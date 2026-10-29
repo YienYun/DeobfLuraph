@@ -9,6 +9,16 @@ const tidy = require('./tidy');
 
 const SPIN_CHECKS = 24;
 
+function addTraceStatus(job, body) {
+  const status = /^-- run status: (.*)$/m.exec(body);
+  if (status) {
+    job.traceStatus = status[1].trim();
+    if (job.traceStatus !== 'finished') {
+      job.warnings.push(`Trace did not finish normally: ${job.traceStatus}`);
+    }
+  }
+}
+
 function patchChunk(src, tmpdir, chunkTag) {
   const p = path.join(tmpdir, `_chunk_${harness.chunkKey(src)}.luau`);
   fs.writeFileSync(p, src, 'latin1');
@@ -35,8 +45,7 @@ async function run(job) {
     throw e;
   }
 
-  let spin = true;
-  if (spin) patched = vmmap.patchSpin(patched);
+  let spin = false;
 
   const cachePath = harness.loadP2dCache(job.input);
   const runner = new harness.Runner(job);
@@ -77,7 +86,9 @@ async function run(job) {
     body = cleanBody;
     let added = 0;
     for (const [key, src] of found) {
-      if (!chunks[key]) {
+      if (!chunks[key] && args.noHooks) {
+        chunks[key] = src;
+      } else if (!chunks[key]) {
         rawChunks[key] = src;
         chunks[key] = patchChunk(src, job.outdir, key);
         if (spin) chunks[key] = vmmap.patchSpin(chunks[key]);
@@ -85,6 +96,9 @@ async function run(job) {
       }
     }
     if (added > 0) {
+      if (attempt === args.maxRuns) {
+        job.warnings.push('Additional VM chunks were found after the final allowed trace run; the result may be incomplete.');
+      }
       process.stderr.write(`[*] script loadstring'd ${added} new VM chunk(s); instrumenting and re-running\n`);
       continue;
     }
@@ -102,6 +116,11 @@ async function run(job) {
     const pid = parseInt(trig[1], 10);
     if (skip.includes(pid)) {
       process.stderr.write(`[!] anti-tamper trigger ${pid} fired again; giving up on reruns\n`);
+      job.warnings.push(`Anti-tamper trigger #${pid} fired again; the result may be incomplete.`);
+      break;
+    }
+    if (attempt === args.maxRuns) {
+      job.warnings.push(`Anti-tamper trigger #${pid} fired on the final allowed run; the result may be incomplete.`);
       break;
     }
     process.stderr.write(`[*] anti-tamper trap reached through function #${pid}; disabling it and re-running\n`);
@@ -109,6 +128,12 @@ async function run(job) {
   }
 
   const runText = harness.traceText(body);
+  if (body.includes(harness.mark('P2DMISS'))) {
+    job.warnings.push('The offline Path2D model could not answer a call; the result may be incomplete.');
+  }
+  if (skip.length) {
+    job.warnings.push(`Anti-tamper functions ${skip.map(p => '#' + p).join(', ')} were skipped during tracing.`);
+  }
   body = harness.p2dMiss(body, cachePath);
   body = body.replace(new RegExp(harness.mark('TRIGGER ') + '\\d+\\n?', 'g'), '');
 
@@ -133,13 +158,15 @@ async function run(job) {
     job.write(job.tracePath, tidy.tidy(text, { preamble: !args.keepPreamble }));
   }
 
-  if (!devirtOn && !job.debug) {
+  // In debug mode also keep the trace alongside the intermediate files.
+  if (!devirtOn || job.debug) {
     writeTrace();
   }
 
-  if (strings) job.write(job.path('.strings.txt'), strings);
+  if (strings !== null) job.write(job.path('.strings.txt'), strings);
 
   const dpath = job.path('.devirt.luau');
+  let producedLift = false;
   if (protosJson) {
     const ppath = job.path('.protos.json');
     if (protosJson.startsWith('error:')) {
@@ -151,6 +178,10 @@ async function run(job) {
           job.write(job.path(`.chunk_${k}.luau`), src, 'latin1')
         );
 
+        // Use a fresh stats file even in --debug mode. Old intermediate
+        // outputs must never be mistaken for a result from the current run.
+        const statsDir = fs.mkdtempSync(path.join(require('os').tmpdir(), 'deobf-stats-'));
+        const statsPath = path.join(statsDir, 'stats.json');
         const cfgData = {
           input: job.input,
           source: job.source,
@@ -165,6 +196,7 @@ async function run(job) {
           run_text: runText,
           ppath: ppath,
           dpath: dpath,
+          stats_path: statsPath,
           chunk_paths: chunkPaths,
           args: {
             budget: args.budget,
@@ -177,20 +209,24 @@ async function run(job) {
           },
         };
         const cfgPath = job.path('.cfg.json');
-        fs.writeFileSync(cfgPath, JSON.stringify(cfgData), 'utf8');
-
-        const { execFileSync } = require('child_process');
-        const { getPythonBin } = require('./pyenv');
-        const pythonBin = getPythonBin();
-        const bridgePy = path.join(__dirname, 'devirt_bridge.py');
-        const coreDir = path.join(__dirname, '..', 'core');
         try {
+          fs.writeFileSync(cfgPath, JSON.stringify(cfgData), 'utf8');
+          const { execFileSync } = require('child_process');
+          const { getPythonBin } = require('./pyenv');
+          const pythonBin = getPythonBin();
+          const bridgePy = path.join(__dirname, 'devirt_bridge.py');
+          const coreDir = path.join(__dirname, '..', 'core');
           execFileSync(pythonBin, [bridgePy, 'pipeline', cfgPath], {
             env: Object.assign({}, process.env, { PYTHONPATH: coreDir }),
             stdio: 'inherit',
           });
+          if (fs.existsSync(statsPath)) {
+            job.liftStats = JSON.parse(fs.readFileSync(statsPath, 'utf8'));
+            producedLift = true;
+          }
         } finally {
           try { fs.unlinkSync(cfgPath); } catch {}
+          fs.rmSync(statsDir, { recursive: true, force: true });
         }
       }
     }
@@ -198,24 +234,55 @@ async function run(job) {
 
   runner.finish();
   trace.statusLine(body);
+  addTraceStatus(job, body);
 
-  if (devirtOn && fs.existsSync(dpath)) {
+  if (devirtOn && producedLift && fs.existsSync(dpath)) {
     const lifted = fs.readFileSync(dpath, 'utf8');
     const nilCalls = (lifted.match(/\(nil\)\(/g) || []).length;
     const lines = lifted.split('\n').length;
-    if (nilCalls < 50 || nilCalls * 100 < lines) {
+    const stats = job.liftStats;
+    if (lifted.trim() && stats.functions > 0 && (nilCalls < 50 || nilCalls * 100 < lines)) {
+      job.resultType = 'devirtualized';
+      if (stats.errors || stats.fallbacks) {
+        job.warnings.push(`Lift has ${stats.errors} unlifted blocks and ${stats.fallbacks} unstructured jumps.`);
+      }
+      if (!stats.converged) {
+        job.warnings.push('Constant resolution did not converge; the output may be incomplete.');
+      }
+      if (/error\(["'](?:devirt:|Luraph runtime function, not devirtualized)/.test(lifted)) {
+        job.warnings.push('The output contains unresolved devirtualization stubs; it may be incomplete.');
+      }
+      // Parsing is only a syntax check, not proof that recovered code has the
+      // same behavior as the original. Keep imperfect output but flag it.
+      const check = require('child_process').spawnSync(harness.luauAst(), [dpath], {
+        stdio: ['ignore', 'ignore', 'pipe'], encoding: 'utf8', timeout: 120000, windowsHide: true,
+      });
+      if (check.error || check.status !== 0) {
+        const detail = (check.stderr || check.error?.message || 'unknown parser error').trim().slice(0, 300);
+        const warning = `Output did not pass the Luau syntax check: ${detail}`;
+        process.stderr.write(`[!] ${warning}\n`);
+        job.warnings.push(warning);
+      }
       return dpath;
     }
-    process.stderr.write(`[!] the devirtualized output is broken (${nilCalls} calls of nil); writing behaviour trace instead\n`);
+    const warning = !lifted.trim() || !stats.functions
+      ? 'Devirtualization recovered no functions; returning a behaviour trace instead.'
+      : `The devirtualized output looks broken (${nilCalls} calls of nil); returning a behaviour trace instead.`;
+    process.stderr.write(`[!] ${warning}\n`);
+    job.warnings.push(warning);
     if (!job.debug) { try { fs.unlinkSync(dpath); } catch {} }
     writeTrace();
+    job.resultType = 'trace';
     return job.tracePath;
   }
 
   if (devirtOn) {
-    process.stderr.write('[!] devirtualization produced no output; writing behaviour trace\n');
+    const warning = 'Devirtualization produced no output; returning a behaviour trace instead.';
+    process.stderr.write(`[!] ${warning}\n`);
+    job.warnings.push(warning);
     if (!fs.existsSync(job.tracePath)) writeTrace();
   }
+  job.resultType = 'trace';
   return job.tracePath;
 }
 
@@ -240,6 +307,9 @@ async function runGeneric(job) {
   }
   runner.finish();
   let body = harness.takeP2d(res.body);
+  if (body.includes(harness.mark('P2DMISS'))) {
+    job.warnings.push('The offline Path2D model could not answer a call; the result may be incomplete.');
+  }
   body = harness.p2dMiss(body, cachePath);
   const { body: cleanBody } = harness.takeChunks(body);
   body = cleanBody;
@@ -248,8 +318,13 @@ async function runGeneric(job) {
 
   const text = trace.header(job.input) + body;
   job.write(job.tracePath, tidy.tidy(text, { preamble: false }));
-  if (strings) job.write(job.path('.strings.txt'), strings);
+  if (strings !== null) job.write(job.path('.strings.txt'), strings);
   trace.statusLine(body);
+  addTraceStatus(job, body);
+  job.resultType = 'trace';
+  if (!args.noDevirt) {
+    job.warnings.push('This input is not recognized as Luraph v15; only a behaviour trace was produced.');
+  }
   return job.tracePath;
 }
 

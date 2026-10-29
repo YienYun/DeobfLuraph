@@ -6,7 +6,8 @@ const path = require('path');
 const detectModule = require('./src/detect');
 const driver = require('./src/driver');
 
-const SUPPORTED_EXTENSIONS = ['.lua', '.luau'];
+const DIRECTORY_EXTENSIONS = ['.lua', '.luau'];
+const FILE_EXTENSIONS = ['.lua', '.luau', '.txt'];
 
 function parseArgs(argv) {
   const args = {
@@ -27,12 +28,22 @@ function parseArgs(argv) {
     devirtRounds: 200,
     executor: 'Wave',
     inputText: null,
+    report: null,
+    help: false,
   };
+
+  function valueAt(index, option) {
+    if (index >= argv.length || (option !== '--input-text' && argv[index].startsWith('-'))) {
+      throw new Error(`${option} needs a value`);
+    }
+    return argv[index];
+  }
 
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
-    if (a === '--detect') { args.detect = true; }
-    else if (a === '--plugin') { args.plugin = argv[++i]; }
+    if (a === '--help' || a === '-h') { args.help = true; }
+    else if (a === '--detect') { args.detect = true; }
+    else if (a === '--plugin') { args.plugin = valueAt(++i, a); }
     else if (a === '--no-devirt') { args.noDevirt = true; }
     else if (a === '--no-hooks') { args.noHooks = true; }
     else if (a === '--no-fold') { args.noFold = true; }
@@ -40,24 +51,32 @@ function parseArgs(argv) {
     else if (a === '--strings') { args.strings = true; }
     else if (a === '--keep-harness') { args.keepHarness = true; }
     else if (a === '--keep-preamble') { args.keepPreamble = true; }
-    else if (a === '-o' || a === '--output') { args.output = argv[++i]; }
-    else if (a === '--timeout') { args.timeout = parseInt(argv[++i], 10); }
-    else if (a === '--prelude-file') { args.preludeFile = argv[++i]; }
-    else if (a === '--budget') { args.budget = parseInt(argv[++i], 10); }
-    else if (a === '--max-runs') { args.maxRuns = parseInt(argv[++i], 10); }
-    else if (a === '--devirt-rounds') { args.devirtRounds = parseInt(argv[++i], 10); }
-    else if (a === '--executor') { args.executor = argv[++i]; }
-    else if (a === '--input-text') { args.inputText = argv[++i]; }
+    else if (a === '-o' || a === '--output') { args.output = valueAt(++i, a); }
+    else if (a === '--report') { args.report = valueAt(++i, a); }
+    else if (a === '--timeout') { args.timeout = Number(valueAt(++i, a)); }
+    else if (a === '--prelude-file') { args.preludeFile = valueAt(++i, a); }
+    else if (a === '--budget') { args.budget = Number(valueAt(++i, a)); }
+    else if (a === '--max-runs') { args.maxRuns = Number(valueAt(++i, a)); }
+    else if (a === '--devirt-rounds') { args.devirtRounds = Number(valueAt(++i, a)); }
+    else if (a === '--executor') { args.executor = valueAt(++i, a); }
+    else if (a === '--input-text') { args.inputText = valueAt(++i, a); }
     else if (a === '--cfg-json') {
-      // extra harness CFG as inline JSON or '@file.json' (e.g. readfile_map,
-      // http_map, real_json) -- merged into the cfg of every run
-      let spec = argv[++i];
+      // Extra harness CFG as inline JSON or '@file.json'.
+      let spec = valueAt(++i, a);
       if (spec.startsWith('@')) spec = fs.readFileSync(spec.slice(1), 'utf8');
       args.cfgJson = JSON.parse(spec);
+      if (!args.cfgJson || Array.isArray(args.cfgJson) || typeof args.cfgJson !== 'object') {
+        throw new Error('--cfg-json must be a JSON object');
+      }
     }
     else if (!a.startsWith('-')) { args.inputs.push(a); }
+    else { throw new Error(`unknown option: ${a}`); }
   }
 
+  for (const [name, value] of [['--timeout', args.timeout], ['--budget', args.budget],
+    ['--max-runs', args.maxRuns], ['--devirt-rounds', args.devirtRounds]]) {
+    if (!Number.isSafeInteger(value) || value <= 0) throw new Error(`${name} must be a positive integer`);
+  }
   return args;
 }
 
@@ -70,6 +89,10 @@ class Job {
     this.tracePath = tracePath;
     this.debug = debug;
     this.obfuscator = obfuscator;
+    this.resultType = null;
+    this.traceStatus = null;
+    this.liftStats = null;
+    this.warnings = [];
   }
 
   creditHeader() {
@@ -113,7 +136,7 @@ function collectInputFiles(rawPaths) {
     if (stat.isDirectory()) {
       const entries = fs.readdirSync(abs, { withFileTypes: true });
       for (const entry of entries) {
-        if (entry.isFile() && SUPPORTED_EXTENSIONS.includes(path.extname(entry.name).toLowerCase())) {
+        if (entry.isFile() && DIRECTORY_EXTENSIONS.includes(path.extname(entry.name).toLowerCase())) {
           const filePath = path.join(abs, entry.name);
           if (!seen.has(filePath)) {
             seen.add(filePath);
@@ -123,8 +146,8 @@ function collectInputFiles(rawPaths) {
       }
     } else if (stat.isFile()) {
       const ext = path.extname(abs).toLowerCase();
-      if (!SUPPORTED_EXTENSIONS.includes(ext)) {
-        process.stderr.write(`[!] unsupported extension for ${raw} (expected ${SUPPORTED_EXTENSIONS.join(', ')})\n`);
+      if (!FILE_EXTENSIONS.includes(ext)) {
+        process.stderr.write(`[!] unsupported extension for ${raw} (expected ${FILE_EXTENSIONS.join(', ')})\n`);
         continue;
       }
       if (!seen.has(abs)) {
@@ -135,6 +158,30 @@ function collectInputFiles(rawPaths) {
   }
 
   return files;
+}
+
+function sameExistingFile(a, b) {
+  if (path.resolve(a) === path.resolve(b)) return true;
+  try {
+    const left = fs.statSync(a);
+    const right = fs.statSync(b);
+    return left.dev === right.dev && left.ino === right.ino;
+  } catch {
+    return false;
+  }
+}
+
+function writeAtomically(destination, content) {
+  const dir = path.dirname(path.resolve(destination));
+  fs.mkdirSync(dir, { recursive: true });
+  const temp = fs.mkdtempSync(path.join(dir, '.deobf-write-'));
+  try {
+    const staged = path.join(temp, 'result');
+    fs.writeFileSync(staged, content, 'utf8');
+    fs.renameSync(staged, destination);
+  } finally {
+    fs.rmSync(temp, { recursive: true, force: true });
+  }
 }
 
 async function processFile(absInput, args) {
@@ -155,20 +202,22 @@ async function processFile(absInput, args) {
   process.stderr.write(`[*] obfuscator: ${plugin.label} (detected, ${confidence.toFixed(2)})\n`);
 
   const outdir = path.join(path.dirname(absInput), 'output');
-  fs.mkdirSync(outdir, { recursive: true });
+  const defaultOutName = path.basename(absInput).replace(/\.txt$/i, '.luau');
+  const final = args.output && args.singleFile
+    ? path.resolve(args.output)
+    : path.join(outdir, defaultOutName);
+  if (sameExistingFile(absInput, final)) {
+    throw new Error('output must not overwrite the input file');
+  }
+  if (args.report && (sameExistingFile(absInput, args.report) || sameExistingFile(final, args.report))) {
+    throw new Error('report must be different from both input and output');
+  }
 
-  const tracename = path.basename(absInput).replace(/(\.luau?|\.txt)?$/, '.deobf.luau');
+  const tracename = path.basename(absInput).replace(/(\.luau?|\.txt)?$/i, '.deobf.luau');
   const os = require('os');
   const workdir = args.debug ? null : fs.mkdtempSync(path.join(os.tmpdir(), 'deobf_node_'));
-
-  const tracePath = args.debug
-    ? (args.output || path.join(outdir, tracename))
-    : path.join(workdir, tracename);
-  const final = (args.output && args.inputs.length === 1)
-    ? args.output
-    : path.join(outdir, path.basename(absInput));
-
-  fs.mkdirSync(path.dirname(path.resolve(final)), { recursive: true });
+  if (args.debug) fs.mkdirSync(outdir, { recursive: true });
+  const tracePath = args.debug ? path.join(outdir, tracename) : path.join(workdir, tracename);
 
   try {
     const fixed = detectModule.restoreHeaderNewline(source);
@@ -187,12 +236,9 @@ async function processFile(absInput, args) {
 
     let result;
     if (plugin.name === 'luarmor_client') {
-      // Auth-gated loader: control flow is not virtualized, but tracing deadlocks
-      // on wall-clock anti-tamper (docs/LUARMOR_NOTES.md §4, §8). Route instead.
-      throw new Error(
-        'Luarmor whitelist client detected — devirtualization/tracing not applicable. ' +
-        'Use tools/luarmor_probe.py to classify and split loader vs payload.'
-      );
+      // Auth-gated loaders are not supported by this checkout. Do not point
+      // users at a probe tool that is not actually included in the project.
+      throw new Error('Luarmor whitelist client detected — this loader is not supported by this project.');
     } else if (plugin.name === 'luraph_v15') {
       result = await driver.run(job);
     } else {
@@ -202,9 +248,28 @@ async function processFile(absInput, args) {
     if (final && result && fs.existsSync(result)) {
       let content = fs.readFileSync(result, 'utf8');
       content = content.replace(/^(\s*--(?:[ \t]*(?:Deobfuscated by|Detected obfuscation|Local names are inferred|source:|NOTE: reconstructed|during the trace)[^\n]*\n?|\s*\n))+/, '');
-      fs.writeFileSync(final, content, 'utf8');
-      process.stderr.write(`[+] result: ${final}\n`);
-      return final;
+      const stringsPath = job.path('.strings.txt');
+      const stringsFinal = final + '.strings.txt';
+      if (args.strings && fs.existsSync(stringsPath)) {
+        if (sameExistingFile(absInput, stringsFinal) || (args.report && sameExistingFile(args.report, stringsFinal))) {
+          throw new Error('strings output must not overwrite the input or report');
+        }
+        writeAtomically(stringsFinal, fs.readFileSync(stringsPath, 'utf8'));
+      }
+      writeAtomically(final, content);
+      const report = {
+        input: path.resolve(absInput),
+        output: path.resolve(final),
+        obfuscator: plugin.name,
+        confidence,
+        result_type: job.resultType,
+        trace_status: job.traceStatus,
+        lift_stats: job.liftStats,
+        warnings: job.warnings,
+      };
+      if (args.report) writeAtomically(path.resolve(args.report), JSON.stringify(report, null, 2) + '\n');
+      process.stderr.write(`[+] result (${job.resultType}): ${final}\n`);
+      return report;
     }
     process.stderr.write(`[!] no result for ${path.basename(absInput)}\n`);
     return null;
@@ -218,8 +283,14 @@ async function processFile(absInput, args) {
 async function main() {
   const args = parseArgs(process.argv.slice(2));
 
+  const usage = 'Usage: node deob.js <input.lua | folder> [more_files_or_folders...] [-o <output.lua>] [--plugin <name>] [--no-devirt] [--debug] [--detect] [--report <report.json>]';
+  if (args.help) {
+    console.log(usage);
+    console.log('Use --detect to classify without executing, or --no-devirt for a behaviour trace.');
+    return;
+  }
   if (args.inputs.length === 0) {
-    console.error('Usage: node deob.js <input.lua | folder> [more_files_or_folders...] [-o <output.lua>] [--plugin <name>] [--no-devirt] [--debug] [--detect]');
+    console.error(usage);
     process.exit(2);
   }
 
@@ -227,6 +298,11 @@ async function main() {
   if (files.length === 0) {
     console.error('[!] no valid .lua / .luau input files found');
     process.exit(1);
+  }
+
+  args.singleFile = files.length === 1;
+  if (args.report && (args.detect || !args.singleFile)) {
+    throw new Error('--report requires exactly one input file and cannot be used with --detect');
   }
 
   if (args.detect) {
@@ -260,10 +336,14 @@ async function main() {
   }
 
   process.stderr.write(`\n[*] done: ${succeeded} succeeded, ${failed} failed out of ${files.length}\n`);
-  if (failed > 0 && succeeded === 0) process.exit(1);
+  if (failed > 0) process.exitCode = 1;
 }
 
-main().catch(err => {
-  process.stderr.write('[!] Fatal error: ' + (err.message || err) + '\n');
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch(err => {
+    process.stderr.write('[!] Fatal error: ' + (err.message || err) + '\n');
+    process.exitCode = 1;
+  });
+}
+
+module.exports = { parseArgs, collectInputFiles, processFile, sameExistingFile, writeAtomically };

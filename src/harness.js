@@ -40,6 +40,12 @@ function _ensureExec(p) {
 let _luauExe = null;
 function findLuau() {
   if (_luauExe) return _ensureExec(_luauExe);
+  if (process.env.LUAU_BIN) {
+    const override = path.resolve(process.env.LUAU_BIN);
+    if (!fs.existsSync(override)) throw new Error('LUAU_BIN does not exist: ' + override);
+    _luauExe = _ensureExec(override);
+    return _luauExe;
+  }
   const exe = process.platform === 'win32' ? 'luau.exe' : 'luau';
   const local = path.join(BIN, exe);
   if (fs.existsSync(local)) { _luauExe = _ensureExec(local); return _luauExe; }
@@ -63,6 +69,11 @@ function findLuau() {
 }
 
 function luauAst() {
+  if (process.env.LUAU_AST_BIN) {
+    const override = path.resolve(process.env.LUAU_AST_BIN);
+    if (!fs.existsSync(override)) throw new Error('LUAU_AST_BIN does not exist: ' + override);
+    return _ensureExec(override);
+  }
   const exe = process.platform === 'win32' ? 'luau-ast.exe' : 'luau-ast';
   const local = path.join(BIN, exe);
   if (fs.existsSync(local)) return _ensureExec(local);
@@ -124,6 +135,8 @@ function p2dCachePath(inputPath) {
 }
 
 function loadP2dCache(inputPath) {
+  // Batch jobs must not reuse a previous input's recorded engine answers.
+  P2D_CACHE.clear();
   const cp = p2dCachePath(inputPath);
   if (fs.existsSync(cp)) {
     const lines = fs.readFileSync(cp, 'utf8').split('\n');

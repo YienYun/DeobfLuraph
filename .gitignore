@@ -1,0 +1,16 @@
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+
+# Dependencies, caches and locally built tools
+node_modules/
+__pycache__/
+*.py[cod]
+.local-bin/
+
+# Generated analysis output
+output/
+*.path2d
+.deobf-write-*/
+coverage/

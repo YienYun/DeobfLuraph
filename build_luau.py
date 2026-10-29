@@ -10,7 +10,7 @@ fails with "attempt to index vector with 'Dot'".
 
 Needs git, cmake and a C++ compiler (MSVC via a developer prompt, or gcc,
 e.g. MSYS2's; Ninja is used when installed).
-    python build_luau.py [--tag 0.739] [--src DIR] [--portable] [--jobs N]
+    python build_luau.py [--tag 0.739] [--src DIR] [--portable] [--jobs N] [--output-dir DIR]
 """
 import argparse
 import os
@@ -90,17 +90,26 @@ def patch(src):
         )
         dc = dc.replace(
             "CallInfo* luaD_growCI(lua_State* L)",
-            """static bool is_harness_closure(Closure* cl)
+            """static bool is_harness_lua_closure(Closure* cl)
 {
-    if (!cl)
-        return false;
-    if (cl->isC)
-        return true;
-    if (!cl->l.p || !cl->l.p->source)
+    if (!cl || cl->isC || !cl->l.p || !cl->l.p->source)
         return false;
     const char* s = getstr(cl->l.p->source);
     return strstr(s, "harness") != nullptr || strstr(s, "envlog") != nullptr ||
-           strcmp(s, "=prelude") == 0 || strcmp(s, "=plugin_rt") == 0;
+           strcmp(s, "=prelude") == 0 || strcmp(s, "=plugin_rt") == 0 || strcmp(s, "=stdin") == 0;
+}
+
+static bool is_harness_frame(lua_State* L)
+{
+    if (!L || !L->ci || L->ci < L->base_ci)
+        return false;
+    for (CallInfo* ci = L->ci; ci >= L->base_ci; --ci)
+    {
+        Closure* cl = (ci->func && ttisfunction(ci->func)) ? clvalue(ci->func) : nullptr;
+        if (cl && !cl->isC)
+            return is_harness_lua_closure(cl);
+    }
+    return false;
 }
 
 CallInfo* luaD_growCI(lua_State* L)""",
@@ -109,8 +118,7 @@ CallInfo* luaD_growCI(lua_State* L)""",
             "    if (L->size_ci >= hardlimit)\n        luaD_throw(L, LUA_ERRERR); // error while handling stack error",
             """    if (L->size_ci >= LUAI_MAXCALLS && L->ci >= L->base_ci && L->ci < L->base_ci + L->size_ci + 120)
     {
-        Closure* cl = (L->ci->func && ttisfunction(L->ci->func)) ? clvalue(L->ci->func) : nullptr;
-        if (is_harness_closure(cl))
+        if (is_harness_frame(L))
             return ++L->ci;
     }
 
@@ -121,12 +129,8 @@ CallInfo* luaD_growCI(lua_State* L)""",
             "    if (L->nCcalls == LUAI_MAXCCALLS)\n        luaG_runerror(L, \"C stack overflow\");",
             """    if (L->nCcalls == LUAI_MAXCCALLS)
     {
-        if (L->ci > L->base_ci)
-        {
-            Closure* cl = (L->ci->func && ttisfunction(L->ci->func)) ? clvalue(L->ci->func) : nullptr;
-            if (is_harness_closure(cl))
-                return;
-        }
+        if (is_harness_frame(L))
+            return;
         luaG_runerror(L, "C stack overflow");
     }""",
         )
@@ -159,7 +163,7 @@ def build_direct_gcc(src, jobs, portable):
 
     opt = ["-O3", "-DNDEBUG"] + ([] if portable else ["-march=native"])
     inc = [
-        "-ICommon/include", "-IAst/include", "-IBytecode/include", "-IBytecode/src",
+        "-ICommon/include", "-IAst/include", "-IAnalysis/include", "-IBytecode/include", "-IBytecode/src",
         "-IInliner/include", "-IInliner/src", "-ICompiler/include", "-IConfig/include",
         "-ICodeGen/include", "-IVM/include", "-IVM/src", "-IRequire/include",
         "-IRequire/src", "-ICLI/include", "-Iextern", "-Iextern/isocline/include",
@@ -177,17 +181,46 @@ def build_direct_gcc(src, jobs, portable):
     for d in cpp_dirs:
         cpp_files.extend(sorted(glob.glob(os.path.join(src, d, "*.cpp"))))
     cpp_files.extend(os.path.join(src, f) for f in cli_files)
+    # The AST CLI needs the JSON encoder, but not the rest of Analysis.
     c_file = os.path.join(src, "extern/isocline/src/isocline.c")
 
     obj_dir = os.path.join(src, "build-gcc-objs")
     os.makedirs(obj_dir, exist_ok=True)
+    # The full Analysis library is much larger than the AST CLI needs. Supply
+    # the flag and the diagnostic-location formatter normally provided by it;
+    # the actual parser and JSON encoder still come from Luau unchanged.
+    shim = os.path.join(obj_dir, "ast_link_shim.cpp")
+    shim_text = '''#include "Luau/Common.h"
+#include "Luau/Location.h"
+#include <string>
+LUAU_FASTFLAGVARIABLE(DebugLuauIfLocalAnalysis)
+namespace Luau {
+std::string toString(const Location& l, int offset, bool) {
+    return "(" + std::to_string(l.begin.line + offset) + ", " + std::to_string(l.begin.column + offset) +
+           ") - (" + std::to_string(l.end.line + offset) + ", " + std::to_string(l.end.column + offset) + ")";
+}
+}
+'''
+    old_shim = None
+    if os.path.exists(shim):
+        with open(shim, encoding="utf-8") as f:
+            old_shim = f.read()
+    if old_shim != shim_text:
+        with open(shim, "w", encoding="utf-8", newline="\n") as f:
+            f.write(shim_text)
+    ast_only_files = [os.path.join(src, "Analysis/src/AstJsonEncoder.cpp"),
+                      os.path.join(src, "CLI/src/Ast.cpp"), shim]
 
     tasks = []
     objs = []
-    for f in cpp_files:
+    ast_objs = []
+    for f in cpp_files + ast_only_files:
         rel = os.path.relpath(f, src).replace("/", "_").replace("\\", "_")
         obj = os.path.join(obj_dir, rel + ".o")
-        objs.append(obj)
+        if f not in ast_only_files:
+            objs.append(obj)
+        if rel.startswith(("Common_src_", "Ast_src_")) or f in ast_only_files or rel == "CLI_src_FileUtils.cpp":
+            ast_objs.append(obj)
         if not os.path.exists(obj) or os.path.getmtime(f) > os.path.getmtime(obj):
             cmd = ["g++", "-std=c++17", "-fno-math-errno", "-Wno-unused", "-Wno-maybe-uninitialized"] + opt + inc + ["-c", f, "-o", obj]
             tasks.append(cmd)
@@ -206,9 +239,13 @@ def build_direct_gcc(src, jobs, portable):
     exe = os.path.join(BIN, "luau.exe" if os.name == "nt" else "luau")
     run(["g++"] + opt + objs + ["-lpthread", "-lm", "-o", exe], cwd=src)
     print("[+] wrote " + exe, file=sys.stderr)
+    ast_exe = os.path.join(BIN, "luau-ast.exe" if os.name == "nt" else "luau-ast")
+    run(["g++"] + opt + ast_objs + ["-lpthread", "-lm", "-o", ast_exe], cwd=src)
+    print("[+] wrote " + ast_exe, file=sys.stderr)
 
 
 def main():
+    global BIN
     ap = argparse.ArgumentParser(description=__doc__.strip().splitlines()[0])
     ap.add_argument("--tag", default=TAG, help="Luau release tag (default %(default)s)")
     ap.add_argument("--src", help="existing checkout to use (default: fresh clone in a temp folder)")
@@ -216,7 +253,12 @@ def main():
                     help="gcc: no -march=native (for a binary copied to another machine)")
     ap.add_argument("--jobs", type=int, default=os.cpu_count() or 2,
                     help="parallel build jobs (default: CPU count)")
+    ap.add_argument("--output-dir", default=BIN,
+                    help="directory for the built binaries (default: repository bin/)")
     args = ap.parse_args()
+    if args.jobs < 1:
+        ap.error("--jobs must be positive")
+    BIN = os.path.abspath(args.output_dir)
     tmp = None
     src = args.src
     if not src:

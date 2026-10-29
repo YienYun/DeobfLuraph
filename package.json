@@ -1,17 +1,24 @@
 {
-  "name": "luraphv15-node",
+  "name": "deobfluraph",
   "version": "1.0.0",
-  "description": "Luraph v15 deobfuscator - Node.js port",
+  "description": "Luraph v15.0 & v15.1 Luau Deobfuscator Engine",
   "main": "deob.js",
   "bin": {
     "deob": "./deob.js"
   },
   "scripts": {
     "start": "node deob.js",
-    "test": "node test/run.js"
+    "test": "node --test"
   },
-  "keywords": ["luraph", "deobfuscator", "roblox", "luau"],
-  "author": "",
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "luraph",
+    "deobfuscator",
+    "roblox",
+    "luau"
+  ],
   "license": "MIT",
   "type": "commonjs"
 }

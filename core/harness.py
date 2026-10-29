@@ -39,6 +39,12 @@ def _ensure_exec(p):
     return p
 
 def find_luau():
+    override = os.environ.get("LUAU_BIN")
+    if override:
+        override = os.path.abspath(override)
+        if not os.path.isfile(override):
+            raise RuntimeError("LUAU_BIN does not exist: " + override)
+        return _ensure_exec(override)
     exe = "luau.exe" if os.name == "nt" else "luau"
     local = os.path.join(BIN, exe)
     if os.path.exists(local):
@@ -64,6 +70,12 @@ def find_luau():
 
 def luau_ast():
     """Path of luau-ast (prints a file's AST as JSON; decode it as latin-1)."""
+    override = os.environ.get("LUAU_AST_BIN")
+    if override:
+        override = os.path.abspath(override)
+        if not os.path.isfile(override):
+            raise RuntimeError("LUAU_AST_BIN does not exist: " + override)
+        return _ensure_exec(override)
     return _ensure_exec(os.path.join(BIN, "luau-ast.exe" if os.name == "nt" else "luau-ast"))
 
 AST_TIMEOUT = 120  # seconds; 1.7 MB scripts parse in seconds, this only guards a hung binary

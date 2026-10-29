@@ -113,7 +113,8 @@ def find_dispatchers(root):
                 if not opname:
                     continue
                 nxt_i = idx + 1
-                if nxt_i < len(body) and body[nxt_i]["type"] == "AstStatIf":
+                if nxt_i < len(body) and body[nxt_i]["type"] == "AstStatIf" \
+                        and eval_cond(body[nxt_i]["condition"], opname, 0) is not None:
                     found.append({"node": n, "op": opname, "arr": arr, "pc": pc, "tree": body[nxt_i],
                                   "rest": body[nxt_i + 1:], "form": form})
                     matched = True
@@ -122,7 +123,7 @@ def find_dispatchers(root):
                     st1 = body[nxt_i]
                     if len(st1.get("values") or []) == 1:
                         v1 = _unwrap(st1["values"][0])
-                        if v1.get("type") == "AstExprBinary" and v1.get("op") in OPS:
+                        if eval_cond(v1, opname, 0) is not None:
                             found.append({"node": n, "op": opname, "arr": arr, "pc": pc, "tree": n["body"],
                                           "rest": body[nxt_i + 2:], "form": form})
                             matched = True
@@ -298,11 +299,12 @@ def closure_entries(root):
             if n.get("type") in ("AstStatWhile", "AstStatRepeat") and any(n is d for d in disp_nodes):
                 vm_idx = _vm_stack_idx(stack)
                 inner = stack[vm_idx] if stack and stack[vm_idx].get("vararg") and not stack[vm_idx].get("args") \
-                    else next(f for f in reversed(stack) if f.get("vararg") and not f["args"])
-                outer = next(f for f in reversed(stack) if len(f["args"]) >= 2)
-                l1, c1, _, _ = loc(inner["body"]["body"][0])
-                name = "__pv" if _curried3_of(stack, vm_idx) else outer["args"][_maker_params(outer)[0]]["name"]
-                seen[(l1, c1)] = name
+                    else next((f for f in reversed(stack) if f.get("vararg") and not f["args"]), None)
+                outer = next((f for f in reversed(stack) if len(f["args"]) >= 2), None)
+                if inner is not None and outer is not None and inner.get("body", {}).get("body"):
+                    l1, c1, _, _ = loc(inner["body"]["body"][0])
+                    name = "__pv" if _curried3_of(stack, vm_idx) else outer["args"][_maker_params(outer)[0]]["name"]
+                    seen[(l1, c1)] = name
             for v in n.values():
                 walk(v, stack)
         elif isinstance(n, list):
@@ -681,3 +683,80 @@ def _captures(info):
         if nm not in maker_decls:   # a maker decl would shadow it at the hook
             caps.add(nm)
     return sorted(caps)
+
+
+def plain_curried_makers(root):
+    """Curried LPH_NO_VIRTUALIZE factories (`f3 = function(W, Z, v) return
+    function(a, c, X) ... return function(...) ... end end end`) stored in a
+    setmetatable({...}) VM constructor table and not already a VM dispatcher."""
+    disp_nodes = {id(d["node"]) for d in find_dispatchers(root)}
+    hooked_locs = set()
+    for info in maker_info(root):
+        c3 = info.get("curried3")
+        if c3:
+            hooked_locs.add(c3["f3"]["location"])
+            hooked_locs.add(c3["f2"]["location"])
+            if c3.get("f1"):
+                hooked_locs.add(c3["f1"]["location"])
+
+    def _contains_disp(fn):
+        st = [fn]
+        while st:
+            x = st.pop()
+            if isinstance(x, dict):
+                if id(x) in disp_nodes:
+                    return True
+                st.extend(x.values())
+            elif isinstance(x, list):
+                st.extend(x)
+        return False
+
+    out = []
+    seen = set()
+
+    def visit(n):
+        if isinstance(n, dict):
+            if n.get("type") == "AstExprCall" and n["func"].get("type") == "AstExprGlobal" \
+                    and n["func"]["global"] == "setmetatable" and n["args"] \
+                    and n["args"][0]["type"] == "AstExprTable":
+                for it in n["args"][0]["items"]:
+                    f3 = it.get("value")
+                    if not isinstance(f3, dict) or f3.get("type") != "AstExprFunction":
+                        continue
+                    if f3.get("vararg") or len(f3.get("args") or []) < 2:
+                        continue
+                    b3 = (f3.get("body") or {}).get("body") or []
+                    if len(b3) != 1 or b3[0].get("type") != "AstStatReturn" or len(b3[0].get("list") or []) != 1:
+                        continue
+                    f2 = b3[0]["list"][0]
+                    if not isinstance(f2, dict) or f2.get("type") != "AstExprFunction" or f2.get("vararg"):
+                        continue
+                    b2 = (f2.get("body") or {}).get("body") or []
+                    if not b2 or b2[-1].get("type") != "AstStatReturn" or len(b2[-1].get("list") or []) != 1:
+                        continue
+                    if not all(st.get("type") == "AstStatLocal" for st in b2[:-1]):
+                        continue
+                    f1 = b2[-1]["list"][0]
+                    if not isinstance(f1, dict) or f1.get("type") != "AstExprFunction":
+                        continue
+                    b1 = (f1.get("body") or {}).get("body") or []
+                    if (len(b1) == 2 and b1[0].get("type") == "AstStatLocal"
+                            and b1[1].get("type") == "AstStatWhile"
+                            and (b1[1].get("condition") or {}).get("type") == "AstExprConstantBool"
+                            and b1[1]["condition"].get("value") is True):
+                        continue
+                    if f3["location"] in hooked_locs or f2["location"] in hooked_locs or _contains_disp(f1):
+                        continue
+                    if f2["location"] in seen:
+                        continue
+                    seen.add(f2["location"])
+                    l2, c2, _, _ = loc(f2)
+                    out.append({"at": (l2, c2), "f3": f3, "f2": f2, "f1": f1})
+            for v in n.values():
+                visit(v)
+        elif isinstance(n, list):
+            for v in n:
+                visit(v)
+    visit(root)
+    return out
+

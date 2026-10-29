@@ -142,6 +142,10 @@ class Printer:
         return head + "(" + ", ".join(params) + ")\n" + body + ("\n" if body else "") + self.ind * depth + "end"
 
     def emit(self, depth, text):
+        if text.startswith("(") and self.lines:
+            prev = self.lines[-1].rstrip()
+            if prev and not prev.endswith((";", "then", "do", "else", "repeat", "{", "(")):
+                self.lines[-1] = prev + ";"
         self.lines.append(self.ind * depth + text)
 
     def block(self, b, depth):

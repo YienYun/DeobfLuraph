@@ -95,6 +95,28 @@ def patch_entries(source, path):
                  "__PA[%s].__maker=\"%s@%d,%d\";__PK[%s]=%s;%s end "
                  % (pv, pv, pv, pv, tag, l2, c2, info.get("pf_key", pv), var, cap))
         edits.append((l2, c2, code))
+    for pm in vmmap.plain_curried_makers(root):
+        (l2, c2), f3, f2 = pm["at"], pm["f3"], pm["f2"]
+        ret_st = f3["body"]["body"][0]
+        r_l1, r_c1, _, _ = vmmap.loc(ret_st)
+        fn_l1, fn_c1, fn_l2, fn_c2 = vmmap.loc(f2)
+        f3_params = list(dict.fromkeys(
+            a["name"] for a in (f3.get("args") or []) if a.get("name") and a["name"] != "..."
+        ))
+        f3_cap = ",".join("%s=%s" % (nm, nm) for nm in f3_params)
+        # Replace `return <f2>` with local binding (0 extra call frames, 0 newlines)
+        prefix_code = ("local __pv={%s};local __mk=" % f3_cap)
+        suffix_code = (";if __PA and __PA.n<8192 then __PA.n=__PA.n+1;"
+                       "__PA[__pv]={__seq=__PA.n,__maker=\"plain:%s@%d,%d\",%s};"
+                       "__PF[__mk]=__pv;__PK[__pv]=__mk end;return __mk"
+                       % (tag, l2, c2, f3_cap))
+        # Slice out `return` keyword right before f2 on line r_l1 (r_l1 == fn_l1)
+        if r_l1 == fn_l1:
+            lines_pre = lines[r_l1][r_c1:fn_c1]
+            if lines_pre.strip() == "return":
+                edits.append((r_l1, r_c1, prefix_code + "--[["))
+                edits.append((fn_l1, fn_c1, "]]"))
+                edits.append((fn_l2, fn_c2, suffix_code))
     for l, c, code in sorted(edits, reverse=True):
         lines[l] = lines[l][:c] + code + lines[l][c:]
     return "\n".join(lines)
@@ -117,6 +139,9 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None):
     cache = devirt.WalkCache()
     t0 = time.time()
     last_errors = None
+    last_full_stats = None
+    converged = False
+    pending_constants = 0
     for rnd in range(1, rounds + 1):
         t1 = time.time()
 
@@ -145,10 +170,13 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None):
             text, stats, reqs, bufs = devirt.run_big_stack(devirt.lift_program, job.source_path, ppath, chunk_paths,
                                                            live and live())
             new = reqs - requested
+            last_full_stats = dict(stats)
+            pending_constants = len(new)
+            converged = not new and (not (requested | reqs) or devirt.same_patches(last_bufs, bufs))
             print("[*]   %d functions, %d unlifted blocks, %d unstructured jumps, %d new constant requests (%.1fs)"
                   % (stats["functions"], stats["errors"], stats["fallbacks"], len(new), time.time() - t1),
                   file=sys.stderr)
-            if (not new and (not (requested | reqs) or devirt.same_patches(last_bufs, bufs))) or rnd == rounds:
+            if converged or rnd == rounds:
                 break
             if quick:
                 print("[*]   the full lift needs more constants: continuing with full lifts", file=sys.stderr)
@@ -182,6 +210,9 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None):
                  "before the first full lift (see the error above); re-run with "
                  "DEVIRT_FULL_ROUNDS=1 to lift the first round without extra constant runs")
     job.write(dpath, prefix + devirt.finish_text(text) + "\n")
+    # The caller can distinguish a real lift from an empty/stale file and
+    # surface incomplete analysis rather than presenting it as a clean success.
+    return dict(last_full_stats, converged=converged, pending_constant_requests=pending_constants)
 
 def run(job):
     """The whole Luraph pipeline; returns the result file's path."""
@@ -383,7 +414,7 @@ def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths)
             server[0] = None
         return runner.run(patched, c, chunks)
     try:
-        devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths, live)
+        return devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths, live)
     except Exception as e:
 
         print("[!] devirtualization failed: %s: %s" % (type(e).__name__, e), file=sys.stderr)

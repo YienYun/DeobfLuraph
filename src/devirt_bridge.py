@@ -9,7 +9,16 @@ if CORE_DIR not in sys.path:
 
 cmd = sys.argv[1]
 
-if cmd == "pipeline":
+if cmd == "patch-entries":
+    # Preserve source bytes: Lua string literals in protected files need not
+    # be UTF-8. AST locations and the original Python mapper use latin-1.
+    source_path = sys.argv[2]
+    with open(source_path, "rb") as f:
+        source = f.read().decode("latin-1")
+    from obfuscators.luraph_v15 import driver
+    sys.stdout.buffer.write(driver.patch_entries(source, source_path).encode("latin-1"))
+
+elif cmd == "pipeline":
 
     config_file = sys.argv[2]
     with open(config_file, "r", encoding="utf-8") as f:
@@ -39,6 +48,7 @@ if cmd == "pipeline":
     args = DummyArgs(c["args"])
     job = Job(c["input"], c["source"], args, c["trace_path"], c["debug"], c["obfuscator"])
     job.source_path = c["source_path"]
+    job.trace_status = c.get("trace_status")
     job.credit_header = lambda: ""
 
     runner = harness.Runner(job)
@@ -52,7 +62,7 @@ if cmd == "pipeline":
 
     if profiler:
         profiler.enable()
-    driver.lift(
+    stats = driver.lift(
         job,
         runner,
         c["patched"],
@@ -68,9 +78,12 @@ if cmd == "pipeline":
         profiler.dump_stats(prof_path)
         sys.stderr.write("[*] cProfile stats written to %s\n" % prof_path)
     runner.finish()
+    if stats is not None and c.get("stats_path"):
+        with open(c["stats_path"], "w", encoding="utf-8", newline="\n") as f:
+            json.dump(stats, f)
 
     dpath = c["dpath"]
-    if os.path.exists(dpath):
+    if stats is not None and os.path.exists(dpath):
         with open(dpath, "r", encoding="utf-8", errors="replace") as f:
             lines = f.readlines()
         clean = []
@@ -93,7 +106,5 @@ if cmd == "pipeline":
         with open(dpath, "w", encoding="utf-8", newline="\n") as f:
             f.writelines(clean)
 
-    print(json.dumps({"success": True, "output": c["dpath"]}))
-
 else:
-    sys.exit(f"Unknown command: {cmd} (expected: pipeline)")
+    sys.exit(f"Unknown command: {cmd} (expected: patch-entries or pipeline)")

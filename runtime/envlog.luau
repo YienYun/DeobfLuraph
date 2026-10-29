@@ -2296,6 +2296,11 @@ if name == "HttpGet" or name == "HttpGetAsync" or name == "HttpPost" or name == 
                 end
         end
 
+        if isMethod and name == "GetGuiInset" then
+                emit({ text = calleeText .. "(" .. fmtArgs(R.unpack(args, 1, args.n)) .. ")" })
+                return ENV.Vector2.new(0, 36), ENV.Vector2.new(0, 0)
+        end
+
         local hint
         if name == "FindFirstChild" or name == "WaitForChild" or name == "FindFirstChildOfClass"
                 or name == "FindFirstChildWhichIsA" or name == "FindFirstAncestor" or name == "FindFirstAncestorOfClass"

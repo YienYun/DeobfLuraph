@@ -28,14 +28,14 @@ function detectLuraph(source) {
   return 0.0;
 }
 
-const HEADER_LINE_RE = /\s*--[ \t]*This file was protected using Luraph Obfuscator v[\d.]+[ \t]*\[https?:\/\/lura\.ph\/?\]/;
+const HEADER_LINE_RE = /^\s*--[ \t]*This file was protected using Luraph Obfuscator v[\d.]+[ \t]*\[https?:\/\/lura\.ph\/?\]/;
 
 function restoreHeaderNewline(source) {
   const m = HEADER_LINE_RE.exec(source);
   if (m) {
     const end = m.index + m[0].length;
     const next = source[end];
-    if (next !== '' && next !== '\n' && next !== '\r') {
+    if (next !== undefined && next !== '\n' && next !== '\r') {
       return source.slice(0, end) + '\n' + source.slice(end).replace(/^[ \t]+/, '');
     }
   }

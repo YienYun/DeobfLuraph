@@ -161,12 +161,18 @@ class Dump:
         new_protos = d.get("new_protos") or {}
         if new_protos:
             by_suffix = getattr(self, "by_suffix", {})
+            plain_by_suffix = getattr(self, "plain_by_suffix", {})
             for key, cap in new_protos.items():
                 pcap = {k: self.val(v) for k, v in cap.items()}
                 mk = pcap.get("__maker")
                 if mk is not None:
                     tag = mk.decode("latin-1") if isinstance(mk, bytes) else str(mk)
-                    if tag not in getattr(self, "vms", {}):
+                    if tag.startswith("plain:"):
+                        if tag not in getattr(self, "plain_makers", {}):
+                            hit = plain_by_suffix.get(tag.rpartition("@")[2])
+                            if hit is not None:
+                                pcap["__maker"] = hit.encode("latin-1")
+                    elif tag not in getattr(self, "vms", {}):
                         hit = by_suffix.get(tag.rpartition("@")[2])
                         if hit is not None:
                             pcap["__maker"] = hit.encode("latin-1")
@@ -402,16 +408,170 @@ class SharedFn(Global):
         Global.__init__(self, "luraph_runtime%d" % n)
         self.fn = fn
 
-class PlainProto:
-    """A plain Lua function (e.g. preserved source) that captures outer locals."""
+import luauast as LA
 
-    def __init__(self, fn, node, replacements, lines):
+
+def _classify_vm_method(vmobj, fn_node):
+    """Identify Luraph v15 helper methods on the VM object by AST shape rather
+    than obfuscated 2-letter method names:
+      - 'unpack':  function(W, Z) return W[k](Z, 1, Z.n) end
+      - 'setlist': function(W, Z, v, ...) local p = W[kp](...); W[km](p, 1, p.n, v + 1, Z) end
+      - 'closure': function(W, Z, v, a, c, X, p) ... end (7 args, creates child VM closure)
+    """
+    if not isinstance(fn_node, dict) or fn_node.get("type") != "AstExprFunction":
+        return None
+    args = fn_node.get("args") or []
+    body = (fn_node.get("body") or {}).get("body") or []
+    if len(args) == 2 and not fn_node.get("vararg") and len(body) == 1 and body[0].get("type") == "AstStatReturn":
+        rl = body[0].get("list") or []
+        if len(rl) == 1 and rl[0].get("type") == "AstExprCall":
+            ca = rl[0].get("args") or []
+            fc = rl[0].get("func") or {}
+            if len(ca) == 3 and fc.get("type") == "AstExprIndexExpr" and fc["index"].get("type") == "AstExprConstantNumber":
+                target = vmobj.get(int(fc["index"]["value"])) if isinstance(vmobj, LTable) else None
+                if isinstance(target, Builtin) and "unpack" in target.name:
+                    return "unpack"
+    if fn_node.get("vararg") and len(args) == 3 and len(body) >= 2:
+        for st in body:
+            if st.get("type") == "AstStatExpr" and st["expr"].get("type") == "AstExprCall":
+                fc = st["expr"].get("func") or {}
+                if fc.get("type") == "AstExprIndexExpr" and fc["index"].get("type") == "AstExprConstantNumber":
+                    target = vmobj.get(int(fc["index"]["value"])) if isinstance(vmobj, LTable) else None
+                    if isinstance(target, Builtin) and target.name == "table.move":
+                        return "setlist"
+    if len(args) == 7 and not fn_node.get("vararg"):
+        return "closure"
+    return None
+
+
+class _PlainPrinter(LA.Printer):
+    def __init__(self, indent="\t", node_reps=None, capnames=None, fl=None, vm=None, vmobj=None, base_depth=0, parent_lf=None):
+        super().__init__(indent)
+        self.node_reps = node_reps or {}
+        self.capnames = capnames or {}
+        self.fl = fl
+        self.vm = vm
+        self.vmobj = vmobj
+        self.base_depth = base_depth
+        self.parent_lf = parent_lf
+
+    def _const_lit(self, v):
+        if v is None:
+            return "nil"
+        if isinstance(v, bool):
+            return "true" if v else "false"
+        if isinstance(v, (int, float)):
+            return LA.num(float(v) if isinstance(v, int) and abs(v) >= 2 ** 53 else v)
+        if isinstance(v, bytes):
+            return LA.quote(v.decode("latin-1"))
+        if isinstance(v, str):
+            return LA.quote(v)
+        return "nil"
+
+    def _lift_wkk(self, spec, depth):
+        p_fn, u_desc, upv_tbl_ast, capnames = spec
+        fl = self.fl
+        if fl is None or not isinstance(p_fn, OpaqueFn) or p_fn.pf_tid is None:
+            return "function(...) end"
+        dump = fl.prog.dump
+        proto = dump.tables.get(p_fn.pf_tid)
+        cap = getattr(dump, "cap_by_self", {}).get(p_fn.pf_tid)
+        if not isinstance(proto, LTable) or cap is None:
+            return "function(...) end"
+        mk = cap.get("__maker")
+        tag = mk.decode("latin-1") if isinstance(mk, bytes) else (str(mk) if mk is not None else "")
+        cvm = dump.vms.get(tag) or self.vm
+        cvmobj = cvm.vmobj_of(cap) if hasattr(cvm, "vmobj_of") else self.vmobj
+
+        slot_holders = {}
+        if isinstance(upv_tbl_ast, dict) and upv_tbl_ast.get("type") == "AstExprTable":
+            for it in upv_tbl_ast.get("items") or []:
+                k = it.get("key")
+                val = it.get("value")
+                if isinstance(k, dict) and k.get("type") == "AstExprConstantNumber" and isinstance(val, dict):
+                    slot_holders[int(k["value"])] = self.expr(val, depth)
+
+        entries = []
+        upnames = {}
+        if isinstance(u_desc, LTable):
+            count = u_desc.length() // 3
+            for idx in range(1, count + 1):
+                kind = u_desc.get((idx - 1) * 3 + 1)
+                slot = u_desc.get((idx - 1) * 3 + 3)
+                entries.append(BoxProxy(idx) if kind == 2 else UpContainer(idx))
+                if isinstance(slot, int) and slot in slot_holders:
+                    upnames[idx] = "%s[%d]" % (slot_holders[slot], slot)
+                elif isinstance(slot, int):
+                    upnames[idx] = "upv%d" % idx
+
+        try:
+            sh = dict(getattr(dump, "shared_cap", None) or {})
+            for k, v in cap.items():
+                if k not in ("self", "__maker", "__seq"):
+                    sh.setdefault(k, v)
+            lines = fl.lift(cvm, cvmobj, proto, UpList(entries), upnames, self.base_depth + depth + 1, shared=sh)
+            params = list(fl.params)
+            ind = self.ind * depth
+            body = "\n".join(self.ind * (depth + 1) + l for l in lines)
+            return "function(" + ", ".join(params) + ")\n" + body + ("\n" if body else "") + ind + "end"
+        except Exception:
+            return "function(...) end"
+
+    def expr(self, e, depth=0):
+        rep = self.node_reps.get(id(e))
+        if rep is not None:
+            kind = rep[0]
+            if kind == "reg":
+                return self.capnames.get(rep[1], "r%d" % rep[1])
+            if kind in ("global", "builtin"):
+                return rep[1]
+            if kind == "const":
+                return self._const_lit(rep[1])
+            if kind == "unpack":
+                arg = rep[1]
+                s = self.expr(arg, depth)
+                if arg.get("type") == "AstExprLocal":
+                    return "table.unpack(%s, 1, %s.n)" % (s, s)
+                return "(function(_t) return table.unpack(_t, 1, _t.n) end)(%s)" % s
+            if kind == "setlist":
+                if self.fl is not None:
+                    self.fl.prog.dump.needs_setlist = True
+                return "_lph_setlist(%s)" % ", ".join(self.expr(a, depth) for a in rep[1])
+            if kind == "wkk":
+                return self._lift_wkk(rep[1], depth)
+        return super().expr(e, depth)
+
+    def prefix(self, e, depth):
+        rep = self.node_reps.get(id(e))
+        if rep is not None and rep[0] == "wkk":
+            return "(" + self.expr(e, depth) + ")"
+        return super().prefix(e, depth)
+
+    def function(self, e, head, depth):
+        params = [a["name"] for a in e["args"]]
+        if e.get("vararg"):
+            params.append("...")
+        sub = _PlainPrinter(self.ind, self.node_reps, self.capnames, fl=self.fl,
+                            vm=self.vm, vmobj=self.vmobj, base_depth=self.base_depth, parent_lf=self.parent_lf)
+        sub.block(e["body"], depth + 1)
+        body = "\n".join(sub.lines)
+        return head + "(" + ", ".join(params) + ")\n" + body + ("\n" if body else "") + self.ind * depth + "end"
+
+
+class PlainProto:
+    """A plain Lua function (e.g. LPH_NO_VIRTUALIZE) that captures outer locals."""
+
+    def __init__(self, fn, node, replacements, lines, node_reps=None):
         self.fn = fn
         self.node = node
         self.replacements = replacements
         self.lines = lines
+        self.node_reps = node_reps
 
-    def render(self, capnames, upnames):
+    def render(self, capnames, upnames, fl=None, vm=None, vmobj=None, depth=0, parent_lf=None):
+        if self.node_reps is not None:
+            p = _PlainPrinter("\t", self.node_reps, capnames, fl=fl, vm=vm, vmobj=vmobj, base_depth=depth, parent_lf=parent_lf)
+            return p.expr(self.node, 0)
         m = re.fullmatch(r"(\d+),(\d+) - (\d+),(\d+)", self.node["location"])
         lines = self.lines
         l1, c1, l2, c2 = (int(x) for x in m.groups())
@@ -1297,7 +1457,8 @@ class ProtoLifter:
     def plain_closure(self, fn):
         """A plain Lua function that captures outer locals via the maker function."""
         node = fn.node
-        lines = getattr(self.vm, "src_lines", None)
+        src_map = getattr(self.dump, "plain_src_by_node", {})
+        lines = src_map.get(id(node)) or getattr(self.vm, "src_lines", None)
         if not isinstance(node, dict) or node.get("type") != "AstExprFunction" or not lines:
             return None
         declared = _declared_in(node)
@@ -1315,85 +1476,184 @@ class ProtoLifter:
                         if isinstance(item, dict):
                             parent_map[id(item)] = (n, k)
 
-        m = re.fullmatch(r"(\d+),(\d+) - (\d+),(\d+)", node["location"])
-        if not m:
-            return None
-        l1, c1, l2, c2 = (int(x) for x in m.groups())
+        def _boxed_reg(t):
+            if not isinstance(t, LTable) or len(t.h) != 2:
+                return None
+            sk = ik = rnum = None
+            for kk, vv in t.h.items():
+                if isinstance(vv, RegFile):
+                    sk = kk
+                elif isinstance(vv, int) and not isinstance(vv, bool):
+                    ik, rnum = kk, vv
+            return (sk, ik, rnum) if sk is not None and ik is not None else None
 
-        replacements = []
+        node_reps = {}
+        consumed_ids = set()
         ups = []
+
+        # Pre-scan W:kk(kp, ku, upv_tbl, Z, v, env) child-VM closure calls so Z/v args are marked consumed.
         for n in undeclared:
             loc = n["local"]["location"]
             sc = fn.env.lookup(loc)
             val = sc.vars[loc] if sc is not None else None
+            if not isinstance(val, LTable):
+                continue
             p, _ = parent_map.get(id(n), (None, None))
+            if not (p and p.get("type") == "AstExprIndexName" and p.get("op") == ":"):
+                continue
+            gp, _ = parent_map.get(id(p), (None, None))
+            if not (gp and gp.get("type") == "AstExprCall" and gp.get("self") and gp.get("func") is p):
+                continue
+            mfn = val.get(p["index"].encode("latin-1"))
+            mnode = mfn.node if isinstance(mfn, (OpaqueFn, LuaFunc)) else (mfn if isinstance(mfn, dict) else None)
+            mkind = _classify_vm_method(val, mnode)
+            cargs = gp.get("args") or []
+            if mkind == "closure" and len(cargs) == 6 \
+                    and cargs[0].get("type") == "AstExprConstantNumber" \
+                    and cargs[1].get("type") == "AstExprConstantNumber":
+                kp, ku = int(cargs[0]["value"]), int(cargs[1]["value"])
+                z_ast, v_ast, env_ast = cargs[3], cargs[4], cargs[5]
+                z_sc = fn.env.lookup(z_ast["local"]["location"]) if z_ast.get("type") == "AstExprLocal" else None
+                z_tbl = z_sc.vars[z_ast["local"]["location"]] if z_sc is not None else None
+                if isinstance(z_tbl, LTable):
+                    p_fn = self.index(z_tbl, kp, None)
+                    u_desc = self.index(z_tbl, ku, None)
+                    for extra in (z_ast, v_ast, env_ast):
+                        if isinstance(extra, dict) and extra.get("type") == "AstExprLocal" \
+                                and extra["local"]["location"] not in declared:
+                            consumed_ids.add(id(extra))
+                    consumed_ids.add(id(n))
+                    node_reps[id(gp)] = ("wkk", (p_fn, u_desc, cargs[2], None))
+                    if self.walk_only and isinstance(p_fn, OpaqueFn) and p_fn.pf_tid in self.dump.tables:
+                        cproto = self.dump.tables[p_fn.pf_tid]
+                        ccap = getattr(self.dump, "cap_by_self", {}).get(p_fn.pf_tid)
+                        cmk = ccap.get("__maker") if ccap is not None else None
+                        ctag = cmk.decode("latin-1") if isinstance(cmk, bytes) else (str(cmk) if cmk is not None else "")
+                        cvm = getattr(self.dump, "vms", {}).get(ctag, self.vm)
+                        wc = ClosureExpr(cproto, [])
+                        wc.vm = cvm
+                        self.children.append(wc)
+
+        for n in undeclared:
+            if id(n) in consumed_ids:
+                continue
+            loc = n["local"]["location"]
+            sc = fn.env.lookup(loc)
+            val = sc.vars[loc] if sc is not None else None
+            p, _ = parent_map.get(id(n), (None, None))
+            breg = _boxed_reg(val)
+            if breg is not None:
+                sk, ik, rnum = breg
+                gp, _ = parent_map.get(id(p), (None, None)) if p else (None, None)
+                if p and p.get("type") == "AstExprIndexExpr" and p["index"].get("type") == "AstExprConstantNumber":
+                    pkv = int(p["index"]["value"])
+                    if pkv == sk and gp and gp.get("type") == "AstExprIndexExpr" and gp.get("expr") is p:
+                        self.captured_regs.add(rnum)
+                        ups.append(Reg(rnum))
+                        node_reps[id(gp)] = ("reg", rnum)
+                        continue
+                    if pkv == ik and gp and gp.get("type") == "AstExprIndexExpr" and gp.get("index") is p:
+                        continue
+                self.captured_regs.add(rnum)
+                ups.append(Reg(rnum))
+                node_reps[id(n)] = ("reg", rnum)
+                continue
             if isinstance(val, LTable) and p and p.get("type") == "AstExprIndexExpr":
                 idx_node = p.get("index", {})
                 if idx_node.get("type") == "AstExprConstantNumber":
                     k = int(idx_node["value"])
                     item = val.get(k)
+                    if item is None and val.tid in self.dump.lazy and val is not self.vmobj:
+                        item = self.index(val, k, None)
                     if isinstance(item, Reg):
                         self.captured_regs.add(item.n)
                         ups.append(item)
-                        pm = re.fullmatch(r"(\d+),(\d+) - (\d+),(\d+)", p["location"])
-                        if pm:
-                            _, pc1, _, pc2 = (int(x) for x in pm.groups())
-                            replacements.append((pc1 - c1, pc2 - c1, "reg", item.n))
-                            continue
-                    elif isinstance(item, Global):
-                        pm = re.fullmatch(r"(\d+),(\d+) - (\d+),(\d+)", p["location"])
-                        if pm:
-                            _, pc1, _, pc2 = (int(x) for x in pm.groups())
-                            replacements.append((pc1 - c1, pc2 - c1, "global", item.name))
-                            continue
-                    elif isinstance(item, Builtin):
-                        pm = re.fullmatch(r"(\d+),(\d+) - (\d+),(\d+)", p["location"])
-                        if pm:
-                            _, pc1, _, pc2 = (int(x) for x in pm.groups())
-                            replacements.append((pc1 - c1, pc2 - c1, "builtin", item.name))
-                            continue
+                        node_reps[id(p)] = ("reg", item.n)
+                        continue
+                    if isinstance(item, MaybeBox):
+                        self.captured_regs.add(item.reg)
+                        ups.append(Reg(item.reg))
+                        node_reps[id(p)] = ("reg", item.reg)
+                        continue
+                    ibreg = _boxed_reg(item)
+                    if ibreg is not None:
+                        sk, ik, rnum = ibreg
+                        gp, _ = parent_map.get(id(p), (None, None))
+                        ggp, _ = parent_map.get(id(gp), (None, None)) if gp else (None, None)
+                        if gp and gp.get("type") == "AstExprIndexExpr" and gp["index"].get("type") == "AstExprConstantNumber":
+                            gkv = int(gp["index"]["value"])
+                            if gkv == sk and ggp and ggp.get("type") == "AstExprIndexExpr" and ggp.get("expr") is gp:
+                                self.captured_regs.add(rnum)
+                                ups.append(Reg(rnum))
+                                node_reps[id(ggp)] = ("reg", rnum)
+                                continue
+                            if gkv == ik and ggp and ggp.get("type") == "AstExprIndexExpr" and ggp.get("index") is gp:
+                                continue
+                    if isinstance(item, (Global, Builtin)):
+                        node_reps[id(p)] = ("global", item.name)
+                        continue
+                    if isinstance(item, (int, float, bytes, bool)) or (item is None and k in val.h):
+                        node_reps[id(p)] = ("const", item)
+                        continue
+            elif isinstance(val, LTable) and p and p.get("type") == "AstExprIndexName" and p.get("op") == ":":
+                gp, _ = parent_map.get(id(p), (None, None))
+                if gp and gp.get("type") == "AstExprCall" and gp.get("self") and gp.get("func") is p:
+                    mfn = val.get(p["index"].encode("latin-1"))
+                    mnode = mfn.node if isinstance(mfn, (OpaqueFn, LuaFunc)) else (mfn if isinstance(mfn, dict) else None)
+                    mkind = _classify_vm_method(val, mnode)
+                    cargs = gp.get("args") or []
+                    if mkind == "unpack" and len(cargs) == 1:
+                        node_reps[id(gp)] = ("unpack", cargs[0])
+                        continue
+                    if mkind == "setlist" and len(cargs) >= 2:
+                        node_reps[id(gp)] = ("setlist", cargs)
+                        continue
             elif isinstance(val, Reg):
                 self.captured_regs.add(val.n)
                 ups.append(val)
-                nm = re.fullmatch(r"(\d+),(\d+) - (\d+),(\d+)", n["location"])
-                if nm:
-                    _, nc1, _, nc2 = (int(x) for x in nm.groups())
-                    replacements.append((nc1 - c1, nc2 - c1, "reg", val.n))
-                    continue
-            elif isinstance(val, Global):
-                nm = re.fullmatch(r"(\d+),(\d+) - (\d+),(\d+)", n["location"])
-                if nm:
-                    _, nc1, _, nc2 = (int(x) for x in nm.groups())
-                    replacements.append((nc1 - c1, nc2 - c1, "global", val.name))
-                    continue
+                node_reps[id(n)] = ("reg", val.n)
+                continue
+            elif isinstance(val, MaybeBox):
+                self.captured_regs.add(val.reg)
+                ups.append(Reg(val.reg))
+                node_reps[id(n)] = ("reg", val.reg)
+                continue
+            elif isinstance(val, (Global, Builtin)):
+                node_reps[id(n)] = ("global", val.name)
+                continue
+            elif isinstance(val, (int, float, bytes, bool)):
+                node_reps[id(n)] = ("const", val)
+                continue
             return None
 
-        proto = PlainProto(fn, node, replacements, lines)
+        proto = PlainProto(fn, node, [], lines, node_reps=node_reps)
         c = ClosureExpr(proto, ups)
         self.children.append(c)
         return c
 
     def plain_function_text(self, fn):
-        """A trivial function Luraph compiles to plain Lua instead of bytecode
-        (Script42: a closure op whose maker is `function() return function()
-        return {} end end`): its source text, if it reads no outer locals."""
+        """A self-contained plain Lua function (e.g. LPH_NO_VIRTUALIZE with no
+        outer upvalues): formatted cleanly via luauast.Printer."""
         node = fn.node if not isinstance(fn, dict) else fn
-        lines = getattr(self.vm, "src_lines", None)
+        src_map = getattr(self.dump, "plain_src_by_node", {})
+        lines = src_map.get(id(node)) if isinstance(node, dict) else None
+        lines = lines or getattr(self.vm, "src_lines", None)
         if not isinstance(node, dict) or node.get("type") != "AstExprFunction" or not lines:
             return None
         declared = _declared_in(node)
         for n in iter_nodes(node):
             if n.get("type") == "AstExprLocal" and n["local"]["location"] not in declared:
                 return None
-        m = re.fullmatch(r"(\d+),(\d+) - (\d+),(\d+)", node["location"])
-        if not m:
-            return None
-        l1, c1, l2, c2 = (int(x) for x in m.groups())
-        if l1 == l2:
-            text = lines[l1][c1:c2]
-        else:
-            text = "\n".join([lines[l1][c1:]] + lines[l1 + 1:l2] + [lines[l2][:c2]])
-        return text if len(text) <= 2000 else None
+        try:
+            return LA.Printer("\t").expr(node, 0)
+        except Exception:
+            m = re.fullmatch(r"(\d+),(\d+) - (\d+),(\d+)", node["location"])
+            if not m:
+                return None
+            l1, c1, l2, c2 = (int(x) for x in m.groups())
+            if l1 == l2:
+                return lines[l1][c1:c2]
+            return "\n".join([lines[l1][c1:]] + lines[l1 + 1:l2] + [lines[l2][:c2]])
 
     def sym_binop(self, op, a, b):
         if isinstance(a, SymList) or isinstance(b, SymList):
@@ -2124,6 +2384,24 @@ class ProtoLifter:
                     return Multi([True])
                 if len(args.items) == 1 and isinstance(args.items[0], int) and not getattr(self.vm, "info", {}).get("curried3"):
                     return Multi([None])
+                cap_fn = getattr(self.dump, "cap_by_self", {}).get(fn.pf_tid)
+                mk_fn = cap_fn.get("__maker") if cap_fn is not None else None
+                tag_fn = mk_fn.decode("latin-1") if isinstance(mk_fn, bytes) else (str(mk_fn) if mk_fn is not None else "")
+                if tag_fn.startswith("plain:"):
+                    pm = getattr(self.dump, "plain_makers", {}).get(tag_fn)
+                    if pm is not None:
+                        f3, f2, src_lines = pm
+                        env3 = Scope()
+                        for a in (f3.get("args") or []):
+                            nm = a.get("name")
+                            if nm and nm != "...":
+                                env3.vars[a["location"]] = cap_fn.get(nm)
+                        r = it.call_lua(LuaFunc(f2, env3), args)
+                        src_map = self.dump.__dict__.setdefault("plain_src_by_node", {})
+                        for x in r.items:
+                            if isinstance(x, LuaFunc) and isinstance(x.node, dict):
+                                src_map[id(x.node)] = src_lines
+                        return r
                 return self.make_curried_closure(fn, args)
             node = self.vm_fn_node(fn)
             if node is not None and node is self.vm.maker:
@@ -4265,6 +4543,7 @@ class Program:
         self.dump = Dump(dump_path)
         self.vms = {}
         self.ctors = {}
+        self.plain_makers = {}
         for i, path in enumerate([source_path] + list(chunk_paths)):
             root, lines, vms, ctor = analyze_source(path)
             if i == 0:
@@ -4274,6 +4553,10 @@ class Program:
                 self.vms[tag] = vm
                 self.ctors[id(vm)] = ctor
                 vm.src_lines = lines
+            ckey = harness.chunk_key("\n".join(lines))
+            for pm in vmmap.plain_curried_makers(root):
+                l2, c2 = pm["at"]
+                self.plain_makers["plain:%s@%d,%d" % (ckey, l2, c2)] = (pm["f3"], pm["f2"], lines)
         self.dump.vm_names = {vm.maker["args"][0]["name"] for vm in self.vms.values()} | {
             vm.info["chain"][0]["args"][0]["name"] for vm in self.vms.values()
             if vm.info.get("chain") and vm.info["chain"][0].get("args")
@@ -4285,14 +4568,24 @@ class Program:
         by_suffix = {}
         for tag in self.vms:
             by_suffix[tag.rpartition("@")[2]] = tag
+        plain_by_suffix = {}
+        for tag in self.plain_makers:
+            plain_by_suffix[tag.rpartition("@")[2]] = tag
         self.dump.vms = self.vms
         self.dump.by_suffix = by_suffix
+        self.dump.plain_makers = self.plain_makers
+        self.dump.plain_by_suffix = plain_by_suffix
         for cap in self.dump.protos.values():
             mk = cap.get("__maker")
             if mk is None:
                 continue
             tag = mk.decode("latin-1") if isinstance(mk, bytes) else str(mk)
-            if tag not in self.vms:
+            if tag.startswith("plain:"):
+                if tag not in self.plain_makers:
+                    hit = plain_by_suffix.get(tag.rpartition("@")[2])
+                    if hit is not None:
+                        cap["__maker"] = hit.encode("latin-1")
+            elif tag not in self.vms:
                 hit = by_suffix.get(tag.rpartition("@")[2])
                 if hit is not None:
                     cap["__maker"] = hit.encode("latin-1")
@@ -4317,7 +4610,11 @@ class Program:
         # VM-wide capture fields every proto's capture agrees on (helpers,
         # shared tables): the values uncaptured children still need
         shared = {}
-        caps_list = [c for c in self.dump.protos.values() if c.get("__maker") is not None]
+        caps_list = [
+            c for c in self.dump.protos.values()
+            if c.get("__maker") is not None
+            and not (c["__maker"].decode("latin-1") if isinstance(c["__maker"], bytes) else str(c["__maker"])).startswith("plain:")
+        ]
         if caps_list:
             for nm in caps_list[0]:
                 if nm in ("self", "__maker", "__seq"):
@@ -4813,7 +5110,7 @@ class FunctionLifter:
             for i, e in enumerate(c.upvals, 1):
                 if isinstance(e, Reg):
                     upnames[i] = capnames.get(e.n, "r%d" % e.n)
-            text = proto.render(capnames, upnames)
+            text = proto.render(capnames, upnames, fl=self, vm=vm, vmobj=vmobj, depth=depth, parent_lf=parent_lf)
             f = CG.FuncE(text.splitlines())
             f.captures = set(upnames.values())
             return f
@@ -4920,24 +5217,70 @@ def stmt_exprs(st):
         out += list(st.values.items)
     return out
 
+def _proto_reaches(src_proto, dst_proto, vmobj):
+    if not isinstance(src_proto, LTable) or not isinstance(dst_proto, LTable):
+        return False
+    if src_proto is dst_proto:
+        return True
+    seen = {id(src_proto)}
+    if vmobj is not None:
+        seen.add(id(vmobj))
+    stack = [src_proto]
+    target = id(dst_proto)
+    while stack:
+        t = stack.pop()
+        for v in t.h.values():
+            if isinstance(v, LTable):
+                vid = id(v)
+                if vid == target:
+                    return True
+                if vid not in seen:
+                    seen.add(vid)
+                    stack.append(v)
+    return False
+
 def _vm_roots(prog):
     """[(maker tag, [(seq, pid, cap), ...] sorted)] with the payload VM last, and its tag."""
-    by_vm = {}
-    group_tag = {}
+    raw_by_maker = {}
+    meta_by_maker = {}
     for key, cap in prog.dump.protos.items():
         mtag = cap.get("__maker")
         if mtag is None:
             continue
         mtag_s = mtag.decode("latin-1") if isinstance(mtag, bytes) else str(mtag)
+        if mtag_s.startswith("plain:"):
+            continue
         vm = prog.vms.get(mtag_s)
         info = getattr(vm, "info", {}) if vm is not None else {}
         vmobj = vm.vmobj_of(cap) if vm is not None else cap.get("self")
+        raw_by_maker.setdefault(mtag, []).append((cap.get("__seq") or 0, key, cap))
+        if mtag not in meta_by_maker:
+            meta_by_maker[mtag] = (mtag_s, vm, info, vmobj)
+
+    group_tag = {}
+    roots_by_gk = {}
+    for mtag, lst in sorted(raw_by_maker.items(), key=lambda kv: min(x[0] for x in kv[1])):
+        mtag_s, vm, info, vmobj = meta_by_maker[mtag]
+        root_cap = min(lst, key=lambda x: (x[0], x[1]))[2]
+        root_proto = vm.proto_of(root_cap) if vm is not None else root_cap.get("self")
         if not info.get("curried3") and vmobj is not None and "@" in mtag_s:
             gk = (mtag_s.split("@", 1)[0], id(vmobj))
-            tag = group_tag.setdefault(gk, mtag)
+            merged = None
+            for prev_tag, prev_proto in roots_by_gk.get(gk, ()):
+                if _proto_reaches(prev_proto, root_proto, vmobj) or _proto_reaches(root_proto, prev_proto, vmobj):
+                    merged = prev_tag
+                    break
+            if merged is not None:
+                group_tag[mtag] = merged
+            else:
+                group_tag[mtag] = mtag
+                roots_by_gk.setdefault(gk, []).append((mtag, root_proto))
         else:
-            tag = mtag
-        by_vm.setdefault(tag, []).append((cap.get("__seq") or 0, key, cap))
+            group_tag[mtag] = mtag
+
+    by_vm = {}
+    for mtag, lst in raw_by_maker.items():
+        by_vm.setdefault(group_tag[mtag], []).extend(lst)
 
     vms = sorted(by_vm.items(), key=lambda kv: min(x[0] for x in kv[1]))
     payload = vms[-1][0] if vms else None
@@ -4945,10 +5288,11 @@ def _vm_roots(prog):
     for _, lst in vms:
         lst.sort(key=lambda x: (x[0], x[1]))
 
+    max_min_seq = max((min(x[0] for x in lst) for _, lst in vms), default=0)
     rc = prog.dump.raw.get("root_callee")
     for tag, lst in vms:
         hit = [x for x in lst if rc is not None and str(x[1]) == str(rc)]
-        if hit:
+        if hit and (tag == payload or hit[0][0] >= max_min_seq):
             lst.remove(hit[0])
             lst.insert(0, hit[0])
             payload = tag
@@ -5014,6 +5358,11 @@ def lift_program(source, protos_path, chunk_paths=(), fetch=None):
         out.append("return vm_root_%s(...)" % payload_pid)
 
     shared = []
+    if getattr(prog.dump, "needs_setlist", False):
+        shared += ["local function _lph_setlist(t, off, ...)",
+                   "\tlocal p = table.pack(...)",
+                   "\ttable.move(p, 1, p.n, off + 1, t)",
+                   "end", ""]
     for n in sorted(prog.dump.shared.values()):
         shared += ["-- Luraph runtime function (from the VM object, not part of the script: not lifted).",
                    "-- LPH_ENCFUNC decrypts a function this way: (key, encrypted buffer, ...) -> function.",

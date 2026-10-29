@@ -159,9 +159,6 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None):
                   "(%.1fs)" % (rnd, stats["functions"], stats["walked"], stats["errors"], len(new),
                                " (%d decoded live)" % stats["fetched"] if stats.get("fetched") else "",
                                time.time() - t1), file=sys.stderr)
-            if os.environ.get("DEVIRT_REQS"):
-                for rq in sorted(new):
-                    print("[*]     request %s" % rq, file=sys.stderr)
             if (not new and (not (requested | reqs) or devirt.same_patches(last_bufs, bufs))) or rnd == rounds:
                 full = True
         if full:
@@ -372,6 +369,9 @@ def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths)
         first, err = hs.reply(args.timeout)
         server.append(True)
         if first is not None and harness.same_trace(harness.trace_text(first), run_text):
+            s_protos, _ = trace.take_line(first, "PROTOS")
+            if s_protos and not s_protos.startswith("error:"):
+                job.write(ppath, s_protos)
             synced[0] = True
         else:
             if first is None:

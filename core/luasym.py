@@ -731,6 +731,9 @@ def _random_next_integer(rng, a, b):
     u64 = (hi << 32) | lo
     return st, ia + (((u64 * (span & 0xFFFFFFFFFFFFFFFF)) >> 64) & 0xFFFFFFFFFFFFFFFF)
 
+_GLOBAL_TABLES = {"_G", "shared", "math", "string", "table", "bit32", "coroutine", "os", "debug", "utf8", "buffer", "task"}
+_GLOBAL_INSTANCES = {"game", "workspace", "Workspace", "script"}
+
 def _lua_type(v):
     if v is None:
         return b"nil"
@@ -742,18 +745,52 @@ def _lua_type(v):
         return b"string"
     if isinstance(v, (dict, LTable)):
         return b"table"
+    if isinstance(v, tuple) and len(v) == 2 and v[0] == "g":
+        if v[1] in _GLOBAL_TABLES:
+            return b"table"
+        if v[1] in _GLOBAL_INSTANCES or v[1] == "Enum":
+            return b"userdata"
+        return b"function"
     raise ValueError("unknown type")
 
 def _lua_typeof(v):
     if isinstance(v, dict) and b"__type" in v:
         t = v[b"__type"]
         return t.encode() if isinstance(t, str) else t
+    if isinstance(v, tuple) and len(v) == 2 and v[0] == "g":
+        if v[1] in _GLOBAL_TABLES:
+            return b"table"
+        if v[1] == "Enum":
+            return b"Enums"
+        if v[1] in _GLOBAL_INSTANCES:
+            return b"Instance"
+        return b"function"
     return _lua_type(v)
+
+def _lua_debug_info(fn, what):
+    if not (isinstance(fn, tuple) and len(fn) == 2 and fn[0] == "g" and isinstance(what, bytes)):
+        raise ValueError("unsupported debug.info target")
+    if fn[1] in _GLOBAL_TABLES or fn[1] in _GLOBAL_INSTANCES or fn[1] == "Enum":
+        raise ValueError("not a function")
+    out = []
+    for ch in what.decode("latin-1"):
+        if ch == "s":
+            out.append(b"[C]")
+        elif ch == "l":
+            out.append(-1)
+        elif ch == "n":
+            out.append(fn[1].rpartition(".")[2].encode("latin-1"))
+        elif ch == "a":
+            out.extend([0, True])
+        else:
+            raise ValueError("unsupported debug.info option")
+    return Multi(out) if len(out) != 1 else out[0]
 
 FACT_CONCRETE = dict(CONCRETE)
 FACT_CONCRETE.update({
     "type": _lua_type,
     "typeof": _lua_typeof,
+    "debug.info": _lua_debug_info,
     "UDim.new": _udim_new,
     "UDim2.new": _udim2_new,
     "UDim2.fromScale": _udim2_fromScale,

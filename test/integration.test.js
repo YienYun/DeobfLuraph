@@ -114,7 +114,10 @@ test('full Luraph v15.0 ChilliLibraryEngine2 devirtualizes cleanly into valid Lu
   const result = JSON.parse(fs.readFileSync(report, 'utf8'));
   assert.equal(result.result_type, 'devirtualized');
   assert.equal(result.trace_status, 'finished');
+  assert.equal(result.lift_stats.errors, 0);
   assert.equal(result.lift_stats.fallbacks, 0);
+  assert.doesNotMatch(text, /_lph_setlist/);
+  assert.doesNotMatch(text, /error\("devirt:/);
 });
 
 test('debug mode never returns a stale devirtualization from a previous run', { skip }, t => {

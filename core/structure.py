@@ -792,9 +792,9 @@ class Structurer:
     def region_after(self, cur, loop):
         return self.region(cur, None, loop)
 
-SPLIT_LIMIT = 3000      
+SPLIT_LIMIT = 3500      
 
-def structure(entry, blocks, own=None, rounds=60):
+def structure(entry, blocks, own=None, rounds=65):
     """Structurer.run, with its goto fallbacks resolved by CFG rewrites:
     - a jump out of a loop to somewhere other than the loop's exit (a
       multi-level break/continue, a second exit): every exit edge sets a
@@ -844,31 +844,86 @@ def structure(entry, blocks, own=None, rounds=60):
                 n += k > 0
         if not n:
             break
-    if sr.fallbacks and not any(b.kind in ("for", "forin") for b in first[1].values()):
+    if sr.fallbacks:
         if own is not None:
             own.add("state")
-        body = state_machine(*first, "state")
+        body = state_machine(*first, "state", own)
         sr.fallbacks = 0
     return entry, body, sr
 
-def state_machine(entry, blocks, name):
+def state_machine(entry, blocks, name, own=None):
     """Last resort, always correct: the whole function as a dispatch loop
     over its blocks (`local state = 1 while true do if state == 1 then ...`).
-    A numeric/generic `for` header cannot be split into states."""
+    Numeric and generic `for` headers are desugared into explicit state
+    variables initialized at their ForPrepS site."""
     import codegen as CG
     order = rpo(entry, lambda n: blocks[n].succ)
     num = {bid: i for i, bid in enumerate(order, 1)}
+
+    def add_own(nm):
+        if own is not None:
+            own.add(nm)
+        return CG.LocalName(nm)
+
+    prep_repl = {}
+    for_meta = {}
+    fk = 0
+    for bid in order:
+        b = blocks[bid]
+        if b.kind == "for":
+            fk += 1
+            var, lst = b.values
+            fi = add_own("forIdx_%d" % fk)
+            fl = add_own("forLim_%d" % fk)
+            fs = add_own("forStep_%d" % fk)
+            prep_repl[id(lst)] = CG.AssignS(
+                [fi, fl, fs],
+                S.Multi([Bin("Sub", lst[0], lst[2]), lst[1], lst[2]]),
+            )
+            for_meta[bid] = ("for", var, fi, fl, fs, lst[2])
+        elif b.kind == "forin":
+            fk += 1
+            vars_, lst = b.values
+            fit = add_own("forIter_%d" % fk)
+            fok = add_own("forOk_%d" % fk)
+            fvs = add_own("forVals_%d" % fk)
+            prep_repl[id(lst)] = CG.AssignS([fit], S.Multi([CG.GenIterE(list(lst))]))
+            for_meta[bid] = ("forin", vars_, fit, fok, fvs)
 
     def goto(t):
         return _set_stmt(name, num[t])
     cases = []
     for bid in order:
         b = blocks[bid]
-        out = SBlock(b.stmts)
+        stmts = [prep_repl[id(s.exprs)] if isinstance(s, CG.ForPrepS) and id(s.exprs) in prep_repl else s
+                 for s in b.stmts]
+        out = SBlock(stmts)
         if b.kind == "goto":
             out.append(goto(b.succ[0]))
         elif b.kind == "cond":
             out.append(SIf(b.cond, SBlock([goto(b.succ[0])]), SBlock([goto(b.succ[1])])))
+        elif b.kind == "for":
+            _, var, fi, fl, fs, step_e = for_meta[bid]
+            out.append(CG.AssignS([fi], S.Multi([Bin("Add", fi, fs)])))
+            out.append(CG.AssignS([var], S.Multi([fi])))
+            if isinstance(step_e, Const) and isinstance(step_e.v, (int, float)) and not isinstance(step_e.v, bool):
+                cond = Bin("CompareGe" if step_e.v <= 0 else "CompareLe", fi, fl)
+            else:
+                cond = Bin("Or",
+                           Bin("And", Bin("CompareLe", fs, Const(0)), Bin("CompareGe", fi, fl)),
+                           Bin("And", Bin("CompareGt", fs, Const(0)), Bin("CompareLe", fi, fl)))
+            out.append(SIf(cond, SBlock([goto(b.succ[0])]), SBlock([goto(b.succ[1])])))
+        elif b.kind == "forin":
+            _, vars_, fit, fok, fvs = for_meta[bid]
+            out.append(CG.AssignS([fok, fvs], S.Multi([], CG.InlineTail(CG.CallE(fit, S.Multi([]))))))
+            unpack_stmts = []
+            if vars_:
+                unpack_stmts.append(CG.AssignS(
+                    list(vars_),
+                    S.Multi([S.Index(fvs, Const(idx)) for idx in range(1, len(vars_) + 1)]),
+                ))
+            unpack_stmts.append(goto(b.succ[0]))
+            out.append(SIf(fok, SBlock(unpack_stmts), SBlock([goto(b.succ[1])])))
         elif b.kind == "ret":
             out.append(SReturn(b.values))
         elif b.kind == "error":
@@ -886,10 +941,21 @@ def state_machine(entry, blocks, name):
             # emitting `return` hid the bug and corrupted the output
             out.append(SError("state machine: unhandled block kind %s" % b.kind))
         cases.append((num[bid], out))
-    chain = SBlock()
-    for k, out in reversed(cases):
-        test = Bin("CompareEq", CG.LocalName(name), Const(k))
-        chain = SBlock([SIf(test, out, chain)])
+
+    def build_dispatch(sub):
+        if len(sub) <= 24:
+            ch = SBlock()
+            for k, out in reversed(sub):
+                test = Bin("CompareEq", CG.LocalName(name), Const(k))
+                ch = SBlock([SIf(test, out, ch)])
+            return ch
+        mid = len(sub) // 2
+        pivot = sub[mid - 1][0]
+        left = build_dispatch(sub[:mid])
+        right = build_dispatch(sub[mid:])
+        return SBlock([SIf(Bin("CompareLe", CG.LocalName(name), Const(pivot)), left, right)])
+
+    chain = build_dispatch(cases)
     return SBlock([_set_stmt(name, 1), SLoop(chain)])
 
 def sccs(nodes, succ):

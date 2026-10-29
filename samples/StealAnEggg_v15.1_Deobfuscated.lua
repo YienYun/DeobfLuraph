@@ -1,4 +1,5 @@
-(function()
+local n = 778854720
+;(function()
 	local genv = ((typeof(getgenv) == "function") and getgenv()) or _G
 	genv.ChilliCanvasHold = true
 	local CoreGui = game:GetService("CoreGui")
@@ -240,8 +241,8 @@ local function fn()
 			return instance
 		end
 
-		local function st(t, Q, n, S)
-			local UIStroke = c("UIStroke", {Thickness = t, Color = Q or G, ApplyStrokeMode = (n and scrollingFrame.ApplyStrokeMode.Contextual) or scrollingFrame.ApplyStrokeMode.Border, LineJoinMode = scrollingFrame.LineJoinMode.Round, Transparency = S or 0})
+		local function st(t, Q, arg, S)
+			local UIStroke = c("UIStroke", {Thickness = t, Color = Q or G, ApplyStrokeMode = (arg and scrollingFrame.ApplyStrokeMode.Contextual) or scrollingFrame.ApplyStrokeMode.Border, LineJoinMode = scrollingFrame.LineJoinMode.Round, Transparency = S or 0})
 
 			pcall(function()
 				UIStroke.BorderOffset = uDimNew(0, 0)
@@ -252,15 +253,15 @@ local function fn()
 			return UIStroke
 		end
 
-		local function getUIGradient(Q, n)
-			return c("UIGradient", {Color = Q, Rotation = 90, Name = n or "UIGradient"})
+		local function getUIGradient(Q, arg)
+			return c("UIGradient", {Color = Q, Rotation = 90, Name = arg or "UIGradient"})
 		end
 
-		local function getUIAspectRatioConstraint(n, S)
-			return c("UIAspectRatioConstraint", {AspectRatio = n or 1, DominantAxis = (S and scrollingFrame.DominantAxis.Height) or scrollingFrame.DominantAxis.Width})
+		local function getUIAspectRatioConstraint(arg, S)
+			return c("UIAspectRatioConstraint", {AspectRatio = arg or 1, DominantAxis = (S and scrollingFrame.DominantAxis.Height) or scrollingFrame.DominantAxis.Width})
 		end
 
-		local function n(parent)
+		local function fn2(parent)
 			parent.FontFace = font
 			parent.TextColor3 = o
 			parent.TextScaled = true
@@ -289,10 +290,10 @@ local function fn()
 			if F then
 				return S(TextLabel, ((F == true) and font) or F)
 			end
-			return n(TextLabel)
+			return fn2(TextLabel)
 		end
 
-		local function fn2(i)
+		local function fn3(i)
 			i.TextTransparency = 0.32
 			local uiStroke = i:FindFirstChildOfClass("UIStroke")
 			uiStroke.Thickness = 0.06
@@ -330,7 +331,7 @@ local function fn()
 		local function fb(R, H, I)
 			local uiScale, y, v = R:FindFirstChildOfClass("UIScale") or c("UIScale", {Parent = R, Name = "InteractionScale"}), false
 
-			local function fn3(arg, arg2)
+			local function fn4(arg, arg2)
 				if v then
 					v:Cancel()
 				end
@@ -340,20 +341,20 @@ local function fn()
 
 			trackConnection(R.MouseEnter, function()
 				y = true
-				fn3(H, 0.1)
+				fn4(H, 0.1)
 			end)
 
 			trackConnection(R.MouseLeave, function()
 				y = false
-				fn3(1, 0.1)
+				fn4(1, 0.1)
 			end)
 
 			trackConnection(R.MouseButton1Down, function()
-				fn3(I, 0.055)
+				fn4(I, 0.055)
 			end)
 
 			trackConnection(R.MouseButton1Up, function()
-				fn3((y and H) or 1, 0.08)
+				fn4((y and H) or 1, 0.08)
 			end)
 
 			return uiScale
@@ -451,7 +452,7 @@ local function fn()
 			return TextButton, Frame, v, Frame2, Frame3
 		end
 
-		local function fn3(arg, arg2, arg3, arg4, arg5, arg6)
+		local function fn4(arg, arg2, arg3, arg4, arg5, arg6)
 			local Frame = c("Frame", {Parent = arg, Name = "Switch", AnchorPoint = vector2New(arg2, 0.5), Position = uDim2FromScale(arg3, 0.5), Size = uDim2FromScale(arg4, arg5), BackgroundColor3 = o, ZIndex = arg6 or 3, st(0.06)})
 			local UIGradient = c("UIGradient", {Parent = Frame, Name = "OFF", Color = ColorSequence.new(G), Rotation = 90, Transparency = NumberSequence.new(0.6)})
 			local on = getUIGradient(C, "ON")
@@ -505,7 +506,7 @@ local function fn()
 			pcall(writefile, arg, arg2)
 		end
 
-		local function fn4(arg)
+		local function fn5(arg)
 			if isfolder then
 				if not (isfolder(arg)) then
 					pcall(makefolder, arg)
@@ -532,7 +533,7 @@ local function fn()
 		Z.wr = wr
 		local n2, n3, n4 = 1000, 3, 12
 
-		local function fn5(arg)
+		local function fn6(arg)
 			if arg <= 0 then
 				return 0
 			end
@@ -542,7 +543,7 @@ local function fn()
 
 		local function s2v(arg)
 			arg = math.clamp(tonumber(arg) or 0, 0, n2)
-			return ((arg <= 0) and 0) or fn5(10 ^ (n3 + (((n4 - n3) * arg) / n2)))
+			return ((arg <= 0) and 0) or fn6(10 ^ (n3 + (((n4 - n3) * arg) / n2)))
 		end
 
 		local function v2s(arg)
@@ -553,33 +554,33 @@ local function fn()
 			return math.clamp(math.floor(((((math.log10(arg) - n3) / (n4 - n3)) * n2) * 100) + 0.5) / 100, 0, n2)
 		end
 
-		local function fn6(arg)
+		local function fn7(arg)
 			local stringFormat, flag = string.format, ((arg >= 100) and "%.0f") or ((arg >= 10) and "%.1f")
 			local v = stringFormat(flag or "%.2f", arg)
 			return if v:find(".", 1, true) then v:gsub("0+$", ""):gsub("%.$", "") else v
-		end
-
-		local function fn7(arg)
-			local v = s2v(arg)
-
-			if v <= 0 then
-				return "Off"
-			elseif v < 1000000 then
-				return fn6(v / 1000) .. " K/s"
-			elseif v < 1000000000 then
-				return fn6(v / 1000000) .. " M/s"
-			end
-
-			return fn6(v / 1000000000) .. " B/s"
 		end
 
 		local function fn8(arg)
 			local v = s2v(arg)
 
 			if v <= 0 then
+				return "Off"
+			elseif v < 1000000 then
+				return fn7(v / 1000) .. " K/s"
+			elseif v < 1000000000 then
+				return fn7(v / 1000000) .. " M/s"
+			end
+
+			return fn7(v / 1000000000) .. " B/s"
+		end
+
+		local function fn9(arg)
+			local v = s2v(arg)
+
+			if v <= 0 then
 				return "0"
 			elseif v < 1000000 then
-				return fn6(v / 1000) .. "k"
+				return fn7(v / 1000) .. "k"
 			end
 
 			return (string.format("%.3f", v / 1000000):gsub("0+$", ""):gsub("%.$", ""))
@@ -587,7 +588,7 @@ local function fn()
 
 		local tbl2 = {k = 1000, m = 1000000, b = 1000000000, t = 1000000000000}
 
-		local function fn9(arg)
+		local function fn10(arg)
 			arg = tostring(arg or ""):gsub("[%s,/]", ""):lower():gsub("s$", "")
 
 			if arg == "" then
@@ -604,7 +605,7 @@ local function fn()
 		Z.s2v = s2v
 		Z.v2s = v2s
 
-		local function fn10(color, arg)
+		local function fn11(color, arg)
 			local n5, n6, n7, str = math.floor((color.R * 255) + 0.5), math.floor((color.G * 255) + 0.5), math.floor((color.B * 255) + 0.5), tostring(arg):gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;")
 			return ("<font color=\"rgb(%d,%d,%d)\">%s</font>"):format(n5, n6, n7, str)
 		end
@@ -615,14 +616,14 @@ local function fn()
 		index3.__index = index3
 		local n5, n6, tbl3 = 1, 1, {}
 
-		local function fn11(arg)
+		local function fn12(arg)
 			tbl3[#tbl3 + 1] = arg
 			arg()
 		end
 
 		local w2
 
-		local function fn12()
+		local function fn13()
 			if w2 then
 				if w2.closeDD then
 					w2.closeDD()
@@ -650,10 +651,10 @@ local function fn()
 			end
 
 			w3.dirP = "ChilliLibrary/Games/" .. tostring(arg.Game or gameRef.GameId)
-			fn4("ChilliLibrary")
-			fn4("ChilliLibrary/Games")
-			fn4(w3.dirP)
-			fn4(w3.dirP .. "/configs")
+			fn5("ChilliLibrary")
+			fn5("ChilliLibrary/Games")
+			fn5(w3.dirP)
+			fn5(w3.dirP .. "/configs")
 			local currentCamera = workspace.CurrentCamera
 			local viewportSize = (currentCamera and currentCamera.ViewportSize) or vector2New(1280, 720)
 			viewportSize = if viewportSize.X < 1 then vector2New(1280, 720) else if viewportSize.Y < 1 then vector2New(1280, 720) else viewportSize
@@ -698,13 +699,13 @@ local function fn()
 			do
 				local M, v3
 
-				local function fn13()
+				local function fn14()
 					local n10 = 0.06637302041053772 / n5
 					return uDim2New(n10, 0, 0.6588137149810791, 0)
 				end
 
-				local function fn14(arg2, arg3)
-					local v4 = fn13()
+				local function fn15(arg2, arg3)
+					local v4 = fn14()
 
 					if v3 then
 						v3:Cancel()
@@ -715,20 +716,20 @@ local function fn()
 
 				trackConnection(TextButton.MouseEnter, function()
 					M = true
-					fn14(1.04, 0.12)
+					fn15(1.04, 0.12)
 				end)
 
 				trackConnection(TextButton.MouseLeave, function()
 					M = false
-					fn14(1, 0.12)
+					fn15(1, 0.12)
 				end)
 
 				trackConnection(TextButton.MouseButton1Down, function()
-					fn14(0.96, 0.06)
+					fn15(0.96, 0.06)
 				end)
 
 				trackConnection(TextButton.MouseButton1Up, function()
-					fn14((M and 1.04) or 1, 0.09)
+					fn15((M and 1.04) or 1, 0.09)
 				end)
 			end
 
@@ -751,19 +752,19 @@ local function fn()
 
 			local flag, input, v3, absoluteSize
 
-			local function fn13(arg2)
+			local function fn14(arg2)
 				for _, v4 in ipairs(M) do
 					tw(v4, {BackgroundTransparency = (arg2 and 0.05) or 0.35}, 0.1)
 				end
 			end
 
 			trackConnection(TextButton2.MouseEnter, function()
-				fn13(true)
+				fn14(true)
 			end)
 
 			trackConnection(TextButton2.MouseLeave, function()
 				if not (flag) then
-					fn13(false)
+					fn14(false)
 				end
 			end)
 
@@ -773,7 +774,7 @@ local function fn()
 						if input2.UserInputState == scrollingFrame.UserInputState.Begin then
 							local input3, v4, absoluteSize2 = ((input2.UserInputType == scrollingFrame.UserInputType.Touch) and input2) or nil, vector2New(input2.Position.X, input2.Position.Y), Frame.AbsoluteSize
 							flag, input, v3, absoluteSize = true, input3, v4, absoluteSize2
-							fn13(true)
+							fn14(true)
 						end
 					end
 				end
@@ -793,7 +794,7 @@ local function fn()
 
 				if flag2 then
 					flag, input = false, nil
-					fn13(false)
+					fn14(false)
 				end
 			end)
 
@@ -872,7 +873,7 @@ local function fn()
 			local Frame4 = c("Frame", {Parent = Frame3, Name = "Field", AnchorPoint = vector2New(1, 0.5), Position = uDim2FromScale(0.982, 0.5), Size = uDim2FromScale(0.82, 0.6), BackgroundColor3 = G, BackgroundTransparency = 0.6, ZIndex = 7, st(0.1)})
 			local Frame5 = c("Frame", {Parent = Frame4, Name = "Underline", AnchorPoint = vector2New(0.5, 1), Position = uDim2FromScale(0.5, 1), Size = uDim2FromScale(0, 0.11), BackgroundColor3 = o, ZIndex = 9})
 			local TextBox = c("TextBox", {Parent = Frame4, Name = "Input", AnchorPoint = vector2New(0, 0.5), Position = uDim2FromScale(0.025, 0.5), Size = uDim2FromScale(0.9, 0.62), PlaceholderText = "Filter features...", PlaceholderColor3 = color3FromRGB(198, 198, 198), TextXAlignment = left, ZIndex = 8})
-			n(TextBox)
+			fn2(TextBox)
 			local TextButton3, tbl5 = c("TextButton", {Parent = Frame4, Name = "Clear", AnchorPoint = vector2New(1, 0.5), Position = uDim2FromScale(0.985, 0.5), Size = uDim2FromScale(0.075, 0.74), Visible = false, ZIndex = 9, getUIAspectRatioConstraint(1, true)}), {45, -45}
 
 			for _, v4 in ipairs(tbl5) do
@@ -913,7 +914,7 @@ local function fn()
 			w3.sbox = TextBox
 			local v4
 
-			local function fn14()
+			local function fn15()
 				local n10, n11 = 0.0749 / n6, 0.022 / n6
 				Frame3.Size = uDim2FromScale(1, n10)
 				local y = Frame.AbsoluteSize.Y
@@ -930,10 +931,10 @@ local function fn()
 				end
 			end
 
-			trackConnection(Frame:GetPropertyChangedSignal("AbsolutePosition"), fn14)
-			trackConnection(Frame:GetPropertyChangedSignal("AbsoluteSize"), fn14)
+			trackConnection(Frame:GetPropertyChangedSignal("AbsolutePosition"), fn15)
+			trackConnection(Frame:GetPropertyChangedSignal("AbsoluteSize"), fn15)
 
-			fn11(function()
+			fn12(function()
 				Frame2.Size = uDim2New(1, 0, 0.125 / n6, 0)
 				v2.Position, v2.Size = uDim2New(0.5687711238861084 / n5, 0, 0.5, 0), uDim2New(0.8620089292526245 / n5, 0, 0.7499999403953552, 0)
 				TextButton.Position, TextButton.Size = uDim2New(1 - (0.04500001668930054 / n5), 0, 0.4339999854564667, 0), uDim2New(0.06637302041053772 / n5, 0, 0.6588137149810791, 0)
@@ -947,7 +948,7 @@ local function fn()
 				end
 
 				v4 = nil
-				fn14()
+				fn15()
 				w3:Reflow()
 			end)
 
@@ -1016,7 +1017,7 @@ local function fn()
 					end
 				end
 			else
-				fn12()
+				fn13()
 
 				if arg.dragStop then
 					arg.dragStop()
@@ -1104,7 +1105,7 @@ local function fn()
 				obj.canvas()
 			end)
 
-			fn11(function()
+			fn12(function()
 				local n8, n9 = 0.1454 / n6, 1 - (0.01500005 / n6)
 				ScrollingFrame.Position, ScrollingFrame.Size = uDim2New(0.5000000596046448, 0, (n8 + n9) / 2, 0), uDim2New(0.9900000095367432, 0, n9 - n8, 0)
 			end)
@@ -1139,7 +1140,7 @@ local function fn()
 			if type(cur) ~= "table" then
 				return
 			end
-			fn12()
+			fn13()
 
 			for _, tab in ipairs(arg.Tabs) do
 				tab.page.Visible = tab == cur
@@ -1188,7 +1189,7 @@ local function fn()
 				end
 			end
 
-			local function fn13()
+			local function fn14()
 				local x, y = v2.AbsoluteSize.X, v2.AbsoluteSize.Y
 
 				if x <= 0 then
@@ -1204,15 +1205,15 @@ local function fn()
 				Frame2.Size = uDim2FromOffset(n10, n10)
 			end
 
-			local function fn14()
+			local function fn15()
 				local page, y, n10 = v.page, Frame.AbsolutePosition.Y, Frame.AbsolutePosition.Y + Frame.AbsoluteSize.Y
 				Frame.Visible = (y >= page.AbsolutePosition.Y) and (n10 <= (page.AbsolutePosition.Y + page.AbsoluteSize.Y))
 			end
 
-			trackConnection(v2:GetPropertyChangedSignal("TextBounds"), fn13)
-			trackConnection(v2:GetPropertyChangedSignal("AbsoluteSize"), fn13)
-			trackConnection(v2:GetPropertyChangedSignal("AbsolutePosition"), fn14)
-			trackConnection(v.page:GetPropertyChangedSignal("CanvasPosition"), fn14)
+			trackConnection(v2:GetPropertyChangedSignal("TextBounds"), fn14)
+			trackConnection(v2:GetPropertyChangedSignal("AbsoluteSize"), fn14)
+			trackConnection(v2:GetPropertyChangedSignal("AbsolutePosition"), fn15)
+			trackConnection(v.page:GetPropertyChangedSignal("CanvasPosition"), fn15)
 
 			hit(c("TextButton", {Parent = v2, Name = "SectionButton", Size = uDim2FromScale(1, 1), ZIndex = 8}), function()
 				obj:Expand(not obj.open)
@@ -1234,7 +1235,7 @@ local function fn()
 				end
 			end)
 
-			fn11(function()
+			fn12(function()
 				obj:Fit()
 			end)
 
@@ -1243,8 +1244,8 @@ local function fn()
 
 			task.defer(function()
 				obj:Fit()
-				fn13()
 				fn14()
+				fn15()
 			end)
 
 			return obj
@@ -1266,7 +1267,7 @@ local function fn()
 		end
 
 		index3.Expand = function(arg, open, arg2)
-			fn12()
+			fn13()
 			arg.open = open
 
 			if arg.tw then
@@ -1292,7 +1293,7 @@ local function fn()
 			local v = tw(g2, {Size = uDim2New(1, 0, 0, y)}, 0.28, quint)
 			arg.tw = v
 
-			local function fn13()
+			local function fn14()
 				if arg.tw == v then
 					arg.tw = nil
 					g2.Visible, g2.ClipsDescendants = arg.open, not arg.open
@@ -1300,19 +1301,19 @@ local function fn()
 				end
 			end
 
-			v.Completed:Connect(fn13)
+			v.Completed:Connect(fn14)
 		end
 
 		index3.Collapse = function(arg, arg2)
 			arg:Expand(not arg2)
 		end
 
-		local function fn13(arg, arg2)
-			arg.nt = fn2(l2({Parent = arg.m, Name = "Note", AnchorPoint = vector2New(0, 0.5), Position = uDim2FromScale(0.025, 0.755), Size = uDim2FromScale(arg2, 0.3), TextXAlignment = left, Visible = false, ZIndex = 5}))
+		local function fn14(arg, arg2)
+			arg.nt = fn3(l2({Parent = arg.m, Name = "Note", AnchorPoint = vector2New(0, 0.5), Position = uDim2FromScale(0.025, 0.755), Size = uDim2FromScale(arg2, 0.3), TextXAlignment = left, Visible = false, ZIndex = 5}))
 			return arg.nt
 		end
 
-		local function fn14(arg, arg2, arg3)
+		local function fn15(arg, arg2, arg3)
 			arg.lb.Position, arg.lb.Size = uDim2FromScale(0.025, (arg3 and 0.34) or 0.5), uDim2FromScale(arg2, (arg3 and 0.432) or 0.64)
 			arg.ratio = (arg3 and 7.5) or 10
 		end
@@ -1427,7 +1428,7 @@ local function fn()
 					local v = tw(Frame, {Size = size}, 0.28, quint)
 					tbl4.ht = v
 
-					local function fn15()
+					local function fn16()
 						if tbl4.ht == v then
 							tbl4.ht = nil
 							Frame.Visible = tbl4.shown
@@ -1438,7 +1439,7 @@ local function fn()
 						end
 					end
 
-					v.Completed:Connect(fn15)
+					v.Completed:Connect(fn16)
 				end
 
 				if tbl4.o and tbl4.o.kids then
@@ -1535,14 +1536,14 @@ local function fn()
 
 		index3.Toggle = function(arg, arg2, arg3, arg4, arg5, arg6)
 			local v = arg:Row(arg2, arg6)
-			fn14(v, (arg5 and 0.62) or 0.72, arg5 ~= nil)
+			fn15(v, (arg5 and 0.62) or 0.72, arg5 ~= nil)
 
 			if arg5 then
-				fn13(v, 0.799)
+				fn14(v, 0.799)
 				v.nt.Text, v.nt.Visible = tostring(arg5), true
 			end
 
-			local v2, v3 = fn3(v.m, 0.5, 0.915, 0.142, (arg5 and 0.5625) or 0.75, 3)
+			local v2, v3 = fn4(v.m, 0.5, 0.915, 0.142, (arg5 and 0.5625) or 0.75, 3)
 			local tbl4 = {}
 			tbl4.Value = arg3 == true
 
@@ -1575,7 +1576,7 @@ local function fn()
 			return tbl4
 		end
 
-		local function fn15(arg)
+		local function fn16(arg)
 			arg = tonumber(arg)
 			if not (arg) then
 				return 0
@@ -1602,11 +1603,11 @@ local function fn()
 			end
 
 			local v = arg:Row(arg2, arg10)
-			local n10 = math.max(fn15(arg8), fn15(arg3), fn15(arg4), fn15(arg5))
+			local n10 = math.max(fn16(arg8), fn16(arg3), fn16(arg4), fn16(arg5))
 			local flag2 = flag or (n10 > 0)
 			local flag22 = (flag2 and math.clamp(math.max(1, n10), 1, 6)) or 0
 
-			local function fn16(arg11)
+			local function fn17(arg11)
 				arg11 = tonumber(arg11) or 0
 				if not (flag2) then
 					return math.round(arg11)
@@ -1615,63 +1616,63 @@ local function fn()
 				return math.round(arg11 * n11) / n11
 			end
 
-			arg3, arg4 = fn16(arg3), fn16(arg4)
-			local flag23 = (flag2 and math.max(10 ^ (-flag22), fn16(math.abs(tonumber(arg8) or (10 ^ (-flag22)))))) or math.max(1, math.round(math.abs(tonumber(arg8) or 1)))
+			arg3, arg4 = fn17(arg3), fn17(arg4)
+			local flag23 = (flag2 and math.max(10 ^ (-flag22), fn17(math.abs(tonumber(arg8) or (10 ^ (-flag22)))))) or math.max(1, math.round(math.abs(tonumber(arg8) or 1)))
 			arg10 = v.m
-			v.nt = fn13(v, 0.48)
+			v.nt = fn14(v, 0.48)
 			local TextBox = c("TextBox", {Parent = arg10, Name = "Value", AnchorPoint = vector2New(0, 0.5), Position = uDim2FromScale(0.525, 0.5), Size = uDim2FromScale(0.095, 0.56), BackgroundColor3 = G, BackgroundTransparency = 0.6, ZIndex = 5, c("UIPadding", {Name = "ValuePadding"})})
-			n(TextBox)
+			fn2(TextBox)
 			st(0.1).Parent = TextBox
 			local Frame = c("Frame", {Parent = arg10, Name = "Slider", Active = true, AnchorPoint = vector2New(0.5, 0.5), Position = uDim2FromScale(0.8075, 0.5), Size = uDim2FromScale(0.345, 0.45), BackgroundColor3 = G, BackgroundTransparency = 0.6, ZIndex = 3, st(0.1)})
 			local Frame2 = c("Frame", {Parent = Frame, Name = "Bar", Active = true, AnchorPoint = vector2New(0, 0.5), Position = uDim2FromScale(0, 0.5), Size = uDim2FromScale(0.5, 1), BackgroundColor3 = o, ZIndex = 4, getUIGradient(C, "AccentGradient")})
 			local Frame3, tbl4 = c("Frame", {Parent = Frame, Name = "Hold", Active = true, AnchorPoint = vector2New(0.5, 0.5), Position = uDim2FromScale(0.5, 0.5), Size = uDim2FromScale(0.115, 1.2), BackgroundColor3 = color3FromRGB(89, 89, 89), BackgroundTransparency = 1, ZIndex = 5, st(0.09, color3FromRGB(39, 39, 39)), c("Frame", {Name = "Color", AnchorPoint = vector2New(0.5, 0), Position = uDim2FromScale(0.5, 0), Size = uDim2FromScale(1, 1), BackgroundColor3 = o, ZIndex = 6})}), {Value = arg3, Unit = arg72, Min = arg3, Max = arg4}
 			local str = tostring(arg9 or "")
 
-			local function fn17(arg11)
+			local function fn18(arg11)
 				if flag then
-					return fn7(arg11)
+					return fn8(arg11)
 				end
 				return (flag2 and string.format("%." .. (flag22 .. "f"), arg11)) or tostring(math.round(arg11))
 			end
 
-			local function fn18(arg11)
+			local function fn19(arg11)
 				local n11, flag3 = #tostring(arg11):gsub("<.->", ""), arg72 ~= nil
 				arg11 = math.clamp(((flag3 and 0.125) or 0.095) + (math.max(0, n11 - ((flag3 and 7) or 5)) * 0.0095), (flag3 and 0.125) or 0.095, (flag3 and 0.195) or 0.175)
 				local n12, visible = 0.62 - arg11, str ~= ""
 				n11 = (visible and 0.75) or 1
 				TextBox.Position, TextBox.Size, Frame.Size = uDim2FromScale(n12, 0.5), uDim2FromScale(arg11, 0.56 * n11), uDim2FromScale(0.345, 0.45 * n11)
-				fn14(v, math.min((flag3 and 0.43) or 0.45, math.max(0.28, n12 - 0.045)), visible)
+				fn15(v, math.min((flag3 and 0.43) or 0.45, math.max(0.28, n12 - 0.045)), visible)
 				local nt, nt2, nt3, v2, v3 = v.nt, v.nt, v.nt, str, uDim2FromScale(math.max(0.2, n12 - 0.045), 0.3)
 				nt.Text = v2
 				nt2.Visible = visible
 				nt3.Size = v3
 			end
 
-			local function fn19()
+			local function fn20()
 				local n11 = ((tbl4.Max > tbl4.Min) and ((tbl4.Value - tbl4.Min) / (tbl4.Max - tbl4.Min))) or 0
 				n11 = math.clamp(n11, 0.0575, 0.9425)
 				Frame2.Size, Frame3.Position = uDim2FromScale(n11, 1), uDim2FromScale(n11, 0.5)
 				if TextBox:IsFocused() then
 					return
 				end
-				local text = fn10(o, fn17(tbl4.Value)) .. ((arg72 and fn10(w, arg72)) or "")
+				local text = fn11(o, fn18(tbl4.Value)) .. ((arg72 and fn11(w, arg72)) or "")
 				TextBox.RichText = true
 				TextBox.Text = text
-				fn18(text)
+				fn19(text)
 			end
 
 			v.setNote = function(arg11)
 				str = tostring(arg11 or "")
-				fn18(TextBox.Text)
+				fn19(TextBox.Text)
 				v.fit()
 			end
 
 			tbl4.Set = function(arg11, value, arg12)
 				value = math.clamp(tonumber(value) or tbl4.Value, tbl4.Min, tbl4.Max)
-				value = if value > tbl4.Min then if value < tbl4.Max then math.clamp(fn16(tbl4.Min + (math.floor(((value - tbl4.Min) / flag23) + 0.5) * flag23)), tbl4.Min, tbl4.Max) else value else value
+				value = if value > tbl4.Min then if value < tbl4.Max then math.clamp(fn17(tbl4.Min + (math.floor(((value - tbl4.Min) / flag23) + 0.5) * flag23)), tbl4.Min, tbl4.Max) else value else value
 				arg11 = value ~= tbl4.Value
 				tbl4.Value = value
-				fn19()
+				fn20()
 
 				if arg12 then
 				elseif arg11 then
@@ -1680,7 +1681,7 @@ local function fn()
 			end
 
 			tbl4.Range = function(_, arg11, arg12)
-				tbl4.Min, tbl4.Max = fn16(arg11), fn16(arg12)
+				tbl4.Min, tbl4.Max = fn17(arg11), fn17(arg12)
 				tbl4:Set(tbl4.Value, true)
 			end
 
@@ -1694,11 +1695,11 @@ local function fn()
 
 			local flag3, input
 
-			local function fn20(arg11)
+			local function fn21(arg11)
 				tbl4:Set(tbl4.Min + ((tbl4.Max - tbl4.Min) * math.clamp((arg11 - Frame.AbsolutePosition.X) / math.max(Frame.AbsoluteSize.X, 1), 0, 1)))
 			end
 
-			local function fn21(input2)
+			local function fn22(input2)
 				if flag3 then
 					return
 				elseif input2.UserInputState ~= scrollingFrame.UserInputState.Begin then
@@ -1710,20 +1711,20 @@ local function fn()
 				local input3
 				input3, flag3 = ((input2.UserInputType == scrollingFrame.UserInputType.Touch) and input2) or nil, true
 				input = input3
-				fn20(input2.Position.X)
+				fn21(input2.Position.X)
 			end
 
 			arg2 = {Frame, Frame2, Frame3}
 
 			for _, v2 in ipairs(arg2) do
-				trackConnection(v2.InputBegan, fn21)
+				trackConnection(v2.InputBegan, fn22)
 			end
 
 			trackConnection(UserInputService.InputChanged, function(input2)
 				local input3 = flag3 and ((input and (input2 == input)) or (if input then not input else input2.UserInputType == scrollingFrame.UserInputType.MouseMovement))
 
 				if input3 then
-					fn20(input2.Position.X)
+					fn21(input2.Position.X)
 				end
 			end)
 
@@ -1737,8 +1738,8 @@ local function fn()
 
 			trackConnection(TextBox.Focused, function()
 				tw(TextBox, {BackgroundTransparency = 0.42}, 0.16)
-				TextBox.RichText, TextBox.Text = false, (flag and fn8(tbl4.Value)) or fn17(tbl4.Value)
-				fn18(TextBox.Text)
+				TextBox.RichText, TextBox.Text = false, (flag and fn9(tbl4.Value)) or fn18(tbl4.Value)
+				fn19(TextBox.Text)
 
 				task.defer(function()
 					if TextBox:IsFocused() then
@@ -1749,23 +1750,23 @@ local function fn()
 
 			trackConnection(TextBox:GetPropertyChangedSignal("Text"), function()
 				if TextBox:IsFocused() then
-					fn18(TextBox.Text)
+					fn19(TextBox.Text)
 				end
 			end)
 
 			trackConnection(TextBox.FocusLost, function()
 				tw(TextBox, {BackgroundTransparency = 0.6}, 0.16)
-				local num = (flag and fn9(TextBox.Text)) or tonumber((TextBox.Text:gsub(",", "."):gsub("[^%d%.%-]", "")))
+				local num = (flag and fn10(TextBox.Text)) or tonumber((TextBox.Text:gsub(",", "."):gsub("[^%d%.%-]", "")))
 
 				if num then
 					tbl4:Set(num)
 				end
 
-				fn19()
+				fn20()
 			end)
 
 			tbl4.Value = math.clamp(tonumber(arg5) or arg3, arg3, arg4)
-			fn19()
+			fn20()
 			v.ctl = TextBox
 			v.vb = TextBox
 			v.tr = Frame
@@ -1778,24 +1779,24 @@ local function fn()
 			local v = arg:Row(arg2, value, true)
 			local TextButton = c("TextButton", {Parent = v.m, Name = "Dropdown", AnchorPoint = vector2New(0.5, 0.5), Position = uDim2FromScale(0.845, 0.5), Size = uDim2FromScale(0.28, 0.62), BackgroundColor3 = G, BackgroundTransparency = 0.6, ZIndex = 6, st(0.1)})
 			fb(TextButton, 1.025, 0.975)
-			fn13(v, 0.66)
+			fn14(v, 0.66)
 			local text = tostring(arg7 or "")
 
-			local function fn16()
+			local function fn17()
 				local visible = text ~= ""
 				v.nt.Text, v.nt.Visible = text, visible
-				fn14(v, 0.65, visible)
+				fn15(v, 0.65, visible)
 				TextButton.Size = uDim2FromScale(0.28, (visible and 0.465) or 0.62)
 			end
 
-			fn16()
+			fn17()
 			local v2 = l2({Parent = TextButton, Name = "Value", AnchorPoint = vector2New(0.5, 0.5), Position = uDim2FromScale(0.405, 0.5), Size = uDim2FromScale(0.7, 0.58), TextWrapped = true, ZIndex = 7})
 			c("Frame", {Parent = TextButton, Name = "Divider", AnchorPoint = vector2New(0.5, 0.5), Position = uDim2FromScale(0.8, 0.5), Size = uDim2FromScale(0.014, 0.66), BackgroundColor3 = G, BackgroundTransparency = 0.3, ZIndex = 7})
 			local v3 = chev(TextButton, w, uDim2FromScale(0.888, 0.5), uDim2FromScale(0.16, 0.56), 7)
 			local Frame, tbl4, flag, tbl5, str, Frame2, v4, v5, v6, v7, tbl6 = c("Frame", {Parent = v.r, Name = "Menu", AnchorPoint = vector2New(0.5, 0), Position = uDim2New(0.5, 0, 0, 0), Size = uDim2New(1, 0, 0, 0), BackgroundTransparency = 1, ClipsDescendants = true, Visible = false, ZIndex = 6}), {Multi = arg6, Options = arg3, Empty = "None"}, false, {}, ""
 			local n10, n11, n12, n13 = 0, 0, 0, 0
 
-			local function fn17()
+			local function fn18()
 				local options, tbl7 = ((type(tbl4.Options) == "function") and tbl4.Options()) or tbl4.Options, {}
 
 				for i, v8 in ipairs(((type(options) == "table") and options) or {}) do
@@ -1805,7 +1806,7 @@ local function fn()
 				return tbl7
 			end
 
-			local function fn18(arg9)
+			local function fn19(arg9)
 				if arg6 then
 					return table.find(tbl4.Value, arg9) ~= nil
 				end
@@ -1816,7 +1817,7 @@ local function fn()
 				return (arg6 and #tbl4.Value) or (((tbl4.Value ~= nil) and 1) or 0)
 			end
 
-			local function fn19(arg9)
+			local function fn20(arg9)
 				if arg6 then
 					local n14 = #tbl4.Value
 					v2.Text = (((n14 == 0) and tbl4.Empty) or ((n14 == 1) and tostring(tbl4.Value[1]))) or (n14 .. " selected")
@@ -1843,8 +1844,8 @@ local function fn()
 				end
 			end
 
-			local function fn20()
-				local tbl7, v8, v9 = {}, ipairs, table.pack(fn17())
+			local function fn21()
+				local tbl7, v8, v9 = {}, ipairs, table.pack(fn18())
 
 				for k, v10 in v8(table.unpack(v9, 1, v9.n)) do
 					k = tbl5[v10]
@@ -1865,7 +1866,7 @@ local function fn()
 				return tbl7
 			end
 
-			local function fn21(arg9)
+			local function fn22(arg9)
 				local n102 = n10
 				local v8, size, r2, visible = uDim2New(1, 0, 0, n102 + ((flag and (n12 + n11)) or 0)), n13 * 2, flag
 
@@ -1907,7 +1908,7 @@ local function fn()
 				end
 			end
 
-			local function fn22(arg9)
+			local function fn23(arg9)
 				local x = v.r.AbsoluteSize.X
 				if x <= 0 then
 					return
@@ -1925,7 +1926,7 @@ local function fn()
 				if flag then
 				elseif arg9 then
 				else
-					return fn21(false)
+					return fn22(false)
 				end
 
 				n15 = tbl5
@@ -1950,7 +1951,7 @@ local function fn()
 				else
 				end
 
-				local n18, v8 = (n13 + n16) + n17, fn20()
+				local n18, v8 = (n13 + n16) + n17, fn21()
 
 				if #v8 == 0 then
 					if tbl4.empty then
@@ -1979,12 +1980,12 @@ local function fn()
 					n11 = n18 + (n12 + n14)
 				end
 
-				fn19(false)
-				fn21(arg9)
+				fn20(false)
+				fn22(arg9)
 			end
 
 			v.dd = function()
-				fn22(false)
+				fn23(false)
 			end
 
 			local n14 = 0
@@ -1994,11 +1995,11 @@ local function fn()
 
 				if math.abs(x - n14) >= 0.5 then
 					n14 = x
-					fn22(false)
+					fn23(false)
 				end
 			end)
 
-			local function fn23()
+			local function fn24()
 				local tbl52 = tbl5
 
 				for _, v8 in next, tbl52, nil do
@@ -2006,16 +2007,16 @@ local function fn()
 				end
 
 				tbl5 = {}
-				tbl52 = fn17()
+				tbl52 = fn18()
 
 				if #tbl52 >= 5 then
 					if not (Frame2) then
 						Frame2 = c("Frame", {Parent = Frame, Name = "Search", BackgroundColor3 = G, BackgroundTransparency = 0.6, ZIndex = 7, st(0.07)})
-						v4 = n(c("TextBox", {Parent = Frame2, Name = "Input", AnchorPoint = vector2New(0.5, 0.5), Position = uDim2FromScale(0.5, 0.5), Size = uDim2FromScale(0.94, 0.56), PlaceholderText = "Search...", PlaceholderColor3 = color3FromRGB(198, 198, 198), ZIndex = 9}))
+						v4 = fn2(c("TextBox", {Parent = Frame2, Name = "Input", AnchorPoint = vector2New(0.5, 0.5), Position = uDim2FromScale(0.5, 0.5), Size = uDim2FromScale(0.94, 0.56), PlaceholderText = "Search...", PlaceholderColor3 = color3FromRGB(198, 198, 198), ZIndex = 9}))
 
 						trackConnection(v4:GetPropertyChangedSignal("Text"), function()
 							str = (v4.Text:match("^%s*(.-)%s*$") or ""):lower()
-							fn22(true)
+							fn23(true)
 						end)
 					end
 				end
@@ -2037,7 +2038,7 @@ local function fn()
 					local v9 = l2({Parent = TextButton2, Name = "Label", AnchorPoint = vector2New(0.5, 0.5), Position = uDim2FromScale((arg6 and 0.56) or 0.5, 0.5), Size = uDim2FromScale((arg6 and 0.62) or 0.78, 0.56), Text = v8, TextWrapped = true, ZIndex = 9})
 
 					tbl7.paint = function(arg9)
-						local v10, tbl8 = fn18(v8), {}
+						local v10, tbl8 = fn19(v8), {}
 						local v102 = (v10 and 0.2) or ((flag2 and 0.3) or 0.45)
 						tbl8.BackgroundTransparency = v102
 
@@ -2089,13 +2090,13 @@ local function fn()
 
 							if arg8 then
 								tbl4.Value = v10
-								fn19(true)
+								fn20(true)
 							else
 								tbl4:Set(v10)
 							end
 						elseif arg8 then
 							tbl4.Value = v8
-							fn19(true)
+							fn20(true)
 						else
 							tbl4:Set(v8)
 							w3.closeDD()
@@ -2125,7 +2126,7 @@ local function fn()
 			else
 			end
 
-			local function fn24(arg9)
+			local function fn25(arg9)
 				if flag == arg9 then
 					return
 				end
@@ -2135,7 +2136,7 @@ local function fn()
 						w3.closeDD()
 					end
 
-					fn23()
+					fn24()
 					str = ""
 
 					if v4 then
@@ -2143,7 +2144,7 @@ local function fn()
 					end
 
 					function w3.closeDD()
-						fn24(false)
+						fn25(false)
 					end
 				else
 					if v4 then
@@ -2156,15 +2157,15 @@ local function fn()
 				flag = arg9
 				tw(v3, {Rotation = (arg9 and 180) or 0}, 0.22)
 				tw(TextButton, {BackgroundTransparency = (arg9 and 0.42) or 0.6}, 0.16)
-				fn22(true)
+				fn23(true)
 			end
 
 			v.close = function()
-				fn24(false)
+				fn25(false)
 			end
 
 			hit(TextButton, function()
-				fn24(not flag)
+				fn25(not flag)
 			end)
 
 			tbl4.Set = function(arg9, arg10, arg11)
@@ -2173,7 +2174,7 @@ local function fn()
 				if arg6 then
 					local value2, tbl7 = {}, {}
 
-					for _, v8 in ipairs(fn17()) do
+					for _, v8 in ipairs(fn18()) do
 						tbl7[v8] = true
 					end
 
@@ -2189,11 +2190,11 @@ local function fn()
 
 					tbl4.Value = value2
 				else
-					local v8, flag2 = fn17(), ((arg10 ~= nil) and tostring(arg10)) or nil
+					local v8, flag2 = fn18(), ((arg10 ~= nil) and tostring(arg10)) or nil
 					tbl4.Value = ((((flag2 and (table.find(v8, flag2) or (type(tbl4.Options) == "function"))) and flag2) or tbl4.Value) or tbl4.Def) or v8[1]
 				end
 
-				fn19(false)
+				fn20(false)
 
 				if (if arg11 then not arg11 else not arg8) and ((arg6 and (enc(arg9) ~= enc(tbl4.Value))) or (if arg6 then not arg6 else arg9 ~= tbl4.Value)) then
 					K(arg5, tbl4.Value)
@@ -2204,8 +2205,8 @@ local function fn()
 				tbl4.Options = options
 
 				if flag then
-					fn23()
-					fn22(false)
+					fn24()
+					fn23(false)
 				end
 
 				if not (arg9) then
@@ -2215,8 +2216,8 @@ local function fn()
 
 			v.setNote = function(arg9)
 				text = tostring(arg9 or "")
-				fn16()
-				fn22(false)
+				fn17()
+				fn23(false)
 			end
 
 			if arg6 then
@@ -2228,10 +2229,10 @@ local function fn()
 
 				tbl4.Value = value
 			else
-				tbl4.Value = ((arg4 ~= nil) and tostring(arg4)) or fn17()[1]
+				tbl4.Value = ((arg4 ~= nil) and tostring(arg4)) or fn18()[1]
 			end
 
-			fn19(false)
+			fn20(false)
 			v.ctl = TextButton
 			arg:Reg(v, tbl4, (arg6 and "multidropdown") or "dropdown")
 			return tbl4
@@ -2241,13 +2242,13 @@ local function fn()
 			local v = arg:Row(arg2, arg6)
 			local Frame = c("Frame", {Parent = v.m, Name = "Field", AnchorPoint = vector2New(0.5, 0.5), Position = uDim2FromScale(0.845, 0.5), Size = uDim2FromScale(0.28, 0.62), BackgroundColor3 = G, BackgroundTransparency = 0.6, ZIndex = 4, st(0.1)})
 			local Frame2 = c("Frame", {Parent = Frame, Name = "Underline", AnchorPoint = vector2New(0.5, 1), Position = uDim2FromScale(0.5, 1), Size = uDim2FromScale(0, 0.11), BackgroundColor3 = o, ZIndex = 6})
-			local v2 = n(c("TextBox", {Parent = Frame, Name = "Input", AnchorPoint = vector2New(0.5, 0.5), Position = uDim2FromScale(0.5, 0.5), Size = uDim2FromScale(0.9, 0.56), PlaceholderText = arg3 or "Type...", PlaceholderColor3 = color3FromRGB(198, 198, 198), ZIndex = 5}))
-			fn13(v, 0.66)
+			local v2 = fn2(c("TextBox", {Parent = Frame, Name = "Input", AnchorPoint = vector2New(0.5, 0.5), Position = uDim2FromScale(0.5, 0.5), Size = uDim2FromScale(0.9, 0.56), PlaceholderText = arg3 or "Type...", PlaceholderColor3 = color3FromRGB(198, 198, 198), ZIndex = 5}))
+			fn14(v, 0.66)
 
 			v.setNote = function(arg7)
 				local visible = tostring(arg7 or "") ~= ""
 				v.nt.Text, v.nt.Visible = tostring(arg7 or ""), visible
-				fn14(v, 0.65, visible)
+				fn15(v, 0.65, visible)
 				Frame.Size = uDim2FromScale(0.28, (visible and 0.465) or 0.62)
 				v.fit()
 			end
@@ -2290,8 +2291,8 @@ local function fn()
 			local v2, v3, v4 = rb({Parent = v.m, Name = "Action", Position = uDim2FromScale(0.8846889218690012, 0.5), Size = uDim2FromScale(0.20062215626239777, (arg5 and 0.51) or 0.68), ZIndex = 6, Text = arg32, LSize = uDim2FromScale(0.9, 0.62), wrap = true})
 
 			if arg5 then
-				fn14(v, 0.62, true)
-				fn13(v, 0.7393778)
+				fn15(v, 0.62, true)
+				fn14(v, 0.7393778)
 				v.nt.Text, v.nt.Visible = tostring(arg5), true
 			end
 
@@ -2342,12 +2343,12 @@ local function fn()
 		index3.Text = function(arg, arg2, value, arg3)
 			local v = arg:Row(arg2, arg3)
 			v.lb.Size = uDim2FromScale(0.94, 0.64)
-			fn13(v, 0.94)
+			fn14(v, 0.94)
 
 			v.setNote = function(arg4)
 				local visible = tostring(arg4 or "") ~= ""
 				v.nt.Text, v.nt.Visible = tostring(arg4 or ""), visible
-				fn14(v, 0.94, visible)
+				fn15(v, 0.94, visible)
 				v.fit()
 			end
 
@@ -2393,7 +2394,7 @@ local function fn()
 
 			local tbl6 = {Skip = true}
 
-			local function fn16()
+			local function fn17()
 				local tbl7 = {}
 
 				for _, v2 in ipairs(tbl5) do
@@ -2406,14 +2407,14 @@ local function fn()
 			tbl6.Set = function(_, arg5, arg6)
 				if tbl4[arg5] ~= arg6 then
 					tbl4[arg5] = arg6
-					fn16()
+					fn17()
 				end
 			end
 
 			tbl6.Icon = function(arg5)
 			end
 
-			fn16()
+			fn17()
 			return tbl6
 		end
 
@@ -2467,7 +2468,7 @@ local function fn()
 		H, R = setmetatable, {__mode = "k"}
 		local v = H({}, R)
 
-		local function fn16(arg, arg2)
+		local function fn17(arg, arg2)
 			if not (arg) then
 				return
 			end
@@ -2507,16 +2508,16 @@ local function fn()
 				return
 			end
 
-			local function fn17(arg3)
+			local function fn18(arg3)
 				return (arg3:gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;"))
 			end
 
 			arg.RichText = true
-			arg.Text = fn17(tbl5.t:sub(1, pos - 1)) .. ("<font color=\"rgb(58,255,55)\">" .. (fn17(tbl5.t:sub(pos, v2)) .. ("</font>" .. fn17(tbl5.t:sub(v2 + 1)))))
+			arg.Text = fn18(tbl5.t:sub(1, pos - 1)) .. ("<font color=\"rgb(58,255,55)\">" .. (fn18(tbl5.t:sub(pos, v2)) .. ("</font>" .. fn18(tbl5.t:sub(v2 + 1)))))
 			tbl5.p = arg.Text
 		end
 
-		local function fn17(arg)
+		local function fn18(arg)
 			local str = tostring(arg.Disp or arg.Name)
 
 			if str:lower():sub(-4) == " tab" then
@@ -2539,7 +2540,7 @@ local function fn()
 				if not (section.res) then
 					i = (str == "") or (section.Disp:lower():find(str, 1, true) ~= nil)
 					visible = if section.extra then (section.extra(str) == true) or i else i
-					fn16(section.hd, str)
+					fn17(section.hd, str)
 
 					for i2, row in ipairs(section.rows) do
 						i2 = row.o
@@ -2574,7 +2575,7 @@ local function fn()
 							end
 
 							if row.lb then
-								fn16(row.lb, str)
+								fn17(row.lb, str)
 							end
 
 							visible = if i4 then true else visible
@@ -2731,7 +2732,7 @@ local function fn()
 
 				layoutOrder += 1
 				tbl8.x.h.LayoutOrder, tbl8.x.h.Visible, tbl8.go = layoutOrder, true, v2.l[1]
-				tbl8.lb.Text = "GO TO  " .. (fn17(v2.t) .. ("  >  " .. v2.s.Disp))
+				tbl8.lb.Text = "GO TO  " .. (fn18(v2.t) .. ("  >  " .. v2.s.Disp))
 				tbl6[arg2] = true
 				local v3, l3 = ipairs, v2.l
 
@@ -2884,11 +2885,11 @@ local function fn()
 
 				task.delay(0.5, function()
 					if v3.Parent then
-						local v4, fn18 = tw(v3, {Transparency = 1}, 0.28), function()
+						local v4, fn19 = tw(v3, {Transparency = 1}, 0.28), function()
 							v3:Destroy()
 						end
 
-						v4.Completed:Connect(fn18)
+						v4.Completed:Connect(fn19)
 					end
 				end)
 			end)
@@ -2903,7 +2904,7 @@ local function fn()
 			end)
 		end
 
-		local function fn18(arg, arg2)
+		local function fn19(arg, arg2)
 			if arg.d then
 				return
 			end
@@ -2959,7 +2960,7 @@ local function fn()
 			end
 
 			while #tbl5 >= 6 do
-				fn18(tbl5[1], true)
+				fn19(tbl5[1], true)
 			end
 
 			n10 += 1
@@ -2978,7 +2979,7 @@ local function fn()
 
 				tbl6.t = task.delay(arg3, function()
 					tbl6.t = nil
-					fn18(tbl6)
+					fn19(tbl6)
 				end)
 			end
 
@@ -2990,7 +2991,7 @@ local function fn()
 
 			if not (flag) then
 				for i = #tbl5, 1, -1 do
-					fn18(tbl5[i], true)
+					fn19(tbl5[i], true)
 				end
 			end
 		end
@@ -3021,7 +3022,7 @@ local function fn()
 
 		local str = "Default"
 
-		local function fn19(arg, t)
+		local function fn20(arg, t)
 			return arg.dirP .. ("/configs/" .. (t .. ".json"))
 		end
 
@@ -3073,8 +3074,8 @@ local function fn()
 			if not (v2) then
 				return false, "encode failed"
 			end
-			wr(fn19(arg, t), v2)
-			wr(fn19(arg, t) .. ".bak", v2)
+			wr(fn20(arg, t), v2)
+			wr(fn20(arg, t) .. ".bak", v2)
 			return true
 		end
 
@@ -3101,7 +3102,7 @@ local function fn()
 			end)
 		end
 
-		local function fn20(t, arg, arg2)
+		local function fn21(t, arg, arg2)
 			for k, v2 in next, t, nil do
 				k = (type(v2) == "table") and v2[arg]
 
@@ -3128,7 +3129,7 @@ local function fn()
 				if not (opt.Skip) then
 					if opt.Type ~= "button" then
 						if opt.Type ~= "text" then
-							i = ((values[opt.Tab] and values[opt.Tab][opt.Sec]) and values[opt.Tab][opt.Sec][opt.Name]) or fn20(values, opt.Sec, opt.Name)
+							i = ((values[opt.Tab] and values[opt.Tab][opt.Sec]) and values[opt.Tab][opt.Sec][opt.Name]) or fn21(values, opt.Sec, opt.Name)
 							local value = if type(i) == "table" then i.Value else nil
 							value = if value == nil then ((type(opt.Def) == "table") and table.clone(opt.Def)) or opt.Def else value
 
@@ -3177,22 +3178,22 @@ local function fn()
 				return false, "Config does not exist: " .. tostring(t)
 			end
 
-			local function fn21(arg2)
+			local function fn22(arg2)
 				return (type(arg2) == "table") and ((type(arg2.Values) == "table") or (type(arg2.States) == "table"))
 			end
 
-			t = dec(rd(fn19(arg, v2)))
+			t = dec(rd(fn20(arg, v2)))
 
-			if fn21(t) then
+			if fn22(t) then
 			else
-				t = dec(rd(fn19(arg, v2) .. ".bak"))
+				t = dec(rd(fn20(arg, v2) .. ".bak"))
 
-				if fn21(t) then
-					wr(fn19(arg, v2), enc(t) or "")
+				if fn22(t) then
+					wr(fn20(arg, v2), enc(t) or "")
 				end
 			end
 
-			if not (fn21(t)) then
+			if not (fn22(t)) then
 				return false, "Config file is empty or invalid."
 			end
 			arg.Active = v2
@@ -3311,22 +3312,22 @@ local function fn()
 			local tweenInfo = TweenInfo.new(0.08, scrollingFrame.EasingStyle.Quad, scrollingFrame.EasingDirection.Out)
 			local tweenInfo2 = TweenInfo.new(0.14, scrollingFrame.EasingStyle.Back, scrollingFrame.EasingDirection.Out)
 
-			local function fn21()
+			local function fn22()
 				local currentCamera = workspace.CurrentCamera
 				local viewportSize = (currentCamera and currentCamera.ViewportSize) or vector2New(1280, 720)
 				viewportSize = if viewportSize.X < 1 then vector2New(1280, 720) else viewportSize
 				UIScale.Scale = math.clamp((viewportSize.X * 0.035) / 56, 0.7, 1.4)
 			end
 
-			fn21()
+			fn22()
 
 			if workspace.CurrentCamera then
-				trackConnection(workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"), fn21)
+				trackConnection(workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"), fn22)
 			end
 
 			local input, v3, position, flag2, flag3
 
-			local function fn22(arg2, arg3)
+			local function fn23(arg2, arg3)
 				if input == "mouse" then
 					return arg2.UserInputType == ((arg3 and scrollingFrame.UserInputType.MouseMovement) or scrollingFrame.UserInputType.MouseButton1)
 				end
@@ -3352,7 +3353,7 @@ local function fn()
 
 			trackConnection(UserInputService.InputChanged, function(input2)
 				if input then
-					if not (fn22(input2, true)) then
+					if not (fn23(input2, true)) then
 						return
 					end
 				else
@@ -3376,7 +3377,7 @@ local function fn()
 
 			trackConnection(UserInputService.InputEnded, function(input2)
 				if input then
-					if fn22(input2, false) then
+					if fn23(input2, false) then
 						input, flag2 = nil, false
 						TweenService:Create(UIScale2, tweenInfo2, {Scale = 1}):Play()
 					end
@@ -3400,7 +3401,7 @@ local function fn()
 			D["Keypad" .. v2] = "Num" .. (i - 1)
 		end
 
-		local function fn21(arg)
+		local function fn22(arg)
 			return (arg and (D[arg] or tostring(arg))) or nil
 		end
 
@@ -3410,35 +3411,35 @@ local function fn()
 			return (tbl7[arg.Type] and (arg.Quick ~= false)) and not arg.mirrorOf
 		end
 
-		local function fn22(arg)
+		local function fn23(arg)
 			return ((type(arg) == "table") and table.clone(arg)) or {}
 		end
 
 		index.Quick = function(setTab)
 			local setTab2 = setTab
 			local quickDefaults = setTab2.QuickDefaults or {}
-			local v2 = setTab2:State("Quick Pinned Features", fn22(quickDefaults.pins))
-			local v3 = setTab2:State("Quick Pin Groups", fn22(quickDefaults.groups))
-			local v4 = setTab2:State("Quick Keybinds", fn22(quickDefaults.keys))
+			local v2 = setTab2:State("Quick Pinned Features", fn23(quickDefaults.pins))
+			local v3 = setTab2:State("Quick Pin Groups", fn23(quickDefaults.groups))
+			local v4 = setTab2:State("Quick Keybinds", fn23(quickDefaults.keys))
 			local v5 = setTab2:State("Quick Panel Position", {})
 			local v6 = setTab2:State("Quick Panel Collapsed", {})
 			local v7 = setTab2:State("Quick Open Key", "LeftControl")
 			setTab2:State("Quick LeftCenter Hidden", quickDefaults.hud == true)
 
-			local function fn23()
+			local function fn24()
 				return ((type(v4.Value) == "table") and v4.Value) or {}
 			end
 
-			local function fn24()
+			local function fn25()
 				return ((type(v2.Value) == "table") and v2.Value) or {}
 			end
 
-			local function fn25(arg)
+			local function fn26(arg)
 				return math.clamp(math.floor(tonumber((type(v3.Value) == "table") and v3.Value[arg]) or 1), 1, 5)
 			end
 
-			local function fn26(arg)
-				return table.find(fn24(), arg) ~= nil
+			local function fn27(arg)
+				return table.find(fn25(), arg) ~= nil
 			end
 
 			local ScreenGui = c("ScreenGui", {Name = HttpService:GenerateGUID(false):gsub("-", ""):sub(1, 12), ResetOnSpawn = false, IgnoreGuiInset = true, ZIndexBehavior = scrollingFrame.ZIndexBehavior.Sibling, DisplayOrder = 5, Enabled = false})
@@ -3447,12 +3448,12 @@ local function fn()
 			setTab2.qgui = ScreenGui
 			local a, tbl9 = ((touchEnabled and 150) or 120) / 100, {true, true, true, true, true}
 
-			local function fn27(arg)
+			local function fn28(arg)
 				local clamp, max, n11 = math.clamp, math.max, (0.078 * a) * 0.97
 				return clamp(arg, 0, max(0, 0.998 - n11))
 			end
 
-			local function fn28(arg)
+			local function fn29(arg)
 				local v8, n11 = ((touchEnabled and {0.023, 0.023, 0.42}) or {0.023, 0.303, 0.7})[arg], 0.078 * a
 
 				if arg == 2 then
@@ -3475,8 +3476,8 @@ local function fn()
 				return 0.11, 0.74
 			end
 
-			local function fn29(arg)
-				local num, num2 = fn28(arg)
+			local function fn30(arg)
+				local num, num2 = fn29(arg)
 				local flag2 = (type(v5.Value) == "table") and v5.Value[tostring(arg)]
 
 				if type(flag2) == "table" then
@@ -3484,7 +3485,7 @@ local function fn()
 				else
 				end
 
-				return fn27(num), math.clamp(num2, 0, 0.98)
+				return fn28(num), math.clamp(num2, 0, 0.98)
 			end
 
 			local tbl10, tbl11 = {}, {}
@@ -3501,7 +3502,7 @@ local function fn()
 
 				local function toggleCol()
 					tbl12.col = not tbl12.col
-					local v8 = fn22(v6.Value)
+					local v8 = fn23(v6.Value)
 					v8[tostring(i)] = tbl12.col
 					v6:Set(v8)
 
@@ -3565,7 +3566,7 @@ local function fn()
 					end
 
 					flag3 = true
-					Frame2.Position = uDim2FromScale(fn27(v9.X + (n11.X / absoluteSize.X)), math.clamp(v9.Y + (n11.Y / absoluteSize.Y), 0, 0.98))
+					Frame2.Position = uDim2FromScale(fn28(v9.X + (n11.X / absoluteSize.X)), math.clamp(v9.Y + (n11.Y / absoluteSize.Y), 0, 0.98))
 				end)
 
 				trackConnection(UserInputService.InputEnded, function(input2)
@@ -3582,7 +3583,7 @@ local function fn()
 					flag2 = false
 
 					if flag3 then
-						input2 = fn22(v5.Value)
+						input2 = fn23(v5.Value)
 
 						for k, v10 in next, input2, nil do
 							if type(v10) ~= "table" then
@@ -3606,7 +3607,7 @@ local function fn()
 				return v8
 			end
 
-			local function fn30(arg, arg2)
+			local function fn31(arg, arg2)
 				if arg2 then
 					l2({Parent = arg, Name = "BarKeyChip", AnchorPoint = vector2New(0, 0.5), Position = uDim2FromScale(0.025, 0.485), Size = uDim2FromScale(0.153, 0.612), Text = "[" .. (arg2 .. "]"), TextXAlignment = left, ZIndex = 6}).TextColor3 = color3FromRGB(190, 190, 190)
 				end
@@ -3615,7 +3616,7 @@ local function fn()
 			local Interface, tbl12 = setmetatable, {__mode = "k"}
 			local v8 = Interface({}, tbl12)
 
-			local function fn31(arg, arg2, arg3)
+			local function fn32(arg, arg2, arg3)
 				v8[arg2] = v8[arg2] or {}
 				v8[arg2][arg3] = true
 
@@ -3626,17 +3627,17 @@ local function fn()
 				end}
 			end
 
-			local function fn32(arg, arg2, arg3, arg4, arg5)
+			local function fn33(arg, arg2, arg3, arg4, arg5)
 				local type_ = arg2.Type
 
 				if type_ == "toggle" then
 					local v9 = A(arg, arg4, arg5, true)
 					l2({Parent = v9, Name = "Label", AnchorPoint = vector2New(0, 0.5), Position = uDim2FromScale((arg3 and 0.19) or 0.03, 0.5), Size = uDim2FromScale((arg3 and 0.52) or 0.68, 0.72), Text = arg2.Disp or arg2.Name, ZIndex = 4})
-					fn30(v9, arg3)
-					local v10, v11 = fn3(v9, 1, 0.955, 0.23, 0.56, 6)
+					fn31(v9, arg3)
+					local v10, v11 = fn4(v9, 1, 0.955, 0.23, 0.56, 6)
 					v11(arg2.Value == true, false)
 
-					fn31(arg, arg2, function()
+					fn32(arg, arg2, function()
 						v11(arg2.Value == true)
 					end)
 
@@ -3648,7 +3649,7 @@ local function fn()
 				elseif type_ == "button" then
 					local v9, v10, v11 = rb({Parent = arg.body, Name = "Item" .. arg4, LayoutOrder = arg4, Size = uDim2FromScale(0.7121, arg5), ZIndex = 3, Text = arg2.Disp or arg2.Name})
 					v11.Position, v11.Size = uDim2FromScale((arg3 and 0.58) or 0.5, 0.5), uDim2FromScale((arg3 and 0.78) or 0.94, 0.68)
-					fn30(v9, arg3)
+					fn31(v9, arg3)
 					arg.items[#arg.items + 1] = v9
 
 					hit(v9, function()
@@ -3670,15 +3671,15 @@ local function fn()
 					local bar = clone2.Bar
 					local hold = clone2.Hold
 
-					local function fn33()
+					local function fn34()
 						hold.Size = uDim2FromOffset(math.max(1, clone2.AbsoluteSize.Y * 1.38), math.max(1, clone2.AbsoluteSize.Y * 1.38))
 					end
 
-					fn33()
-					arg.cons[#arg.cons + 1] = trackConnection(clone2:GetPropertyChangedSignal("AbsoluteSize"), fn33)
+					fn34()
+					arg.cons[#arg.cons + 1] = trackConnection(clone2:GetPropertyChangedSignal("AbsoluteSize"), fn34)
 					local v9, v10 = arg2:Places()
 
-					local function fn34()
+					local function fn35()
 						local n11 = ((arg2.Max > arg2.Min) and math.clamp((arg2.Value - arg2.Min) / (arg2.Max - arg2.Min), 0, 1)) or 0
 						n11 = math.clamp(n11, 0.0575, 0.9425)
 						bar.Size, hold.Position = uDim2FromScale(n11, 1), uDim2FromScale(n11, 0.5)
@@ -3688,8 +3689,8 @@ local function fn()
 						end
 					end
 
-					fn34()
-					fn31(arg, arg2, fn34)
+					fn35()
+					fn32(arg, arg2, fn35)
 
 					trackConnection(clone.FocusLost, function()
 						local num = tonumber(clone.Text)
@@ -3698,14 +3699,14 @@ local function fn()
 							arg2:Set(num)
 						end
 
-						fn34()
+						fn35()
 					end)
 
 					local flag2, input
 
-					local function fn35(arg6)
+					local function fn36(arg6)
 						arg2:Set(arg2.Min + ((arg2.Max - arg2.Min) * math.clamp((arg6 - clone2.AbsolutePosition.X) / math.max(clone2.AbsoluteSize.X, 1), 0, 1)))
-						fn34()
+						fn35()
 					end
 
 					parent = {clone2, bar, hold}
@@ -3718,7 +3719,7 @@ local function fn()
 										local input3
 										input3, flag2 = ((input2.UserInputType == scrollingFrame.UserInputType.Touch) and input2) or nil, true
 										input = input3
-										fn35(input2.Position.X)
+										fn36(input2.Position.X)
 									end
 								end
 							end
@@ -3729,7 +3730,7 @@ local function fn()
 						local input3 = flag2 and ((input and (input2 == input)) or (if input then not input else input2.UserInputType == scrollingFrame.UserInputType.MouseMovement))
 
 						if input3 then
-							fn35(input2.Position.X)
+							fn36(input2.Position.X)
 						end
 					end)
 
@@ -3751,22 +3752,22 @@ local function fn()
 					local underline = clone.Underline
 					input.Text = tostring(arg2.Value or "")
 
-					local function fn33(arg6)
+					local function fn34(arg6)
 						tw(clone, {BackgroundTransparency = (arg6 and 0.42) or 0.6}, 0.16)
 						tw(underline, {Size = uDim2FromScale((arg6 and 1) or 0, 0.11)}, 0.2, quint)
 					end
 
 					trackConnection(input.Focused, function()
-						fn33(true)
+						fn34(true)
 					end)
 
 					trackConnection(input.FocusLost, function()
-						fn33(false)
+						fn34(false)
 						arg2:Set(input.Text)
 						input.Text = tostring(arg2.Value or "")
 					end)
 
-					fn31(arg, arg2, function()
+					fn32(arg, arg2, function()
 						if not (input:IsFocused()) then
 							input.Text = tostring(arg2.Value or "")
 						end
@@ -3774,21 +3775,21 @@ local function fn()
 				end
 			end
 
-			local function fn33()
+			local function fn34()
 				table.clear(tbl10)
-				local n11, tbl13 = fn23(), {}
+				local n11, tbl13 = fn24(), {}
 
 				for i = 1, 5, 1 do
 					tbl13[i] = {}
 				end
 
-				for i, v9 in ipairs(fn24()) do
+				for i, v9 in ipairs(fn25()) do
 					i = setTab2.ByPath[v9]
 
 					if i then
 						if t(i) then
-							local insert, v10, tbl14 = table.insert, tbl13[fn25(v9)], {o = i}
-							tbl14.k = (UserInputService.KeyboardEnabled and fn21(n11[v9])) or nil
+							local insert, v10, tbl14 = table.insert, tbl13[fn26(v9)], {o = i}
+							tbl14.k = (UserInputService.KeyboardEnabled and fn22(n11[v9])) or nil
 							insert(v10, tbl14)
 						end
 					end
@@ -3827,10 +3828,10 @@ local function fn()
 						v9.car.Rotation = (v9.col and 180) or 0
 
 						for i2, v12 in ipairs(v10) do
-							fn32(v9, v12.o, v12.k, i2, n12 / n11)
+							fn33(v9, v12.o, v12.k, i2, n12 / n11)
 						end
 
-						v9.pn.Position = uDim2FromScale(fn29(i))
+						v9.pn.Position = uDim2FromScale(fn30(i))
 						v9.pn.Visible = true
 					end
 				end
@@ -3846,7 +3847,7 @@ local function fn()
 				end
 			end
 
-			local function fn34(arg)
+			local function fn35(arg)
 				local v9 = tbl10[arg]
 				local uiScale = v9 and (v9:FindFirstChildOfClass("UIScale") or c("UIScale", {Parent = v9}))
 				if not uiScale then
@@ -3872,29 +3873,29 @@ local function fn()
 			setTab2.sizeOpt.Quick = false
 			local v9, v10 = tbl12:Section("Pin Pad", true, "Quick Access"), tbl12:Section("Pin & Key List", true, "Quick Bar & Keybinds")
 
-			local function fn35()
-				v2:Set(fn22(quickDefaults.pins))
-				v3:Set(fn22(quickDefaults.groups))
+			local function fn36()
+				v2:Set(fn23(quickDefaults.pins))
+				v3:Set(fn23(quickDefaults.groups))
 				v5:Set({})
 			end
 
-			setTab = v10:Button("Reset Pins", "Reset", fn35, "Restore default items, bars and positions", "Done!")
+			setTab = v10:Button("Reset Pins", "Reset", fn36, "Restore default items, bars and positions", "Done!")
 			setTab:Title("Reset Quick Access")
 			setTab.Quick = false
 
 			v10:Button("Reset Keybinds", "Reset", function()
-				v4:Set(fn22(quickDefaults.keys))
+				v4:Set(fn23(quickDefaults.keys))
 			end, "Restore the defaults set in code", "Done!").Quick = false
 
 			local v11 = v9:Toggle("Enable Keybinds", true, function(keysOn)
 				setTab2.keysOn = keysOn
 			end, "Turn off to disable every feature hotkey")
 
-			fn35 = v9:Toggle("Show Pin Pads", true, function(enabled)
+			fn36 = v9:Toggle("Show Pin Pads", true, function(enabled)
 				ScreenGui.Enabled = enabled
 			end, "Floating quick bars; drag a header to move one")
 
-			fn35:Title("Show Quick Bars")
+			fn36:Title("Show Quick Bars")
 
 			local v12, v13 = v9:Dropdown("Visible Quick Bars", {"Quick Bar 1", "Quick Bar 2", "Quick Bar 3", "Quick Bar 4", "Quick Bar 5"}, {"Quick Bar 1", "Quick Bar 2", "Quick Bar 3", "Quick Bar 4", "Quick Bar 5"}, function(arg)
 				tbl9 = {}
@@ -3907,20 +3908,20 @@ local function fn()
 					end
 				end
 
-				fn33()
-			end, true, nil, fn35), v9:Slider("Pad Size", 60, 200, (touchEnabled and 150) or 120, function(T)
+				fn34()
+			end, true, nil, fn36), v9:Slider("Pad Size", 60, 200, (touchEnabled and 150) or 120, function(T)
 				a = T / 100
-				fn33()
+				fn34()
 			end, "%", 1)
 
 			v13:Title("Quick Bar Size")
-			setTab = {v11, fn35, v12, v13}
+			setTab = {v11, fn36, v12, v13}
 
 			for _, v14 in ipairs(setTab) do
 				v14.Quick = false
 			end
 
-			ScreenGui.Enabled = fn35.Value
+			ScreenGui.Enabled = fn36.Value
 			local Notifications = setTab2:State("Notifications", true)
 			local T = setTab2:State("Open On Launch", true)
 
@@ -3951,7 +3952,7 @@ local function fn()
 			v15 = Interface:Button("UI Toggle Key", "Rebind", function()
 				setTab2.cap = "__OPEN__"
 				v15:Note("Press any key...")
-			end, "Current: " .. tostring(fn21(v7.Value)), "")
+			end, "Current: " .. tostring(fn22(v7.Value)), "")
 
 			v15.Quick = false
 
@@ -3962,7 +3963,7 @@ local function fn()
 					setTab2.key = v16
 				end
 
-				v15:Note("Current: " .. tostring(fn21(arg)))
+				v15:Note("Current: " .. tostring(fn22(arg)))
 			end
 
 			if not (UserInputService.KeyboardEnabled) then
@@ -3972,22 +3973,22 @@ local function fn()
 
 			local tbl13, flag2 = {}, false
 
-			local function fn36(arg)
+			local function fn37(arg)
 				local TextButton = c("TextButton", {Parent = arg, Name = "QuickAccessToggle", AnchorPoint = vector2New(1, 0.5), Position = uDim2FromScale(0.985, 0.5), Size = uDim2FromScale(0.115, 0.74), ZIndex = 6})
-				local v16, v17 = fn3(TextButton, 0.5, 0.5, 0.95, 0.78, 6)
+				local v16, v17 = fn4(TextButton, 0.5, 0.5, 0.95, 0.78, 6)
 				return TextButton, v17
 			end
 
 			local v16
 
-			local function fn37(arg, arg2)
+			local function fn38(arg, arg2)
 				local path = arg.Path
 				local keyboardEnabled, QuickRow = UserInputService.KeyboardEnabled and tbl8[arg.Type], v10:Row("QuickRow", nil)
 				QuickRow.lb.Text = arg.Disp or arg.Name
 				QuickRow.lb.Size = uDim2FromScale((keyboardEnabled and 0.47) or 0.63, 0.64)
 				local m = QuickRow.m
 				local TextButton = c("TextButton", {Parent = m, Name = "BarPicker", AnchorPoint = vector2New(1, 0.5), Position = uDim2FromScale(0.858, 0.5), Size = uDim2FromScale(0.062, 0.55), BackgroundColor3 = G, BackgroundTransparency = 0.5, ZIndex = 6, st(0.1)})
-				n(TextButton)
+				fn2(TextButton)
 				fb(TextButton, 1.04, 0.96)
 				local Frame2, tbl14 = c("Frame", {Parent = TextButton, Name = "Caret", AnchorPoint = vector2New(1, 0), Position = uDim2FromScale(0.99, 0.01), Size = uDim2FromScale(0.44, 0.44), BackgroundTransparency = 1, ZIndex = 8, getUIAspectRatioConstraint(1, true)}), {{0.335355, 45}, {0.664645, -45}}
 
@@ -3999,40 +4000,40 @@ local function fn()
 
 				if keyboardEnabled then
 					TextButton2 = c("TextButton", {Parent = m, Name = "KeyChip", AnchorPoint = vector2New(1, 0.5), Position = uDim2FromScale(0.775, 0.5), Size = uDim2FromScale(0.125, 0.5), BackgroundColor3 = G, BackgroundTransparency = 0.35, ZIndex = 6, st(0.1)})
-					n(TextButton2)
+					fn2(TextButton2)
 					fb(TextButton2, 1.04, 0.96)
 					TextButton3 = TextButton2
 				else
 					TextButton3 = TextButton2
 				end
 
-				local Q, v17 = fn36(m)
+				local Q, v17 = fn37(m)
 				local Frame3, tbl15 = c("Frame", {Parent = QuickRow.r, Name = "BarMenu", AnchorPoint = vector2New(1, 0.5), Position = uDim2FromScale(0.985, 0.755), Size = uDim2FromScale(0.4, 0), BackgroundTransparency = 1, Visible = false, ZIndex = 5, c("UIListLayout", {Name = "MenuLayout", FillDirection = scrollingFrame.FillDirection.Horizontal, HorizontalAlignment = scrollingFrame.HorizontalAlignment.Right, VerticalAlignment = scrollingFrame.VerticalAlignment.Center, SortOrder = scrollingFrame.SortOrder.LayoutOrder, Padding = uDimNew(0.024, 0)})}), {}
 
 				for i = 1, 5, 1 do
 					keyboardEnabled = c("TextButton", {Parent = Frame3, Name = "Bar" .. i, LayoutOrder = i, Size = uDim2FromScale(0.176, 1), Text = tostring(i), BackgroundColor3 = G, BackgroundTransparency = 0.4, ZIndex = 6, st(0.09)})
-					n(keyboardEnabled)
+					fn2(keyboardEnabled)
 					fb(keyboardEnabled, 1.06, 0.94)
 					tbl15[i] = keyboardEnabled
 				end
 
 				local function pt()
-					local v18 = fn26(path)
+					local v18 = fn27(path)
 					v17(v18, false)
-					TextButton.Text, TextButton.TextTransparency = tostring(fn25(path)), (v18 and 0) or 0.5
+					TextButton.Text, TextButton.TextTransparency = tostring(fn26(path)), (v18 and 0) or 0.5
 
 					for i, v19 in ipairs(tbl15) do
-						v19.BackgroundTransparency, v19.TextTransparency = ((i == fn25(path)) and 0.15) or 0.4, ((i == fn25(path)) and 0) or 0.2
+						v19.BackgroundTransparency, v19.TextTransparency = ((i == fn26(path)) and 0.15) or 0.4, ((i == fn26(path)) and 0) or 0.2
 					end
 
 					if TextButton3 then
-						TextButton3.Text = (((setTab2.cap == path) and "?") or fn21(fn23()[path])) or "-"
+						TextButton3.Text = (((setTab2.cap == path) and "?") or fn22(fn24()[path])) or "-"
 					end
 				end
 
 				local NumberValue, flag3, v18 = c("NumberValue", {Parent = QuickRow.r, Name = "BarMenuAlpha"}), false
 
-				local function fn38(arg3)
+				local function fn39(arg3)
 					local ratio = 10 + (-3.8 * arg3)
 					local n11 = 10 / ratio
 					QuickRow.ratio = ratio
@@ -4044,23 +4045,23 @@ local function fn()
 					QuickRow.fit()
 				end
 
-				trackConnection(NumberValue.Changed, fn38)
+				trackConnection(NumberValue.Changed, fn39)
 
-				local function fn39(arg3)
+				local function fn40(arg3)
 					if flag3 == arg3 then
 						return
 					end
 					flag3 = arg3
 
 					if arg3 then
-						fn12()
+						fn13()
 
 						if v16 then
 							v16()
 						end
 
 						function v16()
-							fn39(false)
+							fn40(false)
 						end
 
 						setTab2.closeDD = v16
@@ -4081,20 +4082,20 @@ local function fn()
 
 				for i, v19 in ipairs(tbl15) do
 					hit(v19, function()
-						local v20 = fn22(v3.Value)
+						local v20 = fn23(v3.Value)
 						v20[path] = i
 						v3:Set(v20)
-						fn39(false)
+						fn40(false)
 						pt()
 					end)
 				end
 
 				hit(TextButton, function()
-					fn39(not flag3)
+					fn40(not flag3)
 				end)
 
 				hit(Q, function()
-					local v19 = fn22(v2.Value)
+					local v19 = fn23(v2.Value)
 					local v20 = table.find(v19, path)
 
 					if v20 then
@@ -4150,7 +4151,7 @@ local function fn()
 								if section.noReg then
 								else
 									if t(i2) then
-										i4, row2 = fn17(i2.Section.t) .. ("  >  " .. i2.Section.Disp)
+										i4, row2 = fn18(i2.Section.t) .. ("  >  " .. i2.Section.Disp)
 
 										if i4 ~= i then
 											row2 = m(i4)
@@ -4160,7 +4161,7 @@ local function fn()
 											row2 = row
 										end
 
-										i3 = fn37(i2, i4)
+										i3 = fn38(i2, i4)
 										i3.hx = row2
 										tbl13[#tbl13 + 1] = i3
 										row = row2
@@ -4184,7 +4185,7 @@ local function fn()
 					else
 						i = (arg == "") or (v17.s:find(arg, 1, true) ~= nil)
 						v17.h.Visible = i
-						fn16(v17.lb, arg)
+						fn17(v17.lb, arg)
 
 						if i then
 							tbl14[v17.hx] = true
@@ -4197,14 +4198,14 @@ local function fn()
 				for _, v17 in ipairs(tbl13) do
 					if v17.hdr then
 						v17.h.Visible = (arg == "") or (tbl14[v17] == true)
-						fn16(v17.lb2, arg)
+						fn17(v17.lb2, arg)
 					end
 				end
 
 				return flag3
 			end
 
-			local function fn38()
+			local function fn39()
 				for _, v17 in ipairs(tbl13) do
 					if v17.pt then
 						v17.pt()
@@ -4213,21 +4214,21 @@ local function fn()
 			end
 
 			local function qChips()
-				local v17 = fn23()
+				local v17 = fn24()
 
 				for i, opt in ipairs(setTab2.Opts) do
 					local mirrorOf = opt.mirrorOf or opt
 					i = opt.row
 
 					if (((tbl8[mirrorOf.Type] and i) and i.m) and (opt.Quick ~= false)) and (mirrorOf.Quick ~= false) then
-						local keyboardEnabled, optionKeyChip = (UserInputService.KeyboardEnabled and fn21(v17[mirrorOf.Path])) or nil, i.m:FindFirstChild("OptionKeyChip")
+						local keyboardEnabled, optionKeyChip = (UserInputService.KeyboardEnabled and fn22(v17[mirrorOf.Path])) or nil, i.m:FindFirstChild("OptionKeyChip")
 
 						if keyboardEnabled then
 							local n11, visible = ((mirrorOf.Type == "button") and 0.772) or 0.822, i.nt and i.nt.Visible
 
 							if not optionKeyChip then
 								optionKeyChip = c("TextButton", {Parent = i.m, Name = "OptionKeyChip", Active = true, AnchorPoint = vector2New(1, 0.5), BackgroundColor3 = G, BackgroundTransparency = 0.35, ZIndex = 7, st(0.1)})
-								n(optionKeyChip)
+								fn2(optionKeyChip)
 								fb(optionKeyChip, 1.06, 0.94)
 
 								hit(optionKeyChip, function()
@@ -4285,13 +4286,13 @@ local function fn()
 						if input.KeyCode ~= scrollingFrame.KeyCode.Escape then
 							v7:Set(input.KeyCode.Name)
 						else
-							v15:Note("Current: " .. tostring(fn21(v7.Value)))
+							v15:Note("Current: " .. tostring(fn22(v7.Value)))
 						end
 					else
-						local v17 = fn22(v4.Value)
+						local v17 = fn23(v4.Value)
 						v17[cap] = ((input.KeyCode ~= scrollingFrame.KeyCode.Escape) and input.KeyCode.Name) or nil
 						v4:Set(v17)
-						fn38()
+						fn39()
 					end
 
 					return
@@ -4309,7 +4310,7 @@ local function fn()
 				if not (v11.Value) then
 					return
 				end
-				local v17, N, v18 = next, fn23()
+				local v17, N, v18 = next, fn24()
 
 				for k, v19 in v17, N, v18 do
 					if v19 == input.KeyCode.Name then
@@ -4318,7 +4319,7 @@ local function fn()
 						if gameProcessed then
 							if tbl8[gameProcessed.Type] then
 								setTab2:Fire(gameProcessed)
-								fn34(k)
+								fn35(k)
 							end
 						end
 					end
@@ -4326,24 +4327,24 @@ local function fn()
 			end)
 
 			v2.ls[#v2.ls + 1] = function()
-				fn33()
-				fn38()
+				fn34()
+				fn39()
 			end
 
 			v3.ls[#v3.ls + 1] = function()
-				fn33()
-				fn38()
+				fn34()
+				fn39()
 			end
 
 			v4.ls[#v4.ls + 1] = function()
-				fn33()
+				fn34()
 				qChips()
-				fn38()
+				fn39()
 			end
 
 			v5.ls[#v5.ls + 1] = function()
 				for i, v17 in ipairs(tbl11) do
-					v17.pn.Position = uDim2FromScale(fn29(i))
+					v17.pn.Position = uDim2FromScale(fn30(i))
 				end
 			end
 
@@ -4358,10 +4359,10 @@ local function fn()
 					v17.col = (type(v6.Value) == "table") and (v6.Value[tostring(i)] == true)
 				end
 
-				fn33()
+				fn34()
 				qChips()
-				fn38()
-				v15:Note("Current: " .. tostring(fn21(v7.Value)))
+				fn39()
+				v15:Note("Current: " .. tostring(fn22(v7.Value)))
 			end
 
 			return tbl12
@@ -4444,7 +4445,7 @@ local function fn()
 
 			N.cfgNotes = cfgNotes
 
-			local function fn23()
+			local function fn24()
 				for _, v4 in ipairs(tbl9) do
 					if v4.Refresh then
 						v4:Refresh(N:List(), true)
@@ -4454,7 +4455,7 @@ local function fn()
 				cfgNotes()
 			end
 
-			local function fn24(arg2)
+			local function fn25(arg2)
 				for i = 2, #tbl9, 1 do
 					if tbl9[i] then
 						tbl9[i]:Set(arg2, true)
@@ -4462,7 +4463,7 @@ local function fn()
 				end
 			end
 
-			local function fn25(arg2)
+			local function fn26(arg2)
 				arg2 = tostring(arg2 or ""):match("^%s*(.-)%s*$") or ""
 
 				if arg2 == "" then
@@ -4509,7 +4510,7 @@ local function fn()
 						Q = "Default " .. n11
 					end
 				else
-					Q = fn25(str3)
+					Q = fn26(str3)
 
 					if Q then
 						if N:Find(Q) then
@@ -4524,12 +4525,12 @@ local function fn()
 
 				if N:Save(Q, table.unpack(str3, 1, str3.n)) then
 					A:Set("", true)
-					fn23()
-					fn24(Q)
+					fn24()
+					fn25(Q)
 				end
 			end, "New config copies current settings", "")
 
-			local v4, fn26, Q = N:List(), function(arg2)
+			local v4, fn27, Q = N:List(), function(arg2)
 				local X = false
 
 				for i, v4 in ipairs(((type(arg2) == "table") and arg2) or {arg2}) do
@@ -4558,16 +4559,16 @@ local function fn()
 				end
 
 				N:Mgr(true)
-				fn23()
+				fn24()
 				tbl9[1]:Set({}, true)
 			end, {"Tick the configs to remove, then press Delete", "Delete"}
 
-			tbl9[2] = Config:Dropdown("Delete Config", v4, {}, fn26, true, nil, nil, Q)
+			tbl9[2] = Config:Dropdown("Delete Config", v4, {}, fn27, true, nil, nil, Q)
 
 			tbl9[3] = Config:Dropdown("Set Startup Config", N:List(), N.Startup, function(arg2)
 				local v5 = N:Find(arg2)
 				if not (v5) then
-					return fn23()
+					return fn24()
 				end
 				N.Startup = v5
 				N:Mgr(true)
@@ -4582,11 +4583,11 @@ local function fn()
 				N:Save()
 			end, "Save: " .. N.Active, "")
 
-			fn26 = arg:Section("Import / Export", true)
+			fn27 = arg:Section("Import / Export", true)
 
-			tbl9[5] = fn26:Dropdown("Export Config", N:List(), N:Find(N.Active) or "Default", function(profile)
+			tbl9[5] = fn27:Dropdown("Export Config", N:List(), N:Find(N.Active) or "Default", function(profile)
 				profile = (N:Find(profile) or N:Find(N.Active)) or "Default"
-				local v5 = dec(rd(fn19(N, profile)))
+				local v5 = dec(rd(fn20(N, profile)))
 				if type(v5) ~= "table" then
 					return Z.Notify("Export Failed", "Selected config does not exist.")
 				end
@@ -4600,16 +4601,16 @@ local function fn()
 				end
 			end, false, nil, nil, {"Pick a config, then press Export to copy its text", "Export"})
 
-			local a = fn26:Input("Import Config Text", "Paste exported config JSON...")
+			local a = fn27:Input("Import Config Text", "Paste exported config JSON...")
 			a.Skip = true
 
-			fn26:Button("Import Config", "Import", function()
+			fn27:Button("Import Config", "Import", function()
 				local match = tostring(a.Value or ""):match("^%s*(.-)%s*$") or ""
 				local flag2 = (#match < 1048576) and dec(match)
 				if ((type(flag2) ~= "table") or (flag2.Format ~= "ChilliLibraryConfig")) or (type(flag2.Config) ~= "table") then
 					return Z.Notify("Import Failed", "Paste exported config JSON first.")
 				end
-				match = fn25(tostring(flag2.Name or "Imported"):sub(1, 40)) or "Imported"
+				match = fn26(tostring(flag2.Name or "Imported"):sub(1, 40)) or "Imported"
 				local match2, n11 = match, 1
 
 				while N:Find(match2) do
@@ -4620,13 +4621,13 @@ local function fn()
 				flag2.Config.Profile = match2
 				N:Save(match2, flag2.Config)
 				a:Set("", true)
-				fn23()
-				fn24(match2)
+				fn24()
+				fn25(match2)
 				Z.Notify("Config Imported", "Imported: " .. (match2 .. ". Open Load Config to apply, or Set Startup Config for Auto Load."), 5)
 			end, "Creates a config only; use Load Config or Set Startup after", "").Quick = false
 
-			fn26 = tbl9
-			tbl9 = {fn26[2], fn26[3], fn26[4], fn26[5]}
+			fn27 = tbl9
+			tbl9 = {fn27[2], fn27[3], fn27[4], fn27[5]}
 
 			for _, v5 in ipairs(tbl9) do
 				v5.Skip = true
@@ -4641,7 +4642,7 @@ local function fn()
 			v2.ready = true
 
 			K(function()
-				if not (isfile and isfile(fn19(v2, "Default"))) then
+				if not (isfile and isfile(fn20(v2, "Default"))) then
 					v2:Save("Default", v2:Collect())
 				end
 
@@ -4732,7 +4733,7 @@ local function fn()
 				return c("UIGradient", {Parent = arg2, Color = arg3, Rotation = 90})
 			end
 
-			local function fn23(arg2, arg3, arg4, T, A, arg5, m, arg6, arg7)
+			local function fn24(arg2, arg3, arg4, T, A, arg5, m, arg6, arg7)
 				local TextLabel = c("TextLabel", {Parent = arg2, Position = uDim2FromOffset(arg4, T), Size = uDim2FromOffset(A, arg5), FontFace = font, TextColor3 = o, TextSize = arg3, TextXAlignment = left, Text = m or "", ZIndex = 12})
 
 				for k, v2 in next, arg7 or {}, nil do
@@ -4755,37 +4756,37 @@ local function fn()
 			local Frame2 = c("Frame", {Parent = ScreenGui, Active = true, AnchorPoint = vector2New(0.5, 0.5), BackgroundColor3 = G, BackgroundTransparency = 0.18, Position = uDim2FromScale(0.5, 0.5), Size = uDim2FromOffset(430, 316), ZIndex = 10})
 			local UIScale = c("UIScale", {Parent = Frame2})
 
-			local function fn24()
+			local function fn25()
 				local viewportSize = (workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize) or vector2New(1280, 720)
 				viewportSize = if viewportSize.X < 1 then vector2New(1280, 720) else viewportSize
 				UIScale.Scale = math.clamp(math.min(viewportSize.X / 1280, viewportSize.Y / 720), 0.72, 1.35)
 			end
 
-			fn24()
+			fn25()
 
 			if workspace.CurrentCamera then
-				local connection = workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(fn24)
+				local connection = workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(fn25)
 
-				local function fn25()
+				local function fn26()
 					connection:Disconnect()
 				end
 
-				ScreenGui.Destroying:Connect(fn25)
+				ScreenGui.Destroying:Connect(fn26)
 			end
 
 			getUIStroke(Frame2, 2)
-			fn24 = c("Frame", {Parent = Frame2, BackgroundColor3 = o, Position = uDim2FromOffset(22, 22), Size = uDim2FromOffset(5, 26), ZIndex = 12})
-			getUIGradient2(fn24, r)
-			getUIStroke(fn24, 1.4)
-			fn23(Frame2, 21, 38, 20, 370, 30, arg.Title, true)
+			fn25 = c("Frame", {Parent = Frame2, BackgroundColor3 = o, Position = uDim2FromOffset(22, 22), Size = uDim2FromOffset(5, 26), ZIndex = 12})
+			getUIGradient2(fn25, r)
+			getUIStroke(fn25, 1.4)
+			fn24(Frame2, 21, 38, 20, 370, 30, arg.Title, true)
 			c("Frame", {Parent = Frame2, BackgroundColor3 = o, BackgroundTransparency = 0.82, Position = uDim2FromOffset(22, 58), Size = uDim2FromOffset(386, 1), ZIndex = 12})
-			getUIGradient2(fn23(Frame2, 17, 22, 68, 386, 24, arg.Warn, false, {TextColor3 = color3FromRGB(255, 72, 72)}), ColorSequence.new(color3FromRGB(255, 132, 123), color3FromRGB(239, 28, 28)))
+			getUIGradient2(fn24(Frame2, 17, 22, 68, 386, 24, arg.Warn, false, {TextColor3 = color3FromRGB(255, 72, 72)}), ColorSequence.new(color3FromRGB(255, 132, 123), color3FromRGB(239, 28, 28)))
 			local body, tbl9 = arg.Body, {TextWrapped = true}
 			tbl9.TextYAlignment, tbl9.LineHeight, tbl9.TextTransparency = scrollingFrame.TextYAlignment.Top, 1.14, 0.12
-			fn23(Frame2, 15, 22, 98, 386, 74, body, false, tbl9)
-			fn23(Frame2, 14, 22, 176, 386, 46, arg.Tip, false, {TextWrapped = true, TextYAlignment = scrollingFrame.TextYAlignment.Top, LineHeight = 1.12, TextColor3 = color3FromRGB(255, 176, 120), RichText = true})
+			fn24(Frame2, 15, 22, 98, 386, 74, body, false, tbl9)
+			fn24(Frame2, 14, 22, 176, 386, 46, arg.Tip, false, {TextWrapped = true, TextYAlignment = scrollingFrame.TextYAlignment.Top, LineHeight = 1.12, TextColor3 = color3FromRGB(255, 176, 120), RichText = true})
 
-			local function fn25(T)
+			local function fn26(T)
 				ScreenGui:Destroy()
 
 				if N.dlg == ScreenGui then
@@ -4798,21 +4799,21 @@ local function fn()
 			tbl9, body = ipairs, {{22, arg.Cancel or "Cancel", arg.no}, {224, arg.Accept or "OK", arg.ok}}
 
 			for k, v2 in tbl9(body) do
-				fn24, arg = k == 2, c("TextButton", {Parent = Frame2, Active = true, BackgroundTransparency = 1, Position = uDim2FromOffset(v2[1], 244), Size = uDim2FromOffset(184, 46), ZIndex = 14})
-				k = c("Frame", {Parent = arg, AnchorPoint = vector2New(0.5, 0.5), BackgroundColor3 = (fn24 and color3FromRGB(175, 0, 0)) or color3FromRGB(24, 25, 30), Position = uDim2FromScale(0.5, 0.5), Size = uDim2FromScale(1, 0.92), ZIndex = 12})
+				fn25, arg = k == 2, c("TextButton", {Parent = Frame2, Active = true, BackgroundTransparency = 1, Position = uDim2FromOffset(v2[1], 244), Size = uDim2FromOffset(184, 46), ZIndex = 14})
+				k = c("Frame", {Parent = arg, AnchorPoint = vector2New(0.5, 0.5), BackgroundColor3 = (fn25 and color3FromRGB(175, 0, 0)) or color3FromRGB(24, 25, 30), Position = uDim2FromScale(0.5, 0.5), Size = uDim2FromScale(1, 0.92), ZIndex = 12})
 				getUIStroke(k, 1.6)
 				local Frame3 = c("Frame", {Parent = k, AnchorPoint = vector2New(0.5, 0), BackgroundColor3 = o, Position = uDim2FromScale(0.5, 0), Size = uDim2FromScale(1, 0.9), ZIndex = 12})
-				getUIGradient2(Frame3, (fn24 and r) or W)
-				getUIGradient2(c("Frame", {Parent = Frame3, AnchorPoint = vector2New(0.5, 0.5), BackgroundColor3 = o, Position = uDim2FromScale(0.5, 0.5), Size = uDim2FromScale(0.965, 0.88), ZIndex = 13}), (fn24 and d) or W)
+				getUIGradient2(Frame3, (fn25 and r) or W)
+				getUIGradient2(c("Frame", {Parent = Frame3, AnchorPoint = vector2New(0.5, 0.5), BackgroundColor3 = o, Position = uDim2FromScale(0.5, 0.5), Size = uDim2FromScale(0.965, 0.88), ZIndex = 13}), (fn25 and d) or W)
 				Frame3, k = v2[2], {AnchorPoint = vector2New(0.5, 0.5), Position = uDim2FromScale(0.5, 0.5), Size = uDim2FromScale(0.9, 0.6), TextWrapped = true}
 				k.TextXAlignment, k.ZIndex = scrollingFrame.TextXAlignment.Center, 15
-				fn23(arg, 17, 0, 0, 0, 0, Frame3, true, k)
+				fn24(arg, 17, 0, 0, 0, 0, Frame3, true, k)
 
-				local function fn26()
-					fn25(v2[3])
+				local function fn27()
+					fn26(v2[3])
 				end
 
-				arg.MouseButton1Click:Connect(fn26)
+				arg.MouseButton1Click:Connect(fn27)
 			end
 		end
 
@@ -4848,7 +4849,7 @@ local function fn()
 			end
 		end
 
-		local function fn23(a, arg)
+		local function fn24(a, arg)
 			if typeof(a) == "Color3" then
 				return a
 			end
@@ -4871,11 +4872,11 @@ local function fn()
 			return num
 		end
 
-		local function fn24(arg, arg2)
+		local function fn25(arg, arg2)
 			return math.clamp(a(arg, arg2), 0, 1)
 		end
 
-		local function fn25(parent, color, rotation)
+		local function fn26(parent, color, rotation)
 			local chilliCanvasGradient = parent:FindFirstChild("ChilliCanvasGradient")
 
 			if color == nil then
@@ -4920,7 +4921,7 @@ local function fn()
 			end
 		end
 
-		local function fn26(arg, arg2)
+		local function fn27(arg, arg2)
 			local uiCorner = arg:FindFirstChildOfClass("UICorner")
 
 			if arg2 == nil then
@@ -4940,7 +4941,7 @@ local function fn()
 			(uiCorner or c("UICorner", {Parent = arg})).CornerRadius = uDimNew(0, math.floor(arg2 + 0.5))
 		end
 
-		local function fn27(arg, color, arg2, arg3, applyStrokeMode)
+		local function fn28(arg, color, arg2, arg3, applyStrokeMode)
 			local uiStroke = arg:FindFirstChildOfClass("UIStroke")
 
 			if arg2 == nil then
@@ -4958,10 +4959,10 @@ local function fn()
 			end
 
 			uiStroke = uiStroke or c("UIStroke", {LineJoinMode = scrollingFrame.LineJoinMode.Round, Parent = arg})
-			uiStroke.ApplyStrokeMode, uiStroke.Color, uiStroke.Thickness, uiStroke.Transparency = applyStrokeMode or scrollingFrame.ApplyStrokeMode.Contextual, color or G, math.max(0.01, arg2), fn24(arg3, 0)
+			uiStroke.ApplyStrokeMode, uiStroke.Color, uiStroke.Thickness, uiStroke.Transparency = applyStrokeMode or scrollingFrame.ApplyStrokeMode.Contextual, color or G, math.max(0.01, arg2), fn25(arg3, 0)
 		end
 
-		local function fn28(arg)
+		local function fn29(arg)
 			if typeof(arg) ~= "Instance" then
 				return
 			end
@@ -5002,7 +5003,7 @@ local function fn()
 			return result
 		end
 
-		local function fn29(arg)
+		local function fn30(arg)
 			if typeof(arg) ~= "Instance" then
 				return false
 			else
@@ -5030,7 +5031,7 @@ local function fn()
 			return false
 		end
 
-		local function fn30(arg, arg2)
+		local function fn31(arg, arg2)
 			if typeof(arg.Size) == "UDim2" then
 				return arg.Size
 			end
@@ -5039,14 +5040,14 @@ local function fn()
 			return uDim2New(v2.Scale, v2.Offset, v3.Scale, v3.Offset)
 		end
 
-		local function fn31(arg, arg2)
+		local function fn32(arg, arg2)
 			if typeof(arg.Position) == "UDim2" then
 				return arg.Position
 			end
 			return uDim2FromOffset(math.floor((a(arg.X, 0) * arg2.Unit) + 0.5), math.floor((a(arg.Y, 0) * arg2.Unit) + 0.5))
 		end
 
-		local function fn32(arg, T)
+		local function fn33(arg, T)
 			T = if type(T) == "table" then if type(T.Get) == "function" then T.Get() else T else T
 			if typeof(T) == "Instance" then
 				return T
@@ -5054,14 +5055,14 @@ local function fn()
 			return arg.root
 		end
 
-		local function fn33(T, A, z)
+		local function fn34(T, A, z)
 			T.pp[#T.pp + 1] = {A, z}
 			T.dirty = true
 		end
 
 		local function T(backgroundColor3, z, arg)
 			local m = backgroundColor3.m
-			z.Size, z.Position = fn30(arg, m), fn31(arg, m)
+			z.Size, z.Position = fn31(arg, m), fn32(arg, m)
 
 			if typeof(arg.AnchorPoint) == "Vector2" then
 				z.AnchorPoint = arg.AnchorPoint
@@ -5079,16 +5080,16 @@ local function fn()
 				z.Visible = arg.Visible ~= false
 			end
 
-			backgroundColor3 = fn23(arg.Background, nil)
+			backgroundColor3 = fn24(arg.Background, nil)
 
 			if backgroundColor3 then
-				z.BackgroundColor3, z.BackgroundTransparency = backgroundColor3, fn24(arg.BackgroundTransparency, 0)
+				z.BackgroundColor3, z.BackgroundTransparency = backgroundColor3, fn25(arg.BackgroundTransparency, 0)
 			elseif arg.BackgroundTransparency ~= nil then
-				z.BackgroundTransparency = fn24(arg.BackgroundTransparency, 1)
+				z.BackgroundTransparency = fn25(arg.BackgroundTransparency, 1)
 			end
 
 			if arg.Corner ~= nil then
-				fn26(z, a(arg.Corner, 0) * m.Unit)
+				fn27(z, a(arg.Corner, 0) * m.Unit)
 			end
 
 			if arg.Clip ~= nil then
@@ -5140,27 +5141,27 @@ local function fn()
 		end
 
 		local z = {Frame = function(arg, m)
-			local scrollingFrame2 = c(((m.Scrolling == true) and "ScrollingFrame") or "Frame", {Name = tostring(m.Name or "Panel"), BackgroundColor3 = fn23(m.Background, G), BackgroundTransparency = fn24(m.BackgroundTransparency, 1), ZIndex = tonumber(m.ZIndex) or 6})
+			local scrollingFrame2 = c(((m.Scrolling == true) and "ScrollingFrame") or "Frame", {Name = tostring(m.Name or "Panel"), BackgroundColor3 = fn24(m.Background, G), BackgroundTransparency = fn25(m.BackgroundTransparency, 1), ZIndex = tonumber(m.ZIndex) or 6})
 
 			if scrollingFrame2:IsA("ScrollingFrame") then
-				scrollingFrame2.Active, scrollingFrame2.AutomaticCanvasSize, scrollingFrame2.CanvasSize, scrollingFrame2.ElasticBehavior, scrollingFrame2.ScrollBarImageColor3, scrollingFrame2.ScrollingDirection = true, scrollingFrame.AutomaticSize.Y, uDim2New(), scrollingFrame.ElasticBehavior.Never, fn23(m.ScrollBarColor, arg.sty.ScrollBarColor), scrollingFrame.ScrollingDirection.Y
+				scrollingFrame2.Active, scrollingFrame2.AutomaticCanvasSize, scrollingFrame2.CanvasSize, scrollingFrame2.ElasticBehavior, scrollingFrame2.ScrollBarImageColor3, scrollingFrame2.ScrollingDirection = true, scrollingFrame.AutomaticSize.Y, uDim2New(), scrollingFrame.ElasticBehavior.Never, fn24(m.ScrollBarColor, arg.sty.ScrollBarColor), scrollingFrame.ScrollingDirection.Y
 			end
 
 			if m.Layout ~= nil then
 				c("UIListLayout", {Parent = scrollingFrame2, FillDirection = ((tostring(m.Layout):lower() == "row") and scrollingFrame.FillDirection.Horizontal) or scrollingFrame.FillDirection.Vertical, SortOrder = scrollingFrame.SortOrder.LayoutOrder})
 			end
 
-			fn33(arg, scrollingFrame2, fn32(arg, m.Parent))
+			fn34(arg, scrollingFrame2, fn33(arg, m.Parent))
 
 			return A(arg, scrollingFrame2, "Frame", m, function()
 				T(arg, scrollingFrame2, m)
 
 				if (m.StrokeColor ~= nil) or (m.StrokeThickness ~= nil) then
-					fn27(scrollingFrame2, fn23(m.StrokeColor, G), a(m.StrokeThickness, 0.06) * arg.m.Unit, m.StrokeTransparency, scrollingFrame.ApplyStrokeMode.Border)
+					fn28(scrollingFrame2, fn24(m.StrokeColor, G), a(m.StrokeThickness, 0.06) * arg.m.Unit, m.StrokeTransparency, scrollingFrame.ApplyStrokeMode.Border)
 				end
 
 				if m.Gradient ~= nil then
-					fn25(scrollingFrame2, m.Gradient, m.GradientRotation)
+					fn26(scrollingFrame2, m.Gradient, m.GradientRotation)
 				end
 
 				local uiListLayout = scrollingFrame2:FindFirstChildOfClass("UIListLayout")
@@ -5179,22 +5180,22 @@ local function fn()
 			end)
 		end, Text = function(x, arg)
 			local TextLabel = c("TextLabel", {Name = tostring(arg.Name or "Text"), RichText = arg.Rich ~= false, TextScaled = false, TextStrokeTransparency = 1, TextWrapped = arg.Wrap ~= false, TextYAlignment = scrollingFrame.TextYAlignment.Top, ZIndex = tonumber(arg.ZIndex) or 7})
-			fn33(x, TextLabel, fn32(x, arg.Parent))
+			fn34(x, TextLabel, fn33(x, arg.Parent))
 
 			return A(x, TextLabel, "Text", arg, function()
 				local m, sty = x.m, x.sty
 				TextLabel.Text, TextLabel.RichText, TextLabel.TextWrapped = tostring(arg.Text or ""), arg.Rich ~= false, arg.Wrap ~= false
 				TextLabel.FontFace = N(arg.Font) or m.Font
 				TextLabel.TextSize = math.max(6, math.floor((m.TextSize * a(arg.Scale, 1)) + 0.5))
-				TextLabel.LineHeight, TextLabel.TextColor3, TextLabel.TextTransparency = a(arg.LineHeight, m.LineHeight), fn23(arg.Color, sty.TextColor), fn24(arg.Transparency, 0)
-				TextLabel.TextStrokeColor3, TextLabel.TextStrokeTransparency = fn23(arg.TextStrokeColor, G), fn24(arg.TextStrokeTransparency, sty.TextStrokeTransparency)
+				TextLabel.LineHeight, TextLabel.TextColor3, TextLabel.TextTransparency = a(arg.LineHeight, m.LineHeight), fn24(arg.Color, sty.TextColor), fn25(arg.Transparency, 0)
+				TextLabel.TextStrokeColor3, TextLabel.TextStrokeTransparency = fn24(arg.TextStrokeColor, G), fn25(arg.TextStrokeTransparency, sty.TextStrokeTransparency)
 				TextLabel.TextXAlignment = tbl9[tostring(arg.Align or ""):lower()] or m.Align
 				sty = tostring(arg.VAlign or "top"):lower()
 				TextLabel.TextYAlignment = (((sty == "center") and scrollingFrame.TextYAlignment.Center) or ((sty == "bottom") and scrollingFrame.TextYAlignment.Bottom)) or scrollingFrame.TextYAlignment.Top
-				fn25(TextLabel, arg.Gradient, arg.GradientRotation)
+				fn26(TextLabel, arg.Gradient, arg.GradientRotation)
 
 				if (arg.StrokeThickness ~= nil) or (arg.StrokeColor ~= nil) then
-					fn27(TextLabel, fn23(arg.StrokeColor, G), a(arg.StrokeThickness, 0.1) * TextLabel.TextSize, arg.StrokeTransparency, scrollingFrame.ApplyStrokeMode.Contextual)
+					fn28(TextLabel, fn24(arg.StrokeColor, G), a(arg.StrokeThickness, 0.1) * TextLabel.TextSize, arg.StrokeTransparency, scrollingFrame.ApplyStrokeMode.Contextual)
 				end
 
 				T(x, TextLabel, arg)
@@ -5210,55 +5211,55 @@ local function fn()
 				end
 			end)
 		end, Button = function(x, arg)
-			local TextButton = c("TextButton", {Name = tostring(arg.Name or "Button"), BackgroundColor3 = fn23(arg.Background, G), BackgroundTransparency = fn24(arg.BackgroundTransparency, 0.35), RichText = arg.Rich ~= false, TextScaled = false, TextStrokeTransparency = 1, ZIndex = tonumber(arg.ZIndex) or 8})
-			fn33(x, TextButton, fn32(x, arg.Parent))
+			local TextButton = c("TextButton", {Name = tostring(arg.Name or "Button"), BackgroundColor3 = fn24(arg.Background, G), BackgroundTransparency = fn25(arg.BackgroundTransparency, 0.35), RichText = arg.Rich ~= false, TextScaled = false, TextStrokeTransparency = 1, ZIndex = tonumber(arg.ZIndex) or 8})
+			fn34(x, TextButton, fn33(x, arg.Parent))
 			local flag2, flag3, Q = false, false, true
 
-			local function fn34()
-				local X = fn24(arg.BackgroundTransparency, 0.35)
-				local flag32 = (if Q then not Q else math.clamp(X + 0.25, 0, 1)) or (flag3 and fn24(arg.PressTransparency, X - 0.18))
-				local flag33 = flag32 or (flag2 and fn24(arg.HoverTransparency, X - 0.12))
+			local function fn35()
+				local X = fn25(arg.BackgroundTransparency, 0.35)
+				local flag32 = (if Q then not Q else math.clamp(X + 0.25, 0, 1)) or (flag3 and fn25(arg.PressTransparency, X - 0.18))
+				local flag33 = flag32 or (flag2 and fn25(arg.HoverTransparency, X - 0.12))
 				flag32 = flag33 or X
-				TextButton.BackgroundTransparency, TextButton.TextTransparency = flag32, (Q and fn24(arg.Transparency, 0)) or 0.4
+				TextButton.BackgroundTransparency, TextButton.TextTransparency = flag32, (Q and fn25(arg.Transparency, 0)) or 0.4
 			end
 
 			local button = A(x, TextButton, "Button", arg, function()
 				local m = x.m
 				TextButton.Text, TextButton.RichText, TextButton.FontFace = tostring(arg.Text or ""), arg.Rich ~= false, N(arg.Font) or m.Font
-				TextButton.TextSize, TextButton.TextColor3 = math.max(6, math.floor((m.TextSize * a(arg.Scale, 1)) + 0.5)), fn23(arg.Color, o)
+				TextButton.TextSize, TextButton.TextColor3 = math.max(6, math.floor((m.TextSize * a(arg.Scale, 1)) + 0.5)), fn24(arg.Color, o)
 				TextButton.TextXAlignment = tbl9[tostring(arg.Align or "center"):lower()] or scrollingFrame.TextXAlignment.Center
-				fn25(TextButton, arg.Gradient, arg.GradientRotation)
-				fn27(TextButton, fn23(arg.StrokeColor, G), a(arg.StrokeThickness, 0.05) * m.Unit, arg.StrokeTransparency, scrollingFrame.ApplyStrokeMode.Border)
-				fn26(TextButton, a(arg.Corner, 0.3) * m.Unit)
-				local v2 = fn30(arg, m)
+				fn26(TextButton, arg.Gradient, arg.GradientRotation)
+				fn28(TextButton, fn24(arg.StrokeColor, G), a(arg.StrokeThickness, 0.05) * m.Unit, arg.StrokeTransparency, scrollingFrame.ApplyStrokeMode.Border)
+				fn27(TextButton, a(arg.Corner, 0.3) * m.Unit)
+				local v2 = fn31(arg, m)
 				v2 = if typeof(arg.Size) ~= "UDim2" then if arg.Width == nil then if arg.WidthScale == nil then uDim2New(0, math.floor(TextButton.TextBounds.X + m.Unit), v2.Y.Scale, v2.Y.Offset) else v2 else v2 else v2
-				TextButton.Size, TextButton.Position = v2, fn31(arg, m)
+				TextButton.Size, TextButton.Position = v2, fn32(arg, m)
 
 				if arg.LayoutOrder ~= nil then
 					TextButton.LayoutOrder = tonumber(arg.LayoutOrder) or 0
 				end
 
-				fn34()
+				fn35()
 			end)
 
 			TextButton.MouseEnter:Connect(function()
 				flag2 = true
-				fn34()
+				fn35()
 			end)
 
 			TextButton.MouseLeave:Connect(function()
 				flag2, flag3 = false, false
-				fn34()
+				fn35()
 			end)
 
 			TextButton.MouseButton1Down:Connect(function()
 				flag3 = true
-				fn34()
+				fn35()
 			end)
 
 			TextButton.MouseButton1Up:Connect(function()
 				flag3 = false
-				fn34()
+				fn35()
 			end)
 
 			TextButton.Activated:Connect(function()
@@ -5282,18 +5283,18 @@ local function fn()
 
 			button.SetEnabled = function(arg2)
 				Q = arg2 ~= false
-				fn34()
+				fn35()
 				return button
 			end
 
 			return button
 		end, Image = function(x, arg)
-			local ImageLabel = c("ImageLabel", {Name = tostring(arg.Name or "Image"), BackgroundColor3 = fn23(arg.Background, G), BackgroundTransparency = fn24(arg.BackgroundTransparency, 1), ScaleType = scrollingFrame.ScaleType.Fit, ZIndex = tonumber(arg.ZIndex) or 7})
-			fn33(x, ImageLabel, fn32(x, arg.Parent))
+			local ImageLabel = c("ImageLabel", {Name = tostring(arg.Name or "Image"), BackgroundColor3 = fn24(arg.Background, G), BackgroundTransparency = fn25(arg.BackgroundTransparency, 1), ScaleType = scrollingFrame.ScaleType.Fit, ZIndex = tonumber(arg.ZIndex) or 7})
+			fn34(x, ImageLabel, fn33(x, arg.Parent))
 
 			local image = A(x, ImageLabel, "Image", arg, function()
 				local m = x.m
-				ImageLabel.Image, ImageLabel.ImageColor3, ImageLabel.ImageTransparency = tostring(arg.Image or ""), fn23(arg.ImageColor, o), fn24(arg.Transparency, 0)
+				ImageLabel.Image, ImageLabel.ImageColor3, ImageLabel.ImageTransparency = tostring(arg.Image or ""), fn24(arg.ImageColor, o), fn25(arg.Transparency, 0)
 
 				if arg.ScaleType ~= nil then
 					local str2 = tostring(arg.ScaleType):lower()
@@ -5312,10 +5313,10 @@ local function fn()
 				end
 
 				if (arg.StrokeColor ~= nil) or (arg.StrokeThickness ~= nil) then
-					fn27(ImageLabel, fn23(arg.StrokeColor, o), a(arg.StrokeThickness, 0.08) * m.Unit, arg.StrokeTransparency, scrollingFrame.ApplyStrokeMode.Border)
+					fn28(ImageLabel, fn24(arg.StrokeColor, o), a(arg.StrokeThickness, 0.08) * m.Unit, arg.StrokeTransparency, scrollingFrame.ApplyStrokeMode.Border)
 				end
 
-				fn26(ImageLabel, a(arg.Corner, 0.3) * m.Unit)
+				fn27(ImageLabel, a(arg.Corner, 0.3) * m.Unit)
 			end)
 
 			image.SetImage = function(image2)
@@ -5326,9 +5327,9 @@ local function fn()
 
 			return image
 		end, Bar = function(x, arg)
-			local Frame2 = c("Frame", {Name = tostring(arg.Name or "Bar"), BackgroundColor3 = fn23(arg.Background, color3FromRGB(40, 40, 55)), BackgroundTransparency = fn24(arg.BackgroundTransparency, 0.25), ClipsDescendants = true, ZIndex = tonumber(arg.ZIndex) or 7})
-			fn33(x, Frame2, fn32(x, arg.Parent))
-			local Frame3 = c("Frame", {Parent = Frame2, Name = "Fill", BackgroundColor3 = fn23(arg.FillColor, w), BackgroundTransparency = fn24(arg.FillTransparency, 0), Size = uDim2FromScale(0, 1), ZIndex = Frame2.ZIndex + 1})
+			local Frame2 = c("Frame", {Name = tostring(arg.Name or "Bar"), BackgroundColor3 = fn24(arg.Background, color3FromRGB(40, 40, 55)), BackgroundTransparency = fn25(arg.BackgroundTransparency, 0.25), ClipsDescendants = true, ZIndex = tonumber(arg.ZIndex) or 7})
+			fn34(x, Frame2, fn33(x, arg.Parent))
+			local Frame3 = c("Frame", {Parent = Frame2, Name = "Fill", BackgroundColor3 = fn24(arg.FillColor, w), BackgroundTransparency = fn25(arg.FillTransparency, 0), Size = uDim2FromScale(0, 1), ZIndex = Frame2.ZIndex + 1})
 
 			local bar = A(x, Frame2, "Bar", arg, function()
 				local m = x.m
@@ -5342,23 +5343,23 @@ local function fn()
 					end
 				end
 
-				Frame2.BackgroundColor3, Frame3.BackgroundColor3 = fn23(arg.Background, color3FromRGB(40, 40, 55)), fn23(arg.FillColor, w)
-				Frame3.Size = uDim2FromScale(fn24(arg.Alpha, 0), 1)
-				fn26(Frame2, a(arg.Corner, 0.16) * m.Unit)
-				fn26(Frame3, a(arg.Corner, 0.16) * m.Unit)
-				fn25(Frame3, arg.FillGradient, arg.GradientRotation)
+				Frame2.BackgroundColor3, Frame3.BackgroundColor3 = fn24(arg.Background, color3FromRGB(40, 40, 55)), fn24(arg.FillColor, w)
+				Frame3.Size = uDim2FromScale(fn25(arg.Alpha, 0), 1)
+				fn27(Frame2, a(arg.Corner, 0.16) * m.Unit)
+				fn27(Frame3, a(arg.Corner, 0.16) * m.Unit)
+				fn26(Frame3, arg.FillGradient, arg.GradientRotation)
 			end)
 
 			bar.SetAlpha = function(alpha)
 				arg.Alpha = alpha
-				Frame3.Size = uDim2FromScale(fn24(alpha, 0), 1)
+				Frame3.Size = uDim2FromScale(fn25(alpha, 0), 1)
 				return bar
 			end
 
 			return bar
 		end, Model = function(x, arg)
-			local ViewportFrame = c("ViewportFrame", {Name = tostring(arg.Name or "Model"), Ambient = fn23(arg.Ambient, color3FromRGB(170, 170, 180)), BackgroundColor3 = fn23(arg.Background, G), BackgroundTransparency = fn24(arg.BackgroundTransparency, 1), LightColor = fn23(arg.LightColor, o), LightDirection = ((typeof(arg.LightDirection) == "Vector3") and arg.LightDirection) or Vector3.new(-0.6, -1, -0.4), ZIndex = tonumber(arg.ZIndex) or 7})
-			fn33(x, ViewportFrame, fn32(x, arg.Parent))
+			local ViewportFrame = c("ViewportFrame", {Name = tostring(arg.Name or "Model"), Ambient = fn24(arg.Ambient, color3FromRGB(170, 170, 180)), BackgroundColor3 = fn24(arg.Background, G), BackgroundTransparency = fn25(arg.BackgroundTransparency, 1), LightColor = fn24(arg.LightColor, o), LightDirection = ((typeof(arg.LightDirection) == "Vector3") and arg.LightDirection) or Vector3.new(-0.6, -1, -0.4), ZIndex = tonumber(arg.ZIndex) or 7})
+			fn34(x, ViewportFrame, fn33(x, arg.Parent))
 			local Camera = c("Camera", {Parent = ViewportFrame, FieldOfView = a(arg.FieldOfView, 40)})
 			ViewportFrame.CurrentCamera = Camera
 			local tbl10 = {}
@@ -5369,7 +5370,7 @@ local function fn()
 			tbl10.Height = a(arg.CameraHeight, 0.35)
 			tbl10.Zoom = a(arg.Zoom, 1.05)
 
-			local function fn34()
+			local function fn35()
 				if tbl10.Model then
 					local unit = Vector3.new(math.sin(tbl10.Angle), tbl10.Height, math.cos(tbl10.Angle)).Unit
 					Camera.CFrame = CFrame.lookAt(tbl10.Center + (unit * tbl10.Distance), tbl10.Center)
@@ -5383,7 +5384,7 @@ local function fn()
 				end
 
 				tbl10.Template = template
-				local v2 = fn28(template)
+				local v2 = fn29(template)
 				if not (v2) then
 					return
 				end
@@ -5406,7 +5407,7 @@ local function fn()
 				tbl10.Distance = (tbl10.Radius / math.tan(math.rad(Camera.FieldOfView / 2))) * tbl10.Zoom
 				v2.Parent = ViewportFrame
 				tbl10.Model = v2
-				fn34()
+				fn35()
 			end
 
 			local model = A(x, ViewportFrame, "Model", arg, function()
@@ -5423,11 +5424,11 @@ local function fn()
 				end
 
 				if arg.Corner ~= nil then
-					fn26(ViewportFrame, a(arg.Corner, 0) * m2.Unit)
+					fn27(ViewportFrame, a(arg.Corner, 0) * m2.Unit)
 				end
 
 				if (arg.StrokeColor ~= nil) or (arg.StrokeThickness ~= nil) then
-					fn27(ViewportFrame, fn23(arg.StrokeColor, o), a(arg.StrokeThickness, 0.08) * m2.Unit, arg.StrokeTransparency, scrollingFrame.ApplyStrokeMode.Border)
+					fn28(ViewportFrame, fn24(arg.StrokeColor, o), a(arg.StrokeThickness, 0.08) * m2.Unit, arg.StrokeTransparency, scrollingFrame.ApplyStrokeMode.Border)
 				end
 
 				m2 = a(arg.Zoom, 1.05)
@@ -5462,7 +5463,7 @@ local function fn()
 				if tbl10.Model then
 					if tbl10.Spin then
 						tbl10.Angle = (tbl10.Angle + (0.4886921905584123 * arg2)) % 6.283185307179586
-						fn34()
+						fn35()
 					end
 				end
 			end
@@ -5495,7 +5496,7 @@ local function fn()
 			m.ClipsDescendants = v2.ClipContent ~= false
 			lb.AnchorPoint = vector2New(0, 0)
 			local Frame2 = c("Frame", {Parent = m, Name = "SearchField", AnchorPoint = vector2New(0.5, 0.5), BackgroundColor3 = G, BackgroundTransparency = 0.6, Visible = false, ZIndex = 4, st(0.1)})
-			local v4 = n(c("TextBox", {Parent = Frame2, Name = "SearchInput", AnchorPoint = vector2New(0.5, 0.5), Position = uDim2FromScale(0.5, 0.5), Size = uDim2FromScale(0.9, 0.56), PlaceholderText = tostring(arg.SearchPlaceholder or "Search..."), PlaceholderColor3 = color3FromRGB(198, 198, 198), ZIndex = 5}))
+			local v4 = fn2(c("TextBox", {Parent = Frame2, Name = "SearchInput", AnchorPoint = vector2New(0.5, 0.5), Position = uDim2FromScale(0.5, 0.5), Size = uDim2FromScale(0.9, 0.56), PlaceholderText = tostring(arg.SearchPlaceholder or "Search..."), PlaceholderColor3 = color3FromRGB(198, 198, 198), ZIndex = 5}))
 			local ScrollingFrame = c("ScrollingFrame", {Parent = m, Name = "CanvasScroll", Active = true, BackgroundTransparency = 1, CanvasSize = uDim2New(), ElasticBehavior = scrollingFrame.ElasticBehavior.Never, ScrollBarImageColor3 = v2.ScrollBarColor, ScrollBarImageTransparency = v2.ScrollBarTransparency, ScrollingDirection = scrollingFrame.ScrollingDirection.Y, ZIndex = 5})
 			local Frame3 = c("Frame", {Parent = m, Name = "CanvasDock", BackgroundTransparency = 1, Visible = false, ZIndex = 7})
 			local Frame4 = c("Frame", {Parent = m, Name = "CanvasDockRule", BackgroundColor3 = color3FromRGB(170, 174, 184), Visible = false, ZIndex = 7})
@@ -5519,7 +5520,7 @@ local function fn()
 				tbl10.dirty = true
 			end
 
-			local function fn34()
+			local function fn35()
 				for i = #tbl10.pp, 1, -1 do
 					local v5 = tbl10.pp[i]
 
@@ -5537,7 +5538,7 @@ local function fn()
 
 			local Q
 
-			local function fn35()
+			local function fn36()
 				local parent, x2 = r2.Parent, r2.AbsoluteSize.X
 
 				if parent then
@@ -5554,14 +5555,14 @@ local function fn()
 				local n13, textSize, lineHeight = (f * 0.2) * a(v2.Padding, 1), math.max(8, math.floor(((n11 * 0.026) * a(v2.TextScale, 1)) + 0.5)), math.max(0.8, a(v2.LineHeight, 1.16))
 				local unit, width, m2 = textSize * lineHeight, math.max(1, x2 - (n12 * 2)), tbl10.m
 				m2.TextSize, m2.LineHeight, m2.Unit, m2.Width, m2.Font, m2.Align = textSize, lineHeight, unit, width, N(v2.Font) or font, tbl9[tostring(v2.Alignment):lower()] or left
-				m.BackgroundColor3, m.BackgroundTransparency, m.ClipsDescendants = fn23(v2.BackgroundColor, G), fn24(v2.BackgroundTransparency, 0.5), v2.ClipContent ~= false
+				m.BackgroundColor3, m.BackgroundTransparency, m.ClipsDescendants = fn24(v2.BackgroundColor, G), fn25(v2.BackgroundTransparency, 0.5), v2.ClipContent ~= false
 
 				if uiStroke then
 					pcall(function()
 						uiStroke.StrokeSizingMode = scrollingFrame.StrokeSizingMode.FixedSize
 					end)
 
-					uiStroke.Color, uiStroke.Transparency, uiStroke.Thickness = fn23(v2.StrokeColor, G), fn24(v2.StrokeTransparency, 0), math.max(1, f * a(v2.StrokeScale, 0.05))
+					uiStroke.Color, uiStroke.Transparency, uiStroke.Thickness = fn24(v2.StrokeColor, G), fn25(v2.StrokeTransparency, 0), math.max(1, f * a(v2.StrokeScale, 0.05))
 				end
 
 				parent = flag2 and (str2 ~= "")
@@ -5585,7 +5586,7 @@ local function fn()
 					Frame4.Visible = flag22 > 0
 
 					if flag22 > 0 then
-						Frame4.BackgroundColor3, Frame4.Position, Frame4.Size = fn23(tbl10.drc, color3FromRGB(170, 174, 184)), uDim2FromOffset(n12, (lineHeight + scrollingEnabled) + parent), uDim2FromOffset(width, flag22)
+						Frame4.BackgroundColor3, Frame4.Position, Frame4.Size = fn24(tbl10.drc, color3FromRGB(170, 174, 184)), uDim2FromOffset(n12, (lineHeight + scrollingEnabled) + parent), uDim2FromOffset(width, flag22)
 						lineHeight += (scrollingEnabled + (parent * 2)) + flag22
 					else
 						lineHeight += scrollingEnabled + parent
@@ -5595,13 +5596,13 @@ local function fn()
 					Frame4.Visible = false
 				end
 
-				fn34()
+				fn35()
 
 				for _, v5 in ipairs(tbl10.rh) do
 					K(v5, Q, width, unit)
 				end
 
-				fn34()
+				fn35()
 
 				for _, v5 in ipairs(tbl10.el) do
 					pcall(v5.Apply)
@@ -5615,7 +5616,7 @@ local function fn()
 				ScrollingFrame.Position, ScrollingFrame.Size, ScrollingFrame.CanvasSize = uDim2FromOffset(n12, lineHeight), uDim2FromOffset(width, str22), uDim2FromOffset(0, x2)
 				ScrollingFrame.ScrollBarThickness = (scrollingEnabled and math.max(2, math.floor((n11 * 0.006) + 0.5))) or 0
 				ScrollingFrame.ScrollingEnabled = scrollingEnabled
-				ScrollingFrame.ScrollBarImageColor3, ScrollingFrame.ScrollBarImageTransparency = fn23(v2.ScrollBarColor, o), fn24(v2.ScrollBarTransparency, 0)
+				ScrollingFrame.ScrollBarImageColor3, ScrollingFrame.ScrollBarImageTransparency = fn24(v2.ScrollBarColor, o), fn25(v2.ScrollBarTransparency, 0)
 				n15 = math.max(1, math.ceil((lineHeight + str22) + n13))
 				m.Size = uDim2New(1, 0, 0, n15)
 				r2.Size = uDim2New(n7, 0, 0, n15 + math.ceil((f * 0.15) / 0.85))
@@ -5642,7 +5643,7 @@ local function fn()
 				end
 			end)
 
-			fn11(function()
+			fn12(function()
 				tbl10.dirty = true
 			end)
 
@@ -5681,11 +5682,11 @@ local function fn()
 
 				if n13 >= 0.2 then
 					n13 = 0
-					B = fn29(r2)
+					B = fn30(r2)
 				end
 
 				if #tbl10.pp > 0 then
-					fn34()
+					fn35()
 					tbl10.dirty = true
 				end
 
@@ -5703,7 +5704,7 @@ local function fn()
 						if (os.clock() - n15) >= 0.1 then
 							tbl10.dirty = false
 							n15 = os.clock()
-							local ok, result = pcall(fn35)
+							local ok, result = pcall(fn36)
 
 							if not (ok) then
 								tbl10.dirty = true
@@ -5821,7 +5822,7 @@ local function fn()
 				tbl10.dirty = true
 			end, Attach = function(arg2, arg3)
 				if typeof(arg2) == "Instance" then
-					fn33(tbl10, arg2, fn32(tbl10, arg3))
+					fn34(tbl10, arg2, fn33(tbl10, arg3))
 				end
 
 				return arg2
@@ -6224,8 +6225,8 @@ local function fn2()
 	end
 
 	ctx.fn19 = function()
-		local b, n = ctx.localPlayer, tonumber(ctx.localPlayer:GetAttribute("RagdollEndTime")) or 0
-		return n > getServerTimeNow()
+		local b, n2 = ctx.localPlayer, tonumber(ctx.localPlayer:GetAttribute("RagdollEndTime")) or 0
+		return n2 > getServerTimeNow()
 	end
 
 	ctx.fn28 = function(b, ...)
@@ -6451,31 +6452,31 @@ local function fn2()
 		end
 
 		if c.sp then
-			local sp, n, S = c.sp, t.n
+			local sp, n2, n22 = c.sp, t.n
 
-			if n then
-				S = n
+			if n2 then
+				n22 = n2
 			else
 				local v2 = ctx.fn27
-				S = v2(t.cat)
+				n22 = v2(t.cat)
 			end
 
-			if not (sp[S]) then
+			if not (sp[n22]) then
 				return false
 			end
 		end
 
 		if c.no then
-			local no, n, S = c.no, t.n
+			local no, n2, n22 = c.no, t.n
 
-			if n then
-				S = n
+			if n2 then
+				n22 = n2
 			else
 				local v2 = ctx.fn27
-				S = v2(t.cat)
+				n22 = v2(t.cat)
 			end
 
-			if no[S] then
+			if no[n22] then
 				return false
 			end
 		end
@@ -6525,17 +6526,17 @@ local function fn2()
 
 	local t = {}
 
-	local function Q(n, S)
-		t[n] = S
+	local function Q(arg, S)
+		t[arg] = S
 	end
 
 	trackConnection(heartbeat, function()
 		if next(t) then
-			local n = t
+			local v2 = t
 			t = {}
 
-			for _, v2 in next, n, nil do
-				pcall(v2)
+			for _, v3 in next, v2, nil do
+				pcall(v3)
 			end
 		end
 	end)
@@ -6546,7 +6547,7 @@ local function fn2()
 
 	ctx.state.log = {}
 
-	ctx.fn6 = function(status, n)
+	ctx.fn6 = function(status, arg)
 		local S, X = ctx.state, ctx.state
 		S.noteAt = os.clock()
 		X.status = status
@@ -6567,7 +6568,7 @@ local function fn2()
 		S, X = ctx.state, ctx.state
 		S.warned = X.warned or {}
 
-		if (n == "warn") or (n == "err") then
+		if (arg == "warn") or (arg == "err") then
 			if not (c.open) then
 				X, S = ctx.state, os.clock() - (ctx.state.warned[status] or -1000000000)
 
@@ -6580,11 +6581,11 @@ local function fn2()
 		end
 	end
 
-	local function fn12(n, S)
-		v.Notify(n, S)
+	local function fn12(arg, S)
+		v.Notify(arg, S)
 	end
 
-	local function n(S, X)
+	local function fn13(S, X)
 		return function(i)
 			Q(S, function()
 				X:Set(i)
@@ -6750,11 +6751,11 @@ local function fn2()
 	local i = {}
 	ctx.slot28 = i
 
-	local function fn13(F, K, f, R, H, I, u)
+	local function fn14(F, K, f, R, H, I, u)
 		local y = ctx.slot28
 		y[f] = R or false
 
-		local function fn14(arg)
+		local function fn15(arg)
 			local v2 = ctx.slot28
 			v2[f] = arg
 
@@ -6765,14 +6766,14 @@ local function fn2()
 			X()
 		end
 
-		return F:Toggle(K, R, fn14, I, u)
+		return F:Toggle(K, R, fn15, I, u)
 	end
 
 	local function F(K, f, R, H, I, u, y, arg, arg2)
 		local v2 = ctx.slot28
 		v2[R] = I
 
-		local function fn14(arg3)
+		local function fn15(arg3)
 			local v3 = ctx.slot28
 			v3[R] = arg3
 
@@ -6783,14 +6784,14 @@ local function fn2()
 			X()
 		end
 
-		return K:Dropdown(f, H, I, fn14, y, arg, arg2)
+		return K:Dropdown(f, H, I, fn15, y, arg, arg2)
 	end
 
 	local function K(f, R, H, I, u, y, arg, arg2, arg3, arg4, arg5)
 		local v2 = ctx.slot28
 		v2[H] = ((arg == "log") and v.s2v(y)) or y
 
-		local function fn14(arg6)
+		local function fn15(arg6)
 			local v3 = ctx.slot28
 			v3[H] = arg6
 
@@ -6799,13 +6800,13 @@ local function fn2()
 			end
 		end
 
-		return f:Slider(R, I, u, y, fn14, arg, arg2, arg4, arg5)
+		return f:Slider(R, I, u, y, fn15, arg, arg2, arg4, arg5)
 	end
 
 	local f, R = {}
 	ctx.lastMV = R
 
-	local function fn14(H)
+	local function fn15(H)
 		H.at, H.tok, H.i = H.at or 0, 0, #f + 1
 		f[H.i] = H
 		return H
@@ -7138,7 +7139,7 @@ local function fn2()
 		return true
 	end
 
-	local function fn15(arg, arg2)
+	local function fn16(arg, arg2)
 		if not (ctx.fn7(arg2)) then
 			return false
 		end
@@ -7216,7 +7217,7 @@ local function fn2()
 		return v2(arg, arg2)
 	end
 
-	local function fn16()
+	local function fn17()
 		local v2, v3 = getServerTimeNow(), ctx.fn17
 
 		if v3("Cycle", "IsNightPhase", v2) then
@@ -7244,7 +7245,7 @@ local function fn2()
 		return ((n2 > 0) and n2) or 0
 	end
 
-	local function fn17()
+	local function fn18()
 		local attribute = workspace:GetAttribute("AdminBoost_Treadmill")
 
 		if type(attribute) == "number" then
@@ -7267,7 +7268,7 @@ local function fn2()
 		local flag, position = false
 
 		while arg() do
-			local v2 = fn16()
+			local v2 = fn17()
 
 			if v2 <= 0 then
 				if flag then
@@ -7311,14 +7312,14 @@ local function fn2()
 		return false
 	end
 
-	local function fn18(arg)
+	local function fn19(arg)
 		local v2 = ctx.fn23
 		local Areas2 = v2("Areas", "GuardAreas", tostring(arg), "Guard")
 		arg = Areas2 and (Areas2:FindFirstChild("HumanoidRootPart", true))
 		return ((arg and arg:IsA("BasePart")) and arg) or nil
 	end
 
-	local function fn19(arg, arg2)
+	local function fn20(arg, arg2)
 		local v2 = ctx.localPlayer
 		local str, v3, uid = "FirstAreaEgg_" .. v2.UserId, pairs, ctx.fn15
 		v2 = table.pack(uid())
@@ -7331,7 +7332,7 @@ local function fn2()
 			if k then
 				local flag = uid:sub(1, #str) == str
 				local match = if uid:sub(1, 13) == "FirstAreaEgg_" then flag and uid:match("_([%w ]+:Slot_%d+)$") else if type(v4.AreaId) == "string" then if type(v4.NestId) == "string" then v4.AreaId .. (":" .. v4.NestId) else nil else nil
-				local Forest = match and (fn18(v4.AreaId) or (flag and fn18("Forest")))
+				local Forest = match and (fn19(v4.AreaId) or (flag and fn19("Forest")))
 
 				if Forest then
 					local position, v5 = v4.BottomCFrame.Position, ctx.vector3New
@@ -7380,7 +7381,7 @@ local function fn2()
 			return false
 		end
 
-		local fn20 = ((type(arg) == "function") and arg) or (function()
+		local fn21 = ((type(arg) == "function") and arg) or (function()
 			return arg
 		end)
 
@@ -7411,7 +7412,7 @@ local function fn2()
 
 		for i2 = 1, 3, 1 do
 			i2 = ctx.fn11
-			v4 = fn19((i2() or v2).Position, tbl2)
+			v4 = fn20((i2() or v2).Position, tbl2)
 
 			if v4 then
 				if not (arg2()) then
@@ -7508,7 +7509,7 @@ local function fn2()
 				end
 			end
 
-			local v6 = fn20()
+			local v6 = fn21()
 
 			if v6 then
 				flag = true
@@ -7570,7 +7571,7 @@ local function fn2()
 			end)
 		end
 
-		v5, reGuardPatrolForestStrike = fn20(), ctx.fn11
+		v5, reGuardPatrolForestStrike = fn21(), ctx.fn11
 		arg2 = reGuardPatrolForestStrike()
 		connection = ((flag and (v5 ~= nil)) and (arg2 ~= nil)) and ((arg2.Position - v5).Magnitude <= 30)
 		return connection
@@ -7578,7 +7579,7 @@ local function fn2()
 
 	ctx.state.ragTo = ragTo
 
-	local function fn20(arg, arg2, arg3, arg4, arg5)
+	local function fn21(arg, arg2, arg3, arg4, arg5)
 		local now2 = ctx.state
 
 		if now2.ready then
@@ -7659,7 +7660,7 @@ local function fn2()
 
 	local tbl2 = {}
 
-	local function fn21(arg, arg2, arg3)
+	local function fn22(arg, arg2, arg3)
 		if tbl2[arg] then
 			tbl2[arg]:Disconnect()
 			tbl2[arg] = nil
@@ -7701,7 +7702,7 @@ local function fn2()
 		font2 = font2 or font
 		local n2, n3, n4, n5, n6, n7, n8, n9, str = 0.7, 1.9, 2.6, 2.1, 0.95, 5.6, 0.0909, 8, "#9AA3B5"
 
-		local function fn22(arg)
+		local function fn23(arg)
 			if typeof(arg) ~= "Instance" then
 				return false
 			else
@@ -7729,7 +7730,7 @@ local function fn2()
 			return false
 		end
 
-		local function fn23(arg)
+		local function fn24(arg)
 			if not arg or arg.DiffWrapped then
 				return arg
 			end
@@ -7760,7 +7761,7 @@ local function fn2()
 			return arg
 		end
 
-		local function fn24(arg)
+		local function fn25(arg)
 			pcall(function()
 				local v2 = arg.Get()
 
@@ -7772,17 +7773,17 @@ local function fn2()
 			end)
 		end
 
-		local function fn25(arg)
+		local function fn26(arg)
 			arg = tostring(arg or "")
 			arg = string.gsub(arg, "&", "&amp;")
 			arg = string.gsub(arg, "<", "&lt;")
 			return (string.gsub(arg, ">", "&gt;"))
 		end
 
-		local function fn26(arg, arg2, arg3)
+		local function fn27(arg, arg2, arg3)
 			local tbl7 = {Key = arg2, Header = arg3, Rows = {}, UnitsWide = 0, Count = -1, Width = -1, Surface = nil}
 
-			local function fn27(arg4)
+			local function fn28(arg4)
 				if tbl7.Surface then
 					if tbl7.UnitsWide <= 0 then
 						return
@@ -7842,7 +7843,7 @@ local function fn2()
 				end
 			end
 
-			local function fn28()
+			local function fn29()
 				local tbl8 = ((type(tbl6.Rows) == "function") and tbl6.Rows(arg2)) or {}
 				local count, color = math.min(#tbl8, n9), (tbl8[1] and tbl8[1].Color) or str
 
@@ -7856,7 +7857,7 @@ local function fn2()
 				if arg3 then
 					local tbl9 = ((type(tbl6.Header) == "function") and tbl6.Header()) or {Text = "READING ADMIN EVENTS", Color = str, Right = ""}
 					color = tbl9.Color
-					local set, tbl10 = tbl7.Title.Set, {Text = fn25(tbl9.Text)}
+					local set, tbl10 = tbl7.Title.Set, {Text = fn26(tbl9.Text)}
 					tbl10.Color = Color3.fromHex(tbl9.Color)
 					set(tbl10)
 					set, tbl10 = tbl7.Right.Set, {}
@@ -7873,14 +7874,14 @@ local function fn2()
 					if v2 then
 						row.Icon.Set({Image = v2.Image or "", StrokeColor = v2.Color})
 						local set, hintShown = row.Name.Set, {}
-						hintShown.Text = "<b>" .. (fn25(v2.Name) .. "</b>")
+						hintShown.Text = "<b>" .. (fn26(v2.Name) .. "</b>")
 						set(hintShown)
 						row.Chip.Set({StrokeColor = v2.Color})
-						set, i2 = row.ChipText.Set, {Text = fn25(v2.Chip)}
+						set, i2 = row.ChipText.Set, {Text = fn26(v2.Chip)}
 						i2.Color = Color3.fromHex(v2.Color)
 						set(i2)
 						set, hintShown = row.Detail.Set, {}
-						hintShown.Text = "<font color=\"" .. (str .. ("\">" .. (fn25(v2.Detail) .. "</font>")))
+						hintShown.Text = "<font color=\"" .. (str .. ("\">" .. (fn26(v2.Detail) .. "</font>")))
 						set(hintShown)
 						hintShown = (type(v2.Hint) == "string") and (v2.Hint ~= "")
 
@@ -7908,25 +7909,25 @@ local function fn2()
 				tbl7.Surface = surface
 				tbl7.Frame = surface:Frame({X = 0, Y = 0, Width = 1, Height = 2, Corner = 0.35, Background = "#000000", BackgroundTransparency = 1})
 				tbl7.Accent = surface:Frame({Parent = tbl7.Frame, X = 0, Y = 0, Width = 0.22, Height = 2, Corner = 0.11, Background = str, BackgroundTransparency = 0})
-				fn23(tbl7.Frame)
-				fn23(tbl7.Accent)
+				fn24(tbl7.Frame)
+				fn24(tbl7.Accent)
 
 				if arg3 then
-					tbl7.Title = fn23(surface:Text({Parent = tbl7.Frame, X = n2, Y = 0.35, Width = 1, Height = 1.2, Scale = 1.2, Wrap = false, Font = font2, TextStrokeTransparency = 1}))
-					tbl7.Right = fn23(surface:Text({Parent = tbl7.Frame, X = n2, Y = 0.45, Width = 1, Height = 1, Wrap = false, Align = "Right", Color = Color3.fromHex(str)}))
-					tbl7.Divider = fn23(surface:Frame({Parent = tbl7.Frame, X = n2, Y = n3, Width = 1, Height = 0.06, Background = "#FFFFFF", BackgroundTransparency = 0.85, Visible = false}))
-					fn24(tbl7.Title)
+					tbl7.Title = fn24(surface:Text({Parent = tbl7.Frame, X = n2, Y = 0.35, Width = 1, Height = 1.2, Scale = 1.2, Wrap = false, Font = font2, TextStrokeTransparency = 1}))
+					tbl7.Right = fn24(surface:Text({Parent = tbl7.Frame, X = n2, Y = 0.45, Width = 1, Height = 1, Wrap = false, Align = "Right", Color = Color3.fromHex(str)}))
+					tbl7.Divider = fn24(surface:Frame({Parent = tbl7.Frame, X = n2, Y = n3, Width = 1, Height = 0.06, Background = "#FFFFFF", BackgroundTransparency = 0.85, Visible = false}))
+					fn25(tbl7.Title)
 				end
 
 				local n92 = ((arg2 == "main") and n9) or 1
 
 				for i2 = 1, n92, 1 do
-					local tbl8 = {Icon = fn23(surface:Image({Parent = tbl7.Frame, X = n2, Y = 0, Width = n5, Height = n5, Corner = 0.35, Background = "#000000", BackgroundTransparency = 0.45, StrokeThickness = n8, StrokeTransparency = 0, Visible = false})), Name = fn23(surface:Text({Parent = tbl7.Frame, X = n2, Y = 0, Width = 1, Height = 1.1, Scale = 1.05, Wrap = false, Font = font, TextStrokeTransparency = 1, Visible = false})), Chip = fn23(surface:Frame({Parent = tbl7.Frame, X = 0, Y = 0, Width = n7, Height = n6, Corner = 0.3, Background = "#000000", BackgroundTransparency = 0.35, StrokeThickness = n8, StrokeTransparency = 0, Visible = false}))}
-					tbl8.ChipText = fn23(surface:Text({Parent = tbl8.Chip, X = 0, Y = 0, Width = n7, Height = n6, Scale = 0.78, Wrap = false, Align = "Center", VAlign = "center", Font = font2, TextStrokeTransparency = 1}))
-					tbl8.Detail = fn23(surface:Text({Parent = tbl7.Frame, X = n2, Y = 0, Width = 1, Height = 1, Scale = 0.92, Wrap = false, Visible = false}))
-					tbl8.Hint = fn23(surface:Image({Parent = tbl7.Frame, X = n2, Y = 0, Width = 1, Height = 1, Corner = 0.25, Background = "#000000", BackgroundTransparency = 1, Visible = false}))
-					fn24(tbl8.Name)
-					fn24(tbl8.Detail)
+					local tbl8 = {Icon = fn24(surface:Image({Parent = tbl7.Frame, X = n2, Y = 0, Width = n5, Height = n5, Corner = 0.35, Background = "#000000", BackgroundTransparency = 0.45, StrokeThickness = n8, StrokeTransparency = 0, Visible = false})), Name = fn24(surface:Text({Parent = tbl7.Frame, X = n2, Y = 0, Width = 1, Height = 1.1, Scale = 1.05, Wrap = false, Font = font, TextStrokeTransparency = 1, Visible = false})), Chip = fn24(surface:Frame({Parent = tbl7.Frame, X = 0, Y = 0, Width = n7, Height = n6, Corner = 0.3, Background = "#000000", BackgroundTransparency = 0.35, StrokeThickness = n8, StrokeTransparency = 0, Visible = false}))}
+					tbl8.ChipText = fn24(surface:Text({Parent = tbl8.Chip, X = 0, Y = 0, Width = n7, Height = n6, Scale = 0.78, Wrap = false, Align = "Center", VAlign = "center", Font = font2, TextStrokeTransparency = 1}))
+					tbl8.Detail = fn24(surface:Text({Parent = tbl7.Frame, X = n2, Y = 0, Width = 1, Height = 1, Scale = 0.92, Wrap = false, Visible = false}))
+					tbl8.Hint = fn24(surface:Image({Parent = tbl7.Frame, X = n2, Y = 0, Width = 1, Height = 1, Corner = 0.25, Background = "#000000", BackgroundTransparency = 1, Visible = false}))
+					fn25(tbl8.Name)
+					fn25(tbl8.Detail)
 					tbl7.Rows[i2] = tbl8
 				end
 
@@ -7944,7 +7945,7 @@ local function fn2()
 
 			trackConnection(RunService2.Heartbeat, function(deltaTime)
 				if tbl7.Surface then
-					if not (fn22(tbl7.Surface:Root())) then
+					if not (fn23(tbl7.Surface:Root())) then
 						return
 					end
 				else
@@ -7955,12 +7956,12 @@ local function fn2()
 
 				if n10 >= 0.5 then
 					n10 = 0
-					pcall(fn28)
+					pcall(fn29)
 				end
 
 				if tbl7.PlaceWanted then
 					tbl7.PlaceWanted = false
-					pcall(fn27, math.max(tbl7.Count, 0))
+					pcall(fn28, math.max(tbl7.Count, 0))
 				end
 			end)
 
@@ -7969,17 +7970,17 @@ local function fn2()
 
 		local tbl7, assetId, tbl8 = {live = {"LIVE", "#4DFF7A"}, active = {"ACTIVE", "#4DFF7A"}, ready = {"READY", "#7FD8FF"}, wait = {"WAITING", "#FFC24D"}, off = {"OFF", "#9AA3B5"}}, "rbxassetid://116524274262912", {Treadmill = "rbxassetid://84421204509494", ["Sci-FiTreadmill"] = "rbxassetid://81563639782445", FlameTreadmill = "rbxassetid://103122274001487", CelebrityTreadmill = "rbxassetid://75188836342954", GoldenTreadmill = "rbxassetid://99555941892079", ["The FreezeTreadmill"] = "rbxassetid://97611802500180", ["Lucky BlockTreadmill"] = "rbxassetid://85546442623094", HackerTreadmill = "rbxassetid://114661675379027", DemonicTreadmill = "rbxassetid://99849961715962", AngelicTreadmill = "rbxassetid://104277706019985", AstralTreadmill = "rbxassetid://118444572497588"}
 
-		local function fn27(arg, arg2, arg3, arg4, arg5, arg6)
+		local function fn28(arg, arg2, arg3, arg4, arg5, arg6)
 			local off = tbl7[arg3] or tbl7.off
 			return {Name = arg, Detail = tostring(arg2 or ""), Chip = arg5 or off[1], Color = off[2], Image = arg4, Hint = arg6}
 		end
 
-		local function fn28()
+		local function fn29()
 			local attribute = workspace:GetAttribute("AdminBoost_Treadmill")
 			return (((type(attribute) == "number") and (attribute > 1)) and ("x" .. attribute)) or nil
 		end
 
-		local function fn29()
+		local function fn30()
 			local adminTreadmill = workspace:FindFirstChild("AdminTreadmill")
 
 			for _, v2 in ipairs((adminTreadmill and adminTreadmill:GetChildren()) or {}) do
@@ -7991,7 +7992,7 @@ local function fn2()
 			return tbl8.AngelicTreadmill
 		end
 
-		local function fn30()
+		local function fn31()
 			local attribute, capture = workspace:GetAttribute("Event_CaptureTheEgg") or workspace:GetAttribute("Event_CaptureTheEggGameplay"), ctx.slot28
 			local capture2, capSt = capture.capture
 
@@ -8004,34 +8005,34 @@ local function fn2()
 
 			capture = capSt or "Off"
 			capture2 = ((attribute and "live") or ((capture == "Off") and "off")) or "wait"
-			return fn27("Capture The Egg", ((capture == "Off") and "Turn on Capture The Egg below to join the event") or capture, capture2, assetId)
+			return fn28("Capture The Egg", ((capture == "Off") and "Turn on Capture The Egg below to join the event") or capture, capture2, assetId)
 		end
 
-		local function fn31()
-			local str2, adminTreadmill, v2 = fn28(), workspace:FindFirstChild("AdminTreadmill"), ctx.slot28
+		local function fn32()
+			local str2, adminTreadmill, v2 = fn29(), workspace:FindFirstChild("AdminTreadmill"), ctx.slot28
 			if not (v2.adminTread) then
-				return fn27("Admin Treadmill", "Turn on Use Admin Treadmill below", "off", fn29())
+				return fn28("Admin Treadmill", "Turn on Use Admin Treadmill below", "off", fn30())
 			end
 
 			if str2 then
 			elseif adminTreadmill then
 			else
-				return fn27("Admin Treadmill", "Waiting for the Admin Treadmill", "wait", fn29())
+				return fn28("Admin Treadmill", "Waiting for the Admin Treadmill", "wait", fn30())
 			end
 
 			str2 = str2 or "on"
 			v2 = ctx.state
 			if v2.onAdmin then
-				return fn27("Admin Treadmill", "Running on the Admin Treadmill " .. str2, "active", fn29())
+				return fn28("Admin Treadmill", "Running on the Admin Treadmill " .. str2, "active", fn30())
 			end
-			return fn27("Admin Treadmill", "Going to the Admin Treadmill " .. str2, "live", fn29())
+			return fn28("Admin Treadmill", "Going to the Admin Treadmill " .. str2, "live", fn30())
 		end
 
 		local v2 = utf8.char(128994)
 		local v3 = utf8.char(128308)
 
-		local function fn32()
-			local v4, adminSteal = fn28(), ctx.slot28
+		local function fn33()
+			local v4, adminSteal = fn29(), ctx.slot28
 			local adminSteal2, flag = adminSteal.adminSteal and (v4 ~= nil)
 
 			if adminSteal2 then
@@ -8055,39 +8056,39 @@ local function fn2()
 
 			adminSteal2, adminSteal = flag22 or ("Ready, waiting for an egg, " .. v4), "rbxassetid://137134884810647"
 			if flag then
-				return fn27("Instant Steal V3", adminSteal2, "active", adminSteal, v2 .. " ACTIVE")
+				return fn28("Instant Steal V3", adminSteal2, "active", adminSteal, v2 .. " ACTIVE")
 			end
 			flag2 = ctx.slot28
-			return fn27("Instant Steal V3", adminSteal2, "off", adminSteal, v3 .. " INACTIVE", ((flag2.adminSteal and not v4) and adminSteal) or nil)
+			return fn28("Instant Steal V3", adminSteal2, "off", adminSteal, v3 .. " INACTIVE", ((flag2.adminSteal and not v4) and adminSteal) or nil)
 		end
 
-		local function fn33()
+		local function fn34()
 			local flag, minigame = (((workspace:GetAttribute("Event_RedLightGreenLight") == true) and "Red Light Green Light") or ((workspace:GetAttribute("Event_TrexRun") == true) and "T-Rex Run")) or nil, ctx.state
 			local mgSt, v4 = minigame.mgSt or "Off", ctx.slot28
 			minigame = v4.minigame
 			local pos, v5 = (((if minigame then not minigame else "off") or (((mgSt == "Carrying the egg home") or mgSt:find("^Going for")) and "active")) or (flag and "live")) or "wait", ctx.slot28
 			mgSt = if v5.minigame then mgSt else "Turn on Auto Steal Minigame Egg below"
-			return fn27(flag or "Minigame Egg", mgSt, pos, assetId)
+			return fn28(flag or "Minigame Egg", mgSt, pos, assetId)
 		end
 
 		tbl6.Rows = function(arg)
 			if arg == "capture" then
-				return {fn30()}
-			elseif arg == "treadmill" then
 				return {fn31()}
-			elseif arg == "old" then
+			elseif arg == "treadmill" then
 				return {fn32()}
-			elseif arg == "minigame" then
+			elseif arg == "old" then
 				return {fn33()}
+			elseif arg == "minigame" then
+				return {fn34()}
 			end
 
 			return {}
 		end
 
-		fn26(tbl3["Capture The Egg"], "capture", false)
-		fn26(tbl3["Admin Treadmill"], "treadmill", false)
-		fn26(tbl3["Instant Steal V3"], "old", false)
-		fn26(tbl3["Minigame Eggs"], "minigame", false)
+		fn27(tbl3["Capture The Egg"], "capture", false)
+		fn27(tbl3["Admin Treadmill"], "treadmill", false)
+		fn27(tbl3["Instant Steal V3"], "old", false)
+		fn27(tbl3["Minigame Eggs"], "minigame", false)
 	end)
 
 	local tbl6, tbl7 = {links = {}, rig = 0, body = 0, at = 0}, {}
@@ -8152,7 +8153,7 @@ local function fn2()
 		return flag2
 	end
 
-	local function fn22()
+	local function fn23()
 		local v2 = ctx.tbl6
 		local o2, character = v2.o, ctx.tbl6
 		local c2, v3 = character.c, ctx.localPlayer
@@ -8173,8 +8174,8 @@ local function fn2()
 		end
 	end
 
-	local function fn23()
-		local v2 = nil
+	local function fn24()
+		local n2 = 752200888
 		local character = ctx.localPlayer.Character
 		local humanoid = character and character:FindFirstChildOfClass("Humanoid")
 		if ctx.fn() then
@@ -8230,9 +8231,9 @@ local function fn2()
 			clone.HipHeight = hipHeight
 		end
 
-		local v3 = ctx.tbl6
+		local v2 = ctx.tbl6
 		ctx.tbl6.o = humanoid
-		v3.c = clone
+		v2.c = clone
 		ctx.fn2(clone)
 		local links = ctx.tbl6.links
 		local animator = humanoid:FindFirstChildOfClass("Animator")
@@ -8240,24 +8241,24 @@ local function fn2()
 		local signal = humanoid:GetPropertyChangedSignal("WalkSpeed")
 		local signal2 = signal
 		local connect = signal.Connect
-		local n2 = 67565019
+		local n3 = 67565019
 
-		local function fn24()
+		local function fn25()
 			if clone.Parent then
 				clone.WalkSpeed = humanoid.WalkSpeed
 				return
 			end
 		end
 
-		n2 = 104953609
-		links[1] = connect(signal2, fn24)
+		n3 = 104953609
+		links[1] = connect(signal2, fn25)
 
 		if animator then
 			if animator2 then
 				local animationPlayed = animator.AnimationPlayed
-				local n3 = 125120365
+				local n4 = 125120365
 
-				local function fn25(arg)
+				local function fn26(arg)
 					local ok, result = pcall(animator2.LoadAnimation, animator2, arg.Animation)
 
 					if ok then
@@ -8275,15 +8276,15 @@ local function fn2()
 					end
 				end
 
-				n3 = 316630004
-				links[2] = animationPlayed:Connect(fn25)
+				n4 = 316630004
+				links[2] = animationPlayed:Connect(fn26)
 			end
 		end
 
-		local n3 = #links + 1
-		local n4 = 325230272
+		local n4 = #links + 1
+		local n5 = 325230272
 
-		local function fn25()
+		local function fn26()
 			ctx.fn3()
 
 			if ctx.localPlayer.Character then
@@ -8297,11 +8298,11 @@ local function fn2()
 			humanoid.Health = 0
 		end
 
-		n4 = 507322915
-		links[n3] = clone.Died:Connect(fn25)
+		n5 = 507322915
+		links[n4] = clone.Died:Connect(fn26)
 	end
 
-	local function fn24(arg)
+	local function fn25(arg)
 		local v2 = ipairs
 
 		for k, v3 in v2(tbl8) do
@@ -8332,13 +8333,13 @@ local function fn2()
 	g("05_swap#1", function()
 		local flag, flag2 = false, false
 
-		local function fn25(arg)
+		local function fn26(arg)
 			flag = false
 			if not (arg) then
 				return
 			end
 
-			local function fn26(child)
+			local function fn27(child)
 				if child:IsA("Humanoid") then
 					child.Died:Once(function()
 						flag = true
@@ -8347,14 +8348,14 @@ local function fn2()
 			end
 
 			for _, child in ipairs(arg:GetChildren()) do
-				fn26(child)
+				fn27(child)
 			end
 
-			arg.ChildAdded:Connect(fn26)
+			arg.ChildAdded:Connect(fn27)
 		end
 
 		local v2 = ctx.localPlayer
-		fn25(v2.Character)
+		fn26(v2.Character)
 		v2 = ctx.localPlayer
 
 		trackConnection(v2.CharacterRemoving, function()
@@ -8366,7 +8367,7 @@ local function fn2()
 		trackConnection(v2.CharacterAdded, function(character)
 			local v3 = ctx.fn3
 			v3()
-			fn25(character)
+			fn26(character)
 			local v4, v5, v6, flag22 = ctx.tbl6, ctx.tbl6, ctx.tbl6, flag2
 			v4.gate, v5.body, v6.at = flag22, os.clock(), os.clock() + 1
 			flag2 = false
@@ -8383,7 +8384,7 @@ local function fn2()
 		end
 	end)
 
-	local function fn25()
+	local function fn26()
 		local v2 = ctx.state
 		local invisBusy, invisBusy2 = v2.invisBusy
 
@@ -8433,10 +8434,10 @@ local function fn2()
 		while true do
 			arg2 = ctx.fn
 			local v2 = arg2()
-			if not (((if v2 then not v2 else not fn25()) and (os.clock() < n2)) and arg()) then
+			if not (((if v2 then not v2 else not fn26()) and (os.clock() < n2)) and arg()) then
 				break
 			end
-			fn23()
+			fn24()
 			v2 = ctx.fn
 			if v2() then
 				return true
@@ -8448,7 +8449,7 @@ local function fn2()
 		return true
 	end
 
-	local v2 = fn14({name = "Shield", gap = 0.25})
+	local v2 = fn15({name = "Shield", gap = 0.25})
 
 	v2.on = function()
 		return true
@@ -8461,26 +8462,26 @@ local function fn2()
 		end
 
 		Q("swap", function()
-			if fn25() then
+			if fn26() then
 				local v4 = ctx.fn
 
 				if v4() then
-					fn22()
+					fn23()
 				end
 			else
-				fn23()
+				fn24()
 			end
 
 			local v4 = ctx.fn4
 			local v5 = v4()
 
 			if v5 then
-				fn24(v5)
+				fn25(v5)
 			end
 		end)
 	end
 
-	local v3 = fn14({name = "Steal", mover = true, gap = 0.5, pri = 2, hold = true, where = function(arg)
+	local v3 = fn15({name = "Steal", mover = true, gap = 0.5, pri = 2, hold = true, where = function(arg)
 		return (((type(arg) == "table") and arg.hw) and "dim") or "field"
 	end})
 
@@ -8619,7 +8620,7 @@ local function fn2()
 
 		v5 = ctx.state
 
-		v5.autoSteal = fn13(autoSteal, "Auto Steal", "steal", false, function(arg)
+		v5.autoSteal = fn14(autoSteal, "Auto Steal", "steal", false, function(arg)
 			if not (arg) then
 				local v9 = ctx.slot28
 
@@ -8687,7 +8688,7 @@ local function fn2()
 		end
 
 		function c.pre(arg)
-			local function fn26(arg2)
+			local function fn27(arg2)
 				for k, v13 in next, arg, nil do
 					k = (type(v13) == "table") and v13["Auto Steal"]
 					v13 = (type(k) == "table") and k[arg2]
@@ -8697,7 +8698,7 @@ local function fn2()
 				end
 			end
 
-			local instantStealV2, Delivery = fn26("Instant Steal V2")
+			local instantStealV2, Delivery = fn27("Instant Steal V2")
 
 			if instantStealV2 then
 				if instantStealV2.Value == true then
@@ -8705,7 +8706,7 @@ local function fn2()
 				end
 			end
 
-			local fastDelivery, instantSteal, v2TweenSpeed = fn26("Fast Delivery"), fn26("Instant Steal")
+			local fastDelivery, instantSteal, v2TweenSpeed = fn27("Fast Delivery"), fn27("Instant Steal")
 
 			if fastDelivery then
 				if fastDelivery.Value == true then
@@ -8717,7 +8718,7 @@ local function fn2()
 				end
 			end
 
-			v2TweenSpeed = fn26("V2 Tween Speed")
+			v2TweenSpeed = fn27("V2 Tween Speed")
 
 			if v2TweenSpeed then
 				if Delivery then
@@ -8727,7 +8728,7 @@ local function fn2()
 				end
 			end
 
-			instantStealV2, Delivery = fn26("Tween Speed")
+			instantStealV2, Delivery = fn27("Tween Speed")
 
 			if instantStealV2 then
 				v2TweenSpeed = tonumber(instantStealV2.Value)
@@ -8739,19 +8740,19 @@ local function fn2()
 				end
 			end
 
-			instantStealV2, v2TweenSpeed = fn26("Carry Speed")
+			instantStealV2, v2TweenSpeed = fn27("Carry Speed")
 
 			if instantStealV2 then
 				v2TweenSpeed["Delivery Speed"] = v2TweenSpeed["Delivery Speed"] or instantStealV2
 			end
 
-			instantStealV2, fastDelivery = fn26("Instant Steal Steps")
+			instantStealV2, fastDelivery = fn27("Instant Steal Steps")
 
 			if instantStealV2 then
 				fastDelivery["Step Count"] = fastDelivery["Step Count"] or instantStealV2
 			end
 
-			v2TweenSpeed, instantStealV2 = fn26("Instant Steal")
+			v2TweenSpeed, instantStealV2 = fn27("Instant Steal")
 
 			if instantStealV2 and (v2TweenSpeed.Value ~= true) then
 				instantStealV2.Delivery = {Value = "Walk"}
@@ -8761,7 +8762,7 @@ local function fn2()
 				end
 			end
 
-			Delivery, v2TweenSpeed = fn26("Delivery")
+			Delivery, v2TweenSpeed = fn27("Delivery")
 
 			if Delivery and ((Delivery.Value == "Codium Steps") or (Delivery.Value == "Quick Steps")) then
 				v2TweenSpeed["Teleport Delivery"] = v2TweenSpeed["Teleport Delivery"] or {Value = "Quick Steps"}
@@ -8774,7 +8775,7 @@ local function fn2()
 				end
 			end
 
-			v2TweenSpeed = fn26("Teleport Delivery")
+			v2TweenSpeed = fn27("Teleport Delivery")
 
 			if v2TweenSpeed then
 				if v2TweenSpeed.Value == "Rapid Carry" then
@@ -8783,29 +8784,29 @@ local function fn2()
 			end
 		end
 
-		local function fn26(arg)
+		local function fn27(arg)
 			return function(arg2)
 				return arg2 == arg
 			end
 		end
 
 		moveToEgg = F(autoSteal, "Move To Egg", "moveTo", {"Walk", "Teleport"}, "Walk")
-		local v13, v14 = F(autoSteal, "Delivery", "insDel", {"Walk", "Instant Steps", "Fast Tween"}, "Walk"):When(moveToEgg, (fn26("Walk"))), F(autoSteal, "Teleport Delivery", "tpDel", {"Walk", "Quick Steps", "Fast Tween"}, "Walk"):When(moveToEgg, (fn26("Teleport")))
+		local v13, v14 = F(autoSteal, "Delivery", "insDel", {"Walk", "Instant Steps", "Fast Tween"}, "Walk"):When(moveToEgg, (fn27("Walk"))), F(autoSteal, "Teleport Delivery", "tpDel", {"Walk", "Quick Steps", "Fast Tween"}, "Walk"):When(moveToEgg, (fn27("Teleport")))
 
 		pcall(function()
 			v14.row.lb.Text = "Delivery"
 		end)
 
 		v5 = ctx.state
-		F(autoSteal, "Teleport Zones", "tpZones", v5.TZ, {"Titan Temple", "Light Dark", "Enchanted Forest"}, nil, true):When(moveToEgg, (fn26("Teleport")))
+		F(autoSteal, "Teleport Zones", "tpZones", v5.TZ, {"Titan Temple", "Light Dark", "Enchanted Forest"}, nil, true):When(moveToEgg, (fn27("Teleport")))
 
 		autoSteal:Slider("Delivery Speed", 80, 110, 100, function(arg)
 			local v15 = ctx.slot28
 			v15.carryK = arg / 100
-		end, "%", 1):When(v13, (fn26("Walk")))
+		end, "%", 1):When(v13, (fn27("Walk")))
 
-		K(autoSteal, "Step Count", "stepsN", 1, 6, 3, nil, 1):When(v13, (fn26("Instant Steps")))
-		K(autoSteal, "Fast Tween Speed", "pullSpd", 3000, 4500, 3300, nil, 50):When(v13, (fn26("Fast Tween")))
+		K(autoSteal, "Step Count", "stepsN", 1, 6, 3, nil, 1):When(v13, (fn27("Instant Steps")))
+		K(autoSteal, "Fast Tween Speed", "pullSpd", 3000, 4500, 3300, nil, 50):When(v13, (fn27("Fast Tween")))
 		local stealFilter, v15 = {}, ctx.state
 		v15.stealFilter = stealFilter
 		local tbl9, areas = {["Best Rarity"] = "Best rarity", ["Biggest Weight"] = "Biggest", ["Best Mutation"] = "Best mutation", ["Highest Value"] = "Best value", ["Lowest Value"] = "Lowest value"}, ctx.slot28
@@ -8817,9 +8818,9 @@ local function fn2()
 			X()
 		end)
 
-		fn26 = ctx.state
+		fn27 = ctx.state
 
-		areas, v13, moveToEgg = fn26.AREAS, ctx.state, function(arg)
+		areas, v13, moveToEgg = fn27.AREAS, ctx.state, function(arg)
 			local v16 = ctx.slot28
 			v16.zones = nil
 			v16 = ctx.state
@@ -8844,13 +8845,13 @@ local function fn2()
 		autoSteal:Dropdown("Target Areas", areas, ctx.state.AREAS, moveToEgg, true)
 		v5 = ctx.state
 
-		local function fn27(arg)
+		local function fn28(arg)
 			local v16 = ctx.state
 			stealFilter.rar = v16.minRar(arg)
 			X()
 		end
 
-		autoSteal:Dropdown("Min Rarity", v5.RANY, "Any", fn27, false)
+		autoSteal:Dropdown("Min Rarity", v5.RANY, "Any", fn28, false)
 
 		autoSteal:Slider("Min Steal Value", 0, 0, 0, function(arg)
 			stealFilter.minV = ((arg > 0) and arg) or nil
@@ -8859,17 +8860,17 @@ local function fn2()
 
 		areas = ctx.state
 
-		local function fn28(arg)
+		local function fn29(arg)
 			local v16 = ctx.state
 			stealFilter.sp = v16.names(arg)
 			X()
 		end
 
-		autoSteal:Dropdown("Target Specific Eggs", areas.eggList, {}, fn28, true)
-		fn13(autoSteal, "Steal Missing Index Eggs", "index", false)
+		autoSteal:Dropdown("Target Specific Eggs", areas.eggList, {}, fn29, true)
+		fn14(autoSteal, "Steal Missing Index Eggs", "index", false)
 		areas = tbl3["Instant Steal V3"]
 		areas:Text("Instant Steal V3 Note", "Needs Admin Treadmill")
-		fn13(areas, "Use Instant Steal V3", "adminSteal", true)
+		fn14(areas, "Use Instant Steal V3", "adminSteal", true)
 
 		ctx2.fn9 = function()
 			local v16 = ctx.slot28
@@ -9098,20 +9099,20 @@ local function fn2()
 			return tbl10
 		end
 
-		local function fn29()
+		local function fn30()
 			local v16 = ctx.fn23
 			local Build = v16("Build", "FuseBiomeZone")
 			return Build and (Build:FindFirstChild("ExitPart", true))
 		end
 
-		local function fn30(arg)
+		local function fn31(arg)
 			pcall(function()
 				firetouchinterest(ctx.fn11(), arg, 0)
 				firetouchinterest(ctx.fn11(), arg, 1)
 			end)
 		end
 
-		local function fn31()
+		local function fn32()
 			local v16 = ctx.localPlayer
 			local flag, flag2 = v16:GetAttribute("InEnchantedTree") == true
 
@@ -9153,11 +9154,11 @@ local function fn2()
 				flag = v16
 			end
 
-			return flag and not fn31()
+			return flag and not fn32()
 		end
 
 		ctx2.fn2 = function(arg)
-			local v16, v17 = fn29(), ctx.localPlayer
+			local v16, v17 = fn30(), ctx.localPlayer
 			local character, n3 = v17.Character, os.clock() + 12
 
 			while true do
@@ -9184,7 +9185,7 @@ local function fn2()
 				end
 				flag, v16222 = ctx.fn10, ctx.cFrameNew
 				flag(v16222(v16.Position))
-				fn30(v16)
+				fn31(v16)
 				task.wait(arg or 0.1)
 			end
 
@@ -9192,18 +9193,18 @@ local function fn2()
 			return not arg()
 		end
 
-		fn28, v15 = ctx.state, ctx.state
-		fn28.inFuse = ctx2.fn
+		fn29, v15 = ctx.state, ctx.state
+		fn29.inFuse = ctx2.fn
 		v15.leaveFuse = ctx2.fn2
 		local v16 = ctx.state
 
 		v16.fuseZone = function()
-			local v17, v18 = fn29(), ctx.fn11
+			local v17, v18 = fn30(), ctx.fn11
 			local v19 = v18()
 			return ((v19 ~= nil) and (v17 ~= nil)) and ((v19.Position - v17.Position).Magnitude < 1200)
 		end
 
-		local v17 = fn14({name = "FuseGuard", gap = 0.3})
+		local v17 = fn15({name = "FuseGuard", gap = 0.3})
 		local now2
 
 		v17.on = function()
@@ -9233,7 +9234,7 @@ local function fn2()
 			now2 = nil
 		end
 
-		local v18 = fn14({name = "NightHome", mover = true, soft = true, pri = 40, gap = 1, aux = true, where = function(arg)
+		local v18 = fn15({name = "NightHome", mover = true, soft = true, pri = 40, gap = 1, aux = true, where = function(arg)
 			return ((arg == "dim") and "dim") or "field"
 		end})
 
@@ -9309,7 +9310,7 @@ local function fn2()
 			state = ctx.fn13
 
 			if not (state(v20.Position)) then
-				if not (fn31()) then
+				if not (fn32()) then
 					local v21, v22 = ctx.fn20, ctx.vector3New
 					return v21() + v22(0, 3, 0)
 				end
@@ -9328,7 +9329,7 @@ local function fn2()
 			else
 				local v20 = ctx.fn6
 				v20("Night, back to the safe zone")
-				fn15(arg, arg2)
+				fn16(arg, arg2)
 			end
 		end
 
@@ -9343,6 +9344,8 @@ local function fn2()
 		end
 
 		local function reach(arg, arg2)
+			local n3 = 154716356
+			local n4 = 4201903402
 			local humanoid = ctx.fn4()
 
 			if humanoid then
@@ -9371,14 +9374,14 @@ local function fn2()
 									local v21 = ctx.state
 									local v22 = ctx.state
 									local hold = ctx.state.hold or 0
-									local n3 = nil // 177
+									local n5 = n4 // 177
 									v21.tainted = nil
 									v22.hold = hold + 1
 									ctx.fn6("Resetting after a failed steal")
 									ctx.fn10(ctx.cFrameNew(treadmillBottom.Position.X, 72, treadmillBottom.Position.Z))
-									local n4 = os.clock() + 2.5
+									local n6 = os.clock() + 2.5
 
-									while os.clock() < n4 do
+									while os.clock() < n6 do
 										if arg2() then
 											if ctx.fn11() then
 												if not ctx.fn11().Anchored then
@@ -9398,7 +9401,7 @@ local function fn2()
 
 									ctx.state.hold = ctx.state.hold - 1
 									ctx.fn7(arg2)
-									local n5 = n3 - 116803461
+									n4 = n5 - 116803461
 								end
 							end
 						end
@@ -9413,19 +9416,19 @@ local function fn2()
 							end
 						end
 
-						local n3 = 0
+						local n5 = 0
 						local flag = false
-						local n4 = 339821253
+						local n6 = 339821253
 
-						local function fn32()
+						local function fn33()
 							if flag then
 								return false
 							end
 
 							if arg2() then
 								if arg.Uid then
-									if n3 <= os.clock() then
-										n3 = os.clock() + 0.05
+									if n5 <= os.clock() then
+										n5 = os.clock() + 0.05
 										local v21 = nil
 
 										for _, v22 in pairs(ctx.fn15()) do
@@ -9456,12 +9459,12 @@ local function fn2()
 						end
 
 						local name = arg.Name
-						local n5 = bit32.band(nil, 214216891) - 4175069708
-						n4 = 459586737
+						local n7 = bit32.band(n3, 214216891) - 4175069708
+						n6 = 459586737
 						ctx.fn6("Going to " .. name)
 
-						if ctx2.fn3(arg.Pos + Vector3.new(0, 3, 0), fn32) then
-							if fn32() then
+						if ctx2.fn3(arg.Pos + Vector3.new(0, 3, 0), fn33) then
+							if fn33() then
 								return true
 							end
 						end
@@ -9511,28 +9514,29 @@ local function fn2()
 			return not ((ok and (type(result) == "table")) and (result.State == "GuardCarried"))
 		end
 
-		local fn32, tbl10, character = function(arg, arg2, arg3, arg4)
-			local n3 = 81621270
+		local fn33, tbl10, character = function(arg, arg2, arg3, arg4)
+			local n3 = 1331730983
+			local n4 = 81621270
 
 			if arg4 then
 				if ctx.state.cmode() == "Fast tween" then
 					if not ctx.fn16(arg) then
 						local flag = nil
-						local n4 = 520083309
+						local n5 = 520083309
 
-						local function fn32()
+						local function fn33()
 							flag = ctx.fn17("Egg", "CarryFieldEgg", arg) == true
 						end
 
-						n4 = 349918074
-						task.spawn(fn32)
-						local n5 = 0
+						n5 = 349918074
+						task.spawn(fn33)
+						local n6 = 0
 						local v20
 
 						repeat
 							v20 = ctx.fn12()
-							n5 += v20
-						until not (n5 < 0.05)
+							n6 += v20
+						until not (n6 < 0.05)
 
 						local flag2 = not not ctx.fn11
 
@@ -9542,9 +9546,9 @@ local function fn2()
 							v20 = ctx.fn18
 						end
 
-						local n6 = v20().X + 13.8
+						local n7 = v20().X + 13.8
 						ctx.state.flyY = flag2 and flag2.Position.Y
-						local n7 = 0.016666666666666666
+						local n8 = 0.016666666666666666
 
 						while not ctx.fn16(arg) do
 							if flag ~= false then
@@ -9553,8 +9557,8 @@ local function fn2()
 										local v21 = ctx.fn11()
 
 										if v21 then
-											ctx.fn10(ctx.cFrameNew(v21.Position.X - math.min(ctx.slot28.pullSpd * n7, 250, math.max(v21.Position.X - n6, 0)), ctx.state.flyY or v21.Position.Y, v21.Position.Z) * CFrame.Angles(0, 1.5707963267948966, 0))
-											n7 = ctx.fn12()
+											ctx.fn10(ctx.cFrameNew(v21.Position.X - math.min(ctx.slot28.pullSpd * n8, 250, math.max(v21.Position.X - n7, 0)), ctx.state.flyY or v21.Position.Y, v21.Position.Z) * CFrame.Angles(0, 1.5707963267948966, 0))
+											n8 = ctx.fn12()
 											continue
 										end
 									end
@@ -9567,33 +9571,33 @@ local function fn2()
 						if ctx.fn16(arg) then
 							return true
 						end
-						local v21 = bit32.band(nil, n3)
+						local v21 = bit32.band(n3, n4)
 						ctx.fn10(ctx.cFrameNew(arg3 + Vector3.new(0, 3, 0)))
-						local n8 = v21 - 3034543583
+						n3 = v21 - 3034543583
 					end
 				end
 			end
 
 			local character = ctx.localPlayer.Character
 			local v20 = nil
-			local n4 = 0
 			local n5 = 0
+			local n6 = 0
 			local now3 = os.clock()
 			local v21 = table.pack(bit32.band(now3, 4294967295))
 			local v22 = table.pack(bit32.band(v21[1], 65535))
 			local v23 = bit32.band(50073 * v22[1] + bit32.lshift(bit32.band(50073 * bit32.rshift(v21[1], 16) + 58138 * v22[1], 65535), 16), 4294967295)
 			local v24 = table.pack(bit32.band(bit32.bnot(now3), 4294967295))
 			local v25 = table.pack(bit32.band(v24[1], 65535))
-			local n6 = 4269197112 + n3 + v23 + bit32.band(50073 * v25[1] + bit32.lshift(bit32.band(50073 * bit32.rshift(v24[1], 16) + 58138 * v25[1], 65535), 16), 4294967295)
-			local n7 = now3 + 6
-			local n8 = os.clock() + 0.3
+			local n7 = 4269197112 + n4 + v23 + bit32.band(50073 * v25[1] + bit32.lshift(bit32.band(50073 * bit32.rshift(v24[1], 16) + 58138 * v25[1], 65535), 16), 4294967295)
+			local n8 = now3 + 6
+			local n9 = os.clock() + 0.3
 			local now4 = nil
 			local flag = false
 			local exitTo = nil
 			local v202
 
 			while true do
-				if os.clock() < n7 then
+				if os.clock() < n8 then
 					if ctx.fn16(arg) then
 						exitTo = 1
 						break
@@ -9602,7 +9606,7 @@ local function fn2()
 							exitTo = 2
 							break
 						else
-							local n9, fn32
+							local n10, fn33
 
 							if arg3 then
 								if ctx.fn19() then
@@ -9612,112 +9616,112 @@ local function fn2()
 										if (v26.Position - arg3).Magnitude > 8 then
 											ctx.fn10(ctx.cFrameNew(arg3 + Vector3.new(0, 3, 0)))
 
-											if n5 < 3 then
-												n5 += 1
-												n9 = 296848232
+											if n6 < 3 then
+												n6 += 1
+												n10 = 296848232
 
-												fn32 = function()
+												fn33 = function()
 													local Egg, v27 = ctx.fn17("Egg", "CarryFieldEgg", arg)
-													n5 -= 1
+													n6 -= 1
 													if type(v27) ~= "string" then
 														return
 													end
 													local str = v27:lower()
 													local now5 = os.clock()
 													v20 = str
-													n4 = now5
+													n5 = now5
 												end
 
-												n9 = 215482811
-												task.spawn(fn32)
+												n10 = 215482811
+												task.spawn(fn33)
 												v202 = v20 or ""
 											else
 												v202 = v20 or ""
 											end
-										elseif n5 < 3 then
-											n5 += 1
-											n9 = 296848232
+										elseif n6 < 3 then
+											n6 += 1
+											n10 = 296848232
 
-											fn32 = function()
+											fn33 = function()
 												local Egg, v27 = ctx.fn17("Egg", "CarryFieldEgg", arg)
-												n5 -= 1
+												n6 -= 1
 												if type(v27) ~= "string" then
 													return
 												end
 												local str = v27:lower()
 												local now5 = os.clock()
 												v20 = str
-												n4 = now5
+												n5 = now5
 											end
 
-											n9 = 215482811
-											task.spawn(fn32)
+											n10 = 215482811
+											task.spawn(fn33)
 											v202 = v20 or ""
 										else
 											v202 = v20 or ""
 										end
-									elseif n5 < 3 then
-										n5 += 1
-										n9 = 296848232
+									elseif n6 < 3 then
+										n6 += 1
+										n10 = 296848232
 
-										fn32 = function()
+										fn33 = function()
 											local Egg, v27 = ctx.fn17("Egg", "CarryFieldEgg", arg)
-											n5 -= 1
+											n6 -= 1
 											if type(v27) ~= "string" then
 												return
 											end
 											local str = v27:lower()
 											local now5 = os.clock()
 											v20 = str
-											n4 = now5
+											n5 = now5
 										end
 
-										n9 = 215482811
-										task.spawn(fn32)
+										n10 = 215482811
+										task.spawn(fn33)
 										v202 = v20 or ""
 									else
 										v202 = v20 or ""
 									end
-								elseif n5 < 3 then
-									n5 += 1
-									n9 = 296848232
+								elseif n6 < 3 then
+									n6 += 1
+									n10 = 296848232
 
-									fn32 = function()
+									fn33 = function()
 										local Egg, v26 = ctx.fn17("Egg", "CarryFieldEgg", arg)
-										n5 -= 1
+										n6 -= 1
 										if type(v26) ~= "string" then
 											return
 										end
 										local str = v26:lower()
 										local now5 = os.clock()
 										v20 = str
-										n4 = now5
+										n5 = now5
 									end
 
-									n9 = 215482811
-									task.spawn(fn32)
+									n10 = 215482811
+									task.spawn(fn33)
 									v202 = v20 or ""
 								else
 									v202 = v20 or ""
 								end
-							elseif n5 < 3 then
-								n5 += 1
-								n9 = 296848232
+							elseif n6 < 3 then
+								n6 += 1
+								n10 = 296848232
 
-								fn32 = function()
+								fn33 = function()
 									local Egg, v26 = ctx.fn17("Egg", "CarryFieldEgg", arg)
-									n5 -= 1
+									n6 -= 1
 									if type(v26) ~= "string" then
 										return
 									end
 									local str = v26:lower()
 									local now5 = os.clock()
 									v20 = str
-									n4 = now5
+									n5 = now5
 								end
 
-								n9 = 215482811
-								task.spawn(fn32)
+								n10 = 215482811
+								task.spawn(fn33)
 								v202 = v20 or ""
 							else
 								v202 = v20 or ""
@@ -9730,7 +9734,7 @@ local function fn2()
 								exitTo = 4
 								break
 							else
-								local v26, n10, fn33, v27, v28, n11, v29, unit
+								local v26, n11, fn34, v27, v28, n12, v29, unit
 
 								if v202:find("already carrying") then
 									if not ctx.fn16(arg) then
@@ -9738,23 +9742,23 @@ local function fn2()
 										v20 = nil
 
 										if arg3 then
-											if os.clock() >= n8 then
-												n8 = os.clock() + 0.15
+											if os.clock() >= n9 then
+												n9 = os.clock() + 0.15
 												v26 = ctx2.fn5(arg3)
 
 												if v26 then
-													n10 = 134987126
+													n11 = 134987126
 
-													fn33 = function()
+													fn34 = function()
 														v26.HoldDuration = 0
 														fireproximityprompt(v26)
 													end
 
-													n10 = 391743875
-													pcall(fn33)
+													n11 = 391743875
+													pcall(fn34)
 
 													if v202:find("closer") then
-														if os.clock() - n4 < 0.5 then
+														if os.clock() - n5 < 0.5 then
 															now4 = now4 or os.clock()
 															v27 = ctx.fn4()
 															v28 = ctx.fn11()
@@ -9763,7 +9767,7 @@ local function fn2()
 																if os.clock() - now4 > 0.6 then
 																	if v27 then
 																		if v28 then
-																			n11 = n6 + 3680240543
+																			n12 = n7 + 3680240543
 																			v29 = ctx.vector3New(v28.Position.X - arg3.X, 0, v28.Position.Z - arg3.Z)
 
 																			if v29.Magnitude > 0.1 then
@@ -9774,8 +9778,8 @@ local function fn2()
 																				task.wait(0.35)
 																				v27:MoveTo(arg3 + unit * 1.5)
 																				task.wait(0.35)
-																				n7 += 0.7
-																				n6 = n11 + 614726753
+																				n8 += 0.7
+																				n7 = n12 + 614726753
 																				flag = true
 																				task.wait(0.05)
 																				continue
@@ -9785,8 +9789,8 @@ local function fn2()
 																			task.wait(0.35)
 																			v27:MoveTo(arg3 + unit * 1.5)
 																			task.wait(0.35)
-																			n7 += 0.7
-																			n6 = n11 + 614726753
+																			n8 += 0.7
+																			n7 = n12 + 614726753
 																			flag = true
 																		end
 																	end
@@ -9799,7 +9803,7 @@ local function fn2()
 														now4 = nil
 													end
 												elseif v202:find("closer") then
-													if os.clock() - n4 < 0.5 then
+													if os.clock() - n5 < 0.5 then
 														now4 = now4 or os.clock()
 														v27 = ctx.fn4()
 														v28 = ctx.fn11()
@@ -9808,7 +9812,7 @@ local function fn2()
 															if os.clock() - now4 > 0.6 then
 																if v27 then
 																	if v28 then
-																		n11 = n6 + 3680240543
+																		n12 = n7 + 3680240543
 																		v29 = ctx.vector3New(v28.Position.X - arg3.X, 0, v28.Position.Z - arg3.Z)
 
 																		if v29.Magnitude > 0.1 then
@@ -9819,8 +9823,8 @@ local function fn2()
 																			task.wait(0.35)
 																			v27:MoveTo(arg3 + unit * 1.5)
 																			task.wait(0.35)
-																			n7 += 0.7
-																			n6 = n11 + 614726753
+																			n8 += 0.7
+																			n7 = n12 + 614726753
 																			flag = true
 																			task.wait(0.05)
 																			continue
@@ -9830,8 +9834,8 @@ local function fn2()
 																		task.wait(0.35)
 																		v27:MoveTo(arg3 + unit * 1.5)
 																		task.wait(0.35)
-																		n7 += 0.7
-																		n6 = n11 + 614726753
+																		n8 += 0.7
+																		n7 = n12 + 614726753
 																		flag = true
 																	end
 																end
@@ -9845,7 +9849,7 @@ local function fn2()
 												end
 											elseif arg3 then
 												if v202:find("closer") then
-													if os.clock() - n4 < 0.5 then
+													if os.clock() - n5 < 0.5 then
 														now4 = now4 or os.clock()
 														v27 = ctx.fn4()
 														v28 = ctx.fn11()
@@ -9854,7 +9858,7 @@ local function fn2()
 															if os.clock() - now4 > 0.6 then
 																if v27 then
 																	if v28 then
-																		n11 = n6 + 3680240543
+																		n12 = n7 + 3680240543
 																		v29 = ctx.vector3New(v28.Position.X - arg3.X, 0, v28.Position.Z - arg3.Z)
 
 																		if v29.Magnitude > 0.1 then
@@ -9865,8 +9869,8 @@ local function fn2()
 																			task.wait(0.35)
 																			v27:MoveTo(arg3 + unit * 1.5)
 																			task.wait(0.35)
-																			n7 += 0.7
-																			n6 = n11 + 614726753
+																			n8 += 0.7
+																			n7 = n12 + 614726753
 																			flag = true
 																			task.wait(0.05)
 																			continue
@@ -9876,8 +9880,8 @@ local function fn2()
 																		task.wait(0.35)
 																		v27:MoveTo(arg3 + unit * 1.5)
 																		task.wait(0.35)
-																		n7 += 0.7
-																		n6 = n11 + 614726753
+																		n8 += 0.7
+																		n7 = n12 + 614726753
 																		flag = true
 																	end
 																end
@@ -9894,7 +9898,7 @@ local function fn2()
 											end
 										elseif arg3 then
 											if v202:find("closer") then
-												if os.clock() - n4 < 0.5 then
+												if os.clock() - n5 < 0.5 then
 													now4 = now4 or os.clock()
 													v27 = ctx.fn4()
 													v28 = ctx.fn11()
@@ -9903,7 +9907,7 @@ local function fn2()
 														if os.clock() - now4 > 0.6 then
 															if v27 then
 																if v28 then
-																	n11 = n6 + 3680240543
+																	n12 = n7 + 3680240543
 																	v29 = ctx.vector3New(v28.Position.X - arg3.X, 0, v28.Position.Z - arg3.Z)
 
 																	if v29.Magnitude > 0.1 then
@@ -9914,8 +9918,8 @@ local function fn2()
 																		task.wait(0.35)
 																		v27:MoveTo(arg3 + unit * 1.5)
 																		task.wait(0.35)
-																		n7 += 0.7
-																		n6 = n11 + 614726753
+																		n8 += 0.7
+																		n7 = n12 + 614726753
 																		flag = true
 																		task.wait(0.05)
 																		continue
@@ -9925,8 +9929,8 @@ local function fn2()
 																	task.wait(0.35)
 																	v27:MoveTo(arg3 + unit * 1.5)
 																	task.wait(0.35)
-																	n7 += 0.7
-																	n6 = n11 + 614726753
+																	n8 += 0.7
+																	n7 = n12 + 614726753
 																	flag = true
 																end
 															end
@@ -9942,23 +9946,23 @@ local function fn2()
 											now4 = nil
 										end
 									elseif arg3 then
-										if os.clock() >= n8 then
-											n8 = os.clock() + 0.15
+										if os.clock() >= n9 then
+											n9 = os.clock() + 0.15
 											v26 = ctx2.fn5(arg3)
 
 											if v26 then
-												n10 = 134987126
+												n11 = 134987126
 
-												fn33 = function()
+												fn34 = function()
 													v26.HoldDuration = 0
 													fireproximityprompt(v26)
 												end
 
-												n10 = 391743875
-												pcall(fn33)
+												n11 = 391743875
+												pcall(fn34)
 
 												if v202:find("closer") then
-													if os.clock() - n4 < 0.5 then
+													if os.clock() - n5 < 0.5 then
 														now4 = now4 or os.clock()
 														v27 = ctx.fn4()
 														v28 = ctx.fn11()
@@ -9967,7 +9971,7 @@ local function fn2()
 															if os.clock() - now4 > 0.6 then
 																if v27 then
 																	if v28 then
-																		n11 = n6 + 3680240543
+																		n12 = n7 + 3680240543
 																		v29 = ctx.vector3New(v28.Position.X - arg3.X, 0, v28.Position.Z - arg3.Z)
 
 																		if v29.Magnitude > 0.1 then
@@ -9978,8 +9982,8 @@ local function fn2()
 																			task.wait(0.35)
 																			v27:MoveTo(arg3 + unit * 1.5)
 																			task.wait(0.35)
-																			n7 += 0.7
-																			n6 = n11 + 614726753
+																			n8 += 0.7
+																			n7 = n12 + 614726753
 																			flag = true
 																			task.wait(0.05)
 																			continue
@@ -9989,8 +9993,8 @@ local function fn2()
 																		task.wait(0.35)
 																		v27:MoveTo(arg3 + unit * 1.5)
 																		task.wait(0.35)
-																		n7 += 0.7
-																		n6 = n11 + 614726753
+																		n8 += 0.7
+																		n7 = n12 + 614726753
 																		flag = true
 																	end
 																end
@@ -10003,7 +10007,7 @@ local function fn2()
 													now4 = nil
 												end
 											elseif v202:find("closer") then
-												if os.clock() - n4 < 0.5 then
+												if os.clock() - n5 < 0.5 then
 													now4 = now4 or os.clock()
 													v27 = ctx.fn4()
 													v28 = ctx.fn11()
@@ -10012,7 +10016,7 @@ local function fn2()
 														if os.clock() - now4 > 0.6 then
 															if v27 then
 																if v28 then
-																	n11 = n6 + 3680240543
+																	n12 = n7 + 3680240543
 																	v29 = ctx.vector3New(v28.Position.X - arg3.X, 0, v28.Position.Z - arg3.Z)
 
 																	if v29.Magnitude > 0.1 then
@@ -10023,8 +10027,8 @@ local function fn2()
 																		task.wait(0.35)
 																		v27:MoveTo(arg3 + unit * 1.5)
 																		task.wait(0.35)
-																		n7 += 0.7
-																		n6 = n11 + 614726753
+																		n8 += 0.7
+																		n7 = n12 + 614726753
 																		flag = true
 																		task.wait(0.05)
 																		continue
@@ -10034,8 +10038,8 @@ local function fn2()
 																	task.wait(0.35)
 																	v27:MoveTo(arg3 + unit * 1.5)
 																	task.wait(0.35)
-																	n7 += 0.7
-																	n6 = n11 + 614726753
+																	n8 += 0.7
+																	n7 = n12 + 614726753
 																	flag = true
 																end
 															end
@@ -10049,7 +10053,7 @@ local function fn2()
 											end
 										elseif arg3 then
 											if v202:find("closer") then
-												if os.clock() - n4 < 0.5 then
+												if os.clock() - n5 < 0.5 then
 													now4 = now4 or os.clock()
 													v27 = ctx.fn4()
 													v28 = ctx.fn11()
@@ -10058,7 +10062,7 @@ local function fn2()
 														if os.clock() - now4 > 0.6 then
 															if v27 then
 																if v28 then
-																	n11 = n6 + 3680240543
+																	n12 = n7 + 3680240543
 																	v29 = ctx.vector3New(v28.Position.X - arg3.X, 0, v28.Position.Z - arg3.Z)
 
 																	if v29.Magnitude > 0.1 then
@@ -10069,8 +10073,8 @@ local function fn2()
 																		task.wait(0.35)
 																		v27:MoveTo(arg3 + unit * 1.5)
 																		task.wait(0.35)
-																		n7 += 0.7
-																		n6 = n11 + 614726753
+																		n8 += 0.7
+																		n7 = n12 + 614726753
 																		flag = true
 																		task.wait(0.05)
 																		continue
@@ -10080,8 +10084,8 @@ local function fn2()
 																	task.wait(0.35)
 																	v27:MoveTo(arg3 + unit * 1.5)
 																	task.wait(0.35)
-																	n7 += 0.7
-																	n6 = n11 + 614726753
+																	n8 += 0.7
+																	n7 = n12 + 614726753
 																	flag = true
 																end
 															end
@@ -10098,7 +10102,7 @@ local function fn2()
 										end
 									elseif arg3 then
 										if v202:find("closer") then
-											if os.clock() - n4 < 0.5 then
+											if os.clock() - n5 < 0.5 then
 												now4 = now4 or os.clock()
 												v27 = ctx.fn4()
 												v28 = ctx.fn11()
@@ -10107,7 +10111,7 @@ local function fn2()
 													if os.clock() - now4 > 0.6 then
 														if v27 then
 															if v28 then
-																n11 = n6 + 3680240543
+																n12 = n7 + 3680240543
 																v29 = ctx.vector3New(v28.Position.X - arg3.X, 0, v28.Position.Z - arg3.Z)
 
 																if v29.Magnitude > 0.1 then
@@ -10118,8 +10122,8 @@ local function fn2()
 																	task.wait(0.35)
 																	v27:MoveTo(arg3 + unit * 1.5)
 																	task.wait(0.35)
-																	n7 += 0.7
-																	n6 = n11 + 614726753
+																	n8 += 0.7
+																	n7 = n12 + 614726753
 																	flag = true
 																	task.wait(0.05)
 																	continue
@@ -10129,8 +10133,8 @@ local function fn2()
 																task.wait(0.35)
 																v27:MoveTo(arg3 + unit * 1.5)
 																task.wait(0.35)
-																n7 += 0.7
-																n6 = n11 + 614726753
+																n8 += 0.7
+																n7 = n12 + 614726753
 																flag = true
 															end
 														end
@@ -10146,23 +10150,23 @@ local function fn2()
 										now4 = nil
 									end
 								elseif arg3 then
-									if os.clock() >= n8 then
-										n8 = os.clock() + 0.15
+									if os.clock() >= n9 then
+										n9 = os.clock() + 0.15
 										v26 = ctx2.fn5(arg3)
 
 										if v26 then
-											n10 = 134987126
+											n11 = 134987126
 
-											fn33 = function()
+											fn34 = function()
 												v26.HoldDuration = 0
 												fireproximityprompt(v26)
 											end
 
-											n10 = 391743875
-											pcall(fn33)
+											n11 = 391743875
+											pcall(fn34)
 
 											if v202:find("closer") then
-												if os.clock() - n4 < 0.5 then
+												if os.clock() - n5 < 0.5 then
 													now4 = now4 or os.clock()
 													v27 = ctx.fn4()
 													v28 = ctx.fn11()
@@ -10171,7 +10175,7 @@ local function fn2()
 														if os.clock() - now4 > 0.6 then
 															if v27 then
 																if v28 then
-																	n11 = n6 + 3680240543
+																	n12 = n7 + 3680240543
 																	v29 = ctx.vector3New(v28.Position.X - arg3.X, 0, v28.Position.Z - arg3.Z)
 
 																	if v29.Magnitude > 0.1 then
@@ -10182,8 +10186,8 @@ local function fn2()
 																		task.wait(0.35)
 																		v27:MoveTo(arg3 + unit * 1.5)
 																		task.wait(0.35)
-																		n7 += 0.7
-																		n6 = n11 + 614726753
+																		n8 += 0.7
+																		n7 = n12 + 614726753
 																		flag = true
 																		task.wait(0.05)
 																		continue
@@ -10193,8 +10197,8 @@ local function fn2()
 																	task.wait(0.35)
 																	v27:MoveTo(arg3 + unit * 1.5)
 																	task.wait(0.35)
-																	n7 += 0.7
-																	n6 = n11 + 614726753
+																	n8 += 0.7
+																	n7 = n12 + 614726753
 																	flag = true
 																end
 															end
@@ -10207,7 +10211,7 @@ local function fn2()
 												now4 = nil
 											end
 										elseif v202:find("closer") then
-											if os.clock() - n4 < 0.5 then
+											if os.clock() - n5 < 0.5 then
 												now4 = now4 or os.clock()
 												v27 = ctx.fn4()
 												v28 = ctx.fn11()
@@ -10216,7 +10220,7 @@ local function fn2()
 													if os.clock() - now4 > 0.6 then
 														if v27 then
 															if v28 then
-																n11 = n6 + 3680240543
+																n12 = n7 + 3680240543
 																v29 = ctx.vector3New(v28.Position.X - arg3.X, 0, v28.Position.Z - arg3.Z)
 
 																if v29.Magnitude > 0.1 then
@@ -10227,8 +10231,8 @@ local function fn2()
 																	task.wait(0.35)
 																	v27:MoveTo(arg3 + unit * 1.5)
 																	task.wait(0.35)
-																	n7 += 0.7
-																	n6 = n11 + 614726753
+																	n8 += 0.7
+																	n7 = n12 + 614726753
 																	flag = true
 																	task.wait(0.05)
 																	continue
@@ -10238,8 +10242,8 @@ local function fn2()
 																task.wait(0.35)
 																v27:MoveTo(arg3 + unit * 1.5)
 																task.wait(0.35)
-																n7 += 0.7
-																n6 = n11 + 614726753
+																n8 += 0.7
+																n7 = n12 + 614726753
 																flag = true
 															end
 														end
@@ -10253,7 +10257,7 @@ local function fn2()
 										end
 									elseif arg3 then
 										if v202:find("closer") then
-											if os.clock() - n4 < 0.5 then
+											if os.clock() - n5 < 0.5 then
 												now4 = now4 or os.clock()
 												v27 = ctx.fn4()
 												v28 = ctx.fn11()
@@ -10262,7 +10266,7 @@ local function fn2()
 													if os.clock() - now4 > 0.6 then
 														if v27 then
 															if v28 then
-																n11 = n6 + 3680240543
+																n12 = n7 + 3680240543
 																v29 = ctx.vector3New(v28.Position.X - arg3.X, 0, v28.Position.Z - arg3.Z)
 
 																if v29.Magnitude > 0.1 then
@@ -10273,8 +10277,8 @@ local function fn2()
 																	task.wait(0.35)
 																	v27:MoveTo(arg3 + unit * 1.5)
 																	task.wait(0.35)
-																	n7 += 0.7
-																	n6 = n11 + 614726753
+																	n8 += 0.7
+																	n7 = n12 + 614726753
 																	flag = true
 																	task.wait(0.05)
 																	continue
@@ -10284,8 +10288,8 @@ local function fn2()
 																task.wait(0.35)
 																v27:MoveTo(arg3 + unit * 1.5)
 																task.wait(0.35)
-																n7 += 0.7
-																n6 = n11 + 614726753
+																n8 += 0.7
+																n7 = n12 + 614726753
 																flag = true
 															end
 														end
@@ -10302,7 +10306,7 @@ local function fn2()
 									end
 								elseif arg3 then
 									if v202:find("closer") then
-										if os.clock() - n4 < 0.5 then
+										if os.clock() - n5 < 0.5 then
 											now4 = now4 or os.clock()
 											v27 = ctx.fn4()
 											v28 = ctx.fn11()
@@ -10311,7 +10315,7 @@ local function fn2()
 												if os.clock() - now4 > 0.6 then
 													if v27 then
 														if v28 then
-															n11 = n6 + 3680240543
+															n12 = n7 + 3680240543
 															v29 = ctx.vector3New(v28.Position.X - arg3.X, 0, v28.Position.Z - arg3.Z)
 
 															if v29.Magnitude > 0.1 then
@@ -10322,8 +10326,8 @@ local function fn2()
 																task.wait(0.35)
 																v27:MoveTo(arg3 + unit * 1.5)
 																task.wait(0.35)
-																n7 += 0.7
-																n6 = n11 + 614726753
+																n8 += 0.7
+																n7 = n12 + 614726753
 																flag = true
 																task.wait(0.05)
 																continue
@@ -10333,8 +10337,8 @@ local function fn2()
 															task.wait(0.35)
 															v27:MoveTo(arg3 + unit * 1.5)
 															task.wait(0.35)
-															n7 += 0.7
-															n6 = n11 + 614726753
+															n8 += 0.7
+															n7 = n12 + 614726753
 															flag = true
 														end
 													end
@@ -10462,11 +10466,11 @@ local function fn2()
 			end
 		end
 
-		fn28 = ctx.state
-		fn28.trust = trust
+		fn29 = ctx.state
+		fn29.trust = trust
 		local flag
 
-		local function fn33()
+		local function fn34()
 			local v21 = ctx.slot28
 
 			if v21.moveTo == "Teleport" then
@@ -10505,11 +10509,11 @@ local function fn2()
 		end
 
 		autoSteal = ctx.RunService
-		trackConnection(autoSteal.Heartbeat, fn33)
+		trackConnection(autoSteal.Heartbeat, fn34)
 		v15 = ctx.RunService
-		trackConnection(v15.Stepped, fn33)
+		trackConnection(v15.Stepped, fn34)
 		areas = ctx.RunService
-		trackConnection(areas.PreSimulation, fn33)
+		trackConnection(areas.PreSimulation, fn34)
 		local now3, v21 = os.clock(), ctx.localPlayer
 		ctx2.now = now3
 
@@ -10517,14 +10521,14 @@ local function fn2()
 			ctx2.now = os.clock()
 		end)
 
-		fn27 = ctx.state
-		fn27.tpFails = {}
+		fn28 = ctx.state
+		fn28.tpFails = {}
 		local tbl12 = {Prehistoric = 2300, Cosmic = 4300, ["Cherry Blossom"] = 4300}
 		ctx2.tbl12 = tbl12
 
-		local fn34, v22 = function(arg, arg2)
+		local fn35, v22 = function(arg, arg2)
 			local state = 1
-			local v22, arg22, n4, fn34, n5, n6, fn35, n7, n8, flag2, flag3, v23, v232, fn36, n9, result, n10, uid, v24, num, flag4, v25, v26, n11, flag5, v252, n12, fn37, fn38, n13, v27, v272, v28, v242, huge, v29, forIter_1, v30, flag6, magnitude, position, v243, n14, v244, fn39, fn40, flag7, fn41, fn42, fn43, now4, str, n15, n16, v31, v245, str2, str3, str4, flag8, now5, x2, n17, cframe, n18, n19, n20, v32, v33, v332, x3, z2, fn44, n21, now6, position2, n22, result2, n23, v34, n24, v35, v36, assemblyLinearVelocity, ok, result3, ok2, v37, n25, n26, ok3, result4
+			local n4, n5, v22, arg22, n6, fn35, n7, fn36, n8, n9, flag2, flag3, v23, v232, fn37, n10, result, uid, v24, num, flag4, v25, v26, n11, flag5, v252, n12, fn38, fn39, n13, v27, v272, v28, v242, huge, v29, forIter_1, v30, flag6, magnitude, position, v243, n14, v244, fn40, fn41, flag7, fn42, fn43, fn44, now4, str, n15, n16, v31, v245, str2, str3, str4, flag8, now5, x2, n17, cframe, n18, n19, n20, v32, v33, v332, x3, z2, fn45, n21, now6, position2, n22, result2, n23, v34, n24, v35, v36, assemblyLinearVelocity, ok, result3, ok2, v37, n25, n26, ok3, result4
 
 			while true do
 				if state <= 123 then
@@ -10532,9 +10536,11 @@ local function fn2()
 						if state <= 30 then
 							if state <= 15 then
 								if state == 1 then
+									n4 = 2712092414
+									n5 = 3762350027
 									v22 = arg
 									arg22 = arg2
-									n4 = 144721891
+									n6 = 144721891
 
 									if ctx.fn7(arg22) then
 										state = 3
@@ -10552,7 +10558,7 @@ local function fn2()
 								elseif state == 4 then
 									return false, "Stuck on treadmill"
 								elseif state == 5 then
-									fn34 = function()
+									fn35 = function()
 										local ok4, result5 = pcall(ctx.slot33.Egg.ReadFieldEgg, v22.Uid)
 
 										if ok4 then
@@ -10565,24 +10571,24 @@ local function fn2()
 										return ok4
 									end
 
-									if fn34(101497688) then
+									if fn35(101497688) then
 										state = 6
 									else
 										state = 11
 									end
 								elseif state == 6 then
-									local n27 = nil - nil
+									local n27 = n4 - n5
 									ctx.fn6("Waiting for the guard to bring " .. v22.Name .. " back")
-									n5 = 0
+									n7 = 0
 									state = 7
 								elseif state == 7 then
-									if fn34(101497688) then
+									if fn35(101497688) then
 										state = 8
 									else
 										state = 10
 									end
 								elseif state == 8 then
-									if n5 < 15 then
+									if n7 < 15 then
 										state = 9
 									else
 										state = 10
@@ -10594,12 +10600,12 @@ local function fn2()
 										state = 10
 									end
 								elseif state == 10 then
-									n6 = 2712092414
+									n4 = 2712092414
 									state = 11
 								elseif state == 11 then
 									ctx2.fn6()
 
-									fn35 = function()
+									fn36 = function()
 										local v38 = ctx2.tbl10[1]
 										if v38 then
 											return rawget(ctx2.tbl10[1], "MovementMode") == "Initializing"
@@ -10607,8 +10613,8 @@ local function fn2()
 										return v38
 									end
 
-									n7 = n4 + 349979374
-									n8 = 0
+									n8 = n6 + 349979374
+									n9 = 0
 									flag2 = nil
 									state = 12
 								elseif state == 12 then
@@ -10621,7 +10627,7 @@ local function fn2()
 										state = 13
 									end
 								elseif state == 13 then
-									if n8 < 1 then
+									if n9 < 1 then
 										state = 18
 									else
 										state = 15
@@ -10640,13 +10646,13 @@ local function fn2()
 									end
 								end
 							elseif state == 16 then
-								if fn35(246097483) then
+								if fn36(246097483) then
 									state = 17
 								else
 									state = 19
 								end
 							elseif state == 17 then
-								if n8 < 2.5 then
+								if n9 < 2.5 then
 									state = 18
 								else
 									state = 19
@@ -10672,7 +10678,7 @@ local function fn2()
 								v232 = v23:FindFirstChild("Guard")
 								state = 22
 							elseif state == 22 then
-								fn36 = function()
+								fn37 = function()
 									local guard = v232
 
 									if v232 then
@@ -10685,23 +10691,23 @@ local function fn2()
 									return guard
 								end
 
-								if fn36(n6 + 2071483052) then
+								if fn37(n4 + 2071483052) then
 									state = 23
 								else
 									state = 27
 								end
 							elseif state == 23 then
 								ctx.fn6("Waiting for the " .. tostring(v22.a) .. " guard to sleep")
-								n9 = 0
+								n10 = 0
 								state = 24
 							elseif state == 24 then
-								if fn36(488608170) then
+								if fn37(488608170) then
 									state = 25
 								else
 									state = 27
 								end
 							elseif state == 25 then
-								if n9 < 8 then
+								if n10 < 8 then
 									state = 26
 								else
 									state = 27
@@ -10743,7 +10749,6 @@ local function fn2()
 						elseif state <= 45 then
 							if state == 31 then
 								v22.Pos = result.BottomCFrame.Position
-								n10 = 3762350027
 								state = 34
 							elseif state == 32 then
 								if result.State ~= "Dropped" then
@@ -10798,12 +10803,12 @@ local function fn2()
 								state = 42
 							elseif state == 42 then
 								local raycastParams = RaycastParams.new()
-								n12 = n6 - n10
+								n12 = n4 - n5
 								local filterDescendantsInstances = { ctx.localPlayer.Character }
 								raycastParams.FilterType = Enum.RaycastFilterType.Exclude
 								raycastParams.FilterDescendantsInstances = filterDescendantsInstances
 
-								fn37 = function(arg3, arg4, arg5, arg6)
+								fn38 = function(arg3, arg4, arg5, arg6)
 									local hit = workspace:Raycast(ctx.vector3New(arg4, v22.Pos.Y + arg6, arg5), ctx.vector3New(0, -arg6 - 150, 0), raycastParams)
 									local y2
 
@@ -10822,7 +10827,8 @@ local function fn2()
 									return ctx.cFrameNew(arg4, y2 + 3.6, arg5)
 								end
 
-								fn38 = function(arg3, arg4)
+								fn39 = function(arg3, arg4)
+									local n27 = 417737511
 									local ok4, result5 = pcall(ctx.slot33.Egg.ReadFieldEgg, uid)
 
 									if ok4 then
@@ -10842,7 +10848,7 @@ local function fn2()
 										end
 
 										local vector3Zero = Vector3.zero
-										local n27 = 0
+										local n28 = 0
 
 										for _, v38 in pairs(ctx.fn15()) do
 											local exitTo = nil
@@ -10861,7 +10867,7 @@ local function fn2()
 															break
 														else
 															vector3Zero += v38.BottomCFrame.Position
-															n27 += 1
+															n28 += 1
 															local v39 = table.pack(J_1())
 															if v39[1] then
 																v38 = v39[3]
@@ -10886,32 +10892,32 @@ local function fn2()
 											break
 										end
 
-										local n28
+										local n29
 
-										if n27 > 0 then
-											n28 = pos - vector3Zero / n27
+										if n28 > 0 then
+											n29 = pos - vector3Zero / n28
 										else
-											n28 = Vector3.new(0, 0, 1)
+											n29 = Vector3.new(0, 0, 1)
 										end
 
-										local unit, n29, n30
+										local unit, n30, n31
 
-										if ctx.vector3New(n28.X, 0, n28.Z).Magnitude > 0.5 then
-											unit = ctx.vector3New(n28.X, 0, n28.Z).Unit or Vector3.new(0, 0, 1)
+										if ctx.vector3New(n29.X, 0, n29.Z).Magnitude > 0.5 then
+											unit = ctx.vector3New(n29.X, 0, n29.Z).Unit or Vector3.new(0, 0, 1)
 										else
 											unit = Vector3.new(0, 0, 1)
-											n29 = unit * arg3
-											local n31 = math.max(result5.BoundsSize.X, result5.BoundsSize.Z) / 2
-											local n32 = n31 + 2.5
-											n30 = pos + n29 * n32
-											bit32.bor(nil, arg4)
-											return fn37(147674248, n30.X, n30.Z, 8)
+											n30 = unit * arg3
+											local n32 = math.max(result5.BoundsSize.X, result5.BoundsSize.Z) / 2
+											local n33 = n32 + 2.5
+											n31 = pos + n30 * n33
+											bit32.bor(n27, arg4)
+											return fn38(147674248, n31.X, n31.Z, 8)
 										end
 
-										n29 = unit * arg3
-										n30 = pos + n29 * (math.max(result5.BoundsSize.X, result5.BoundsSize.Z) / 2 + 2.5)
-										bit32.bor(nil, arg4)
-										return fn37(147674248, n30.X, n30.Z, 8)
+										n30 = unit * arg3
+										n31 = pos + n30 * (math.max(result5.BoundsSize.X, result5.BoundsSize.Z) / 2 + 2.5)
+										bit32.bor(n27, arg4)
+										return fn38(147674248, n31.X, n31.Z, 8)
 									end
 								end
 
@@ -10923,7 +10929,7 @@ local function fn2()
 									state = 43
 								end
 							elseif state == 43 then
-								v27 = fn38(1, 168941985)
+								v27 = fn39(1, 168941985)
 
 								if v27 then
 									state = 44
@@ -10946,7 +10952,7 @@ local function fn2()
 								end
 							end
 						elseif state == 46 then
-							v28 = fn38(-1, 168941985)
+							v28 = fn39(-1, 168941985)
 
 							if v28 then
 								state = 47
@@ -11142,7 +11148,7 @@ local function fn2()
 								v243 = v24
 								state = 79
 							elseif state == 73 then
-								n14 = n7 + n10
+								n14 = n8 + n5
 
 								if ctx.vector3New(position.X - v22.Pos.X, 0, position.Z - v22.Pos.Z).Magnitude <= 12 then
 									state = 75
@@ -11156,7 +11162,7 @@ local function fn2()
 								v243 = ctx.cFrameNew(position + Vector3.new(0, 3.6, 0))
 								state = 76
 							elseif state == 76 then
-								n7 = n14 + 532617269
+								n8 = n14 + 532617269
 								state = 79
 							end
 						elseif state == 77 then
@@ -11169,17 +11175,17 @@ local function fn2()
 							v244 = v243
 							state = 81
 						elseif state == 80 then
-							v244 = fn37(147674248, v252, v22.Pos.Z, 150)
+							v244 = fn38(147674248, v252, v22.Pos.Z, 150)
 							state = 81
 						elseif state == 81 then
-							local function fn45(arg3)
+							local function fn46(arg3)
 								if arg3 then
 									return math.abs(arg3 - v244.X) < 60
 								end
 								return arg3
 							end
 
-							fn39 = function(arg3)
+							fn40 = function(arg3)
 								local v38 = ctx.fn11()
 								if v38 then
 									return ctx.vector3New(v38.Position.X - v22.Pos.X, 0, v38.Position.Z - v22.Pos.Z).Magnitude > 4
@@ -11187,7 +11193,7 @@ local function fn2()
 								return v38
 							end
 
-							fn40 = function()
+							fn41 = function()
 								if v252 then
 									return ctx2.fn3((v272 or v24).Position - Vector3.new(0, 0.6, 0), arg22)
 								end
@@ -11207,7 +11213,7 @@ local function fn2()
 										if flag4 then
 											if v38 then
 												if num then
-													if not fn45(num) then
+													if not fn46(num) then
 														v38.CFrame = ctx2.v20
 														return
 													end
@@ -11225,7 +11231,7 @@ local function fn2()
 
 							local v38 = nil
 
-							fn41 = function(arg3, arg4, arg5)
+							fn42 = function(arg3, arg4, arg5)
 								if arg4 ~= true then
 									if not flag5 then
 										if arg22() then
@@ -11259,7 +11265,7 @@ local function fn2()
 								return arg4, arg5
 							end
 
-							fn42 = function(arg3, arg4, arg5, arg6)
+							fn43 = function(arg3, arg4, arg5, arg6)
 								local now7 = os.clock()
 
 								while true do
@@ -11285,14 +11291,14 @@ local function fn2()
 
 							ctx.fn6("Teleporting to " .. v22.Name)
 
-							local function fn46(arg3)
+							local function fn47(arg3)
 								flag4 = true
 								num = nil
 
 								if arg3 then
 									ctx.fn10(v244)
 								else
-									fn42(352840305, v244, 0.2)
+									fn43(352840305, v244, 0.2)
 									num = 0
 								end
 
@@ -11300,30 +11306,30 @@ local function fn2()
 									if num ~= 0 then
 										local n27 = 151515905
 
-										local function fn47()
+										local function fn48()
 											return num ~= nil
 										end
 
 										n27 = 475599424
-										fn42(352840305, v244, 0.8, fn47)
+										fn43(352840305, v244, 0.8, fn48)
 									end
 
 									if arg22() then
 										if num then
-											if fn45(num) then
+											if fn46(num) then
 												flag4 = nil
 												return true
 											end
 											num = nil
 											local n27 = 52470438
 
-											local function fn47()
-												return fn45(num)
+											local function fn48()
+												return fn46(num)
 											end
 
 											n27 = 222430855
-											fn42(352840305, ctx2.v20, 0.14, fn47)
-											if fn45(num) then
+											fn43(352840305, ctx2.v20, 0.14, fn48)
+											if fn46(num) then
 												flag4 = nil
 												return true
 											end
@@ -11331,13 +11337,13 @@ local function fn2()
 											flag4 = nil
 											local n28 = 46037686
 
-											local function fn48()
-												return fn45(num)
+											local function fn49()
+												return fn46(num)
 											end
 
 											n28 = 194793070
-											fn42(352840305, v244, 1.5, fn48)
-											if fn45(num) then
+											fn43(352840305, v244, 1.5, fn49)
+											if fn46(num) then
 												return true
 											end
 											flag4 = true
@@ -11369,31 +11375,31 @@ local function fn2()
 								return true
 							end
 
-							fn43 = function(arg3, arg4)
+							fn44 = function(arg3, arg4)
 								ctx2.fn7(v38)
 								v38 = ctx2.fn8(v244.Position)
-								local v39 = fn46(arg4)
+								local v39 = fn47(arg4)
 								ctx2.fn7(v38)
 								v38 = nil
 								return v39
 							end
 
-							if fn43(448224679, true) then
+							if fn44(448224679, true) then
 								state = 83
 							else
 								state = 82
 							end
 						elseif state == 82 then
-							local teleportWasRefused, v38 = fn41(86349695, false, "Teleport was refused")
+							local teleportWasRefused, v38 = fn42(86349695, false, "Teleport was refused")
 							return teleportWasRefused, v38
 						elseif state == 83 then
-							if fn40(225281491) then
+							if fn41(225281491) then
 								state = 85
 							else
 								state = 84
 							end
 						elseif state == 84 then
-							local couldNotReach, v38 = fn41(86349695, false, "Could not reach")
+							local couldNotReach, v38 = fn42(86349695, false, "Could not reach")
 							return couldNotReach, v38
 						elseif state == 85 then
 							now4 = os.clock()
@@ -11506,8 +11512,8 @@ local function fn2()
 						elseif state == 103 then
 							n16 += 1
 							str = nil
-							fn43(448224679)
-							fn40(225281491)
+							fn44(448224679)
+							fn41(225281491)
 							now4 = os.clock()
 							n15 = 0
 
@@ -11525,7 +11531,7 @@ local function fn2()
 								state = 113
 							end
 						elseif state == 106 then
-							if fn39(286263092) then
+							if fn40(286263092) then
 								state = 107
 							else
 								state = 113
@@ -11578,7 +11584,7 @@ local function fn2()
 						str2 = "Egg is gone"
 						state = 117
 					elseif state == 117 then
-						local v38, v39 = fn41(86349695, false, str2)
+						local v38, v39 = fn42(86349695, false, str2)
 						return v38, v39
 					elseif state == 118 then
 						if str:find("pet") then
@@ -11593,7 +11599,7 @@ local function fn2()
 						str3 = "Pet bag is full"
 						state = 121
 					elseif state == 121 then
-						local v38, v39 = fn41(86349695, false, str3)
+						local v38, v39 = fn42(86349695, false, str3)
 						return v38, v39
 					elseif state == 122 then
 						if ctx.fn16(uid) then
@@ -11618,12 +11624,12 @@ local function fn2()
 								str4 = str
 								state = 126
 							elseif state == 126 then
-								local v38, v39 = fn41(86349695, false, str4)
+								local v38, v39 = fn42(86349695, false, str4)
 								return v38, v39
 							elseif state == 127 then
 								flag5 = true
 								flag8 = ctx.state.tpRapid()
-								local v38 = bit32.band(n10, n7)
+								local v38 = bit32.band(n5, n8)
 
 								if flag8 then
 									state = 128
@@ -11679,7 +11685,7 @@ local function fn2()
 									state = 137
 								end
 							elseif state == 137 then
-								local droppedOnTheWay, v38 = fn41(86349695, false, "Dropped on the way")
+								local droppedOnTheWay, v38 = fn42(86349695, false, "Dropped on the way")
 								return droppedOnTheWay, v38
 							elseif state == 138 then
 								if ctx.state.tpCodium() then
@@ -11689,7 +11695,7 @@ local function fn2()
 								end
 							end
 						elseif state == 139 then
-							local v38, v39 = fn41(86349695, true, "grabbed")
+							local v38, v39 = fn42(86349695, true, "grabbed")
 							return v38, v39
 						elseif state == 140 then
 							if flag8 then
@@ -11703,7 +11709,7 @@ local function fn2()
 							state = 142
 						elseif state == 142 then
 							x2 = ctx.fn18().X
-							n17 = n7 + n12
+							n17 = n8 + n12
 							cframe = CFrame.lookAt(ctx.vector3New(x2 + 15.4, 70.6, -382), Vector3.new(0, 70.6, -382))
 
 							if flag8 then
@@ -11751,7 +11757,7 @@ local function fn2()
 						elseif state == 151 then
 							local v333 = nil
 
-							fn44 = function(arg3, arg4)
+							fn45 = function(arg3, arg4)
 								v333 = v333 or v332
 								local humanoid = ctx.fn4()
 								local clamp = math.clamp
@@ -11810,7 +11816,7 @@ local function fn2()
 						elseif state == 153 then
 							local rotation = cframe.Rotation
 							ctx.fn10(ctx.cFrameNew(v332) * rotation)
-							fn44(411966697, v32)
+							fn45(411966697, v32)
 
 							if v332 then
 								state = 154
@@ -11840,7 +11846,7 @@ local function fn2()
 						elseif state == 157 then
 							v332 += (v32 - v332).Unit * 500
 							local rotation = cframe.Rotation
-							fn42(352840305, ctx.cFrameNew(v332) * rotation, 0.155)
+							fn43(352840305, ctx.cFrameNew(v332) * rotation, 0.155)
 
 							if v332 then
 								state = 154
@@ -11848,7 +11854,7 @@ local function fn2()
 								state = 158
 							end
 						elseif state == 158 then
-							fn42(352840305, cframe, 0.3)
+							fn43(352840305, cframe, 0.3)
 
 							if ctx.fn16(uid) then
 								state = 160
@@ -11856,7 +11862,7 @@ local function fn2()
 								state = 159
 							end
 						elseif state == 159 then
-							local droppedOnTheWay, v38 = fn41(86349695, false, "Dropped on the way")
+							local droppedOnTheWay, v38 = fn42(86349695, false, "Dropped on the way")
 							return droppedOnTheWay, v38
 						elseif state == 160 then
 							task.spawn(ctx.fn5, "RF/EggWorld/AskFieldEggDrop", { Reason = "PlayerRequest" })
@@ -12177,7 +12183,7 @@ local function fn2()
 							state = 210
 						end
 					elseif state == 210 then
-						local droppedOnTheWay, v38 = fn41(86349695, false, "Dropped on the way")
+						local droppedOnTheWay, v38 = fn42(86349695, false, "Dropped on the way")
 						return droppedOnTheWay, v38
 					elseif state == 211 then
 						v37 = ctx.fn11()
@@ -12226,7 +12232,7 @@ local function fn2()
 					end
 				elseif state <= 231 then
 					if state == 217 then
-						fn44(411966697, cframe.Position)
+						fn45(411966697, cframe.Position)
 						state = 218
 					elseif state == 218 then
 						n20 = n25 + 3739410948
@@ -12257,7 +12263,7 @@ local function fn2()
 					elseif state == 222 then
 						v332 = ctx.vector3New(math.max(cframe.X, v332.X - 500), 70.6, -382)
 						local rotation = cframe.Rotation
-						fn42(352840305, ctx.cFrameNew(v332) * rotation, 0.155)
+						fn43(352840305, ctx.cFrameNew(v332) * rotation, 0.155)
 
 						if v332 then
 							state = 219
@@ -12265,7 +12271,7 @@ local function fn2()
 							state = 223
 						end
 					elseif state == 223 then
-						fn42(352840305, n19, 0.4, function()
+						fn43(352840305, n19, 0.4, function()
 							return not ctx.fn16(uid)
 						end)
 
@@ -12312,24 +12318,24 @@ local function fn2()
 							state = 230
 						end
 					elseif state == 230 then
-						local eggWentBackToItsNest, v38 = fn41(86349695, false, "Egg went back to its nest")
+						local eggWentBackToItsNest, v38 = fn42(86349695, false, "Egg went back to its nest")
 						return eggWentBackToItsNest, v38
 					elseif state == 231 then
 						state = 232
 					end
 				elseif state == 232 then
-					fn42(352840305, n19, 0.2)
-					local v38, v39 = fn41(86349695, true)
+					fn43(352840305, n19, 0.2)
+					local v38, v39 = fn42(86349695, true)
 					return v38, v39
 				elseif state == 233 then
-					local deliveryFailed, v38 = fn41(86349695, false, "Delivery failed")
+					local deliveryFailed, v38 = fn42(86349695, false, "Delivery failed")
 					return deliveryFailed, v38
 				elseif state == 234 then
 					n26 += ctx.fn12()
 					state = 224
 				elseif state == 235 then
-					fn42(352840305, n19, 0.2)
-					local v38, v39 = fn41(86349695, true)
+					fn43(352840305, n19, 0.2)
+					local v38, v39 = fn42(86349695, true)
 					return v38, v39
 				elseif state == 236 then
 					if ctx.fn16(uid) then
@@ -12338,10 +12344,10 @@ local function fn2()
 						state = 237
 					end
 				elseif state == 237 then
-					local v38, v39 = fn41(86349695, true)
+					local v38, v39 = fn42(86349695, true)
 					return v38, v39
 				elseif state == 238 then
-					local couldNotDrop, v38 = fn41(86349695, false, "Could not drop")
+					local couldNotDrop, v38 = fn42(86349695, false, "Could not drop")
 					return couldNotDrop, v38
 				elseif state == 239 then
 					n21 += ctx.fn12()
@@ -12350,16 +12356,16 @@ local function fn2()
 					ctx.fn12()
 					state = 130
 				elseif state == 241 then
-					n9 += ctx.fn12()
+					n10 += ctx.fn12()
 					state = 24
 				elseif state == 242 then
-					if n8 >= 1 then
+					if n9 >= 1 then
 						state = 243
 					else
 						state = 246
 					end
 				elseif state == 243 then
-					if fn35(246097483) then
+					if fn36(246097483) then
 						state = 244
 					else
 						state = 246
@@ -12375,10 +12381,10 @@ local function fn2()
 					flag2 = true
 					state = 246
 				elseif state == 246 then
-					n8 += ctx.fn12()
+					n9 += ctx.fn12()
 					state = 12
 				elseif state == 247 then
-					n5 += ctx.fn12()
+					n7 += ctx.fn12()
 					state = 7
 				end
 			end
@@ -12949,12 +12955,12 @@ local function fn2()
 			return v23(arg)
 		end
 
-		fn28 = ctx.state
-		fn28.stealChase = ctx2.fn11
+		fn29 = ctx.state
+		fn29.stealChase = ctx2.fn11
 		local v23
 		ctx2.v23 = v23
 
-		local function fn35(arg, arg2, arg3)
+		local function fn36(arg, arg2, arg3)
 			ctx.fn6("Taking " .. ctx.slot44.cur .. " in")
 			local now4 = os.clock()
 
@@ -12993,13 +12999,15 @@ local function fn2()
 			return nil
 		end
 
-		ctx2.fn35 = fn35
+		ctx2.fn36 = fn36
 
-		local function fn36(arg, arg2)
+		local function fn37(arg, arg2)
+			local n4 = 3317902398
+			local n5 = 557732927
 			local exitTo = nil
 			local exitTo3 = nil
 			local exitTo5 = nil
-			local exitTo2, character2, v24, v25, v26, v27, v28, v29, n4, position
+			local exitTo2, character2, v24, v25, v26, v27, v28, n6, position
 
 			while true do
 				if ctx.state.agBusy then
@@ -13015,13 +13023,13 @@ local function fn2()
 								v24 = ctx.fn18()
 								v25 = ctx.state
 								v26 = v25.cmode()
-								v27 //= 2
-								v28 = ctx.fn11()
-								v29 = ctx.fn20()
+								n4 //= 2
+								v27 = ctx.fn11()
+								v28 = ctx.fn20()
 
-								if v28 then
-									n4 = v28.Position.X - v29.X
-									position = v28.Position
+								if v27 then
+									n6 = v27.Position.X - v28.X
+									position = v27.Position
 
 									if not v25 then
 										continue
@@ -13050,13 +13058,13 @@ local function fn2()
 					v24 = ctx.fn18()
 					v25 = ctx.state
 					v26 = v25.cmode()
-					v27 //= 2
-					v28 = ctx.fn11()
-					v29 = ctx.fn20()
+					n4 //= 2
+					v27 = ctx.fn11()
+					v28 = ctx.fn20()
 
-					if v28 then
-						n4 = v28.Position.X - v29.X
-						position = v28.Position
+					if v27 then
+						n6 = v27.Position.X - v28.X
+						position = v27.Position
 
 						if not v25 then
 							exitTo2 = nil
@@ -13070,13 +13078,13 @@ local function fn2()
 									v24 = ctx.fn18()
 									v25 = ctx.state
 									v26 = v25.cmode()
-									v27 //= 2
-									v28 = ctx.fn11()
-									v29 = ctx.fn20()
+									n4 //= 2
+									v27 = ctx.fn11()
+									v28 = ctx.fn20()
 
-									if v28 then
-										n4 = v28.Position.X - v29.X
-										position = v28.Position
+									if v27 then
+										n6 = v27.Position.X - v28.X
+										position = v27.Position
 
 										if not v25 then
 											continue
@@ -13116,13 +13124,13 @@ local function fn2()
 				v24 = ctx.fn18()
 				v25 = ctx.state
 				v26 = v25.cmode()
-				v27 //= 2
-				v28 = ctx.fn11()
-				v29 = ctx.fn20()
+				n4 //= 2
+				v27 = ctx.fn11()
+				v28 = ctx.fn20()
 
-				if v28 then
-					n4 = v28.Position.X - v29.X
-					position = v28.Position
+				if v27 then
+					n6 = v27.Position.X - v28.X
+					position = v27.Position
 
 					if not v25 then
 						while true do
@@ -13137,13 +13145,13 @@ local function fn2()
 									v24 = ctx.fn18()
 									v25 = ctx.state
 									v26 = v25.cmode()
-									v27 //= 2
-									v28 = ctx.fn11()
-									v29 = ctx.fn20()
+									n4 //= 2
+									v27 = ctx.fn11()
+									v28 = ctx.fn20()
 
-									if v28 then
-										n4 = v28.Position.X - v29.X
-										position = v28.Position
+									if v27 then
+										n6 = v27.Position.X - v28.X
+										position = v27.Position
 
 										if not v25 then
 											continue
@@ -13175,13 +13183,13 @@ local function fn2()
 													v24 = ctx.fn18()
 													v25 = ctx.state
 													v26 = v25.cmode()
-													v27 //= 2
-													v28 = ctx.fn11()
-													v29 = ctx.fn20()
+													n4 //= 2
+													v27 = ctx.fn11()
+													v28 = ctx.fn20()
 
-													if v28 then
-														n4 = v28.Position.X - v29.X
-														position = v28.Position
+													if v27 then
+														n6 = v27.Position.X - v28.X
+														position = v27.Position
 
 														if not v25 then
 															continue
@@ -13210,13 +13218,13 @@ local function fn2()
 										v24 = ctx.fn18()
 										v25 = ctx.state
 										v26 = v25.cmode()
-										v27 //= 2
-										v28 = ctx.fn11()
-										v29 = ctx.fn20()
+										n4 //= 2
+										v27 = ctx.fn11()
+										v28 = ctx.fn20()
 
-										if v28 then
-											n4 = v28.Position.X - v29.X
-											position = v28.Position
+										if v27 then
+											n6 = v27.Position.X - v28.X
+											position = v27.Position
 
 											if not v25 then
 												exitTo2 = nil
@@ -13230,13 +13238,13 @@ local function fn2()
 														v24 = ctx.fn18()
 														v25 = ctx.state
 														v26 = v25.cmode()
-														v27 //= 2
-														v28 = ctx.fn11()
-														v29 = ctx.fn20()
+														n4 //= 2
+														v27 = ctx.fn11()
+														v28 = ctx.fn20()
 
-														if v28 then
-															n4 = v28.Position.X - v29.X
-															position = v28.Position
+														if v27 then
+															n6 = v27.Position.X - v28.X
+															position = v27.Position
 
 															if not v25 then
 																continue
@@ -13278,13 +13286,13 @@ local function fn2()
 									v24 = ctx.fn18()
 									v25 = ctx.state
 									v26 = v25.cmode()
-									v27 //= 2
-									v28 = ctx.fn11()
-									v29 = ctx.fn20()
+									n4 //= 2
+									v27 = ctx.fn11()
+									v28 = ctx.fn20()
 
-									if v28 then
-										n4 = v28.Position.X - v29.X
-										position = v28.Position
+									if v27 then
+										n6 = v27.Position.X - v28.X
+										position = v27.Position
 
 										if not v25 then
 											continue
@@ -13328,13 +13336,13 @@ local function fn2()
 			end
 
 			if exitTo == 1 then
-				local magnitude = ctx.vector3New(n4, 0, position.Z - v29.Z).Magnitude
+				local magnitude = ctx.vector3New(n6, 0, position.Z - v28.Z).Magnitude
 
 				if magnitude then
 					if magnitude <= 600 then
 						if not ctx2.fn9() then
-							if not ctx.fn13(v28.Position) then
-								return ctx2.fn35(arg, arg2, magnitude <= 150)
+							if not ctx.fn13(v27.Position) then
+								return ctx2.fn36(arg, arg2, magnitude <= 150)
 							end
 						end
 					end
@@ -13342,20 +13350,20 @@ local function fn2()
 			end
 
 			local cframe = CFrame.Angles(0, 1.5707963267948966, 0)
-			local v30 = ctx.vector3New(v24.X + 13.8, v24.Y + 3.35, -365.3)
-			local z2 = v30.Z
+			local v29 = ctx.vector3New(v24.X + 13.8, v24.Y + 3.35, -365.3)
+			local z2 = v29.Z
 
 			for i2 = 1, 3 do
 				ctx.fn6("Carrying " .. ctx.slot44.cur .. " home")
 
 				if ctx.fn11() then
-					ctx2.fn10(arg, arg2, v30, z2, cframe, v26)
+					ctx2.fn10(arg, arg2, v29, z2, cframe, v26)
 
 					if ctx.fn16(arg) then
 						if v26 ~= "Tween" then
-							ctx.fn10(ctx.cFrameNew(v30) * cframe)
+							ctx.fn10(ctx.cFrameNew(v29) * cframe)
 						elseif ctx2.fn9() then
-							ctx.fn10(ctx.cFrameNew(v30) * cframe)
+							ctx.fn10(ctx.cFrameNew(v29) * cframe)
 						end
 
 						break
@@ -13381,18 +13389,18 @@ local function fn2()
 
 			if v26 == "Tween" then
 				if not ctx2.fn9() then
-					return ctx2.fn35(arg, arg2)
+					return ctx2.fn36(arg, arg2)
 				end
 			end
 
-			local n5 = 0
-			local n6, v31, v32, v33
+			local n7 = 0
+			local n8, v30, v31, v32
 
 			while true do
 				if v26 == "Fast tween" then
-					if n5 < 0.1 then
+					if n7 < 0.1 then
 						while ctx.fn16(arg) do
-							n5 += ctx.fn12()
+							n7 += ctx.fn12()
 							local exitTo4 = nil
 
 							while true do
@@ -13400,9 +13408,9 @@ local function fn2()
 									exitTo4 = 1
 									break
 								else
-									if n5 < 0.19 + ctx.fn21() then
+									if n7 < 0.19 + ctx.fn21() then
 										if ctx.fn16(arg) then
-											n5 += ctx.fn12()
+											n7 += ctx.fn12()
 											continue
 										end
 									end
@@ -13412,7 +13420,7 @@ local function fn2()
 							end
 
 							if exitTo4 == 1 then
-								if n5 < 0.1 then
+								if n7 < 0.1 then
 									continue
 								end
 
@@ -13420,11 +13428,11 @@ local function fn2()
 									return false
 								end
 								ctx.fn17("Egg", "DropFieldEgg", "PlayerRequest")
-								n6 = 0
+								n8 = 0
 
 								while ctx.fn16(arg) do
-									if n6 < 1.5 then
-										n6 += ctx.fn12()
+									if n8 < 1.5 then
+										n8 += ctx.fn12()
 										continue
 									end
 									break
@@ -13433,21 +13441,21 @@ local function fn2()
 								if ctx2.fn9() then
 									return true
 								end
-								v31 = ctx2.fn8()
-								v32, v33 = ctx2.v23(arg, arg2, character2, v30, cframe)
-								ctx2.fn7(v31)
-								return v32, v33
+								v30 = ctx2.fn8()
+								v31, v32 = ctx2.v23(arg, arg2, character2, v29, cframe)
+								ctx2.fn7(v30)
+								return v31, v32
 							end
 
 							if ctx.localPlayer.Character ~= character2 then
 								return false
 							end
 							ctx.fn17("Egg", "DropFieldEgg", "PlayerRequest")
-							n6 = 0
+							n8 = 0
 
 							while ctx.fn16(arg) do
-								if n6 < 1.5 then
-									n6 += ctx.fn12()
+								if n8 < 1.5 then
+									n8 += ctx.fn12()
 									continue
 								end
 								break
@@ -13456,21 +13464,21 @@ local function fn2()
 							if ctx2.fn9() then
 								return true
 							end
-							v31 = ctx2.fn8()
-							v32, v33 = ctx2.v23(arg, arg2, character2, v30, cframe)
-							ctx2.fn7(v31)
-							return v32, v33
+							v30 = ctx2.fn8()
+							v31, v32 = ctx2.v23(arg, arg2, character2, v29, cframe)
+							ctx2.fn7(v30)
+							return v31, v32
 						end
 
 						if ctx.localPlayer.Character ~= character2 then
 							return false
 						end
 						ctx.fn17("Egg", "DropFieldEgg", "PlayerRequest")
-						n6 = 0
+						n8 = 0
 
 						while ctx.fn16(arg) do
-							if n6 < 1.5 then
-								n6 += ctx.fn12()
+							if n8 < 1.5 then
+								n8 += ctx.fn12()
 								continue
 							end
 							break
@@ -13479,21 +13487,21 @@ local function fn2()
 						if ctx2.fn9() then
 							return true
 						end
-						v31 = ctx2.fn8()
-						v32, v33 = ctx2.v23(arg, arg2, character2, v30, cframe)
-						ctx2.fn7(v31)
-						return v32, v33
+						v30 = ctx2.fn8()
+						v31, v32 = ctx2.v23(arg, arg2, character2, v29, cframe)
+						ctx2.fn7(v30)
+						return v31, v32
 					end
 
 					if ctx.localPlayer.Character ~= character2 then
 						return false
 					end
 					ctx.fn17("Egg", "DropFieldEgg", "PlayerRequest")
-					n6 = 0
+					n8 = 0
 
 					while ctx.fn16(arg) do
-						if n6 < 1.5 then
-							n6 += ctx.fn12()
+						if n8 < 1.5 then
+							n8 += ctx.fn12()
 							continue
 						end
 						break
@@ -13502,14 +13510,14 @@ local function fn2()
 					if ctx2.fn9() then
 						return true
 					end
-					v31 = ctx2.fn8()
-					v32, v33 = ctx2.v23(arg, arg2, character2, v30, cframe)
-					ctx2.fn7(v31)
-					return v32, v33
+					v30 = ctx2.fn8()
+					v31, v32 = ctx2.v23(arg, arg2, character2, v29, cframe)
+					ctx2.fn7(v30)
+					return v31, v32
 				else
-					if n5 < 0.19 + ctx.fn21() then
+					if n7 < 0.19 + ctx.fn21() then
 						if ctx.fn16(arg) then
-							n5 += ctx.fn12()
+							n7 += ctx.fn12()
 							continue
 						end
 
@@ -13517,11 +13525,11 @@ local function fn2()
 							return false
 						end
 						ctx.fn17("Egg", "DropFieldEgg", "PlayerRequest")
-						n6 = 0
+						n8 = 0
 
 						while ctx.fn16(arg) do
-							if n6 < 1.5 then
-								n6 += ctx.fn12()
+							if n8 < 1.5 then
+								n8 += ctx.fn12()
 								continue
 							end
 							break
@@ -13530,10 +13538,10 @@ local function fn2()
 						if ctx2.fn9() then
 							return true
 						end
-						v31 = ctx2.fn8()
-						v32, v33 = ctx2.v23(arg, arg2, character2, v30, cframe)
-						ctx2.fn7(v31)
-						return v32, v33
+						v30 = ctx2.fn8()
+						v31, v32 = ctx2.v23(arg, arg2, character2, v29, cframe)
+						ctx2.fn7(v30)
+						return v31, v32
 					end
 
 					break
@@ -13544,11 +13552,11 @@ local function fn2()
 				return false
 			end
 			ctx.fn17("Egg", "DropFieldEgg", "PlayerRequest")
-			n6 = 0
+			n8 = 0
 
 			while ctx.fn16(arg) do
-				if n6 < 1.5 then
-					n6 += ctx.fn12()
+				if n8 < 1.5 then
+					n8 += ctx.fn12()
 					continue
 				end
 				break
@@ -13557,13 +13565,13 @@ local function fn2()
 			if ctx2.fn9() then
 				return true
 			end
-			v31 = ctx2.fn8()
-			v32, v33 = ctx2.v23(arg, arg2, character2, v30, cframe)
-			ctx2.fn7(v31)
-			return v32, v33
+			v30 = ctx2.fn8()
+			v31, v32 = ctx2.v23(arg, arg2, character2, v29, cframe)
+			ctx2.fn7(v30)
+			return v31, v32
 		end
 
-		local function fn37(arg)
+		local function fn38(arg)
 			local v24 = ctx.fn15
 
 			for _, v25 in pairs(v24()) do
@@ -13578,7 +13586,7 @@ local function fn2()
 		end
 
 		ctx2.v23 = function(arg, arg2, arg3, arg4, arg5)
-			if fn37(arg) then
+			if fn38(arg) then
 				return false, "Egg went back to its nest"
 			end
 			local n4 = ctx.fn6
@@ -13625,7 +13633,7 @@ local function fn2()
 					if (n9 > 0) and ((os.clock() - n9) > 0.6) then
 						n9 = 0
 
-						fn20(arg42, function()
+						fn21(arg42, function()
 							local v25 = arg2()
 							local flag3
 
@@ -13773,7 +13781,9 @@ local function fn2()
 			return false
 		end
 
-		local fn38, tbl13, tbl14, n4, tbl15, n5, flag2, tbl16, n6, v24 = function(arg, arg2)
+		local fn39, tbl13, tbl14, n4, tbl15, n5, flag2, tbl16, n6, v24 = function(arg, arg2)
+			local n4 = 2439831516
+			local n5 = 2368779657
 			local character2 = ctx.localPlayer.Character
 			local onAdmin = ctx.fn11()
 			local onAdmin2 = ctx.state.onAdmin
@@ -13793,7 +13803,7 @@ local function fn2()
 					ctx.state.leaveTree()
 				end
 
-				local function fn38()
+				local function fn39()
 					local v24 = arg2()
 					if v24 then
 						return ctx.localPlayer.Character == character2
@@ -13801,11 +13811,11 @@ local function fn2()
 					return v24
 				end
 
-				local function fn39(arg3, arg4, arg5, arg6)
-					local n4 = os.clock() + arg5
+				local function fn40(arg3, arg4, arg5, arg6)
+					local n6 = os.clock() + arg5
 
-					while os.clock() < n4 do
-						if fn38() then
+					while os.clock() < n6 do
+						if fn39() then
 							if arg6 then
 								if arg6(290571211) then
 									return true
@@ -13904,29 +13914,29 @@ local function fn2()
 				if not onAdmin then
 					if v24 then
 						if (v24.Position - Vector3.new(550.73, 93.8, -351.03)).Magnitude > 8 then
-							local v25 = bit32.band(nil, nil)
+							local v25 = bit32.band(n4, n5)
 							ctx.fn6("Instant steal: flying to the start spot")
-							if not ctx.fn22(Vector3.new(550.73, 93.8, -351.03), fn38, 400) then
+							if not ctx.fn22(Vector3.new(550.73, 93.8, -351.03), fn39, 400) then
 								return false
 							end
-							local n4 = 2439831516
+							n4 = 2439831516
 						end
 					end
 				end
 
 				ctx.fn6("Instant steal: waiting at the start spot")
-				local n4
+				local n6
 
 				if onAdmin2 then
-					n4 = 0.75
+					n6 = 0.75
 				else
-					n4 = 0.5
+					n6 = 0.5
 				end
 
-				if fn39(Vector3.new(550.73, 93.8, -351.03), 345205730, n4) then
-					local n5 = 28646123
+				if fn40(Vector3.new(550.73, 93.8, -351.03), 345205730, n6) then
+					local n7 = 28646123
 
-					local function fn40()
+					local function fn41()
 						local ok, result = pcall(ctx.slot33.Egg.ReadFieldEgg, arg.Uid)
 
 						if ok then
@@ -13956,11 +13966,11 @@ local function fn2()
 						return pos + Vector3.new(0, 3, 0)
 					end
 
-					n5 = 419565845
+					n7 = 419565845
 					ctx.fn6("Instant steal: teleporting to " .. arg.Name)
 
-					if fn39(fn40, 345205730, 0.3) then
-						local n6 = 0
+					if fn40(fn41, 345205730, 0.3) then
+						local n8 = 0
 						local flag3 = false
 
 						for i2 = 1, 3 do
@@ -13968,7 +13978,7 @@ local function fn2()
 								ctx.fn6(("Instant steal: missed, following the egg (try %d/3)"):format(i2))
 							end
 
-							flag3 = fn39(fn40, 345205730, 2.5, function(arg3)
+							flag3 = fn40(fn41, 345205730, 2.5, function(arg3)
 								if ctx.fn16(arg.Uid) then
 									return true
 								end
@@ -13977,19 +13987,19 @@ local function fn2()
 									return true
 								end
 								local now4 = os.clock()
-								local n62 = n6
+								local n82 = n8
 
 								if bit32.bxor(arg3, 141081270) ~= 275383728 then
-									if n62 <= now4 then
-										n6 = os.clock() + 0.08
+									if n82 <= now4 then
+										n8 = os.clock() + 0.08
 										task.spawn(ctx.fn17, "Egg", "CarryFieldEgg", arg.Uid)
 										return
 									end
 								else
 									bit32.bxor(arg3, 2430304055)
 
-									if n62 <= now4 then
-										n6 = os.clock() + 0.08
+									if n82 <= now4 then
+										n8 = os.clock() + 0.08
 										task.spawn(ctx.fn17, "Egg", "CarryFieldEgg", arg.Uid)
 										return
 									end
@@ -14001,13 +14011,13 @@ local function fn2()
 
 								if not flag3 then
 									if not flag2 then
-										if fn38() then
+										if fn39() then
 											continue
 										end
 									end
 								end
 							elseif not flag2 then
-								if fn38() then
+								if fn39() then
 									continue
 								end
 							end
@@ -14017,23 +14027,23 @@ local function fn2()
 
 						if flag3 then
 							ctx.fn6("Instant steal: back with " .. arg.Name)
-							local n7 = 141766199
+							local n9 = 141766199
 
 							local function getPivot()
 								return ctx.fn23("Build", "StarHandler"):GetPivot()
 							end
 
-							n7 = 384687021
+							n9 = 384687021
 							local ok, cframe = pcall(getPivot)
-							local n8
+							local n10
 
 							if ok then
-								n8 = cframe.Position + cframe.LookVector * 6 + Vector3.new(0, 3, 0)
+								n10 = cframe.Position + cframe.LookVector * 6 + Vector3.new(0, 3, 0)
 							else
-								n8 = Vector3.new(540, 70.4, -397)
+								n10 = Vector3.new(540, 70.4, -397)
 							end
 
-							fn39(n8, 345205730, 4, function(arg3)
+							fn40(n10, 345205730, 4, function(arg3)
 								local v25 = arg
 
 								if arg3 + 121504474 == 59466867 then
@@ -14046,7 +14056,7 @@ local function fn2()
 							return not ctx.fn16(arg.Uid)
 						end
 
-						fn39(Vector3.new(550.73, 93.8, -351.03), 345205730, 0.2)
+						fn40(Vector3.new(550.73, 93.8, -351.03), 345205730, 0.2)
 						return false
 					end
 
@@ -14121,7 +14131,7 @@ local function fn2()
 			return tbl17
 		end
 
-		local function fn39()
+		local function fn40()
 			if os.clock() < n5 then
 				local tbl152 = tbl15
 				return tbl152
@@ -14183,7 +14193,7 @@ local function fn2()
 		local tbl17, tbl18 = {["Lowest value"] = "lo", ["Best rarity"] = "r", ["Best mutation"] = "mv", Biggest = "s", Closest = "near"}, {}
 		local areaEggSlotsClient = workspace:FindFirstChild("AreaEggSlotsClient")
 
-		local function fn40(arg)
+		local function fn41(arg)
 			if (arg.State == "Dropped") or (arg.State == "Carried") then
 				local areaEggSlotsClient2 = workspace:FindFirstChild(arg.Uid) or (areaEggSlotsClient and areaEggSlotsClient:FindFirstChild(arg.Uid))
 
@@ -14201,7 +14211,7 @@ local function fn2()
 			return arg.BottomCFrame.Position
 		end
 
-		local function fn41(arg, uid, tg, arg2, arg3, arg4)
+		local function fn42(arg, uid, tg, arg2, arg3, arg4)
 			local tbl19 = tbl18[uid]
 
 			if if tbl19 then tbl19.r ~= arg else not tbl19 then
@@ -14257,7 +14267,7 @@ local function fn2()
 			end
 
 			e2.held = (tg and Players:GetPlayerByUserId(near2)) or nil
-			local v26, name, tg2, n7 = fn40(arg), e2.n, e2.tg
+			local v26, name, tg2, n7 = fn41(arg), e2.n, e2.tg
 
 			if tg2 then
 				arg2 = ctx.state
@@ -14295,7 +14305,7 @@ local function fn2()
 			return e2
 		end
 
-		local function fn42(arg, arg2)
+		local function fn43(arg, arg2)
 			local tbl19, now4 = {}, os.clock()
 
 			if if arg then not arg else l() <= 0 then
@@ -14335,7 +14345,7 @@ local function fn2()
 			end
 
 			local tbl20 = ctx.slot28
-			local index, position = tbl20.index and fn39(), ctx.state
+			local index, position = tbl20.index and fn40(), ctx.state
 			local wantEgg, flag3 = position.wantEgg, ctx.slot28
 			local str = tbl17[flag3.order] or "v"
 			flag3, tbl20, position = (now4 - n4) > 8, {}, ctx.fn11
@@ -14466,7 +14476,7 @@ local function fn2()
 							end
 
 							if k then
-								local v27 = fn41(v26, uid, index, wantEgg, str, position)
+								local v27 = fn42(v26, uid, index, wantEgg, str, position)
 
 								if arg then
 									tbl19[#tbl19 + 1] = v27
@@ -14573,7 +14583,7 @@ local function fn2()
 		local v26
 		local n7 = 0
 
-		local function fn43()
+		local function fn44()
 			if v26 then
 				if (os.clock() - n7) < 0.3 then
 					local v262 = v26
@@ -14581,7 +14591,7 @@ local function fn2()
 				end
 			end
 
-			local v27, v272, v28 = fn42(false), os
+			local v27, v272, v28 = fn43(false), os
 			v28, v26 = v272.clock(), v27
 			n7 = v28
 			v272 = v26
@@ -14597,13 +14607,13 @@ local function fn2()
 		local v28 = ctx.state
 
 		v28.targetsSoon = function()
-			return fn42(false, true)
+			return fn43(false, true)
 		end
 
 		local v29 = ctx.state
 
 		v29.allEggs = function()
-			return fn42(true)
+			return fn43(true)
 		end
 
 		v6 = ctx.state
@@ -14618,7 +14628,7 @@ local function fn2()
 		v4.bagMax = bagMax
 		local n8 = 0
 
-		local function fn44()
+		local function fn45()
 			local n9 = 0
 
 			for k in pairs(fn10()) do
@@ -14629,7 +14639,7 @@ local function fn2()
 			return n9 >= bagMax2
 		end
 
-		local function fn45(arg)
+		local function fn46(arg)
 			if (os.clock() - n8) < 1 then
 				return true
 			end
@@ -14696,8 +14706,8 @@ local function fn2()
 			local v31 = ctx.slot28
 
 			if v31.bagSell then
-				if fn44() then
-					fn45(1 / 0)
+				if fn45() then
+					fn46(1 / 0)
 				end
 			end
 		end
@@ -14727,8 +14737,8 @@ local function fn2()
 			end
 		end
 
-		local function fn46()
-			local v31, flag4, hwList = fn43(), l() > 0
+		local function fn47()
+			local v31, flag4, hwList = fn44(), l() > 0
 
 			if flag4 then
 				local v32 = ctx.state
@@ -14781,7 +14791,7 @@ local function fn2()
 				return nil
 			end
 
-			v31 = fn46()[1]
+			v31 = fn47()[1]
 			if not v31 then
 				return nil
 			end
@@ -14813,7 +14823,7 @@ local function fn2()
 			v32 = l()
 
 			if v32 <= 0 then
-				fn43()
+				fn44()
 				local v33 = ctx.fn6
 				return v33("Waiting for daytime")
 			end
@@ -14826,7 +14836,7 @@ local function fn2()
 				v32 = ctx.fn6
 				return v32(v3.fullTx or "Bag full, retrying soon", "warn")
 			end
-			v32 = fn46()
+			v32 = fn47()
 			v3.empty = ((#v32 == 0) and (v3.empty or os.clock())) or nil
 			if #v32 == 0 then
 				local I = ctx.fn6
@@ -14857,11 +14867,11 @@ local function fn2()
 				return I("Matching eggs are in other players' hands")
 			end
 
-			if fn44() then
+			if fn45() then
 				I = ctx.slot28
 
 				if I.bagSell then
-					if fn45(v33.v) then
+					if fn46(v33.v) then
 						return "wait"
 					end
 				end
@@ -14892,7 +14902,7 @@ local function fn2()
 			end
 		end
 
-		local function fn47(arg)
+		local function fn48(arg)
 			local humanoidRootPart = I(arg)
 			local playerByUserId, flag4 = (humanoidRootPart and (humanoidRootPart.State == "Carried")) and Players:GetPlayerByUserId(tonumber(humanoidRootPart.CarrierUserId) or 0)
 
@@ -14957,7 +14967,7 @@ local function fn2()
 			end
 		end
 
-		local function fn48(arg)
+		local function fn49(arg)
 			local v32 = I(arg)
 			local v322, flag4 = v32 and (v32.State == "Carried")
 
@@ -14973,7 +14983,7 @@ local function fn2()
 
 		local tbl20 = {}
 
-		local function fn49(arg, arg2, arg3)
+		local function fn50(arg, arg2, arg3)
 			local uid, v32 = arg.Uid, ctx.localPlayer
 			local character2, n9 = v32.Character, ctx.fn4
 			local flag4, RunService2 = n9(), ctx.slot28
@@ -15019,7 +15029,7 @@ local function fn2()
 				return false, "Stuck on treadmill"
 			end
 
-			v32, n9 = fn47(uid), ctx.fn11
+			v32, n9 = fn48(uid), ctx.fn11
 			RunService2 = n9()
 
 			if v32 then
@@ -15029,7 +15039,7 @@ local function fn2()
 						n9("Ragdoll jump to the carrier")
 
 						ragTo(function()
-							local v33 = fn47(uid)
+							local v33 = fn48(uid)
 							local n10
 
 							if v33 then
@@ -15050,24 +15060,24 @@ local function fn2()
 			local tbl21
 			RunService2 = ctx.RunService
 
-			local function fn50(deltaTime)
+			local function fn51(deltaTime)
 				if tbl21 then
 					pcall(ctx.state.huntStep, tbl21[1], tbl21[2], deltaTime)
 				end
 			end
 
-			local connection, now4, flag5 = RunService2.PreSimulation:Connect(fn50), os.clock(), false
+			local connection, now4, flag5 = RunService2.PreSimulation:Connect(fn51), os.clock(), false
 			n9, RunService2 = 0, 0
 
 			while true do
-				fn50 = arg2()
+				fn51 = arg2()
 				local flag6
 
-				if fn50 then
+				if fn51 then
 					local v33 = ctx.localPlayer
 					flag6 = v33.Character == character2
 				else
-					flag6 = fn50
+					flag6 = fn51
 				end
 
 				if not (flag6 and ((os.clock() - now4) < 90)) then
@@ -15083,14 +15093,14 @@ local function fn2()
 					flag5 = (flag6 ~= nil) and ((flag6.State == "Slot") or (flag6.State == "Dropped"))
 					break
 				end
-				v33, flag6 = fn47(uid)
-				local fn502, flag7 = v33 and flag6
+				v33, flag6 = fn48(uid)
+				local fn512, flag7 = v33 and flag6
 
-				if fn502 then
+				if fn512 then
 					local v34 = ctx.fn13
 					flag7 = not v34(v33.Position)
 				else
-					flag7 = fn502
+					flag7 = fn512
 				end
 
 				tbl21 = (flag7 and {flag6, v33}) or nil
@@ -15103,18 +15113,18 @@ local function fn2()
 				flag7 = ctx.fn6
 				flag7((v33 and ((tbl21 and ("Chasing %s for %s"):format(flag6.DisplayName, arg.Name)) or "The carrier reached their base")) or "Looking for the egg carrier")
 				flag6 = ctx.fn12
-				fn502 = flag6()
+				fn512 = flag6()
 
 				if v33 then
 				else
-					n9 += fn502
+					n9 += fn512
 					if n9 >= 3 then
 						flag5, v32 = flag52, v33
 						break
 					end
 				end
 
-				RunService2 = ((v33 and not tbl21) and (RunService2 + fn502)) or 0
+				RunService2 = ((v33 and not tbl21) and (RunService2 + fn512)) or 0
 
 				if RunService2 > 1.5 then
 					tbl20[uid] = os.clock() + 60
@@ -15144,13 +15154,13 @@ local function fn2()
 			end
 
 			if flag4 then
-				local function fn51(arg4)
+				local function fn52(arg4)
 					local v33 = ctx.fn6
 					v33(arg.Name .. " went back to its nest, going for it")
 					arg.Pos = arg4.BottomCFrame.Position
 					arg4, v33 = reach(arg, arg2)
 					if arg4 then
-						return fn32(uid, arg2, arg.Pos)
+						return fn33(uid, arg2, arg.Pos)
 					end
 					return arg4, v33
 				end
@@ -15159,16 +15169,16 @@ local function fn2()
 				v32, now4 = character2(uid), I(uid)
 
 				if (if v32 then not v32 else now4) and (now4.State == "Slot") then
-					v32 = (fn51(now4))
+					v32 = (fn52(now4))
 				else
 					if v32 then
 					else
 						if now4 then
-							fn50 = ctx.fn6
-							fn50("The egg fell, taking it")
-							local v33, v34, v35, v36 = fn40(now4), ctx.fn10, ctx.cFrameNew, ctx.vector3New
+							fn51 = ctx.fn6
+							fn51("The egg fell, taking it")
+							local v33, v34, v35, v36 = fn41(now4), ctx.fn10, ctx.cFrameNew, ctx.vector3New
 							v34(v35(v33 + v36(0, 3, 0)))
-							v32 = (fn32(uid, arg2, v33))
+							v32 = (fn33(uid, arg2, v33))
 						else
 						end
 					end
@@ -15191,7 +15201,7 @@ local function fn2()
 						if now4 then
 							if now4.State == "Dropped" then
 								local v33
-								v32, v33 = fn32(uid, arg2, fn40(now4)), I(uid)
+								v32, v33 = fn33(uid, arg2, fn41(now4)), I(uid)
 								now4 = v33
 							else
 							end
@@ -15199,19 +15209,19 @@ local function fn2()
 						end
 
 						local v33 = ctx.fn16
-						v32 = if v33(uid) then v32 else if now4 then if now4.State == "Slot" then fn51(now4) else v32 else v32
+						v32 = if v33(uid) then v32 else if now4 then if now4.State == "Slot" then fn52(now4) else v32 else v32
 					else
 					end
 				end
 
 				if v32 then
-					local v33, v34 = fn36(uid, arg2)
+					local v33, v34 = fn37(uid, arg2)
 
 					if not (v33) then
 						if arg2() then
 							if (arg3 or 0) < 4 then
-								if fn48(uid) then
-									return fn49(arg, arg2, (arg3 or 0) + 1)
+								if fn49(uid) then
+									return fn50(arg, arg2, (arg3 or 0) + 1)
 								end
 							end
 						end
@@ -15324,7 +15334,7 @@ local function fn2()
 				player, adminSteal2 = ctx.state, arg.Uid == ctx.state.mgUid
 			end
 
-			adminSteal, player = adminSteal2 and (fn17())
+			adminSteal, player = adminSteal2 and (fn18())
 
 			if adminSteal then
 				flag4 = ctx2.fn9
@@ -15334,7 +15344,7 @@ local function fn2()
 			end
 
 			if player then
-				player2 = fn38(arg, arg2)
+				player2 = fn39(arg, arg2)
 
 				if player2 then
 					adminSteal = ctx.fn6
@@ -15365,11 +15375,11 @@ local function fn2()
 
 					if v33() then
 					else
-						local function fn50()
+						local function fn51()
 							local v34 = ctx.fn16
 
 							if not (v34()) then
-								if fn17() then
+								if fn18() then
 									flag5 = true
 									return false
 								end
@@ -15378,7 +15388,7 @@ local function fn2()
 							return arg22()
 						end
 
-						arg2 = fn50
+						arg2 = fn51
 					end
 				else
 				end
@@ -15410,10 +15420,10 @@ local function fn2()
 					local v32 = ctx.state
 					flag6 = true
 					v32.tpKeep = arg.Uid
-					local v33, v34 = fn34(arg, arg2)
+					local v33, v34 = fn35(arg, arg2)
 
 					if v34 == "grabbed" then
-						player2, str = fn36(arg.Uid, arg2)
+						player2, str = fn37(arg.Uid, arg2)
 					else
 						player2, str = v33, v34
 					end
@@ -15424,14 +15434,14 @@ local function fn2()
 							v34 = ctx.localPlayer
 
 							if v34.Character == character2 then
-								if fn48(arg.Uid) then
-									player2, str = fn49(arg, arg2)
+								if fn49(arg.Uid) then
+									player2, str = fn50(arg, arg2)
 								else
 									if str == "Dropped on the way" then
 										v33 = ctx2.fn11
 
 										if v33(arg.Uid, arg2) then
-											player2, str = fn36(arg.Uid, arg2)
+											player2, str = fn37(arg.Uid, arg2)
 										else
 										end
 									else
@@ -15500,16 +15510,16 @@ local function fn2()
 			end
 
 			if str == "Taken by someone" then
-				player2, str = fn49(arg, arg2)
+				player2, str = fn50(arg, arg2)
 			else
 				if player2 then
 					if flag6 then
 					else
-						adminSteal, player = fn32(arg.Uid, arg2, arg.Pos, true)
+						adminSteal, player = fn33(arg.Uid, arg2, arg.Pos, true)
 						flag4, adminSteal2 = nil
 
 						if adminSteal then
-							flag4, adminSteal2 = fn36(arg.Uid, arg2)
+							flag4, adminSteal2 = fn37(arg.Uid, arg2)
 						else
 							flag4, adminSteal2 = adminSteal, player
 						end
@@ -15524,8 +15534,8 @@ local function fn2()
 								v32 = ctx.slot28
 
 								if v32.thief then
-									if fn48(arg.Uid) then
-										player2, str = fn49(arg, arg2)
+									if fn49(arg.Uid) then
+										player2, str = fn50(arg, arg2)
 									else
 										player2, str = flag4, adminSteal2
 									end
@@ -15688,7 +15698,7 @@ local function fn2()
 					elseif str == "Bag is full" then
 						v32 = ctx.slot28
 
-						if v32.bagSell and fn45(arg.v) then
+						if v32.bagSell and fn46(arg.v) then
 							tbl13[arg.Uid] = nil
 						else
 							v3.full = os.clock() + 30
@@ -15751,7 +15761,7 @@ local function fn2()
 
 		local dropEggsAtSafeZone
 
-		dropEggsAtSafeZone = fn13(stealSec, "Drop Eggs At Safe Zone", "dropSafe", false, function(arg)
+		dropEggsAtSafeZone = fn14(stealSec, "Drop Eggs At Safe Zone", "dropSafe", false, function(arg)
 			if arg then
 				if c.busy then
 					return
@@ -15767,7 +15777,7 @@ local function fn2()
 			end})
 		end)
 
-		fn13(stealSec, "Anti Guard Panel", "agPanel", true, function(arg)
+		fn14(stealSec, "Anti Guard Panel", "agPanel", true, function(arg)
 			local v7 = ctx.state
 
 			if v7.agShow then
@@ -15776,7 +15786,7 @@ local function fn2()
 			end
 		end)
 
-		local function fn26(arg)
+		local function fn27(arg)
 			return ((arg > 0) and (((math.random() * 2) - 1) * arg)) or 0
 		end
 
@@ -15862,7 +15872,7 @@ local function fn2()
 			local tbl11, n2, n3 = {}, 0, 0
 
 			for i2, step in ipairs(arg.steps) do
-				n2, n3 = math.max((n2 + math.max(step[1] - n3, 0)) + fn26((step[2] and arg.hold) or arg.hop), 0), step[1]
+				n2, n3 = math.max((n2 + math.max(step[1] - n3, 0)) + fn27((step[2] and arg.hold) or arg.hop), 0), step[1]
 				tbl11[i2] = {n2, step[2]}
 			end
 
@@ -15916,7 +15926,7 @@ local function fn2()
 
 		local tbl11 = {"LuaSourceContainer", "Sound", "ForceField", "JointInstance", "Constraint", "WeldConstraint", "BodyMover", "ProximityPrompt", "BillboardGui"}
 
-		local function fn27(arg, parent)
+		local function fn28(arg, parent)
 			local tbl12 = {}
 
 			for _, descendant in ipairs(arg:GetDescendants()) do
@@ -15966,7 +15976,7 @@ local function fn2()
 			return result
 		end
 
-		local function fn28()
+		local function fn29()
 			local dis = tbl10.dis
 			if not dis then
 				return
@@ -16029,7 +16039,7 @@ local function fn2()
 				end
 			end
 
-			local function fn29()
+			local function fn30()
 				for _, v9 in ipairs(dis.hidden) do
 					pcall(function()
 						v9.LocalTransparencyModifier = 1
@@ -16042,14 +16052,14 @@ local function fn2()
 				end)
 			end
 
-			fn29()
+			fn30()
 			v8, arg = ctx.RunService, ctx.RunService
-			pcall(ctx.RunService.BindToRenderStep, ctx.RunService, "VenyxAG", Enum.RenderPriority.Last.Value + 1, fn29)
+			pcall(ctx.RunService.BindToRenderStep, ctx.RunService, "VenyxAG", Enum.RenderPriority.Last.Value + 1, fn30)
 			local RunService2 = ctx.RunService
-			dis.beat = RunService2.Heartbeat:Connect(fn29)
+			dis.beat = RunService2.Heartbeat:Connect(fn30)
 
 			for i2, v9 in ipairs(tbl12) do
-				i2 = fn27(v9, currentCamera)
+				i2 = fn28(v9, currentCamera)
 				dis.copies[#dis.copies + 1] = i2
 
 				if i2 then
@@ -16061,7 +16071,7 @@ local function fn2()
 		end
 
 		ctx2.fn = function()
-			fn28()
+			fn29()
 			local v8 = ctx.fn4
 			local v9 = v8()
 
@@ -16075,7 +16085,9 @@ local function fn2()
 			v8.agBusy = false
 		end
 
-		local fn29, v8 = function(arg)
+		local fn30, v8 = function(arg)
+			local n2 = 2118510397
+			local n3 = 2500815568
 			local character = ctx.localPlayer.Character
 			local v8 = ctx.fn11()
 			local v9 = ctx.fn4()
@@ -16084,7 +16096,7 @@ local function fn2()
 				if v8 then
 					if v9 then
 						if v9.Health > 0 then
-							local function fn29()
+							local function fn30()
 								local v10 = ctx.fn4()
 								local flag3 = ctx.flag
 
@@ -16114,25 +16126,25 @@ local function fn2()
 								v13 = ctx2.fn4()
 							end
 
-							local n2 = v13 + v10.off
+							local n4 = v13 + v10.off
 
-							local function fn30(arg2)
-								while fn29(449202395) do
+							local function fn31(arg2)
+								while fn30(449202395) do
 									if os.clock() - arg < arg2 then
 										ctx.RunService.Heartbeat:Wait()
 
 										if v10.freeze then
-											local n3 = 8177091
+											local n5 = 8177091
 
-											local function fn31()
+											local function fn32()
 												local v82 = v8
 												local v14 = ctx.vector
 												v8.AssemblyLinearVelocity = ctx.vector
 												v82.AssemblyAngularVelocity = v14
 											end
 
-											n3 = 264777235
-											pcall(fn31)
+											n5 = 264777235
+											pcall(fn32)
 										end
 
 										continue
@@ -16141,19 +16153,19 @@ local function fn2()
 									break
 								end
 
-								return fn29(449202395)
+								return fn30(449202395)
 							end
 
-							local n3 = 437056366
+							local n5 = 437056366
 
-							local function fn31()
+							local function fn32()
 								v9.BreakJointsOnDeath = false
 							end
 
-							n3 = 519340746
-							pcall(fn31)
+							n5 = 519340746
+							pcall(fn32)
 							local flag3 = ctx2.slot61
-							local n4
+							local n6
 
 							if ctx2.slot61 then
 								flag3 = v11[1]
@@ -16165,41 +16177,41 @@ local function fn2()
 										flag3 = not v11[1][2]
 
 										if flag3 then
-											ctx2.fn5(character, v8, n2, v10.freeze)
-											n4 = position - n2
+											ctx2.fn5(character, v8, n4, v10.freeze)
+											n6 = position - n4
 										else
-											n4 = nil
+											n6 = nil
 										end
 									elseif flag3 then
-										ctx2.fn5(character, v8, n2, v10.freeze)
-										n4 = position - n2
+										ctx2.fn5(character, v8, n4, v10.freeze)
+										n6 = position - n4
 									else
-										n4 = nil
+										n6 = nil
 									end
 								elseif flag3 then
-									ctx2.fn5(character, v8, n2, v10.freeze)
-									n4 = position - n2
+									ctx2.fn5(character, v8, n4, v10.freeze)
+									n6 = position - n4
 								else
-									n4 = nil
+									n6 = nil
 								end
 							elseif flag3 then
-								ctx2.fn5(character, v8, n2, v10.freeze)
-								n4 = position - n2
+								ctx2.fn5(character, v8, n4, v10.freeze)
+								n6 = position - n4
 							else
-								n4 = nil
+								n6 = nil
 							end
 
-							ctx2.fn6(character, n4)
+							ctx2.fn6(character, n6)
 							ctx.state.agFlash("Work")
 
 							if v10.limp then
 								v9.PlatformStand = true
 							end
 
-							local n5 = nil + 1379882577
+							local n7 = n3 + 1379882577
 							local str = tostring(ctx.localPlayer.UserId)
 
-							local function fn32(arg2)
+							local function fn33(arg2)
 								local Areas2 = ctx.fn23("Areas", "GuardAreas")
 								local v14 = ipairs
 								local children
@@ -16263,10 +16275,10 @@ local function fn2()
 								local position2
 
 								if os.clock() - arg > 0.2 then
-									if fn32(321298282) then
+									if fn33(321298282) then
 										flag4 = true
 										break
-									elseif fn30(v14[1], 27038411) then
+									elseif fn31(v14[1], 27038411) then
 										if v14[2] then
 											position2 = position
 
@@ -16274,28 +16286,28 @@ local function fn2()
 												ctx2.fn5(character, v8, position2, v10.freeze)
 												ctx.RunService.PreSimulation:Wait()
 
-												if fn29(449202395) then
+												if fn30(449202395) then
 													if (v8.Position - position2).Magnitude > 3 then
 														ctx2.fn5(character, v8, position2, v10.freeze)
 													end
 												end
 											else
-												position2 = n2
+												position2 = n4
 												ctx2.fn5(character, v8, position2, v10.freeze)
 												ctx.RunService.PreSimulation:Wait()
 
-												if fn29(449202395) then
+												if fn30(449202395) then
 													if (v8.Position - position2).Magnitude > 3 then
 														ctx2.fn5(character, v8, position2, v10.freeze)
 													end
 												end
 											end
 										else
-											position2 = n2
+											position2 = n4
 											ctx2.fn5(character, v8, position2, v10.freeze)
 											ctx.RunService.PreSimulation:Wait()
 
-											if fn29(449202395) then
+											if fn30(449202395) then
 												if (v8.Position - position2).Magnitude > 3 then
 													ctx2.fn5(character, v8, position2, v10.freeze)
 												end
@@ -16304,7 +16316,7 @@ local function fn2()
 
 										continue
 									end
-								elseif fn30(v14[1], 27038411) then
+								elseif fn31(v14[1], 27038411) then
 									if v14[2] then
 										position2 = position
 
@@ -16312,28 +16324,28 @@ local function fn2()
 											ctx2.fn5(character, v8, position2, v10.freeze)
 											ctx.RunService.PreSimulation:Wait()
 
-											if fn29(449202395) then
+											if fn30(449202395) then
 												if (v8.Position - position2).Magnitude > 3 then
 													ctx2.fn5(character, v8, position2, v10.freeze)
 												end
 											end
 										else
-											position2 = n2
+											position2 = n4
 											ctx2.fn5(character, v8, position2, v10.freeze)
 											ctx.RunService.PreSimulation:Wait()
 
-											if fn29(449202395) then
+											if fn30(449202395) then
 												if (v8.Position - position2).Magnitude > 3 then
 													ctx2.fn5(character, v8, position2, v10.freeze)
 												end
 											end
 										end
 									else
-										position2 = n2
+										position2 = n4
 										ctx2.fn5(character, v8, position2, v10.freeze)
 										ctx.RunService.PreSimulation:Wait()
 
-										if fn29(449202395) then
+										if fn30(449202395) then
 											if (v8.Position - position2).Magnitude > 3 then
 												ctx2.fn5(character, v8, position2, v10.freeze)
 											end
@@ -16347,37 +16359,37 @@ local function fn2()
 							end
 
 							if flag4 then
-								if fn29(449202395) then
+								if fn30(449202395) then
 									ctx2.fn5(character, v8, position, v10.freeze)
 									ctx.RunService.PreSimulation:Wait()
 
-									if fn29(449202395) then
+									if fn30(449202395) then
 										if (v8.Position - position).Magnitude > 3 then
 											ctx2.fn5(character, v8, position, v10.freeze)
 										end
 									end
 
-									fn30(os.clock() - arg + 0.25, 27038411)
+									fn31(os.clock() - arg + 0.25, 27038411)
 								else
-									fn30(v12, 27038411)
+									fn31(v12, 27038411)
 								end
 							else
-								fn30(v12, 27038411)
+								fn31(v12, 27038411)
 							end
 
-							local n6 = 253338573
+							local n8 = 253338573
 
-							local function fn33()
+							local function fn34()
 								v9.PlatformStand = platformStand
 							end
 
-							n6 = 188153803
-							pcall(fn33)
+							n8 = 188153803
+							pcall(fn34)
 							ctx2.fn()
 							local agFlash = ctx.state.agFlash
 							local str2
 
-							if fn29(449202395) then
+							if fn30(449202395) then
 								if ctx2.fn7() then
 									str2 = "Good"
 								else
@@ -16413,7 +16425,7 @@ local function fn2()
 			v10.agBusy, tbl10.since, v11.agAt = true, os.clock(), os.clock()
 
 			task.spawn(function()
-				if not (pcall(fn29, os.clock())) then
+				if not (pcall(fn30, os.clock())) then
 					local v12 = ctx2.fn
 					v12()
 				end
@@ -16422,7 +16434,7 @@ local function fn2()
 
 		local flag3, flag4, flag5 = false, false, false
 
-		local function fn30()
+		local function fn31()
 			local flag6 = ctx.slot28
 			local antiGuard, flag7 = flag6.antiGuard
 
@@ -16502,13 +16514,13 @@ local function fn2()
 			return antiGuard
 		end
 
-		local function fn31()
+		local function fn32()
 			local flag52 = flag5
 			flag5 = flag3 or flag4
 
 			if flag5 then
 				if not (flag52) then
-					if fn30() then
+					if fn31() then
 						local v9 = ctx.state
 						v9.agKick()
 					end
@@ -16518,7 +16530,7 @@ local function fn2()
 
 		local v9, str = ctx.localPlayer, tostring(ctx.localPlayer.UserId)
 
-		local function fn32()
+		local function fn33()
 			local area, Areas2 = tbl10.area
 
 			if area then
@@ -16552,7 +16564,7 @@ local function fn2()
 
 				if arg then
 					tbl10.dirty = nil
-					fn31()
+					fn32()
 				end
 			end)
 		end)
@@ -16573,14 +16585,14 @@ local function fn2()
 
 			if tbl10.dirty then
 				tbl10.dirty = nil
-				fn31()
+				fn32()
 			end
 
 			if flag2 then
 				if flag5 then
 					if (os.clock() - (tbl10.kAt or 0)) > 0.3 then
-						if fn30() then
-							if fn32() then
+						if fn31() then
+							if fn33() then
 								tbl10.kAt = os.clock()
 								v10 = ctx.state
 								v10.agKick()
@@ -16607,7 +16619,7 @@ local function fn2()
 
 			if deltaTime ~= flag4 then
 				flag4 = deltaTime
-				fn31()
+				fn32()
 			end
 		end)
 
@@ -16633,7 +16645,7 @@ local function fn2()
 
 		local v7 = v6({}, tbl9)
 
-		local function fn26()
+		local function fn27()
 			return HttpService:GenerateGUID(false):gsub("-", ""):sub(1, 14)
 		end
 
@@ -16659,7 +16671,7 @@ local function fn2()
 		tbl9 = ctx.state
 		local autoSteal = tbl9.autoSteal
 
-		local function fn27()
+		local function fn28()
 			local tbl12, tbl13, v8 = {}, {}, ctx.state
 
 			for _, v9 in ipairs(v8.pick) do
@@ -16695,7 +16707,7 @@ local function fn2()
 			return tbl12, tbl13.curUid
 		end
 
-		local function fn28(arg)
+		local function fn29(arg)
 			table.clear(ctx.state.pick)
 			local v8 = ipairs
 
@@ -16714,7 +16726,7 @@ local function fn2()
 			end
 		end
 
-		local function fn29(arg)
+		local function fn30(arg)
 			local v8, v9 = ctx.state, table.find(ctx.state.pick, arg)
 
 			if v9 then
@@ -16758,7 +16770,7 @@ local function fn2()
 				return arg2
 			end
 			return arg.Value == true
-		end, StealPlan = fn27, StealNow = function(arg)
+		end, StealPlan = fn28, StealNow = function(arg)
 			local v8 = ctx.state
 			v8.skip[arg] = nil
 			v8 = ctx.state
@@ -16787,7 +16799,7 @@ local function fn2()
 				end
 			end
 		end, PrioritizeSteal = function(arg)
-			fn29(arg)
+			fn30(arg)
 			arg = ctx.slot28
 
 			if not (arg.steal) then
@@ -16812,7 +16824,7 @@ local function fn2()
 				v10.stopSteal()
 			end
 		end, MoveInPlan = function(arg, arg2)
-			local v8 = fn27()
+			local v8 = fn28()
 			local v9 = table.find(v8, arg)
 			arg = v9 and (v9 + arg2)
 
@@ -16832,7 +16844,7 @@ local function fn2()
 				v9, n2 = ctx.state, if table.find(ctx.state.pick, v8[i2]) then math.max(n2, i2) else n2
 			end
 
-			fn28({table.unpack(v8, 1, n2)})
+			fn29({table.unpack(v8, 1, n2)})
 		end, ResortSteal = function()
 			local v8 = ctx.state
 
@@ -16875,7 +16887,7 @@ local function fn2()
 			return tbl12
 		end, HalloweenPick = function(arg)
 			if arg then
-				fn29(arg)
+				fn30(arg)
 				local v8 = ctx.slot28
 
 				if not (v8.hwEggs) then
@@ -16938,7 +16950,7 @@ local function fn2()
 			local TweenService = game:GetService("TweenService")
 			local color3FromRGB = Color3.fromRGB
 
-			local function fn30(arg)
+			local function fn31(arg)
 				local tbl12 = {}
 
 				for i2, v8 in ipairs(arg) do
@@ -16949,15 +16961,15 @@ local function fn2()
 			end
 
 			local tbl12 = {}
-			tbl12.Hud = {Color = fn30({{0, color3FromRGB(0, 118, 255)}, {1, color3FromRGB(72, 204, 255)}}), Rotation = -90, Stroke = color3FromRGB(0, 28, 76), Light = color3FromRGB(172, 226, 255)}
-			tbl12.Steal = {Color = fn30({{0, color3FromRGB(60, 255, 0)}, {1, color3FromRGB(136, 255, 0)}}), Rotation = -90, Stroke = color3FromRGB(11, 72, 0), Light = color3FromRGB(190, 255, 180)}
-			tbl12.Queued = {Color = fn30({{0, color3FromRGB(118, 118, 132)}, {1, color3FromRGB(172, 172, 186)}}), Rotation = -90, Stroke = color3FromRGB(28, 28, 34), Light = color3FromRGB(214, 214, 226)}
-			tbl12.PriorityOn = {Color = fn30({{0, color3FromRGB(255, 247, 0)}, {1, color3FromRGB(255, 136, 0)}}), Rotation = 90, Stroke = color3FromRGB(0, 0, 0), Light = color3FromRGB(132, 112, 0)}
-			tbl12.Cancel = {Color = fn30({{0, color3FromRGB(214, 17, 17)}, {1, color3FromRGB(253, 20, 20)}}), Rotation = -90, Stroke = color3FromRGB(72, 0, 0), Light = color3FromRGB(255, 103, 103)}
-			tbl12.Chilli = {Color = fn30({{0, color3FromRGB(132, 74, 255)}, {0.34, color3FromRGB(178, 74, 255)}, {0.6, color3FromRGB(255, 104, 206)}, {0.78, color3FromRGB(255, 168, 232)}, {1, color3FromRGB(146, 66, 255)}}), Rotation = -115, Stroke = color3FromRGB(44, 10, 80), Light = color3FromRGB(226, 178, 255)}
-			local v8, tbl13, rarityGradients = fn30({{0, color3FromRGB(255, 255, 255)}, {0.2, color3FromRGB(206, 212, 224)}, {0.42, color3FromRGB(74, 80, 94)}, {0.58, color3FromRGB(42, 46, 56)}, {0.78, color3FromRGB(158, 166, 182)}, {1, color3FromRGB(250, 252, 255)}}), {}
+			tbl12.Hud = {Color = fn31({{0, color3FromRGB(0, 118, 255)}, {1, color3FromRGB(72, 204, 255)}}), Rotation = -90, Stroke = color3FromRGB(0, 28, 76), Light = color3FromRGB(172, 226, 255)}
+			tbl12.Steal = {Color = fn31({{0, color3FromRGB(60, 255, 0)}, {1, color3FromRGB(136, 255, 0)}}), Rotation = -90, Stroke = color3FromRGB(11, 72, 0), Light = color3FromRGB(190, 255, 180)}
+			tbl12.Queued = {Color = fn31({{0, color3FromRGB(118, 118, 132)}, {1, color3FromRGB(172, 172, 186)}}), Rotation = -90, Stroke = color3FromRGB(28, 28, 34), Light = color3FromRGB(214, 214, 226)}
+			tbl12.PriorityOn = {Color = fn31({{0, color3FromRGB(255, 247, 0)}, {1, color3FromRGB(255, 136, 0)}}), Rotation = 90, Stroke = color3FromRGB(0, 0, 0), Light = color3FromRGB(132, 112, 0)}
+			tbl12.Cancel = {Color = fn31({{0, color3FromRGB(214, 17, 17)}, {1, color3FromRGB(253, 20, 20)}}), Rotation = -90, Stroke = color3FromRGB(72, 0, 0), Light = color3FromRGB(255, 103, 103)}
+			tbl12.Chilli = {Color = fn31({{0, color3FromRGB(132, 74, 255)}, {0.34, color3FromRGB(178, 74, 255)}, {0.6, color3FromRGB(255, 104, 206)}, {0.78, color3FromRGB(255, 168, 232)}, {1, color3FromRGB(146, 66, 255)}}), Rotation = -115, Stroke = color3FromRGB(44, 10, 80), Light = color3FromRGB(226, 178, 255)}
+			local v8, tbl13, rarityGradients = fn31({{0, color3FromRGB(255, 255, 255)}, {0.2, color3FromRGB(206, 212, 224)}, {0.42, color3FromRGB(74, 80, 94)}, {0.58, color3FromRGB(42, 46, 56)}, {0.78, color3FromRGB(158, 166, 182)}, {1, color3FromRGB(250, 252, 255)}}), {}
 
-			local function fn31(arg)
+			local function fn32(arg)
 				local directory = tbl13[arg]
 				if directory then
 					return directory
@@ -16991,7 +17003,7 @@ local function fn2()
 				end
 
 				local rarity, color = (directory and tostring((directory.DisplayName or directory._id) or "")) or "", ((directory and (typeof(directory.Color) == "Color3")) and directory.Color) or color3FromRGB(255, 255, 255)
-				local v82, n12 = fn30({{0, color}, {1, color}}), 90
+				local v82, n12 = fn31({{0, color}, {1, color}}), 90
 
 				if string.upper(rarity) == "SECRET" then
 					v82 = v8
@@ -17013,7 +17025,7 @@ local function fn2()
 				return rarity
 			end
 
-			local function fn32(arg, arg2)
+			local function fn33(arg, arg2)
 				local n12 = tonumber(arg.AssetScale) or 1
 				local n13, mutations = ((n12 > 5) and (((n12 / 5) ^ 1.2) * 19.637875755794113)) or (n12 ^ 1.85), ((type(arg.Mutations) == "table") and arg.Mutations) or {}
 				mutations = if #mutations == 0 then if type(arg.BaseMutation) == "string" then if arg.BaseMutation ~= "" then {arg.BaseMutation} else mutations else mutations else mutations
@@ -17033,7 +17045,7 @@ local function fn2()
 
 			local tbl14 = {"", "K", "M", "B", "T", "Qa", "Qi", "Sx"}
 
-			local function fn33(arg)
+			local function fn34(arg)
 				arg = tonumber(arg) or 0
 				local n12 = 1
 
@@ -17045,7 +17057,7 @@ local function fn2()
 				return "$" .. (string.gsub(str2, "%.0$", "") .. (tbl14[n12] .. "/s"))
 			end
 
-			local function fn34(arg, text)
+			local function fn35(arg, text)
 				if arg then
 					if arg.Text ~= text then
 						arg.Text = text
@@ -17061,9 +17073,9 @@ local function fn2()
 			local n14, tbl17, tbl18, eggs, tbl19, v16, tbl20 = 1, {}, {}, "All", {}, setmetatable, {__mode = "k"}
 			local v17 = v16({}, tbl20)
 			local uiStroke, thickness
-			local flag6, flag7, flag8, fn35 = false, false, false
+			local flag6, flag7, flag8, fn36 = false, false, false
 
-			local function fn36()
+			local function fn37()
 				local playerGui = v4:FindFirstChildOfClass("PlayerGui")
 				local hud = playerGui and (playerGui:FindFirstChild("HUD"))
 				local gameHUD = hud and (hud:FindFirstChild("GameHUD"))
@@ -17101,7 +17113,7 @@ local function fn2()
 				return tbl21
 			end
 
-			local function fn37(arg)
+			local function fn38(arg)
 				local ok, result = pcall(function()
 					return arg:Clone()
 				end)
@@ -17123,18 +17135,18 @@ local function fn2()
 				return result
 			end
 
-			local function fn38(arg)
-				arg.Name = fn26()
+			local function fn39(arg)
+				arg.Name = fn27()
 
 				for _, descendant in ipairs(arg:GetDescendants()) do
-					descendant.Name = fn26()
+					descendant.Name = fn27()
 				end
 			end
 
 			local n15, n16, n17 = 2.3120369911193848, 556, 86.24
 			local tbl21 = {Panel = n15, Hud = n15}
 
-			local function fn39(arg)
+			local function fn40(arg)
 				if arg then
 					local x2 = (v13 and v13.AbsoluteSize.X) or 0
 					return ((x2 > 0) and ((n15 * x2) / n16)) or nil
@@ -17144,8 +17156,8 @@ local function fn2()
 				return ((offset > 0) and ((n15 * offset) / n17)) or nil
 			end
 
-			local function fn40(arg, arg2)
-				local v18 = fn39(arg2.Panel)
+			local function fn41(arg, arg2)
+				local v18 = fn40(arg2.Panel)
 
 				if v18 then
 					if arg.Parent then
@@ -17154,7 +17166,7 @@ local function fn2()
 				end
 			end
 
-			local function fn41(arg, arg2)
+			local function fn42(arg, arg2)
 				local panel = (arg2 and tbl21.Panel) or tbl21.Hud
 				panel = if panel then if panel <= 0 then n15 else panel else n15
 
@@ -17167,30 +17179,30 @@ local function fn2()
 						if if ok then result ~= Enum.StrokeSizingMode.ScaledSize else not ok then
 							i2 = {Ratio = descendant.Thickness / panel, Panel = arg2 == true}
 							v17[descendant] = i2
-							fn40(descendant, i2)
+							fn41(descendant, i2)
 						end
 					end
 				end
 			end
 
-			local function fn42()
+			local function fn43()
 				for k, v18 in pairs(v17) do
-					fn40(k, v18)
+					fn41(k, v18)
 				end
 			end
 
-			local function fn43()
-				fn42()
+			local function fn44()
+				fn43()
 			end
 
-			local function fn44(arg)
+			local function fn45(arg)
 				if not (arg) then
 					return nil
 				end
 				return {Button = arg, Gradient = arg:FindFirstChildOfClass("UIGradient"), Stroke = arg:FindFirstChild("UIStroke"), Light = arg:FindFirstChild("UIStrokeClr"), Label = arg:FindFirstChild("Label") or arg:FindFirstChild("TextLabel"), Scale = arg:FindFirstChild("BtnScale")}
 			end
 
-			local function fn45(arg, style)
+			local function fn46(arg, style)
 				if arg then
 					if arg.Style == style then
 						return
@@ -17215,7 +17227,7 @@ local function fn2()
 				end
 			end
 
-			local function fn46(arg)
+			local function fn47(arg)
 				if not (arg) then
 					return
 				end
@@ -17230,40 +17242,40 @@ local function fn2()
 					scale2 = scale
 				end
 
-				local function fn47(arg2)
+				local function fn48(arg2)
 					TweenService:Create(scale2, tweenInfo5, {Scale = arg2}):Play()
 				end
 
-				local button, fn48 = arg.Button, function()
-					fn47(1.08)
+				local button, fn49 = arg.Button, function()
+					fn48(1.08)
 				end
 
-				button.MouseEnter:Connect(fn48)
+				button.MouseEnter:Connect(fn49)
 
-				fn48, button = arg.Button, function()
-					fn47(1)
+				fn49, button = arg.Button, function()
+					fn48(1)
 				end
 
-				fn48.MouseLeave:Connect(button)
+				fn49.MouseLeave:Connect(button)
 
-				button, fn48 = arg.Button, function()
-					fn47(0.94)
+				button, fn49 = arg.Button, function()
+					fn48(0.94)
 				end
 
-				button.MouseButton1Down:Connect(fn48)
+				button.MouseButton1Down:Connect(fn49)
 
-				fn48, button = arg.Button, function()
-					fn47(1.08)
+				fn49, button = arg.Button, function()
+					fn48(1.08)
 				end
 
-				fn48.MouseButton1Up:Connect(button)
+				fn49.MouseButton1Up:Connect(button)
 			end
 
 			local tweenInfo6 = TweenInfo.new(2.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
 			local tweenInfo7 = TweenInfo.new(6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
 			local tweenInfo8, tbl22 = TweenInfo.new(1.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {}
 
-			local function fn47(arg)
+			local function fn48(arg)
 				for _, v18 in ipairs(tbl22) do
 					pcall(function()
 						v18:Cancel()
@@ -17275,7 +17287,7 @@ local function fn2()
 					return
 				end
 
-				local function fn48(arg2)
+				local function fn49(arg2)
 					tbl22[#tbl22 + 1] = arg2
 					arg2:Play()
 				end
@@ -17285,21 +17297,21 @@ local function fn2()
 				if gradient then
 					gradient.Rotation = -115
 					gradient.Offset = Vector2.new(-0.3, 0)
-					fn48(TweenService:Create(gradient, tweenInfo6, {Offset = Vector2.new(0.3, 0)}))
-					fn48(TweenService:Create(gradient, tweenInfo7, {Rotation = -65}))
+					fn49(TweenService:Create(gradient, tweenInfo6, {Offset = Vector2.new(0.3, 0)}))
+					fn49(TweenService:Create(gradient, tweenInfo7, {Rotation = -65}))
 				end
 
 				gradient = arg.Light
 
 				if gradient then
 					gradient.Color = color3FromRGB(226, 178, 255)
-					fn48(TweenService:Create(gradient, tweenInfo8, {Color = color3FromRGB(255, 245, 255)}))
+					fn49(TweenService:Create(gradient, tweenInfo8, {Color = color3FromRGB(255, 245, 255)}))
 				end
 			end
 
 			local v18 = setthreadidentity or set_thread_identity
 
-			local function fn48()
+			local function fn49()
 				local eggState = v7.EggState
 
 				if (type(eggState) == "table") and (type(eggState.ReadFieldEggs) == "function") then
@@ -17361,12 +17373,12 @@ local function fn2()
 				return records
 			end
 
-			local function fn49()
+			local function fn50()
 				local enabled = (uiStrokeClr ~= nil) and ((uiStrokeClr.ActivePets and uiStrokeClr.ActivePets.Enabled) or (uiStrokeClr.GrowingEggs and uiStrokeClr.GrowingEggs.Enabled))
 				return enabled or false
 			end
 
-			local function fn50()
+			local function fn51()
 				local v19, tbl23, activePets = ipairs, {}, uiStrokeClr.ActivePets
 				tbl23[1], tbl23[2] = activePets, uiStrokeClr.GrowingEggs
 				activePets = false
@@ -17415,7 +17427,7 @@ local function fn2()
 				return activePets
 			end
 
-			local function fn51(arg, arg2)
+			local function fn52(arg, arg2)
 				local column = uiStrokeClr and uiStrokeClr.Column
 
 				if column then
@@ -17446,7 +17458,7 @@ local function fn2()
 			local udim22 = UDim2.new(0.849, 0, n18, 0)
 			local udim23, n21 = UDim2.new(0.2, 0, n19, 0), 0.849
 
-			local function fn52(arg, visible)
+			local function fn53(arg, visible)
 				if arg then
 					if arg.Button.Visible ~= visible then
 						arg.Button.Visible = visible
@@ -17454,20 +17466,20 @@ local function fn2()
 				end
 			end
 
-			local function fn53(arg, rank, arg2, badgeStyle)
+			local function fn54(arg, rank, arg2, badgeStyle)
 				local visible = rank ~= nil
 				arg.Rank = rank
-				fn52(arg.Steal, not visible)
-				fn52(arg.Up, visible)
-				fn52(arg.Down, visible)
-				fn52(arg.Cancel, visible)
+				fn53(arg.Steal, not visible)
+				fn53(arg.Up, visible)
+				fn53(arg.Down, visible)
+				fn53(arg.Cancel, visible)
 
 				if visible then
-					fn45(arg.Up, ((rank > 1) and tbl12.Hud) or tbl12.Queued)
-					fn45(arg.Down, ((rank < (badgeStyle or rank)) and tbl12.Hud) or tbl12.Queued)
+					fn46(arg.Up, ((rank > 1) and tbl12.Hud) or tbl12.Queued)
+					fn46(arg.Down, ((rank < (badgeStyle or rank)) and tbl12.Hud) or tbl12.Queued)
 				end
 
-				fn45(arg.Star, ((rank == 1) and tbl12.PriorityOn) or tbl12.Queued)
+				fn46(arg.Star, ((rank == 1) and tbl12.PriorityOn) or tbl12.Queued)
 
 				if arg.Badge then
 					if arg.Badge.Visible ~= visible then
@@ -17475,7 +17487,7 @@ local function fn2()
 					end
 
 					if visible then
-						fn34(arg.Badge, "#" .. rank)
+						fn35(arg.Badge, "#" .. rank)
 						badgeStyle = (arg2 and tbl12.Steal) or tbl12.PriorityOn
 
 						if arg.BadgeStyle ~= badgeStyle then
@@ -17489,7 +17501,7 @@ local function fn2()
 				end
 			end
 
-			local function fn54()
+			local function fn55()
 				if not (tbl15) then
 					return
 				end
@@ -17497,41 +17509,41 @@ local function fn2()
 
 				if tbl15.On ~= v19 then
 					tbl15.On = v19
-					fn45(tbl15.Toggle, (v19 and tbl12.Steal) or tbl12.Cancel)
-					fn34(tbl15.Toggle.Label, (v19 and "Auto Steal: ON") or "Auto Steal: OFF")
+					fn46(tbl15.Toggle, (v19 and tbl12.Steal) or tbl12.Cancel)
+					fn35(tbl15.Toggle.Label, (v19 and "Auto Steal: ON") or "Auto Steal: OFF")
 				end
 
 				if tbl15.Guard then
 					if tbl15.GuardOn ~= v20 then
 						tbl15.GuardOn = v20
-						fn45(tbl15.Guard, (v20 and tbl12.Steal) or tbl12.Cancel)
-						fn34(tbl15.Guard.Label, (v20 and "Halloween: ON") or "Halloween: OFF")
+						fn46(tbl15.Guard, (v20 and tbl12.Steal) or tbl12.Cancel)
+						fn35(tbl15.Guard.Label, (v20 and "Halloween: ON") or "Halloween: OFF")
 					end
 				end
 
 				if tbl15.Eggs then
 					if tbl15.EggsShown ~= eggs then
 						tbl15.EggsShown = eggs
-						fn45(tbl15.Eggs, ((eggs == "Halloween") and tbl12.PriorityOn) or tbl12.Hud)
-						fn34(tbl15.Eggs.Label, "Eggs: " .. eggs)
+						fn46(tbl15.Eggs, ((eggs == "Halloween") and tbl12.PriorityOn) or tbl12.Hud)
+						fn35(tbl15.Eggs.Label, "Eggs: " .. eggs)
 					end
 				end
 
 				if v14 then
 					if tbl15.SortShown ~= farmAutoStealStealPriority then
 						tbl15.SortShown = farmAutoStealStealPriority
-						fn34(v14.Label, "Sort: " .. tostring(farmAutoStealStealPriority))
+						fn35(v14.Label, "Sort: " .. tostring(farmAutoStealStealPriority))
 					end
 				end
 			end
 
 			local n22, tbl23, tbl24, tbl25 = 4, {}, {}, {}
 
-			local function fn55()
+			local function fn56()
 				if not (scrollingFrame) then
 					return
 				end
-				fn54()
+				fn55()
 				local tbl26 = {}
 
 				for _, v19 in pairs(tbl18) do
@@ -17590,7 +17602,7 @@ local function fn2()
 
 				local tbl31, tbl32 = {}, {}
 
-				local function fn56(arg)
+				local function fn57(arg)
 					if arg ~= nil then
 						if not (tbl32[arg]) then
 							tbl32[arg] = true
@@ -17601,12 +17613,12 @@ local function fn2()
 
 				if tbl30[1] then
 					if tbl30[1].Current then
-						fn56(tbl30[1].Uid)
+						fn57(tbl30[1].Uid)
 					elseif v19 then
-						fn56(v19)
+						fn57(v19)
 					end
 				elseif v19 then
-					fn56(v19)
+					fn57(v19)
 				end
 
 				local n23, n24, flag9 = 1, 1, if type(obj.HalloweenGoesFirst) == "function" then obj.HalloweenGoesFirst() else nil
@@ -17624,10 +17636,10 @@ local function fn2()
 					flag10 = if tbl272 then if tbl29 then if flag9 == nil then tbl272.Value > ((tbl292 and tbl292.Value) or 0) else flag9 else flag10 else flag10
 
 					if flag10 then
-						fn56(tbl272.Uid)
+						fn57(tbl272.Uid)
 						n23 = n23 + 1
 					else
-						fn56(tbl29)
+						fn57(tbl29)
 						n24 = n24 + 1
 					end
 
@@ -17703,12 +17715,12 @@ local function fn2()
 							tbl29.Frame.LayoutOrder = i2
 						end
 
-						fn53(tbl29, tbl28[v20.Uid], v20.Uid == v19, n25)
+						fn54(tbl29, tbl28[v20.Uid], v20.Uid == v19, n25)
 					end
 				end
 			end
 
-			local function fn56()
+			local function fn57()
 				if not (scrollingFrame) then
 					return
 				end
@@ -17723,7 +17735,7 @@ local function fn2()
 				end
 			end
 
-			local function fn57(arg)
+			local function fn58(arg)
 				local clone = template:Clone()
 				local spacer = clone:FindFirstChild("Spacer")
 				local textLabel, tbl26 = spacer:FindFirstChild("TextLabel"), {Uid = arg, Frame = clone}
@@ -17732,11 +17744,11 @@ local function fn2()
 				tbl26.ValueLabel = spacer:FindFirstChild("Value")
 				tbl26.DetailLabel = spacer:FindFirstChild("Detail")
 				tbl26.Gradient = textLabel and textLabel:FindFirstChildOfClass("UIGradient")
-				tbl26.Steal = fn44(spacer:FindFirstChild("Unequip"))
-				tbl26.Cancel = fn44(spacer:FindFirstChild("Cancel"))
-				tbl26.Star = fn44(spacer:FindFirstChild("Star"))
-				tbl26.Up = fn44(spacer:FindFirstChild("Up"))
-				tbl26.Down = fn44(spacer:FindFirstChild("Down"))
+				tbl26.Steal = fn45(spacer:FindFirstChild("Unequip"))
+				tbl26.Cancel = fn45(spacer:FindFirstChild("Cancel"))
+				tbl26.Star = fn45(spacer:FindFirstChild("Star"))
+				tbl26.Up = fn45(spacer:FindFirstChild("Up"))
+				tbl26.Down = fn45(spacer:FindFirstChild("Down"))
 				tbl26.Badge = spacer:FindFirstChild("Rank")
 				tbl26.BadgeGradient = (tbl26.Badge and tbl26.Badge:FindFirstChildOfClass("UIGradient")) or nil
 
@@ -17747,11 +17759,11 @@ local function fn2()
 					end
 				end
 
-				fn46(tbl26.Steal)
-				fn46(tbl26.Cancel)
-				fn46(tbl26.Star)
-				fn46(tbl26.Up)
-				fn46(tbl26.Down)
+				fn47(tbl26.Steal)
+				fn47(tbl26.Cancel)
+				fn47(tbl26.Star)
+				fn47(tbl26.Up)
+				fn47(tbl26.Down)
 				spacer, textLabel = ipairs, {{tbl26.Up, -1}, {tbl26.Down, 1}}
 
 				for _, v19 in spacer(textLabel) do
@@ -17780,7 +17792,7 @@ local function fn2()
 								obj.MoveInPlan(tbl26.Uid, v19[2])
 							end
 
-							obj.UiDefer(fn55)
+							obj.UiDefer(fn56)
 						end)
 					end
 				end
@@ -17799,7 +17811,7 @@ local function fn2()
 							end
 						end
 
-						obj.UiDefer(fn55)
+						obj.UiDefer(fn56)
 					end
 
 					textLabel.Activated:Connect(arg)
@@ -17817,7 +17829,7 @@ local function fn2()
 							obj.CancelSteal(tbl26.Uid)
 						end
 
-						obj.UiDefer(fn55)
+						obj.UiDefer(fn56)
 					end
 
 					arg.Activated:Connect(spacer)
@@ -17829,23 +17841,23 @@ local function fn2()
 							obj.PrioritizeSteal(tbl26.Uid)
 						end
 
-						obj.UiDefer(fn55)
+						obj.UiDefer(fn56)
 					end
 
 					arg.Activated:Connect(textLabel)
 				end
 
-				fn41(clone, true)
-				fn38(clone)
+				fn42(clone, true)
+				fn39(clone)
 				clone.Size = UDim2.new(1, 0, 0, math.max(n13, 1))
 				clone.Visible = true
 				clone.Parent = scrollingFrame
 				return tbl26
 			end
 
-			local v19 = fn30({{0, color3FromRGB(255, 176, 60)}, {1, color3FromRGB(255, 112, 20)}})
+			local v19 = fn31({{0, color3FromRGB(255, 176, 60)}, {1, color3FromRGB(255, 112, 20)}})
 
-			local function fn58(arg, arg2)
+			local function fn59(arg, arg2)
 				local style = arg2.Style
 
 				if arg.Category ~= arg2.Category then
@@ -17861,9 +17873,9 @@ local function fn2()
 					end
 				end
 
-				fn34(arg.Label, style.Name)
-				fn34(arg.ValueLabel, fn33(arg2.Value))
-				fn34(arg.DetailLabel, arg2.Detail or "")
+				fn35(arg.Label, style.Name)
+				fn35(arg.ValueLabel, fn34(arg2.Value))
+				fn35(arg.DetailLabel, arg2.Detail or "")
 				style = arg.DetailLabel and arg.DetailLabel:FindFirstChildOfClass("UIGradient")
 
 				if style then
@@ -17872,7 +17884,7 @@ local function fn2()
 				end
 			end
 
-			local function fn59(arg)
+			local function fn60(arg)
 				arg = tonumber(arg) or 0
 				local str2 = ((arg >= 1000) and string.format("%.0f", arg)) or string.format("%.2f", arg)
 				local v20, v21 = string.match(str2, "^(%-?%d+)(%.%d+)$")
@@ -17890,7 +17902,7 @@ local function fn2()
 				return v202 .. ((v21 or "") .. " Kg")
 			end
 
-			local function fn60(arg, arg2)
+			local function fn61(arg, arg2)
 				local str2, n23, eggRecords = string.format("x%.2f", arg2), 0, v7.EggRecords
 
 				if type(eggRecords) == "table" then
@@ -17899,7 +17911,7 @@ local function fn2()
 
 						if ok then
 							if tonumber(result) then
-								local num, str3 = tonumber(result), str2 .. ("  " .. (utf8.char(183) .. ("  " .. fn59(result))))
+								local num, str3 = tonumber(result), str2 .. ("  " .. (utf8.char(183) .. ("  " .. fn60(result))))
 								str2, n23 = str3, num
 							else
 							end
@@ -17913,10 +17925,10 @@ local function fn2()
 				return str2, n23
 			end
 
-			local fn61
+			local fn62
 
-			local function fn62(arg)
-				local v20 = fn48()
+			local function fn63(arg)
+				local v20 = fn49()
 
 				if (v20 and (arg == n12)) and flag then
 					local tbl26, now2, ok, v202, n23, v21 = {}, os.clock(), pairs, ((eggs ~= "Halloween") and v20) or {}, -1
@@ -17928,7 +17940,7 @@ local function fn2()
 							if flag9 then
 								if type(v22.AssetCategory) == "string" then
 									tbl26[uid] = true
-									local v23, tbl27 = fn31(v22.AssetCategory), tbl18[uid]
+									local v23, tbl27 = fn32(v22.AssetCategory), tbl18[uid]
 
 									if tbl27 then
 									else
@@ -17940,12 +17952,12 @@ local function fn2()
 
 									if ((tbl27.Detail == nil) or (tbl27.Scale ~= k)) or (tbl27.Category ~= v22.AssetCategory) then
 										tbl27.Scale = k
-										tbl27.Detail, tbl27.Weight = fn60(v22.AssetCategory, k)
+										tbl27.Detail, tbl27.Weight = fn61(v22.AssetCategory, k)
 									end
 
 									tbl27.Category = v22.AssetCategory
 									tbl27.Style = v23
-									tbl27.Value = fn32(v22, v23)
+									tbl27.Value = fn33(v22, v23)
 									tbl27.Position = ((typeof(v22.BottomCFrame) == "CFrame") and v22.BottomCFrame.Position) or nil
 
 									if (v22.State == "Slot") or (v22.State == "Dropped") then
@@ -17966,11 +17978,11 @@ local function fn2()
 
 											if v23 then
 											else
-												v23 = fn57(uid)
+												v23 = fn58(uid)
 												tbl17[uid] = v23
 											end
 
-											fn58(v23, tbl27)
+											fn59(v23, tbl27)
 										end
 									end
 								else
@@ -18002,7 +18014,7 @@ local function fn2()
 							tbl26[k] = true
 							local tbl27 = tbl18[k] or {Uid = k, Halloween = v23.Uid}
 							tbl18[k] = tbl27
-							tbl27.Category, tbl27.Style = v23.Name, fn31(v23.Name)
+							tbl27.Category, tbl27.Style = v23.Name, fn32(v23.Name)
 							tbl27.Value = tonumber(v23.Value) or tbl27.Style.EarningRate
 							tbl27.Weight = 0
 							tbl27.Detail = string.format("x%.2f", tonumber(v23.Scale) or 1) .. ("  " .. (utf8.char(183) .. ("  Halloween" .. ((v23.Holder and ("  " .. (utf8.char(183) .. ("  Held by " .. v23.Holder)))) or ""))))
@@ -18010,9 +18022,9 @@ local function fn2()
 
 							if flag4 then
 								if scrollingFrame then
-									v23 = tbl17[k] or fn57(k)
+									v23 = tbl17[k] or fn58(k)
 									tbl17[k] = v23
-									fn58(v23, tbl27)
+									fn59(v23, tbl27)
 								end
 							end
 						end
@@ -18039,13 +18051,13 @@ local function fn2()
 						end
 					end
 
-					fn55()
+					fn56()
 				end
 			end
 
 			local n23 = 0
 
-			local function fn63(arg)
+			local function fn64(arg)
 				if flag7 then
 					if (os.clock() - n23) < 10 then
 						flag8 = true
@@ -18056,7 +18068,7 @@ local function fn2()
 				flag7 = true
 				n23 = os.clock()
 				local now2 = n23
-				pcall(fn62, arg)
+				pcall(fn63, arg)
 
 				if n23 == now2 then
 					flag7 = false
@@ -18064,11 +18076,11 @@ local function fn2()
 
 				if flag8 then
 					flag8 = false
-					fn61()
+					fn62()
 				end
 			end
 
-			fn61 = function()
+			fn62 = function()
 				if flag6 then
 					return
 				elseif not (flag) then
@@ -18083,13 +18095,13 @@ local function fn2()
 
 					if flag then
 						if n122 == n12 then
-							task.spawn(pcall, fn63, n122)
+							task.spawn(pcall, fn64, n122)
 						end
 					end
 				end)
 			end
 
-			local function fn64(arg, arg2)
+			local function fn65(arg, arg2)
 				if flag4 then
 					return
 				elseif not (v13) then
@@ -18106,7 +18118,7 @@ local function fn2()
 					v15:Set(true)
 				end
 
-				if fn50() then
+				if fn51() then
 					RunService2.Heartbeat:Wait()
 
 					if flag4 then
@@ -18118,7 +18130,7 @@ local function fn2()
 					end
 				end
 
-				fn51(true)
+				fn52(true)
 				v12.Enabled = true
 
 				if tween then
@@ -18134,12 +18146,12 @@ local function fn2()
 					tween:Play()
 				end
 
-				fn43()
-				fn56()
-				task.spawn(pcall, fn63, n12)
+				fn44()
+				fn57()
+				task.spawn(pcall, fn64, n12)
 			end
 
-			local function fn65(arg, arg2, arg3)
+			local function fn66(arg, arg2, arg3)
 				if flag4 then
 					if not (v13) then
 						return
@@ -18181,13 +18193,13 @@ local function fn2()
 				tween3:Play()
 
 				if arg then
-					fn51(false)
+					fn52(false)
 				end
 			end
 
 			function genv.ChilliStealPanelClose(arg)
 				if flag4 then
-					fn65(false, false, arg)
+					fn66(false, false, arg)
 				end
 			end
 
@@ -18198,7 +18210,7 @@ local function fn2()
 
 			local function createScreenGui(arg)
 				local screenGui = Instance.new("ScreenGui")
-				screenGui.Name = fn26()
+				screenGui.Name = fn27()
 				screenGui.Archivable = false
 				screenGui.ResetOnSpawn = false
 				screenGui.IgnoreGuiInset = arg.IgnoreGuiInset
@@ -18212,7 +18224,7 @@ local function fn2()
 				return screenGui
 			end
 
-			local function fn66()
+			local function fn67()
 				if v10 then
 					if v10.Parent then
 						if v11 then
@@ -18223,7 +18235,7 @@ local function fn2()
 					end
 				end
 
-				local v20 = fn37(uiStrokeClr.Pets)
+				local v20 = fn38(uiStrokeClr.Pets)
 				if not (v20) then
 					return false
 				end
@@ -18237,16 +18249,16 @@ local function fn2()
 					end
 				end
 
-				v11 = fn44(v20)
+				v11 = fn45(v20)
 				imageLabel = v20:FindFirstChild("ImageLabel")
 
 				if v11.Scale then
 					v11.Scale.Scale = 1
 				end
 
-				fn45(v11, tbl12.Chilli)
-				fn46(v11)
+				fn46(v11, tbl12.Chilli)
 				fn47(v11)
+				fn48(v11)
 				v20.AnchorPoint = Vector2.new(0.5, 0.5)
 				v20.Visible = false
 				v20.LayoutOrder = 0
@@ -18256,12 +18268,12 @@ local function fn2()
 
 					obj.UiDefer(function()
 						if if v12 then not v12.Parent else not v12 then
-							pcall(fn35)
+							pcall(fn36)
 
 							obj.UiDefer(function()
 								if v12 then
 									if not (flag4) then
-										pcall(fn64, true)
+										pcall(fn65, true)
 									end
 								end
 							end)
@@ -18270,15 +18282,15 @@ local function fn2()
 						end
 
 						if flag4 then
-							fn65(true, true)
+							fn66(true, true)
 						else
-							fn64(true)
+							fn65(true)
 						end
 					end)
 				end)
 
-				fn41(v20)
-				fn38(v20)
+				fn42(v20)
+				fn39(v20)
 				v10 = createScreenGui(uiStrokeClr.Hud)
 				v20.Parent = v10
 				v10.Parent = hui
@@ -18287,7 +18299,7 @@ local function fn2()
 
 			local udim24, udim25
 
-			local function fn67()
+			local function fn68()
 				local button, eggs2, pets = v11 and v11.Button, uiStrokeClr.Eggs, uiStrokeClr.Pets
 
 				if button then
@@ -18322,7 +18334,7 @@ local function fn2()
 
 					if button.Size ~= udim27 then
 						button.Size = udim27
-						fn42()
+						fn43()
 					end
 				elseif if flag4 then not flag4 else udim24 then
 					if button.Position ~= udim24 then
@@ -18332,7 +18344,7 @@ local function fn2()
 					if udim25 then
 						if button.Size ~= udim25 then
 							button.Size = udim25
-							fn42()
+							fn43()
 						end
 					end
 				elseif not (udim24) then
@@ -18348,9 +18360,9 @@ local function fn2()
 				end
 			end
 
-			local function fn68()
+			local function fn69()
 				local frame = uiStrokeClr.ActivePets.Frame
-				local v20 = fn37(frame)
+				local v20 = fn38(frame)
 				if not (v20) then
 					return false
 				end
@@ -18450,41 +18462,41 @@ local function fn2()
 					n26.Position = UDim2.new(0, 0, 0.5, 0)
 					n26.Size = UDim2.new(0.37, 0, 1, 0)
 					n26.Parent = frame2
-					n25 = fn44(n26)
+					n25 = fn45(n26)
 
-					local function fn69(arg)
+					local function fn70(arg)
 						if arg then
 							if type(arg.Set) == "function" then
 								pcall(arg.Set, arg, not obj.Toggle(arg, false))
 							end
 						end
 
-						obj.UiDefer(fn54)
+						obj.UiDefer(fn55)
 					end
-
-					local function fn70()
-						fn69(autoSteal)
-					end
-
-					n26.Activated:Connect(fn70)
-					fn70 = unequip:Clone()
-					fn70.Parent = frame2
-					aspectRatio4 = fn44(fn70)
 
 					local function fn71()
-						fn69(obj.HalloweenToggle)
+						fn70(autoSteal)
 					end
 
-					fn70.Activated:Connect(fn71)
+					n26.Activated:Connect(fn71)
+					fn71 = unequip:Clone()
+					fn71.Parent = frame2
+					aspectRatio4 = fn45(fn71)
+
+					local function fn72()
+						fn70(obj.HalloweenToggle)
+					end
+
+					fn71.Activated:Connect(fn72)
 					n27 = unequip:Clone()
 					n27.Parent = frame2
-					fn71 = fn44(n27)
+					fn72 = fn45(n27)
 
 					n27.Activated:Connect(function()
 						local flag9 = ((eggs == "All") and "Halloween") or ((eggs == "Halloween") and "Field")
 						eggs = flag9 or "All"
-						obj.UiDefer(fn54)
-						fn61()
+						obj.UiDefer(fn55)
+						fn62()
 					end)
 
 					listLayout = Instance.new("UIListLayout")
@@ -18496,35 +18508,35 @@ local function fn2()
 					listLayout.Parent = frame2
 					n26.Size = UDim2.new(0.31, 0, 1, 0)
 					n26.LayoutOrder = 1
-					fn70.Size = UDim2.new(0.31, 0, 1, 0)
-					fn70.LayoutOrder = 2
+					fn71.Size = UDim2.new(0.31, 0, 1, 0)
+					fn71.LayoutOrder = 2
 					n27.Size = UDim2.new(0.31, 0, 1, 0)
 					n27.LayoutOrder = 3
-					tbl15 = {Toggle = n25, Guard = aspectRatio4, Eggs = fn71}
+					tbl15 = {Toggle = n25, Guard = aspectRatio4, Eggs = fn72}
 
 					function obj.StealPanelSync()
-						obj.UiDefer(fn54)
+						obj.UiDefer(fn55)
 					end
 				end
 
 				equipBest = header:FindFirstChildOfClass("UIGradient")
 
 				if equipBest then
-					equipBest.Color = fn30({{0, color3FromRGB(200, 18, 24)}, {0.53, color3FromRGB(255, 88, 90)}, {1, color3FromRGB(214, 28, 34)}})
+					equipBest.Color = fn31({{0, color3FromRGB(200, 18, 24)}, {0.53, color3FromRGB(255, 88, 90)}, {1, color3FromRGB(214, 28, 34)}})
 				end
 
 				title = header:FindFirstChild("Title")
-				fn34(title, "Steal Panel")
+				fn35(title, "Steal Panel")
 				local plusEquip = header:FindFirstChild("PlusEquip")
-				v14 = fn44(plusEquip)
+				v14 = fn45(plusEquip)
 
 				if v14 then
-					fn45(v14, tbl12.Steal)
-					fn34(v14.Label, "Sort: " .. tostring(farmAutoStealStealPriority))
-					fn46(v14)
+					fn46(v14, tbl12.Steal)
+					fn35(v14.Label, "Sort: " .. tostring(farmAutoStealStealPriority))
+					fn47(v14)
 					local n26 = 0
 
-					local function fn69()
+					local function fn70()
 						if (os.clock() - n26) < 0.25 then
 							return
 						end
@@ -18546,8 +18558,8 @@ local function fn2()
 						end
 
 						obj.UiDefer(function()
-							fn34(v14.Label, "Sort: " .. tostring(farmAutoStealStealPriority))
-							fn55()
+							fn35(v14.Label, "Sort: " .. tostring(farmAutoStealStealPriority))
+							fn56()
 						end)
 					end
 
@@ -18565,17 +18577,17 @@ local function fn2()
 						end
 					end
 
-					plusEquip.Activated:Connect(fn69)
+					plusEquip.Activated:Connect(fn70)
 
-					local function fn70(input)
+					local function fn71(input)
 						if input.UserInputType == Enum.UserInputType.MouseButton1 then
-							fn69()
+							fn70()
 						elseif input.UserInputType == Enum.UserInputType.Touch then
-							fn69()
+							fn70()
 						end
 					end
 
-					plusEquip.InputBegan:Connect(fn70)
+					plusEquip.InputBegan:Connect(fn71)
 				end
 
 				for _, descendant in ipairs(close:GetDescendants()) do
@@ -18586,7 +18598,7 @@ local function fn2()
 					end
 				end
 
-				aspectRatio2 = fn44(close)
+				aspectRatio2 = fn45(close)
 
 				if aspectRatio2.Label then
 					if aspectRatio2.Label:IsA("TextLabel") then
@@ -18596,17 +18608,17 @@ local function fn2()
 					end
 				end
 
-				fn46(aspectRatio2)
+				fn47(aspectRatio2)
 
-				local function fn69()
+				local function fn70()
 					obj.UiClick()
 
 					obj.UiDefer(function()
-						fn65(true, true)
+						fn66(true, true)
 					end)
 				end
 
-				close.Activated:Connect(fn69)
+				close.Activated:Connect(fn70)
 				aspectRatio2 = unequip:Clone()
 				aspectRatio2.Name = "Cancel"
 				aspectRatio2.Parent = spacer
@@ -18629,21 +18641,21 @@ local function fn2()
 				textLabel.AnchorPoint = Vector2.new(textLabel.AnchorPoint.X, 0.5)
 				textLabel.Size = UDim2.new(0.38, 0, 0.3, 0)
 				textLabel.Position = UDim2.new(0.415, 0, 0.2, 0)
-				fn34(textLabel, "")
+				fn35(textLabel, "")
 				aspectRatio = textLabel:Clone()
 				aspectRatio.Name = "Value"
 				aspectRatio.Size = UDim2.new(0.38, 0, 0.23, 0)
 				aspectRatio.Position = UDim2.new(0.415, 0, 0.48, 0)
-				fn69 = aspectRatio:FindFirstChildOfClass("UIGradient")
+				fn70 = aspectRatio:FindFirstChildOfClass("UIGradient")
 
-				if fn69 then
+				if fn70 then
 				else
-					fn69 = Instance.new("UIGradient")
-					fn69.Parent = aspectRatio
+					fn70 = Instance.new("UIGradient")
+					fn70.Parent = aspectRatio
 				end
 
-				fn69.Color = tbl12.Steal.Color
-				fn69.Rotation = tbl12.Steal.Rotation
+				fn70.Color = tbl12.Steal.Color
+				fn70.Rotation = tbl12.Steal.Rotation
 				aspectRatio.Parent = spacer
 				equipBest = aspectRatio:Clone()
 				equipBest.Name = "Detail"
@@ -18657,39 +18669,39 @@ local function fn2()
 				end
 
 				equipBest.Parent = spacer
-				close = fn44(unequip)
-				fn34(close.Label, "Steal")
-				fn45(close, tbl12.Steal)
-				n24 = fn44(aspectRatio2)
-				fn34(n24.Label, "X")
-				fn45(n24, tbl12.Cancel)
+				close = fn45(unequip)
+				fn35(close.Label, "Steal")
+				fn46(close, tbl12.Steal)
+				n24 = fn45(aspectRatio2)
+				fn35(n24.Label, "X")
+				fn46(n24, tbl12.Cancel)
 				aspectRatio2.Position = udim2
 				aspectRatio2.Visible = false
 				unequip.Position = udim22
 				unequip.Size = udim23
-				fn69 = aspectRatio2:Clone()
-				fn69.Name = "Star"
-				fn69.AnchorPoint = Vector2.new(1, 0.5)
-				fn69.Size = UDim2.new(0.1, 0, n19, 0)
-				fn69.Position = udim2
-				fn69.Visible = true
-				fn69.Parent = spacer
-				equipBest = fn44(fn69)
-				fn34(equipBest.Label, utf8.char(9733))
-				fn45(equipBest, tbl12.Queued)
+				fn70 = aspectRatio2:Clone()
+				fn70.Name = "Star"
+				fn70.AnchorPoint = Vector2.new(1, 0.5)
+				fn70.Size = UDim2.new(0.1, 0, n19, 0)
+				fn70.Position = udim2
+				fn70.Visible = true
+				fn70.Parent = spacer
+				equipBest = fn45(fn70)
+				fn35(equipBest.Label, utf8.char(9733))
+				fn46(equipBest, tbl12.Queued)
 				textLabel, mouseEnabled = ipairs, {{"Up", utf8.char(9650), n21 - n20}, {"Down", utf8.char(9660), n21}}
 
 				for _, v21 in textLabel(mouseEnabled) do
-					fn69 = aspectRatio2:Clone()
-					fn69.Name = v21[1]
-					fn69.AnchorPoint = Vector2.new(1, 0.5)
-					fn69.Size = UDim2.new(0.1, 0, n19, 0)
-					fn69.Position = UDim2.new(v21[3], 0, n18, 0)
-					fn69.Visible = false
-					fn69.Parent = spacer
-					n24 = fn44(fn69)
-					fn34(n24.Label, v21[2])
-					fn45(n24, tbl12.Hud)
+					fn70 = aspectRatio2:Clone()
+					fn70.Name = v21[1]
+					fn70.AnchorPoint = Vector2.new(1, 0.5)
+					fn70.Size = UDim2.new(0.1, 0, n19, 0)
+					fn70.Position = UDim2.new(v21[3], 0, n18, 0)
+					fn70.Visible = false
+					fn70.Parent = spacer
+					n24 = fn45(fn70)
+					fn35(n24.Label, v21[2])
+					fn46(n24, tbl12.Hud)
 				end
 
 				aspectRatio2.AnchorPoint = Vector2.new(1, 0)
@@ -18711,7 +18723,7 @@ local function fn2()
 				close.TextXAlignment = Enum.TextXAlignment.Left
 				close.ZIndex = 6
 				close.Visible = false
-				fn34(close, "#1")
+				fn35(close, "#1")
 				mouseEnabled = close:FindFirstChildOfClass("UIGradient")
 
 				if mouseEnabled then
@@ -18725,14 +18737,14 @@ local function fn2()
 				template, scrollingFrame, v13 = template2, scrollingFrame2, v20
 				position = frame.Position
 				v20.Position = position
-				fn41(v20, true)
-				fn38(v20)
+				fn42(v20, true)
+				fn39(v20)
 				v12 = createScreenGui(uiStrokeClr.ActivePets)
 				v12.Enabled = false
 				v20.Parent = v12
 				v12.Parent = hui
-				table.insert(tbl19, scrollingFrame2:GetPropertyChangedSignal("AbsoluteSize"):Connect(fn56))
-				table.insert(tbl19, v20:GetPropertyChangedSignal("AbsoluteSize"):Connect(fn43))
+				table.insert(tbl19, scrollingFrame2:GetPropertyChangedSignal("AbsoluteSize"):Connect(fn57))
+				table.insert(tbl19, v20:GetPropertyChangedSignal("AbsoluteSize"):Connect(fn44))
 				return true
 			end
 
@@ -18747,8 +18759,8 @@ local function fn2()
 				if flag4 then
 					flag4 = false
 
-					if not (fn49()) then
-						fn51(false, true)
+					if not (fn50()) then
+						fn52(false, true)
 					end
 				end
 
@@ -18772,11 +18784,11 @@ local function fn2()
 				v12, v13, position, title, v14, scrollingFrame, template, n13, tbl15, tbl16, n14, uiStrokeClr = nil, nil, nil, nil, nil, nil, nil, 0, nil, nil, 1, nil
 			end
 
-			fn35 = function()
+			fn36 = function()
 				if flag then
 					return
 				end
-				local uiStrokeClr2 = fn36()
+				local uiStrokeClr2 = fn37()
 
 				if not (uiStrokeClr2) then
 					if not (flag2) then
@@ -18787,7 +18799,7 @@ local function fn2()
 
 							if not (flag) then
 								if obj.Toggle(v9, flag3) then
-									fn35()
+									fn36()
 								end
 							end
 						end)
@@ -18805,8 +18817,8 @@ local function fn2()
 				uiStrokeClr2 = uiStrokeClr.Pets:FindFirstChild("UIStrokeClr")
 				tbl21.Hud = ((uiStrokeClr2 and uiStrokeClr2:IsA("UIStroke")) and uiStrokeClr2.Thickness) or n15
 
-				if fn66() then
-					if not (fn68()) then
+				if fn67() then
+					if not (fn69()) then
 						I()
 						return
 					end
@@ -18817,7 +18829,7 @@ local function fn2()
 
 				if flag5 then
 					flag5 = false
-					task.spawn(fn64)
+					task.spawn(fn65)
 				end
 
 				local absolutePosition
@@ -18829,15 +18841,15 @@ local function fn2()
 
 					if deltaTime ~= absolutePosition then
 						absolutePosition, n24 = deltaTime, 0
-						fn67()
+						fn68()
 					elseif n24 >= 0.25 then
 						absolutePosition, n24 = deltaTime, 0
-						fn67()
+						fn68()
 					end
 				end))
 
 				if uiStroke then
-					table.insert(tbl19, uiStroke:GetPropertyChangedSignal("Thickness"):Connect(fn42))
+					table.insert(tbl19, uiStroke:GetPropertyChangedSignal("Thickness"):Connect(fn43))
 				end
 
 				local v20, tbl26, activePets = ipairs, {}, uiStrokeClr.ActivePets
@@ -18848,7 +18860,7 @@ local function fn2()
 						table.insert(tbl19, v21:GetPropertyChangedSignal("Enabled"):Connect(function()
 							if v21.Enabled then
 								if flag4 then
-									fn65(false)
+									fn66(false)
 								end
 							end
 						end))
@@ -18865,7 +18877,7 @@ local function fn2()
 
 						if type(v20) == "table" then
 							if type(v20.Connect) == "function" then
-								v21, uiStrokeClr2 = pcall(v20.Connect, v20, fn61)
+								v21, uiStrokeClr2 = pcall(v20.Connect, v20, fn62)
 
 								if v21 then
 									if uiStrokeClr2 then
@@ -18880,8 +18892,8 @@ local function fn2()
 				uiStrokeClr2 = workspace:FindFirstChild("AreaEggSlotsClient")
 
 				if uiStrokeClr2 then
-					table.insert(tbl19, uiStrokeClr2.ChildAdded:Connect(fn61))
-					table.insert(tbl19, uiStrokeClr2.ChildRemoved:Connect(fn61))
+					table.insert(tbl19, uiStrokeClr2.ChildAdded:Connect(fn62))
+					table.insert(tbl19, uiStrokeClr2.ChildRemoved:Connect(fn62))
 				end
 
 				task.spawn(function()
@@ -18909,7 +18921,7 @@ local function fn2()
 								I()
 
 								if obj.Toggle(v9, flag3) then
-									fn35()
+									fn36()
 								end
 							end)
 
@@ -18917,17 +18929,17 @@ local function fn2()
 						end
 
 						if n25 >= n3 then
-							fn61()
+							fn62()
 							n25 = 0
 						else
 							if flag4 then
-								fn55()
+								fn56()
 							end
 						end
 					end
 				end)
 
-				task.spawn(pcall, fn63, n122)
+				task.spawn(pcall, fn64, n122)
 			end
 
 			table.insert(ctx.state.cleanup, function()
@@ -18937,7 +18949,7 @@ local function fn2()
 					v10:Destroy()
 				end
 
-				fn47(nil)
+				fn48(nil)
 				v10, v11, imageLabel = nil, nil, nil
 			end)
 
@@ -18951,7 +18963,7 @@ local function fn2()
 						if flag4 then
 							flag5 = true
 						else
-							task.spawn(fn64)
+							task.spawn(fn65)
 						end
 					else
 						flag5 = true
@@ -18961,13 +18973,13 @@ local function fn2()
 				end
 			end
 
-			task.defer(fn35)
+			task.defer(fn36)
 			tbl20 = ctx.state
 
 			tbl20.hud = {Sync = function()
-				v.q(fn54)
+				v.q(fn55)
 			end, Refresh = function()
-				fn61()
+				fn62()
 			end}
 
 			task.delay(1, function()
@@ -19011,7 +19023,7 @@ local function fn2()
 			return ColorSequence.new(tbl10)
 		end}
 
-		local function fn26(arg)
+		local function fn27(arg)
 			return C[arg] or arg
 		end
 
@@ -19026,13 +19038,13 @@ local function fn2()
 			ps.Bullet = utf8.char(8226)
 			ps.Color = {Text = "#FFFFFF", Income = "#4DFF7A", Clock = "#FFC24D", Ready = "#4DFF7A", Growing = "#FFC24D", Inventory = "#7FD8FF", Weight = "#CDE7FF", Scale = "#FFDF8A", Separator = "#7A8CC0", Hint = "#9FB8FF"}
 
-			local function fn27(arg, arg2)
+			local function fn28(arg, arg2)
 				local ok, result = pcall(Font.new, arg, arg2, Enum.FontStyle.Normal)
 				return (ok and result) or nil
 			end
 
-			ps.NameFont = fn27("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.ExtraBold)
-			ps.RarityFont = fn27("rbxassetid://12187365977", Enum.FontWeight.Bold) or fn27("rbxasset://fonts/families/FredokaOne.json", Enum.FontWeight.Regular)
+			ps.NameFont = fn28("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.ExtraBold)
+			ps.RarityFont = fn28("rbxassetid://12187365977", Enum.FontWeight.Bold) or fn28("rbxasset://fonts/families/FredokaOne.json", Enum.FontWeight.Regular)
 			ps.NameGradient = tbl10.Sequence({{0, Color3.fromRGB(255, 255, 255)}, {0.5, Color3.fromRGB(222, 238, 255)}, {1, Color3.fromRGB(255, 255, 255)}})
 			ps.SecretGradient = tbl10.Sequence({{0, Color3.fromRGB(255, 255, 255)}, {0.2, Color3.fromRGB(206, 212, 224)}, {0.42, Color3.fromRGB(74, 80, 94)}, {0.58, Color3.fromRGB(42, 46, 56)}, {0.78, Color3.fromRGB(158, 166, 182)}, {1, Color3.fromRGB(250, 252, 255)}})
 			ps.SecretRotation = 90
@@ -19124,7 +19136,7 @@ local function fn2()
 
 				if type(arg) == "table" then
 					for i2, v6 in ipairs(arg) do
-						i2 = string.upper(fn26(v6))
+						i2 = string.upper(fn27(v6))
 
 						if (v6 == "Rainbow") or (v6 == "Prismatic") then
 							local tbl15 = {}
@@ -19145,7 +19157,7 @@ local function fn2()
 
 			local rarityGradients
 
-			local function fn28(arg)
+			local function fn29(arg)
 				if type(arg) == "table" then
 					if typeof(arg.RarityGradient) == "Instance" then
 						return arg.RarityGradient
@@ -19218,7 +19230,7 @@ local function fn2()
 
 				local rarity, icon = (((type(flag) == "table") and (type(flag.Rarity) == "table")) and flag.Rarity) or nil, ((type(flag) == "table") and flag.Icon) or nil
 				local rarity2, color = (rarity and tostring((rarity.DisplayName or rarity._id) or "Common")) or "Common", ((rarity and (typeof(rarity.Color) == "Color3")) and rarity.Color) or Color3.fromRGB(255, 255, 255)
-				arg = {Name = ((type(flag) == "table") and tostring(flag.DisplayName or str)) or str, Category = str, Rarity = rarity2, RarityNumber = (rarity and tonumber(rarity.RarityNumber or rarity.Rank)) or 0, Color = color, Hex = "#" .. string.upper(color:ToHex()), Gradient = fn28(rarity), EarningRate = ((type(flag) == "table") and tonumber(flag.EarningRate)) or 0, Icon = (((type(icon) == "string") and (icon ~= "")) and icon) or nil}
+				arg = {Name = ((type(flag) == "table") and tostring(flag.DisplayName or str)) or str, Category = str, Rarity = rarity2, RarityNumber = (rarity and tonumber(rarity.RarityNumber or rarity.Rank)) or 0, Color = color, Hex = "#" .. string.upper(color:ToHex()), Gradient = fn29(rarity), EarningRate = ((type(flag) == "table") and tonumber(flag.EarningRate)) or 0, Icon = (((type(icon) == "string") and (icon ~= "")) and icon) or nil}
 				tbl14[str] = arg
 				return arg
 			end
@@ -19291,7 +19303,7 @@ local function fn2()
 		local tbl9 = v.dec(v.rd(I)) or {}
 		tbl9.Visited = ((type(tbl9.Visited) == "table") and tbl9.Visited) or {}
 
-		local function fn26()
+		local function fn27()
 			v.wr(I, v.enc(tbl9) or "{}")
 		end
 
@@ -19304,10 +19316,10 @@ local function fn2()
 		end
 
 		tbl9.Visited[gameRef.JobId] = getServerTimeNow()
-		fn26()
+		fn27()
 		local tbl10, v4 = {}
 		local n3, id = 0
-		local flag, fn27 = false
+		local flag, fn28 = false
 
 		trackConnection(TeleportService.TeleportInitFailed, function(arg)
 			local v5 = ctx.localPlayer
@@ -19322,7 +19334,7 @@ local function fn2()
 						tbl10[id] = true
 					end
 
-					task.spawn(fn27, ctx.state.hopping)
+					task.spawn(fn28, ctx.state.hopping)
 				end
 			end
 		end)
@@ -19337,7 +19349,7 @@ local function fn2()
 			end
 		end)
 
-		local function fn28(arg)
+		local function fn29(arg)
 			if v4 then
 				if (os.clock() - n3) < 60 then
 					local v42 = v4
@@ -19385,12 +19397,12 @@ local function fn2()
 			return tbl11
 		end
 
-		fn27 = function(arg)
+		fn28 = function(arg)
 			for i2 = 1, 2, 1 do
 				local v5, tbl11 = ipairs, {2, 1}
 
 				for k, v6 in v5(tbl11) do
-					local tbl12, v7, visited = {}, ipairs, table.pack(fn28(arg))
+					local tbl12, v7, visited = {}, ipairs, table.pack(fn29(arg))
 
 					for k2, v8 in v7(table.unpack(visited, 1, visited.n)) do
 						if ((v8.maxPlayers or 0) - (v8.playing or 0)) >= v6 then
@@ -19420,7 +19432,7 @@ local function fn2()
 						visited, k, v7, v6 = tbl9.Visited, v8.id, getServerTimeNow(), v8.id
 						visited[k] = v7
 						id, flag = v6, false
-						fn26()
+						fn27()
 						local v9 = ctx.state
 						v9.beforeTeleport()
 						fn12("Server Hop", ("Joining a server with %d players"):format(v8.playing or 0))
@@ -19436,7 +19448,7 @@ local function fn2()
 									if not (flag) then
 										local tbl102 = tbl10
 										tbl102[v8.id] = true
-										fn27(arg)
+										fn28(arg)
 									end
 								end
 							end
@@ -19472,20 +19484,20 @@ local function fn2()
 
 			v7.hopping = hopMode or "Least Players"
 			arg = ctx.state
-			return fn27(arg.hopping)
+			return fn28(arg.hopping)
 		end
 
 		local eggFinder, tbl11 = tbl3["Egg Finder"], {Status = "Idle", Kind = "idle", HopStart = 0, HopEnd = 0}
 
-		local function fn29(status, kind)
+		local function fn30(status, kind)
 			tbl11.Status, tbl11.Kind = status, kind or tbl11.Kind
 		end
 
 		local tbl12, tbl13, autoHop = {}
 
-		autoHop = fn13(eggFinder, "Auto Hop", "autoHop", false, function(arg)
+		autoHop = fn14(eggFinder, "Auto Hop", "autoHop", false, function(arg)
 			if not (arg) then
-				fn29("Idle", "idle")
+				fn30("Idle", "idle")
 				return
 			end
 
@@ -19512,7 +19524,7 @@ local function fn2()
 			local n17, flag2, n18, flag3, n19, tbl17 = -1, false, 0, true, 0
 			local n20, flag4, flag5 = 0, false, false
 
-			local function fn30(arg)
+			local function fn31(arg)
 				if not arg or arg.DiffWrapped then
 					return arg
 				end
@@ -19543,7 +19555,7 @@ local function fn2()
 				return arg
 			end
 
-			local function fn31(arg)
+			local function fn32(arg)
 				local widthKey = tostring(n13) .. ("|" .. string.gsub(tostring(arg.Spec.Text or ""), "%d", "0"))
 				if arg.WidthKey == widthKey then
 					return arg.WidthUnits
@@ -19573,7 +19585,7 @@ local function fn2()
 				return arg.WidthUnits
 			end
 
-			local function fn32()
+			local function fn33()
 				local survey = tbl11.Survey
 				local best = (survey and survey.Best) or nil
 
@@ -19595,7 +19607,7 @@ local function fn2()
 				n20, n18 = survey.Count, 2
 			end
 
-			local function fn33()
+			local function fn34()
 				if not (tbl16.Card) then
 					return
 				end
@@ -19683,7 +19695,7 @@ local function fn2()
 				str(tbl18)
 			end
 
-			local function fn34()
+			local function fn35()
 				if tbl16.Card then
 					if n12 <= 0 then
 						return
@@ -19693,7 +19705,7 @@ local function fn2()
 				end
 
 				flag2 = false
-				local n21, n22 = math.max(1, (n12 - n8) - 0.5), fn31(tbl16.Server)
+				local n21, n22 = math.max(1, (n12 - n8) - 0.5), fn32(tbl16.Server)
 
 				if n22 then
 					tbl16.ServerUnits = n22 + 0.1
@@ -19718,7 +19730,7 @@ local function fn2()
 				n22 = nil
 
 				if flag5 then
-					n23 = fn31(tbl16.ChipText)
+					n23 = fn32(tbl16.ChipText)
 
 					if n23 then
 						tbl16.ChipUnits = n23 + 0.9
@@ -19751,7 +19763,7 @@ local function fn2()
 				end
 			end
 
-			local function fn35(arg)
+			local function fn36(arg)
 				v6 = arg
 				tbl16.Card = arg:Frame({X = 0, Y = 0, Width = 1, Height = n4, Corner = 0.35, Background = "#000000", BackgroundTransparency = 1})
 				tbl16.Accent = arg:Frame({Parent = tbl16.Card, X = 0, Y = 0, Width = 0.22, Height = n4, Corner = 0.11, Background = tbl14.idle.Color, BackgroundTransparency = 0})
@@ -19768,7 +19780,7 @@ local function fn2()
 				local tbl18 = {"Card", "Accent", "Title", "Server", "Detail", "Bar", "Divider", "Icon", "Name", "Chip", "ChipText", "Info"}
 
 				for _, v7 in ipairs(tbl18) do
-					fn30(tbl16[v7])
+					fn31(tbl16[v7])
 				end
 
 				arg:OnResize(function(_, arg2, arg3)
@@ -19793,7 +19805,7 @@ local function fn2()
 			end
 
 			eggFinder:Surface({Name = "Finder Status", ShowTitle = false, Layout = "free", Style = {TextScale = 1, LineHeight = 1.1, MinLines = 2, MaxLines = 7, AutoHeight = true, BackgroundTransparency = 0.5, TextColor = Color3.fromRGB(255, 255, 255), TextStrokeTransparency = 0.7}, Build = function(arg)
-				fn35(arg)
+				fn36(arg)
 			end})
 
 			RunService2 = ctx.RunService
@@ -19811,17 +19823,17 @@ local function fn2()
 
 				if flag3 or (n19 >= 1) then
 					flag3, n19 = false, 0
-					pcall(fn32)
+					pcall(fn33)
 				end
 
-				pcall(fn33)
+				pcall(fn34)
 
 				if (n18 > 0) or flag2 then
 					if n18 > 0 then
 						n18 -= 1
 					end
 
-					pcall(fn34)
+					pcall(fn35)
 				end
 			end)
 		end)()
@@ -19851,9 +19863,9 @@ local function fn2()
 		end
 
 		F(eggFinder, "Rarity To Wait For", "hopRare", tbl15, "Cosmic", nil, false, "For After A Rare Spawns: this rarity or higher", autoHop)
-		local syncWithAutoStealFilters, tbl16 = fn13(eggFinder, "Sync With Auto Steal Filters", "hopSync", true, nil, "Changing a filter here also changes it in Auto Steal, and back", autoHop), {}
+		local syncWithAutoStealFilters, tbl16 = fn14(eggFinder, "Sync With Auto Steal Filters", "hopSync", true, nil, "Changing a filter here also changes it in Auto Steal, and back", autoHop), {}
 
-		local function fn30(arg, arg2)
+		local function fn31(arg, arg2)
 			local v6 = c.ByPath["Farm > Auto Steal > " .. arg2]
 			if not v6 then
 				return
@@ -19891,14 +19903,14 @@ local function fn2()
 
 		n4 = ctx.state
 
-		fn30(eggFinder:Dropdown("Min Rarity", n4.RANY, "Any", function(arg)
+		fn31(eggFinder:Dropdown("Min Rarity", n4.RANY, "Any", function(arg)
 			local v6 = ctx.state
 			tbl12.rar = v6.minRar(arg)
 		end, false, "Find eggs of the chosen rarity and every rarity above it", autoHop), "Min Rarity")
 
 		tbl15 = ctx.state
 
-		fn30(eggFinder:Dropdown("Target Areas", tbl15.AREAS, ctx.state.AREAS, function(arg)
+		fn31(eggFinder:Dropdown("Target Areas", tbl15.AREAS, ctx.state.AREAS, function(arg)
 			tbl13 = nil
 			local v6 = ctx.state
 
@@ -19919,9 +19931,9 @@ local function fn2()
 			tbl12.sp = v6.names(arg)
 		end
 
-		fn30(eggFinder:Dropdown("Target Specific Eggs", n4, {}, n2, true, "Only look for these eggs (empty = all)", autoHop), "Target Specific Eggs")
+		fn31(eggFinder:Dropdown("Target Specific Eggs", n4, {}, n2, true, "Only look for these eggs (empty = all)", autoHop), "Target Specific Eggs")
 
-		fn30(eggFinder:Slider("Min Value To Find", 0, 0, 0, function(arg)
+		fn31(eggFinder:Slider("Min Value To Find", 0, 0, 0, function(arg)
 			tbl12.minV = ((arg > 0) and arg) or nil
 		end, "log", nil, "Skip eggs worth less than this. Drag or type 250k, 50m, 1.5b", autoHop), "Min Steal Value")
 
@@ -19935,7 +19947,7 @@ local function fn2()
 
 		K(eggFinder, "First Hop Delay", "hopDelay", 3, 10, 5, "s", 0.5, nil, "Wait after the script loads before the first hop", autoHop)
 
-		local function fn31()
+		local function fn32()
 			local v6 = ctx.slot28
 			local hopSync, stealFilter = v6.hopSync
 
@@ -19949,7 +19961,7 @@ local function fn2()
 			return stealFilter or tbl12
 		end
 
-		local function fn32()
+		local function fn33()
 			local tbl132 = ctx.slot28
 			if tbl132.hopSync then
 				local v6 = ctx.slot28
@@ -19977,10 +19989,10 @@ local function fn2()
 				if type(arg) == "table" then
 					local tbl17, v9 = {cat = arg.AssetCategory, r = T(arg.AssetCategory), v = 1 / 0, m = {}}, ctx.fn26
 
-					if v9(fn31(), tbl17) then
+					if v9(fn32(), tbl17) then
 						local v10 = ctx.fn17
 						tbl9.Window = v10("Cycle", "NextNightTime", getServerTimeNow()) or (getServerTimeNow() + 300)
-						fn26()
+						fn27()
 					end
 				end
 			end
@@ -19990,7 +20002,7 @@ local function fn2()
 			end
 		end
 
-		local v8 = fn14({name = "Hopper", gap = 0.5})
+		local v8 = fn15({name = "Hopper", gap = 0.5})
 
 		v8.on = function()
 			local v9 = ctx.slot28
@@ -20000,11 +20012,11 @@ local function fn2()
 		v8.fn = function()
 			local v9 = l()
 			if v9 <= 0 then
-				return fn29("Night, waiting for the field to reset", "night")
+				return fn30("Night, waiting for the field to reset", "night")
 			end
 			local v10 = ctx.slot28
 			if (os.clock() - now2) < v10.hopDelay then
-				return fn29("Looking around this server", "scan")
+				return fn30("Looking around this server", "scan")
 			end
 			v10 = ctx.fn16
 			local v102 = v10()
@@ -20019,7 +20031,7 @@ local function fn2()
 
 			v102 = v10 or (ctx.lastMV and ((ctx.lastMV.name == "Steal") or (ctx.lastMV.name == "HwEggs")))
 			if v102 then
-				return fn29("Busy stealing", "steal")
+				return fn30("Busy stealing", "steal")
 			end
 			v10 = ctx.slot28
 			local hwEggs, n5 = v10.hwEggs
@@ -20033,22 +20045,22 @@ local function fn2()
 
 			v102 = n5 or 0
 			if v102 > 0 then
-				return fn29(v102 .. " Halloween egg(s) here, stealing first", "steal")
+				return fn30(v102 .. " Halloween egg(s) here, stealing first", "steal")
 			end
 			v102 = ctx.state
 			if v102.lock() then
-				return fn29("Busy with an event, hop waits", "race")
+				return fn30("Busy with an event, hop waits", "race")
 			end
 			n5 = ctx.state
 
 			if n5.starWants then
 				hwEggs = ctx.state
 				if hwEggs.starWants() then
-					return fn29("Catching a Shooting Star, hop waits", "star")
+					return fn30("Catching a Shooting Star, hop waits", "star")
 				end
 			end
 
-			local steal, v11, n6, v12, flag2, v13 = fn31(), ctx.slot28, table.find(E, ctx.slot28.hopRare) or 7, fn32(), pairs, ctx.fn15
+			local steal, v11, n6, v12, flag2, v13 = fn32(), ctx.slot28, table.find(E, ctx.slot28.hopRare) or 7, fn33(), pairs, ctx.fn15
 			local v14, flag3, n7, n8, tbl17 = table.pack(v13()), false, 0, 0
 
 			for k, v15 in flag2(table.unpack(v14, 1, v14.n)) do
@@ -20110,29 +20122,29 @@ local function fn2()
 			end
 
 			if steal then
-				return fn29(n8 .. " matching egg(s) here", "found")
+				return fn30(n8 .. " matching egg(s) here", "found")
 			end
 
 			if n7 > 0 then
 				if (os.clock() - (v8.seen or os.clock())) < 20 then
 					v8.seen = v8.seen or os.clock()
-					return fn29("Someone is carrying a match, waiting", "found")
+					return fn30("Someone is carrying a match, waiting", "found")
 				end
 			end
 
 			v8.seen = nil
 			if v9 < 12 then
-				return fn29("Night is close, staying", "night")
+				return fn30("Night is close, staying", "night")
 			end
 			n5 = ctx.slot28
 
 			if n5.hopWhen ~= "No egg matches here" then
 				if getServerTimeNow() > (tbl9.Window or 0) then
-					return fn29("Waiting for a reason to hop", "rare")
+					return fn30("Waiting for a reason to hop", "rare")
 				end
 			end
 
-			fn29("Hopping", "joining")
+			fn30("Hopping", "joining")
 			steal = ctx.state
 
 			if not (steal.hop("Least Players")) then
@@ -20153,14 +20165,14 @@ local function fn2()
 		return tbl9
 	end
 
-	local function fn26()
+	local function fn27()
 		local tool = ctx.localPlayer
 		local character = tool.Character
 		tool = character and (character:FindFirstChildOfClass("Tool"))
 		return tool and (tool:GetAttribute("UID"))
 	end
 
-	local function fn27(arg)
+	local function fn28(arg)
 		local placedEggRenders, placedEggRenders2 = workspace:FindFirstChild("PlacedEggRenders"), ctx.localPlayer
 		local str = placedEggRenders2.UserId .. ("_" .. arg)
 		arg, placedEggRenders2 = placedEggRenders and (placedEggRenders:FindFirstChild(str))
@@ -20183,13 +20195,13 @@ local function fn2()
 	end
 
 	ctx.state.eggPos = function(arg)
-		local v4, localCFrame = fn27(arg), ctx.fn9
+		local v4, localCFrame = fn28(arg), ctx.fn9
 		local v5, v6 = localCFrame(), fn10()[arg]
 		localCFrame = ((type(v6) == "table") and (type(v6.Placement) == "table")) and v6.Placement.LocalCFrame
 		return ((v4 and v4:GetPivot().Position) or (((v5 and v5.CenterPoint) and (typeof(localCFrame) == "CFrame")) and (v5.CenterPoint.CFrame * localCFrame).Position)) or nil
 	end
 
-	local function fn28(arg)
+	local function fn29(arg)
 		local v4 = ctx.fn28
 		if not (v4("RF/EggWorld/AskHatch", arg)) then
 			return false
@@ -20200,7 +20212,7 @@ local function fn2()
 		return true
 	end
 
-	local function fn29(arg, arg2)
+	local function fn30(arg, arg2)
 		local str = ({Biggest = "s", ["Best rarity"] = "r"})[arg2] or "v"
 
 		table.sort(arg, function(arg3, arg4)
@@ -20218,11 +20230,11 @@ local function fn2()
 	end
 
 	g("20_farm#1", function()
-		local v4 = fn14({name = "Place", mover = true, gap = 8, pri = 4, soft = true, bad = {}})
+		local v4 = fn15({name = "Place", mover = true, gap = 8, pri = 4, soft = true, bad = {}})
 		local autoPlaceEgg = tbl3["Auto Place Egg"]
-		local pen = n("pen", autoPlaceEgg:Text("Pen Status", "Pen status unknown"))
+		local pen = fn13("pen", autoPlaceEgg:Text("Pen Status", "Pen status unknown"))
 
-		local autoPlaceEgg2, tbl9, tbl10, n2, v5 = fn13(autoPlaceEgg, "Auto Place Egg", "place", false, function(arg)
+		local autoPlaceEgg2, tbl9, tbl10, n2, v5 = fn14(autoPlaceEgg, "Auto Place Egg", "place", false, function(arg)
 			if not (arg) then
 				H(v4)
 			end
@@ -20249,7 +20261,7 @@ local function fn2()
 			v5, tbl12[#tbl12 + 1] = ctx.state, ctx.state.RANY[i2]
 		end
 
-		local function fn30(arg)
+		local function fn31(arg)
 			local v7, rar = ipairs
 
 			for k, v8 in v7(arg) do
@@ -20261,15 +20273,15 @@ local function fn2()
 			tbl11.rar = rar
 		end
 
-		autoPlaceEgg:Dropdown("Place Rarities", tbl12, {}, fn30, true, "Only place eggs of the picked rarities (empty = all)", autoPlaceEgg2)
-		fn30 = ctx.state
+		autoPlaceEgg:Dropdown("Place Rarities", tbl12, {}, fn31, true, "Only place eggs of the picked rarities (empty = all)", autoPlaceEgg2)
+		fn31 = ctx.state
 
-		local function fn31(arg)
+		local function fn32(arg)
 			local v7 = ctx.state
 			tbl11.sp = v7.names(arg)
 		end
 
-		autoPlaceEgg:Dropdown("Place Specific Eggs", fn30.eggList, {}, fn31, true, "Only place these eggs (empty = all)", autoPlaceEgg2)
+		autoPlaceEgg:Dropdown("Place Specific Eggs", fn31.eggList, {}, fn32, true, "Only place these eggs (empty = all)", autoPlaceEgg2)
 
 		autoPlaceEgg:Slider("Min Place Value", 0, 0, 0, function(arg)
 			tbl11.minV = ((arg > 0) and arg) or nil
@@ -20286,7 +20298,7 @@ local function fn2()
 			end
 		end
 
-		local function fn32()
+		local function fn33()
 			local n4 = ctx.fn9
 			local v9, v10, v11, tbl13, v12 = n4(), ctx.vector, next, {}, ctx.state
 			tbl13[1], tbl13[2] = workspace:FindFirstChild("PlacedEggRenders"), v12.hidden
@@ -20315,7 +20327,8 @@ local function fn2()
 			return (v9 and v9.PetArea) and v9.PetArea.Position
 		end
 
-		local function fn33(arg)
+		local function fn34(arg)
+			local n4 = 3427796316
 			local v9 = ctx.fn9()
 
 			if v9 then
@@ -20324,15 +20337,15 @@ local function fn2()
 
 				if petArea then
 					if centerPoint then
-						local v10 = table.pack(bit32.band(nil, 4294967295))
+						local v10 = table.pack(bit32.band(n4, 4294967295))
 						local v11 = table.pack(bit32.band(v10[1], 65535))
 						local v12 = bit32.band(v11[1] * 38414 + bit32.lshift(bit32.band(v11[1] * 20443 + bit32.rshift(v10[1], 16) * 38414, 65535), 16), 4294967295)
 						local v13, v14, v15 = ipairs({ -1, 1 })
 						local huge = math.huge
-						local n4 = -math.huge
-						local huge2 = math.huge
 						local n5 = -math.huge
-						local n6 = 0
+						local huge2 = math.huge
+						local n6 = -math.huge
+						local n7 = 0
 						local v16 = table.pack(J_1())
 
 						if v16[1] then
@@ -20347,11 +20360,11 @@ local function fn2()
 
 									while true do
 										local vector2 = centerPoint.CFrame:PointToObjectSpace(petArea.CFrame * ctx.vector3New(v17 * petArea.Size.X / 2, petArea.Size.Y / 2, v22 * petArea.Size.Z / 2))
-										n6 = vector2.Y
+										n7 = vector2.Y
 										huge = math.min(huge, vector2.X)
-										n4 = math.max(n4, vector2.X)
+										n5 = math.max(n5, vector2.X)
 										huge2 = math.min(huge2, vector2.Z)
-										n5 = math.max(n5, vector2.Z)
+										n6 = math.max(n6, vector2.Z)
 										local v23 = table.pack(J_2())
 
 										if v23[1] then
@@ -20402,21 +20415,21 @@ local function fn2()
 						end
 
 						local tbl14 = {}
-						local vector2 = Vector2.new((huge + n4) / 2, (huge2 + n5) / 2)
-						local n7 = math.ceil((huge + 2.5) / 4) * 4
-						local n8 = n4 - 2.5
-						local n72, exitTo2, vector22, flag, n9, magnitude
+						local vector2 = Vector2.new((huge + n5) / 2, (huge2 + n6) / 2)
+						local n8 = math.ceil((huge + 2.5) / 4) * 4
+						local n9 = n5 - 2.5
+						local n82, exitTo2, vector22, flag, n10, magnitude
 
 						if 4 <= 0 then
-							if n7 >= n8 then
-								n72 = n7
+							if n8 >= n9 then
+								n82 = n8
 
 								while true do
-									for i2 = math.ceil((huge2 + 2.5) / 4) * 4, n5 - 2.5, 4 do
+									for i2 = math.ceil((huge2 + 2.5) / 4) * 4, n6 - 2.5, 4 do
 										exitTo2 = nil
 
 										while true do
-											vector22 = Vector2.new(n72, i2)
+											vector22 = Vector2.new(n82, i2)
 											flag = true
 
 											for _, v17 in ipairs(tbl13) do
@@ -20427,9 +20440,9 @@ local function fn2()
 											end
 
 											if flag then
-												n9 = #tbl14 + 1
+												n10 = #tbl14 + 1
 												magnitude = (vector22 - vector2).Magnitude
-												tbl14[n9] = { ctx.cFrameNew(n72, n6, i2), magnitude }
+												tbl14[n10] = { ctx.cFrameNew(n82, n7, i2), magnitude }
 
 												if U_2 <= 0 then
 													if J_2 >= w_2 then
@@ -20456,28 +20469,28 @@ local function fn2()
 
 									if U_1 <= 0 then
 										if J_1 >= w_1 then
-											n72 = J_1
+											n82 = J_1
 											continue
 										end
 									elseif J_1 <= w_1 then
-										n72 = J_1
+										n82 = J_1
 										continue
 									end
 
 									break
 								end
 							end
-						elseif n7 <= n8 then
-							n72 = n7
+						elseif n8 <= n9 then
+							n82 = n8
 
 							while true do
 								local exitTo3 = nil
 
-								for i2 = math.ceil((huge2 + 2.5) / 4) * 4, n5 - 2.5, 4 do
+								for i2 = math.ceil((huge2 + 2.5) / 4) * 4, n6 - 2.5, 4 do
 									exitTo2 = nil
 
 									while true do
-										vector22 = Vector2.new(n72, i2)
+										vector22 = Vector2.new(n82, i2)
 										flag = true
 
 										for _, v17 in ipairs(tbl13) do
@@ -20488,9 +20501,9 @@ local function fn2()
 										end
 
 										if flag then
-											n9 = #tbl14 + 1
+											n10 = #tbl14 + 1
 											magnitude = (vector22 - vector2).Magnitude
-											tbl14[n9] = { ctx.cFrameNew(n72, n6, i2), magnitude }
+											tbl14[n10] = { ctx.cFrameNew(n82, n7, i2), magnitude }
 
 											if U_2 <= 0 then
 												if J_2 >= w_2 then
@@ -20518,20 +20531,20 @@ local function fn2()
 								if exitTo3 == 1 then
 									if U_1 <= 0 then
 										if J_1 >= w_1 then
-											n72 = J_1
+											n82 = J_1
 											continue
 										end
 									elseif J_1 <= w_1 then
-										n72 = J_1
+										n82 = J_1
 										continue
 									end
 								elseif U_1 <= 0 then
 									if J_1 >= w_1 then
-										n72 = J_1
+										n82 = J_1
 										continue
 									end
 								elseif J_1 <= w_1 then
-									n72 = J_1
+									n82 = J_1
 									continue
 								end
 
@@ -20539,14 +20552,14 @@ local function fn2()
 							end
 						end
 
-						local n10 = 313309081
+						local n11 = 313309081
 
-						local function fn34(arg2, arg3)
+						local function fn35(arg2, arg3)
 							return arg2[2] < arg3[2]
 						end
 
-						n10 = 317219338
-						table.sort(tbl14, fn34)
+						n11 = 317219338
+						table.sort(tbl14, fn35)
 						return tbl14
 					end
 
@@ -20557,7 +20570,7 @@ local function fn2()
 			return {}
 		end
 
-		local function fn34(arg)
+		local function fn35(arg)
 			local n4 = ctx.fn17
 			if n4("Egg", "WearEggTool", arg) == false then
 				return false
@@ -20565,7 +20578,7 @@ local function fn2()
 			n4 = os.clock() + 2
 
 			while os.clock() < n4 do
-				if fn26() == arg then
+				if fn27() == arg then
 					return true
 				end
 
@@ -20586,7 +20599,7 @@ local function fn2()
 			return false
 		end
 
-		local function fn35()
+		local function fn36()
 			local n4 = ctx.slot28
 			local placeWhen = n4.placeWhen
 
@@ -20607,7 +20620,7 @@ local function fn2()
 			return true
 		end
 
-		local function fn36()
+		local function fn37()
 			local v9, tbl13, tbl14, result = fn10(), {}, {}, ctx.slot28
 			local placeIdx, placeIdx2 = result.placeIdx
 
@@ -20690,23 +20703,23 @@ local function fn2()
 			return n4, tbl13, v9, tbl14
 		end
 
-		local v9 = fn14({name = "PlaceInfo", gap = 2, info = true})
+		local v9 = fn15({name = "PlaceInfo", gap = 2, info = true})
 
 		v9.on = function()
 			return getOpen("Farm")
 		end
 
-		v9.fn = fn36
+		v9.fn = fn37
 
 		v4.want = function()
-			local v10, v11, v12, v13 = fn36()
+			local v10, v11, v12, v13 = fn37()
 
 			if v10 >= 30 then
 				return
 			elseif (#v11 + #v13) == 0 then
 				return
 			elseif #v13 == 0 then
-				if not (fn35()) then
+				if not (fn36()) then
 					return
 				end
 			end
@@ -20715,7 +20728,7 @@ local function fn2()
 
 			if v14.placeFirst ~= "Backpack" then
 				local v15 = ctx.slot28
-				fn29(v11, v15.placeFirst)
+				fn30(v11, v15.placeFirst)
 			end
 
 			for i2, v15 in ipairs(v13) do
@@ -20726,17 +20739,17 @@ local function fn2()
 		end
 
 		v4.run = function(arg, arg2)
-			local flag = fn32()
+			local flag = fn33()
 			if not (flag) then
 				return
 			end
 			local v10 = ctx.fn6
 			v10("Walking to your pen")
 			v10 = ctx.vector3New
-			if not (fn15(flag + v10(0, 3, 0), arg2)) then
+			if not (fn16(flag + v10(0, 3, 0), arg2)) then
 				return
 			end
-			local v11, n4, n5, n6 = fn33(arg.recs), math.min(arg.room, #arg.list), 0, 0
+			local v11, n4, n5, n6 = fn34(arg.recs), math.min(arg.room, #arg.list), 0, 0
 
 			for i2 = 1, n4, 1 do
 				if not (arg2()) then
@@ -20744,7 +20757,7 @@ local function fn2()
 				end
 				v10 = arg.list[i2]
 
-				if fn34(v10.uid) then
+				if fn35(v10.uid) then
 					flag = false
 
 					for i3 = 1, 8, 1 do
@@ -20799,17 +20812,17 @@ local function fn2()
 	end)
 
 	g("20_farm#2", function()
-		local v4 = fn14({name = "Hatch", gap = 2, bad = {}, info = true})
+		local v4 = fn15({name = "Hatch", gap = 2, bad = {}, info = true})
 		local autoHatchEquip = tbl3["Auto Hatch & Equip"]
-		local autoHatch, v5 = fn13(autoHatchEquip, "Auto Hatch", "hatch", false), ctx.state
+		local autoHatch, v5 = fn14(autoHatchEquip, "Auto Hatch", "hatch", false), ctx.state
 		local nostat, tbl9, v6 = v5.nostat, {}, ctx.state
 
-		local function fn30(arg)
+		local function fn31(arg)
 			local v7 = ctx.state
 			tbl9.rar = v7.minRar(arg)
 		end
 
-		autoHatchEquip:Dropdown("Hatch Min Rarity", v6.RANY, "Any", fn30, false, "Hatch eggs of the chosen rarity and every rarity above it", autoHatch)
+		autoHatchEquip:Dropdown("Hatch Min Rarity", v6.RANY, "Any", fn31, false, "Hatch eggs of the chosen rarity and every rarity above it", autoHatch)
 
 		autoHatchEquip:Slider("Min Hatch Value", 0, 0, 0, function(arg)
 			tbl9.minV = ((arg > 0) and arg) or nil
@@ -20817,13 +20830,13 @@ local function fn2()
 
 		v6 = ctx.state
 
-		local function fn31(arg)
+		local function fn32(arg)
 			local v7 = ctx.state
 			tbl9.sp = v7.names(arg)
 		end
 
-		autoHatchEquip:Dropdown("Hatch Specific Eggs", v6.eggList, {}, fn31, true, "Only hatch these eggs (empty = all)", autoHatch)
-		fn13(autoHatchEquip, "Auto Equip Best", "equip", false, nil, "Equip Best when a better pet appears")
+		autoHatchEquip:Dropdown("Hatch Specific Eggs", v6.eggList, {}, fn32, true, "Only hatch these eggs (empty = all)", autoHatch)
+		fn14(autoHatchEquip, "Auto Equip Best", "equip", false, nil, "Equip Best when a better pet appears")
 
 		v4.on = function()
 			local v7 = ctx.slot28
@@ -20908,7 +20921,7 @@ local function fn2()
 					else
 						k = tbl11 + 1
 
-						if fn28(placeIdx2) then
+						if fn29(placeIdx2) then
 							local v9 = ctx.slot44
 							v9.hatched = v9.hatched + 1
 						else
@@ -20923,7 +20936,7 @@ local function fn2()
 			end
 		end
 
-		local v7 = fn14({name = "Equip", gap = 8})
+		local v7 = fn15({name = "Equip", gap = 8})
 
 		v7.on = function()
 			local v8 = ctx.slot28
@@ -20949,16 +20962,16 @@ local function fn2()
 
 	g("20_farm#3", function()
 		local tbl9 = {Boss = "Fractured", Scrambled = "Scrambled", Enchanted = "Enchanted", Nitro = "Nitro", Spectral = "Spectral"}
-		local v4 = fn14({name = "Mutate", mover = true, gap = 1, pri = 3, soft = true, bad = {}})
+		local v4 = fn15({name = "Mutate", mover = true, gap = 1, pri = 3, soft = true, bad = {}})
 		local autoMutation = tbl3["Auto Mutation"]
 
-		local autoMutate = fn13(autoMutation, "Auto Mutate", "mutate", false, function(arg)
+		local autoMutate = fn14(autoMutation, "Auto Mutate", "mutate", false, function(arg)
 			if not (arg) then
 				H(v4)
 			end
 		end)
 
-		local mst, tbl10 = n("mst", autoMutation:Text("Mutate Status", "Off", autoMutate)), {Boss = true, Scrambled = true, Enchanted = true, Nitro = true, Spectral = true}
+		local mst, tbl10 = fn13("mst", autoMutation:Text("Mutate Status", "Off", autoMutate)), {Boss = true, Scrambled = true, Enchanted = true, Nitro = true, Spectral = true}
 
 		autoMutation:Dropdown("Mutations To Use", {"Fractured", "Scrambled", "Enchanted", "Nitro", "Spectral"}, {"Fractured", "Scrambled", "Enchanted", "Nitro", "Spectral"}, function(arg)
 			for k, v5 in next, tbl9, nil do
@@ -20968,13 +20981,13 @@ local function fn2()
 
 		local tbl11, tbl12, v5 = {}, {}, ctx.state
 
-		local function fn30(arg)
+		local function fn31(arg)
 			local v6 = ctx.state
 			tbl11.rar = v6.minRar(arg)
 			X()
 		end
 
-		autoMutation:Dropdown("Mutate Min Rarity", v5.RANY, "Any", fn30, false, "Only eggs of this rarity and above get mutated", autoMutate)
+		autoMutation:Dropdown("Mutate Min Rarity", v5.RANY, "Any", fn31, false, "Only eggs of this rarity and above get mutated", autoMutate)
 
 		autoMutation:Slider("Mutate Min Value", 0, 0, 0, function(arg)
 			tbl11.minV = ((arg > 0) and arg) or nil
@@ -20983,13 +20996,13 @@ local function fn2()
 
 		v5 = ctx.state
 
-		local function fn31(arg)
+		local function fn32(arg)
 			local v6 = ctx.state
 			tbl11.sp = v6.names(arg)
 			X()
 		end
 
-		autoMutation:Dropdown("Mutate Target Eggs", v5.eggList, {}, fn31, true, "Only mutate these eggs (empty = all)", autoMutate)
+		autoMutation:Dropdown("Mutate Target Eggs", v5.eggList, {}, fn32, true, "Only mutate these eggs (empty = all)", autoMutate)
 		local tbl13, v6 = {["Highest Value"] = "Best value", ["Best Rarity"] = "Best rarity", ["Biggest Size"] = "Biggest"}, ctx.slot28
 		v6.mutFirst = "Best value"
 
@@ -21001,7 +21014,7 @@ local function fn2()
 		autoMutate = ctx.state
 		local nostat = autoMutate.nostat
 
-		local function fn32()
+		local function fn33()
 			local tbl14, tbl15, v7, tbl16, v8, v9 = {}, {Boss = 0, Scrambled = 0, Enchanted = 0, Nitro = 0, Spectral = 0}, ipairs, {}, ctx.localPlayer, ctx.localPlayer
 			tbl16[1], tbl16[2] = v8.Character or (fn9()), v9.Character and (fn9())
 
@@ -21020,19 +21033,19 @@ local function fn2()
 			return tbl14, tbl15
 		end
 
-		local v7 = fn14({name = "Bag", gap = 2, info = true})
+		local v7 = fn15({name = "Bag", gap = 2, info = true})
 
 		v7.on = function()
 			return getOpen("Farm")
 		end
 
 		v7.fn = function()
-			local v8, v9 = fn32()
+			local v8, v9 = fn33()
 			S("bag", nostat, {Fractured = tostring(v9.Boss), Scrambled = tostring(v9.Scrambled), Enchanted = tostring(v9.Enchanted), Nitro = tostring(v9.Nitro), Spectral = tostring(v9.Spectral)})
 		end
 
-		local function fn33(arg)
-			arg = arg or (fn32())
+		local function fn34(arg)
+			arg = arg or (fn33())
 			if not (next(arg)) then
 				mst("No consumables in your bag")
 				return
@@ -21082,17 +21095,17 @@ local function fn2()
 			end
 			mst(#tbl14 .. " egg(s) can be mutated")
 			v9 = ctx.slot28
-			return fn29(tbl14, v9.mutFirst)[1]
+			return fn30(tbl14, v9.mutFirst)[1]
 		end
 
-		local v8 = fn14({name = "MutateInfo", gap = 2, info = true})
+		local v8 = fn15({name = "MutateInfo", gap = 2, info = true})
 
 		v8.on = function()
 			return getOpen("Farm")
 		end
 
 		v8.fn = function()
-			fn33()
+			fn34()
 		end
 
 		v4.want = function()
@@ -21100,7 +21113,7 @@ local function fn2()
 			local mutPick = placement.mutPick
 
 			if mutPick then
-				local v9, v10 = fn10()[mutPick.uid], fn32()
+				local v9, v10 = fn10()[mutPick.uid], fn33()
 				placement = ((type(v9) == "table") and v9.Placement) and z(v9)
 
 				for _, v11 in ipairs((placement and mutPick.ks) or {}) do
@@ -21126,7 +21139,7 @@ local function fn2()
 			if not (mutPick.mutate) then
 				return
 			end
-			mutPick = fn33(fn32())
+			mutPick = fn34(fn33())
 
 			if not mutPick then
 				v4.at = os.clock() + 5
@@ -21144,8 +21157,8 @@ local function fn2()
 			tbl14.Scrambled = require(scrambleMutationFlags).SuccessPercent:Get()
 		end)
 
-		local function fn34(arg, arg2)
-			local v9, n2 = fn27(arg.uid), ctx.state
+		local function fn35(arg, arg2)
+			local v9, n2 = fn28(arg.uid), ctx.state
 			local v10 = n2.eggPos(arg.uid)
 
 			if v9 then
@@ -21153,13 +21166,13 @@ local function fn2()
 				if v10 then
 					mst("Going to " .. arg.n)
 					n2 = ctx.vector3New
-					if not (fn15(v10 + n2(0, 3, 4), arg2)) then
+					if not (fn16(v10 + n2(0, 3, 4), arg2)) then
 						return
 					end
 					local v92 = v9
 
 					for i2 = 1, 15, 1 do
-						v92 = fn27(arg.uid)
+						v92 = fn28(arg.uid)
 						if v92 then
 							break
 						end
@@ -21183,7 +21196,7 @@ local function fn2()
 			v10 = ctx.fn6
 			v10("Mutating " .. arg.n)
 			v10, n2 = ctx.vector3New, v9:GetPivot().Position + ctx.vector3New(0, 3, 4)
-			if not (fn15(n2, arg2)) then
+			if not (fn16(n2, arg2)) then
 				return
 			end
 			n2 = ctx.fn4
@@ -21229,13 +21242,13 @@ local function fn2()
 
 		v4.run = function(arg, arg2)
 			if arg.pick then
-				return fn34(arg, arg2)
+				return fn35(arg, arg2)
 			end
 			local v9
 
 			while arg and (arg2()) do
-				v9 = fn34(arg, arg2)
-				arg = (v9 and arg2()) and fn33()
+				v9 = fn35(arg, arg2)
+				arg = (v9 and arg2()) and fn34()
 			end
 
 			return v9
@@ -21257,15 +21270,15 @@ local function fn2()
 	end)
 
 	g("20_farm#4", function()
-		local v4 = fn14({name = "Treadmill", mover = true, gap = 2, pri = 9, soft = true})
+		local v4 = fn15({name = "Treadmill", mover = true, gap = 2, pri = 9, soft = true})
 
-		fn13(tbl3["Auto Treadmill"], "Auto Treadmill", "tread", false, function(arg)
+		fn14(tbl3["Auto Treadmill"], "Auto Treadmill", "tread", false, function(arg)
 			if not (arg) then
 				H(v4)
 			end
 		end)
 
-		fn13(tbl3["Admin Treadmill"], "Use Admin Treadmill", "adminTread", false, function(arg)
+		fn14(tbl3["Admin Treadmill"], "Use Admin Treadmill", "adminTread", false, function(arg)
 			if not (arg) then
 				H(v4)
 			end
@@ -21274,7 +21287,7 @@ local function fn2()
 		local reTreadmillAssignedBeltShifted = ctx.state
 		local nostat, treadAt, n2, n3, leaderstats = reTreadmillAssignedBeltShifted.nostat, 0, 0, 0
 
-		local function fn30()
+		local function fn31()
 			treadAt = os.clock()
 			local v5 = ctx.state
 			v5.treadAt = treadAt
@@ -21285,7 +21298,7 @@ local function fn2()
 			end
 		end
 
-		local v5 = fn14({name = "SpeedInfo", gap = 1, info = true})
+		local v5 = fn15({name = "SpeedInfo", gap = 1, info = true})
 
 		v5.on = function()
 			return true
@@ -21304,7 +21317,7 @@ local function fn2()
 			if leaderstats3 then
 				if leaderstats then
 					if leaderstats3 > leaderstats then
-						fn30()
+						fn31()
 					end
 				end
 			end
@@ -21312,9 +21325,9 @@ local function fn2()
 			leaderstats = leaderstats3
 		end
 
-		local function fn31()
+		local function fn32()
 			local adminTreadmill, pad = workspace:FindFirstChild("AdminTreadmill"), ctx.slot28
-			local adminTreadmill2 = pad.adminTread and (adminTreadmill or fn17())
+			local adminTreadmill2 = pad.adminTread and (adminTreadmill or fn18())
 
 			if adminTreadmill2 then
 				pad = adminTreadmill and (adminTreadmill:FindFirstChild("Pad") or adminTreadmill:FindFirstChildWhichIsA("BasePart", true))
@@ -21349,7 +21362,7 @@ local function fn2()
 		reTreadmillAssignedBeltShifted = v6:FindFirstChild("RE/Treadmill/AssignedBeltShifted")
 
 		if reTreadmillSpeedGained then
-			trackConnection(reTreadmillSpeedGained.OnClientEvent, fn30)
+			trackConnection(reTreadmillSpeedGained.OnClientEvent, fn31)
 		end
 
 		if reTreadmillAssignedBeltShifted then
@@ -21365,7 +21378,7 @@ local function fn2()
 						arg = ctx.slot28
 
 						if not (arg.tread) then
-							if not (fn17()) then
+							if not (fn18()) then
 								task.spawn(ctx.fn5, "RF/Treadmill/AskDoff")
 							end
 						end
@@ -21376,7 +21389,7 @@ local function fn2()
 
 		v4.want = function()
 			local v7 = ctx.fn11
-			local v8, v9, v10 = v7(), fn31()
+			local v8, v9, v10 = v7(), fn32()
 
 			if v8 then
 				if not (v9) then
@@ -21403,7 +21416,7 @@ local function fn2()
 		end
 
 		v4.run = function(arg, arg2)
-			local v7, v8 = fn31()
+			local v7, v8 = fn32()
 
 			if v8 then
 				local v9 = ctx.state
@@ -21434,7 +21447,7 @@ local function fn2()
 			local flag = ctx.fn6
 			flag((v8 and "Going to the admin treadmill") or "Going to the treadmill")
 			flag = ctx.vector3New
-			if not (fn15(arg + flag(0, 1, 0), arg2)) then
+			if not (fn16(arg + flag(0, 1, 0), arg2)) then
 				return
 			end
 			flag, arg = ctx.state, ctx.state
@@ -21529,7 +21542,7 @@ local function fn2()
 				tread2 = tread
 			else
 				v8 = ctx.slot28
-				tread2 = v8.adminTread and (fn17() or (workspace:FindFirstChild("AdminTreadmill") ~= nil))
+				tread2 = v8.adminTread and (fn18() or (workspace:FindFirstChild("AdminTreadmill") ~= nil))
 			end
 
 			return tread2
@@ -21540,9 +21553,9 @@ local function fn2()
 		end
 
 		local autoProgression, ctx2 = tbl3["Auto Progression"], {}
-		fn13(autoProgression, "Auto Buy Trail", "trails", false)
-		fn13(autoProgression, "Auto Upgrade Base", "upBase", false)
-		fn13(autoProgression, "Auto Upgrade Treadmill", "upTread", false)
+		fn14(autoProgression, "Auto Buy Trail", "trails", false)
+		fn14(autoProgression, "Auto Upgrade Base", "upBase", false)
+		fn14(autoProgression, "Auto Upgrade Treadmill", "upTread", false)
 		local pre = c.pre
 
 		function c.pre(arg)
@@ -21563,7 +21576,7 @@ local function fn2()
 			end
 		end
 
-		fn13(autoProgression, "Auto Claim Money", "claimCash", false, function(arg)
+		fn14(autoProgression, "Auto Claim Money", "claimCash", false, function(arg)
 			ctx2.slot1 = arg
 			arg = ctx.slot28
 			arg.claimIndex = ctx2.slot1 or ctx2.slot2
@@ -21575,7 +21588,7 @@ local function fn2()
 			arg.claimIndex = ctx2.slot1 or ctx2.slot2
 		end)
 
-		local v8 = fn14({name = "Progress", gap = 5, fail = {}})
+		local v8 = fn15({name = "Progress", gap = 5, fail = {}})
 
 		v8.on = function()
 			local upBase = ctx.slot28
@@ -21767,7 +21780,7 @@ local function fn2()
 	end)
 
 	ctx.fn25 = function(arg, arg2)
-		local arg22, v4, tbl9, tbl10 = I(arg), fn26(), {}, {}
+		local arg22, v4, tbl9, tbl10 = I(arg), fn27(), {}, {}
 
 		for k, v5 in next, ((type(arg.Inventory) == "table") and arg.Inventory) or {}, nil do
 			if type(v5) == "table" then
@@ -21809,11 +21822,11 @@ local function fn2()
 	end
 
 	g("20_farm#5", function()
-		local v4, autoSell, tbl9 = fn14({name = "Sell", gap = 5, info = true}), tbl3["Auto Sell"], {"Rarity Only", "Value Only", "Rarity And Value", "Rarity Or Value"}
+		local v4, autoSell, tbl9 = fn15({name = "Sell", gap = 5, info = true}), tbl3["Auto Sell"], {"Rarity Only", "Value Only", "Rarity And Value", "Rarity Or Value"}
 
-		local function fn30(arg, arg2, arg3, arg4)
+		local function fn31(arg, arg2, arg3, arg4)
 			local tbl10 = {rule = "Rarity And Value", mx = arg3}
-			local v5, v6 = autoSell:Text(arg .. " Sell Preview", arg .. (" matches  -  0 " .. (arg:lower() .. "s"))), fn13(autoSell, "Auto Sell " .. arg, arg2, false, nil, arg4)
+			local v5, v6 = autoSell:Text(arg .. " Sell Preview", arg .. (" matches  -  0 " .. (arg:lower() .. "s"))), fn14(autoSell, "Auto Sell " .. arg, arg2, false, nil, arg4)
 
 			autoSell:Button("Sell " .. (arg .. "s Now"), "Sell", function()
 				task.spawn(function()
@@ -21823,12 +21836,12 @@ local function fn2()
 				end)
 			end, ((arg == "Egg") and "Sell matching eggs once") or nil, "Sold!", v6)
 
-			local str, fn31 = arg .. " Rule", function(rule)
+			local str, fn32 = arg .. " Rule", function(rule)
 				tbl10.rule = rule
 			end
 
-			autoSell:Dropdown("Sell " .. str, tbl9, "Rarity And Value", fn31, false, "Which checks must pass to sell", v6)
-			fn31, str = arg .. " Max Rarity", ctx.state
+			autoSell:Dropdown("Sell " .. str, tbl9, "Rarity And Value", fn32, false, "Which checks must pass to sell", v6)
+			fn32, str = arg .. " Max Rarity", ctx.state
 			local rnum, v7 = str.RNUM, ctx.state
 			str, arg4 = v7.RNUM[arg3]
 
@@ -21839,31 +21852,31 @@ local function fn2()
 				arg4 = v7.RNUM[1]
 			end
 
-			local function fn32(arg5)
+			local function fn33(arg5)
 				local v8 = ctx.state
 				tbl10.mx = v8.RIDX[arg5] or arg3
 			end
 
 			str = arg:lower() .. "s at or below this rarity"
-			autoSell:Dropdown(fn31, rnum, arg4, fn32, false, "Sell " .. str, v6)
+			autoSell:Dropdown(fn32, rnum, arg4, fn33, false, "Sell " .. str, v6)
 
 			autoSell:Slider(arg .. " Sell Value", 0, 0, 0, function(v8)
 				tbl10.v = v8
 			end, "log", nil, "Sell " .. (arg:lower() .. "s worth less than this (0 = off)"), v6)
 
-			fn13(autoSell, "Keep Mutated " .. (arg .. "s"), arg2 .. "Keep", arg ~= "Egg", nil, "Never sell mutated " .. (arg:lower() .. "s"), v6)
+			fn14(autoSell, "Keep Mutated " .. (arg .. "s"), arg2 .. "Keep", arg ~= "Egg", nil, "Never sell mutated " .. (arg:lower() .. "s"), v6)
 
-			rnum, arg4, fn31, fn32, str = "Blacklist Sell " .. (arg .. "s"), ctx.state, ctx.state.eggList, function(arg5)
+			rnum, arg4, fn32, fn33, str = "Blacklist Sell " .. (arg .. "s"), ctx.state, ctx.state.eggList, function(arg5)
 				local v8 = ctx.state
 				tbl10.no = v8.names(arg5)
 			end, arg:lower() .. "s are never sold"
 
-			autoSell:Dropdown(rnum, fn31, {}, fn32, true, "These " .. str, v6)
+			autoSell:Dropdown(rnum, fn32, {}, fn33, true, "These " .. str, v6)
 			return tbl10, v5
 		end
 
-		local Pet, v5 = fn30("Pet", "sellPets", 3)
-		local Egg, v6 = fn30("Egg", "sellEggs", 7, "Sell bag eggs matching the rules below")
+		local Pet, v5 = fn31("Pet", "sellPets", 3)
+		local Egg, v6 = fn31("Egg", "sellEggs", 7, "Sell bag eggs matching the rules below")
 		local tbl10 = {}
 
 		pcall(function()
@@ -21872,7 +21885,7 @@ local function fn2()
 			end
 		end)
 
-		local function fn31(arg, arg2, arg3)
+		local function fn32(arg, arg2, arg3)
 			local tbl11, v7 = {}, ipairs
 
 			for k, v8 in v7(arg) do
@@ -21897,7 +21910,7 @@ local function fn2()
 			return tbl11
 		end
 
-		local function fn32(arg)
+		local function fn33(arg)
 			local result = ctx.fn24
 			local result2 = result()
 			if not (result2) then
@@ -21905,7 +21918,7 @@ local function fn2()
 			end
 			result = ctx.fn25
 			local v7, v8 = result(result2)
-			local tbl11, tbl12 = fn31(v7, Pet, "sellPetsKeep"), fn31(v8, Egg, "sellEggsKeep")
+			local tbl11, tbl12 = fn32(v7, Pet, "sellPetsKeep"), fn32(v8, Egg, "sellEggsKeep")
 			local n2 = #tbl11
 			local n3, n4 = #tbl12, 0
 
@@ -21936,7 +21949,7 @@ local function fn2()
 				n6 += (result and tonumber(result2)) or 0
 			end
 
-			local function fn33(arg2)
+			local function fn34(arg2)
 				local tbl13 = {"", "K", "M", "B", "T", "Qa", "Qi"}
 				local n7 = 1
 
@@ -21948,8 +21961,8 @@ local function fn2()
 			end
 
 			Q("sellTx", function()
-				v5:Set(("Pet matches  -  %d pets for %s"):format(n2, fn33(n5)))
-				v6:Set(("Egg matches  -  %d eggs (%d Halloween) for %s"):format(n3, n4, fn33(n6)))
+				v5:Set(("Pet matches  -  %d pets for %s"):format(n2, fn34(n5)))
+				v6:Set(("Egg matches  -  %d eggs (%d Halloween) for %s"):format(n3, n4, fn34(n6)))
 			end)
 
 			if arg then
@@ -21985,16 +21998,16 @@ local function fn2()
 			return sellPets2 or (getOpen("Farm"))
 		end
 
-		v4.fn = fn32
-		fn30 = ctx.state
-		fn30.sellRun = fn32
+		v4.fn = fn33
+		fn31 = ctx.state
+		fn31.sellRun = fn33
 	end)
 
 	g("20_farm#6", function()
-		local v4 = fn14({name = "Favorite", gap = 3, pend = {}})
+		local v4 = fn15({name = "Favorite", gap = 3, pend = {}})
 		local autoFavorite = tbl3["Auto Favorite"]
-		local favTx, tbl9, tbl10 = n("favTx", autoFavorite:Text("Favorite Preview", "Favorite matches  -  0 pets")), {}, {}
-		local autoFavoritePet = fn13(autoFavorite, "Auto Favorite Pet", "fav", false, nil, "Favorite pets matching the rules below")
+		local favTx, tbl9, tbl10 = fn13("favTx", autoFavorite:Text("Favorite Preview", "Favorite matches  -  0 pets")), {}, {}
+		local autoFavoritePet = fn14(autoFavorite, "Auto Favorite Pet", "fav", false, nil, "Favorite pets matching the rules below")
 
 		autoFavorite:Button("Favorite Pets Now", "Favorite", function()
 			local v5 = ctx.state
@@ -22027,7 +22040,7 @@ local function fn2()
 			tbl12[#tbl12 + 1] = tbl[i2]
 		end
 
-		local function fn30(arg)
+		local function fn31(arg)
 			tbl9.any = table.find(arg, "Any Mutation") ~= nil
 			tbl9.mut = fn11(arg, V)
 
@@ -22040,7 +22053,7 @@ local function fn2()
 			end
 		end
 
-		autoFavorite:Dropdown("Favorite Mutations", tbl12, {}, fn30, true, "Mutation check (empty = skip)", autoFavoritePet)
+		autoFavorite:Dropdown("Favorite Mutations", tbl12, {}, fn31, true, "Mutation check (empty = skip)", autoFavoritePet)
 
 		autoFavorite:Slider("Min Favorite Value", 0, 0, 0, function(arg)
 			tbl9.minV = ((arg > 0) and arg) or nil
@@ -22048,14 +22061,14 @@ local function fn2()
 
 		v5 = ctx.state
 
-		tbl12, fn30 = v5.eggList, function(arg)
+		tbl12, fn31 = v5.eggList, function(arg)
 			local v6 = ctx.state
 			tbl10 = v6.names(arg) or {}
 		end
 
-		autoFavorite:Dropdown("Always Favorite Species", tbl12, {}, fn30, true, "Always favorite these species", autoFavoritePet)
-		fn13(autoFavorite, "Auto Favorite Equipped", "favEq", false, nil, "Keep equipped pets favorited")
-		fn13(autoFavorite, "Auto Unfavorite Equipped", "unfav", false, nil, "Unfavorite equipped pets not in the rules")
+		autoFavorite:Dropdown("Always Favorite Species", tbl12, {}, fn31, true, "Always favorite these species", autoFavoritePet)
+		fn14(autoFavorite, "Auto Favorite Equipped", "favEq", false, nil, "Keep equipped pets favorited")
+		fn14(autoFavorite, "Auto Unfavorite Equipped", "unfav", false, nil, "Unfavorite equipped pets not in the rules")
 
 		autoFavorite:Button("Favorite Equipped Now", "Favorite", function()
 			local v6 = ctx.state
@@ -22101,7 +22114,7 @@ local function fn2()
 			return fav2 or (getOpen("Farm"))
 		end
 
-		local function fn31(arg)
+		local function fn32(arg)
 			local tbl102, n2, n22 = tbl10, arg.n
 
 			if n2 then
@@ -22178,7 +22191,7 @@ local function fn2()
 
 			for k, v9 in v8, inventory, nil do
 				if type(v9) == "table" then
-					if fn31(z(v9)) then
+					if fn32(z(v9)) then
 						n2 = n3 + 1
 						n3, n4 = n2, if v9.IsFavorite then n4 else n4 + 1
 					else
@@ -22209,7 +22222,7 @@ local function fn2()
 								fav2 = v10.unfav
 							end
 
-							favEq2 = (fav2 or (favNow == "rules")) and fn31(z(v9))
+							favEq2 = (fav2 or (favNow == "rules")) and fn32(z(v9))
 						end
 
 						local flag
@@ -22267,12 +22280,12 @@ local function fn2()
 
 	g("20_farm#7", function()
 		local ctx2 = {}
-		local v4 = fn14({name = "Fuse", gap = 2, bad = {}, info = true})
+		local v4 = fn15({name = "Fuse", gap = 2, bad = {}, info = true})
 		ctx2.v4 = v4
 		local autoFuseMachine = tbl3["Auto Fuse Machine"]
-		local fuseTx = n("fuseTx", autoFuseMachine:Text("Fuse Preview", "Fuse status unknown"))
+		local fuseTx = fn13("fuseTx", autoFuseMachine:Text("Fuse Preview", "Fuse status unknown"))
 		ctx2.fuseTx = fuseTx
-		local autoFuseMachine2, tbl9, v5, v6 = fn13(autoFuseMachine, "Auto Fuse Machine", "fuse", false, nil, "Fuse 3 same pets into an egg, nonstop"), {["Lowest Rarity First"] = "Lowest rarity", ["Highest Rarity First"] = "Highest rarity", ["Most Copies First"] = "Most copies", ["Lowest Value First"] = "Lowest value"}, ctx.slot28, ctx.slot28
+		local autoFuseMachine2, tbl9, v5, v6 = fn14(autoFuseMachine, "Auto Fuse Machine", "fuse", false, nil, "Fuse 3 same pets into an egg, nonstop"), {["Lowest Rarity First"] = "Lowest rarity", ["Highest Rarity First"] = "Highest rarity", ["Most Copies First"] = "Most copies", ["Lowest Value First"] = "Lowest value"}, ctx.slot28, ctx.slot28
 		v5.fuseFirst = "Lowest rarity"
 		v6.fuseUse = "Lowest value first"
 
@@ -22291,22 +22304,22 @@ local function fn2()
 		v8, ctx2.tbl10.rar = ctx.state, v7.maxRar(ctx.state.RNUM[6])
 		v7 = ctx.state
 
-		local rnum, v9, rnum2, fn30 = v7.RNUM, ctx.state, ctx.state.RNUM, function(arg)
+		local rnum, v9, rnum2, fn31 = v7.RNUM, ctx.state, ctx.state.RNUM, function(arg)
 			local v9, v10 = ctx2.tbl10, ctx.state
 			v9.rar = v10.maxRar(arg)
 		end
 
-		autoFuseMachine:Dropdown("Max Rarity to Fuse", rnum, rnum2[6], fn30, false, nil, autoFuseMachine2)
+		autoFuseMachine:Dropdown("Max Rarity to Fuse", rnum, rnum2[6], fn31, false, nil, autoFuseMachine2)
 		v6 = ctx.state
 
-		local function fn31(arg)
+		local function fn32(arg)
 			local v10, v11 = ctx2.tbl10, ctx.state
 			v10.sp = v11.names(arg)
 		end
 
-		autoFuseMachine:Dropdown("Specific Species to Fuse", v6.eggList, {}, fn31, true, "Only fuse these species (empty = all)", autoFuseMachine2)
-		fn13(autoFuseMachine, "Skip Mutated Pets", "fuseKeep", true, nil, nil, autoFuseMachine2)
-		fn13(autoFuseMachine, "Eject Incomplete Slots", "fuseEject", true, nil, "Take out pets that can't make a set", autoFuseMachine2)
+		autoFuseMachine:Dropdown("Specific Species to Fuse", v6.eggList, {}, fn32, true, "Only fuse these species (empty = all)", autoFuseMachine2)
+		fn14(autoFuseMachine, "Skip Mutated Pets", "fuseKeep", true, nil, nil, autoFuseMachine2)
+		fn14(autoFuseMachine, "Eject Incomplete Slots", "fuseEject", true, nil, "Take out pets that can't make a set", autoFuseMachine2)
 
 		local tbl11 = {["Lowest rarity"] = function(arg)
 			return (-arg.r * 1000) + #arg
@@ -22327,12 +22340,14 @@ local function fn2()
 
 		ctx2.v4.fn = function()
 			local state = 1
-			local v10, inventory, tbl12, tbl13, v11, fusionSlots, forIter_1, v12, n2, forIter_2, v13, n3, tbl14, category, lowestRarity, tbl15, v14, forIter_3, v15, v16, flag, str, tbl16, tbl17, v17, n4, n5, Fuse, num, v18, v19
+			local n2, n3, v10, inventory, tbl12, tbl13, v11, fusionSlots, forIter_1, v12, n4, forIter_2, v13, n5, tbl14, category, lowestRarity, tbl15, v14, forIter_3, v15, v16, flag, str, tbl16, tbl17, v17, n6, n7, Fuse, num, v18, v19
 
 			while true do
 				if state <= 47 then
 					if state <= 23 then
 						if state == 1 then
+							n2 = 852339492
+							n3 = 3016584455
 							v10 = ctx.fn24()
 
 							if v10 then
@@ -22415,7 +22430,7 @@ local function fn2()
 								state = 14
 							end
 						elseif state == 14 then
-							n2 = nil - 2078756101
+							n4 = n2 - 2078756101
 							local v20 = ctx.fn25(v10, true)
 							forIter_2 = (function(arg, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v21, v32, v42, v52, v62, v72, v82, v92, v102 in arg, s, var do coroutine.yield(true, {k, v21, v32, v42, v52, v62, v72, v82, v92, v102}) end end); co(); return co end)(ipairs(v20))
 							state = 15
@@ -22430,18 +22445,18 @@ local function fn2()
 								state = 26
 							end
 						elseif state == 16 then
-							n3 = ctx2.v4.bad[v13.uid]
+							n5 = ctx2.v4.bad[v13.uid]
 
-							if n3 then
+							if n5 then
 								state = 18
 							else
 								state = 17
 							end
 						elseif state == 17 then
-							n3 = 0
+							n5 = 0
 							state = 18
 						elseif state == 18 then
-							if n3 < os.clock() then
+							if n5 < os.clock() then
 								state = 19
 							else
 								state = 15
@@ -22628,17 +22643,17 @@ local function fn2()
 							state = 47
 						end
 					elseif state == 46 then
-						local n6 = nil - 2923402609
+						local n8 = n3 - 2923402609
 
-						local function fn32(arg, arg2)
+						local function fn33(arg, arg2)
 							if ctx.slot28.fuseUse ~= "Highest value first" then
 								return arg.v < arg2.v
 							end
 							return arg.v > arg2.v
 						end
 
-						n6 = 472813359
-						table.sort(tbl15, fn32)
+						n8 = 472813359
+						table.sort(tbl15, fn33)
 						state = 47
 					elseif state == 47 then
 						if ctx.slot28.fuse then
@@ -22671,7 +22686,7 @@ local function fn2()
 							state = 53
 						end
 					elseif state == 53 then
-						local v20 = bit32.bor(nil, n2)
+						local v20 = bit32.bor(n3, n4)
 						ctx.fn5("RF/Fusery/ConfirmBriefing")
 						task.wait(0.35)
 						state = 54
@@ -22699,8 +22714,8 @@ local function fn2()
 							state = 57
 						end
 					elseif state == 57 then
-						n4 = 3 - #tbl12
-						n5 = 1
+						n6 = 3 - #tbl12
+						n7 = 1
 
 						if 1 <= 0 then
 							state = 60
@@ -22708,7 +22723,7 @@ local function fn2()
 							state = 58
 						end
 					elseif state == 58 then
-						if n5 <= n4 then
+						if n7 <= n6 then
 							state = 59
 						else
 							state = 66
@@ -22716,7 +22731,7 @@ local function fn2()
 					elseif state == 59 then
 						state = 62
 					elseif state == 60 then
-						if n5 >= n4 then
+						if n7 >= n6 then
 							state = 61
 						else
 							state = 66
@@ -22724,8 +22739,8 @@ local function fn2()
 					elseif state == 61 then
 						state = 62
 					elseif state == 62 then
-						tbl17[n5] = tbl15[n5].uid
-						tbl16[#tbl16 + 1] = inventory[tbl17[n5]]
+						tbl17[n7] = tbl15[n7].uid
+						tbl16[#tbl16 + 1] = inventory[tbl17[n7]]
 
 						if U_1 <= 0 then
 							state = 65
@@ -22739,7 +22754,7 @@ local function fn2()
 							state = 66
 						end
 					elseif state == 64 then
-						n5 = J_1
+						n7 = J_1
 						state = 62
 					elseif state == 65 then
 						if J_1 >= w_1 then
@@ -22817,7 +22832,7 @@ local function fn2()
 				elseif state == 78 then
 					return
 				elseif state == 79 then
-					n5 = J_1
+					n7 = J_1
 					state = 62
 				elseif state == 80 then
 					v17 = t290_384_1[3]
@@ -22895,13 +22910,13 @@ local function fn2()
 	end)
 
 	g("21_eggs#1", function()
-		local function fn30(arg)
+		local function fn31(arg)
 			return C[arg] or arg
 		end
 
 		local v4, v5 = ctx.localPlayer, ctx.networking
 
-		local function fn31()
+		local function fn32()
 			return HttpService:GenerateGUID(false):gsub("-", ""):sub(1, 14)
 		end
 
@@ -22909,7 +22924,7 @@ local function fn2()
 		local fusePredictor = tbl3["Fuse Predictor"];
 		({}).Page = tbl4.Predictor.page
 		local position
-		local v6 = fn14({name = "GoTo", mover = true, gap = 0.5, pri = 0, soft = true})
+		local v6 = fn15({name = "GoTo", mover = true, gap = 0.5, pri = 0, soft = true})
 
 		v6.on = function()
 			local position2 = position
@@ -22923,7 +22938,7 @@ local function fn2()
 
 		v6.run = function(arg, arg2)
 			local v7 = ctx.vector3New
-			fn15(arg + v7(0, 3, 4), arg2)
+			fn16(arg + v7(0, 3, 4), arg2)
 			position = nil
 		end
 
@@ -22964,9 +22979,9 @@ local function fn2()
 				flag = true
 			end
 
-			local function fn32(arg, arg2, parent)
+			local function fn33(arg, arg2, parent)
 				local instance = Instance.new(arg)
-				instance.Name = fn31()
+				instance.Name = fn32()
 
 				for k, v11 in pairs(arg2) do
 					instance[k] = v11
@@ -22980,11 +22995,11 @@ local function fn2()
 			end
 
 			local function getUIGradient(arg, arg2, arg3, arg4)
-				return fn32("UIGradient", {Color = ColorSequence.new(arg2, arg3), Rotation = arg4 or 90}, arg)
+				return fn33("UIGradient", {Color = ColorSequence.new(arg2, arg3), Rotation = arg4 or 90}, arg)
 			end
 
-			local function fn33(arg, arg2)
-				local TextLabel = fn32("TextLabel", {BackgroundTransparency = 1, TextColor3 = color, TextScaled = false, TextXAlignment = Enum.TextXAlignment.Center, TextYAlignment = Enum.TextYAlignment.Center, TextTruncate = Enum.TextTruncate.AtEnd, Text = ""}, arg)
+			local function fn34(arg, arg2)
+				local TextLabel = fn33("TextLabel", {BackgroundTransparency = 1, TextColor3 = color, TextScaled = false, TextXAlignment = Enum.TextXAlignment.Center, TextYAlignment = Enum.TextYAlignment.Center, TextTruncate = Enum.TextTruncate.AtEnd, Text = ""}, arg)
 
 				if rarityFont then
 					TextLabel.FontFace = rarityFont
@@ -22996,11 +23011,11 @@ local function fn2()
 					TextLabel[k] = v11
 				end
 
-				fn32("UIStroke", {Color = color2, Thickness = 1.5, LineJoinMode = Enum.LineJoinMode.Round}, TextLabel)
+				fn33("UIStroke", {Color = color2, Thickness = 1.5, LineJoinMode = Enum.LineJoinMode.Round}, TextLabel)
 				return TextLabel
 			end
 
-			local function fn34(parent, textSize)
+			local function fn35(parent, textSize)
 				textSize = math.max(6, math.floor(textSize + 0.5))
 
 				if parent.TextSize ~= textSize then
@@ -23031,7 +23046,7 @@ local function fn2()
 
 			local tbl20 = {}
 
-			local function fn35(arg)
+			local function fn36(arg)
 				if tbl20[arg] == nil then
 					local flag3 = false
 
@@ -23050,8 +23065,8 @@ local function fn2()
 				return tbl20[arg]
 			end
 
-			local function fn36(parent, arg)
-				local v11, edgePaint = fn35(arg), parent:FindFirstChild("EdgePaint")
+			local function fn37(parent, arg)
+				local v11, edgePaint = fn36(arg), parent:FindFirstChild("EdgePaint")
 
 				if not (v11) then
 					if edgePaint then
@@ -23076,11 +23091,11 @@ local function fn2()
 				edgePaint.Color = v11
 			end
 
-			local function fn37(arg)
+			local function fn38(arg)
 				return ((string.upper(tostring(arg.Rarity)) == "DIVINE") and "Divine") or "Secret"
 			end
 
-			local function fn38(arg, text)
+			local function fn39(arg, text)
 				text = tostring(text or "")
 
 				if arg.Text ~= text then
@@ -23088,27 +23103,27 @@ local function fn2()
 				end
 			end
 
-			local function fn39(arg, visible)
+			local function fn40(arg, visible)
 				if arg.Visible ~= visible then
 					arg.Visible = visible
 				end
 			end
 
-			local function fn40(arg)
+			local function fn41(arg)
 				if string.upper(tostring(arg.Rarity)) == "SECRET" then
 					return ps.SecretGradient, ps.SecretRotation
 				end
 				return arg.Gradient, nil
 			end
 
-			local function fn41(parent, arg, rotation)
+			local function fn42(parent, arg, rotation)
 				local rarityPaint = parent:FindFirstChild("RarityPaint")
 
 				if rarityPaint then
 					rarityPaint:Destroy()
 				end
 
-				local v11, v12 = fn40(arg)
+				local v11, v12 = fn41(arg)
 				rarityPaint = nil
 
 				if (typeof(v11) == "Instance") and v11:IsA("UIGradient") then
@@ -23152,7 +23167,7 @@ local function fn2()
 
 			local tbl21 = {}
 
-			local function fn42(arg)
+			local function fn43(arg)
 				local str = tostring(arg.Category)
 				if tbl21[str] then
 					return tbl21[str]
@@ -23170,7 +23185,7 @@ local function fn2()
 					return colorSequence
 				end
 
-				local tbl22 = fn40(arg)
+				local tbl22 = fn41(arg)
 				local keypoints, tbl23 = if (typeof(tbl22) == "Instance") and tbl22:IsA("UIGradient") then tbl22.Color.Keypoints else if typeof(tbl22) == "ColorSequence" then tbl22.Keypoints else nil, {}
 
 				if keypoints then
@@ -23209,7 +23224,7 @@ local function fn2()
 				return tbl23
 			end
 
-			local function fn43(parent, arg)
+			local function fn44(parent, arg)
 				local rarityPaint = parent:FindFirstChild("RarityPaint")
 
 				if rarityPaint then
@@ -23220,11 +23235,11 @@ local function fn2()
 				rarityPaint = Instance.new("UIGradient")
 				rarityPaint.Name = "RarityPaint"
 				rarityPaint.Rotation = 90
-				rarityPaint.Color = fn42(arg)
+				rarityPaint.Color = fn43(arg)
 				rarityPaint.Parent = parent
 			end
 
-			local function fn44(arg, arg2)
+			local function fn45(arg, arg2)
 				local keypoints = arg.Keypoints
 				if arg2 <= keypoints[1].Time then
 					return keypoints[1].Value
@@ -23243,8 +23258,8 @@ local function fn2()
 				return keypoints[#keypoints].Value
 			end
 
-			local function fn45(arg, arg2, arg3)
-				local tbl22 = {ColorSequenceKeypoint.new(0, fn44(arg, arg2))}
+			local function fn46(arg, arg2, arg3)
+				local tbl22 = {ColorSequenceKeypoint.new(0, fn45(arg, arg2))}
 
 				for _, keypoint in ipairs(arg.Keypoints) do
 					if keypoint.Time > (arg2 + 0.001) then
@@ -23254,16 +23269,16 @@ local function fn2()
 					end
 				end
 
-				table.insert(tbl22, ColorSequenceKeypoint.new(1, fn44(arg, arg3)))
+				table.insert(tbl22, ColorSequenceKeypoint.new(1, fn45(arg, arg3)))
 				return ColorSequence.new(tbl22)
 			end
 
 			local colorSequence = ColorSequence.new(Color3.fromRGB(255, 255, 255), Color3.fromRGB(236, 240, 248))
 
-			local function fn46(parent, arg, arg2)
+			local function fn47(parent, arg, arg2)
 				if not (arg2) then
 					if string.upper(tostring(arg.Rarity)) == "SECRET" then
-						fn41(parent, arg, nil)
+						fn42(parent, arg, nil)
 						return
 					end
 				end
@@ -23307,12 +23322,12 @@ local function fn2()
 					flag32, flag33 = (flag3 and 0) or 0.5, (flag3 and 0.5) or 1
 				end
 
-				rarityPaint.Color = fn45(color7, flag32, flag33)
+				rarityPaint.Color = fn46(color7, flag32, flag33)
 				rarityPaint.Rotation = rotation
 				rarityPaint.Parent = parent
 			end
 
-			local function fn47(arg)
+			local function fn48(arg)
 				arg = math.max(0, math.floor(tonumber(arg) or 0))
 				if arg >= 3600 then
 					return string.format("%dh %02dm", arg // 3600, (arg % 3600) // 60)
@@ -23320,7 +23335,7 @@ local function fn2()
 				return string.format("%dm %02ds", arg // 60, arg % 60)
 			end
 
-			local function fn48(arg, arg2)
+			local function fn49(arg, arg2)
 				local ok, result = pcall(function()
 					return gm.EggRecords.EggIcon(arg)
 				end)
@@ -23347,7 +23362,7 @@ local function fn2()
 				return arg2.Icon or ""
 			end
 
-			local function fn49()
+			local function fn50()
 				local eggState = gm.EggState
 
 				if type(eggState) ~= "table" then
@@ -23381,7 +23396,7 @@ local function fn2()
 						else
 						end
 
-						ok = {Id = k, Info = n6, Scale = n7, Weight = n8, Mutations = mutations, Income = ps.Income(n6, n7, mutations), Status = "Inventory", Remaining = 1 / 0, Percent = 0, EggIcon = fn48(v11, n6)}
+						ok = {Id = k, Info = n6, Scale = n7, Weight = n8, Mutations = mutations, Income = ps.Income(n6, n7, mutations), Status = "Inventory", Remaining = 1 / 0, Percent = 0, EggIcon = fn49(v11, n6)}
 
 						if v11.Placement ~= nil then
 							mutations, n7 = pcall(eggState.IsReadyToHatch, k)
@@ -23430,11 +23445,11 @@ local function fn2()
 				return tbl22
 			end
 
-			local function fn50()
+			local function fn51()
 				local v11
 
 				task.spawn(function()
-					local ok, result = pcall(fn49)
+					local ok, result = pcall(fn50)
 
 					if ok then
 						v11 = result
@@ -23444,7 +23459,7 @@ local function fn2()
 				return v11
 			end
 
-			local function fn51(arg)
+			local function fn52(arg)
 				local sort = tbl13.Sort
 
 				table.sort(arg, function(arg2, arg3)
@@ -23463,7 +23478,7 @@ local function fn2()
 				end)
 			end
 
-			local function fn52(arg, arg2)
+			local function fn53(arg, arg2)
 				if arg2 == "" then
 					return true
 				end
@@ -23494,14 +23509,14 @@ local function fn2()
 
 			local tbl25 = {Color3.fromRGB(235, 250, 255), Color3.fromRGB(110, 200, 255)}
 
-			local function fn53(arg)
-				local ok, result = pcall(fn30, arg)
+			local function fn54(arg)
+				local ok, result = pcall(fn31, arg)
 				result = ((ok and (type(result) == "string")) and result) or tostring(arg)
 				result = string.gsub(result, "%s*[Mm]utation$", "")
 				return string.upper(result)
 			end
 
-			local function fn54(arg, arg2)
+			local function fn55(arg, arg2)
 				if type(arg) ~= "table" then
 					return "", nil
 				elseif #arg == 0 then
@@ -23511,7 +23526,7 @@ local function fn2()
 				local tbl26 = {}
 
 				for _, v11 in ipairs(arg) do
-					table.insert(tbl26, fn53(v11))
+					table.insert(tbl26, fn54(v11))
 				end
 
 				local str = tostring(arg[1])
@@ -23531,9 +23546,9 @@ local function fn2()
 				return table.concat(tbl26, arg2 or " + "), arg
 			end
 
-			local function fn55(arg, arg2, arg3)
-				local v11, v12 = fn54(arg2, arg3)
-				fn38(arg, v11)
+			local function fn56(arg, arg2, arg3)
+				local v11, v12 = fn55(arg2, arg3)
+				fn39(arg, v11)
 
 				if v12 then
 					if arg:GetAttribute("MutationKey") ~= v11 then
@@ -23542,7 +23557,7 @@ local function fn2()
 
 						if arg3 then
 						else
-							arg3 = fn32("UIGradient", {Rotation = 90}, arg)
+							arg3 = fn33("UIGradient", {Rotation = 90}, arg)
 							arg3.Name = "MutationPaint"
 						end
 
@@ -23553,44 +23568,44 @@ local function fn2()
 				return v11 ~= ""
 			end
 
-			local function fn56(arg)
+			local function fn57(arg)
 				if arg.Status == "Ready" then
 					return "READY"
 				elseif arg.Status == "Growing" then
 					if arg.Remaining == (1 / 0) then
 						return "GROWING"
 					end
-					return fn47(arg.Remaining) .. ("  " .. (arg.Percent .. "%"))
+					return fn48(arg.Remaining) .. ("  " .. (arg.Percent .. "%"))
 				end
 
 				return "IN BAG"
 			end
 
-			local function fn57(arg)
+			local function fn58(arg)
 				return string.format("x%.2f", arg.Scale)
 			end
 
-			local function fn58(arg)
+			local function fn59(arg)
 				return ps.FormatWeight(arg.Weight)
 			end
 
-			local function fn59(arg, arg2)
-				local Frame5 = fn32("Frame", {BackgroundColor3 = Color3.fromRGB(8, 8, 12), BackgroundTransparency = 0.15, BorderSizePixel = 0, ClipsDescendants = true}, arg)
+			local function fn60(arg, arg2)
+				local Frame5 = fn33("Frame", {BackgroundColor3 = Color3.fromRGB(8, 8, 12), BackgroundTransparency = 0.15, BorderSizePixel = 0, ClipsDescendants = true}, arg)
 
 				for k, v11 in pairs(arg2) do
 					Frame5[k] = v11
 				end
 
-				fn32("UICorner", {CornerRadius = UDim.new(0.5, 0)}, Frame5)
-				fn32("UIStroke", {Color = color2, Thickness = 1.5, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, Frame5)
-				arg = fn32("Frame", {BackgroundColor3 = color, BorderSizePixel = 0, Size = UDim2.fromScale(0, 1)}, Frame5)
-				fn32("UICorner", {CornerRadius = UDim.new(0.5, 0)}, arg)
-				local v11, Frame6 = getUIGradient(arg, color, color, 0), fn32("Frame", {BackgroundColor3 = color, BackgroundTransparency = 0.78, BorderSizePixel = 0, Position = UDim2.fromScale(0, 0.08), Size = UDim2.fromScale(1, 0.34)}, arg)
-				fn32("UICorner", {CornerRadius = UDim.new(0.5, 0)}, Frame6)
-				return {Track = Frame5, Fill = arg, Gradient = v11, Text = fn33(Frame5, {Size = UDim2.fromScale(1, 1), ZIndex = arg.ZIndex + 2}), Style = nil, Alpha = -1}
+				fn33("UICorner", {CornerRadius = UDim.new(0.5, 0)}, Frame5)
+				fn33("UIStroke", {Color = color2, Thickness = 1.5, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, Frame5)
+				arg = fn33("Frame", {BackgroundColor3 = color, BorderSizePixel = 0, Size = UDim2.fromScale(0, 1)}, Frame5)
+				fn33("UICorner", {CornerRadius = UDim.new(0.5, 0)}, arg)
+				local v11, Frame6 = getUIGradient(arg, color, color, 0), fn33("Frame", {BackgroundColor3 = color, BackgroundTransparency = 0.78, BorderSizePixel = 0, Position = UDim2.fromScale(0, 0.08), Size = UDim2.fromScale(1, 0.34)}, arg)
+				fn33("UICorner", {CornerRadius = UDim.new(0.5, 0)}, Frame6)
+				return {Track = Frame5, Fill = arg, Gradient = v11, Text = fn34(Frame5, {Size = UDim2.fromScale(1, 1), ZIndex = arg.ZIndex + 2}), Style = nil, Alpha = -1}
 			end
 
-			local function fn60(arg, arg2)
+			local function fn61(arg, arg2)
 				local inventory = tbl11[arg2.Status] or tbl11.Inventory
 
 				if arg.Style ~= inventory then
@@ -23605,57 +23620,57 @@ local function fn2()
 					arg.Fill.Size = UDim2.fromScale(inventory, 1)
 				end
 
-				fn38(arg.Text, fn56(arg2))
+				fn39(arg.Text, fn57(arg2))
 			end
 
-			local function fn61(arg, arg2, arg3)
-				local Frame5 = fn32("Frame", {BackgroundTransparency = 1}, arg)
+			local function fn62(arg, arg2, arg3)
+				local Frame5 = fn33("Frame", {BackgroundTransparency = 1}, arg)
 
 				for k, v11 in pairs(arg2) do
 					Frame5[k] = v11
 				end
 
-				fn32("UIListLayout", {FillDirection = Enum.FillDirection.Horizontal, HorizontalAlignment = (arg3 and Enum.HorizontalAlignment.Center) or Enum.HorizontalAlignment.Left, VerticalAlignment = Enum.VerticalAlignment.Center, SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, 8)}, Frame5)
-				arg3 = fn33(Frame5, {AutomaticSize = Enum.AutomaticSize.X, LayoutOrder = 1, Size = UDim2.fromScale(0, 1), TextTruncate = Enum.TextTruncate.None})
+				fn33("UIListLayout", {FillDirection = Enum.FillDirection.Horizontal, HorizontalAlignment = (arg3 and Enum.HorizontalAlignment.Center) or Enum.HorizontalAlignment.Left, VerticalAlignment = Enum.VerticalAlignment.Center, SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, 8)}, Frame5)
+				arg3 = fn34(Frame5, {AutomaticSize = Enum.AutomaticSize.X, LayoutOrder = 1, Size = UDim2.fromScale(0, 1), TextTruncate = Enum.TextTruncate.None})
 				getUIGradient(arg3, tbl24[1], tbl24[2], 90)
-				arg = fn33(Frame5, {AutomaticSize = Enum.AutomaticSize.X, LayoutOrder = 2, Size = UDim2.fromScale(0, 1), TextTruncate = Enum.TextTruncate.None})
+				arg = fn34(Frame5, {AutomaticSize = Enum.AutomaticSize.X, LayoutOrder = 2, Size = UDim2.fromScale(0, 1), TextTruncate = Enum.TextTruncate.None})
 				getUIGradient(arg, tbl25[1], tbl25[2], 90)
 				return {Row = Frame5, Size = arg3, Weight = arg}
 			end
 
-			local function fn62(arg)
+			local function fn63(arg)
 				local tbl26 = {}
-				tbl26.Frame = fn32("Frame", {BackgroundColor3 = color3, BackgroundTransparency = 0.04, BorderSizePixel = 0, LayoutOrder = arg, Visible = false}, Frame2)
-				fn32("UICorner", {CornerRadius = UDim.new(0.07, 0)}, tbl26.Frame)
-				tbl26.Stroke = fn32("UIStroke", {Color = color5, Thickness = 1.5, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, tbl26.Frame)
-				tbl26.Glow = fn32("Frame", {BackgroundColor3 = color, BackgroundTransparency = 0.1, BorderSizePixel = 0, Size = UDim2.fromScale(1, 0.55)}, tbl26.Frame)
-				fn32("UICorner", {CornerRadius = UDim.new(0.12, 0)}, tbl26.Glow)
-				arg = fn32("Frame", {BackgroundColor3 = color3, BorderSizePixel = 0, Size = UDim2.fromScale(1, 1)}, tbl26.Glow)
-				fn32("UICorner", {CornerRadius = UDim.new(0.12, 0)}, arg)
-				fn32("UIGradient", {Rotation = 90, Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.45, 0.86), NumberSequenceKeypoint.new(1, 0)})}, arg)
-				fn32("ImageLabel", {BackgroundTransparency = 1, Image = assetId, ImageColor3 = Color3.fromRGB(40, 40, 60), ImageTransparency = 0.88, ScaleType = Enum.ScaleType.Tile, TileSize = UDim2.fromScale(0.34, 0.42), Size = UDim2.fromScale(1, 1)}, tbl26.Glow)
-				tbl26.Image = fn32("ImageLabel", {AnchorPoint = Vector2.new(0.5, 0), BackgroundTransparency = 1, Position = UDim2.fromScale(0.5, 0.025), ScaleType = Enum.ScaleType.Fit, Size = UDim2.fromScale(0.92, 0.52)}, tbl26.Frame)
-				tbl26.CornerBack = fn32("Frame", {AnchorPoint = Vector2.new(1, 1), BackgroundColor3 = color3, BackgroundTransparency = 0.45, BorderSizePixel = 0, Position = UDim2.fromScale(1, 0.555), Size = UDim2.fromScale(0.27, 0.19)}, tbl26.Frame)
-				fn32("UIAspectRatioConstraint", {AspectRatio = 1, DominantAxis = Enum.DominantAxis.Width}, tbl26.CornerBack)
-				fn32("UICorner", {CornerRadius = UDim.new(0.5, 0)}, tbl26.CornerBack)
-				tbl26.CornerStroke = fn32("UIStroke", {Transparency = 0.5, Color = color5, Thickness = 1, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, tbl26.CornerBack)
-				tbl26.Corner = fn32("ImageLabel", {AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, Position = UDim2.fromScale(0.5, 0.5), ScaleType = Enum.ScaleType.Fit, Size = UDim2.fromScale(0.94, 0.94)}, tbl26.CornerBack)
-				arg = fn32("Frame", {BackgroundColor3 = color3, BackgroundTransparency = 0.1, BorderSizePixel = 0, Position = UDim2.fromScale(0.04, 0.03), Size = UDim2.fromScale(0.25, 0.09)}, tbl26.Frame)
-				fn32("UICorner", {CornerRadius = UDim.new(0.35, 0)}, arg)
-				fn32("UIStroke", {Color = color2, Thickness = 1.5}, arg)
-				tbl26.Rank = fn33(arg, {Size = UDim2.fromScale(1, 1)})
-				tbl26.Mutation = fn33(tbl26.Frame, {AnchorPoint = Vector2.new(1, 0), Position = UDim2.fromScale(0.96, 0.035), Size = UDim2.fromScale(0.64, 0.08), TextXAlignment = Enum.TextXAlignment.Right})
-				tbl26.Name = fn33(tbl26.Frame, {Position = UDim2.fromScale(0.04, 0.565), Size = UDim2.fromScale(0.92, 0.085)})
-				tbl26.Rarity = fn33(tbl26.Frame, {Position = UDim2.fromScale(0.04, 0.648), Size = UDim2.fromScale(0.92, 0.062)})
-				tbl26.Value = fn33(tbl26.Frame, {Position = UDim2.fromScale(0.04, 0.712), Size = UDim2.fromScale(0.92, 0.088)})
+				tbl26.Frame = fn33("Frame", {BackgroundColor3 = color3, BackgroundTransparency = 0.04, BorderSizePixel = 0, LayoutOrder = arg, Visible = false}, Frame2)
+				fn33("UICorner", {CornerRadius = UDim.new(0.07, 0)}, tbl26.Frame)
+				tbl26.Stroke = fn33("UIStroke", {Color = color5, Thickness = 1.5, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, tbl26.Frame)
+				tbl26.Glow = fn33("Frame", {BackgroundColor3 = color, BackgroundTransparency = 0.1, BorderSizePixel = 0, Size = UDim2.fromScale(1, 0.55)}, tbl26.Frame)
+				fn33("UICorner", {CornerRadius = UDim.new(0.12, 0)}, tbl26.Glow)
+				arg = fn33("Frame", {BackgroundColor3 = color3, BorderSizePixel = 0, Size = UDim2.fromScale(1, 1)}, tbl26.Glow)
+				fn33("UICorner", {CornerRadius = UDim.new(0.12, 0)}, arg)
+				fn33("UIGradient", {Rotation = 90, Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.45, 0.86), NumberSequenceKeypoint.new(1, 0)})}, arg)
+				fn33("ImageLabel", {BackgroundTransparency = 1, Image = assetId, ImageColor3 = Color3.fromRGB(40, 40, 60), ImageTransparency = 0.88, ScaleType = Enum.ScaleType.Tile, TileSize = UDim2.fromScale(0.34, 0.42), Size = UDim2.fromScale(1, 1)}, tbl26.Glow)
+				tbl26.Image = fn33("ImageLabel", {AnchorPoint = Vector2.new(0.5, 0), BackgroundTransparency = 1, Position = UDim2.fromScale(0.5, 0.025), ScaleType = Enum.ScaleType.Fit, Size = UDim2.fromScale(0.92, 0.52)}, tbl26.Frame)
+				tbl26.CornerBack = fn33("Frame", {AnchorPoint = Vector2.new(1, 1), BackgroundColor3 = color3, BackgroundTransparency = 0.45, BorderSizePixel = 0, Position = UDim2.fromScale(1, 0.555), Size = UDim2.fromScale(0.27, 0.19)}, tbl26.Frame)
+				fn33("UIAspectRatioConstraint", {AspectRatio = 1, DominantAxis = Enum.DominantAxis.Width}, tbl26.CornerBack)
+				fn33("UICorner", {CornerRadius = UDim.new(0.5, 0)}, tbl26.CornerBack)
+				tbl26.CornerStroke = fn33("UIStroke", {Transparency = 0.5, Color = color5, Thickness = 1, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, tbl26.CornerBack)
+				tbl26.Corner = fn33("ImageLabel", {AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, Position = UDim2.fromScale(0.5, 0.5), ScaleType = Enum.ScaleType.Fit, Size = UDim2.fromScale(0.94, 0.94)}, tbl26.CornerBack)
+				arg = fn33("Frame", {BackgroundColor3 = color3, BackgroundTransparency = 0.1, BorderSizePixel = 0, Position = UDim2.fromScale(0.04, 0.03), Size = UDim2.fromScale(0.25, 0.09)}, tbl26.Frame)
+				fn33("UICorner", {CornerRadius = UDim.new(0.35, 0)}, arg)
+				fn33("UIStroke", {Color = color2, Thickness = 1.5}, arg)
+				tbl26.Rank = fn34(arg, {Size = UDim2.fromScale(1, 1)})
+				tbl26.Mutation = fn34(tbl26.Frame, {AnchorPoint = Vector2.new(1, 0), Position = UDim2.fromScale(0.96, 0.035), Size = UDim2.fromScale(0.64, 0.08), TextXAlignment = Enum.TextXAlignment.Right})
+				tbl26.Name = fn34(tbl26.Frame, {Position = UDim2.fromScale(0.04, 0.565), Size = UDim2.fromScale(0.92, 0.085)})
+				tbl26.Rarity = fn34(tbl26.Frame, {Position = UDim2.fromScale(0.04, 0.648), Size = UDim2.fromScale(0.92, 0.062)})
+				tbl26.Value = fn34(tbl26.Frame, {Position = UDim2.fromScale(0.04, 0.712), Size = UDim2.fromScale(0.92, 0.088)})
 				getUIGradient(tbl26.Value, tbl12[1], tbl12[2], 90)
-				tbl26.Stats = fn61(tbl26.Frame, {Position = UDim2.fromScale(0.04, 0.8), Size = UDim2.fromScale(0.92, 0.075)}, true)
-				tbl26.Progress = fn59(tbl26.Frame, {Position = UDim2.fromScale(0.06, 0.888), Size = UDim2.fromScale(0.88, 0.085)})
-				tbl26.Select = fn32("Frame", {BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1), Visible = false}, tbl26.Frame)
-				fn32("UICorner", {CornerRadius = UDim.new(0.07, 0)}, tbl26.Select)
-				tbl26.SelectStroke = fn32("UIStroke", {Color = color6, Thickness = 3, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, tbl26.Select)
-				fn36(tbl26.SelectStroke, "Divine")
-				tbl26.Button = fn32("TextButton", {AutoButtonColor = false, BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1), Text = "", ZIndex = 20}, tbl26.Frame)
+				tbl26.Stats = fn62(tbl26.Frame, {Position = UDim2.fromScale(0.04, 0.8), Size = UDim2.fromScale(0.92, 0.075)}, true)
+				tbl26.Progress = fn60(tbl26.Frame, {Position = UDim2.fromScale(0.06, 0.888), Size = UDim2.fromScale(0.88, 0.085)})
+				tbl26.Select = fn33("Frame", {BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1), Visible = false}, tbl26.Frame)
+				fn33("UICorner", {CornerRadius = UDim.new(0.07, 0)}, tbl26.Select)
+				tbl26.SelectStroke = fn33("UIStroke", {Color = color6, Thickness = 3, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, tbl26.Select)
+				fn37(tbl26.SelectStroke, "Divine")
+				tbl26.Button = fn33("TextButton", {AutoButtonColor = false, BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1), Text = "", ZIndex = 20}, tbl26.Frame)
 
 				tbl26.Button.Activated:Connect(function()
 					if tbl26.Id ~= nil then
@@ -23668,43 +23683,43 @@ local function fn2()
 				return tbl26
 			end
 
-			local function fn63(arg)
+			local function fn64(arg)
 				local cardH = tbl18.CardH
-				fn34(arg.Rank, cardH * 0.062)
-				fn34(arg.Mutation, cardH * 0.06)
-				fn34(arg.Name, cardH * 0.078)
-				fn34(arg.Rarity, cardH * 0.056)
-				fn34(arg.Value, cardH * 0.082)
-				fn34(arg.Stats.Size, cardH * 0.062)
-				fn34(arg.Stats.Weight, cardH * 0.062)
+				fn35(arg.Rank, cardH * 0.062)
+				fn35(arg.Mutation, cardH * 0.06)
+				fn35(arg.Name, cardH * 0.078)
+				fn35(arg.Rarity, cardH * 0.056)
+				fn35(arg.Value, cardH * 0.082)
+				fn35(arg.Stats.Size, cardH * 0.062)
+				fn35(arg.Stats.Weight, cardH * 0.062)
 				arg.Stats.Row:FindFirstChildOfClass("UIListLayout").Padding = UDim.new(0, math.max(4, math.floor(cardH * 0.03)))
-				fn34(arg.Progress.Text, cardH * 0.062)
+				fn35(arg.Progress.Text, cardH * 0.062)
 				arg.Stroke.Thickness = math.max(1.4, cardH * 0.007)
 				arg.SelectStroke.Thickness = math.max(2.8, cardH * 0.014)
 				arg.CornerStroke.Thickness = math.max(1, cardH * 0.0035)
 			end
 
-			local function fn64(arg, arg2, arg3)
+			local function fn65(arg, arg2, arg3)
 				arg.Id = arg2.Id
-				fn39(arg.Frame, true)
+				fn40(arg.Frame, true)
 				local info = arg2.Info
 				local key = tostring(arg2.Id) .. ("|" .. tostring(info.Category))
 
 				if arg.Key ~= key then
 					arg.Key = key
-					fn43(arg.Glow, info)
-					fn46(arg.Name, info, true)
-					fn46(arg.Rarity, info, false)
-					fn36(arg.Stroke, fn37(info))
+					fn44(arg.Glow, info)
+					fn47(arg.Name, info, true)
+					fn47(arg.Rarity, info, false)
+					fn37(arg.Stroke, fn38(info))
 					arg.Image.Image = (info.Icon or arg2.EggIcon) or ""
 					arg.Corner.Image = arg2.EggIcon or ""
-					fn38(arg.Name, info.Name)
-					fn38(arg.Rarity, string.upper(tostring(info.Rarity)))
+					fn39(arg.Name, info.Name)
+					fn39(arg.Rarity, string.upper(tostring(info.Rarity)))
 				end
 
-				fn39(arg.CornerBack, ((arg2.EggIcon ~= nil) and (arg2.EggIcon ~= "")) and (info.Icon ~= nil))
-				fn38(arg.Rank, "#" .. arg3)
-				fn55(arg.Mutation, arg2.Mutations, "\n")
+				fn40(arg.CornerBack, ((arg2.EggIcon ~= nil) and (arg2.EggIcon ~= "")) and (info.Icon ~= nil))
+				fn39(arg.Rank, "#" .. arg3)
+				fn56(arg.Mutation, arg2.Mutations, "\n")
 				key = ((type(arg2.Mutations) == "table") and math.max(1, #arg2.Mutations)) or 1
 				info = UDim2.fromScale(0.64, 0.07 * key)
 
@@ -23712,99 +23727,99 @@ local function fn2()
 					arg.Mutation.Size = info
 				end
 
-				fn38(arg.Value, "$" .. ps.FormatRate(arg2.Income))
-				fn38(arg.Stats.Size, fn57(arg2))
-				fn38(arg.Stats.Weight, fn58(arg2))
-				fn60(arg.Progress, arg2)
-				fn39(arg.Select, arg2.Id == id)
+				fn39(arg.Value, "$" .. ps.FormatRate(arg2.Income))
+				fn39(arg.Stats.Size, fn58(arg2))
+				fn39(arg.Stats.Weight, fn59(arg2))
+				fn61(arg.Progress, arg2)
+				fn40(arg.Select, arg2.Id == id)
 			end
 
-			local function fn65(arg, arg2, arg3, arg4)
-				local tbl26 = {Frame = fn32("Frame", {BackgroundColor3 = color3, BackgroundTransparency = 0.12, BorderSizePixel = 0, LayoutOrder = arg, Size = UDim2.new(0.2, -8, 1, 0)}, Frame3)}
-				fn32("UICorner", {CornerRadius = UDim.new(0.22, 0)}, tbl26.Frame)
-				fn32("UIStroke", {Color = color5, Thickness = 1.2, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, tbl26.Frame)
-				tbl26.Icon = fn32("ImageLabel", {AnchorPoint = Vector2.new(0, 0.5), BackgroundTransparency = 1, Image = arg2, Position = UDim2.fromScale(0.04, 0.5), ScaleType = Enum.ScaleType.Fit, Size = UDim2.fromScale(0.28, 0.78)}, tbl26.Frame)
-				tbl26.Value = fn33(tbl26.Frame, {Position = UDim2.fromScale(0.33, 0.06), Size = UDim2.fromScale(0.65, 0.54), TextXAlignment = Enum.TextXAlignment.Left})
+			local function fn66(arg, arg2, arg3, arg4)
+				local tbl26 = {Frame = fn33("Frame", {BackgroundColor3 = color3, BackgroundTransparency = 0.12, BorderSizePixel = 0, LayoutOrder = arg, Size = UDim2.new(0.2, -8, 1, 0)}, Frame3)}
+				fn33("UICorner", {CornerRadius = UDim.new(0.22, 0)}, tbl26.Frame)
+				fn33("UIStroke", {Color = color5, Thickness = 1.2, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, tbl26.Frame)
+				tbl26.Icon = fn33("ImageLabel", {AnchorPoint = Vector2.new(0, 0.5), BackgroundTransparency = 1, Image = arg2, Position = UDim2.fromScale(0.04, 0.5), ScaleType = Enum.ScaleType.Fit, Size = UDim2.fromScale(0.28, 0.78)}, tbl26.Frame)
+				tbl26.Value = fn34(tbl26.Frame, {Position = UDim2.fromScale(0.33, 0.06), Size = UDim2.fromScale(0.65, 0.54), TextXAlignment = Enum.TextXAlignment.Left})
 				getUIGradient(tbl26.Value, arg3[1], arg3[2], 90)
-				tbl26.Caption = fn33(tbl26.Frame, {Position = UDim2.fromScale(0.33, 0.58), Size = UDim2.fromScale(0.65, 0.36), TextColor3 = color4, TextXAlignment = Enum.TextXAlignment.Left, Text = arg4})
+				tbl26.Caption = fn34(tbl26.Frame, {Position = UDim2.fromScale(0.33, 0.58), Size = UDim2.fromScale(0.65, 0.36), TextColor3 = color4, TextXAlignment = Enum.TextXAlignment.Left, Text = arg4})
 				return tbl26
 			end
 
-			local function fn66(arg, arg2)
-				local tbl26 = {Filter = arg2, Button = fn32("TextButton", {AutoButtonColor = false, BackgroundColor3 = color, BorderSizePixel = 0, LayoutOrder = arg, Size = UDim2.new(0.25, -8, 1, 0), Text = ""}, Frame4)}
-				fn32("UICorner", {CornerRadius = UDim.new(0.3, 0)}, tbl26.Button)
-				tbl26.Stroke = fn32("UIStroke", {Color = color5, Thickness = 1.2, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, tbl26.Button)
+			local function fn67(arg, arg2)
+				local tbl26 = {Filter = arg2, Button = fn33("TextButton", {AutoButtonColor = false, BackgroundColor3 = color, BorderSizePixel = 0, LayoutOrder = arg, Size = UDim2.new(0.25, -8, 1, 0), Text = ""}, Frame4)}
+				fn33("UICorner", {CornerRadius = UDim.new(0.3, 0)}, tbl26.Button)
+				tbl26.Stroke = fn33("UIStroke", {Color = color5, Thickness = 1.2, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, tbl26.Button)
 				tbl26.Gradient = getUIGradient(tbl26.Button, arg2.Colors[1], arg2.Colors[2], 90)
-				tbl26.Text = fn33(tbl26.Button, {Size = UDim2.fromScale(1, 1)})
+				tbl26.Text = fn34(tbl26.Button, {Size = UDim2.fromScale(1, 1)})
 
-				local button, fn67 = tbl26.Button, function()
+				local button, fn68 = tbl26.Button, function()
 					tbl13.Filter = arg2.Key
 					requestEggRefresh()
 				end
 
-				button.Activated:Connect(fn67)
+				button.Activated:Connect(fn68)
 				return tbl26
 			end
 
-			local function fn67(arg)
+			local function fn68(arg)
 				tbl14 = {}
 				local tbl142 = tbl14
-				tbl142.Frame = fn32("Frame", {BackgroundColor3 = color3, BackgroundTransparency = 0.04, BorderSizePixel = 0, Size = UDim2.fromScale(1, 1), Visible = false}, nil)
-				fn32("UICorner", {CornerRadius = UDim.new(0.1, 0)}, tbl14.Frame)
+				tbl142.Frame = fn33("Frame", {BackgroundColor3 = color3, BackgroundTransparency = 0.04, BorderSizePixel = 0, Size = UDim2.fromScale(1, 1), Visible = false}, nil)
+				fn33("UICorner", {CornerRadius = UDim.new(0.1, 0)}, tbl14.Frame)
 				tbl142 = tbl14
-				tbl142.Stroke = fn32("UIStroke", {Color = color5, Thickness = 1.5, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, tbl14.Frame)
+				tbl142.Stroke = fn33("UIStroke", {Color = color5, Thickness = 1.5, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, tbl14.Frame)
 				tbl142 = tbl14
-				tbl142.Art = fn32("Frame", {BackgroundColor3 = color, BackgroundTransparency = 0.1, BorderSizePixel = 0, Size = UDim2.fromScale(0.3, 1)}, tbl14.Frame)
-				fn32("UIAspectRatioConstraint", {AspectRatio = 1, DominantAxis = Enum.DominantAxis.Height}, tbl14.Art)
-				fn32("UICorner", {CornerRadius = UDim.new(0.1, 0)}, tbl14.Art)
-				tbl142 = fn32("Frame", {BackgroundColor3 = color3, BorderSizePixel = 0, Size = UDim2.fromScale(1, 1)}, tbl14.Art)
-				fn32("UICorner", {CornerRadius = UDim.new(0.1, 0)}, tbl142)
+				tbl142.Art = fn33("Frame", {BackgroundColor3 = color, BackgroundTransparency = 0.1, BorderSizePixel = 0, Size = UDim2.fromScale(0.3, 1)}, tbl14.Frame)
+				fn33("UIAspectRatioConstraint", {AspectRatio = 1, DominantAxis = Enum.DominantAxis.Height}, tbl14.Art)
+				fn33("UICorner", {CornerRadius = UDim.new(0.1, 0)}, tbl14.Art)
+				tbl142 = fn33("Frame", {BackgroundColor3 = color3, BorderSizePixel = 0, Size = UDim2.fromScale(1, 1)}, tbl14.Art)
+				fn33("UICorner", {CornerRadius = UDim.new(0.1, 0)}, tbl142)
 				local tbl143 = tbl14
-				tbl143.Shade = fn32("UIGradient", {Rotation = 90, Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.5, 0.82), NumberSequenceKeypoint.new(1, 0.25)})}, tbl142)
-				fn32("ImageLabel", {BackgroundTransparency = 1, Image = assetId, ImageColor3 = Color3.fromRGB(40, 40, 60), ImageTransparency = 0.88, ScaleType = Enum.ScaleType.Tile, TileSize = UDim2.fromScale(0.34, 0.34), Size = UDim2.fromScale(1, 1)}, tbl14.Art)
+				tbl143.Shade = fn33("UIGradient", {Rotation = 90, Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.5, 0.82), NumberSequenceKeypoint.new(1, 0.25)})}, tbl142)
+				fn33("ImageLabel", {BackgroundTransparency = 1, Image = assetId, ImageColor3 = Color3.fromRGB(40, 40, 60), ImageTransparency = 0.88, ScaleType = Enum.ScaleType.Tile, TileSize = UDim2.fromScale(0.34, 0.34), Size = UDim2.fromScale(1, 1)}, tbl14.Art)
 				tbl143 = tbl14
-				tbl143.Rays = fn32("ImageLabel", {AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, Image = "rbxassetid://109516122757226", ImageColor3 = color, ImageTransparency = 0, Position = UDim2.fromScale(0.5, 0.46), Rotation = 0, ScaleType = Enum.ScaleType.Fit, Size = UDim2.fromScale(1.9, 1.9)}, tbl14.Art)
-				fn32("ImageLabel", {AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, Image = "rbxassetid://10822615828", ImageColor3 = Color3.fromRGB(20, 18, 34), ImageTransparency = 0.55, Position = UDim2.fromScale(0.5, 0.9), ScaleType = Enum.ScaleType.Stretch, Size = UDim2.fromScale(0.62, 0.14)}, tbl14.Art)
+				tbl143.Rays = fn33("ImageLabel", {AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, Image = "rbxassetid://109516122757226", ImageColor3 = color, ImageTransparency = 0, Position = UDim2.fromScale(0.5, 0.46), Rotation = 0, ScaleType = Enum.ScaleType.Fit, Size = UDim2.fromScale(1.9, 1.9)}, tbl14.Art)
+				fn33("ImageLabel", {AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, Image = "rbxassetid://10822615828", ImageColor3 = Color3.fromRGB(20, 18, 34), ImageTransparency = 0.55, Position = UDim2.fromScale(0.5, 0.9), ScaleType = Enum.ScaleType.Stretch, Size = UDim2.fromScale(0.62, 0.14)}, tbl14.Art)
 				tbl14.RaysClock = 0
 				tbl143 = tbl14
-				tbl143.Image = fn32("ImageLabel", {AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, Position = UDim2.fromScale(0.5, 0.47), ScaleType = Enum.ScaleType.Fit, Size = UDim2.fromScale(0.9, 0.9)}, tbl14.Art)
+				tbl143.Image = fn33("ImageLabel", {AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, Position = UDim2.fromScale(0.5, 0.47), ScaleType = Enum.ScaleType.Fit, Size = UDim2.fromScale(0.9, 0.9)}, tbl14.Art)
 				tbl143 = tbl14
-				tbl143.CornerBack = fn32("Frame", {AnchorPoint = Vector2.new(1, 1), BackgroundColor3 = color3, BackgroundTransparency = 0.45, BorderSizePixel = 0, Position = UDim2.fromScale(1, 1), Size = UDim2.fromScale(0.31, 0.31)}, tbl14.Art)
-				fn32("UICorner", {CornerRadius = UDim.new(0.5, 0)}, tbl14.CornerBack)
+				tbl143.CornerBack = fn33("Frame", {AnchorPoint = Vector2.new(1, 1), BackgroundColor3 = color3, BackgroundTransparency = 0.45, BorderSizePixel = 0, Position = UDim2.fromScale(1, 1), Size = UDim2.fromScale(0.31, 0.31)}, tbl14.Art)
+				fn33("UICorner", {CornerRadius = UDim.new(0.5, 0)}, tbl14.CornerBack)
 				tbl143 = tbl14
-				tbl143.CornerStroke = fn32("UIStroke", {Transparency = 0.5, Color = color5, Thickness = 1, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, tbl14.CornerBack)
+				tbl143.CornerStroke = fn33("UIStroke", {Transparency = 0.5, Color = color5, Thickness = 1, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, tbl14.CornerBack)
 				tbl143 = tbl14
-				tbl143.Corner = fn32("ImageLabel", {AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, Position = UDim2.fromScale(0.5, 0.5), ScaleType = Enum.ScaleType.Fit, Size = UDim2.fromScale(0.94, 0.94)}, tbl14.CornerBack)
+				tbl143.Corner = fn33("ImageLabel", {AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, Position = UDim2.fromScale(0.5, 0.5), ScaleType = Enum.ScaleType.Fit, Size = UDim2.fromScale(0.94, 0.94)}, tbl14.CornerBack)
 				tbl142 = tbl14
-				tbl142.Body = fn32("Frame", {BackgroundTransparency = 1, Size = UDim2.fromScale(0.6, 1)}, tbl14.Frame)
+				tbl142.Body = fn33("Frame", {BackgroundTransparency = 1, Size = UDim2.fromScale(0.6, 1)}, tbl14.Frame)
 				tbl143 = tbl14
-				tbl143.NameRow = fn32("Frame", {BackgroundTransparency = 1, ClipsDescendants = true, Position = UDim2.fromScale(0, 0.03), Size = UDim2.fromScale(0.72, 0.2)}, tbl14.Body)
-				fn32("UIListLayout", {FillDirection = Enum.FillDirection.Horizontal, VerticalAlignment = Enum.VerticalAlignment.Center, SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, 10)}, tbl14.NameRow)
+				tbl143.NameRow = fn33("Frame", {BackgroundTransparency = 1, ClipsDescendants = true, Position = UDim2.fromScale(0, 0.03), Size = UDim2.fromScale(0.72, 0.2)}, tbl14.Body)
+				fn33("UIListLayout", {FillDirection = Enum.FillDirection.Horizontal, VerticalAlignment = Enum.VerticalAlignment.Center, SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, 10)}, tbl14.NameRow)
 				tbl143 = tbl14
-				tbl143.Name = fn33(tbl143.NameRow, {AutomaticSize = Enum.AutomaticSize.X, LayoutOrder = 1, Size = UDim2.fromScale(0, 1), TextXAlignment = Enum.TextXAlignment.Left})
+				tbl143.Name = fn34(tbl143.NameRow, {AutomaticSize = Enum.AutomaticSize.X, LayoutOrder = 1, Size = UDim2.fromScale(0, 1), TextXAlignment = Enum.TextXAlignment.Left})
 				tbl142 = tbl14
-				tbl142.NameLimit = fn32("UISizeConstraint", {MaxSize = Vector2.new(400, 400)}, tbl14.Name)
+				tbl142.NameLimit = fn33("UISizeConstraint", {MaxSize = Vector2.new(400, 400)}, tbl14.Name)
 				tbl142 = tbl14
-				tbl142.Rarity = fn33(tbl142.NameRow, {AutomaticSize = Enum.AutomaticSize.X, LayoutOrder = 2, Position = UDim2.fromScale(0, 0.235), Size = UDim2.fromScale(0, 1), TextTruncate = Enum.TextTruncate.None, TextXAlignment = Enum.TextXAlignment.Left})
+				tbl142.Rarity = fn34(tbl142.NameRow, {AutomaticSize = Enum.AutomaticSize.X, LayoutOrder = 2, Position = UDim2.fromScale(0, 0.235), Size = UDim2.fromScale(0, 1), TextTruncate = Enum.TextTruncate.None, TextXAlignment = Enum.TextXAlignment.Left})
 				tbl142 = tbl14
-				tbl142.Mutation = fn33(tbl142.Body, {Position = UDim2.fromScale(0, 0.235), Size = UDim2.fromScale(1, 0.12), TextTruncate = Enum.TextTruncate.None, TextXAlignment = Enum.TextXAlignment.Left})
+				tbl142.Mutation = fn34(tbl142.Body, {Position = UDim2.fromScale(0, 0.235), Size = UDim2.fromScale(1, 0.12), TextTruncate = Enum.TextTruncate.None, TextXAlignment = Enum.TextXAlignment.Left})
 				tbl143 = tbl14
-				tbl143.Value = fn33(tbl143.Body, {Position = UDim2.fromScale(0, 0.36), Size = UDim2.fromScale(1, 0.2), TextXAlignment = Enum.TextXAlignment.Left})
+				tbl143.Value = fn34(tbl143.Body, {Position = UDim2.fromScale(0, 0.36), Size = UDim2.fromScale(1, 0.2), TextXAlignment = Enum.TextXAlignment.Left})
 				getUIGradient(tbl14.Value, tbl12[1], tbl12[2], 90)
 				tbl142 = tbl14
-				tbl142.Stats = fn61(tbl142.Body, {Position = UDim2.fromScale(0, 0.57), Size = UDim2.fromScale(1, 0.14)}, false)
+				tbl142.Stats = fn62(tbl142.Body, {Position = UDim2.fromScale(0, 0.57), Size = UDim2.fromScale(1, 0.14)}, false)
 				tbl142 = tbl14
-				tbl142.Progress = fn59(tbl142.Body, {Position = UDim2.fromScale(0, 0.74), Size = UDim2.fromScale(1, 0.13)})
+				tbl142.Progress = fn60(tbl142.Body, {Position = UDim2.fromScale(0, 0.74), Size = UDim2.fromScale(1, 0.13)})
 				tbl142 = tbl14
-				tbl142.Rank = fn33(tbl142.Body, {Position = UDim2.fromScale(0, 0.885), Size = UDim2.fromScale(1, 0.11), TextColor3 = color4, TextXAlignment = Enum.TextXAlignment.Left})
+				tbl142.Rank = fn34(tbl142.Body, {Position = UDim2.fromScale(0, 0.885), Size = UDim2.fromScale(1, 0.11), TextColor3 = color4, TextXAlignment = Enum.TextXAlignment.Left})
 				tbl142 = tbl14
-				tbl142.Action = fn32("TextButton", {AnchorPoint = Vector2.new(1, 0), AutoButtonColor = false, BackgroundColor3 = color, BorderSizePixel = 0, Position = UDim2.fromScale(1, 0.03), Size = UDim2.fromScale(0.26, 0.2), Text = "", ZIndex = 20}, tbl14.Body)
-				fn32("UICorner", {CornerRadius = UDim.new(0.24, 0)}, tbl14.Action)
-				fn32("UIStroke", {Color = color2, Thickness = 1.5, Transparency = 0.2, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, tbl14.Action)
+				tbl142.Action = fn33("TextButton", {AnchorPoint = Vector2.new(1, 0), AutoButtonColor = false, BackgroundColor3 = color, BorderSizePixel = 0, Position = UDim2.fromScale(1, 0.03), Size = UDim2.fromScale(0.26, 0.2), Text = "", ZIndex = 20}, tbl14.Body)
+				fn33("UICorner", {CornerRadius = UDim.new(0.24, 0)}, tbl14.Action)
+				fn33("UIStroke", {Color = color2, Thickness = 1.5, Transparency = 0.2, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, tbl14.Action)
 				tbl142 = tbl14
 				tbl142.ActionGradient = getUIGradient(tbl142.Action, color, color, 90)
 				tbl143 = tbl14
-				tbl143.ActionText = fn33(tbl143.Action, {AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.5), Size = UDim2.fromScale(1.02, 1.12), TextTruncate = Enum.TextTruncate.None, ZIndex = 21})
+				tbl143.ActionText = fn34(tbl143.Action, {AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.5), Size = UDim2.fromScale(1.02, 1.12), TextTruncate = Enum.TextTruncate.None, ZIndex = 21})
 
 				tbl14.Action.Activated:Connect(function()
 					if type(tbl14.RunAction) == "function" then
@@ -23816,7 +23831,7 @@ local function fn2()
 				tbl142:Attach(tbl14.Frame, arg)
 			end
 
-			local function fn68(arg)
+			local function fn69(arg)
 				local rfEggWorldAskHatch = v5:FindFirstChild("RF/EggWorld/AskHatch")
 
 				if rfEggWorldAskHatch then
@@ -23889,7 +23904,7 @@ local function fn2()
 					end
 
 					if focus.Status == "Ready" then
-						fn68(str)
+						fn69(str)
 						return
 					end
 					local placedEggRenders = workspace:FindFirstChild("PlacedEggRenders")
@@ -23925,7 +23940,7 @@ local function fn2()
 				requestEggRefresh()
 			end
 
-			local function fn69()
+			local function fn70()
 				if not (tbl14) then
 					return
 				end
@@ -23935,17 +23950,17 @@ local function fn2()
 				tbl14.Body.Size = UDim2.new(1, -(n7 + (tbl18.Unit * 1.1)), 1, 0)
 				local n8 = math.max(1, (((tbl18.Width - (n6 * 2)) - math.max(6, math.floor(tbl18.Width * 0.012))) - n7) - (tbl18.Unit * 1.1))
 				tbl14.NameLimit.MaxSize = Vector2.new(math.max(40, (n8 * 0.72) * 0.62), n7)
-				fn34(tbl14.Name, n7 * 0.16)
-				fn34(tbl14.Mutation, n7 * 0.1)
-				fn34(tbl14.Rarity, n7 * 0.1)
-				fn34(tbl14.Value, n7 * 0.18)
-				fn34(tbl14.Stats.Size, n7 * 0.105)
-				fn34(tbl14.Stats.Weight, n7 * 0.105)
+				fn35(tbl14.Name, n7 * 0.16)
+				fn35(tbl14.Mutation, n7 * 0.1)
+				fn35(tbl14.Rarity, n7 * 0.1)
+				fn35(tbl14.Value, n7 * 0.18)
+				fn35(tbl14.Stats.Size, n7 * 0.105)
+				fn35(tbl14.Stats.Weight, n7 * 0.105)
 				tbl14.Stats.Row:FindFirstChildOfClass("UIListLayout").Padding = UDim.new(0, math.max(6, math.floor(n7 * 0.05)))
-				fn34(tbl14.Progress.Text, n7 * 0.105)
-				fn34(tbl14.Rank, n7 * 0.105)
+				fn35(tbl14.Progress.Text, n7 * 0.105)
+				fn35(tbl14.Rank, n7 * 0.105)
 				local n9, n10 = n7 * 0.2, n8 * 0.26
-				fn34(tbl14.ActionText, math.min(n9 * 0.52, n10 / 7))
+				fn35(tbl14.ActionText, math.min(n9 * 0.52, n10 / 7))
 				n10 = tbl14.ActionText:FindFirstChildOfClass("UIStroke")
 
 				if n10 then
@@ -23956,11 +23971,11 @@ local function fn2()
 				tbl14.CornerStroke.Thickness = math.max(1, n7 * 0.0045)
 			end
 
-			local function fn70(arg, arg2, arg3)
+			local function fn71(arg, arg2, arg3)
 				local spotlight = (tbl13.Spotlight and (arg ~= nil)) and (tbl14 ~= nil)
 
 				if tbl14 then
-					fn39(tbl14.Frame, spotlight)
+					fn40(tbl14.Frame, spotlight)
 					tbl14.Focus = (spotlight and arg) or nil
 				end
 
@@ -23983,21 +23998,21 @@ local function fn2()
 
 				if tbl14.Key ~= key then
 					tbl14.Key = key
-					fn43(tbl14.Art, spotlight)
+					fn44(tbl14.Art, spotlight)
 					local flag4 = string.upper(tostring(spotlight.Rarity)) == "SECRET"
 					tbl14.Shade.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.5, (flag4 and 0.92) or 0.82), NumberSequenceKeypoint.new(1, (flag4 and 0.72) or 0.25)})
-					fn46(tbl14.Name, spotlight, true)
-					fn46(tbl14.Rarity, spotlight, false)
-					fn36(tbl14.Stroke, fn37(spotlight))
+					fn47(tbl14.Name, spotlight, true)
+					fn47(tbl14.Rarity, spotlight, false)
+					fn37(tbl14.Stroke, fn38(spotlight))
 					tbl14.Image.Image = (spotlight.Icon or arg.EggIcon) or ""
 					tbl14.Corner.Image = arg.EggIcon or ""
-					fn38(tbl14.Name, spotlight.Name)
-					fn38(tbl14.Rarity, string.upper(tostring(spotlight.Rarity)))
+					fn39(tbl14.Name, spotlight.Name)
+					fn39(tbl14.Rarity, string.upper(tostring(spotlight.Rarity)))
 				end
 
-				fn39(tbl14.CornerBack, ((arg.EggIcon ~= nil) and (arg.EggIcon ~= "")) and (spotlight.Icon ~= nil))
-				spotlight = fn55(tbl14.Mutation, arg.Mutations)
-				fn39(tbl14.Mutation, spotlight)
+				fn40(tbl14.CornerBack, ((arg.EggIcon ~= nil) and (arg.EggIcon ~= "")) and (spotlight.Icon ~= nil))
+				spotlight = fn56(tbl14.Mutation, arg.Mutations)
+				fn40(tbl14.Mutation, spotlight)
 				key = (spotlight and tbl14.NameRow) or tbl14.Body
 
 				if tbl14.Rarity.Parent ~= key then
@@ -24005,22 +24020,22 @@ local function fn2()
 					tbl14.Rarity.Size = (spotlight and UDim2.fromScale(0, 1)) or UDim2.fromScale(0, 0.12)
 				end
 
-				fn38(tbl14.Value, "$" .. ps.FormatRate(arg.Income))
-				fn38(tbl14.Stats.Size, fn57(arg))
-				fn38(tbl14.Stats.Weight, fn58(arg))
-				fn60(tbl14.Progress, arg)
+				fn39(tbl14.Value, "$" .. ps.FormatRate(arg.Income))
+				fn39(tbl14.Stats.Size, fn58(arg))
+				fn39(tbl14.Stats.Weight, fn59(arg))
+				fn61(tbl14.Progress, arg)
 				key = tbl11[arg.Status] or tbl11.Inventory
 
 				if tbl14.ActionStyle ~= key then
 					tbl14.ActionStyle = key
 					tbl14.ActionGradient.Color = ColorSequence.new(key.Fill[1], key.Fill[2])
-					fn38(tbl14.ActionText, key.Button)
+					fn39(tbl14.ActionText, key.Button)
 				end
 
-				fn38(tbl14.Rank, string.format("#%d of %d eggs  by %s", arg2, arg3, string.lower(tbl13.Sort)))
+				fn39(tbl14.Rank, string.format("#%d of %d eggs  by %s", arg2, arg3, string.lower(tbl13.Sort)))
 			end
 
-			local function fn71(width, unit, text)
+			local function fn72(width, unit, text)
 				if width <= 0 then
 					return
 				elseif unit <= 0 then
@@ -24072,64 +24087,64 @@ local function fn2()
 						text.Thickness = math.max(1, (unit * 1.25) * 0.08)
 					end
 
-					fn34(v11.Caption, unit * 0.74)
+					fn35(v11.Caption, unit * 0.74)
 				end
 
 				for _, v11 in ipairs(tbl17) do
 					v11.Button.Size = UDim2.new(0.25, -math.ceil((n7 * 3) / 4), 1, 0)
-					fn34(v11.Text, unit * 0.92)
+					fn35(v11.Text, unit * 0.92)
 				end
 
-				fn34(v10, unit * 0.72)
+				fn35(v10, unit * 0.72)
 				n8 = v10
 				n8.Size = UDim2.new(1, 0, 0, math.floor(unit * 1.5))
 
 				for _, v11 in ipairs(tbl15) do
-					fn63(v11)
+					fn64(v11)
 				end
 
-				fn69()
+				fn70()
 			end
 
-			local function fn72(arg)
+			local function fn73(arg)
 				v9 = arg
-				Frame = fn32("Frame", {AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1, Size = UDim2.fromScale(1, 0)}, nil)
-				fn32("UIListLayout", {SortOrder = Enum.SortOrder.LayoutOrder, FillDirection = Enum.FillDirection.Vertical}, Frame)
-				Frame3 = fn32("Frame", {BackgroundTransparency = 1, LayoutOrder = 1, Size = UDim2.new(1, 0, 0, 40)}, Frame)
-				fn32("UIListLayout", {SortOrder = Enum.SortOrder.LayoutOrder, FillDirection = Enum.FillDirection.Horizontal}, Frame3)
-				Frame4 = fn32("Frame", {BackgroundTransparency = 1, LayoutOrder = 2, Size = UDim2.new(1, 0, 0, 28)}, Frame)
-				fn32("UIListLayout", {SortOrder = Enum.SortOrder.LayoutOrder, FillDirection = Enum.FillDirection.Horizontal}, Frame4)
-				Frame2 = fn32("Frame", {AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1, LayoutOrder = 3, Size = UDim2.fromScale(1, 0)}, Frame)
-				fn32("UIGridLayout", {SortOrder = Enum.SortOrder.LayoutOrder, CellSize = UDim2.fromOffset(100, 140)}, Frame2)
-				v10 = fn33(Frame, {LayoutOrder = 4, Size = UDim2.new(1, 0, 0, 20), TextColor3 = color4, Text = ""})
-				tbl16[1] = fn65(1, assetId2, {Color3.fromRGB(255, 255, 255), Color3.fromRGB(190, 200, 225)}, "EGGS")
-				tbl16[2] = fn65(2, assetId2, tbl10[2].Colors, "READY")
-				tbl16[3] = fn65(3, assetId4, tbl10[3].Colors, "GROWING")
-				tbl16[4] = fn65(4, assetId5, tbl10[4].Colors, "IN BAG")
-				tbl16[5] = fn65(5, assetId3, tbl12, "TOTAL / S")
+				Frame = fn33("Frame", {AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1, Size = UDim2.fromScale(1, 0)}, nil)
+				fn33("UIListLayout", {SortOrder = Enum.SortOrder.LayoutOrder, FillDirection = Enum.FillDirection.Vertical}, Frame)
+				Frame3 = fn33("Frame", {BackgroundTransparency = 1, LayoutOrder = 1, Size = UDim2.new(1, 0, 0, 40)}, Frame)
+				fn33("UIListLayout", {SortOrder = Enum.SortOrder.LayoutOrder, FillDirection = Enum.FillDirection.Horizontal}, Frame3)
+				Frame4 = fn33("Frame", {BackgroundTransparency = 1, LayoutOrder = 2, Size = UDim2.new(1, 0, 0, 28)}, Frame)
+				fn33("UIListLayout", {SortOrder = Enum.SortOrder.LayoutOrder, FillDirection = Enum.FillDirection.Horizontal}, Frame4)
+				Frame2 = fn33("Frame", {AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1, LayoutOrder = 3, Size = UDim2.fromScale(1, 0)}, Frame)
+				fn33("UIGridLayout", {SortOrder = Enum.SortOrder.LayoutOrder, CellSize = UDim2.fromOffset(100, 140)}, Frame2)
+				v10 = fn34(Frame, {LayoutOrder = 4, Size = UDim2.new(1, 0, 0, 20), TextColor3 = color4, Text = ""})
+				tbl16[1] = fn66(1, assetId2, {Color3.fromRGB(255, 255, 255), Color3.fromRGB(190, 200, 225)}, "EGGS")
+				tbl16[2] = fn66(2, assetId2, tbl10[2].Colors, "READY")
+				tbl16[3] = fn66(3, assetId4, tbl10[3].Colors, "GROWING")
+				tbl16[4] = fn66(4, assetId5, tbl10[4].Colors, "IN BAG")
+				tbl16[5] = fn66(5, assetId3, tbl12, "TOTAL / S")
 
 				for i2, v11 in ipairs(tbl16) do
 					v11.Share = ((i2 == 5) and 0.28) or 0.18
-					v11.ValueLimit = fn32("UITextSizeConstraint", {MaxTextSize = 24, MinTextSize = 6}, v11.Value)
+					v11.ValueLimit = fn33("UITextSizeConstraint", {MaxTextSize = 24, MinTextSize = 6}, v11.Value)
 				end
 
 				for i2, v11 in ipairs(tbl10) do
-					tbl17[i2] = fn66(i2, v11)
+					tbl17[i2] = fn67(i2, v11)
 				end
 
-				fn67(arg:Dock())
+				fn68(arg:Dock())
 				tbl14.RunAction = runAction
 				arg:Attach(Frame, arg:Root())
 
 				arg:OnResize(function(_, arg2, arg3)
-					pcall(fn71, arg2, arg3, arg:TextSize())
+					pcall(fn72, arg2, arg3, arg:TextSize())
 				end)
 			end
 
-			local function fn73(arg)
+			local function fn74(arg)
 				for _, v11 in ipairs(tbl17) do
 					local active, all = tbl13.Filter == v11.Filter.Key, ((v11.Filter.Key == "All") and arg.All) or arg[v11.Filter.Key]
-					fn38(v11.Text, v11.Filter.Title .. ("  " .. tostring(all or 0)))
+					fn39(v11.Text, v11.Filter.Title .. ("  " .. tostring(all or 0)))
 
 					if v11.Active ~= active then
 						v11.Active = active
@@ -24142,7 +24157,7 @@ local function fn2()
 				end
 			end
 
-			local function fn74()
+			local function fn75()
 				if v9 then
 					if not (Frame) then
 						return
@@ -24151,7 +24166,7 @@ local function fn2()
 					return
 				end
 
-				local tbl192 = fn50()
+				local tbl192 = fn51()
 
 				if tbl192 then
 					tbl19 = tbl192
@@ -24166,18 +24181,18 @@ local function fn2()
 					n6, v11 = n6 + v12.Income, if v11 then if v12.Income > v11.Income then v12 else v11 else v12
 				end
 
-				fn38(tbl16[1].Value, tostring(tbl26.All))
-				fn38(tbl16[2].Value, tostring(tbl26.Ready))
-				fn38(tbl16[3].Value, tostring(tbl26.Growing))
-				fn38(tbl16[4].Value, tostring(tbl26.Inventory))
-				fn38(tbl16[5].Value, "$" .. ps.FormatRate(n6))
-				fn73(tbl26)
-				fn51(tbl192)
+				fn39(tbl16[1].Value, tostring(tbl26.All))
+				fn39(tbl16[2].Value, tostring(tbl26.Ready))
+				fn39(tbl16[3].Value, tostring(tbl26.Growing))
+				fn39(tbl16[4].Value, tostring(tbl26.Inventory))
+				fn39(tbl16[5].Value, "$" .. ps.FormatRate(n6))
+				fn74(tbl26)
+				fn52(tbl192)
 				local v12, tbl27 = string.lower(v9:Query() or ""), {}
 
 				for _, v13 in ipairs(tbl192) do
 					if (tbl13.Filter == "All") or (v13.Status == tbl13.Filter) then
-						if fn52(v13, v12) then
+						if fn53(v13, v12) then
 							table.insert(tbl27, v13)
 						end
 					end
@@ -24203,7 +24218,7 @@ local function fn2()
 					end
 				end
 
-				fn70(tbl26, n7, #tbl192)
+				fn71(tbl26, n7, #tbl192)
 				local n8, n9 = #tbl27, 0
 
 				for i2 = 1, n8, 1 do
@@ -24218,31 +24233,31 @@ local function fn2()
 						end
 
 						n9 += 1
-						tbl26 = fn62(i2)
+						tbl26 = fn63(i2)
 						tbl15[i2] = tbl26
 
 						if tbl18.CardH > 0 then
-							fn63(tbl26)
+							fn64(tbl26)
 						end
 					end
 
-					fn64(tbl26, tbl27[i2], i2)
+					fn65(tbl26, tbl27[i2], i2)
 				end
 
 				for i2 = n8 + 1, #tbl15, 1 do
-					fn39(tbl15[i2].Frame, false)
+					fn40(tbl15[i2].Frame, false)
 					tbl15[i2].Id = nil
 				end
 
 				if #tbl192 == 0 then
-					fn38(v10, "No eggs yet")
+					fn39(v10, "No eggs yet")
 				elseif #tbl27 == 0 then
-					fn38(v10, ((v12 ~= "") and string.format("No eggs match \"%s\"", v12)) or "No eggs in this filter")
+					fn39(v10, ((v12 ~= "") and string.format("No eggs match \"%s\"", v12)) or "No eggs in this filter")
 				else
-					fn38(v10, "")
+					fn39(v10, "")
 				end
 
-				fn39(v10, v10.Text ~= "")
+				fn40(v10, v10.Text ~= "")
 			end
 
 			ps.RequestEggRefresh = requestEggRefresh
@@ -24263,7 +24278,7 @@ local function fn2()
 				eggPredictor:CreateCanvas({Name = "Egg Predictor", Search = true, SearchPlaceholder = "Search eggs...", Layout = "free", OnSearch = function()
 					requestEggRefresh()
 				end, Style = {TextScale = 0.84, LineHeight = 1.1, MinLines = 16, MaxLines = 34, BackgroundTransparency = 0.5, ScrollBarColor = Color3.fromRGB(170, 174, 184), TextColor = Color3.fromRGB(255, 255, 255), TextStrokeTransparency = 0.7}, Build = function(arg)
-					fn72(arg)
+					fn73(arg)
 					requestEggRefresh()
 				end})
 
@@ -24306,7 +24321,7 @@ local function fn2()
 
 						if v112 then
 							flag = false
-							pcall(fn74)
+							pcall(fn75)
 						end
 
 						if ps.RefreshFuse then
@@ -24334,7 +24349,7 @@ local function fn2()
 			local n18, n19, n20, flag, n21, scaleBands = -1, 4, 3, false, 0
 			local n22, n23, tbl14 = 0.01, 150, {{Min = 0, Color = "#8F98A8"}, {Min = 0.3, Color = "#C6CDDA"}, {Min = 0.85, Color = "#FFFFFF"}, {Min = 1.45, Color = "#7CFF9E"}, {Min = 1.9, Color = "#4FE0FF"}, {Min = 2.85, Color = "#6FA0FF"}, {Min = 3.8, Color = "#C08BFF"}, {Min = 5.8, Color = "#FF9A3D"}, {Min = 9.5, Color = "#FF5C5C"}, {Min = 12, Color = "#FFD34D"}, {Min = 20, Color = "#FF4DE8"}}
 
-			local function fn32(arg)
+			local function fn33(arg)
 				local n24, str = -1 / 0, "#FFFFFF"
 
 				for _, v10 in ipairs(tbl14) do
@@ -24351,7 +24366,7 @@ local function fn2()
 				return str
 			end
 
-			local function fn33(arg, arg2)
+			local function fn34(arg, arg2)
 				local eggRecords = gm.EggRecords
 
 				if type(eggRecords) ~= "table" then
@@ -24373,7 +24388,7 @@ local function fn2()
 				return nil
 			end
 
-			local function fn34()
+			local function fn35()
 				if scaleBands then
 					local scaleBands2 = scaleBands
 					return scaleBands2
@@ -24412,7 +24427,7 @@ local function fn2()
 				return getupvalues_
 			end
 
-			local function fn35(arg, arg2, arg3)
+			local function fn36(arg, arg2, arg3)
 				local fuseKernel = gm.FuseKernel
 
 				if type(fuseKernel) == "table" then
@@ -24431,7 +24446,7 @@ local function fn2()
 				return math.exp(((math.log(n24) / n25) * (math.log((arg2 + arg3) / 2) / n25)) * 0.6)
 			end
 
-			local function fn36()
+			local function fn37()
 				local save = gm.Save
 
 				if type(save) ~= "table" then
@@ -24466,7 +24481,7 @@ local function fn2()
 				return {Items = tbl15, Locked = result.FusionLocked == true, Duration = tonumber(result.FusionDuration) or 0, Reward = (result.FusionEggReward ~= nil) and (result.FusionEggReward ~= false), Result = (((type(result.FusionEggReward) == "table") and (type(result.FusionEggReward.Egg) == "table")) and result.FusionEggReward.Egg) or nil}
 			end
 
-			local function fn37(arg)
+			local function fn38(arg)
 				if string.upper(tostring(arg.Rarity)) == "SECRET" then
 					return ps.SecretGradient
 				end
@@ -24474,17 +24489,17 @@ local function fn2()
 			end
 
 			local function getColor(arg)
-				return ((fn37(arg) ~= nil) and Color3.fromRGB(255, 255, 255)) or arg.Color
+				return ((fn38(arg) ~= nil) and Color3.fromRGB(255, 255, 255)) or arg.Color
 			end
 
-			local function fn38(arg)
+			local function fn39(arg)
 				if string.upper(tostring(arg.Rarity)) == "SECRET" then
 					return ps.SecretRotation
 				end
 				return nil
 			end
 
-			local function fn39(arg)
+			local function fn40(arg)
 				v9 = arg
 				arg:SetDock(n2, {Gap = n11, DividerColor = Color3.fromRGB(170, 174, 184)})
 				local v10 = arg:Dock()
@@ -24511,7 +24526,7 @@ local function fn2()
 				end)
 			end
 
-			local function fn40(arg)
+			local function fn41(arg)
 				local v10 = arg and arg.Get()
 
 				if v10 then
@@ -24528,8 +24543,8 @@ local function fn2()
 				return v10
 			end
 
-			local function fn41(arg)
-				local v10 = fn40(arg)
+			local function fn42(arg)
+				local v10 = fn41(arg)
 				if not (v10) then
 					return nil
 				end
@@ -24546,8 +24561,8 @@ local function fn2()
 				return arg / size
 			end
 
-			local function fn42(size, arg)
-				local v10 = fn40(size)
+			local function fn43(size, arg)
+				local v10 = fn41(size)
 				if not (v10) then
 					return nil
 				end
@@ -24562,7 +24577,7 @@ local function fn2()
 				return arg / size
 			end
 
-			local function fn43(arg)
+			local function fn44(arg)
 				local v10 = tbl12[arg]
 
 				if v10 then
@@ -24574,7 +24589,7 @@ local function fn2()
 				return v10
 			end
 
-			local function fn44(arg)
+			local function fn45(arg)
 				local tbl15 = tbl11[arg]
 				if tbl15 then
 					return tbl15
@@ -24594,12 +24609,12 @@ local function fn2()
 				return tbl15
 			end
 
-			local function fn45()
+			local function fn46()
 				if width <= 0 then
 					return
 				end
 				flag = false
-				local n24, set = math.max(1, width - n3), fn41(tbl10.Rarity)
+				local n24, set = math.max(1, width - n3), fn42(tbl10.Rarity)
 
 				if set then
 					n20 = set + 0.1
@@ -24607,7 +24622,7 @@ local function fn2()
 					flag = true
 				end
 
-				set = fn41(tbl10.Name)
+				set = fn42(tbl10.Name)
 
 				if set then
 					n19 = math.min(set + 0.1, math.max(1, (n24 - n20) - n10))
@@ -24627,7 +24642,7 @@ local function fn2()
 				for i2, v10 in ipairs(tbl13) do
 					if v10.Kind == "text" then
 						set = v10.Handle
-						i2 = fn42(set, width)
+						i2 = fn43(set, width)
 
 						if i2 then
 							v10.Height = i2
@@ -24641,7 +24656,7 @@ local function fn2()
 						tbl15 += (height2 + (n11 * 0.5)) + ((v10.Gap and n12) or 0)
 					else
 						n24 = v10.Slot
-						local detailUnits = fn42(n24.Detail, set2)
+						local detailUnits = fn43(n24.Detail, set2)
 
 						if detailUnits then
 							n24.DetailUnits = detailUnits
@@ -24649,7 +24664,7 @@ local function fn2()
 							flag = true
 						end
 
-						local n25, n26 = math.clamp(n24.DetailUnits or 1, 1, 4), fn41(n24.Status)
+						local n25, n26 = math.clamp(n24.DetailUnits or 1, 1, 4), fn42(n24.Status)
 
 						if n26 then
 							n24.StatusUnits = n26 + 0.23
@@ -24658,7 +24673,7 @@ local function fn2()
 						end
 
 						detailUnits = math.min(set2 * 0.42, math.max(2.73, n24.StatusUnits or 2.73))
-						local n27, n28 = math.max(1, (set2 - detailUnits) - n10), fn41(n24.Rarity)
+						local n27, n28 = math.max(1, (set2 - detailUnits) - n10), fn42(n24.Rarity)
 
 						if n28 then
 							n24.RarityUnits = n28 + 0.1
@@ -24666,7 +24681,7 @@ local function fn2()
 							flag = true
 						end
 
-						n28, n26 = math.min(n24.RarityUnits or 3, n27 * 0.5), fn41(n24.Name)
+						n28, n26 = math.min(n24.RarityUnits or 3, n27 * 0.5), fn42(n24.Name)
 
 						if n26 then
 							n24.NameUnits = n26 + 0.1
@@ -24696,7 +24711,7 @@ local function fn2()
 				end
 			end
 
-			local function fn46(arg, arg2)
+			local function fn47(arg, arg2)
 				local flag2 = arg ~= nil
 				v9:SetDock((flag2 and n2) or 0, {Gap = n11})
 				tbl10.Icon.Set({Visible = flag2})
@@ -24710,7 +24725,7 @@ local function fn2()
 				local set, tbl15 = tbl10.Name.Set, {}
 				tbl15.Text = ps.Escape(arg.Name)
 				set(tbl15)
-				tbl10.Rarity.Set({Text = string.upper(tostring(arg.Rarity)), Color = getColor(arg), Gradient = fn37(arg), GradientRotation = fn38(arg)})
+				tbl10.Rarity.Set({Text = string.upper(tostring(arg.Rarity)), Color = getColor(arg), Gradient = fn38(arg), GradientRotation = fn39(arg)})
 				set, tbl15 = arg2.Result, paint(color.Text, string.format("Fusing %d of 3 pets", #arg2.Items))
 
 				if set then
@@ -24740,48 +24755,48 @@ local function fn2()
 				table.clear(tbl13)
 				local n24, n25 = 0, 0
 
-				local function fn47(arg, arg2)
+				local function fn48(arg, arg2)
 					n24 += 1
-					local v10 = fn43(n24)
+					local v10 = fn44(n24)
 					v10.Set({Visible = true, Text = arg})
 					table.insert(tbl13, {Kind = "text", Handle = v10, Gap = arg2})
 				end
 
-				local function fn48(arg, arg2)
-					fn47(string.format("<b><font color=\"%s\">%s</font></b>", arg2, arg), #tbl13 > 0)
+				local function fn49(arg, arg2)
+					fn48(string.format("<b><font color=\"%s\">%s</font></b>", arg2, arg), #tbl13 > 0)
 				end
 
-				local n26 = fn36()
+				local n26 = fn37()
 
 				if n26 then
 					if n26.Result then
 						local result = n26.Result
 						local v10, n27, mutations = ps.AssetInfo(result.AssetCategory), tonumber(result.AssetScale) or 1, ((type(result.Mutations) == "table") and result.Mutations) or {}
-						fn46(v10, n26)
-						fn48("FUSE RESULT (CONFIRMED)", color.Ready)
-						fn47(paint(color.Hint, "Species") .. ("  " .. (bold(paint(v10.Hex, "[" .. (string.upper(tostring(v10.Rarity)) .. "]"))) .. (" " .. bold(paint(color.Text, ps.Escape(v10.Name)))))), false)
-						local v11 = fn33(result.AssetCategory, n27)
-						fn47(paint(color.Hint, "Size") .. ("  " .. (bold(paint(fn32(n27), string.format("%.2fx", n27))) .. ((v11 and (ps.Separator() .. paint(color.Weight, ps.FormatWeight(v11)))) or ""))), false)
+						fn47(v10, n26)
+						fn49("FUSE RESULT (CONFIRMED)", color.Ready)
+						fn48(paint(color.Hint, "Species") .. ("  " .. (bold(paint(v10.Hex, "[" .. (string.upper(tostring(v10.Rarity)) .. "]"))) .. (" " .. bold(paint(color.Text, ps.Escape(v10.Name)))))), false)
+						local v11 = fn34(result.AssetCategory, n27)
+						fn48(paint(color.Hint, "Size") .. ("  " .. (bold(paint(fn33(n27), string.format("%.2fx", n27))) .. ((v11 and (ps.Separator() .. paint(color.Weight, ps.FormatWeight(v11)))) or ""))), false)
 						v11 = ps.MutationText(mutations)
-						fn47(paint(color.Hint, "Mutation") .. ("  " .. (((v11 ~= "") and v11) or paint(color.Text, "Normal"))), false)
-						fn47(paint(color.Hint, "Income") .. ("  " .. bold(paint(color.Income, ps.FormatRate(ps.Income(v10, n27, mutations))))), false)
-						fn47(paint(color.Hint, "The server picks this egg when the fuse starts, it will not change"), false)
+						fn48(paint(color.Hint, "Mutation") .. ("  " .. (((v11 ~= "") and v11) or paint(color.Text, "Normal"))), false)
+						fn48(paint(color.Hint, "Income") .. ("  " .. bold(paint(color.Income, ps.FormatRate(ps.Income(v10, n27, mutations))))), false)
+						fn48(paint(color.Hint, "The server picks this egg when the fuse starts, it will not change"), false)
 					else
 						if #n26.Items == 0 then
-							fn46(nil, nil)
-							fn47(bold(paint(color.Text, "Machine is empty")), false)
-							fn47(paint(color.Hint, "Load 3 pets of the same species to see the result odds"), false)
+							fn47(nil, nil)
+							fn48(bold(paint(color.Text, "Machine is empty")), false)
+							fn48(paint(color.Hint, "Load 3 pets of the same species to see the result odds"), false)
 						else
 							local items = n26.Items
 							local v10 = ps.AssetInfo(items[1].Category)
-							fn46(v10, n26)
-							fn48(string.format("FUSE MACHINE STATUS (%d/3 PETS)", #items), color.Text)
-							fn47(paint(color.Hint, "Species") .. ("  " .. (bold(paint(v10.Hex, "[" .. (string.upper(tostring(v10.Rarity)) .. "]"))) .. (" " .. bold(paint(color.Text, ps.Escape(v10.Name)))))), false)
+							fn47(v10, n26)
+							fn49(string.format("FUSE MACHINE STATUS (%d/3 PETS)", #items), color.Text)
+							fn48(paint(color.Hint, "Species") .. ("  " .. (bold(paint(v10.Hex, "[" .. (string.upper(tostring(v10.Rarity)) .. "]"))) .. (" " .. bold(paint(color.Text, ps.Escape(v10.Name)))))), false)
 
 							for i2 = 1, 3, 1 do
 								local v11 = items[i2]
 								n25 += 1
-								local v12 = fn44(n25)
+								local v12 = fn45(n25)
 								v12.Frame.Set({Visible = true})
 								v12.Status.Set({Text = "SLOT " .. i2})
 
@@ -24790,8 +24805,8 @@ local function fn2()
 									local set, tbl15 = v12.Name.Set, {}
 									tbl15.Text = ps.Escape(v10.Name)
 									set(tbl15)
-									v12.Rarity.Set({Text = string.upper(tostring(v10.Rarity)), Color = getColor(v10), Gradient = fn37(v10), GradientRotation = fn38(v10)})
-									set, i2 = fn33(v11.Category, v11.Scale), bold(paint(color.Scale, string.format("%.2fx", v11.Scale)))
+									v12.Rarity.Set({Text = string.upper(tostring(v10.Rarity)), Color = getColor(v10), Gradient = fn38(v10), GradientRotation = fn39(v10)})
+									set, i2 = fn34(v11.Category, v11.Scale), bold(paint(color.Scale, string.format("%.2fx", v11.Scale)))
 									i2 = (if set then i2 .. (ps.Separator() .. paint(color.Weight, ps.FormatWeight(set))) else i2) .. (ps.Separator() .. bold(paint(color.Income, ps.FormatRate(ps.Income(v10, v11.Scale, v11.Mutations)))))
 									tbl15 = ps.MutationText(v11.Mutations)
 									i2 ..= ps.Separator() .. (((tbl15 ~= "") and tbl15) or paint(color.Hint, "Normal"))
@@ -24817,18 +24832,18 @@ local function fn2()
 							end
 
 							local n28 = n27 / #items
-							local v11, str = fn33(items[1].Category, n28), paint(color.Hint, "Average Scale") .. ("  " .. bold(paint(color.Scale, string.format("%.2fx", n28))))
-							fn47(if v11 then str .. (ps.Separator() .. paint(color.Weight, ps.FormatWeight(v11))) else str, false)
-							fn48("PREDICTED SIZE PROBABILITIES", color.Income)
+							local v11, str = fn34(items[1].Category, n28), paint(color.Hint, "Average Scale") .. ("  " .. bold(paint(color.Scale, string.format("%.2fx", n28))))
+							fn48(if v11 then str .. (ps.Separator() .. paint(color.Weight, ps.FormatWeight(v11))) else str, false)
+							fn49("PREDICTED SIZE PROBABILITIES", color.Income)
 
 							if #items == 3 then
 								local tbl15, tbl16, n29 = {items[1].Scale, items[2].Scale, items[3].Scale}, {}, 0
 
-								for i2, v12 in ipairs(fn34()) do
-									i2 = v12.weight * fn35(tbl15, v12.min, v12.max)
+								for i2, v12 in ipairs(fn35()) do
+									i2 = v12.weight * fn36(tbl15, v12.min, v12.max)
 									n29 += i2
 									local insert, tbl17 = table.insert, {Min = v12.min, Max = v12.max, Weight = i2}
-									tbl17.Color = fn32(v12.min)
+									tbl17.Color = fn33(v12.min)
 									insert(tbl16, tbl17)
 								end
 
@@ -24839,13 +24854,13 @@ local function fn2()
 								v11 = tbl16[1]
 
 								for _, v12 in ipairs(tbl16) do
-									local n30, str2, v13, v14 = ((n29 > 0) and ((v12.Weight / n29) * 100)) or 0, bold(paint(v12.Color, string.format("%.2fx - %.2fx", v12.Min, v12.Max))), fn33(items[1].Category, v12.Min), fn33(items[1].Category, v12.Max)
+									local n30, str2, v13, v14 = ((n29 > 0) and ((v12.Weight / n29) * 100)) or 0, bold(paint(v12.Color, string.format("%.2fx - %.2fx", v12.Min, v12.Max))), fn34(items[1].Category, v12.Min), fn34(items[1].Category, v12.Max)
 									str2 = if v13 then if v14 then str2 .. (ps.Separator() .. paint(color.Weight, string.format("%s - %s", ps.FormatWeight(v13), ps.FormatWeight(v14)))) else str2 else str2
 									v14, v12 = ps.Separator(), ((n30 >= 10) and color.Income) or (((n30 >= 1) and color.Clock) or color.Hint)
-									fn47(str2 .. (v14 .. bold(paint(v12, string.format(((n30 >= 1) and "%.1f%%") or "%.3f%%", n30)))), false)
+									fn48(str2 .. (v14 .. bold(paint(v12, string.format(((n30 >= 1) and "%.1f%%") or "%.3f%%", n30)))), false)
 								end
 
-								fn47(paint(color.Hint, "Size Doubling") .. ("  " .. (bold(paint(color.Clock, string.format("%.2f%%", n22 * 100))) .. paint(color.Hint, string.format(" per roll, x2 again and again up to %dx", n23)))), false)
+								fn48(paint(color.Hint, "Size Doubling") .. ("  " .. (bold(paint(color.Clock, string.format("%.2f%%", n22 * 100))) .. paint(color.Hint, string.format(" per roll, x2 again and again up to %dx", n23)))), false)
 								local n30, n31 = 0, 0
 
 								for i2, v12 in ipairs(tbl16) do
@@ -24859,10 +24874,10 @@ local function fn2()
 									n31 = n31 + (tbl15 * (n32 + v12))
 								end
 
-								fn48("RESULT PREDICTION", color.Text)
-								fn47(paint(color.Hint, "Bigger Than Average Input") .. ("  " .. bold(paint(((n30 >= 0.5) and color.Income) or color.Clock, string.format("%.1f%%", n30 * 100)))), false)
-								fn47(paint(color.Hint, "Expected Income") .. ("  " .. bold(paint(color.Income, ps.FormatRate(n31)))), false)
-								fn47(paint(color.Hint, "Mutation") .. ("  " .. paint(color.Text, "Normal, input mutations are not kept")), false)
+								fn49("RESULT PREDICTION", color.Text)
+								fn48(paint(color.Hint, "Bigger Than Average Input") .. ("  " .. bold(paint(((n30 >= 0.5) and color.Income) or color.Clock, string.format("%.1f%%", n30 * 100)))), false)
+								fn48(paint(color.Hint, "Expected Income") .. ("  " .. bold(paint(color.Income, ps.FormatRate(n31)))), false)
+								fn48(paint(color.Hint, "Mutation") .. ("  " .. paint(color.Text, "Normal, input mutations are not kept")), false)
 								local tbl17 = {}
 
 								for _, item in ipairs(items) do
@@ -24877,12 +24892,12 @@ local function fn2()
 
 								if ok then
 									if type(result) == "number" then
-										fn47(paint(color.Hint, "Fuse Cost") .. ("  " .. bold(paint(color.Clock, (ps.FormatRate(result):gsub("/s$", ""))))), false)
+										fn48(paint(color.Hint, "Fuse Cost") .. ("  " .. bold(paint(color.Clock, (ps.FormatRate(result):gsub("/s$", ""))))), false)
 									end
 								end
 
 								if v11 then
-									fn47(paint(color.Hint, "Estimated Value") .. ("  " .. (bold(paint(color.Income, ps.FormatRate(ps.Income(v10, v11.Min, {})) .. (" ~ " .. ps.FormatRate(ps.Income(v10, v11.Max, {}))))) .. (ps.Separator() .. (paint(color.Hint, "at ") .. bold(paint(v11.Color, string.format("%.2fx - %.2fx", v11.Min, v11.Max))))))), false)
+									fn48(paint(color.Hint, "Estimated Value") .. ("  " .. (bold(paint(color.Income, ps.FormatRate(ps.Income(v10, v11.Min, {})) .. (" ~ " .. ps.FormatRate(ps.Income(v10, v11.Max, {}))))) .. (ps.Separator() .. (paint(color.Hint, "at ") .. bold(paint(v11.Color, string.format("%.2fx - %.2fx", v11.Min, v11.Max))))))), false)
 								end
 
 								ok = nil
@@ -24892,16 +24907,16 @@ local function fn2()
 								end
 
 								if ok then
-									fn47(paint(color.Hint, "Best Case") .. ("  " .. (bold(paint(ok.Color, string.format("%.2fx - %.2fx", ok.Min, ok.Max))) .. ("  " .. bold(paint(color.Income, ps.FormatRate(ps.Income(v10, ok.Max, {}))))))), false)
+									fn48(paint(color.Hint, "Best Case") .. ("  " .. (bold(paint(ok.Color, string.format("%.2fx - %.2fx", ok.Min, ok.Max))) .. ("  " .. bold(paint(color.Income, ps.FormatRate(ps.Income(v10, ok.Max, {}))))))), false)
 								end
 							else
-								fn47(paint(color.Hint, string.format("Load %d more of the same species to see the odds", 3 - #n26.Items)), false)
+								fn48(paint(color.Hint, string.format("Load %d more of the same species to see the odds", 3 - #n26.Items)), false)
 							end
 						end
 					end
 				else
-					fn46(nil, nil)
-					fn47(bold(paint(color.Hint, "Fuse machine data is not available yet")), false)
+					fn47(nil, nil)
+					fn48(bold(paint(color.Hint, "Fuse machine data is not available yet")), false)
 				end
 
 				n26 = n24 + 1
@@ -24914,13 +24929,13 @@ local function fn2()
 					tbl11[i2].Frame.Set({Visible = false})
 				end
 
-				fn45()
+				fn46()
 				n21 = 2
 			end
 
 			if ps.Ready then
 				fusePredictor:CreateCanvas({Name = "Fuse Predictor", Layout = "free", Style = {TextScale = 0.84, LineHeight = 1.1, MinLines = 16, MaxLines = 42, BackgroundTransparency = 0.5, ScrollBarColor = Color3.fromRGB(170, 174, 184), TextColor = Color3.fromRGB(255, 255, 255), TextStrokeTransparency = 0.7}, Build = function(arg)
-					fn39(arg)
+					fn40(arg)
 
 					if type(ps.RequestEggRefresh) == "function" then
 						ps.RequestEggRefresh()
@@ -24935,7 +24950,7 @@ local function fn2()
 							n21 -= 1
 						end
 
-						pcall(fn45)
+						pcall(fn46)
 					end
 				end
 			else
@@ -24947,7 +24962,7 @@ local function fn2()
 	g("22_prio#1", function()
 		local tbl9 = {Default = {"StealFilter", "Star", "Hollow", "Train", "PumpkinBoss", "HwPumpkin", "HwBlood", "Butterfly", "StealWisp", "HwIndex", "StealIndex", "Place", "Essence", "HwDog", "HwMonsters", "HwFishing", "Treadmill"}, Labels = {Star = "Shooting Star", Hollow = "The Hollow Race", StealIndex = "Steal Missing Index Eggs", HwIndex = "Steal Missing Halloween Index", StealFilter = "Steal Filter Eggs", Place = "Auto Place Egg", Treadmill = "Treadmill", Butterfly = "Butterfly Bloom", Essence = "Auto Mutate", StealWisp = "Steal Wisp Quest Eggs", Train = "Phantom Express", PumpkinBoss = "Pumpkin Boss", HwPumpkin = "Pumpkin Moon", HwBlood = "Farm Monsters In Blood Moon", HwDog = "Ghost Dog Quest", HwMonsters = "Farm Monsters", HwFishing = "Fishing"}, Order = {}, Rank = {}, Listeners = {}, Path = "ChilliLibrary/SAE_Priority.json"}
 
-		local function fn30()
+		local function fn31()
 			if type(writefile) ~= "function" then
 				return
 			end
@@ -25012,7 +25027,7 @@ local function fn2()
 			end
 
 			if not (arg2) then
-				fn30()
+				fn31()
 			end
 
 			for _, listener in ipairs(tbl9.Listeners) do
@@ -25095,16 +25110,16 @@ local function fn2()
 		tbl14.HwBlood = {Sub = "Kill every monster while a Blood Moon is up (x2 Candy Corn)", Icon = "rbxassetid://112785428441728", Color = Color3.fromRGB(220, 40, 40)}
 		tbl14.HwFishing = {Sub = "Fish in the Halloween Dimension", Icon = "rbxassetid://112785428441728", Color = Color3.fromRGB(110, 200, 255)}
 
-		local function fn31(arg, arg2)
+		local function fn32(arg, arg2)
 			local ok, result = pcall(Font.new, arg, arg2, Enum.FontStyle.Normal)
 			return (ok and result) or nil
 		end
 
-		local json = fn31("rbxassetid://12187365977", Enum.FontWeight.Bold) or fn31("rbxasset://fonts/families/FredokaOne.json", Enum.FontWeight.Regular)
-		fn31("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.ExtraBold)
-		local json2 = fn31("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium)
+		local json = fn32("rbxassetid://12187365977", Enum.FontWeight.Bold) or fn32("rbxasset://fonts/families/FredokaOne.json", Enum.FontWeight.Regular)
+		fn32("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.ExtraBold)
+		local json2 = fn32("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium)
 
-		local function fn32(arg, arg2, parent)
+		local function fn33(arg, arg2, parent)
 			local instance = Instance.new(arg)
 
 			for k, v4 in pairs(arg2) do
@@ -25118,15 +25133,15 @@ local function fn2()
 			return instance
 		end
 
-		local function fn33(arg, arg2, rotation)
-			local paint = arg:FindFirstChild("Paint") or fn32("UIGradient", {Name = "Paint"}, arg)
+		local function fn34(arg, arg2, rotation)
+			local paint = arg:FindFirstChild("Paint") or fn33("UIGradient", {Name = "Paint"}, arg)
 			paint.Color = ColorSequence.new(arg2[1], arg2[2])
 			paint.Rotation = rotation or 90
 			return paint
 		end
 
-		local function fn34(arg, fontFace, arg2)
-			local TextLabel = fn32("TextLabel", {BackgroundTransparency = 1, TextColor3 = color, TextXAlignment = Enum.TextXAlignment.Left, TextYAlignment = Enum.TextYAlignment.Center, TextScaled = true, Text = ""}, arg)
+		local function fn35(arg, fontFace, arg2)
+			local TextLabel = fn33("TextLabel", {BackgroundTransparency = 1, TextColor3 = color, TextXAlignment = Enum.TextXAlignment.Left, TextYAlignment = Enum.TextYAlignment.Center, TextScaled = true, Text = ""}, arg)
 
 			if fontFace then
 				TextLabel.FontFace = fontFace
@@ -25138,24 +25153,24 @@ local function fn2()
 				TextLabel[k] = v4
 			end
 
-			fn32("UITextSizeConstraint", {MaxTextSize = 18, MinTextSize = 1}, TextLabel)
+			fn33("UITextSizeConstraint", {MaxTextSize = 18, MinTextSize = 1}, TextLabel)
 			return TextLabel
 		end
 
 		local function getUIStroke(arg, arg2)
-			return fn32("UIStroke", {Color = color2, Thickness = arg2 or 1.5, LineJoinMode = Enum.LineJoinMode.Round}, arg)
+			return fn33("UIStroke", {Color = color2, Thickness = arg2 or 1.5, LineJoinMode = Enum.LineJoinMode.Round}, arg)
 		end
 
-		local function fn35(arg, arg2)
+		local function fn36(arg, arg2)
 			local tbl15 = {}
 
 			for i2 = 1, 2, 1 do
 				local flag = i2 == 1
-				i2 = fn32("Frame", {AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, Position = UDim2.new(0.5, 0, 0.5, (flag and 2) or 0), Size = UDim2.fromScale(0.56, 0.56), ZIndex = (flag and 2) or 3}, arg)
+				i2 = fn33("Frame", {AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, Position = UDim2.new(0.5, 0, 0.5, (flag and 2) or 0), Size = UDim2.fromScale(0.56, 0.56), ZIndex = (flag and 2) or 3}, arg)
 
 				for i3 = 1, 2, 1 do
-					local Frame = fn32("Frame", {AnchorPoint = Vector2.new(0.5, 0.5), BackgroundColor3 = (flag and Color3.fromRGB(18, 92, 30)) or color, BackgroundTransparency = 0, BorderSizePixel = 0, Position = UDim2.fromScale(((i3 == 1) and 0.31) or 0.69, 0.5), Rotation = (((i3 == 1) and -45) or 45) * ((arg2 and 1) or -1), Size = UDim2.new(0.64, 0, 0.22, 0), ZIndex = (flag and 2) or 3}, i2)
-					fn32("UICorner", {CornerRadius = UDim.new(1, 0)}, Frame)
+					local Frame = fn33("Frame", {AnchorPoint = Vector2.new(0.5, 0.5), BackgroundColor3 = (flag and Color3.fromRGB(18, 92, 30)) or color, BackgroundTransparency = 0, BorderSizePixel = 0, Position = UDim2.fromScale(((i3 == 1) and 0.31) or 0.69, 0.5), Rotation = (((i3 == 1) and -45) or 45) * ((arg2 and 1) or -1), Size = UDim2.new(0.64, 0, 0.22, 0), ZIndex = (flag and 2) or 3}, i2)
+					fn33("UICorner", {CornerRadius = UDim.new(1, 0)}, Frame)
 
 					if not (flag) then
 						table.insert(tbl15, {Piece = Frame})
@@ -25174,15 +25189,15 @@ local function fn2()
 		local tbl15, tbl16, flag, v8 = {}, {Unit = 14, Width = 300, CardH = 40, Gap = 6, Top = 50, Pad = 6}, false
 		local n2 = 0
 
-		local function fn36(arg)
+		local function fn37(arg)
 			return tbl16.Top + ((arg - 1) * (tbl16.CardH + tbl16.Gap))
 		end
 
-		local function fn37(arg)
+		local function fn38(arg)
 			for k, v9 in pairs(tbl15) do
 				local n3 = tbl9.Rank[k] or 1
 				local tbl132 = tbl12[n3] or tbl13
-				fn33(v9.Badge, tbl132, 90)
+				fn34(v9.Badge, tbl132, 90)
 				v9.Number.Text = tostring(n3)
 				v9.Title.Text = tbl9.Labels[k] or k
 				tbl132 = n3 == 1
@@ -25196,7 +25211,7 @@ local function fn2()
 					tbl132 = ((k2 == "Up") and (n3 > 1)) or ((k2 == "Down") and (n3 < #tbl9.Order))
 					button.Active = tbl132
 					button.BackgroundTransparency = (tbl132 and 0) or 0.55
-					fn33(button, (tbl132 and tbl10) or {Color3.fromRGB(70, 72, 90), Color3.fromRGB(46, 48, 62)}, 90)
+					fn34(button, (tbl132 and tbl10) or {Color3.fromRGB(70, 72, 90), Color3.fromRGB(46, 48, 62)}, 90)
 
 					for _, v10 in ipairs(v9.Chevrons[k2]) do
 						v10.Piece.BackgroundColor3 = (tbl132 and color) or Color3.fromRGB(128, 132, 150)
@@ -25205,7 +25220,7 @@ local function fn2()
 					v9.Chevrons[k2].Shadow.Visible = tbl132
 				end
 
-				tbl132 = UDim2.fromOffset(tbl16.Pad, fn36(n3))
+				tbl132 = UDim2.fromOffset(tbl16.Pad, fn37(n3))
 
 				if arg then
 					if flag then
@@ -25221,7 +25236,7 @@ local function fn2()
 			end
 		end
 
-		local function fn38()
+		local function fn39()
 			local unit, n3 = tbl16.Unit, math.max(160, tbl16.Width)
 			local pad = math.max(6, math.floor(unit * 0.45))
 			local n4, cardH, gap, n5 = (n3 - (pad * 2)) - math.max(4, math.floor(unit * 0.3)), math.floor(unit * 2.9), math.floor(unit * 0.45), math.floor(unit * 3.1)
@@ -25266,7 +25281,7 @@ local function fn2()
 				end
 			end
 
-			fn37(false)
+			fn38(false)
 			flag = true
 			n7, n4 = (tbl16.Top + (#tbl9.Order * (cardH + gap))) + pad, Frame
 			n4.Size = UDim2.new(1, 0, 0, n7)
@@ -25276,37 +25291,37 @@ local function fn2()
 			end
 		end
 
-		local function fn39(arg)
-			local tbl17, tbl18 = tbl14[arg] or {Sub = "", Icon = "", Color = color}, {Buttons = {}, Chevrons = {}, Frame = fn32("Frame", {BackgroundColor3 = color3, BackgroundTransparency = 0.05, BorderSizePixel = 0, ClipsDescendants = false}, Frame)}
-			fn32("UICorner", {CornerRadius = UDim.new(0.22, 0)}, tbl18.Frame)
-			tbl18.Stroke = fn32("UIStroke", {Color = color4, Thickness = 1.5, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, tbl18.Frame)
-			tbl18.StrokePaint = fn33(tbl18.Stroke, tbl12[1], 45)
-			tbl18.Glow = fn32("Frame", {BackgroundColor3 = tbl17.Color, BackgroundTransparency = 0.82, BorderSizePixel = 0, Size = UDim2.fromScale(1, 1)}, tbl18.Frame)
-			fn32("UICorner", {CornerRadius = UDim.new(0.22, 0)}, tbl18.Glow)
-			fn32("UIGradient", {Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(0.45, 0.7), NumberSequenceKeypoint.new(1, 1)})}, tbl18.Glow)
-			fn32("ImageLabel", {BackgroundTransparency = 1, Image = assetId, ImageColor3 = color, ImageTransparency = 0.94, ScaleType = Enum.ScaleType.Tile, TileSize = UDim2.fromOffset(46, 46), Size = UDim2.fromScale(1, 1)}, tbl18.Frame)
-			tbl18.Badge = fn32("Frame", {AnchorPoint = Vector2.new(0, 0.5), BackgroundColor3 = color, BorderSizePixel = 0}, tbl18.Frame)
-			fn32("UICorner", {CornerRadius = UDim.new(0.3, 0)}, tbl18.Badge)
-			fn32("UIStroke", {Color = color2, Thickness = 1.5, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, tbl18.Badge)
-			tbl18.Number = fn34(tbl18.Badge, json, {Size = UDim2.fromScale(1, 1), TextXAlignment = Enum.TextXAlignment.Center})
+		local function fn40(arg)
+			local tbl17, tbl18 = tbl14[arg] or {Sub = "", Icon = "", Color = color}, {Buttons = {}, Chevrons = {}, Frame = fn33("Frame", {BackgroundColor3 = color3, BackgroundTransparency = 0.05, BorderSizePixel = 0, ClipsDescendants = false}, Frame)}
+			fn33("UICorner", {CornerRadius = UDim.new(0.22, 0)}, tbl18.Frame)
+			tbl18.Stroke = fn33("UIStroke", {Color = color4, Thickness = 1.5, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, tbl18.Frame)
+			tbl18.StrokePaint = fn34(tbl18.Stroke, tbl12[1], 45)
+			tbl18.Glow = fn33("Frame", {BackgroundColor3 = tbl17.Color, BackgroundTransparency = 0.82, BorderSizePixel = 0, Size = UDim2.fromScale(1, 1)}, tbl18.Frame)
+			fn33("UICorner", {CornerRadius = UDim.new(0.22, 0)}, tbl18.Glow)
+			fn33("UIGradient", {Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(0.45, 0.7), NumberSequenceKeypoint.new(1, 1)})}, tbl18.Glow)
+			fn33("ImageLabel", {BackgroundTransparency = 1, Image = assetId, ImageColor3 = color, ImageTransparency = 0.94, ScaleType = Enum.ScaleType.Tile, TileSize = UDim2.fromOffset(46, 46), Size = UDim2.fromScale(1, 1)}, tbl18.Frame)
+			tbl18.Badge = fn33("Frame", {AnchorPoint = Vector2.new(0, 0.5), BackgroundColor3 = color, BorderSizePixel = 0}, tbl18.Frame)
+			fn33("UICorner", {CornerRadius = UDim.new(0.3, 0)}, tbl18.Badge)
+			fn33("UIStroke", {Color = color2, Thickness = 1.5, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, tbl18.Badge)
+			tbl18.Number = fn35(tbl18.Badge, json, {Size = UDim2.fromScale(1, 1), TextXAlignment = Enum.TextXAlignment.Center})
 			getUIStroke(tbl18.Number, 1.6)
-			tbl18.IconBack = fn32("Frame", {AnchorPoint = Vector2.new(0, 0.5), BackgroundColor3 = tbl17.Color, BackgroundTransparency = 0.72, BorderSizePixel = 0}, tbl18.Frame)
-			fn32("UICorner", {CornerRadius = UDim.new(0.28, 0)}, tbl18.IconBack)
-			fn32("UIStroke", {Color = tbl17.Color, Thickness = 1, Transparency = 0.45, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, tbl18.IconBack)
-			fn32("ImageLabel", {AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, Image = tbl17.Icon, Position = UDim2.fromScale(0.5, 0.5), ScaleType = Enum.ScaleType.Fit, Size = UDim2.fromScale(0.82, 0.82)}, tbl18.IconBack)
-			tbl18.Title = fn34(tbl18.Frame, json, {})
+			tbl18.IconBack = fn33("Frame", {AnchorPoint = Vector2.new(0, 0.5), BackgroundColor3 = tbl17.Color, BackgroundTransparency = 0.72, BorderSizePixel = 0}, tbl18.Frame)
+			fn33("UICorner", {CornerRadius = UDim.new(0.28, 0)}, tbl18.IconBack)
+			fn33("UIStroke", {Color = tbl17.Color, Thickness = 1, Transparency = 0.45, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, tbl18.IconBack)
+			fn33("ImageLabel", {AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, Image = tbl17.Icon, Position = UDim2.fromScale(0.5, 0.5), ScaleType = Enum.ScaleType.Fit, Size = UDim2.fromScale(0.82, 0.82)}, tbl18.IconBack)
+			tbl18.Title = fn35(tbl18.Frame, json, {})
 			getUIStroke(tbl18.Title, 1.5)
-			tbl18.Sub = fn34(tbl18.Frame, json2, {TextColor3 = color5, TextTruncate = Enum.TextTruncate.AtEnd})
-			tbl18.Holder = fn32("Frame", {AnchorPoint = Vector2.new(1, 0.5), AutomaticSize = Enum.AutomaticSize.XY, BackgroundTransparency = 1}, tbl18.Frame)
-			fn32("UIListLayout", {FillDirection = Enum.FillDirection.Horizontal, VerticalAlignment = Enum.VerticalAlignment.Center, SortOrder = Enum.SortOrder.LayoutOrder}, tbl18.Holder)
+			tbl18.Sub = fn35(tbl18.Frame, json2, {TextColor3 = color5, TextTruncate = Enum.TextTruncate.AtEnd})
+			tbl18.Holder = fn33("Frame", {AnchorPoint = Vector2.new(1, 0.5), AutomaticSize = Enum.AutomaticSize.XY, BackgroundTransparency = 1}, tbl18.Frame)
+			fn33("UIListLayout", {FillDirection = Enum.FillDirection.Horizontal, VerticalAlignment = Enum.VerticalAlignment.Center, SortOrder = Enum.SortOrder.LayoutOrder}, tbl18.Holder)
 			tbl17 = {"Up", "Down"}
 
 			for i2, v9 in ipairs(tbl17) do
-				local TextButton2 = fn32("TextButton", {AutoButtonColor = false, BackgroundColor3 = color, BorderSizePixel = 0, LayoutOrder = i2, Text = ""}, tbl18.Holder)
-				fn32("UICorner", {CornerRadius = UDim.new(0.32, 0)}, TextButton2)
-				fn32("UIStroke", {Color = color2, Thickness = 1.5, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, TextButton2)
+				local TextButton2 = fn33("TextButton", {AutoButtonColor = false, BackgroundColor3 = color, BorderSizePixel = 0, LayoutOrder = i2, Text = ""}, tbl18.Holder)
+				fn33("UICorner", {CornerRadius = UDim.new(0.32, 0)}, TextButton2)
+				fn33("UIStroke", {Color = color2, Thickness = 1.5, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, TextButton2)
 				tbl18.Buttons[v9] = TextButton2
-				tbl18.Chevrons[v9] = fn35(TextButton2, v9 == "Up")
+				tbl18.Chevrons[v9] = fn36(TextButton2, v9 == "Up")
 
 				TextButton2.Activated:Connect(function()
 					if not (TextButton2.Active) then
@@ -25317,12 +25332,12 @@ local function fn2()
 						local n3
 						n3, v8 = os.clock() + 0.7, arg
 						n2 = n3
-						fn37(true)
+						fn38(true)
 
 						task.delay(0.75, function()
 							if v8 == arg then
 								if os.clock() >= n2 then
-									pcall(fn37, false)
+									pcall(fn38, false)
 								end
 							end
 						end)
@@ -25333,19 +25348,19 @@ local function fn2()
 			tbl15[arg] = tbl18
 		end
 
-		local function fn40(arg)
+		local function fn41(arg)
 			v4 = arg
-			Frame = fn32("Frame", {BackgroundTransparency = 1, Size = UDim2.fromScale(1, 0)}, nil)
-			Frame2 = fn32("Frame", {BackgroundTransparency = 1}, Frame)
-			v5 = fn34(Frame2, json, {Text = "TASK PRIORITY"})
-			fn33(v5, tbl10, 90)
+			Frame = fn33("Frame", {BackgroundTransparency = 1, Size = UDim2.fromScale(1, 0)}, nil)
+			Frame2 = fn33("Frame", {BackgroundTransparency = 1}, Frame)
+			v5 = fn35(Frame2, json, {Text = "TASK PRIORITY"})
+			fn34(v5, tbl10, 90)
 			getUIStroke(v5, 2)
-			v6 = fn34(Frame2, json2, {Text = "Top goes first. A carried egg is always delivered first.", TextColor3 = color5, TextTruncate = Enum.TextTruncate.AtEnd})
-			TextButton = fn32("TextButton", {AnchorPoint = Vector2.new(1, 0.5), AutoButtonColor = false, BackgroundColor3 = color, BorderSizePixel = 0, Position = UDim2.fromScale(1, 0.5), Text = ""}, Frame2)
-			fn32("UICorner", {CornerRadius = UDim.new(0.35, 0)}, TextButton)
-			fn32("UIStroke", {Color = color2, Thickness = 1.5, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, TextButton)
-			fn33(TextButton, tbl11, 90)
-			v7 = fn34(TextButton, json, {Text = "RESET", Size = UDim2.fromScale(1, 1), TextXAlignment = Enum.TextXAlignment.Center})
+			v6 = fn35(Frame2, json2, {Text = "Top goes first. A carried egg is always delivered first.", TextColor3 = color5, TextTruncate = Enum.TextTruncate.AtEnd})
+			TextButton = fn33("TextButton", {AnchorPoint = Vector2.new(1, 0.5), AutoButtonColor = false, BackgroundColor3 = color, BorderSizePixel = 0, Position = UDim2.fromScale(1, 0.5), Text = ""}, Frame2)
+			fn33("UICorner", {CornerRadius = UDim.new(0.35, 0)}, TextButton)
+			fn33("UIStroke", {Color = color2, Thickness = 1.5, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, TextButton)
+			fn34(TextButton, tbl11, 90)
+			v7 = fn35(TextButton, json, {Text = "RESET", Size = UDim2.fromScale(1, 1), TextXAlignment = Enum.TextXAlignment.Center})
 			getUIStroke(v7, 1.5)
 
 			TextButton.Activated:Connect(function()
@@ -25354,7 +25369,7 @@ local function fn2()
 			end)
 
 			for _, v9 in ipairs(tbl9.Order) do
-				fn39(v9)
+				fn40(v9)
 			end
 
 			arg:Attach(Frame, arg:Root())
@@ -25362,26 +25377,26 @@ local function fn2()
 			arg:OnResize(function(_, arg2, arg3)
 				tbl16.Width = tonumber(arg2) or tbl16.Width
 				tbl16.Unit = math.max(8, tonumber(arg3) or tbl16.Unit)
-				pcall(fn38)
+				pcall(fn39)
 			end)
 
-			pcall(fn38)
+			pcall(fn39)
 		end
 
 		table.insert(tbl9.Listeners, function()
 			if Frame then
-				pcall(fn37, true)
+				pcall(fn38, true)
 			end
 		end)
 
 		priority:Surface({Name = "Task Priority", ShowTitle = false, Layout = "free", Style = {TextScale = 1, LineHeight = 1.1, MinLines = 6, MaxLines = 40, AutoHeight = true, BackgroundTransparency = 1, TextColor = Color3.fromRGB(255, 255, 255), TextStrokeTransparency = 0.7}, Build = function(arg)
-			fn40(arg)
+			fn41(arg)
 		end})
 
 		local tbl17, tbl18, tbl19, v9 = {StealIndex = "Steal:index", HwIndex = "Steal:hwindex", StealWisp = "Steal:wisp", StealFilter = "Steal:filter", Star = "Star", Hollow = "Hollow", Butterfly = "Bloom", Essence = "Mutate", Place = "Place", Train = "Train", PumpkinBoss = "PumpkinBoss", Treadmill = "Treadmill", HwPumpkin = "HwPump", HwBlood = "HwBlood", HwDog = "HwDog", HwMonsters = "HwMon", HwFishing = "HwFish"}, {pick = "picked egg", index = "missing index egg", wisp = "wisp egg", filter = "filter egg", hwfilter = "Halloween egg", hwindex = "missing Halloween egg", carry = "carried egg", wait = "egg at daybreak"}, {Hollow = "The Hollow Race", Star = "Shooting Star", Place = "Auto Place Egg", Mutate = "Auto Mutate", Bloom = "Butterfly Bloom", WispGo = "Wisp quest", Train = "Phantom Express", PumpkinBoss = "Pumpkin Boss", PumpkinDrops = "Pumpkin drops", Machine = "Butterfly machine", HwPump = "Pumpkin Moon", HwBlood = "Farm Monsters In Blood Moon", HwDog = "Ghost Dog Quest", HwMon = "Farm Monsters", HwFish = "Fishing", Ghouler = "Ghouler boss", IslandWars = "Cursed Island Wars", Capture = "Capture The Egg", Stage = "Wait for the field", NightHome = "Night, safe zone", GoTo = "Go to egg", Combat = "Auto hit", Banjo = "Banjo cricket"}, ctx.state
 		v9.rank = {}
 
-		local function fn41(arg)
+		local function fn42(arg)
 			local v10 = ipairs
 
 			for k, v11 in v10(arg) do
@@ -25409,10 +25424,10 @@ local function fn2()
 			rank.Steal = flag22
 		end
 
-		local prio, v10 = n("prio", tbl3.Priority:Text("Task Queue", "Idle")), ctx.state
+		local prio, v10 = fn13("prio", tbl3.Priority:Text("Task Queue", "Idle")), ctx.state
 		v10.prioKeys = {fish = "HwFishing", tread = "Treadmill", mon = "HwMonsters"}
 
-		local function fn42(arg, arg2)
+		local function fn43(arg, arg2)
 			if arg.name == "Steal" then
 				local arg22
 
@@ -25429,7 +25444,7 @@ local function fn2()
 			return tbl19[arg.name] or arg.name
 		end
 
-		local v11 = fn14({name = "PrioInfo", gap = 1, info = true})
+		local v11 = fn15({name = "PrioInfo", gap = 1, info = true})
 
 		v11.on = function()
 			local Farm = getOpen("Farm")
@@ -25477,13 +25492,13 @@ local function fn2()
 								stealNext = flag2
 							end
 
-							next_[n3] = fn42(v13, stealNext or nil)
+							next_[n3] = fn43(v13, stealNext or nil)
 						end
 					end
 				end
 			end
 
-			queue, v122 = lastMV and (fn42(lastMV, (((lastMV.name == "Steal") and (type(lastMV.plan) == "table")) and lastMV.plan.kind) or nil) .. ((lastMV.idle and " (waiting)") or ""))
+			queue, v122 = lastMV and (fn43(lastMV, (((lastMV.name == "Steal") and (type(lastMV.plan) == "table")) and lastMV.plan.kind) or nil) .. ((lastMV.idle and " (waiting)") or ""))
 
 			if queue then
 				v122 = queue
@@ -25505,7 +25520,7 @@ local function fn2()
 		end
 
 		table.insert(tbl9.Listeners, function()
-			fn41(tbl9.Order)
+			fn42(tbl9.Order)
 			local v12 = ctx.state
 
 			if v12.order then
@@ -25514,7 +25529,7 @@ local function fn2()
 			end
 		end)
 
-		fn41(tbl9.Order)
+		fn42(tbl9.Order)
 		local v12 = ctx.state
 
 		v12.prioGet = function()
@@ -25528,7 +25543,7 @@ local function fn2()
 		end
 	end)
 
-	local function fn30(arg)
+	local function fn31(arg)
 		local v4, tbl9, v5 = ipairs, {}, ctx.localPlayer
 
 		do
@@ -25609,7 +25624,7 @@ local function fn2()
 		return tbl12
 	end
 
-	local function fn31(arg)
+	local function fn32(arg)
 		local flag, pos = (tbl9[getAttribute(arg)] ~= nil) or (arg:GetAttribute("IsBat") == true)
 
 		if flag then
@@ -25626,7 +25641,7 @@ local function fn2()
 		return arg and (tbl9[getAttribute(arg)] == -1)
 	end
 
-	local function fn32(arg)
+	local function fn33(arg)
 		return getServerTimeNow() >= (tonumber(arg:GetAttribute("CooldownEndTime")) or 0)
 	end
 
@@ -25648,7 +25663,7 @@ local function fn2()
 
 			for k2, child in v6(children) do
 				if child:IsA("Tool") then
-					if fn31(child) then
+					if fn32(child) then
 						k2, k = tbl9[getAttribute(child)] or 0, ctx.slot28
 
 						if k.weap then
@@ -25719,8 +25734,8 @@ local function fn2()
 			if swapT2 then
 				swapT = swapT2
 			else
-				flag = fn32(tbl13[tbl11.i])
-				swapT = if flag then not flag else fn32(tbl13[i2])
+				flag = fn33(tbl13[tbl11.i])
+				swapT = if flag then not flag else fn33(tbl13[i2])
 			end
 
 			if swapT then
@@ -25736,7 +25751,7 @@ local function fn2()
 
 	g("31_bloom#1", function()
 		local tbl12, tbl13 = {Radiant = "Golden", Amethyst = "Purple", Sapphire = "Blue", Emerald = "Green"}, {Green = 1, Blue = 2, Purple = 3, Golden = 4}
-		local v4 = fn14({name = "Bloom", mover = true, gap = 1, pri = 5, soft = true})
+		local v4 = fn15({name = "Bloom", mover = true, gap = 1, pri = 5, soft = true})
 		local butterflyBloom, tbl14, tbl15 = tbl3["Butterfly Bloom"], {{"Green", "rbxassetid://107744695034799", "#5BE873"}, {"Blue", "rbxassetid://89995151383384", "#5FA2FF"}, {"Purple", "rbxassetid://121235713836098", "#C27BFF"}, {"Golden", "rbxassetid://98126365702697", "#FFD452"}, {"Essence", "rbxassetid://114750647204247", "#6FF0FF"}}, {texts = {}, shown = {}}
 
 		butterflyBloom:Surface({Name = "Butterflies", ShowTitle = false, Layout = "free", Style = {TextScale = 1, LineHeight = 1.1, MinLines = 3.3, MaxLines = 3.3, AutoHeight = true, BackgroundTransparency = 0.35, TextColor = Color3.fromRGB(255, 255, 255), TextStrokeTransparency = 0.7}, Build = function(arg)
@@ -25782,7 +25797,7 @@ local function fn2()
 			end)
 		end})
 
-		local autoButterflyBloom = fn13(butterflyBloom, "Auto Butterfly Bloom", "bloom", false, function(arg)
+		local autoButterflyBloom = fn14(butterflyBloom, "Auto Butterfly Bloom", "bloom", false, function(arg)
 			if not (arg) then
 				H(v4)
 			end
@@ -25805,9 +25820,9 @@ local function fn2()
 		end, true, "Only for Chase mode", autoButterflyBloom)
 
 		K(butterflyBloom, "Tween Speed  ", "bfSpeed", 100, 600, 320, "studs/s", 10, nil, nil, autoButterflyBloom)
-		local tbl17, fn33, tbl18 = {}, ipairs, {"Spawned", "Escaped"}
+		local tbl17, fn34, tbl18 = {}, ipairs, {"Spawned", "Escaped"}
 
-		for _, v5 in fn33(tbl18) do
+		for _, v5 in fn34(tbl18) do
 			butterflyBloom = ctx.networking
 			autoButterflyBloom = butterflyBloom:FindFirstChild("RE/Butterflies/" .. v5)
 
@@ -25841,19 +25856,19 @@ local function fn2()
 			n2, n4, n5 = n22, n42, n52
 		end)
 
-		local function fn34()
+		local function fn35()
 			local num = tonumber(workspace:GetAttribute("ButterflyBloomEndsAt"))
 			return (workspace:GetAttribute("Event_ButterflyBloom") == true) and (if num then getServerTimeNow() < num else not num)
 		end
 
-		local function fn35()
+		local function fn36()
 			local num = tonumber(workspace:GetAttribute("ButterflyBloomEndsAt"))
 			return math.min((num and (num - getServerTimeNow())) or (1 / 0), l())
 		end
 
-		local function fn36()
+		local function fn37()
 			local v5 = ctx.fn11
-			local v6, flag, flag2 = v5(), fn35() > 25
+			local v6, flag, flag2 = v5(), fn36() > 25
 
 			if flag then
 				flag2 = flag
@@ -25876,7 +25891,7 @@ local function fn2()
 			local bloom, v62 = v6.bloom
 
 			if bloom then
-				v6 = fn34() and fn36()
+				v6 = fn35() and fn37()
 
 				if v6 then
 					v62 = v6
@@ -25891,30 +25906,30 @@ local function fn2()
 			return v62
 		end
 
-		local function fn37()
+		local function fn38()
 			local v6 = ctx.fn23
 			return v6("Areas", "ButterflyBloom", "Bounds")
 		end
 
-		local function fn38()
+		local function fn39()
 			local v6 = ctx.fn24
 			local v7 = v6()
 			return ((v7 and (type(v7.Butterflies) == "table")) and v7.Butterflies) or {}
 		end
 
-		local function fn39(bfSay)
+		local function fn40(bfSay)
 			local v6 = ctx.state
 			v6.bfSay = bfSay
 		end
 
-		local function fn40(arg)
+		local function fn41(arg)
 			return ((arg:GetAttribute("ButterflyNet") == true) or (arg:GetAttribute("ItemType") == "ButterflyNet")) or (arg.Name == "Butterfly Net")
 		end
 
 		local raycastParams = RaycastParams.new()
 		raycastParams.FilterType = Enum.RaycastFilterType.Exclude
 
-		local function fn41(arg)
+		local function fn42(arg)
 			local filterDescendantsInstances, humanoid = {}, ctx.localPlayer
 
 			do
@@ -25937,14 +25952,14 @@ local function fn2()
 			return hit2 or arg
 		end
 
-		local function fn42(arg)
+		local function fn43(arg)
 			local v6 = ctx.fn23
 			local Machines = v6("Machines", "ButterflyStation", arg)
 			arg = Machines and (Machines:FindFirstChild("Anchor") or Machines)
 			return arg and ((arg:IsA("BasePart") and arg.Position) or (arg:IsA("Model") and arg:GetPivot().Position))
 		end
 
-		local function fn43(arg, arg2)
+		local function fn44(arg, arg2)
 			local v6, v7 = ctx.localPlayer, ctx.localPlayer
 			pcall(ctx.localPlayer.RequestStreamAroundAsync, ctx.localPlayer, arg)
 			local v8, n6, v9 = ctx.fn10, ctx.cFrameNew, ctx.vector3New
@@ -25959,8 +25974,8 @@ local function fn2()
 			end
 		end
 
-		local function fn44(arg)
-			local NetStand = fn42("NetStand") or fn42("ButterflyMachine")
+		local function fn45(arg)
+			local NetStand = fn43("NetStand") or fn43("ButterflyMachine")
 			if not (NetStand) then
 				return false
 			end
@@ -25984,7 +25999,7 @@ local function fn2()
 				if not (arg()) then
 					return false
 				end
-				fn43(NetStand, arg)
+				fn44(NetStand, arg)
 				v7 = ctx.fn5
 				i2, v6 = v7("RF/Butterflies/AskClaimNet")
 
@@ -25997,7 +26012,7 @@ local function fn2()
 				task.wait(0.8)
 			end
 
-			return fn38().NetClaimed == true
+			return fn39().NetClaimed == true
 		end
 
 		local Swarm
@@ -26006,12 +26021,12 @@ local function fn2()
 			Swarm = require(ReplicatedStorage.Controllers.Game.AdminAbuseClientController.Events.ButterflyBloom.Swarm)
 		end)
 
-		local function fn45(arg, arg2)
+		local function fn46(arg, arg2)
 			local tbl19, v6
 			local v7 = ctx.slot33
 			local cat, v8, tbl20 = v7.Cat, getServerTimeNow(), {}
 
-			local function fn46(arg3, arg4, arg5)
+			local function fn47(arg3, arg4, arg5)
 				if typeof(arg5) ~= "Vector3" then
 					return
 				else
@@ -26040,7 +26055,7 @@ local function fn2()
 								if typeof(body) == "Instance" then
 									v9 = flight.Id or k
 									tbl20[v9] = true
-									fn46(v9, flight, (body:IsA("BasePart") and body.Position) or (body:IsA("Model") and body:GetPivot().Position))
+									fn47(v9, flight, (body:IsA("BasePart") and body.Position) or (body:IsA("Model") and body:GetPivot().Position))
 								end
 							end
 						end
@@ -26054,7 +26069,7 @@ local function fn2()
 						local ok, result = pcall(cat.PositionAt, v9, v8)
 
 						if ok then
-							fn46(k, v9, result)
+							fn47(k, v9, result)
 						end
 					end
 				end
@@ -26087,19 +26102,19 @@ local function fn2()
 		end
 
 		v4.want = function()
-			if not (fn34()) then
-				return fn39("Waiting for the next Butterfly Bloom")
+			if not (fn35()) then
+				return fn40("Waiting for the next Butterfly Bloom")
 			end
 
 			if l() <= 0 then
-				return fn39("Night, waiting")
+				return fn40("Night, waiting")
 			end
 
-			if not (fn36()) then
-				local v6 = table.pack(math.max(fn35(), 0))
-				return fn39(("Bloom ends in %ds, not worth the trip"):format(table.unpack(v6, 1, v6.n)))
+			if not (fn37()) then
+				local v6 = table.pack(math.max(fn36(), 0))
+				return fn40(("Bloom ends in %ds, not worth the trip"):format(table.unpack(v6, 1, v6.n)))
 			end
-			return fn37() or true
+			return fn38() or true
 		end
 
 		v4.run = function(arg, arg2)
@@ -26110,15 +26125,15 @@ local function fn2()
 			v6 = ctx.fn4
 			local humanoid = v6()
 
-			if not (fn38().NetClaimed) then
-				fn39("Claiming the butterfly net")
+			if not (fn39().NetClaimed) then
+				fn40("Claiming the butterfly net")
 
 				if ctx.fn7(arg2) then
-					if not (fn44(arg2)) then
-						return fn39("Could not claim the net")
+					if not (fn45(arg2)) then
+						return fn40("Could not claim the net")
 					end
 				else
-					return fn39("Could not claim the net")
+					return fn40("Could not claim the net")
 				end
 			end
 
@@ -26136,17 +26151,17 @@ local function fn2()
 
 			if position and ((position.Position - position2).Magnitude > 300) then
 				if os.clock() < n3 then
-					return fn39("Ragdoll TP did not land, trying again soon")
+					return fn40("Ragdoll TP did not land, trying again soon")
 				end
 				pcall(humanoid.UnequipTools, humanoid)
 
 				if ctx.fn7(arg2) then
 					v6 = ctx.fn8
 					if not (v6(arg2)) then
-						return fn39("Stuck on treadmill")
+						return fn40("Stuck on treadmill")
 					end
 				else
-					return fn39("Stuck on treadmill")
+					return fn40("Stuck on treadmill")
 				end
 
 				arg = ctx.fn11
@@ -26164,10 +26179,10 @@ local function fn2()
 				end
 
 				local v7 = ctx.vector3New
-				local v8, flag = fn41(position2 + v7(0, 0, 6)), false
+				local v8, flag = fn42(position2 + v7(0, 0, 6)), false
 
 				for i2 = 1, 2, 1 do
-					fn39(("Ragdoll TP to the bloom (try %d/2)"):format(i2))
+					fn40(("Ragdoll TP to the bloom (try %d/2)"):format(i2))
 
 					flag = ragTo(function()
 						return v8
@@ -26193,7 +26208,7 @@ local function fn2()
 
 				if not (flag) then
 					n3 = os.clock() + 10
-					return fn39("Ragdoll TP did not land, trying again soon")
+					return fn40("Ragdoll TP did not land, trying again soon")
 				end
 			end
 
@@ -26228,7 +26243,7 @@ local function fn2()
 			local n7, id, v8 = 0
 			local n8, normalWalk = 0
 
-			while (arg2() and (fn34())) and (l() > 0) do
+			while (arg2() and (fn35())) and (l() > 0) do
 				local vector2 = ctx.fn11
 				position = vector2()
 				vector2 = ctx.fn4
@@ -26247,7 +26262,7 @@ local function fn2()
 				end
 
 				if (os.clock() >= arg) or not (v7 and v7.Parent) then
-					arg, v7 = os.clock() + 0.5, (fn30(fn40))
+					arg, v7 = os.clock() + 0.5, (fn31(fn41))
 				else
 				end
 
@@ -26270,7 +26285,7 @@ local function fn2()
 				end
 
 				if flag2 or (os.clock() >= n7) then
-					n7, v8 = os.clock() + 0.1, fn45(position.Position, id)
+					n7, v8 = os.clock() + 0.1, fn46(position.Position, id)
 				else
 				end
 
@@ -26287,7 +26302,7 @@ local function fn2()
 
 				if os.clock() >= n8 then
 					n8 = os.clock() + 0.5
-					fn39(((flag2 == "Chase") and "Chasing butterflies") or "Catching butterflies")
+					fn40(((flag2 == "Chase") and "Chasing butterflies") or "Catching butterflies")
 				else
 				end
 
@@ -26299,7 +26314,7 @@ local function fn2()
 						vector2 = flag
 					else
 						local v9 = ctx.vector3New
-						vector2 = fn41(position2 + v9(0, 0, 6))
+						vector2 = fn42(position2 + v9(0, 0, 6))
 					end
 
 					local v9 = ctx.vector3New
@@ -26322,7 +26337,7 @@ local function fn2()
 
 					if v8 and (v10.Magnitude <= 40) then
 						v9 = ctx.vector3New
-						local v11, unit, unit2 = v9(vector2.X, math.max(fn41(vector2).Y, (vector2.Y - n2) + 4), vector2.Z), ((v8.v.Magnitude > 1) and v8.v.Unit) or ((v10.Magnitude > 0.5) and v10.Unit)
+						local v11, unit, unit2 = v9(vector2.X, math.max(fn42(vector2).Y, (vector2.Y - n2) + 4), vector2.Z), ((v8.v.Magnitude > 1) and v8.v.Unit) or ((v10.Magnitude > 0.5) and v10.Unit)
 
 						if unit then
 							unit2 = unit
@@ -26365,15 +26380,15 @@ local function fn2()
 
 				humanoid.PlatformStand = true
 				vector2 = ctx.vector3New
-				local v9, n9 = fn41(position2 + vector2(0, 0, 6)), os.clock() - now2
+				local v9, n9 = fn42(position2 + vector2(0, 0, 6)), os.clock() - now2
 
 				if flag2 == "Patrol" then
 					flag, vector2 = ctx.vector3New
-					vector2, v9 = ctx.slot28, fn41(position2 + flag(math.sin((n9 * ctx.slot28.bfSpeed) / 180) * 170, 0, 0))
+					vector2, v9 = ctx.slot28, fn42(position2 + flag(math.sin((n9 * ctx.slot28.bfSpeed) / 180) * 170, 0, 0))
 				else
 					if flag2 == "Circle" then
 						local v10, v11, v12 = ctx.vector3New
-						v11, v12, v9 = ctx.slot28, ctx.slot28, fn41(position2 + v10(math.cos(((n9 * ctx.slot28.bfSpeed) / 25) / 4) * 25, 0, math.sin(((n9 * ctx.slot28.bfSpeed) / 25) / 4) * 25))
+						v11, v12, v9 = ctx.slot28, ctx.slot28, fn42(position2 + v10(math.cos(((n9 * ctx.slot28.bfSpeed) / 25) / 4) * 25, 0, math.sin(((n9 * ctx.slot28.bfSpeed) / 25) / 4) * 25))
 					else
 					end
 				end
@@ -26415,45 +26430,45 @@ local function fn2()
 			return v6.bloomWants() and (l() > 0)
 		end
 
-		local v6 = fn14({name = "BloomInfo", gap = 1})
+		local v6 = fn15({name = "BloomInfo", gap = 1})
 
 		v6.on = function()
 			return getOpen("Event")
 		end
 
 		v6.fn = function()
-			local v7 = fn38()
+			local v7 = fn39()
 			local counts, flag = v7.Counts or {}, ctx.state
 			local bfRec = flag.bfRec or {}
 
-			local function fn46(arg)
+			local function fn47(arg)
 				arg = math.max(0, math.floor(arg + 0.5))
 				return ("%d:%02d"):format(arg // 60, arg % 60)
 			end
 
 			local num, flag2 = tonumber(workspace:GetAttribute("ButterflyBloomEndsAt")), getServerTimeNow()
-			flag = (workspace:GetAttribute("Event_ButterflyBloom") == true) and ((num and ("Butterfly Bloom live, " .. (fn46(num - flag2) .. " left"))) or "Butterfly Bloom live")
-			local str, v8 = flag or ("Next Butterfly Bloom in " .. fn46((n5 - flag2) % n4)), ctx.slot28
-			fn46 = v8.bloom
-			flag2, flag = if fn46 then not fn46 else "Off  |  " .. str
+			flag = (workspace:GetAttribute("Event_ButterflyBloom") == true) and ((num and ("Butterfly Bloom live, " .. (fn47(num - flag2) .. " left"))) or "Butterfly Bloom live")
+			local str, v8 = flag or ("Next Butterfly Bloom in " .. fn47((n5 - flag2) % n4)), ctx.slot28
+			fn47 = v8.bloom
+			flag2, flag = if fn47 then not fn47 else "Off  |  " .. str
 
 			if flag2 then
 				flag = flag2
 			else
-				num, fn46 = ctx.lastMV == v4
+				num, fn47 = ctx.lastMV == v4
 
 				if num then
 					v8 = ctx.state
-					fn46 = v8.bfSay
+					fn47 = v8.bfSay
 				else
-					fn46 = num
+					fn47 = num
 				end
 
-				if fn46 then
+				if fn47 then
 					local v9 = ctx.state
 					flag = v9.bfSay .. ("  |  " .. str)
 				else
-					flag = fn46
+					flag = fn47
 				end
 			end
 
@@ -26490,7 +26505,7 @@ local function fn2()
 
 		local butterflyBloom2, flag, flag2 = tbl3["Butterfly Bloom"], false, false
 
-		local function fn46()
+		local function fn47()
 			local v7, v8 = ctx.slot28, ctx.slot28
 			v7.bfTrade, v8.bfSmart = flag and not flag2, flag and flag2
 			X()
@@ -26498,10 +26513,10 @@ local function fn2()
 
 		local v7, tbl19 = butterflyBloom2:Toggle("Auto Trade Up", false, function(arg)
 			flag = arg
-			fn46()
+			fn47()
 		end), {}
 
-		tbl18, fn33 = {"Emerald To Sapphire", "Sapphire To Amethyst", "Amethyst To Radiant"}, function(arg)
+		tbl18, fn34 = {"Emerald To Sapphire", "Sapphire To Amethyst", "Amethyst To Radiant"}, function(arg)
 			tbl19 = {}
 
 			for i2, v8 in ipairs(arg) do
@@ -26510,14 +26525,14 @@ local function fn2()
 			end
 		end
 
-		butterflyBloom2:Dropdown("Trade Up Tiers", tbl18, {}, fn33, true, nil, v7)
+		butterflyBloom2:Dropdown("Trade Up Tiers", tbl18, {}, fn34, true, nil, v7)
 
 		butterflyBloom2:Toggle("Smart Trade For Essence", false, function(arg)
 			flag2 = arg
-			fn46()
+			fn47()
 		end, nil, v7)
 
-		fn13(butterflyBloom2, "Auto Craft Essence", "bfCraft", false)
+		fn14(butterflyBloom2, "Auto Craft Essence", "bfCraft", false)
 		local tbl20, bfRec = {Green = 10, Blue = 10, Purple = 50}, {Green = 240, Blue = 115, Purple = 40, Golden = 1}
 
 		pcall(function()
@@ -26532,10 +26547,10 @@ local function fn2()
 			end
 		end)
 
-		fn33 = ctx.state
-		fn33.bfRec = bfRec
+		fn34 = ctx.state
+		fn34.bfRec = bfRec
 
-		local function fn47(arg)
+		local function fn48(arg)
 			for k, v8 in next, bfRec, nil do
 				if (arg[k] or 0) < v8 then
 					return false
@@ -26545,7 +26560,7 @@ local function fn2()
 			return true
 		end
 
-		local function fn48(arg)
+		local function fn49(arg)
 			local green, blue, purple, golden = arg.Green or 0, arg.Blue or 0, arg.Purple or 0, arg.Golden or 0
 
 			for i2 = 60, 1, -1 do
@@ -26558,7 +26573,7 @@ local function fn2()
 			end
 		end
 
-		local v8 = fn14({name = "Machine", mover = true, gap = 20, pri = 6, soft = true})
+		local v8 = fn15({name = "Machine", mover = true, gap = 20, pri = 6, soft = true})
 
 		v8.on = function()
 			local v9 = ctx.slot28
@@ -26584,7 +26599,7 @@ local function fn2()
 		end
 
 		v8.want = function()
-			if fn34() then
+			if fn35() then
 				return
 			else
 				local v9 = ctx.localPlayer
@@ -26593,17 +26608,17 @@ local function fn2()
 				end
 			end
 
-			local counts, v9 = fn38().Counts or {}, ctx.slot28
+			local counts, v9 = fn39().Counts or {}, ctx.slot28
 
 			if v9.bfCraft then
-				if fn47(counts) then
+				if fn48(counts) then
 					return true
 				end
 			end
 
 			v9 = ctx.slot28
 			if v9.bfSmart then
-				local v10 = fn48(counts)
+				local v10 = fn49(counts)
 				return (v10 and (((v10.Green + v10.Blue) + v10.Purple) > 0)) or nil
 			end
 			local v10, tbl192 = ipairs, tbl19
@@ -26769,14 +26784,14 @@ local function fn2()
 			end
 		end
 
-		local function fn49(arg, arg2, arg3, ...)
-			local v10 = fn42(arg2)
+		local function fn50(arg, arg2, arg3, ...)
+			local v10 = fn43(arg2)
 			if not (v10) then
 				return false
 			end
 
 			for i2 = 1, 3, 1 do
-				fn43(v10, arg3)
+				fn44(v10, arg3)
 				i2 = ctx.fn5
 				local v11, v12, v13 = i2(arg, ...)
 
@@ -26811,7 +26826,7 @@ local function fn2()
 			end
 
 			arg = ctx.slot28
-			local bfSmart, v10 = arg.bfSmart and fn48(fn38().Counts or {}), ipairs
+			local bfSmart, v10 = arg.bfSmart and fn49(fn39().Counts or {}), ipairs
 			arg = (bfSmart and {"Green", "Blue", "Purple"}) or {}
 
 			for k, v11 in v10(arg) do
@@ -26822,7 +26837,7 @@ local function fn2()
 
 					if i2.bfSmart then
 						if arg2() then
-							if not (fn49("RF/Butterflies/AskTradeUp", "ButterflyMachine", arg2, v11)) then
+							if not (fn50("RF/Butterflies/AskTradeUp", "ButterflyMachine", arg2, v11)) then
 								break
 							end
 						else
@@ -26842,11 +26857,11 @@ local function fn2()
 			for k, v11 in bfSmart(arg) do
 				while true do
 					k = ctx.slot28
-					local bfTrade, flag3 = (k.bfTrade and arg2()) and (fn38().Counts or {})[v11]
+					local bfTrade, flag3 = (k.bfTrade and arg2()) and (fn39().Counts or {})[v11]
 
 					if bfTrade then
 						v10 = nil
-						v10, flag3 = ctx.slot28, (fn38().Counts[v11] - ((ctx.slot28.bfCraft and bfRec[v11]) or 0)) >= tbl20[v11]
+						v10, flag3 = ctx.slot28, (fn39().Counts[v11] - ((ctx.slot28.bfCraft and bfRec[v11]) or 0)) >= tbl20[v11]
 					else
 						flag3 = bfTrade
 					end
@@ -26855,7 +26870,7 @@ local function fn2()
 						break
 					end
 
-					if not (fn49("RF/Butterflies/AskTradeUp", "ButterflyMachine", arg2, v11)) then
+					if not (fn50("RF/Butterflies/AskTradeUp", "ButterflyMachine", arg2, v11)) then
 						break
 					end
 					task.wait(0.15)
@@ -26867,7 +26882,7 @@ local function fn2()
 
 				if v10.bfCraft then
 					if arg2() then
-						if not (fn47(fn38().Counts or {})) then
+						if not (fn48(fn39().Counts or {})) then
 							break
 						end
 					else
@@ -26877,7 +26892,7 @@ local function fn2()
 					break
 				end
 
-				if not (fn49("RF/Butterflies/AskCraftEssence", "MutationShrine", arg2)) then
+				if not (fn50("RF/Butterflies/AskCraftEssence", "MutationShrine", arg2)) then
 					break
 				end
 				task.wait(0.3)
@@ -26889,10 +26904,10 @@ local function fn2()
 	end)
 
 	g("31_bloom#2", function()
-		local v4, butterflyBloom = fn14({name = "Wisp", gap = 3}), tbl3["Butterfly Bloom"]
-		local wt = n("wt", butterflyBloom:Text("Wisp Status", "Off"))
-		fn13(butterflyBloom, "Auto Wisp", "wisp", false)
-		fn13(butterflyBloom, "Auto Banjo Cricket", "banjo", false)
+		local v4, butterflyBloom = fn15({name = "Wisp", gap = 3}), tbl3["Butterfly Bloom"]
+		local wt = fn13("wt", butterflyBloom:Text("Wisp Status", "Off"))
+		fn14(butterflyBloom, "Auto Wisp", "wisp", false)
+		fn14(butterflyBloom, "Auto Banjo Cricket", "banjo", false)
 		butterflyBloom = ctx.state
 		butterflyBloom.wispSay = wt
 		butterflyBloom = ctx.state
@@ -26906,14 +26921,14 @@ local function fn2()
 		butterflyBloom = ctx.slot33
 		local wisp = butterflyBloom.Wisp
 
-		local function fn33()
+		local function fn34()
 			local wispCompanion = ctx.fn24
 			local v5 = wispCompanion()
 			wispCompanion = v5 and v5.WispCompanion
 			return v5, ((type(wispCompanion) == "table") and wispCompanion) or nil
 		end
 
-		local function fn34(arg)
+		local function fn35(arg)
 			if arg then
 				if arg.Accepted then
 					if arg.Unlocked then
@@ -26929,17 +26944,17 @@ local function fn2()
 			return (((type(wisp) == "table") and wisp.List) or {})[tonumber(arg.Stage) or 1]
 		end
 
-		local function fn35(arg, arg2)
+		local function fn36(arg, arg2)
 			return ((type(arg.Progress) == "table") and tonumber(arg.Progress[arg2.Id])) or 0
 		end
 
-		local function fn36(arg, arg2)
+		local function fn37(arg, arg2)
 			return (type(arg.Claimed) == "table") and arg.Claimed[arg2.Id]
 		end
 
 		local tbl12 = {}
 
-		local function fn37(arg)
+		local function fn38(arg)
 			if not (tbl12[arg]) then
 				local tbl13 = {}
 
@@ -26957,7 +26972,7 @@ local function fn2()
 
 		local tbl13 = {at = 0}
 
-		local function fn38(arg)
+		local function fn39(arg)
 			if tbl13.q == arg then
 				if (os.clock() - tbl13.at) < 2 then
 					local tbl132 = tbl13
@@ -26966,7 +26981,7 @@ local function fn2()
 			end
 
 			local flag = ctx.fn24
-			local flag2, tbl132 = flag(), fn37((type(arg.Match) == "table") and arg.Match.AreaId)
+			local flag2, tbl132 = flag(), fn38((type(arg.Match) == "table") and arg.Match.AreaId)
 			local v5, tbl14, tbl15 = I(flag2 or {}), {}, {}
 
 			for k, v6 in next, ((flag2 and (type(flag2.Inventory) == "table")) and flag2.Inventory) or {}, nil do
@@ -27016,12 +27031,12 @@ local function fn2()
 			return flag2
 		end
 
-		local function fn39(arg)
-			local v5, v6 = fn33()
-			local rarity = fn34(v6)
+		local function fn40(arg)
+			local v5, v6 = fn34()
+			local rarity = fn35(v6)
 
 			if rarity then
-				if fn36(v6, rarity) then
+				if fn37(v6, rarity) then
 					return false
 				end
 			else
@@ -27030,12 +27045,12 @@ local function fn2()
 
 			local match = ((type(rarity.Match) == "table") and rarity.Match) or {}
 			if rarity.Event == "PetFused" then
-				return (arg.a == match.AreaId) and (fn38(rarity).supply < 3)
+				return (arg.a == match.AreaId) and (fn39(rarity).supply < 3)
 			end
 
 			if rarity.Event ~= "EggSecured" then
 				return false
-			elseif fn35(v6, rarity) >= (tonumber(rarity.Target) or 1) then
+			elseif fn36(v6, rarity) >= (tonumber(rarity.Target) or 1) then
 				return false
 			end
 
@@ -27072,11 +27087,11 @@ local function fn2()
 			if not (v6.wisp) then
 				return false
 			end
-			local v7, v8 = fn33()
-			v6 = fn34(v8)
+			local v7, v8 = fn34()
+			v6 = fn35(v8)
 
 			if v6 then
-				if fn36(v8, v6) then
+				if fn37(v8, v6) then
 					return false
 				end
 			else
@@ -27084,9 +27099,9 @@ local function fn2()
 			end
 
 			if v6.Event == "EggSecured" then
-				return fn35(v8, v6) < (tonumber(v6.Target) or 1)
+				return fn36(v8, v6) < (tonumber(v6.Target) or 1)
 			end
-			return (v6.Event == "PetFused") and (fn38(v6).supply < 3)
+			return (v6.Event == "PetFused") and (fn39(v6).supply < 3)
 		end
 
 		butterflyBloom = ctx.state
@@ -27096,7 +27111,7 @@ local function fn2()
 			local v7 = ctx.slot28
 
 			if v7.wisp then
-				if fn39(arg) then
+				if fn40(arg) then
 					return "wisp"
 				end
 			end
@@ -27104,13 +27119,13 @@ local function fn2()
 			return wantEgg and (wantEgg(arg))
 		end
 
-		local function fn40(...)
+		local function fn41(...)
 			local v7 = ctx.fn23
 			local Build = v7("Build", ...)
 			return Build and ((Build:IsA("BasePart") and Build.Position) or (Build:IsA("Model") and Build:GetPivot().Position))
 		end
 
-		local function fn41(arg)
+		local function fn42(arg)
 			local v7 = ctx.fn24
 			local v8 = v7()
 			if not (v8) then
@@ -27126,7 +27141,7 @@ local function fn2()
 				return wt("Fusing for the wisp quest")
 			end
 
-			v7 = fn38(arg)
+			v7 = fn39(arg)
 			if not (v7.ready) then
 				return wt(((v7.supply >= 3) and "Hatching eggs for the fuse quest") or "Stealing eggs for the fuse quest")
 			end
@@ -27172,7 +27187,7 @@ local function fn2()
 		end
 
 		v4.fn = function()
-			local v7, v8 = fn33()
+			local v7, v8 = fn34()
 			if not (v8) then
 				return wt("Reading quest")
 			end
@@ -27186,10 +27201,10 @@ local function fn2()
 				S("wst", nostat, {Stage = ("0 / %d"):format(n2), Progress = "Not accepted"})
 			end
 
-			local n3 = fn34(v8)
+			local n3 = fn35(v8)
 
 			if n3 then
-				S("wst", nostat, {Stage = ("%d / %d"):format(tonumber(v8.Stage) or 1, n2), Progress = ("%d / %d"):format(fn35(v8, n3), tonumber(n3.Target) or 1)})
+				S("wst", nostat, {Stage = ("%d / %d"):format(tonumber(v8.Stage) or 1, n2), Progress = ("%d / %d"):format(fn36(v8, n3), tonumber(n3.Target) or 1)})
 			end
 
 			n3 = ctx.slot28
@@ -27221,15 +27236,15 @@ local function fn2()
 				end
 
 				v9 = ctx.state
-				v9.wispGo = {fn40("EnchantedForestZone", "WispSpawn"), "Accept"}
+				v9.wispGo = {fn41("EnchantedForestZone", "WispSpawn"), "Accept"}
 				return wt("Going to accept the quest")
 			end
 
-			v7 = fn34(v8)
+			v7 = fn35(v8)
 
 			if v7 then
-				if not (fn36(v8, v7)) then
-					if fn35(v8, v7) >= (tonumber(v7.Target) or 1) then
+				if not (fn37(v8, v7)) then
+					if fn36(v8, v7) >= (tonumber(v7.Target) or 1) then
 						n3 = ctx.fn5
 						n3("RF/WispCompanion/Request", "Claim", v7.Id)
 						return wt("Claimed " .. tostring(v7.Title))
@@ -27244,7 +27259,7 @@ local function fn2()
 				end
 
 				local v9 = ctx.state
-				v9.wispGo = {fn40("EnchantedForestZone", "Zone13Props", "EnchantedTree", "WispAnchor") or fn40("EnchantedForestZone", "WispAnchor"), "Return"}
+				v9.wispGo = {fn41("EnchantedForestZone", "Zone13Props", "EnchantedTree", "WispAnchor") or fn41("EnchantedForestZone", "WispAnchor"), "Return"}
 				return wt("Returning the wisp")
 			end
 
@@ -27253,12 +27268,12 @@ local function fn2()
 			end
 
 			if v7.Event == "PetFused" then
-				return fn41(v7)
+				return fn42(v7)
 			end
 			wt(tostring(v7.Title) .. ((((type(v7.Match) == "table") and v7.Match.Rarity) and " - waiting for that egg in this server") or ""))
 		end
 
-		local v7 = fn14({name = "WispGo", mover = true, gap = 3, pri = 4})
+		local v7 = fn15({name = "WispGo", mover = true, gap = 3, pri = 4})
 
 		v7.on = function()
 			local v8 = ctx.slot28
@@ -27392,18 +27407,18 @@ local function fn2()
 			return v5:GetAttribute("RaceId") == "TheHollowTrack"
 		end
 
-		local function fn33()
+		local function fn34()
 			local v5, v6 = findFirstChild(), ctx.localPlayer
 			local attribute = v6:GetAttribute("RaceHeat")
 			return ((v5 and attribute) and v5:FindFirstChild("RaceHeats")) and v5.RaceHeats:FindFirstChild(attribute)
 		end
 
 		local function phase()
-			local v5 = fn33()
+			local v5 = fn34()
 			return v5 and (v5:GetAttribute("RacePhase"))
 		end
 
-		local function fn34()
+		local function fn35()
 			local v5 = ctx.localPlayer
 			return v5:GetAttribute("RaceFinishPlace") ~= nil
 		end
@@ -27414,7 +27429,7 @@ local function fn2()
 			return ((v6 and (type(v6.TheHollow) == "table")) and tonumber(v6.TheHollow.Wins)) or 0
 		end
 
-		local function fn35()
+		local function fn36()
 			local max, v5, n2 = math.max, ctx.slot28, (tonumber(ctx.slot28.hlSpeed) or 300) - hl.drop
 			return max(n2, 140)
 		end
@@ -27422,7 +27437,7 @@ local function fn2()
 		hl.inRace = inRace
 		hl.wins = wins
 		hl.phase = phase
-		local v5 = fn14({name = "Hollow", mover = true, gap = 1, pri = 3})
+		local v5 = fn15({name = "Hollow", mover = true, gap = 1, pri = 3})
 		hl.job = v5
 
 		v5.on = function()
@@ -27434,7 +27449,7 @@ local function fn2()
 			return (inRace() and "race") or "enter"
 		end
 
-		local function fn36()
+		local function fn37()
 			fn4("RE/MountRace/AskLeave")
 			local n2 = os.clock() + 8
 
@@ -27443,7 +27458,7 @@ local function fn2()
 			end
 		end
 
-		local function fn37(arg)
+		local function fn38(arg)
 			local v6 = findFirstChild()
 
 			local ok, result = pcall(function()
@@ -27472,7 +27487,7 @@ local function fn2()
 			local reMountRacePowerUp, n4, n5, now2 = v7:FindFirstChild("RE/MountRace/PowerUp"), 0, 0
 			tbl12 = {}
 
-			local function fn38()
+			local function fn39()
 				local cframe, v8 = result:FrameAt(n2), ctx.fn11
 				local v9 = v8()
 				if not (v9) then
@@ -27488,10 +27503,10 @@ local function fn2()
 
 						if now2 then
 							if (os.clock() - now2) < 6 then
-								if fn35() > 140 then
+								if fn36() > 140 then
 									hl.drop = hl.drop + 20
 									v8 = ctx.fn6
-									v8("Pulled back, racing at " .. fn35(), "warn")
+									v8("Pulled back, racing at " .. fn36(), "warn")
 								end
 							end
 						end
@@ -27503,12 +27518,12 @@ local function fn2()
 				end
 
 				v9.CFrame = cframe + (cframe.UpVector * n3)
-				v9.AssemblyLinearVelocity = cframe.LookVector * fn35()
+				v9.AssemblyLinearVelocity = cframe.LookVector * fn36()
 				v8 = ctx.vector
 				v9.AssemblyAngularVelocity = v8
 			end
 
-			local function fn39()
+			local function fn40()
 				local serverTime, attribute2 = workspace:GetServerTimeNow(), ctx.fn11
 				local v8 = attribute2()
 
@@ -27559,7 +27574,7 @@ local function fn2()
 
 			tbl12[1] = heartbeat:Connect(function(arg2)
 				if inRace() then
-					if fn34() then
+					if fn35() then
 						return
 					end
 				else
@@ -27567,14 +27582,14 @@ local function fn2()
 				end
 
 				local n22 = n2
-				n2 = n22 + (fn35() * arg2)
-				pcall(fn38)
+				n2 = n22 + (fn36() * arg2)
+				pcall(fn39)
 				n22 = ctx.slot28
 
 				if n22.hlPower ~= false then
 					if os.clock() >= n4 then
 						n4 = os.clock() + 0.2
-						pcall(fn39)
+						pcall(fn40)
 					end
 				end
 			end)
@@ -27583,8 +27598,8 @@ local function fn2()
 
 			tbl12[2] = ok.PreSimulation:Connect(function()
 				if inRace() then
-					if not (fn34()) then
-						pcall(fn38)
+					if not (fn35()) then
+						pcall(fn39)
 					end
 				end
 			end)
@@ -27592,17 +27607,17 @@ local function fn2()
 			v7 = ctx.localPlayer
 			attribute, ok = (v7:GetAttribute("RaceLap")), os.clock()
 
-			while (arg() and (inRace())) and not fn34() do
+			while (arg() and (inRace())) and not fn35() do
 				v7 = ctx.localPlayer
 				local attribute2 = v7:GetAttribute("RaceLap")
 
 				if attribute2 ~= attribute then
 					attribute, ok = attribute2, os.clock()
 				else
-					if (os.clock() - ok) > (((result.Length / fn35()) * 1.4) + 6) then
+					if (os.clock() - ok) > (((result.Length / fn36()) * 1.4) + 6) then
 						ok = os.clock()
 
-						if fn35() > 140 then
+						if fn36() > 140 then
 							hl.drop = hl.drop + 20
 						end
 
@@ -27615,13 +27630,13 @@ local function fn2()
 						end
 
 						v9 = ctx.fn6
-						v9("Lap did not count, racing at " .. fn35(), "warn")
+						v9("Lap did not count, racing at " .. fn36(), "warn")
 					else
 					end
 				end
 
 				attribute2 = nil
-				attribute2, hl.say = ctx.localPlayer, ("Racing lap %s, %d studs/s"):format(tostring(ctx.localPlayer:GetAttribute("RaceLap") or 1), fn35())
+				attribute2, hl.say = ctx.localPlayer, ("Racing lap %s, %d studs/s"):format(tostring(ctx.localPlayer:GetAttribute("RaceLap") or 1), fn36())
 				attribute2 = ctx.fn6
 				attribute2(hl.say)
 				task.wait(0.25)
@@ -27631,7 +27646,7 @@ local function fn2()
 				v8:Disconnect()
 			end
 
-			return fn34()
+			return fn35()
 		end
 
 		v5.run = function(arg, arg2)
@@ -27666,18 +27681,18 @@ local function fn2()
 				end
 			end
 
-			while ((arg2() and (inRace())) and (phase() ~= "Racing")) and not fn34() do
+			while ((arg2() and (inRace())) and (phase() ~= "Racing")) and not fn35() do
 				if phase() == "Joining" then
 					local v6 = ctx.state
 
 					if v6.better(v5) then
 						local v7 = ctx.fn6
 						v7("A higher task goes first, leaving The Hollow")
-						return fn36()
+						return fn37()
 					end
 				end
 
-				local v6 = fn33()
+				local v6 = fn34()
 				local v62 = v6 and (tonumber(v6:GetAttribute("RaceGoAt")) or tonumber(v6:GetAttribute("RaceJoinEndsAt")))
 				hl.say = "Waiting at the start" .. ((v62 and (", go in %ds"):format(math.max(math.ceil(v62 - workspace:GetServerTimeNow()), 0))) or "")
 				v6 = ctx.fn6
@@ -27693,15 +27708,15 @@ local function fn2()
 				return
 			end
 
-			local v6 = fn34()
-			local flag = if v6 then not v6 else fn37(arg2)
+			local v6 = fn35()
+			local flag = if v6 then not v6 else fn38(arg2)
 
-			if fn34() then
+			if fn35() then
 				v6 = ctx.localPlayer
 				local attribute, v7, time = v6:GetAttribute("RaceFinishPlace"), ctx.localPlayer, tonumber(ctx.localPlayer:GetAttribute("RaceFinishTime"))
 				hl.n = hl.n + 1
 				task.wait(1.5)
-				fn36()
+				fn37()
 				hl.time, hl.cycle = time, os.clock() - arg
 				hl.last = ("Finished #%s in %s, round trip %ds"):format(tostring(attribute), (time and ("%.1fs"):format(time)) or "?", math.floor(hl.cycle))
 				arg2 = ctx.fn6
@@ -27715,9 +27730,9 @@ local function fn2()
 
 	g("33_hollow#2", function()
 		local theHollow = tbl3["The Hollow"]
-		local hlSt = n("hlSt", theHollow:Text("The Hollow Status", "Off"))
+		local hlSt = fn13("hlSt", theHollow:Text("The Hollow Status", "Off"))
 
-		fn13(theHollow, "Auto Race The Hollow", "hollow", false, function(arg)
+		fn14(theHollow, "Auto Race The Hollow", "hollow", false, function(arg)
 			if not (arg) then
 				local v4, v5 = ctx.lastMV, ctx.state
 
@@ -27735,8 +27750,8 @@ local function fn2()
 			v5.hlSpeed, v6.HL.drop = math.clamp(tonumber(arg) or 300, 140, 400), 0
 		end, " st/s", 1).Quick = false
 
-		fn13(theHollow, "Use Race Power-Ups", "hlPower", true)
-		local v5 = fn14({name = "HollowInfo", gap = 1, info = true})
+		fn14(theHollow, "Use Race Power-Ups", "hlPower", true)
+		local v5 = fn15({name = "HollowInfo", gap = 1, info = true})
 
 		v5.on = function()
 			return getOpen("Event")
@@ -27761,7 +27776,7 @@ local function fn2()
 	g("34_star#1", function()
 		local ss, shootingStar = {pay = nil, caught = 0, slipped = 0, askAt = 0, jumped = {}}, ctx.state
 		shootingStar.SS = ss
-		local v4 = fn14({name = "Star", mover = true, gap = 0.5, pri = 2})
+		local v4 = fn15({name = "Star", mover = true, gap = 0.5, pri = 2})
 		shootingStar = tbl3["Shooting Star"]
 		local v5 = shootingStar:Text("Shooting Star Status", "Off")
 
@@ -27771,13 +27786,13 @@ local function fn2()
 			end
 		end}
 
-		fn13(shootingStar, "Auto Catch Shooting Star", "star", false, function(arg)
+		fn14(shootingStar, "Auto Catch Shooting Star", "star", false, function(arg)
 			if not (arg) then
 				H(v4)
 			end
 		end)
 
-		local function fn33(pay)
+		local function fn34(pay)
 			if type(pay) == "table" then
 				if pay.Id ~= nil then
 					if ss.pay then
@@ -27793,7 +27808,7 @@ local function fn2()
 			end
 		end
 
-		local function fn34()
+		local function fn35()
 			ss.askAt = os.clock() + 15
 
 			task.spawn(function()
@@ -27801,12 +27816,12 @@ local function fn2()
 				local AskState, v7 = v6("RF/ShootingStar/AskState")
 
 				if AskState then
-					fn33(v7)
+					fn34(v7)
 				end
 			end)
 		end
 
-		local function fn35(arg, arg2)
+		local function fn36(arg, arg2)
 			local v6 = ctx.networking
 			local v7 = v6:FindFirstChild(arg)
 
@@ -27817,9 +27832,9 @@ local function fn2()
 			end
 		end
 
-		fn35("RE/ShootingStar/Fall", fn33)
+		fn36("RE/ShootingStar/Fall", fn34)
 
-		fn35("RE/ShootingStar/Wander", function(arg, leg)
+		fn36("RE/ShootingStar/Wander", function(arg, leg)
 			if ss.pay then
 				if ss.pay.Id == arg then
 					if type(leg) == "table" then
@@ -27829,7 +27844,7 @@ local function fn2()
 			end
 		end)
 
-		fn35("RE/ShootingStar/Slipped", function(arg)
+		fn36("RE/ShootingStar/Slipped", function(arg)
 			if ss.pay then
 				if ss.pay.Id == arg then
 					ss.slipped = ss.slipped + 1
@@ -27838,7 +27853,7 @@ local function fn2()
 			end
 		end)
 
-		fn35("RE/ShootingStar/Claimed", function(arg)
+		fn36("RE/ShootingStar/Claimed", function(arg)
 			if ss.pay then
 				if ss.pay.Id == arg then
 					ss.caught = ss.caught + 1
@@ -27849,7 +27864,7 @@ local function fn2()
 			end
 		end)
 
-		fn35("RE/ShootingStar/Expired", function(arg)
+		fn36("RE/ShootingStar/Expired", function(arg)
 			if ss.pay then
 				if ss.pay.Id == arg then
 					ss.pay = nil
@@ -27858,9 +27873,9 @@ local function fn2()
 			end
 		end)
 
-		fn34()
+		fn35()
 
-		local function fn36(arg)
+		local function fn37(arg)
 			local shootingStarClient = workspace:FindFirstChild("ShootingStarClient")
 			local buddy = shootingStarClient and (shootingStarClient:FindFirstChild("Buddy"))
 			shootingStarClient = buddy and (buddy:FindFirstChild("RootPart"))
@@ -27900,7 +27915,7 @@ local function fn2()
 			return ((typeof(shootingStarClient) == "Vector3") and shootingStarClient) or nil
 		end
 
-		local function fn37(arg)
+		local function fn38(arg)
 			local v6 = getServerTimeNow()
 			return (arg and (v6 >= (tonumber(arg.LandAt) or v6))) and ((tonumber(arg.ExpiresAt) or (1 / 0)) > v6)
 		end
@@ -27909,12 +27924,12 @@ local function fn2()
 
 		v6.starWants = function()
 			local v7 = ctx.slot28
-			return v7.star and fn37(ss.pay)
+			return v7.star and fn38(ss.pay)
 		end
 
 		v4.on = function()
 			if os.clock() >= ss.askAt then
-				fn34()
+				fn35()
 			end
 
 			if ss.pay then
@@ -27924,7 +27939,7 @@ local function fn2()
 			end
 
 			local v7 = ctx.slot28
-			return v7.star and fn37(ss.pay)
+			return v7.star and fn38(ss.pay)
 		end
 
 		v4.want = function()
@@ -27939,7 +27954,7 @@ local function fn2()
 			local n2 = ctx.localPlayer
 			local character = n2.Character
 
-			local function fn38()
+			local function fn39()
 				local flag, flag2 = arg2() and (ss.pay == arg)
 
 				if flag then
@@ -27952,9 +27967,9 @@ local function fn2()
 				return flag2
 			end
 
-			if ctx.fn7(fn38) then
+			if ctx.fn7(fn39) then
 				n2 = ctx.fn8
-				if not (n2(fn38)) then
+				if not (n2(fn39)) then
 					return
 				end
 			else
@@ -27974,13 +27989,13 @@ local function fn2()
 
 			if n2 then
 				local v8 = ctx.fn14
-				if not (v8(fn38, "Shooting Star")) then
+				if not (v8(fn39, "Shooting Star")) then
 					return
 				end
 			end
 
-			local function fn39()
-				local v8 = fn36(arg)
+			local function fn40()
+				local v8 = fn37(arg)
 				local n3
 
 				if v8 then
@@ -27993,26 +28008,26 @@ local function fn2()
 				return n3
 			end
 
-			local function fn40()
-				local v8, v9 = fn39(), ctx.fn11
+			local function fn41()
+				local v8, v9 = fn40(), ctx.fn11
 				local v10 = v9()
 				return ((v8 and v10) and (v10.Position - v8).Magnitude) or (1 / 0)
 			end
 
-			if fn40() > 40 then
+			if fn41() > 40 then
 				if not (ss.jumped[arg.Id]) then
 					ss.jumped[arg.Id] = true
 					n2 = ctx.fn6
 					n2("Ragdoll jump to the star")
-					ragTo(fn39, fn38)
+					ragTo(fn40, fn39)
 				end
 			end
 
-			if fn38() then
-				if fn40() > 40 then
+			if fn39() then
+				if fn41() > 40 then
 					n2 = ctx.fn6
 					n2("Running to the star")
-					local v8 = fn39()
+					local v8 = fn40()
 					local v82
 
 					if v8 then
@@ -28022,18 +28037,18 @@ local function fn2()
 						v82 = v9
 					end
 
-					fn20(v82, fn38, 30, 40)
+					fn21(v82, fn39, 30, 40)
 				end
 			end
 
-			n2, fn40 = (tonumber(arg.HoldSeconds) or 1.6) + 0.3, ctx.fn21
-			local n3, now2 = 0.5 + (fn40() * 2), os.clock()
-			fn40 = false
+			n2, fn41 = (tonumber(arg.HoldSeconds) or 1.6) + 0.3, ctx.fn21
+			local n3, now2 = 0.5 + (fn41() * 2), os.clock()
+			fn41 = false
 			local now3
 			local n4 = 0
 
-			while fn38() do
-				local v8, v9 = fn36(arg)
+			while fn39() do
+				local v8, v9 = fn37(arg)
 				local v10 = ctx.fn11
 				v7 = v10()
 				v10 = ctx.fn4
@@ -28052,7 +28067,7 @@ local function fn2()
 				end
 
 				if v7.Anchored then
-					ctx.fn7(fn38)
+					ctx.fn7(fn39)
 				end
 
 				v10 = ctx.vector3New
@@ -28088,7 +28103,7 @@ local function fn2()
 					v14, v7.AssemblyLinearVelocity, v7.AssemblyAngularVelocity = ctx.vector, assemblyLinearVelocity, ctx.vector
 				end)
 
-				if fn40 then
+				if fn41 then
 					if ss.hold then
 						if if now3 then not now3 else (os.clock() - ss.hold) >= n2 then
 							n4 += 1
@@ -28103,7 +28118,7 @@ local function fn2()
 									fn4("RE/ShootingStar/Hold", arg.Id, false)
 
 									if (n4 % 3) == 0 then
-										fn34()
+										fn35()
 									end
 								end
 							end
@@ -28116,9 +28131,9 @@ local function fn2()
 					end
 				else
 					now2 = if v92.Magnitude > 8 then os.clock() else now2
-					fn40 = (os.clock() - now2) >= n3
+					fn41 = (os.clock() - now2) >= n3
 
-					if not fn40 then
+					if not fn41 then
 						v8 = ctx.fn6
 						v8("At the star, letting the server catch up")
 					end
@@ -28135,7 +28150,7 @@ local function fn2()
 			ss.hold = nil
 		end
 
-		local v7 = fn14({name = "StarInfo", gap = 1})
+		local v7 = fn15({name = "StarInfo", gap = 1})
 
 		v7.on = function()
 			local Event = getOpen("Event")
@@ -28171,11 +28186,11 @@ local function fn2()
 	end)
 
 	g("35_stage#1", function()
-		local v4 = fn14({name = "Stage", mover = true, gap = 0.5, pri = 50, soft = true, aux = true, where = function(arg)
+		local v4 = fn15({name = "Stage", mover = true, gap = 0.5, pri = 50, soft = true, aux = true, where = function(arg)
 			return ((arg == "dim") and "dim") or "field"
 		end})
 
-		local function fn33()
+		local function fn34()
 			local v5 = ctx.state
 			local starWants, starWants2 = v5.starWants
 
@@ -28267,7 +28282,7 @@ local function fn2()
 				v5.rank.Stage = stage
 			end
 
-			return stage2 and (fn33() ~= nil)
+			return stage2 and (fn34() ~= nil)
 		end
 
 		v4.want = function()
@@ -28276,7 +28291,7 @@ local function fn2()
 			if not (v5()) then
 				local v6 = ctx.fn11
 				if v6() then
-					return fn33()
+					return fn34()
 				end
 			end
 		end
@@ -28335,7 +28350,7 @@ local function fn2()
 	end)
 
 	g("36_admin#1", function()
-		local function fn33(arg)
+		local function fn34(arg)
 			local ok, result = pcall(function()
 				local v4 = ctx.slot33
 				return v4.Egg.ReadFieldEgg(arg)
@@ -28366,7 +28381,7 @@ local function fn2()
 			return (arg and arg:IsA("Model")) and arg:GetPivot().Position
 		end
 
-		local function fn34()
+		local function fn35()
 			local v4, tbl12 = ipairs, {"CaptureTheEggSpawn", "AdminAbuseEggSpawn"}
 
 			for k, v5 in v4(tbl12) do
@@ -28381,17 +28396,17 @@ local function fn2()
 			end
 		end
 
-		local function fn35(arg, arg2)
+		local function fn36(arg, arg2)
 			local areaEggSlotsClient = workspace:FindFirstChild("AreaEggSlotsClient")
-			return ((getPosition(areaEggSlotsClient and areaEggSlotsClient:FindFirstChild(arg)) or getPosition(workspace:FindFirstChild(arg))) or ((arg2 and (typeof(arg2.BottomCFrame) == "CFrame")) and arg2.BottomCFrame.Position)) or (fn34())
+			return ((getPosition(areaEggSlotsClient and areaEggSlotsClient:FindFirstChild(arg)) or getPosition(workspace:FindFirstChild(arg))) or ((arg2 and (typeof(arg2.BottomCFrame) == "CFrame")) and arg2.BottomCFrame.Position)) or (fn35())
 		end
 
-		local function fn36(arg)
+		local function fn37(arg)
 			local num = tonumber(arg and arg.CarrierUserId)
 			return ((num and (num > 0)) and num) or nil
 		end
 
-		local function fn37(arg, arg2)
+		local function fn38(arg, arg2)
 			local v4 = ctx.fn16
 			local v5 = v4(arg)
 			arg = nil
@@ -28400,13 +28415,13 @@ local function fn2()
 				arg = v5
 			else
 				v4 = nil
-				v4, arg = ctx.localPlayer, fn36(arg2) == ctx.localPlayer.UserId
+				v4, arg = ctx.localPlayer, fn37(arg2) == ctx.localPlayer.UserId
 			end
 
 			return arg
 		end
 
-		local function fn38(arg, arg2, arg3)
+		local function fn39(arg, arg2, arg3)
 			local v4 = ctx.fn11
 			local v5, n2 = v4(), ctx.fn4
 			v4 = n2()
@@ -28433,7 +28448,7 @@ local function fn2()
 			arg3(cframe)
 		end
 
-		local function fn39(arg, arg2)
+		local function fn40(arg, arg2)
 			local areaEggSlotsClient, v4, n2, carryAreaEgg, v5 = ipairs, table.pack(workspace:GetChildren()), 14
 
 			for k, v6 in areaEggSlotsClient(table.unpack(v4, 1, v4.n)) do
@@ -28471,7 +28486,7 @@ local function fn2()
 			return carryAreaEgg
 		end
 
-		local function fn40(arg, arg2)
+		local function fn41(arg, arg2)
 			local character = ctx.fn4
 			local n2, n3 = character(), ctx.localPlayer
 			character = n3.Character
@@ -28487,15 +28502,15 @@ local function fn2()
 			n2, n3 = os.clock() + 1.4, 0
 
 			while (os.clock() < n2) and (arg2()) do
-				character = fn33(arg)
-				if fn37(arg, character) then
+				character = fn34(arg)
+				if fn38(arg, character) then
 					return true
 				end
 
-				if fn36(character) then
+				if fn37(character) then
 					return false
 				end
-				local v4 = fn35(arg, character)
+				local v4 = fn36(arg, character)
 
 				if v4 then
 					local v5, v6, v7 = ctx.fn10, ctx.cFrameNew, ctx.vector3New
@@ -28503,7 +28518,7 @@ local function fn2()
 
 					if os.clock() >= n3 then
 						n3 = os.clock() + 0.08
-						local v8 = fireproximityprompt and fn39(arg, v4)
+						local v8 = fireproximityprompt and fn40(arg, v4)
 
 						if v8 then
 							pcall(function()
@@ -28522,31 +28537,31 @@ local function fn2()
 				v4()
 			end
 
-			return fn37(arg, fn33(arg))
+			return fn38(arg, fn34(arg))
 		end
 
 		local captureTheEgg = tbl3["Capture The Egg"]
 
-		local function fn41(capSt)
+		local function fn42(capSt)
 			local v4 = ctx.state
 			v4.capSt = capSt
 		end
 
-		local v4 = fn14({name = "Capture", mover = true, gap = 0.25, pri = -1, urgent = true, ev = function()
+		local v4 = fn15({name = "Capture", mover = true, gap = 0.25, pri = -1, urgent = true, ev = function()
 			return true
 		end})
 
-		local autoCaptureEventEgg = fn13(captureTheEgg, "Auto Capture Event Egg", "capture", false, function(arg)
+		local autoCaptureEventEgg = fn14(captureTheEgg, "Auto Capture Event Egg", "capture", false, function(arg)
 			if not (arg) then
 				H(v4)
 			end
 		end)
 
-		fn13(captureTheEgg, "Take It From The Holder", "capTake", true, nil, nil, autoCaptureEventEgg)
+		fn14(captureTheEgg, "Take It From The Holder", "capTake", true, nil, nil, autoCaptureEventEgg)
 		K(captureTheEgg, "Hold Height", "capH", 20, 120, 45, "studs", 1, nil, nil, autoCaptureEventEgg)
 		K(captureTheEgg, "Keep Away Distance", "capAway", 20, 150, 45, "studs", 1, nil, nil, autoCaptureEventEgg)
 
-		local function fn42()
+		local function fn43()
 			local attribute = workspace:GetAttribute("Event_CaptureTheEggUid")
 			return (((type(attribute) == "string") and (attribute ~= "")) and attribute) or nil
 		end
@@ -28554,7 +28569,7 @@ local function fn2()
 		local tbl12 = {}
 		local n2 = -9
 
-		local function fn43()
+		local function fn44()
 			if (os.clock() - n2) < 5 then
 				local tbl122 = tbl12
 				return tbl122
@@ -28591,10 +28606,10 @@ local function fn2()
 			return tbl122
 		end
 
-		local function fn44(arg, arg2)
+		local function fn45(arg, arg2)
 			arg2 = arg2 or 0
 
-			for _, v5 in ipairs(fn43()) do
+			for _, v5 in ipairs(fn44()) do
 				if arg.X >= (v5.lo.X + arg2) then
 					if arg.X <= (v5.hi.X - arg2) then
 						if arg.Z >= (v5.lo.Z + arg2) then
@@ -28607,7 +28622,7 @@ local function fn2()
 			end
 		end
 
-		local function fn45(arg)
+		local function fn46(arg)
 			local children, v5, n3 = ipairs, table.pack(Players:GetPlayers()), 1 / 0
 
 			for k, v6 in children(table.unpack(v5, 1, v5.n)) do
@@ -28633,8 +28648,8 @@ local function fn2()
 			return n3
 		end
 
-		local function fn46(arg)
-			local v5, v6, n3, v7 = ipairs, table.pack(fn43()), 1 / 0
+		local function fn47(arg)
+			local v5, v6, n3, v7 = ipairs, table.pack(fn44()), 1 / 0
 			local n4, v8 = -1
 
 			for k, v9 in v5(table.unpack(v6, 1, v6.n)) do
@@ -28647,7 +28662,7 @@ local function fn2()
 					for k2, v10 in k(n6) do
 						k2 = ctx.vector3New
 						local v11, v12 = ctx.slot28, k2(i2, v9.y + ctx.slot28.capH, v10)
-						local v13, magnitude, v14 = fn45(v12), (v12 - arg).Magnitude, ctx.slot28
+						local v13, magnitude, v14 = fn46(v12), (v12 - arg).Magnitude, ctx.slot28
 
 						if v13 >= (v14.capAway + 10) then
 							if magnitude < n3 then
@@ -28705,12 +28720,12 @@ local function fn2()
 
 		v4.on = function()
 			local v6 = ctx.slot28
-			return v6.capture and (fn42() ~= nil)
+			return v6.capture and (fn43() ~= nil)
 		end
 
 		v4.want = function()
-			local v6 = fn42()
-			return (v6 and fn33(v6)) and v6
+			local v6 = fn43()
+			return (v6 and fn34(v6)) and v6
 		end
 
 		v4.run = function(arg, arg2)
@@ -28722,7 +28737,7 @@ local function fn2()
 			local n4, n5 = 0.016666666666666666, 0
 
 			while arg2() do
-				local v7, flag = fn33(arg), ctx.fn11
+				local v7, flag = fn34(arg), ctx.fn11
 				v6 = flag()
 
 				if v7 then
@@ -28733,10 +28748,10 @@ local function fn2()
 					break
 				end
 
-				local v8, v52 = fn36(v7), ctx.state
+				local v8, v52 = fn37(v7), ctx.state
 				v52.godHunt = false
 
-				if fn37(arg, v7) then
+				if fn38(arg, v7) then
 					v52 = v5
 					local flag2, flag3 = not v52
 
@@ -28744,12 +28759,12 @@ local function fn2()
 						flag = os.clock() >= n3
 
 						if flag then
-							local v9 = fn44(v5, 13)
+							local v9 = fn45(v5, 13)
 							local flag4 = not v9
 
 							if v9 then
 								local v10
-								v10, flag3 = ctx.slot28, fn45(v5) < ctx.slot28.capAway
+								v10, flag3 = ctx.slot28, fn46(v5) < ctx.slot28.capAway
 							else
 								flag3 = flag4
 							end
@@ -28761,11 +28776,11 @@ local function fn2()
 					end
 
 					if flag3 then
-						v5 = fn46(v6.Position)
+						v5 = fn47(v6.Position)
 					end
 
 					n3 = os.clock() + 0.25
-					local v9, v53, v532 = fn44(v6.Position), v5
+					local v9, v53, v532 = fn45(v6.Position), v5
 
 					if v53 then
 						v532 = v53
@@ -28774,8 +28789,8 @@ local function fn2()
 						flag3, v532 = ctx.slot28, flag2(v6.Position.X, ((v9 and v9.y) or v6.Position.Y) + ctx.slot28.capH, v6.Position.Z)
 					end
 
-					fn38(v532, 220, n4)
-					fn41("Holding the event egg" .. str)
+					fn39(v532, 220, n4)
+					fn42("Holding the event egg" .. str)
 				else
 					if v8 then
 						v5 = nil
@@ -28810,14 +28825,14 @@ local function fn2()
 						if capTake then
 							playerByUserId2 = ctx.state
 							playerByUserId2.godHunt = true
-							fn41("Taking the event egg from " .. playerByUserId.DisplayName)
+							fn42("Taking the event egg from " .. playerByUserId.DisplayName)
 						else
-							local v9 = fn35(arg, v7)
+							local v9 = fn36(arg, v7)
 
 							if v9 then
-								if fn44(v9) then
+								if fn45(v9) then
 									local v10 = ctx.vector3New
-									fn38(v9 + v10(0, 25, 0), 400, n4)
+									fn39(v9 + v10(0, 25, 0), 400, n4)
 								end
 							end
 
@@ -28831,13 +28846,13 @@ local function fn2()
 								flag2 = capTake2
 							end
 
-							fn41(displayName .. (" has the event egg" .. ((flag2 and ", get a bat to take it") or "")))
+							fn42(displayName .. (" has the event egg" .. ((flag2 and ", get a bat to take it") or "")))
 						end
 					else
 						if v7.State == "Carried" then
-							fn41("Someone has the event egg")
+							fn42("Someone has the event egg")
 						else
-							local v9 = fn35(arg, v7)
+							local v9 = fn36(arg, v7)
 							if not (v9) then
 								break
 							end
@@ -28870,14 +28885,14 @@ local function fn2()
 							end
 
 							if Wall then
-								fn41("Field wall is up, waiting to go out")
+								fn42("Field wall is up, waiting to go out")
 							else
 								if (magnitude > 220) and (os.clock() >= n5) then
-									fn41("Ragdoll jump to the event egg")
+									fn42("Ragdoll jump to the event egg")
 									n5 = os.clock() + 4
 
 									if ragTo(function()
-										local v10 = fn35(arg, fn33(arg))
+										local v10 = fn36(arg, fn34(arg))
 										local n6
 
 										if v10 then
@@ -28890,41 +28905,41 @@ local function fn2()
 										return n6
 									end, arg2) then
 										n5 = os.clock() + 2
-										fn41("Landed, grabbing the event egg")
+										fn42("Landed, grabbing the event egg")
 										local n6 = os.clock() + 8
 
 										while (os.clock() < n6) and (arg2()) do
-											local v10 = fn33(arg)
+											local v10 = fn34(arg)
 
 											if v10 then
-												if fn37(arg, v10) then
+												if fn38(arg, v10) then
 													break
-												elseif fn36(v10) then
+												elseif fn37(v10) then
 													break
 												end
 											else
 												break
 											end
 
-											fn40(arg, arg2)
+											fn41(arg, arg2)
 										end
 									else
 									end
 								else
 									if flag2 then
-										fn41("Leaving the base for the event egg")
+										fn42("Leaving the base for the event egg")
 										local v10, v11 = ctx.fn22, ctx.vector3New
 
 										v10(v9 + v11(0, 2.5, 0), function()
-											return arg2() and not fn37(arg, fn33(arg))
+											return arg2() and not fn38(arg, fn34(arg))
 										end, 400)
 									elseif magnitude <= 220 then
-										fn41("Grabbing the event egg")
-										fn40(arg, arg2)
+										fn42("Grabbing the event egg")
+										fn41(arg, arg2)
 									else
 										local v10 = ctx.vector3New
-										fn38(v9 + v10(0, 2.5, 0), 400, n4)
-										fn41(("Going for the event egg  %d studs"):format(magnitude))
+										fn39(v9 + v10(0, 2.5, 0), 400, n4)
+										fn42(("Going for the event egg  %d studs"):format(magnitude))
 									end
 								end
 							end
@@ -28941,7 +28956,7 @@ local function fn2()
 			v7.godHunt = false
 			v6 = ctx.fn11
 			v7 = v6()
-			v6 = v7 and fn44(v7.Position, -4)
+			v6 = v7 and fn45(v7.Position, -4)
 
 			if v6 and (v7.Position.Y > (v6.y + 8)) then
 				local v8 = ctx.vector3New
@@ -28969,7 +28984,7 @@ local function fn2()
 					if not flag then
 						break
 					end
-					fn38(v9, 160, n4)
+					fn39(v9, 160, n4)
 					v10 = nil
 					v10, n4 = ctx.fn12, math.clamp(ctx.fn12(), 0.004166666666666667, 0.05)
 				end
@@ -28983,50 +28998,50 @@ local function fn2()
 			end
 		end
 
-		local v6 = fn14({name = "CaptureInfo", gap = 1})
+		local v6 = fn15({name = "CaptureInfo", gap = 1})
 
 		v6.on = function()
 			return getOpen("Admin Abuse")
 		end
 
 		v6.fn = function()
-			local attribute, v7 = (fn42() or workspace:GetAttribute("Event_CaptureTheEgg")) or workspace:GetAttribute("Event_CaptureTheEggGameplay"), ctx.slot28
+			local attribute, v7 = (fn43() or workspace:GetAttribute("Event_CaptureTheEgg")) or workspace:GetAttribute("Event_CaptureTheEggGameplay"), ctx.slot28
 
 			if v7.capture then
 				if attribute then
 					if ctx.lastMV then
 						if ctx.lastMV.name ~= "Capture" then
-							if fn42() then
-								fn41("Waiting for " .. (ctx.lastMV.name .. " to finish"))
+							if fn43() then
+								fn42("Waiting for " .. (ctx.lastMV.name .. " to finish"))
 							elseif not ctx.lastMV then
-								fn41("Looking for the event egg")
+								fn42("Looking for the event egg")
 							end
 						elseif not ctx.lastMV then
-							fn41("Looking for the event egg")
+							fn42("Looking for the event egg")
 						end
 					elseif not ctx.lastMV then
-						fn41("Looking for the event egg")
+						fn42("Looking for the event egg")
 					end
 				else
-					fn41("Waiting for Capture The Egg")
+					fn42("Waiting for Capture The Egg")
 				end
 			else
-				fn41("Off")
+				fn42("Off")
 			end
 		end
 
 		minigameEggs = tbl3["Minigame Eggs"]
 
-		local function fn47(mgSt)
+		local function fn48(mgSt)
 			local v7 = ctx.state
 			v7.mgSt = mgSt
 		end
 
-		fn13(minigameEggs, "Auto Steal Minigame Egg", "minigame", true, nil, "Red Light Green Light, T-Rex Run")
+		fn14(minigameEggs, "Auto Steal Minigame Egg", "minigame", true, nil, "Red Light Green Light, T-Rex Run")
 		local tbl13 = {{"RedLightGreenLight", "RLGL"}, {"TrexRun", "TrexRun"}}
-		local v7, flag, n4 = fn14({name = "Minigame", gap = 0.5}), false, 0
+		local v7, flag, n4 = fn15({name = "Minigame", gap = 0.5}), false, 0
 
-		local function fn48()
+		local function fn49()
 			local v8 = ctx.state
 
 			if v8.mgUid then
@@ -29085,27 +29100,27 @@ local function fn2()
 			local v9 = ctx.slot28
 
 			if not (v9.minigame and v8) then
-				fn48()
+				fn49()
 				local v10 = ctx.slot28
-				return fn47((v10.minigame and "Waiting for Red Light Green Light or T-Rex Run") or "Off")
+				return fn48((v10.minigame and "Waiting for Red Light Green Light or T-Rex Run") or "Off")
 			end
 
 			local attribute, attribute2, bottomCFrame = workspace:GetAttribute(v8 .. "_CarrierUserId"), workspace:GetAttribute(v8 .. "_EggPosition"), ctx.localPlayer
 			if attribute == bottomCFrame.UserId then
-				return fn47("Carrying the egg home")
+				return fn48("Carrying the egg home")
 			end
 
 			if type(attribute) == "number" then
 				if attribute > 0 then
 					bottomCFrame = ctx.state
 					bottomCFrame.mgUid = nil
-					return fn47("Another player has the egg")
+					return fn48("Another player has the egg")
 				end
 			end
 
 			if typeof(attribute2) ~= "Vector3" then
-				fn48()
-				return fn47("Waiting for the egg to land")
+				fn49()
+				return fn48("Waiting for the egg to land")
 			end
 			v9, attribute = pairs, ctx.fn15
 			local v10, n5, uid = table.pack(attribute()), 40
@@ -29132,8 +29147,8 @@ local function fn2()
 			end
 
 			if not (uid) then
-				fn48()
-				return fn47("Egg landed, looking for it")
+				fn49()
+				return fn48("Egg landed, looking for it")
 			end
 			attribute = ctx.state
 
@@ -29185,7 +29200,7 @@ local function fn2()
 				end
 			end
 
-			fn47("Going for the " .. ((((v8 == "RLGL") and "Red Light Green Light") or "T-Rex Run") .. " egg"))
+			fn48("Going for the " .. ((((v8 == "RLGL") and "Red Light Green Light") or "T-Rex Run") .. " egg"))
 		end
 
 		local v8 = ctx.state
@@ -29224,13 +29239,13 @@ local function fn2()
 		local v20 = v19(6248.72, 17163, 16944)
 		local CollectionService = getService("CollectionService")
 
-		local function fn33()
+		local function fn34()
 			local v21 = ctx.fn24
 			local v22 = v21()
 			return ((v22 and (type(v22.BanjoCricket) == "table")) and v22.BanjoCricket) or {}
 		end
 
-		local function fn34(arg)
+		local function fn35(arg)
 			local ok, result = pcall(function()
 				return require(ReplicatedStorage.Data.BanjoCricket).PlaybackSeconds(arg)
 			end)
@@ -29248,7 +29263,7 @@ local function fn2()
 				end
 
 				if (arg.Kind == "Playback") and (type(arg.Notes) == "table") then
-					tbl12.notes, tbl12.listen = arg.Notes, os.clock() + fn34(#arg.Notes)
+					tbl12.notes, tbl12.listen = arg.Notes, os.clock() + fn35(#arg.Notes)
 				elseif arg.Kind == "Note" then
 					table.insert(tbl12.acks, {arg.Mushroom, os.clock()})
 
@@ -29266,7 +29281,7 @@ local function fn2()
 			end)
 		end
 
-		local function fn35(arg)
+		local function fn36(arg)
 			for _, v21 in ipairs(CollectionService:GetTagged("BanjoCricketMushroom")) do
 				if v21:GetAttribute("MushroomIndex") == arg then
 					local hitbox = v21:FindFirstChild("Hitbox") or v21:FindFirstChild("Hitbox Part")
@@ -29286,7 +29301,7 @@ local function fn2()
 			return tbl13[arg]
 		end
 
-		local function fn36()
+		local function fn37()
 			local ok, result = pcall(function()
 				return CollectionService:GetTagged("BanjoCricketNpc")[1]:GetPivot().Position
 			end)
@@ -29294,19 +29309,19 @@ local function fn2()
 			return (ok and result) or v10
 		end
 
-		local function fn37(...)
+		local function fn38(...)
 			local v21 = ctx.fn23
 			local Build = v21("Build", "EnchantedTreeInterior", "Markers", ...)
 			return (Build and Build:IsA("BasePart")) and Build.Position
 		end
 
-		local function fn38()
+		local function fn39()
 			local v21 = ctx.fn11
 			local v22 = v21()
-			return (v22 ~= nil) and ((v22.Position - ((fn37("Passages", "SecretRoomSpawn") or fn37("SecretRoomSpawn")) or v12)).Magnitude < 120)
+			return (v22 ~= nil) and ((v22.Position - ((fn38("Passages", "SecretRoomSpawn") or fn38("SecretRoomSpawn")) or v12)).Magnitude < 120)
 		end
 
-		local function fn39(arg)
+		local function fn40(arg)
 			local raycastParams, filterDescendantsInstances, n2 = RaycastParams.new(), {}, ctx.localPlayer
 			filterDescendantsInstances[1] = n2.Character
 			raycastParams.FilterDescendantsInstances, raycastParams.FilterType = filterDescendantsInstances, Enum.RaycastFilterType.Exclude
@@ -29323,7 +29338,7 @@ local function fn2()
 			return n2 or arg
 		end
 
-		local function fn40(arg)
+		local function fn41(arg)
 			local v21 = ctx.fn11
 			local v22 = v21()
 
@@ -29333,8 +29348,8 @@ local function fn2()
 			end
 		end
 
-		local function fn41(arg, arg2)
-			local n2, unit = fn35(arg), ctx.vector3New
+		local function fn42(arg, arg2)
+			local n2, unit = fn36(arg), ctx.vector3New
 			local unit2 = unit(n2.X - v8.X, 0, n2.Z - v8.Z)
 			unit = (unit2.Magnitude > 0.1) and unit2.Unit
 
@@ -29346,10 +29361,10 @@ local function fn2()
 			end
 
 			unit = ctx.fn22
-			if not (unit(fn39(n2 + (unit2 * 6.5)), arg2, 60)) then
+			if not (unit(fn40(n2 + (unit2 * 6.5)), arg2, 60)) then
 				return false
 			end
-			fn40(n2)
+			fn41(n2)
 			arg2 = ctx.state
 			unit, n2 = arg2.bat(), ctx.fn4
 			arg2 = n2()
@@ -29380,7 +29395,7 @@ local function fn2()
 			return true
 		end
 
-		local function fn42(arg, arg2, arg3)
+		local function fn43(arg, arg2, arg3)
 			local n2 = os.clock() + arg3
 
 			while os.clock() < n2 do
@@ -29400,7 +29415,7 @@ local function fn2()
 			end
 		end
 
-		local function fn43(arg)
+		local function fn44(arg)
 			local n2 = os.clock() + 300
 			tbl12.notes = nil
 			local n3, n4 = 0, 0
@@ -29409,7 +29424,7 @@ local function fn2()
 				local notes = ctx.localPlayer
 
 				if notes:GetAttribute("InEnchantedTree") then
-					if not (fn38()) then
+					if not (fn39()) then
 						return false
 					end
 				else
@@ -29418,7 +29433,7 @@ local function fn2()
 
 				if tbl12.solved then
 					return true
-				elseif fn33().Solved == true then
+				elseif fn34().Solved == true then
 					return true
 				end
 
@@ -29439,10 +29454,10 @@ local function fn2()
 
 							for i2 = 1, 2, 1 do
 								i2 = os.clock()
-								if not (fn41(note, arg)) then
+								if not (fn42(note, arg)) then
 									break
 								end
-								k = fn42(note, i2, 1.6)
+								k = fn43(note, i2, 1.6)
 								if k then
 									break
 								end
@@ -29469,7 +29484,7 @@ local function fn2()
 
 						local v21 = ctx.fn6
 						v21("Waking the mushrooms")
-						fn41(4, arg)
+						fn42(4, arg)
 						n3 = os.clock()
 					else
 					end
@@ -29481,8 +29496,8 @@ local function fn2()
 			return false
 		end
 
-		local function fn44(arg)
-			if fn38() then
+		local function fn45(arg)
+			if fn39() then
 				return true
 			end
 
@@ -29511,11 +29526,11 @@ local function fn2()
 				Build("Taking the Secret Leap")
 				n2 = os.clock() + 8
 
-				while ((os.clock() < n2) and (arg())) and not fn38() do
+				while ((os.clock() < n2) and (arg())) and not fn39() do
 					task.wait(0.1)
 				end
 
-				if fn38() then
+				if fn39() then
 					task.wait(1)
 					return true
 				end
@@ -29524,11 +29539,11 @@ local function fn2()
 			return false
 		end
 
-		local function fn45(arg)
+		local function fn46(arg)
 			task.wait(5)
 
 			for i2 = 1, 3, 1 do
-				local AskClaim, v21 = fn36(), ctx.fn11
+				local AskClaim, v21 = fn37(), ctx.fn11
 				i2 = v21()
 
 				if i2 and ((i2.Position - AskClaim).Magnitude > 9) then
@@ -29545,7 +29560,7 @@ local function fn2()
 						unit2 = (v22(0, 0, -1))
 					end
 
-					local v22, tbl14 = ipairs, {fn39(v18), fn39(v20), fn39(AskClaim + (unit2 * 6))}
+					local v22, tbl14 = ipairs, {fn40(v18), fn40(v20), fn40(AskClaim + (unit2 * 6))}
 
 					for _, v23 in v22(tbl14) do
 						unit = ctx.fn22
@@ -29554,7 +29569,7 @@ local function fn2()
 						end
 					end
 
-					fn40(AskClaim)
+					fn41(AskClaim)
 				end
 
 				AskClaim = ctx.fn6
@@ -29564,21 +29579,21 @@ local function fn2()
 
 				if v21 == true then
 					return true
-				elseif fn33().Claimed == true then
+				elseif fn34().Claimed == true then
 					return true
 				end
 
 				task.wait(1)
 			end
 
-			return fn33().Claimed == true
+			return fn34().Claimed == true
 		end
 
-		local function fn46()
+		local function fn47()
 			local Passages = ctx.fn4
 			local v21 = Passages()
 
-			local function fn47()
+			local function fn48()
 				return true
 			end
 
@@ -29586,12 +29601,12 @@ local function fn2()
 				pcall(v21.UnequipTools, v21)
 			end
 
-			if fn38() then
-				Passages, v21 = fn37("Passages", "SecretRoomExit") or v14, ctx.fn22
-				v21(Passages, fn47, 60)
+			if fn39() then
+				Passages, v21 = fn38("Passages", "SecretRoomExit") or v14, ctx.fn22
+				v21(Passages, fn48, 60)
 				local n2 = os.clock() + 5
 
-				while (os.clock() < n2) and (fn38()) do
+				while (os.clock() < n2) and (fn39()) do
 					local v22, v23 = ctx.fn10, ctx.cFrameNew
 					v22(v23(Passages))
 					task.wait(0.1)
@@ -29602,14 +29617,14 @@ local function fn2()
 			Passages.leaveTree()
 		end
 
-		local v21 = fn14({name = "Banjo", mover = true, gap = 3, pri = 6, soft = true})
+		local v21 = fn15({name = "Banjo", mover = true, gap = 3, pri = 6, soft = true})
 
 		v21.on = function()
 			local v22 = ctx.slot28
 			return v22.banjo and not tbl12.done
 		end
 
-		local function fn47(banjoCricket)
+		local function fn48(banjoCricket)
 			local v22 = ctx.state
 
 			if v22.wispSay then
@@ -29619,17 +29634,17 @@ local function fn2()
 		end
 
 		v21.want = function()
-			if fn33().Claimed == true then
+			if fn34().Claimed == true then
 				tbl12.done = true
-				return fn47("done, Cricket's Banjo is yours")
+				return fn48("done, Cricket's Banjo is yours")
 			end
 			local v22 = ctx.localPlayer
 			if v22:GetAttribute("EnchantedTreeUnlocked") ~= true then
-				return fn47("needs the Enchanted Tree open (finish the wisp quest)")
+				return fn48("needs the Enchanted Tree open (finish the wisp quest)")
 			end
 			v22 = ctx.state
 			if not (v22.bat()) then
-				return fn47("needs a bat in your bag")
+				return fn48("needs a bat in your bag")
 			end
 
 			if os.clock() < tbl12.next then
@@ -29641,52 +29656,52 @@ local function fn2()
 		v21.run = function(arg, arg2)
 			arg = ctx.state
 			if not (arg.needBody()) then
-				return fn47("leaving invisibility first")
+				return fn48("leaving invisibility first")
 			end
 			tbl12.next = os.clock() + 15
 
 			if ctx.fn7(arg2) then
 				arg = ctx.state
 				if not (arg.enterTree(arg2)) then
-					return fn47("could not get into the Enchanted Tree")
+					return fn48("could not get into the Enchanted Tree")
 				end
 			else
-				return fn47("could not get into the Enchanted Tree")
+				return fn48("could not get into the Enchanted Tree")
 			end
 
-			if not (fn44(arg2)) then
-				fn46()
-				return fn47("could not take the Secret Leap")
+			if not (fn45(arg2)) then
+				fn47()
+				return fn48("could not take the Secret Leap")
 			end
 
-			if fn33().Solved ~= true then
+			if fn34().Solved ~= true then
 				if not (tbl12.solved) then
-					if not (fn43(arg2)) then
-						fn46()
-						return fn47("puzzle not solved, trying again")
+					if not (fn44(arg2)) then
+						fn47()
+						return fn48("puzzle not solved, trying again")
 					end
 				end
 			end
 
-			if fn45(arg2) then
+			if fn46(arg2) then
 				tbl12.done = true
 				fn12("Banjo", "Cricket's Banjo claimed", "ok")
-				fn47("done, Cricket's Banjo is yours")
+				fn48("done, Cricket's Banjo is yours")
 			end
 
-			fn46()
+			fn47()
 		end
 	end)
 
 	g("38_halloween#1", function()
 		local CollectionService, tbl12, tbl13, tbl14, tbl15, tbl16, tbl17, tbl18, tbl19 = getService("CollectionService"), {wl = {}, bad = {}, fish = 0, buyAt = 0, fishAt = 0, dogAt = 0, doing = "Off", known = {}}, {pc = {}, miss = {}, at = 0}, {cd = {}, shot = 0, at = 0}, {Prep = true, Match = true, SuddenDeath = true}, {Intro = true, Reveal = true, Prep = true, Match = true, SuddenDeath = true, Win = true, Outro = true}, {Boarded = true, Departing = true, Returning = true, Respawning = true}, {"Meet the dog", "Find 4 memories", "Talk to the fisherman", "Catch the ghost dog", "Done"}, {["x1.2"] = 1, ["x1.1"] = 0.5, ["x1.0 Fastest"] = 0.02}
 
-		local function fn33(arg)
+		local function fn34(arg)
 			local v4 = ctx.localPlayer
 			return v4:GetAttribute(arg)
 		end
 
-		local function fn34(arg, arg2)
+		local function fn35(arg, arg2)
 			local ok, result = pcall(function()
 				return require(ReplicatedStorage.Shared.Flags[arg])[arg2]:Get()
 			end)
@@ -29696,30 +29711,30 @@ local function fn2()
 			end
 		end
 
-		local function fn35(arg)
+		local function fn36(arg)
 			local v4 = ctx.fn24
 			local v5 = v4()
 			return v5 and v5[arg]
 		end
 
 		local function inDim()
-			return fn33("InHalloweenDimension") == true
+			return fn34("InHalloweenDimension") == true
 		end
 
 		local function hwCarrying()
-			return fn33("HalloweenCarrying") == true
+			return fn34("HalloweenCarrying") == true
 		end
 
 		local function findFirstChild()
 			return workspace:FindFirstChild("HalloweenDimension")
 		end
 
-		local function fn36(arg)
+		local function fn37(arg)
 			local v4 = ctx.vector3New
 			return v4(arg.X, 0, arg.Z)
 		end
 
-		local function fn37()
+		local function fn38()
 			local wasDay = l() > 0
 
 			if wasDay then
@@ -29754,7 +29769,7 @@ local function fn2()
 			arg22 = nil
 
 			if steal2 then
-				steal = arg2 and not fn37()
+				steal = arg2 and not fn38()
 
 				if steal then
 					arg22 = steal
@@ -29799,7 +29814,7 @@ local function fn2()
 			return steal2
 		end
 
-		local function fn38(arg)
+		local function fn39(arg)
 			if typeof(arg) ~= "Instance" then
 				return nil
 			end
@@ -29812,7 +29827,7 @@ local function fn2()
 				return arg:GetPivot().Position
 			end
 
-			return arg.Parent and fn38(arg.Parent)
+			return arg.Parent and fn39(arg.Parent)
 		end
 
 		local function normalWalk(humanoid)
@@ -29831,13 +29846,13 @@ local function fn2()
 		local state = ctx.state
 		state.normalWalk = normalWalk
 
-		local function fn39(doing)
+		local function fn40(doing)
 			tbl12.doing = doing
 			local v6 = ctx.fn6
 			v6(doing)
 		end
 
-		local function fn40(arg)
+		local function fn41(arg)
 			if arg and fireproximityprompt then
 				pcall(function()
 					arg.HoldDuration = 0
@@ -29846,7 +29861,7 @@ local function fn2()
 			end
 		end
 
-		local function fn41(arg)
+		local function fn42(arg)
 			local v6, tbl20, v7 = ipairs, {}, ctx.localPlayer
 
 			do
@@ -29867,7 +29882,7 @@ local function fn2()
 
 		local tbl20 = {}
 
-		local function fn42(arg, arg2)
+		local function fn43(arg, arg2)
 			local v6 = tbl20[arg]
 
 			if v6 then
@@ -29888,12 +29903,12 @@ local function fn2()
 				end
 			end
 
-			v6 = fn41(arg2)
+			v6 = fn42(arg2)
 			tbl20[arg] = {v6, os.clock()}
 			return v6
 		end
 
-		local function fn43(arg)
+		local function fn44(arg)
 			local v6 = ctx.fn4
 			local v7 = v6()
 
@@ -29910,7 +29925,7 @@ local function fn2()
 			return arg
 		end
 
-		local function fn44(arg, arg2)
+		local function fn45(arg, arg2)
 			local n2 = os.clock() + arg
 
 			while os.clock() < n2 do
@@ -29926,7 +29941,7 @@ local function fn2()
 			return true
 		end
 
-		local function fn45(arg, arg2, arg3)
+		local function fn46(arg, arg2, arg3)
 			local n2 = os.clock() + arg2
 
 			while os.clock() < n2 do
@@ -29946,12 +29961,12 @@ local function fn2()
 			return arg()
 		end
 
-		local function fn46(arg)
+		local function fn47(arg)
 			local v6 = ctx.fn11
 			local v7 = v6()
 
 			if v7 and arg then
-				local v8 = fn36(arg - v7.Position)
+				local v8 = fn37(arg - v7.Position)
 
 				if v8.Magnitude > 0.1 then
 					pcall(function()
@@ -29962,17 +29977,17 @@ local function fn2()
 			end
 		end
 
-		local function fn47(arg)
-			local function fn48()
+		local function fn48(arg)
+			local function fn49()
 				local v6 = ctx.fn11
 				local v7 = v6()
 				return ((v7 ~= nil) and (arg ~= nil)) and ((v7.Position - arg).Magnitude > 12)
 			end
 
-			return fn48
+			return fn49
 		end
 
-		local function fn48(arg, arg2)
+		local function fn49(arg, arg2)
 			local v6 = ctx.networking
 			local v7 = v6:FindFirstChild(arg)
 
@@ -29983,7 +29998,7 @@ local function fn2()
 			end
 		end
 
-		local function fn49(arg)
+		local function fn50(arg)
 			local v6 = ctx.lastMV
 
 			if v6 then
@@ -30009,7 +30024,7 @@ local function fn2()
 		local overlapParams = OverlapParams.new()
 		raycastParams.FilterType, overlapParams.FilterType = Enum.RaycastFilterType.Exclude, Enum.RaycastFilterType.Exclude
 
-		local function fn50()
+		local function fn51()
 			local tool = ctx.localPlayer
 			local character2 = tool.Character
 			tool = character2 and (character2:FindFirstChildOfClass("Tool"))
@@ -30035,9 +30050,9 @@ local function fn2()
 			return character2
 		end
 
-		local function fn51(arg)
+		local function fn52(arg)
 			if arg then
-				for _, v6 in ipairs(fn50()) do
+				for _, v6 in ipairs(fn51()) do
 					if v6.CanCollide then
 						tbl21[v6] = true
 						v6.CanCollide = false
@@ -30096,14 +30111,14 @@ local function fn2()
 
 		trackConnection(state.Stepped, function()
 			if tbl12.move then
-				fn51(true)
+				fn52(true)
 			elseif next(tbl22) then
-				fn51(false)
+				fn52(false)
 			elseif next(tbl21) then
-				fn51(false)
+				fn52(false)
 			end
 
-			local pin, ghost = tbl12.pin, tbl12.ghost and (fn33("InPumpkinArena") == true)
+			local pin, ghost = tbl12.pin, tbl12.ghost and (fn34("InPumpkinArena") == true)
 
 			if (pin or ghost) and ((os.clock() - (tbl12.pinAt or 0)) > 0.5) then
 				tbl12.pinAt = os.clock()
@@ -30147,7 +30162,7 @@ local function fn2()
 			end
 		end)
 
-		local function fn52(arg)
+		local function fn53(arg)
 			tbl12.mv = (tbl12.mv or 0) + 1
 			tbl12.move = true
 			local ok, result = pcall(arg)
@@ -30188,16 +30203,16 @@ local function fn2()
 			return arg2()
 		end
 
-		local function fn53(arg, arg2, arg3)
-			local function fn54()
+		local function fn54(arg, arg2, arg3)
+			local function fn55()
 				local v6 = ctx.fn22
 				return v6(arg, arg2, arg3)
 			end
 
-			return fn52(fn54)
+			return fn53(fn55)
 		end
 
-		local function fn54(arg, arg2)
+		local function fn55(arg, arg2)
 			local v6 = ctx.fn11
 			local v7 = v6()
 
@@ -30211,39 +30226,39 @@ local function fn2()
 
 			if (v7.Position - arg).Magnitude > 400 then
 				v6 = ctx.vector3New
-				return fn15(arg + v6(0, 3, 0), arg2)
+				return fn16(arg + v6(0, 3, 0), arg2)
 			end
 			v6 = ctx.vector3New
-			return fn53(arg + v6(0, 3, 0), arg2)
+			return fn54(arg + v6(0, 3, 0), arg2)
 		end
 
-		local function fn55(st)
+		local function fn56(st)
 			if type(st) == "table" then
 				tbl13.st, tbl13.at = st, os.clock()
 			end
 		end
 
-		local function fn56(snap)
+		local function fn57(snap)
 			if type(snap) == "table" then
 				tbl14.snap, tbl14.at = snap, os.clock()
 			end
 		end
 
-		local function fn57()
-			local TrainEventPhase = fn33("TrainEventPhase")
+		local function fn58()
+			local TrainEventPhase = fn34("TrainEventPhase")
 			if TrainEventPhase ~= nil then
 				return TrainEventPhase
 			end
 			return ((tbl13.st and ((os.clock() - tbl13.at) < 10)) and tbl13.st.Phase) or nil
 		end
 
-		local function fn58()
-			return fn33("TrainEventTravelStage") == "Prepare"
+		local function fn59()
+			return fn34("TrainEventTravelStage") == "Prepare"
 		end
 
-		local function fn59()
-			local v6 = fn57()
-			local flag, flag2 = ((tbl17[v6] == true) or (v6 == "Town")) or fn58()
+		local function fn60()
+			local v6 = fn58()
+			local flag, flag2 = ((tbl17[v6] == true) or (v6 == "Town")) or fn59()
 
 			if flag then
 				flag2 = flag
@@ -30286,7 +30301,7 @@ local function fn2()
 		local v6 = ctx.state
 
 		v6.lock = function()
-			if fn33("InPumpkinArena") == true then
+			if fn34("InPumpkinArena") == true then
 				if workspace:FindFirstChild("PumpkinArena") then
 					return "PumpkinBoss"
 				end
@@ -30301,19 +30316,19 @@ local function fn2()
 				end
 			end
 
-			if fn33("InSewerCave") == true then
+			if fn34("InSewerCave") == true then
 				v7 = ctx.slot28
 				if v7.hwKey then
 					return "HwKey"
 				end
-			elseif fn33("InManorInterior") == true then
+			elseif fn34("InManorInterior") == true then
 				local v8 = ctx.slot28
 				if v8.hwKey then
 					return "HwKey"
 				end
 			end
 
-			if fn33("RaceId") == "TheHollowTrack" then
+			if fn34("RaceId") == "TheHollowTrack" then
 				return "Hollow"
 			end
 
@@ -30321,11 +30336,11 @@ local function fn2()
 				return "IslandWars"
 			end
 
-			if fn59() then
+			if fn60() then
 				return "Train"
 			end
 
-			if fn33("GhostDogChase") ~= nil then
+			if fn34("GhostDogChase") ~= nil then
 				return "HwDog"
 			end
 		end
@@ -30333,13 +30348,13 @@ local function fn2()
 		local v7 = ctx.state
 
 		v7.realHum = function()
-			return (((((tbl17[fn57()] == true) or tbl14.held()) or inDim()) or (fn33("RaceId") ~= nil)) or ((fn33("InPumpkinArena") == true) and (workspace:FindFirstChild("PumpkinArena") ~= nil))) or (fn33("InSewerCave") == true)
+			return (((((tbl17[fn58()] == true) or tbl14.held()) or inDim()) or (fn34("RaceId") ~= nil)) or ((fn34("InPumpkinArena") == true) and (workspace:FindFirstChild("PumpkinArena") ~= nil))) or (fn34("InSewerCave") == true)
 		end
 
 		local v8 = ctx.state
 
 		v8.highOk = function()
-			local flag, flag2 = inDim() or ((fn33("InPumpkinArena") == true) and (workspace:FindFirstChild("PumpkinArena") ~= nil))
+			local flag, flag2 = inDim() or ((fn34("InPumpkinArena") == true) and (workspace:FindFirstChild("PumpkinArena") ~= nil))
 
 			if flag then
 				flag2 = flag
@@ -30348,24 +30363,24 @@ local function fn2()
 				flag2 = (v9.lock() or "FuseZone") ~= "FuseZone"
 			end
 
-			return flag2 or ((fn57() or "Home") ~= "Home")
-		end
-
-		local function fn60()
-			local guardTutorialProgress = ctx.fn24
-			local v9 = guardTutorialProgress()
-			guardTutorialProgress = v9 and v9.GuardTutorialProgress
-			return (((v9 ~= nil) and ((tonumber(v9.SpeedPower) or 0) >= (fn34("HalloweenDimensionFlags", "SpeedPowerRequirement") or 2500000))) and (type(guardTutorialProgress) == "table")) and (guardTutorialProgress.Completed == true)
+			return flag2 or ((fn58() or "Home") ~= "Home")
 		end
 
 		local function fn61()
+			local guardTutorialProgress = ctx.fn24
+			local v9 = guardTutorialProgress()
+			guardTutorialProgress = v9 and v9.GuardTutorialProgress
+			return (((v9 ~= nil) and ((tonumber(v9.SpeedPower) or 0) >= (fn35("HalloweenDimensionFlags", "SpeedPowerRequirement") or 2500000))) and (type(guardTutorialProgress) == "table")) and (guardTutorialProgress.Completed == true)
+		end
+
+		local function fn62()
 			local v9 = inDim()
 			local v92
 
 			if v9 then
 				v92 = v9
 			else
-				local v10 = fn60()
+				local v10 = fn61()
 
 				if v10 then
 					local v11 = ctx.fn23
@@ -30378,7 +30393,7 @@ local function fn2()
 			return v92
 		end
 
-		local function fn62(arg, arg2, arg3, arg4)
+		local function fn63(arg, arg2, arg3, arg4)
 			local n4 = ctx.fn11
 
 			if n4() then
@@ -30446,11 +30461,11 @@ local function fn2()
 					n4:MoveTo(n10)
 					local v10 = ctx.fn12
 					v10()
-				until (getArg3() or (os.clock() > n11)) or (fn36(arg4.Position - n10).Magnitude < 1.5)
+				until (getArg3() or (os.clock() > n11)) or (fn37(arg4.Position - n10).Magnitude < 1.5)
 			end
 		end
 
-		local function fn63(arg)
+		local function fn64(arg)
 			local v9 = ctx.fn23
 			local HalloweenDimensionPortal = v9("HalloweenDimensionPortal", "Hitbox")
 
@@ -30467,8 +30482,8 @@ local function fn2()
 				v9 = ctx.fn13
 
 				if v9(HalloweenDimension.Position) then
-					if fn16() > 0 then
-						if not (fn49(function()
+					if fn17() > 0 then
+						if not (fn50(function()
 							local v10 = ctx.fn14
 							return v10(arg, "Halloween portal")
 						end)) then
@@ -30495,7 +30510,7 @@ local function fn2()
 			if HalloweenDimension then
 				if (HalloweenDimension.Position - HalloweenDimensionPortal.Position).Magnitude > 400 then
 					local v10, n4 = ctx.vector3New, HalloweenDimensionPortal.Position + ctx.vector3New(0, 3, 0)
-					if not (fn15(n4, arg)) then
+					if not (fn16(n4, arg)) then
 						return false
 					end
 				end
@@ -30511,12 +30526,12 @@ local function fn2()
 				v9()
 			end
 
-			fn62(HalloweenDimensionPortal, inDim, arg, true)
+			fn63(HalloweenDimensionPortal, inDim, arg, true)
 
-			if fn45(inDim, 2, arg) then
-				fn45(fn47(HalloweenDimensionPortal.Position), 6, arg)
-				fn44(1, arg)
-				HalloweenDimension = fn35("HalloweenDimension")
+			if fn46(inDim, 2, arg) then
+				fn46(fn48(HalloweenDimensionPortal.Position), 6, arg)
+				fn45(1, arg)
+				HalloweenDimension = fn36("HalloweenDimension")
 
 				if type(HalloweenDimension) == "table" then
 					if HalloweenDimension.TutorialSeen ~= true then
@@ -30543,7 +30558,7 @@ local function fn2()
 		state = ctx.localPlayer
 
 		trackConnection(state:GetAttributeChangedSignal("InPumpkinArena"), function()
-			if fn33("InPumpkinArena") ~= true then
+			if fn34("InPumpkinArena") ~= true then
 				tbl12.outAt = os.clock()
 			end
 		end)
@@ -30556,19 +30571,19 @@ local function fn2()
 			end
 
 			if (os.clock() - (tbl12.outAt or -99)) < 6 then
-				if fn45(inDim, 6 - (os.clock() - tbl12.outAt), arg) then
+				if fn46(inDim, 6 - (os.clock() - tbl12.outAt), arg) then
 					return true
 				end
 			end
 
-			if not (fn60()) then
+			if not (fn61()) then
 				local v10 = ctx.fn6
 				v10("Halloween Dimension needs 2.5M speed power and the guard tutorial", "warn")
 				return false
 			end
 
 			tbl12.entering, genv.HalloweenPortalUse = true, os.clock() + 60
-			local ok, result = pcall(fn63, arg)
+			local ok, result = pcall(fn64, arg)
 			tbl12.entering = false
 			genv.HalloweenPortalUse = 0
 
@@ -30657,19 +30672,19 @@ local function fn2()
 				exitPortal("Leaving the Halloween Dimension")
 				exitPortal, v12 = ctx.fn10, ctx.cFrameNew
 				exitPortal(v12(hitbox.Position))
-				v12 = fn38(hitbox)
+				v12 = fn39(hitbox)
 
-				fn62(hitbox, function()
+				fn63(hitbox, function()
 					return not inDim()
 				end, arg)
 
-				if fn45(function()
+				if fn46(function()
 					return not inDim()
 				end, 10, arg) then
-					fn45(fn47(v12), 6, arg)
+					fn46(fn48(v12), 6, arg)
 					exitPortal = ctx.state
 					exitPortal.dimLeftAt = os.clock()
-					fn44(1, arg)
+					fn45(1, arg)
 					return true
 				end
 
@@ -30684,7 +30699,7 @@ local function fn2()
 						exitPortal("The exit portal did not take you, resetting the character", "warn")
 						v12 = ctx.state
 						v12.respawn()
-						fn44(1.5)
+						fn45(1.5)
 					end
 				end
 			end
@@ -30694,7 +30709,7 @@ local function fn2()
 
 		local playerScripts
 
-		local function fn64()
+		local function fn65()
 			if playerScripts == nil then
 				local ok = ctx.localPlayer
 				local playerScripts2 = ok:FindFirstChild("PlayerScripts")
@@ -30742,13 +30757,13 @@ local function fn2()
 			end
 		end)
 
-		local function fn65()
+		local function fn66()
 			local entering, entering2 = tbl12.entering or ((genv.HalloweenPortalUse or 0) > os.clock())
 
 			if entering then
 				entering2 = entering
 			else
-				local flag = (ctx.lastMV == nil) and fn64()
+				local flag = (ctx.lastMV == nil) and fn65()
 
 				if flag then
 					local v12 = ctx.state
@@ -30782,7 +30797,7 @@ local function fn2()
 
 			if HalloweenDimensionPortal then
 				if HalloweenDimensionPortal:IsA("BasePart") then
-					v12 = fn65()
+					v12 = fn66()
 
 					if HalloweenDimensionPortal.CanTouch ~= v12 then
 						HalloweenDimensionPortal.CanTouch = v12
@@ -30800,7 +30815,7 @@ local function fn2()
 			end
 		end)
 
-		local v12 = fn14({name = "HwStuck", gap = 1})
+		local v12 = fn15({name = "HwStuck", gap = 1})
 		local now2
 
 		v12.on = function()
@@ -30811,7 +30826,7 @@ local function fn2()
 			local portalHome = ctx.fn11
 			local v13, invisBusy = portalHome(), findFirstChild()
 			portalHome = invisBusy and (invisBusy:FindFirstChild("PortalHome", true))
-			local portal, invisBusy2 = portalHome and (portalHome:FindFirstChild("Portal") or portalHome:FindFirstChildWhichIsA("BasePart", true)), fn59()
+			local portal, invisBusy2 = portalHome and (portalHome:FindFirstChild("Portal") or portalHome:FindFirstChildWhichIsA("BasePart", true)), fn60()
 			invisBusy = nil
 
 			if invisBusy2 then
@@ -30821,12 +30836,12 @@ local function fn2()
 				invisBusy = portalHome.invisBusy
 			end
 
-			invisBusy2 = invisBusy or ((fn33("InPumpkinArena") == true) and (workspace:FindFirstChild("PumpkinArena") ~= nil))
+			invisBusy2 = invisBusy or ((fn34("InPumpkinArena") == true) and (workspace:FindFirstChild("PumpkinArena") ~= nil))
 
 			if invisBusy2 then
 				now2 = nil
 				return
-			elseif fn33("InSewerCave") == true then
+			elseif fn34("InSewerCave") == true then
 				now2 = nil
 				return
 			else
@@ -30865,24 +30880,24 @@ local function fn2()
 			v13.respawn()
 		end
 
-		local function fn66(arg)
+		local function fn67(arg)
 			local v13 = findFirstChild()
 			local zones = v13 and (v13:FindFirstChild("Zones"))
 			zones = zones and (zones:FindFirstChild(arg))
 			return ((zones and zones:IsA("BasePart")) and zones) or nil
 		end
 
-		local function fn67(arg, arg2, arg3)
+		local function fn68(arg, arg2, arg3)
 			local v13 = arg.CFrame:PointToObjectSpace(arg2)
 			return (math.abs(v13.X) <= ((arg.Size.X / 2) - (arg3 or 0))) and (math.abs(v13.Z) <= ((arg.Size.Z / 2) - (arg3 or 0)))
 		end
 
-		local function fn68(arg)
+		local function fn69(arg)
 			for i2 = 3, 1, -1 do
-				local v13 = fn66("Zone" .. i2)
+				local v13 = fn67("Zone" .. i2)
 
 				if v13 then
-					if fn67(v13, arg) then
+					if fn68(v13, arg) then
 						return i2
 					end
 				end
@@ -30891,8 +30906,8 @@ local function fn2()
 			return 0
 		end
 
-		local function fn69()
-			local SafeZone, v13 = fn66("SafeZone"), ctx.fn11
+		local function fn70()
+			local SafeZone, v13 = fn67("SafeZone"), ctx.fn11
 			local v14 = v13()
 
 			if SafeZone then
@@ -30908,7 +30923,7 @@ local function fn2()
 			return v17(v16.X, v14.Position.Y, v16.Z), SafeZone
 		end
 
-		local function fn70(arg)
+		local function fn71(arg)
 			local markers = findFirstChild()
 			local ghostDogQuest = markers and (markers:FindFirstChild("GhostDogQuest"))
 			ghostDogQuest = ghostDogQuest and (ghostDogQuest:FindFirstChild("Markers"))
@@ -30919,23 +30934,23 @@ local function fn2()
 		local v13 = ctx.state
 
 		v13.dimWait = function(arg)
-			local ReturnSpot, v14 = fn70("ReturnSpot"), ctx.fn11
-			local v15, v16, v17 = v14(), fn69()
+			local ReturnSpot, v14 = fn71("ReturnSpot"), ctx.fn11
+			local v15, v16, v17 = v14(), fn70()
 
 			if v16 then
 				if v15 then
-					if fn67(v17, v15.Position) then
+					if fn68(v17, v15.Position) then
 					elseif ReturnSpot then
-						if not (fn36(v15.Position - ReturnSpot.Position).Magnitude < 40) then
-							fn53(v16, arg)
+						if not (fn37(v15.Position - ReturnSpot.Position).Magnitude < 40) then
+							fn54(v16, arg)
 						end
 					else
-						fn53(v16, arg)
+						fn54(v16, arg)
 					end
 				end
 			end
 
-			return fn44(1, arg)
+			return fn45(1, arg)
 		end
 
 		tbl12.meshOf = function(arg)
@@ -30986,7 +31001,7 @@ local function fn2()
 
 		local tbl25 = {}
 
-		local function fn71(arg)
+		local function fn72(arg)
 			local attribute = arg:GetAttribute("HalloweenEggUid")
 			local attribute2 = arg:GetAttribute("PreparedSourceName") or ((attribute and not tbl12.known[attribute]) and tbl12.guess(arg))
 
@@ -31023,17 +31038,17 @@ local function fn2()
 			return tbl25[attribute3]
 		end
 
-		local function fn72(arg)
+		local function fn73(arg)
 			local ok, result = pcall(function()
 				local v14 = ctx.slot33
-				return v14.Assets.Directory[fn71(arg)].EarningRate
+				return v14.Assets.Directory[fn72(arg)].EarningRate
 			end)
 
 			local scale = (arg:IsA("Model") and arg:GetScale()) or 1
 			return ((ok and tonumber(result)) or 0) * (((scale > 5) and (((scale / 5) ^ 1.2) * 19.637875755794113)) or (scale ^ 1.85))
 		end
 
-		local function fn73(arg)
+		local function fn74(arg)
 			if os.clock() >= (tbl12.ixAt or 0) then
 				tbl12.ixAt = os.clock() + 5
 				tbl12.ix = {}
@@ -31067,8 +31082,8 @@ local function fn2()
 			return tbl12.ix[arg] == true
 		end
 
-		local function fn74(arg)
-			local v14, v15 = fn71(arg), ctx.slot28
+		local function fn75(arg)
+			local v14, v15 = fn72(arg), ctx.slot28
 
 			if v15.hwEggOnly then
 				local v16, v17 = ctx.slot28, ctx.fn27
@@ -31081,7 +31096,7 @@ local function fn2()
 
 			if v15.hwMinV then
 				local v16 = ctx.slot28
-				if fn72(arg) < v16.hwMinV then
+				if fn73(arg) < v16.hwMinV then
 					return false
 				end
 			end
@@ -31099,7 +31114,7 @@ local function fn2()
 			return true
 		end
 
-		local function fn75(arg)
+		local function fn76(arg)
 			return arg:GetAttribute("HalloweenEggCanPickUp") == true
 		end
 
@@ -31186,16 +31201,16 @@ local function fn2()
 				hwEggs2 = worldEggs
 			end
 
-			if hwEggs2 and (fn61()) then
+			if hwEggs2 and (fn62()) then
 				v16 = ctx.state
 				hwEggs, v17 = v16.rank["Steal:hwindex"] or 9, ctx.state
 				local stealHwfilter, v19, v20, stealHwindex = v17.rank["Steal:hwfilter"] or 9, ipairs, table.pack(worldEggs:GetChildren()), hwEggs
 
 				for k, v21 in v19(table.unpack(v20, 1, v20.n)) do
 					k = v21:GetAttribute("HalloweenEggUid")
-					local attribute = k and (fn38(v21))
-					local attribute2 = ((attribute and not fn75(v21)) and tbl12.holder(attribute)) or nil
-					local attribute3 = ((attribute and (fn75(v21) or attribute2)) and ((attribute2 and tonumber(attribute2:GetAttribute("HalloweenCarryZone"))) or fn68(attribute))) or 0
+					local attribute = k and (fn39(v21))
+					local attribute2 = ((attribute and not fn76(v21)) and tbl12.holder(attribute)) or nil
+					local attribute3 = ((attribute and (fn76(v21) or attribute2)) and ((attribute2 and tonumber(attribute2:GetAttribute("HalloweenCarryZone"))) or fn69(attribute))) or 0
 					local flag, flag2 = attribute3 >= 1
 
 					if flag then
@@ -31210,7 +31225,7 @@ local function fn2()
 					end
 
 					if flag2 then
-						local v22, v23, v24 = fn71(v21), ctx.state, table.find(ctx.state.pick, k)
+						local v22, v23, v24 = fn72(v21), ctx.state, table.find(ctx.state.pick, k)
 						local v25, stealHwfilter2
 
 						if v24 then
@@ -31253,7 +31268,7 @@ local function fn2()
 											local str2, str22 = ctx.slot28
 
 											if str2.hwIndex then
-												if fn73(v22) then
+												if fn74(v22) then
 													local str3 = "hwindex"
 													str22, hwEggs = str3, stealHwindex
 												else
@@ -31263,7 +31278,7 @@ local function fn2()
 												str22, hwEggs = v25, stealHwfilter2
 											end
 
-											if fn74(v21) then
+											if fn75(v21) then
 												if hwEggs then
 													if stealHwfilter < hwEggs then
 														str2 = "hwfilter"
@@ -31287,7 +31302,7 @@ local function fn2()
 						end
 
 						if arg or v25 then
-							local v26, n6, tbl28, held = fn72(v21), #tbl27 + 1, {Uid = k}, ctx.fn27
+							local v26, n6, tbl28, held = fn73(v21), #tbl27 + 1, {Uid = k}, ctx.fn27
 							tbl28.n = held(v22)
 							held = ctx.fn27
 							tbl28.Name = held(v22)
@@ -31298,7 +31313,7 @@ local function fn2()
 							tbl28.r = T(v22)
 							tbl28.mv = 1
 							tbl28.m = {}
-							tbl28.near = (v18 and -fn36(attribute - v18.Position).Magnitude) or 0
+							tbl28.near = (v18 and -fn37(attribute - v18.Position).Magnitude) or 0
 							tbl28.kind = v25
 							tbl28.tg = v25 ~= nil
 							tbl28.hw = true
@@ -31337,7 +31352,7 @@ local function fn2()
 			return tbl27
 		end
 
-		local function fn76(arg, arg2)
+		local function fn77(arg, arg2)
 			local v16 = findFirstChild()
 			local worldEggs = v16 and (v16:FindFirstChild("WorldEggs"))
 			task.spawn(ctx.fn5, "RF/HalloweenDimension/AskDropEgg")
@@ -31360,10 +31375,10 @@ local function fn2()
 
 				if flag then
 					if v16 then
-						if fn75(v16) then
+						if fn76(v16) then
 							if (os.clock() - n7) > 0.1 then
 								local now3, v17, v18 = os.clock(), ctx.fn10, ctx.cFrameNew
-								v17(v18(fn38(v16) + ctx.vector3New(0, 3, 0)))
+								v17(v18(fn39(v16) + ctx.vector3New(0, 3, 0)))
 								tbl12.take(v16)
 								n7 = now3
 							else
@@ -31380,7 +31395,7 @@ local function fn2()
 			end
 		end
 
-		local function fn77(arg)
+		local function fn78(arg)
 			local v16 = ctx.fn11
 			local v17 = v16()
 
@@ -31392,17 +31407,17 @@ local function fn2()
 			end
 		end
 
-		local function fn78(assemblyLinearVelocity, arg)
-			local HalloweenDelivered = fn33("HalloweenDelivered")
-			local n6, tbl27, SafeZone, SafeZone2 = os.clock() + 60, {}, fn66("SafeZone"), ctx.fn11
+		local function fn79(assemblyLinearVelocity, arg)
+			local HalloweenDelivered = fn34("HalloweenDelivered")
+			local n6, tbl27, SafeZone, SafeZone2 = os.clock() + 60, {}, fn67("SafeZone"), ctx.fn11
 			local v16 = SafeZone2()
-			fn39("Halloween: carrying the egg to safety")
+			fn40("Halloween: carrying the egg to safety")
 			SafeZone2 = ctx.slot28
 
-			if ((((SafeZone2.hwInstant and assemblyLinearVelocity) and SafeZone) and v16) and hwCarrying()) and ((tonumber(fn33("HalloweenCarryZone")) or fn68(v16.Position)) > 1) then
+			if ((((SafeZone2.hwInstant and assemblyLinearVelocity) and SafeZone) and v16) and hwCarrying()) and ((tonumber(fn34("HalloweenCarryZone")) or fn69(v16.Position)) > 1) then
 				local v17, n7, n8 = SafeZone.CFrame:PointToObjectSpace(v16.Position), (SafeZone.Size.X / 2) + 10, (SafeZone.Size.Z / 2) + 10
 				local v18, v19 = ctx.vector3New, SafeZone.CFrame:PointToWorldSpace(ctx.vector3New(math.clamp(v17.X, -n7, n7), 0, math.clamp(v17.Z, -n8, n8)))
-				fn77(v19)
+				fn78(v19)
 
 				for i2 = 1, 4, 1 do
 					n8, i2 = os.clock() + 0.4, false
@@ -31410,7 +31425,7 @@ local function fn2()
 					while (arg() and (hwCarrying())) and (os.clock() < n8) do
 						n7 = ctx.fn11
 						v17 = n7()
-						if v17 and (fn36(v17.Position - v19).Magnitude >= 100) then
+						if v17 and (fn37(v17.Position - v19).Magnitude >= 100) then
 							i2 = true
 							break
 						end
@@ -31421,13 +31436,13 @@ local function fn2()
 					if not i2 then
 						break
 					end
-					fn39("Halloween: pulled back, teleporting to the safe zone edge again")
-					fn77(v19)
+					fn40("Halloween: pulled back, teleporting to the safe zone edge again")
+					fn78(v19)
 				end
 
 				if arg() then
-					if fn76(assemblyLinearVelocity, arg) then
-						fn44(0.5, arg)
+					if fn77(assemblyLinearVelocity, arg) then
+						fn45(0.5, arg)
 					end
 				end
 			end
@@ -31436,7 +31451,7 @@ local function fn2()
 
 			while (arg() and (hwCarrying())) and (os.clock() < n6) do
 				SafeZone = ctx.fn11
-				v16, SafeZone2 = SafeZone(), fn66("SafeZone")
+				v16, SafeZone2 = SafeZone(), fn67("SafeZone")
 
 				if v16 then
 					if SafeZone2 then
@@ -31453,7 +31468,7 @@ local function fn2()
 
 				assemblyLinearVelocity = assemblyLinearVelocity or v16.Position.Y
 
-				for _, v17 in ipairs(fn50()) do
+				for _, v17 in ipairs(fn51()) do
 					if v17.CanCollide then
 						tbl27[v17] = true
 						v17.CanCollide = false
@@ -31463,7 +31478,7 @@ local function fn2()
 				local vector2, v17 = SafeZone2.CFrame:PointToObjectSpace(v16.Position), ctx.slot28
 				local hwInstant = (v17.hwInstant and 6) or 40
 				local n7, n8 = math.max((SafeZone2.Size.X / 2) - hwInstant, 0), math.max((SafeZone2.Size.Z / 2) - hwInstant, 0)
-				v17, hwInstant = ctx.vector3New, fn36(SafeZone2.CFrame:PointToWorldSpace(ctx.vector3New(math.clamp(vector2.X, -n7, n7), vector2.Y, math.clamp(vector2.Z, -n8, n8))) - v16.Position)
+				v17, hwInstant = ctx.vector3New, fn37(SafeZone2.CFrame:PointToWorldSpace(ctx.vector3New(math.clamp(vector2.X, -n7, n7), vector2.Y, math.clamp(vector2.Z, -n8, n8))) - v16.Position)
 				n7, vector2 = hwInstant.Magnitude > 3
 
 				if n7 then
@@ -31509,15 +31524,15 @@ local function fn2()
 				end
 			end
 
-			fn45(function()
-				return fn33("HalloweenDelivered") ~= HalloweenDelivered
+			fn46(function()
+				return fn34("HalloweenDelivered") ~= HalloweenDelivered
 			end, 0.6)
 
-			return fn33("HalloweenDelivered") ~= HalloweenDelivered
+			return fn34("HalloweenDelivered") ~= HalloweenDelivered
 		end
 
-		local function fn79(arg, arg2)
-			local v16 = fn38(arg)
+		local function fn80(arg, arg2)
+			local v16 = fn39(arg)
 			local v162
 
 			if v16 then
@@ -31527,17 +31542,17 @@ local function fn2()
 				v162 = v17
 			end
 
-			fn39("Halloween: going to a zone " .. (fn68(v162) .. " egg"))
+			fn40("Halloween: going to a zone " .. (fn69(v162) .. " egg"))
 
-			local function fn80()
-				return ((arg2() and (arg.Parent ~= nil)) and fn75(arg)) and not hwCarrying()
+			local function fn81()
+				return ((arg2() and (arg.Parent ~= nil)) and fn76(arg)) and not hwCarrying()
 			end
 
 			for i2 = 1, 3, 1 do
-				v162 = fn38(arg)
+				v162 = fn39(arg)
 
 				if v162 then
-					if not (fn80()) then
+					if not (fn81()) then
 						break
 					end
 				else
@@ -31558,15 +31573,15 @@ local function fn2()
 
 				if if i2 then (i2.Position - v162).Magnitude > 20 else not i2 then
 					local v17, v18 = ctx.fn22, ctx.vector3New
-					if not (v17(v162 + v18(0, 3, 0), fn80)) then
+					if not (v17(v162 + v18(0, 3, 0), fn81)) then
 						break
 					end
 				end
 
 				local n6, n7 = os.clock() + 4, 0
 
-				while fn80() and (os.clock() < n6) do
-					i2 = fn38(arg)
+				while fn81() and (os.clock() < n6) do
+					i2 = fn39(arg)
 
 					if i2 then
 						local v17, v18, v19 = ctx.fn10, ctx.cFrameNew, ctx.vector3New
@@ -31595,8 +31610,8 @@ local function fn2()
 			local by = arg.by
 			local e2 = arg.e
 
-			local function fn80()
-				return (e2.Parent ~= nil) and fn75(e2)
+			local function fn81()
+				return (e2.Parent ~= nil) and fn76(e2)
 			end
 
 			local RunService2 = ctx.state
@@ -31610,7 +31625,7 @@ local function fn2()
 				return false
 			end
 
-			fn39("Halloween: chasing " .. (by.DisplayName .. (" for " .. arg.Name)))
+			fn40("Halloween: chasing " .. (by.DisplayName .. (" for " .. arg.Name)))
 			arg = ctx.state
 			arg.godHunt = true
 			RunService2 = ctx.RunService
@@ -31623,7 +31638,7 @@ local function fn2()
 				end
 			end), os.clock() + 12
 
-			while ((((arg2() and (os.clock() < n6)) and e2.Parent) and by.Parent) and (by:GetAttribute("HalloweenCarrying") == true)) and not fn80() do
+			while ((((arg2() and (os.clock() < n6)) and e2.Parent) and by.Parent) and (by:GetAttribute("HalloweenCarrying") == true)) and not fn81() do
 				arg = ctx.fn12
 				arg()
 			end
@@ -31638,7 +31653,7 @@ local function fn2()
 				n6.PlatformStand = false
 			end
 
-			return fn45(fn80, 2.5, arg2)
+			return fn46(fn81, 2.5, arg2)
 		end
 
 		state = ctx.localPlayer
@@ -31655,8 +31670,8 @@ local function fn2()
 		local v16 = ctx.state
 
 		v16.hwSteal = function(cur, arg)
-			local function fn80()
-				return arg() and (fn37() or hwCarrying())
+			local function fn81()
+				return arg() and (fn38() or hwCarrying())
 			end
 
 			local v17 = ctx.slot44
@@ -31669,8 +31684,8 @@ local function fn2()
 				end
 
 				if cur.by then
-					if not (fn52(function()
-						return tbl12.hunt(cur, fn80)
+					if not (fn53(function()
+						return tbl12.hunt(cur, fn81)
 					end)) then
 						if cur.by:GetAttribute("HalloweenCarrying") == true then
 							tbl12.bad[cur.Uid] = os.clock() + 15
@@ -31682,8 +31697,8 @@ local function fn2()
 					end
 				end
 
-				if not (fn52(function()
-					return fn79(e2, fn80)
+				if not (fn53(function()
+					return fn80(e2, fn81)
 				end)) then
 					if e2.Parent then
 						if tbl12.again ~= cur.Uid then
@@ -31697,8 +31712,8 @@ local function fn2()
 
 			tbl12.cur = cur
 
-			v17 = fn52(function()
-				return fn78(cur.Uid, arg)
+			v17 = fn53(function()
+				return fn79(cur.Uid, arg)
 			end)
 
 			tbl12.cur = nil
@@ -31755,10 +31770,10 @@ local function fn2()
 		local raycastParams2, n6, v17, hit = RaycastParams.new(), 0
 		raycastParams2.FilterType = Enum.RaycastFilterType.Exclude
 
-		local function fn80(arg)
+		local function fn81(arg)
 			if v17 then
 				if (os.clock() - n6) < 0.1 then
-					if fn36(arg - v17).Magnitude < 2 then
+					if fn37(arg - v17).Magnitude < 2 then
 						local v18, x2, y2 = ctx.vector3New, arg.X, hit.Y
 						return v18(x2, y2, arg.Z)
 					end
@@ -31786,7 +31801,7 @@ local function fn2()
 
 		local n7, v18 = 0
 
-		local function fn81()
+		local function fn82()
 			if (os.clock() - n7) > 1 then
 				local now3, v19 = os.clock(), ctx.state
 				local v20 = v19.bat()
@@ -31797,7 +31812,7 @@ local function fn2()
 			return v20
 		end
 
-		local function fn82(vector2, walkSpeed)
+		local function fn83(vector2, walkSpeed)
 			local humanoid = ctx.fn11
 			local v19, v20 = humanoid(), ctx.fn4
 			humanoid = v20()
@@ -31810,7 +31825,7 @@ local function fn2()
 				return
 			end
 
-			v20 = fn36(vector2 - v19.Position)
+			v20 = fn37(vector2 - v19.Position)
 			tbl12.ws0 = tbl12.ws0 or normalWalk(humanoid)
 			local n8 = vector2.Y - v19.Position.Y
 			local n9 = ((n8 > 2) and math.min(n8 * 6, 40)) or math.min(v19.AssemblyLinearVelocity.Y, 8)
@@ -31828,7 +31843,7 @@ local function fn2()
 			end
 		end
 
-		local function fn83()
+		local function fn84()
 			local v19 = ctx.fn4
 			local humanoid, v20 = v19(), ctx.fn11
 			v19 = v20()
@@ -31848,7 +31863,7 @@ local function fn2()
 			end
 		end
 
-		local function fn84(arg, arg2, arg3)
+		local function fn85(arg, arg2, arg3)
 			local n8 = os.clock() + 25
 
 			while arg2() and (os.clock() < n8) do
@@ -31856,7 +31871,7 @@ local function fn2()
 				local v20 = v19()
 
 				if v20 then
-					if fn36(arg - v20.Position).Magnitude < 3 then
+					if fn37(arg - v20.Position).Magnitude < 3 then
 						if (arg.Y - v20.Position.Y) < 2 then
 							break
 						end
@@ -31865,16 +31880,16 @@ local function fn2()
 					break
 				end
 
-				fn82(arg, arg3)
+				fn83(arg, arg3)
 				v20 = ctx.fn12
 				v20()
 			end
 
-			fn83()
+			fn84()
 			return arg2()
 		end
 
-		local function fn85()
+		local function fn86()
 			if not (tbl12.bats) then
 				tbl12.bats = {}
 				tbl12.wpn = {}
@@ -31896,7 +31911,7 @@ local function fn2()
 			local character2, flag = wl.Character, ((os.clock() - (tbl12.wlAt or 0)) > 1) or (tbl12.wl[1] and not tbl12.wl[1].Parent)
 
 			if flag then
-				local flag2, pbWeap = fn33("InPumpkinArena") == true
+				local flag2, pbWeap = fn34("InPumpkinArena") == true
 
 				if flag2 then
 					wl = ctx.slot28
@@ -31939,12 +31954,12 @@ local function fn2()
 
 			wl = tbl12.wl
 			if #wl == 0 then
-				return fn81()
+				return fn82()
 			end
 			flag = character2 and (character2:FindFirstChildOfClass("Tool"))
 			character2 = flag and table.find(wl, flag)
 
-			local function fn86(arg)
+			local function fn87(arg)
 				return tonumber(arg:GetAttribute("CooldownEndTime")) or 0
 			end
 
@@ -31954,7 +31969,7 @@ local function fn2()
 				if #wl == 1 then
 					return flag
 				elseif not ((os.clock() - (tbl12.wAt or 0)) >= 0.5) then
-					if fn86(flag) == tbl12.wCd then
+					if fn87(flag) == tbl12.wCd then
 						return flag
 					end
 				end
@@ -31963,7 +31978,7 @@ local function fn2()
 
 				for i3 = 1, #wl - 1, 1 do
 					local v20 = wl[(((character2 + i3) - 1) % #wl) + 1]
-					i3 = fn86(v20) - getServerTimeNow()
+					i3 = fn87(v20) - getServerTimeNow()
 					if i3 <= 0 then
 						v19 = v20
 						break
@@ -31981,7 +31996,7 @@ local function fn2()
 			else
 			end
 
-			tbl12.wAt, tbl12.wCd = os.clock(), fn86(v19)
+			tbl12.wAt, tbl12.wCd = os.clock(), fn87(v19)
 			return v19
 		end
 
@@ -31989,9 +32004,9 @@ local function fn2()
 		local v20, v21, tbl29 = v19({}, tbl28), setmetatable, {__mode = "k"}
 		tbl12.monSkip, tbl12.monT = v20, v21({}, tbl29)
 
-		local function fn86(arg)
+		local function fn87(arg)
 			local flag = ctx.fn11
-			local v22, SafeZone = flag(), fn66("SafeZone")
+			local v22, SafeZone = flag(), fn67("SafeZone")
 			if not (v22) then
 				return
 			end
@@ -32021,10 +32036,10 @@ local function fn2()
 					k = flag
 				end
 
-				local flag2 = (k and v26:IsDescendantOf(workspace)) and fn38(v26)
+				local flag2 = (k and v26:IsDescendantOf(workspace)) and fn39(v26)
 
 				if flag2 then
-					if SafeZone and (fn67(SafeZone, flag2)) then
+					if SafeZone and (fn68(SafeZone, flag2)) then
 					else
 						local magnitude2, v27 = (flag2 - v22.Position).Magnitude, ctx.slot28
 						k = ((v27.hwMonOrder == "Most tokens") and (magnitude2 - ((tbl27[v26:GetAttribute("MonsterSize")] or 0) * 1000))) or magnitude2
@@ -32045,25 +32060,25 @@ local function fn2()
 			return v25
 		end
 
-		local function fn87(arg, arg2)
-			local v22, hwMonTp = fn81(), ctx.fn4
+		local function fn88(arg, arg2)
+			local v22, hwMonTp = fn82(), ctx.fn4
 			hwMonTp()
 			if not (v22) then
-				fn39("Get a bat to fight monsters")
+				fn40("Get a bat to fight monsters")
 				return false
 			end
-			local v23, v24 = fn86(arg2), ctx.fn11
+			local v23, v24 = fn87(arg2), ctx.fn11
 			arg2 = v24()
 			if not (v23 and arg2) then
 				return false
 			end
-			fn39("Fighting " .. (tostring(v23:GetAttribute("MonsterSize") or "a") .. " monster"))
+			fn40("Fighting " .. (tostring(v23:GetAttribute("MonsterSize") or "a") .. " monster"))
 
-			local function fn88()
+			local function fn89()
 				return ((arg() and (v23.Parent ~= nil)) and (v23:GetAttribute("KilledBy") == nil)) and not hwCarrying()
 			end
 
-			v24 = fn38(v23)
+			v24 = fn39(v23)
 			hwMonTp = nil
 
 			if v24 then
@@ -32074,7 +32089,7 @@ local function fn2()
 			end
 
 			if hwMonTp then
-				local v25 = fn36(arg2.Position - v24)
+				local v25 = fn37(arg2.Position - v24)
 				local unit, unit2 = (v25.Magnitude > 0.1) and v25.Unit
 
 				if unit then
@@ -32084,12 +32099,12 @@ local function fn2()
 					unit2 = (v25(0, 0, 1))
 				end
 
-				unit = fn80(v24 + (unit2 * 4))
-				unit2, v25 = ctx.slot28, tbl12.tp(ctx.slot28.hwMonTp, unit, fn88)
+				unit = fn81(v24 + (unit2 * 4))
+				unit2, v25 = ctx.slot28, tbl12.tp(ctx.slot28.hwMonTp, unit, fn89)
 
 				if v25 == nil then
 					local v26 = ctx.slot28
-					v25 = fn84(unit, fn88, v26.hwMonSp)
+					v25 = fn85(unit, fn89, v26.hwMonSp)
 				else
 				end
 
@@ -32100,8 +32115,8 @@ local function fn2()
 
 			hwMonTp, arg2 = os.clock() + 15, os.clock()
 
-			while (fn88() and (os.clock() < hwMonTp)) and ((((tbl12.monT[v23] or 0) + os.clock()) - arg2) < 7) do
-				local v222, v25 = fn38(v23), ctx.fn11
+			while (fn89() and (os.clock() < hwMonTp)) and ((((tbl12.monT[v23] or 0) + os.clock()) - arg2) < 7) do
+				local v222, v25 = fn39(v23), ctx.fn11
 				v24 = v25()
 
 				if v222 then
@@ -32112,7 +32127,7 @@ local function fn2()
 					break
 				end
 
-				v25 = fn36(v24.Position - v222)
+				v25 = fn37(v24.Position - v222)
 				local unit, unit2 = (v25.Magnitude > 0.1) and v25.Unit
 
 				if unit then
@@ -32122,7 +32137,7 @@ local function fn2()
 					unit2 = (v25(0, 0, 1))
 				end
 
-				unit, v25 = fn80(v222 + (unit2 * 4)), ctx.slot28
+				unit, v25 = fn81(v222 + (unit2 * 4)), ctx.slot28
 
 				if v25.hwMonTp then
 					if inDim() then
@@ -32132,18 +32147,18 @@ local function fn2()
 						v24.AssemblyLinearVelocity = v27
 					else
 						unit2 = ctx.slot28
-						fn82(unit, unit2.hwMonSp)
+						fn83(unit, unit2.hwMonSp)
 					end
 				else
 					local v26 = ctx.slot28
-					fn82(unit, v26.hwMonSp)
+					fn83(unit, v26.hwMonSp)
 				end
 
-				fn46(v222)
-				v222 = fn85() or v22
+				fn47(v222)
+				v222 = fn86() or v22
 
 				if os.clock() > (tbl12.reeling or 0) then
-					fn43(v222)
+					fn44(v222)
 				end
 
 				if tbl12.bats then
@@ -32167,7 +32182,7 @@ local function fn2()
 				v25()
 			end
 
-			fn83()
+			fn84()
 			tbl12.monT[v23] = ((tbl12.monT[v23] or 0) + os.clock()) - arg2
 
 			if tbl12.monT[v23] >= 7 then
@@ -32181,7 +32196,7 @@ local function fn2()
 			return true
 		end
 
-		local function fn88(arg, arg2, arg3)
+		local function fn89(arg, arg2, arg3)
 			arg.ready = function()
 				if not (inDim()) then
 					local empty = arg.empty
@@ -32209,8 +32224,8 @@ local function fn2()
 				end
 
 				if not (arg2()) then
-					if not (fn49(function()
-						return fn45(arg2, 2, arg4)
+					if not (fn50(function()
+						return fn46(arg2, 2, arg4)
 					end)) then
 						arg.empty = arg.empty or os.clock()
 						return false
@@ -32219,13 +32234,13 @@ local function fn2()
 
 				arg.empty = nil
 
-				return fn52(function()
+				return fn53(function()
 					return arg3(arg4)
 				end)
 			end
 		end
 
-		local v22 = fn14({name = "HwMon", mover = true, gap = 1, pri = 14, where = "dim", vis = true})
+		local v22 = fn15({name = "HwMon", mover = true, gap = 1, pri = 14, where = "dim", vis = true})
 
 		v22.on = function()
 			local v23 = ctx.slot28
@@ -32239,10 +32254,10 @@ local function fn2()
 				flag = hwMon
 			end
 
-			return ((flag and (fn81() ~= nil)) and fn37()) and fn61()
+			return ((flag and (fn82() ~= nil)) and fn38()) and fn62()
 		end
 
-		local function fn89(arg, arg2, arg3)
+		local function fn90(arg, arg2, arg3)
 			local flag = false
 
 			while true do
@@ -32256,7 +32271,7 @@ local function fn2()
 					flag2 = v23
 				end
 
-				if not (flag2 and (fn87(arg, arg2))) then
+				if not (flag2 and (fn88(arg, arg2))) then
 					break
 				end
 				flag2 = ctx.fn12
@@ -32267,10 +32282,10 @@ local function fn2()
 			return flag
 		end
 
-		fn88(v22, function()
-			return fn86() ~= nil
+		fn89(v22, function()
+			return fn87() ~= nil
 		end, function(arg)
-			return fn89(arg, false, v22)
+			return fn90(arg, false, v22)
 		end)
 
 		tbl12.monRank = function()
@@ -32310,27 +32325,27 @@ local function fn2()
 			return (v23 and tbl12.monRank()) or v23
 		end
 
-		local v23 = fn14({name = "HwBlood", mover = true, gap = 1, pri = 5, where = "dim", vis = true})
+		local v23 = fn15({name = "HwBlood", mover = true, gap = 1, pri = 5, where = "dim", vis = true})
 
 		v23.on = function()
 			local v24 = ctx.slot28
-			local hwBlood = ((v24.hwBlood and (workspace:GetAttribute("HalloweenWorldEvent") == "BloodMoon")) and (fn81() ~= nil)) and (fn37() or (ctx.lastMV == v23))
-			return hwBlood and (fn61())
+			local hwBlood = ((v24.hwBlood and (workspace:GetAttribute("HalloweenWorldEvent") == "BloodMoon")) and (fn82() ~= nil)) and (fn38() or (ctx.lastMV == v23))
+			return hwBlood and (fn62())
 		end
 
-		fn88(v23, function()
-			return fn86(true) ~= nil
+		fn89(v23, function()
+			return fn87(true) ~= nil
 		end, function(arg)
-			return fn89(arg, true, v23)
+			return fn90(arg, true, v23)
 		end)
 
-		local function fn90()
+		local function fn91()
 			local v24 = findFirstChild()
 			local altar = v24 and (v24:FindFirstChild("Altar"))
 			return altar and (altar:FindFirstChild("PumpkinDeposit"))
 		end
 
-		local function fn91()
+		local function fn92()
 			local magnitude, tbl30 = findFirstChild(), ctx.fn11
 			local v24, runawayPumpkins, pcp, pcp2 = tbl30(), magnitude and (magnitude:FindFirstChild("RunawayPumpkins")), tbl12.pcp
 
@@ -32353,7 +32368,7 @@ local function fn2()
 				else
 				end
 
-				i2 = (tbl30 and tbl30.Enabled) and fn38(v25)
+				i2 = (tbl30 and tbl30.Enabled) and fn39(v25)
 				magnitude = i2 and (i2 - v24.Position).Magnitude
 
 				if magnitude then
@@ -32372,35 +32387,35 @@ local function fn2()
 			return pcp2
 		end
 
-		local function fn92(arg)
-			local v24 = fn90()
+		local function fn93(arg)
+			local v24 = fn91()
 			if not v24 then
 				return
 			end
-			fn39("Bringing a pumpkin to the altar")
+			fn40("Bringing a pumpkin to the altar")
 
-			local function fn93()
-				return arg() and (fn33("HalloweenPumpkinCarrying") == true)
+			local function fn94()
+				return arg() and (fn34("HalloweenPumpkinCarrying") == true)
 			end
 
 			if v24:GetAttribute("Open") == false then
-				fn49(function()
-					fn45(function()
+				fn50(function()
+					fn46(function()
 						return v24:GetAttribute("Open") ~= false
-					end, 10, fn93)
+					end, 10, fn94)
 				end)
 			end
 
-			local v25, n8 = ctx.vector3New, (fn38(v24:FindFirstChild("Target")) or v24.Position) + ctx.vector3New(0, 3, 0)
-			local v26, lookVector = ctx.slot28, tbl12.tp(ctx.slot28.hwPumpTp, n8, fn93)
+			local v25, n8 = ctx.vector3New, (fn39(v24:FindFirstChild("Target")) or v24.Position) + ctx.vector3New(0, 3, 0)
+			local v26, lookVector = ctx.slot28, tbl12.tp(ctx.slot28.hwPumpTp, n8, fn94)
 
 			if lookVector == nil then
 				local v27 = ctx.slot28
-				fn84(n8, fn93, v27.hwPumpSp)
+				fn85(n8, fn94, v27.hwPumpSp)
 			end
 
 			for i2 = 1, 4, 1 do
-				if not (fn93()) then
+				if not (fn94()) then
 					break
 				end
 				lookVector, n8 = v24.CFrame.LookVector, (v24.Size.Z / 2) + 3
@@ -32412,26 +32427,26 @@ local function fn2()
 					v28()
 				end
 
-				fn40(v24:FindFirstChildWhichIsA("ProximityPrompt", true))
-				fn44(0.3, fn93)
+				fn41(v24:FindFirstChildWhichIsA("ProximityPrompt", true))
+				fn45(0.3, fn94)
 			end
 		end
 
-		local function fn93(arg)
-			if fn33("HalloweenPumpkinCarrying") == true then
-				fn92(arg)
+		local function fn94(arg)
+			if fn34("HalloweenPumpkinCarrying") == true then
+				fn93(arg)
 				return true
 			end
-			local v24 = fn91()
+			local v24 = fn92()
 			if not (v24) then
 				return false
 			end
-			fn39("Catching a pumpkin")
+			fn40("Catching a pumpkin")
 			local n8, catchPrompt = os.clock() + 10
 
-			while ((arg() and v24.Parent) and (os.clock() < n8)) and (fn33("HalloweenPumpkinCarrying") ~= true) do
+			while ((arg() and v24.Parent) and (os.clock() < n8)) and (fn34("HalloweenPumpkinCarrying") ~= true) do
 				catchPrompt = if catchPrompt and catchPrompt.Parent then catchPrompt else v24:FindFirstChild("CatchPrompt", true)
-				local v25, v26 = fn38(v24), ctx.fn11
+				local v25, v26 = fn39(v24), ctx.fn11
 				local v27 = v26()
 
 				if catchPrompt then
@@ -32448,7 +32463,7 @@ local function fn2()
 
 				if catchPrompt:IsA("ProximityPrompt") then
 					if (v25 - v27.Position).Magnitude <= (catchPrompt.MaxActivationDistance + 2) then
-						fn40(catchPrompt)
+						fn41(catchPrompt)
 					end
 				end
 
@@ -32456,35 +32471,35 @@ local function fn2()
 
 				if v30 == nil then
 					v27 = ctx.slot28
-					fn82(v25, v27.hwPumpSp)
+					fn83(v25, v27.hwPumpSp)
 					v26 = ctx.fn12
 					v26()
 				end
 			end
 
-			fn83()
+			fn84()
 
-			if fn33("HalloweenPumpkinCarrying") == true then
-				fn92(arg)
+			if fn34("HalloweenPumpkinCarrying") == true then
+				fn93(arg)
 			end
 
 			return true
 		end
 
-		local function fn94()
+		local function fn95()
 			return workspace:GetAttribute("HalloweenWorldEvent") == "PumpkinMoon"
 		end
 
-		local v24 = fn14({name = "HwPump", mover = true, gap = 1, pri = 4, where = "dim"})
+		local v24 = fn15({name = "HwPump", mover = true, gap = 1, pri = 4, where = "dim"})
 
 		v24.on = function()
 			local v25 = ctx.slot28
-			local hwPump = (v25.hwPump and fn94()) and (fn37() or (ctx.lastMV == v24))
-			return hwPump and (fn61())
+			local hwPump = (v25.hwPump and fn95()) and (fn38() or (ctx.lastMV == v24))
+			return hwPump and (fn62())
 		end
 
-		fn88(v24, function()
-			return (fn33("HalloweenPumpkinCarrying") == true) or (fn91() ~= nil)
+		fn89(v24, function()
+			return (fn34("HalloweenPumpkinCarrying") == true) or (fn92() ~= nil)
 		end, function(arg)
 			local flag = false
 
@@ -32499,7 +32514,7 @@ local function fn2()
 					flag2 = v25
 				end
 
-				if not (flag2 and (fn93(arg))) then
+				if not (flag2 and (fn94(arg))) then
 					break
 				end
 				v25 = ctx.fn12
@@ -32510,8 +32525,8 @@ local function fn2()
 			return flag
 		end)
 
-		local function fn95(arg, arg2)
-			local v25 = fn70(arg)
+		local function fn96(arg, arg2)
+			local v25 = fn71(arg)
 			if not (v25) then
 				return false
 			end
@@ -32519,14 +32534,14 @@ local function fn2()
 
 			if v27 == nil then
 				arg = nil
-				arg, v27 = ctx.vector3New, fn53(v25.Position + ctx.vector3New(0, 3, 0), arg2)
+				arg, v27 = ctx.vector3New, fn54(v25.Position + ctx.vector3New(0, 3, 0), arg2)
 			else
 			end
 
 			return v27
 		end
 
-		local function fn96(arg, arg2, arg3)
+		local function fn97(arg, arg2, arg3)
 			local Talk, v25
 
 			for i2 = 1, 3, 1 do
@@ -32546,27 +32561,27 @@ local function fn2()
 					break
 				end
 
-				fn95(arg, arg3)
-				fn44(0.4, arg3)
+				fn96(arg, arg3)
+				fn45(0.4, arg3)
 				Talk, v25 = Talk2, v27
 			end
 
 			return Talk, v25
 		end
 
-		local function fn97()
-			local GhostDogQuest = fn35("GhostDogQuest")
+		local function fn98()
+			local GhostDogQuest = fn36("GhostDogQuest")
 			return ((type(GhostDogQuest) == "table") and tonumber(GhostDogQuest.Stage)) or 0, ((type(GhostDogQuest) == "table") and GhostDogQuest) or {}
 		end
 
 		local function getRod()
-			return fn42("rod", function(arg)
+			return fn43("rod", function(arg)
 				return arg:GetAttribute("GhostDogRod") == true
 			end)
 		end
 
-		local function fn98()
-			local v25, v26 = fn97()
+		local function fn99()
+			local v25, v26 = fn98()
 			local n8 = 0
 
 			for k in next, ((type(v26.Artifacts) == "table") and v26.Artifacts) or {}, nil do
@@ -32576,17 +32591,17 @@ local function fn2()
 			return ((v25 * 10) + n8) + ((getRod() and 5) or 0)
 		end
 
-		local function fn99(arg, arg2, arg3)
+		local function fn100(arg, arg2, arg3)
 			local ok, result = pcall(require, ReplicatedStorage.Data.GhostDogQuest)
 
-			local function fn100(arg4)
+			local function fn101(arg4)
 				local ok2, result2 = pcall(result.ChaseFrame, arg, arg4)
 				return ((ok2 and (typeof(result2) == "CFrame")) and result2) or nil
 			end
 
 			if ok then
 				if type(result) == "table" then
-					if not (fn100(0)) then
+					if not (fn101(0)) then
 						return false
 					end
 				else
@@ -32596,13 +32611,13 @@ local function fn2()
 				return false
 			end
 
-			fn39("Ghost Dog: underwater chase")
-			local GhostDogQuestFlags = fn34("GhostDogQuestFlags", "ChaseSpeed") or 58
+			fn40("Ghost Dog: underwater chase")
+			local GhostDogQuestFlags = fn35("GhostDogQuestFlags", "ChaseSpeed") or 58
 
 			local ok2, result2 = pcall(function()
-				fn45(function()
+				fn46(function()
 					local v25 = ctx.fn11
-					local v26, v27 = v25(), fn100(0)
+					local v26, v27 = v25(), fn101(0)
 					return (v26 and v27) and ((v26.Position - v27.Position).Magnitude < 40)
 				end, 8, arg3)
 
@@ -32617,16 +32632,16 @@ local function fn2()
 
 				while arg3() and (os.clock() < n8) do
 					n9 = ctx.fn10
-					n9(fn100(0) * cframe)
+					n9(fn101(0) * cframe)
 					local v25 = ctx.fn12
 					v25()
 				end
 
 				n8, n9 = os.clock(), arg2 * GhostDogQuestFlags
 
-				while arg3() and (fn33("GhostDogChase") ~= nil) do
+				while arg3() and (fn34("GhostDogChase") ~= nil) do
 					local n10 = math.min((os.clock() - n8) * GhostDogQuestFlags, n9)
-					local v25 = fn100(n10)
+					local v25 = fn101(n10)
 
 					if v25 then
 						local v26 = ctx.fn10
@@ -32654,7 +32669,7 @@ local function fn2()
 						n10 = os.clock() + 5
 
 						while os.clock() < n10 do
-							v25 = fn100(n9)
+							v25 = fn101(n9)
 
 							if v25 then
 								local v26 = ctx.fn10
@@ -32680,8 +32695,8 @@ local function fn2()
 					task.wait(0.5)
 				end
 
-				fn45(function()
-					local ReturnSpot, v25 = fn70("ReturnSpot"), ctx.fn11
+				fn46(function()
+					local ReturnSpot, v25 = fn71("ReturnSpot"), ctx.fn11
 					local v26 = v25()
 					return if ReturnSpot then v26 and ((v26.Position - ReturnSpot.Position).Magnitude < 25) else not ReturnSpot
 				end, 6)
@@ -32701,7 +32716,7 @@ local function fn2()
 			return ok2 and result2
 		end
 
-		local function fn100(arg)
+		local function fn101(arg)
 			local ok, result = pcall(require, ReplicatedStorage.Controllers.Game.FishingController[arg])
 			return (ok and result) or nil
 		end
@@ -32713,14 +32728,14 @@ local function fn2()
 			end)
 		end
 
-		local function fn101(arg, arg2)
+		local function fn102(arg, arg2)
 			local n8 = ctx.fn11
 			if not (n8()) then
 				return nil
 			end
-			fn46(arg)
+			fn47(arg)
 			n8 = ctx.slot28
-			local n9, Ui, ok, result = 1.2 * ((tbl19[n8.hwLuck] or 0.875) ^ 0.7142857142857143), fn100("Ui"), pcall(require, ReplicatedStorage.Shared.Util.Fishing)
+			local n9, Ui, ok, result = 1.2 * ((tbl19[n8.hwLuck] or 0.875) ^ 0.7142857142857143), fn101("Ui"), pcall(require, ReplicatedStorage.Shared.Util.Fishing)
 			local ok2, result2 = pcall(require, ReplicatedStorage.Shared.Flags.FishingFlags)
 			fn4("RE/Fishing/Hold")
 			local now3, Cast, flag = os.clock(), tbl12.acq(Ui), false
@@ -32805,8 +32820,8 @@ local function fn2()
 			return ((type(Ui) == "table") and Ui) or nil, now3
 		end
 
-		local function fn102(arg, arg2, arg3)
-			if not (fn44(3.5, arg3)) then
+		local function fn103(arg, arg2, arg3)
+			if not (fn45(3.5, arg3)) then
 				local v25 = ctx.fn5
 				v25("RF/GhostDogQuest/Abort")
 				return false
@@ -32814,11 +32829,11 @@ local function fn2()
 
 			local v25 = ctx.fn5
 			v25("RF/GhostDogQuest/Dive")
-			return fn99(arg, arg2, arg3)
+			return fn100(arg, arg2, arg3)
 		end
 
-		local function fn103(arg, arg2)
-			if not (fn44((tonumber(arg.Wait) or 3) + 0.45, arg2)) then
+		local function fn104(arg, arg2)
+			if not (fn45((tonumber(arg.Wait) or 3) + 0.45, arg2)) then
 				return
 			end
 			local v25 = ctx.fn5
@@ -32830,7 +32845,7 @@ local function fn2()
 				return
 			end
 
-			if fn102(v26, fn34("GhostDogQuestFlags", "FishChaseSeconds") or 25, arg2) then
+			if fn103(v26, fn35("GhostDogQuestFlags", "FishChaseSeconds") or 25, arg2) then
 				fn12("Fishing", "Caught a Ghost Fish!", "ok")
 			end
 		end
@@ -32839,13 +32854,13 @@ local function fn2()
 			local v25
 
 			for i2 = 1, 3, 1 do
-				i2 = fn70("Artifact_" .. arg)
+				i2 = fn71("Artifact_" .. arg)
 				if not i2 then
 					return "the " .. (arg .. " memory is not loaded yet")
 				end
 
 				if arg2() then
-					if not (fn95("Artifact_" .. arg, arg2)) then
+					if not (fn96("Artifact_" .. arg, arg2)) then
 						return v25
 					end
 				else
@@ -32856,16 +32871,16 @@ local function fn2()
 				local artifacts = v26()
 
 				if artifacts then
-					if fn36(artifacts.Position - i2.Position).Magnitude > 4 then
+					if fn37(artifacts.Position - i2.Position).Magnitude > 4 then
 						v26 = nil
 						v26, artifacts.CFrame = ctx.vector3New, CFrame.new(i2.Position + ctx.vector3New(0, 3, 0))
 					end
 				end
 
-				fn44(0.3, arg2)
+				fn45(0.3, arg2)
 				artifacts = ctx.fn5
 				local Collect, v27, v28 = artifacts("RF/GhostDogQuest/Collect", arg)
-				artifacts = select(2, fn97()).Artifacts
+				artifacts = select(2, fn98()).Artifacts
 
 				if v27 == true then
 					return
@@ -32880,14 +32895,14 @@ local function fn2()
 
 					if i3 then
 						if i3.Enabled then
-							fn40(i3)
+							fn41(i3)
 							break
 						end
 					end
 				end
 
-				fn44(0.8, arg2)
-				artifacts = select(2, fn97()).Artifacts
+				fn45(0.8, arg2)
+				artifacts = select(2, fn98()).Artifacts
 
 				if type(artifacts) == "table" then
 					if artifacts[arg] then
@@ -32901,18 +32916,18 @@ local function fn2()
 			return v25 or (arg .. " was not picked up")
 		end
 
-		local function fn104(arg)
-			local v25, v26 = fn97()
-			local v27 = fn98()
+		local function fn105(arg)
+			local v25, v26 = fn98()
+			local v27 = fn99()
 			local DogSpot
-			fn39("Ghost Dog quest: " .. (tbl18[v25 + 1] or "Done"))
+			fn40("Ghost Dog quest: " .. (tbl18[v25 + 1] or "Done"))
 
 			if v25 == 0 then
-				if fn95("DogSpot", arg) then
-					DogSpot = fn96("DogSpot", "Dog", arg)
+				if fn96("DogSpot", arg) then
+					DogSpot = fn97("DogSpot", "Dog", arg)
 
-					fn45(function()
-						return fn97() >= 1
+					fn46(function()
+						return fn98() >= 1
 					end, 5, arg)
 				else
 				end
@@ -32928,18 +32943,18 @@ local function fn2()
 
 							if i2 then
 								DogSpot = "Memory " .. (v28 .. (": " .. tostring(i2)))
-								fn39("Ghost Dog: " .. DogSpot)
+								fn40("Ghost Dog: " .. DogSpot)
 							else
 							end
 						end
 					end
 
 					if flag then
-						if fn95("DogSpot", arg) then
-							tbl30 = fn96("DogSpot", "Dog", arg)
+						if fn96("DogSpot", arg) then
+							tbl30 = fn97("DogSpot", "Dog", arg)
 
-							fn45(function()
-								return fn97() >= 2
+							fn46(function()
+								return fn98() >= 2
 							end, 5, arg)
 
 							DogSpot = tbl30
@@ -32951,14 +32966,14 @@ local function fn2()
 					local flag = (v25 == 2) or ((v25 == 3) and not getRod())
 
 					if flag then
-						if fn95("FishermanSpot", arg) then
-							DogSpot = fn96("FishermanSpot", "Fisherman", arg)
+						if fn96("FishermanSpot", arg) then
+							DogSpot = fn97("FishermanSpot", "Fisherman", arg)
 
 							if (DogSpot == "FisherReunion") or (DogSpot == "FisherHint") then
-								fn44(2.5, arg)
-								DogSpot = fn96("FishermanSpot", "Rod", arg)
+								fn45(2.5, arg)
+								DogSpot = fn97("FishermanSpot", "Rod", arg)
 
-								fn45(function()
+								fn46(function()
 									return getRod() ~= nil
 								end, 5, arg)
 							else
@@ -32967,22 +32982,22 @@ local function fn2()
 						end
 					else
 						if v25 == 3 then
-							local CastTarget = fn70("CastTarget")
+							local CastTarget = fn71("CastTarget")
 
 							if CastTarget then
-								if fn95("CastSpot", arg) then
-									fn43(getRod())
-									fn44(0.5, arg)
-									local v28 = fn101(CastTarget.Position, arg)
+								if fn96("CastSpot", arg) then
+									fn44(getRod())
+									fn45(0.5, arg)
+									local v28 = fn102(CastTarget.Position, arg)
 
 									if v28 and (v28.Mode == "Quest") then
-										fn44((tonumber(v28.Wait) or 3) + 0.45, arg)
+										fn45((tonumber(v28.Wait) or 3) + 0.45, arg)
 										fn4("RE/Fishing/Cancel", v28.Id)
 										local v29 = ctx.fn5
 										local Cast, v30 = v29("RF/GhostDogQuest/Cast")
 
 										if type(v30) == "number" then
-											if fn102(v30, fn34("GhostDogQuestFlags", "ChaseSeconds") or 50, arg) then
+											if fn103(v30, fn35("GhostDogQuestFlags", "ChaseSeconds") or 50, arg) then
 												fn12("Ghost Dog", "Phantom Express Ticket unlocked", "ok")
 											end
 										end
@@ -32998,7 +33013,7 @@ local function fn2()
 				end
 			end
 
-			if fn98() == v27 then
+			if fn99() == v27 then
 				tbl12.dogAt = os.clock() + 20
 
 				if type(DogSpot) == "string" then
@@ -33010,14 +33025,14 @@ local function fn2()
 			return true
 		end
 
-		local v25 = fn14({name = "HwDog", mover = true, gap = 1, pri = 13, where = "dim", vis = function()
-			return fn97() == 3
+		local v25 = fn15({name = "HwDog", mover = true, gap = 1, pri = 13, where = "dim", vis = function()
+			return fn98() == 3
 		end})
 
 		v25.on = function()
 			local v26 = ctx.slot28
-			local hwDog = (v26.hwDog and (fn97() < 4)) and (fn37() or (ctx.lastMV == v25))
-			return hwDog and (fn61())
+			local hwDog = (v26.hwDog and (fn98() < 4)) and (fn38() or (ctx.lastMV == v25))
+			return hwDog and (fn62())
 		end
 
 		v25.ready = function()
@@ -33030,10 +33045,10 @@ local function fn2()
 		end
 
 		v25.run = function(_, arg)
-			return fn104(arg)
+			return fn105(arg)
 		end
 
-		local function fn105(arg)
+		local function fn106(arg)
 			local raycastParams3 = RaycastParams.new()
 			raycastParams3.FilterType = Enum.RaycastFilterType.Exclude
 			local filterDescendantsInstances, v26 = {}, ctx.localPlayer
@@ -33069,7 +33084,7 @@ local function fn2()
 			end
 		end
 
-		local function fn106(arg, arg2)
+		local function fn107(arg, arg2)
 			local raycastParams3, filterDescendantsInstances = RaycastParams.new(), {}
 
 			for _, player in ipairs(Players:GetPlayers()) do
@@ -33097,11 +33112,11 @@ local function fn2()
 		end
 
 		local function fishRaw(arg)
-			local flag = fn33("InSewerCave") == true
+			local flag = fn34("InSewerCave") == true
 
 			if not (flag) then
-				if fn97() == 3 then
-					return fn104(arg)
+				if fn98() == 3 then
+					return fn105(arg)
 				end
 			end
 
@@ -33111,10 +33126,10 @@ local function fn2()
 			end
 
 			if tbl12.waiting() then
-				fn39("Waiting for a bite")
+				fn40("Waiting for a bite")
 
-				fn49(function()
-					fn45(function()
+				fn50(function()
+					fn46(function()
 						return not tbl12.waiting()
 					end, 20, arg)
 				end)
@@ -33123,8 +33138,8 @@ local function fn2()
 			end
 
 			if os.clock() < tbl12.fishAt then
-				fn49(function()
-					fn44(tbl12.fishAt - os.clock(), arg)
+				fn50(function()
+					fn45(tbl12.fishAt - os.clock(), arg)
 				end)
 
 				return true
@@ -33149,17 +33164,17 @@ local function fn2()
 			else
 			end
 
-			ReturnSpot = ((if flag then flag2 else not flag22) and not sq) and fn70("ReturnSpot")
+			ReturnSpot = ((if flag then flag2 else not flag22) and not sq) and fn71("ReturnSpot")
 			local p = (flag22 and flag22.p) or (ReturnSpot and ReturnSpot.Position)
-			local p2 = p and ((fn36(v27.Position - p).Magnitude > 8) or (if flag22 then not flag22 else (p.Y + 1) > v27.Position.Y))
+			local p2 = p and ((fn37(v27.Position - p).Magnitude > 8) or (if flag22 then not flag22 else (p.Y + 1) > v27.Position.Y))
 
 			if p2 then
-				fn39((flag22 and "Going back to your fishing spot") or "Going to the fishing spot")
+				fn40((flag22 and "Going back to your fishing spot") or "Going to the fishing spot")
 				local v28, v29 = ctx.vector3New, tbl12.tp(true, p + ctx.vector3New(0, 3, 0), arg)
 
-				v29 = if v29 == nil then fn52(function()
+				v29 = if v29 == nil then fn53(function()
 					local v30 = ctx.vector3New
-					return fn84(p + v30(0, 3, 0), arg, 300)
+					return fn85(p + v30(0, 3, 0), arg, 300)
 				end) else v29
 
 				if not (v29) then
@@ -33173,7 +33188,7 @@ local function fn2()
 			else
 			end
 
-			local CastTarget, ghostFisherman = (if flag then flag2 else not flag22) and fn70("CastTarget"), (if flag then flag2 else not flag22) and workspace:FindFirstChild("GhostFisherman")
+			local CastTarget, ghostFisherman = (if flag then flag2 else not flag22) and fn71("CastTarget"), (if flag then flag2 else not flag22) and workspace:FindFirstChild("GhostFisherman")
 
 			if sq then
 			else
@@ -33186,7 +33201,7 @@ local function fn2()
 				flag2 = flag2 and (flag2:FindFirstChild(v28))
 			end
 
-			local unit, unit2 = ((((flag2 and flag2:IsA("BasePart")) and (fn36(flag2.Position - v27.Position).Magnitude > 1)) and fn36(flag2.Position - v27.Position).Unit) or ((ghostFisherman and ghostFisherman:IsA("Model")) and ghostFisherman:GetPivot().LookVector)) or (ReturnSpot and ReturnSpot.CFrame.LookVector)
+			local unit, unit2 = ((((flag2 and flag2:IsA("BasePart")) and (fn37(flag2.Position - v27.Position).Magnitude > 1)) and fn37(flag2.Position - v27.Position).Unit) or ((ghostFisherman and ghostFisherman:IsA("Model")) and ghostFisherman:GetPivot().LookVector)) or (ReturnSpot and ReturnSpot.CFrame.LookVector)
 
 			if unit then
 				unit2 = unit
@@ -33199,8 +33214,8 @@ local function fn2()
 			local sq2 = sq or tbl12.findWater(v27.Position, p2, ((flag22 or flag) and 35) or 12, CastTarget)
 
 			if not sq2 then
-				fn39((flag22 and "No water in reach here, stand closer to the water") or "Looking for water to fish")
-				fn44((flag22 and 3) or 1, arg)
+				fn40((flag22 and "No water in reach here, stand closer to the water") or "Looking for water to fish")
+				fn45((flag22 and 3) or 1, arg)
 				return true
 			end
 
@@ -33208,11 +33223,11 @@ local function fn2()
 				tbl12.sq = {flag22.k, sq2}
 			end
 
-			tbl12.pin = fn106(v27, sq2)
+			tbl12.pin = fn107(v27, sq2)
 			ReturnSpot = ctx.slot28
-			fn39("Casting (" .. ((ReturnSpot.hwLuck or "x1.5 Perfect") .. ")"))
-			fn43(v26)
-			ghostFisherman, CastTarget = fn101(sq2, arg)
+			fn40("Casting (" .. ((ReturnSpot.hwLuck or "x1.5 Perfect") .. ")"))
+			fn44(v26)
+			ghostFisherman, CastTarget = fn102(sq2, arg)
 			tbl12.fishAt = os.clock() + 1.2
 
 			if not ghostFisherman then
@@ -33232,7 +33247,7 @@ local function fn2()
 							if ghostFisherman.Mode ~= "Hint" then
 								if ghostFisherman.Mode ~= "Quest" then
 									tbl12.pend = {id = ghostFisherman.Id, at = (os.clock() + flag22) + 0.9, bite = os.clock() + flag22}
-									return fn39("Cast done, farming monsters until the bite") or true
+									return fn40("Cast done, farming monsters until the bite") or true
 								end
 							end
 						end
@@ -33240,8 +33255,8 @@ local function fn2()
 				end
 			end
 
-			local Line = fn100("Line")
-			local Ui, rodTip = fn100("Ui"), v26:FindFirstChild("RodTip", true)
+			local Line = fn101("Line")
+			local Ui, rodTip = fn101("Ui"), v26:FindFirstChild("RodTip", true)
 			local worldPosition, worldPosition2 = (rodTip and rodTip:IsA("Attachment")) and rodTip.WorldPosition
 
 			if worldPosition then
@@ -33276,17 +33291,17 @@ local function fn2()
 				end)
 			end
 
-			fn39("Waiting for a bite")
+			fn40("Waiting for a bite")
 
 			if ghostFisherman.Mode == "GhostFish" then
-				fn103(ghostFisherman, arg)
+				fn104(ghostFisherman, arg)
 			else
 				if ((ghostFisherman.Mode == "Nothing") or (ghostFisherman.Mode == "Hint")) or (ghostFisherman.Mode == "Quest") then
-					fn44(flag22, arg)
+					fn45(flag22, arg)
 					fn4("RE/Fishing/Cancel", ghostFisherman.Id)
 				else
-					if fn44(flag22, arg) then
-						fn39("Reeling in")
+					if fn45(flag22, arg) then
+						fn40("Reeling in")
 						flag5 = true
 						unit2, flag = os.clock(), false
 
@@ -33370,11 +33385,11 @@ local function fn2()
 		tbl12.findWater = function(arg, arg2, arg3, arg4)
 			for i2 = 0, arg3, 1 do
 				local n8, v26 = arg2 + (((((((i2 % 2) == 0) and 1) or -1) * math.ceil(i2 / 2)) * 3.141592653589793) / 18), ctx.vector3New
-				local v27, v28 = ctx.slot28, fn105(arg + (v26(math.cos(n8), 0, math.sin(n8)) * (10 + (32 * (tbl19[ctx.slot28.hwLuck] or 0.875)))))
+				local v27, v28 = ctx.slot28, fn106(arg + (v26(math.cos(n8), 0, math.sin(n8)) * (10 + (32 * (tbl19[ctx.slot28.hwLuck] or 0.875)))))
 
 				if v28 then
 					if arg4 then
-						if not (fn36(v28 - arg4.Position).Magnitude < 12) then
+						if not (fn37(v28 - arg4.Position).Magnitude < 12) then
 							return v28
 						end
 					else
@@ -33425,7 +33440,7 @@ local function fn2()
 
 							for i2 = 1, n9, 1 do
 								for i3 = 1, n10, 1 do
-									local v30, v31 = ctx.vector3New, fn105(v29.CFrame:PointToWorldSpace(ctx.vector3New((((i2 - 0.5) / n9) - 0.5) * size.X, (size.Y / 2) + 1, (((i3 - 0.5) / n10) - 0.5) * size.Z)))
+									local v30, v31 = ctx.vector3New, fn106(v29.CFrame:PointToWorldSpace(ctx.vector3New((((i2 - 0.5) / n9) - 0.5) * size.X, (size.Y / 2) + 1, (((i3 - 0.5) / n10) - 0.5) * size.Z)))
 
 									if v31 then
 										wp[#wp + 1] = v31
@@ -33450,7 +33465,7 @@ local function fn2()
 			local magnitude, v27
 
 			for i2, v28 in ipairs(tbl12.wp) do
-				i2 = fn36(v28 - arg).Magnitude
+				i2 = fn37(v28 - arg).Magnitude
 
 				if magnitude then
 					if i2 < magnitude then
@@ -33474,8 +33489,8 @@ local function fn2()
 			if not v26 then
 				return (tbl12.wpBusy and false) or nil
 			end
-			local v27 = fn36(arg.Position - v26)
-			fn39("Going to the nearest water")
+			local v27 = fn37(arg.Position - v26)
+			fn40("Going to the nearest water")
 			local unit, unit2 = (v27.Magnitude > 1) and v27.Unit
 
 			if unit then
@@ -33486,12 +33501,12 @@ local function fn2()
 			end
 
 			v27 = ctx.slot28
-			local v28 = fn80(v26 + (unit2 * (10 + (32 * (tbl19[v27.hwLuck] or 0.875)))))
+			local v28 = fn81(v26 + (unit2 * (10 + (32 * (tbl19[v27.hwLuck] or 0.875)))))
 			unit2, unit = ctx.slot28, tbl12.tp(ctx.slot28.hwMonTp, v28, arg2)
 
-			unit = if unit == nil then fn52(function()
+			unit = if unit == nil then fn53(function()
 				local v29 = ctx.slot28
-				return fn84(v28, arg2, v29.hwMonSp)
+				return fn85(v28, arg2, v29.hwMonSp)
 			end) else unit
 
 			v27 = ctx.fn11
@@ -33515,7 +33530,7 @@ local function fn2()
 			return ((position and tbl12.findWater(position, 0, 35)) and {math.floor(position.X), math.floor(position.Y), math.floor(position.Z), (inDim() and 1) or 0}) or nil
 		end
 
-		local v26 = fn14({name = "HwFish", mover = true, gap = 1, pri = 15, where = function()
+		local v26 = fn15({name = "HwFish", mover = true, gap = 1, pri = 15, where = function()
 			local v26 = tbl12.mixed()
 			local flag = if v26 then not v26 else tbl12.mySpot()
 			return ((flag and not flag.dim) and "field") or "dim"
@@ -33533,8 +33548,8 @@ local function fn2()
 				flag2 = hwFish2
 			end
 
-			hwFish = flag2 and (fn37() or (ctx.lastMV == v26))
-			return hwFish and ((flag and not flag.dim) or fn61())
+			hwFish = flag2 and (fn38() or (ctx.lastMV == v26))
+			return hwFish and ((flag and not flag.dim) or fn62())
 		end
 
 		tbl12.waiting = function()
@@ -33785,7 +33800,7 @@ local function fn2()
 			return (tostring(math.floor(tonumber(arg) or 0)):reverse():gsub("(%d%d%d)", "%1,"):reverse():gsub("^,", ""))
 		end
 
-		local v27 = fn14({name = "HwReel", gap = 0.2})
+		local v27 = fn15({name = "HwReel", gap = 0.2})
 
 		table.insert(ctx.state.cleanup, function()
 			if tbl12.pend then
@@ -33799,7 +33814,7 @@ local function fn2()
 
 		v27.fn = function()
 			local pend, v28 = tbl12.pend, ctx.fn4
-			local v29, v30, Ui = v28(), getRod(), fn100("Ui")
+			local v29, v30, Ui = v28(), getRod(), fn101("Ui")
 			tbl12.pend = nil
 
 			if v29 then
@@ -33916,8 +33931,8 @@ local function fn2()
 
 		v26.run = function(_, arg)
 			if tbl12.waiting() then
-				return fn49(function()
-					return fn45(function()
+				return fn50(function()
+					return fn46(function()
 						return not tbl12.waiting()
 					end, 2, arg)
 				end)
@@ -34032,7 +34047,7 @@ local function fn2()
 			end
 		end
 
-		local v34 = fn14({name = "Rotate", gap = 1, info = true})
+		local v34 = fn15({name = "Rotate", gap = 1, info = true})
 
 		v34.on = function()
 			local v35 = ctx.slot28
@@ -34056,7 +34071,7 @@ local function fn2()
 				return
 			end
 
-			fn37()
+			fn38()
 			v38 = ctx.slot28
 
 			if v38.rotMode == "Every day" then
@@ -34086,7 +34101,7 @@ local function fn2()
 			end
 		end
 
-		local v35 = fn14({name = "HalloweenBuy", gap = 5})
+		local v35 = fn15({name = "HalloweenBuy", gap = 5})
 
 		v35.on = function()
 			local v36 = ctx.slot28
@@ -34099,7 +34114,7 @@ local function fn2()
 			end)
 
 			result = (ok and tonumber(result)) or 2250
-			if (tonumber(fn35("HalloweenTokens")) or 0) < result then
+			if (tonumber(fn36("HalloweenTokens")) or 0) < result then
 				return
 			end
 			ok = ctx.fn5
@@ -34114,24 +34129,24 @@ local function fn2()
 			end
 		end
 
-		local function fn107(...)
+		local function fn108(...)
 			local v36 = ctx.fn5
 			return v36("RF/TrainEvent/Action", ...)
 		end
 
-		local function fn108()
-			local Status, v36, v37 = fn107("Status")
+		local function fn109()
+			local Status, v36, v37 = fn108("Status")
 
 			if v36 then
-				fn55(v37)
+				fn56(v37)
 			end
 
 			return tbl13.st
 		end
 
-		fn48("RE/TrainEvent/State", fn55)
+		fn49("RE/TrainEvent/State", fn56)
 
-		fn48("RE/TrainEvent/CaptureState", function(invasion)
+		fn49("RE/TrainEvent/CaptureState", function(invasion)
 			if type(invasion) == "table" then
 				if tbl13.st then
 					tbl13.st.Invasion = invasion
@@ -34139,7 +34154,7 @@ local function fn2()
 			end
 		end)
 
-		fn48("RE/GhostBoss/Defeated", function(arg)
+		fn49("RE/GhostBoss/Defeated", function(arg)
 			if type(arg) == "table" then
 				fn12("Ghouler", "+" .. (tostring(arg.Souls or 0) .. " Souls"), "ok")
 			end
@@ -34157,7 +34172,7 @@ local function fn2()
 			end)
 		end)
 
-		local function fn109(arg, arg2)
+		local function fn110(arg, arg2)
 			local str = arg .. tostring(arg2)
 			local v36 = tbl13.pc[str]
 
@@ -34188,7 +34203,7 @@ local function fn2()
 			end
 		end
 
-		local function fn110(arg, arg2, arg3)
+		local function fn111(arg, arg2, arg3)
 			local n8 = ctx.fn11
 			local v36, attribute, attribute2 = n8(), arg:GetAttribute(arg2), arg:GetAttribute(arg3)
 
@@ -34201,45 +34216,45 @@ local function fn2()
 				end
 			end
 
-			return fn38(arg.Parent)
+			return fn39(arg.Parent)
 		end
 
-		local function fn111()
-			return fn41(function(arg)
+		local function fn112()
+			return fn42(function(arg)
 				return arg:GetAttribute("ConductorTicket") == true
 			end)
 		end
 
-		local function fn112()
-			local TrainEvent = fn35("TrainEvent")
-			return (type(TrainEvent) == "table") and (((TrainEvent.AccessUnlocked == true) or ((tonumber(TrainEvent.Tickets) or 0) > 0)) or (fn111() ~= nil))
+		local function fn113()
+			local TrainEvent = fn36("TrainEvent")
+			return (type(TrainEvent) == "table") and (((TrainEvent.AccessUnlocked == true) or ((tonumber(TrainEvent.Tickets) or 0) > 0)) or (fn112() ~= nil))
 		end
 
-		local function fn113()
+		local function fn114()
 			local st = tbl13.st
 			return (((st ~= nil) and (st.ArrivalOpen == true)) and (getServerTimeNow() < (tonumber(st.DepartureAt) or 0))) and ((st.Phase == "Home") or (st.Phase == nil))
 		end
 
-		local function fn114(arg)
+		local function fn115(arg)
 			local ghostBossState = ReplicatedStorage:FindFirstChild("GhostBossState")
 			local attribute = ghostBossState and (ghostBossState:GetAttribute("Phase"))
 			return (((((ghostBossState ~= nil) and (ghostBossState:GetAttribute("BossId") ~= "")) and ((attribute == "Alive") or (attribute == "Spawning"))) and (ghostBossState:GetAttribute("Realm") == arg)) and ghostBossState) or nil
 		end
 
-		local function fn115(arg)
-			return fn42((arg and "vb") or "v", function(arg2)
+		local function fn116(arg)
+			return fn43((arg and "vb") or "v", function(arg2)
 				return (arg2:GetAttribute("GhostVacuum") == true) or (arg and (arg2:GetAttribute("GhostBossVacuum") ~= nil))
 			end)
 		end
 
-		local function fn116(arg, ...)
+		local function fn117(arg, ...)
 			if (os.clock() - (tbl13.suckAt or 0)) >= (((arg == "RE/GhostBoss/Suction") and 0.25) or 0.2) then
 				tbl13.suckAt = os.clock()
 				fn4(arg, ...)
 			end
 		end
 
-		local function fn117(arg)
+		local function fn118(arg)
 			local attribute, unit = arg:GetAttribute("Ground"), ctx.fn11
 			local v36 = unit()
 
@@ -34252,7 +34267,7 @@ local function fn2()
 
 			local attribute2, num = arg:GetAttribute("Velocity"), tonumber(arg:GetAttribute("MovedAt")) or getServerTimeNow()
 			attribute = if typeof(attribute2) == "Vector3" then attribute + (attribute2 * math.clamp(getServerTimeNow() - num, 0, 0.3)) else attribute
-			num = fn36(v36.Position - attribute)
+			num = fn37(v36.Position - attribute)
 			arg, unit = (num.Magnitude > 0.5) and num.Unit
 
 			if arg then
@@ -34266,39 +34281,39 @@ local function fn2()
 			local n8, v37, v38 = arg - v36.Position, ctx.fn10, ctx.cFrameNew
 			v37(v38(v36.Position + (((n8.Magnitude > 2) and (n8.Unit * math.min(n8.Magnitude, 1.3333333333333333))) or n8), ctx.vector3New(attribute.X, v36.Position.Y, attribute.Z)))
 			n8 = ctx.vector3New
-			fn116("RE/GhostBoss/Suction", true, ((attribute + n8(0, 8, 0)) - v36.Position).Unit)
-		end
-
-		local function fn118(arg)
-			return ((type(arg) == "table") and (arg.CanTrade == true)) and ((tonumber(arg.Souls) or 0) >= (tonumber(arg.Cost) or (1 / 0)))
+			fn117("RE/GhostBoss/Suction", true, ((attribute + n8(0, 8, 0)) - v36.Position).Unit)
 		end
 
 		local function fn119(arg)
+			return ((type(arg) == "table") and (arg.CanTrade == true)) and ((tonumber(arg.Souls) or 0) >= (tonumber(arg.Cost) or (1 / 0)))
+		end
+
+		local function fn120(arg)
 			for i2 = 1, 4, 1 do
-				i2 = fn109("TrainEventAction", "OpenSoulShop")
+				i2 = fn110("TrainEventAction", "OpenSoulShop")
 
 				if i2 then
-					local v36, n8, v37 = ctx.vector3New, fn38(i2.Parent) + ctx.vector3New(0, 3, 0), ctx.slot28
+					local v36, n8, v37 = ctx.vector3New, fn39(i2.Parent) + ctx.vector3New(0, 3, 0), ctx.slot28
 
-					if fn53(n8, arg, v37.hwGhostSp or 300) then
-						fn40(i2)
-						fn44(0.5, arg)
+					if fn54(n8, arg, v37.hwGhostSp or 300) then
+						fn41(i2)
+						fn45(0.5, arg)
 					end
 				end
 
-				local OpenSoulShop, v36, v37 = fn107("OpenSoulShop")
+				local OpenSoulShop, v36, v37 = fn108("OpenSoulShop")
 				i2 = ((type(v37) == "table") and v37.SoulShop) or (tbl13.st and tbl13.st.SoulShop)
 
 				for i3 = 1, 200, 1 do
 					if arg() then
-						if not (fn118(i2)) then
+						if not (fn119(i2)) then
 							break
 						end
 					else
 						break
 					end
 
-					local TradeSouls, soulShop, v38 = fn107("TradeSouls", i2.Cost)
+					local TradeSouls, soulShop, v38 = fn108("TradeSouls", i2.Cost)
 					if not (soulShop) then
 						break
 					end
@@ -34310,14 +34325,14 @@ local function fn2()
 						i2.Souls = (tonumber(i2.Souls) or 0) - (tonumber(i2.Cost) or 0)
 					end
 
-					fn44(0.3, arg)
+					fn45(0.3, arg)
 				end
 
-				local Status, v38, v39 = fn107("Status")
+				local Status, v38, v39 = fn108("Status")
 
 				if arg() then
 					if type(v39) == "table" then
-						if not (fn118(v39.SoulShop)) then
+						if not (fn119(v39.SoulShop)) then
 							return
 						end
 					else
@@ -34329,31 +34344,31 @@ local function fn2()
 			end
 		end
 
-		local function fn120(arg)
+		local function fn121(arg)
 			tbl13.left = true
 
 			if (os.clock() - (tbl13.retAt or -99)) < 15 then
 				return
-			elseif fn58() then
+			elseif fn59() then
 				return
 			end
 
 			tbl13.retAt = os.clock()
-			local Name = fn109("Name", "TrainReturn")
-			local returnRailStart = Name and (fn110(Name, "ReturnRailStart", "ReturnRailEnd") or fn38(Name.Parent))
+			local Name = fn110("Name", "TrainReturn")
+			local returnRailStart = Name and (fn111(Name, "ReturnRailStart", "ReturnRailEnd") or fn39(Name.Parent))
 
 			if returnRailStart then
 				local v36, v37, v38 = ctx.fn10, ctx.cFrameNew, ctx.vector3New
 				v36(v37(returnRailStart + v38(0, 3, 0)))
 				v36 = ctx.fn12
 				v36()
-				fn44(0.2, arg)
+				fn45(0.2, arg)
 			end
 
-			fn107("Return")
+			fn108("Return")
 		end
 
-		local function fn121(arg, arg2)
+		local function fn122(arg, arg2)
 			local attribute = ctx.fn11
 			local v36 = attribute()
 
@@ -34362,7 +34377,7 @@ local function fn2()
 				local v37, children, n8 = ipairs, (arg and arg:GetChildren()) or {}, -1 / 0
 
 				for k, child in v37(children) do
-					attribute = child:GetAttribute("TrainGhost") and fn38(child)
+					attribute = child:GetAttribute("TrainGhost") and fn39(child)
 					local magnitude, n9 = (attribute and v36) and (attribute - v36.Position).Magnitude
 
 					if magnitude then
@@ -34384,13 +34399,13 @@ local function fn2()
 			end
 
 			attribute = tbl13.tg
-			local tg, n8 = attribute and (fn38(attribute)), ctx.fn4
+			local tg, n8 = attribute and (fn39(attribute)), ctx.fn4
 			local humanoid = n8()
 			if not ((tg and v36) and humanoid) then
 				tbl12.move = false
-				return fn39("Waiting for ghosts")
+				return fn40("Waiting for ghosts")
 			end
-			fn39(("Vacuuming ghosts %s/%s"):format(tostring(arg2.Captured or 0), tostring(arg2.Goal or 50)))
+			fn40(("Vacuuming ghosts %s/%s"):format(tostring(arg2.Captured or 0), tostring(arg2.Goal or 50)))
 			tbl12.move = true
 			n8 = math.clamp(tonumber(attribute:GetAttribute("ServerCaptureProgress")) or 0, 0, 1)
 
@@ -34398,18 +34413,18 @@ local function fn2()
 				local n9, tbl30 = (((n8 >= 0.75) and 7) or ((n8 >= 0.5) and 10)) or 15, {}
 
 				for _, child in ipairs(arg:GetChildren()) do
-					arg2 = (child ~= attribute) and fn38(child)
+					arg2 = (child ~= attribute) and fn39(child)
 
 					if arg2 then
 						tbl30[#tbl30 + 1] = arg2
 					end
 				end
 
-				local function fn122(arg3)
+				local function fn123(arg3)
 					local n10 = 12
 
 					for _, v37 in ipairs(tbl30) do
-						n10 = math.min(n10, fn36(arg3 - v37).Magnitude)
+						n10 = math.min(n10, fn37(arg3 - v37).Magnitude)
 					end
 
 					return n10
@@ -34433,7 +34448,7 @@ local function fn2()
 					end
 
 					local v38, n10 = ctx.vector3New, (filterDescendantsInstances or tg) + (ctx.vector3New(math.cos((i3 * 3.141592653589793) / 8), 0, math.sin((i3 * 3.141592653589793) / 8)) * n9)
-					i3 = (fn122(n10) * 10) - fn36(n10 - v36.Position).Magnitude
+					i3 = (fn123(n10) * 10) - fn37(n10 - v36.Position).Magnitude
 					i3 = if (n8 <= 0.5) and (if i2 then i3 > i2 else not i2) then if workspace:Raycast(tg, n10 - tg, tbl13.rp) then i3 - 1000 else i3 else i3
 
 					if i2 then
@@ -34446,7 +34461,7 @@ local function fn2()
 					end
 				end
 
-				tbl13.g, tbl13.gAt, tbl13.gTg, tbl13.gClear = rp2, os.clock(), attribute, fn122(v36.Position)
+				tbl13.g, tbl13.gAt, tbl13.gTg, tbl13.gClear = rp2, os.clock(), attribute, fn123(v36.Position)
 			end
 
 			arg, arg2, attribute = tbl13.g, (v36.Position - tg).Magnitude < 24, ctx.slot28
@@ -34458,13 +34473,13 @@ local function fn2()
 			else
 			end
 
-			n8, attribute = fn36(arg - v36.Position), ctx.slot28
+			n8, attribute = fn37(arg - v36.Position), ctx.slot28
 
 			if attribute.hwGhostTp then
 				if not arg2 then
 					if n8.Magnitude > 30 then
 						local v37, v38, v39 = ctx.fn10, ctx.cFrameNew, ctx.vector3New
-						v37(v38(fn80(v39(arg.X, v36.Position.Y, arg.Z)), ctx.vector3New(tg.X, v36.Position.Y, tg.Z)))
+						v37(v38(fn81(v39(arg.X, v36.Position.Y, arg.Z)), ctx.vector3New(tg.X, v36.Position.Y, tg.Z)))
 						v39 = ctx.vector
 						v36.AssemblyLinearVelocity = v39
 						return
@@ -34504,21 +34519,21 @@ local function fn2()
 
 		local v36
 
-		local function fn122(arg)
-			local function fn123()
-				return arg() and (fn57() == "Town")
+		local function fn123(arg)
+			local function fn124()
+				return arg() and (fn58() == "Town")
 			end
 
 			tbl13.left = nil
 			tbl13.tg = nil
 
 			if tbl12.keyTown then
-				if tbl12.keyTown(fn123) then
+				if tbl12.keyTown(fn124) then
 					return
 				end
 			end
 
-			while fn123() do
+			while fn124() do
 				local invasion, TrainEventAction = ((tbl13.st and (type(tbl13.st.Invasion) == "table")) and tbl13.st.Invasion) or {}, ctx.slot28
 
 				if not (TrainEventAction.train) then
@@ -34541,48 +34556,48 @@ local function fn2()
 				end
 
 				if tbl13.left then
-					fn39("Riding back home")
-					fn120(fn123)
-					fn44(1, fn123)
+					fn40("Riding back home")
+					fn121(fn124)
+					fn45(1, fn124)
 				elseif tbl13.soulRide then
-					fn39("Trading souls")
-					fn119(fn123)
-					fn120(fn123)
+					fn40("Trading souls")
+					fn120(fn124)
+					fn121(fn124)
 				else
-					local v37, v38 = fn115(true), ctx.slot28
-					local Town, v39 = v38.hwBoss and fn114("Town"), fn115(false)
+					local v37, v38 = fn116(true), ctx.slot28
+					local Town, v39 = v38.hwBoss and fn115("Town"), fn116(false)
 
 					if if v39 then not v39 else not invasion.VacuumOwned then
-						fn39("Picking up the Ghost Vacuum")
-						TrainEventAction = fn109("TrainEventAction", "PickupVacuum")
+						fn40("Picking up the Ghost Vacuum")
+						TrainEventAction = fn110("TrainEventAction", "PickupVacuum")
 
 						if TrainEventAction then
-							if fn54(fn38(TrainEventAction.Parent), fn123) then
-								fn40(TrainEventAction)
+							if fn55(fn39(TrainEventAction.Parent), fn124) then
+								fn41(TrainEventAction)
 
-								fn45(function()
-									return fn115(false) ~= nil
-								end, 3, fn123)
+								fn46(function()
+									return fn116(false) ~= nil
+								end, 3, fn124)
 							else
-								fn44(1, fn123)
+								fn45(1, fn124)
 							end
 						else
-							fn44(1, fn123)
+							fn45(1, fn124)
 						end
 					elseif Town and v37 then
-						fn39("Sucking in Ghouler")
-						fn43(v37)
+						fn40("Sucking in Ghouler")
+						fn44(v37)
 						tbl12.move = true
-						fn117(Town)
-					elseif (invasion.Phase == "Active") and fn115(false) then
-						fn43(fn115(false))
-						fn121(workspace:FindFirstChild("TrainGhostVisuals"), invasion)
+						fn118(Town)
+					elseif (invasion.Phase == "Active") and fn116(false) then
+						fn44(fn116(false))
+						fn122(workspace:FindFirstChild("TrainGhostVisuals"), invasion)
 					elseif (invasion.Phase == "Warmup") or (invasion.Phase == nil) then
-						fn39("Invasion starts soon")
-						fn44(0.5, fn123)
+						fn40("Invasion starts soon")
+						fn45(0.5, fn124)
 					elseif invasion.Phase == "Active" then
-						fn39("Waiting for the Ghost Vacuum")
-						fn44(0.5, fn123)
+						fn40("Waiting for the Ghost Vacuum")
+						fn45(0.5, fn124)
 					else
 						v38 = ctx.fn4
 						local v40 = v38()
@@ -34595,11 +34610,11 @@ local function fn2()
 						v40 = ctx.slot28
 
 						if v40.hwSouls then
-							fn39("Trading souls")
-							fn119(fn123)
+							fn40("Trading souls")
+							fn120(fn124)
 						end
 
-						fn120(fn123)
+						fn121(fn124)
 					end
 				end
 
@@ -34608,8 +34623,8 @@ local function fn2()
 			end
 
 			tbl12.move = false
-			fn123 = ctx.fn4
-			local humanoid = fn123()
+			fn124 = ctx.fn4
+			local humanoid = fn124()
 
 			if humanoid then
 				humanoid:UnequipTools()
@@ -34622,9 +34637,9 @@ local function fn2()
 			end
 		end
 
-		local function fn123(arg)
-			if not (fn58()) then
-				fn39("Boarding the Phantom Express")
+		local function fn124(arg)
+			if not (fn59()) then
+				fn40("Boarding the Phantom Express")
 				local st = ctx.state
 				if not (st.enterDim(arg)) then
 					tbl13.fail = os.clock() + 10
@@ -34638,14 +34653,14 @@ local function fn2()
 							tbl13.stAt = os.clock()
 							local v37 = ctx.fn6
 							v37("Phantom Express: going to the station")
-							fn107("Station")
-							fn44(3, arg)
-							fn108()
+							fn108("Station")
+							fn45(3, arg)
+							fn109()
 						end
 					end
 				end
 
-				st = fn109("Name", "TrainBoard")
+				st = fn110("Name", "TrainBoard")
 
 				if not st then
 					local v37 = ctx.fn6
@@ -34654,18 +34669,18 @@ local function fn2()
 					return false
 				end
 
-				if not (fn54(fn110(st, "BoardRailStart", "BoardRailEnd"), arg)) then
+				if not (fn55(fn111(st, "BoardRailStart", "BoardRailEnd"), arg)) then
 					return false
 				end
-				st = fn35("TrainEvent")
+				st = fn36("TrainEvent")
 
 				if not ((type(st) == "table") and st.AccessUnlocked) then
-					fn43(fn111())
-					fn44(0.4, arg)
+					fn44(fn112())
+					fn45(0.4, arg)
 				end
 
-				if not (fn58()) then
-					local Board, v37, v38 = fn107("Board")
+				if not (fn59()) then
+					local Board, v37, v38 = fn108("Board")
 
 					if not (v37) then
 						tbl13.fail = os.clock() + 30
@@ -34679,7 +34694,7 @@ local function fn2()
 				end
 			end
 
-			return fn45(fn59, 3, arg)
+			return fn46(fn60, 3, arg)
 		end
 
 		tbl13.stranded = function()
@@ -34694,13 +34709,13 @@ local function fn2()
 				flag2 = flag
 			end
 
-			return flag2 and not fn59()
+			return flag2 and not fn60()
 		end
 
-		v36 = fn14({name = "Train", mover = true, gap = 1, pri = 3, where = "any", vis = true, hold = true, preempt = true})
+		v36 = fn15({name = "Train", mover = true, gap = 1, pri = 3, where = "any", vis = true, hold = true, preempt = true})
 
 		v36.ready = function()
-			local v37 = fn59()
+			local v37 = fn60()
 			local v372
 
 			if v37 then
@@ -34720,8 +34735,8 @@ local function fn2()
 				return not flag
 			end
 
-			if fn59() then
-				return not (flag and (fn57() == "Town"))
+			if fn60() then
+				return not (flag and (fn58() == "Town"))
 			end
 			v37 = ctx.slot28
 			local train, train2 = v37.train
@@ -34730,7 +34745,7 @@ local function fn2()
 				train2 = train
 			else
 				v37 = ctx.slot28
-				train2 = v37.hwSouls and fn118(tbl13.st and tbl13.st.SoulShop)
+				train2 = v37.hwSouls and fn119(tbl13.st and tbl13.st.SoulShop)
 			end
 
 			if not (train2) then
@@ -34743,7 +34758,7 @@ local function fn2()
 				end
 			end
 
-			return (((fn113() and (os.clock() >= (tbl13.fail or 0))) and fn112()) and (tbl13.doneDep ~= tbl13.st.DepartureAt)) and fn61()
+			return (((fn114() and (os.clock() >= (tbl13.fail or 0))) and fn113()) and (tbl13.doneDep ~= tbl13.st.DepartureAt)) and fn62()
 		end
 
 		v36.want = function()
@@ -34757,30 +34772,30 @@ local function fn2()
 				if not (arg.train) then
 					return true
 				end
-				fn39("Left in town, riding back home")
-				fn120(arg2)
-				fn44(3, arg2)
+				fn40("Left in town, riding back home")
+				fn121(arg2)
+				fn45(3, arg2)
 				return true
 			end
 
-			if not (fn59()) then
+			if not (fn60()) then
 				local v37 = ctx.slot28
 				local train = v37.train
 				tbl13.soulRide = if train then nil else not train
 			end
 
 			tbl13.ride = tbl13.st and tbl13.st.DepartureAt
-			arg = fn59()
+			arg = fn60()
 
-			if if arg then fn58() else not arg then
-				if not (fn123(arg2)) then
+			if if arg then fn59() else not arg then
+				if not (fn124(arg2)) then
 					tbl13.soulRide = nil
 					return
 				end
 			end
 
-			while arg2() and (fn59()) do
-				if fn57() == "Town" then
+			while arg2() and (fn60()) do
+				if fn58() == "Town" then
 					arg = ctx.slot28
 
 					if not (arg.train) then
@@ -34789,9 +34804,9 @@ local function fn2()
 						end
 					end
 
-					fn122(arg2)
-				elseif fn58() then
-					fn39("Boarded, waiting for the Phantom Express to leave")
+					fn123(arg2)
+				elseif fn59() then
+					fn40("Boarded, waiting for the Phantom Express to leave")
 					local v37 = ctx.fn4
 					local humanoid = v37()
 
@@ -34805,8 +34820,8 @@ local function fn2()
 					v37 = ctx.fn12
 					v37()
 				else
-					fn39("Riding the Phantom Express")
-					fn44(0.5, arg2)
+					fn40("Riding the Phantom Express")
+					fn45(0.5, arg2)
 				end
 			end
 
@@ -34823,8 +34838,8 @@ local function fn2()
 
 			tbl13.ws0 = nil
 
-			if fn33("TrainEventTravelStage") == "Failed" then
-				if fn113() then
+			if fn34("TrainEventTravelStage") == "Failed" then
+				if fn114() then
 					tbl13.fail = os.clock() + 2
 					arg = ctx.fn6
 					return arg("Phantom Express: the ride did not start, boarding again", "warn")
@@ -34842,17 +34857,17 @@ local function fn2()
 			return true
 		end
 
-		local v37 = fn14({name = "Ghouler", mover = true, gap = 1, pri = 2, vis = true})
+		local v37 = fn15({name = "Ghouler", mover = true, gap = 1, pri = 2, vis = true})
 
 		v37.on = function()
 			local v38 = ctx.slot28
-			return ((v38.hwBoss and not fn59()) and (fn114("World") ~= nil)) and (fn115(true) ~= nil)
+			return ((v38.hwBoss and not fn60()) and (fn115("World") ~= nil)) and (fn116(true) ~= nil)
 		end
 
 		v37.want = function()
 			local v38 = ctx.fn16
 			if not (v38()) then
-				return fn114("World")
+				return fn115("World")
 			end
 		end
 
@@ -34861,15 +34876,15 @@ local function fn2()
 
 			if typeof(attribute) == "Vector3" then
 				local v38 = ctx.vector3New
-				if not (fn54(attribute + v38(42, 0, 0), arg2)) then
+				if not (fn55(attribute + v38(42, 0, 0), arg2)) then
 					return
 				end
 			end
 
-			while arg2() and (fn114("World")) do
-				fn43(fn115(true))
-				fn39("Sucking in Ghouler")
-				fn117(arg)
+			while arg2() and (fn115("World")) do
+				fn44(fn116(true))
+				fn40("Sucking in Ghouler")
+				fn118(arg)
 				attribute = ctx.fn12
 				attribute()
 			end
@@ -34878,10 +34893,10 @@ local function fn2()
 			return true
 		end
 
-		local v38 = fn14({name = "TrainInfo", gap = 3})
+		local v38 = fn15({name = "TrainInfo", gap = 3})
 
 		v38.on = function()
-			fn37()
+			fn38()
 			local v39 = ctx.slot28
 			local train, train2 = v39.train
 
@@ -34905,24 +34920,24 @@ local function fn2()
 		end
 
 		v38.fn = function()
-			fn108()
+			fn109()
 		end
 
-		local function fn124()
+		local function fn125()
 			local v39 = ctx.fn5
 			local Fetch, v40 = v39("RF/IslandWars/Fetch")
-			fn56(v40)
+			fn57(v40)
 		end
 
-		fn48("RE/LiveEvents/Began", function(arg)
+		fn49("RE/LiveEvents/Began", function(arg)
 			if arg == "CursedIslandWars" then
 				tbl14.sd = false
 				tbl14.col = nil
-				task.spawn(fn124)
+				task.spawn(fn125)
 			end
 		end)
 
-		fn48("RE/LiveEvents/Ended", function(arg)
+		fn49("RE/LiveEvents/Ended", function(arg)
 			if arg == "CursedIslandWars" then
 				tbl14.snap = nil
 				tbl14.sd = false
@@ -34930,16 +34945,16 @@ local function fn2()
 			end
 		end)
 
-		local v39 = fn14({name = "IslandWarsInfo", gap = 5})
+		local v39 = fn15({name = "IslandWarsInfo", gap = 5})
 
 		v39.on = function()
 			return (tbl14.snap ~= nil) and (tbl16[tbl14.snap.Phase] == true)
 		end
 
-		v39.fn = fn124
-		fn48("RE/IslandWars/State", fn56)
+		v39.fn = fn125
+		fn49("RE/IslandWars/State", fn57)
 
-		fn48("RE/IslandWars/Moment", function(arg, col, arg2)
+		fn49("RE/IslandWars/Moment", function(arg, col, arg2)
 			if (arg == "Cooldown") and (type(col) == "string") then
 				tbl14.cd[col] = tonumber(arg2) or 0
 			elseif ((arg == "SuddenDeath") or (arg == "EarlySuddenDeath")) or (((arg == "Warning") and tonumber(col)) and (tonumber(col) <= 15)) then
@@ -34959,12 +34974,12 @@ local function fn2()
 
 			if type(v41) == "table" then
 				if v41.CursedIslandWars then
-					fn124()
+					fn125()
 				end
 			end
 		end)
 
-		local function fn125(arg)
+		local function fn126(arg)
 			pcall(function()
 				local Input = require(ReplicatedStorage.Controllers.Game.AdminAbuseClientController.Events.CursedIslandWars.Input)
 				tbl14.k0 = tbl14.k0 or Input.Knock
@@ -34975,10 +34990,10 @@ local function fn2()
 		end
 
 		table.insert(ctx.state.cleanup, function()
-			fn125(false)
+			fn126(false)
 		end)
 
-		local function fn126()
+		local function fn127()
 			local raycastParams3 = ctx.fn11
 			local v40 = raycastParams3()
 
@@ -35001,13 +35016,13 @@ local function fn2()
 			return hit2 ~= nil
 		end
 
-		local function fn127(arg)
-			return fn42(arg, function(arg2)
+		local function fn128(arg)
+			return fn43(arg, function(arg2)
 				return arg2.Name == arg
 			end)
 		end
 
-		local v40 = fn14({name = "IslandWars", mover = true, gap = 0.3, pri = -2, urgent = true, hold = true, where = "any"})
+		local v40 = fn15({name = "IslandWars", mover = true, gap = 0.3, pri = -2, urgent = true, hold = true, where = "any"})
 
 		v40.on = function()
 			local snap, v41, v42 = tbl14.snap, tbl14.me(), ctx.slot28
@@ -35019,7 +35034,7 @@ local function fn2()
 		end
 
 		v40.run = function(arg, arg2)
-			fn125(true)
+			fn126(true)
 
 			while arg2() do
 				local snap, humanoidRootPart, sd = tbl14.snap, tbl14.me(), ctx.fn11
@@ -35046,14 +35061,14 @@ local function fn2()
 				end
 
 				local str, v41, centre = ((humanoidRootPart.Team == "Red") and "Blue") or "Red", getServerTimeNow(), snap.Island and snap.Island:FindFirstChild("Centre")
-				humanoidRootPart = fn38(centre and (centre:FindFirstChild("Top")))
-				sd = humanoidRootPart and ((tbl14.sd or (snap.Phase == "SuddenDeath")) or fn126())
+				humanoidRootPart = fn39(centre and (centre:FindFirstChild("Top")))
+				sd = humanoidRootPart and ((tbl14.sd or (snap.Phase == "SuddenDeath")) or fn127())
 
 				if sd then
-					if fn36(arg.Position - humanoidRootPart).Magnitude > 18 then
-						fn39("Island Wars: moving to the centre")
+					if fn37(arg.Position - humanoidRootPart).Magnitude > 18 then
+						fn40("Island Wars: moving to the centre")
 						local v42
-						v42, arg.AssemblyLinearVelocity = ctx.vector3New, (fn36(humanoidRootPart - arg.Position).Unit * math.max(fn6(), 30)) + ctx.vector3New(0, arg.AssemblyLinearVelocity.Y, 0)
+						v42, arg.AssemblyLinearVelocity = ctx.vector3New, (fn37(humanoidRootPart - arg.Position).Unit * math.max(fn6(), 30)) + ctx.vector3New(0, arg.AssemblyLinearVelocity.Y, 0)
 					end
 				end
 
@@ -35076,23 +35091,23 @@ local function fn2()
 				humanoidRootPart = if humanoidRootPart2.ciwT == "Walls and crystal" then nil else humanoidRootPart
 
 				if snap.Phase ~= "Prep" then
-					local Bat, PumpkinLauncher = fn127("Bat"), fn127("PumpkinLauncher")
+					local Bat, PumpkinLauncher = fn128("Bat"), fn128("PumpkinLauncher")
 
 					if ((humanoidRootPart and (sd <= 10)) and Bat) and (v41 >= (tbl14.cd.Bat or 0)) then
-						fn39("Island Wars: hitting an enemy")
-						fn43(Bat)
-						fn46(humanoidRootPart.Position)
+						fn40("Island Wars: hitting an enemy")
+						fn44(Bat)
+						fn47(humanoidRootPart.Position)
 						fn4("RE/IslandWars/Use", "Swing", humanoidRootPart)
 						tbl14.cd.Bat = math.max(tbl14.cd.Bat or 0, v41 + 0.75)
 					elseif PumpkinLauncher then
 						if v41 >= (tbl14.cd.PumpkinLauncher or 0) then
 							local flag, flag2 = (type(snap.Barriers) == "table") and snap.Barriers[str], (type(snap.Crystals) == "table") and snap.Crystals[str]
-							humanoidRootPart2 = ((humanoidRootPart and (humanoidRootPart.Position + (humanoidRootPart.AssemblyLinearVelocity * (sd / 110)))) or (((flag and ((tonumber(flag.Health) or 0) > 0)) and (typeof(flag.Model) == "Instance")) and fn38(flag.Model:FindFirstChild("Hitbox") or flag.Model))) or (((flag2 and ((tonumber(flag2.Health) or 0) > 0)) and (typeof(flag2.Model) == "Instance")) and fn38(flag2.Model:FindFirstChild("Pivot", true) or flag2.Model))
+							humanoidRootPart2 = ((humanoidRootPart and (humanoidRootPart.Position + (humanoidRootPart.AssemblyLinearVelocity * (sd / 110)))) or (((flag and ((tonumber(flag.Health) or 0) > 0)) and (typeof(flag.Model) == "Instance")) and fn39(flag.Model:FindFirstChild("Hitbox") or flag.Model))) or (((flag2 and ((tonumber(flag2.Health) or 0) > 0)) and (typeof(flag2.Model) == "Instance")) and fn39(flag2.Model:FindFirstChild("Pivot", true) or flag2.Model))
 
 							if humanoidRootPart2 then
-								fn39((humanoidRootPart and "Island Wars: shooting an enemy") or "Island Wars: shooting the enemy base")
-								fn43(PumpkinLauncher)
-								fn46(humanoidRootPart2)
+								fn40((humanoidRootPart and "Island Wars: shooting an enemy") or "Island Wars: shooting the enemy base")
+								fn44(PumpkinLauncher)
+								fn47(humanoidRootPart2)
 								flag = PumpkinLauncher:FindFirstChild("Handle") and PumpkinLauncher.Handle:FindFirstChild("Muzzle")
 								local worldPosition, worldPosition2 = (flag and flag:IsA("Attachment")) and flag.WorldPosition
 
@@ -35121,7 +35136,7 @@ local function fn2()
 		end
 
 		state = ctx.state
-		state.HW = {portal = fn62, HW = tbl12, TS = tbl13, IW = tbl14, QS = tbl18, mj = v22, bm = v23, pj = v24, dj = v25, fj = v26, tj = v36, gj = v37, iw = v40, knock = fn125, dogState = fn97, boardOpen = fn113, trainPhase = fn57, riding = fn59, carrying = hwCarrying, save = fn35, day = fn37, say = fn39, posOf = fn38, flat = fn36, monBat = fn85, equip = fn43, near = fn54, wfor = fn45, pause = fn44, dimOk = fn61, map = findFirstChild}
+		state.HW = {portal = fn63, HW = tbl12, TS = tbl13, IW = tbl14, QS = tbl18, mj = v22, bm = v23, pj = v24, dj = v25, fj = v26, tj = v36, gj = v37, iw = v40, knock = fn126, dogState = fn98, boardOpen = fn114, trainPhase = fn58, riding = fn60, carrying = hwCarrying, save = fn36, day = fn38, say = fn40, posOf = fn39, flat = fn37, monBat = fn86, equip = fn44, near = fn55, wfor = fn46, pause = fn45, dimOk = fn62, map = findFirstChild}
 	end)
 
 	g("38_pumpkin#1", function()
@@ -35133,7 +35148,7 @@ local function fn2()
 		local CollectionService, pb, v5 = getService("CollectionService"), {drops = {}, shot = 0, at = 0, hitAt = 0}, ctx.state
 		v5.PB = pb
 
-		local function fn33(arg)
+		local function fn34(arg)
 			local v6 = ctx.localPlayer
 			return v6:GetAttribute(arg)
 		end
@@ -35144,14 +35159,14 @@ local function fn2()
 		end
 
 		local function inArena()
-			return (fn33("InPumpkinArena") == true) and (arena() ~= nil)
+			return (fn34("InPumpkinArena") == true) and (arena() ~= nil)
 		end
 
 		pb.inArena = inArena
 		pb.arena = arena
 		local ok
 
-		local function fn34()
+		local function fn35()
 			if ok == nil then
 				local ok2, result = pcall(require, ReplicatedStorage.Shared.Util.PumpkinBossSchedule)
 				ok = (ok2 and result) or false
@@ -35161,13 +35176,13 @@ local function fn2()
 			return ok2
 		end
 
-		local function fn35()
-			local v6, v7 = fn34(), getServerTimeNow()
+		local function fn36()
+			local v6, v7 = fn35(), getServerTimeNow()
 			return ((v6 ~= nil) and hw2.gateOpen()) and (select(2, pcall(v6.IsOpen, v7)) == true)
 		end
 
 		pb.left = function()
-			local v6 = fn34()
+			local v6 = fn35()
 			if not (v6) then
 				return nil
 			end
@@ -35187,11 +35202,11 @@ local function fn2()
 			return ok2 and (result == true)
 		end
 
-		local function fn36()
+		local function fn37()
 			return math.floor(getServerTimeNow() / 1800)
 		end
 
-		local function fn37(arg, arg2)
+		local function fn38(arg, arg2)
 			local v6 = ctx.networking
 			local v7 = v6:FindFirstChild(arg)
 
@@ -35202,7 +35217,7 @@ local function fn2()
 			end
 		end
 
-		fn37("RE/PumpkinBoss/Drops", function(arg)
+		fn38("RE/PumpkinBoss/Drops", function(arg)
 			local v6, tbl12 = ipairs, ((type(arg) == "table") and arg) or {}
 
 			for _, v7 in v6(tbl12) do
@@ -35220,7 +35235,7 @@ local function fn2()
 
 		pb.hz = {}
 
-		fn37("RE/PumpkinBoss/Hazard", function(arg)
+		fn38("RE/PumpkinBoss/Hazard", function(arg)
 			if type(arg) == "table" then
 				if type(arg.Id) == "number" then
 					if typeof(arg.Origin) == "Vector3" then
@@ -35230,19 +35245,19 @@ local function fn2()
 			end
 		end)
 
-		fn37("RE/PumpkinBoss/RemoveDrops", function(arg)
+		fn38("RE/PumpkinBoss/RemoveDrops", function(arg)
 			for _, v6 in ipairs(((type(arg) == "table") and arg) or {}) do
 				pb.drops[v6] = nil
 			end
 		end)
 
-		fn37("RE/PumpkinBoss/Fx", function(arg, arg2)
+		fn38("RE/PumpkinBoss/Fx", function(arg, arg2)
 			if (arg == "Currency") and (type(arg2) == "table") then
 				pb.stubs = (pb.stubs or 0) + (tonumber(arg2.Amount) or 0)
 			elseif arg == "Defeated" then
 				if type(arg2) == "table" then
 					if arg2.Stage == nil then
-						pb.done, pb.doneAt = fn36(), os.clock()
+						pb.done, pb.doneAt = fn37(), os.clock()
 						pb.kills = (pb.kills or 0) + 1
 						fn12("Pumpkin Boss", "The Pumpkin King is defeated", "ok")
 					end
@@ -35250,7 +35265,7 @@ local function fn2()
 			end
 		end)
 
-		local v6 = fn14({name = "PumpkinDrops", gap = 0.2})
+		local v6 = fn15({name = "PumpkinDrops", gap = 0.2})
 
 		v6.on = function()
 			local v7 = ctx.slot28
@@ -35277,7 +35292,7 @@ local function fn2()
 			end
 		end
 
-		local v7 = fn14({name = "PumpkinMastery", gap = 3})
+		local v7 = fn15({name = "PumpkinMastery", gap = 3})
 
 		v7.on = function()
 			local state = ctx.slot28
@@ -35326,18 +35341,18 @@ local function fn2()
 			end
 		end
 
-		local function fn38(arg)
+		local function fn39(arg)
 			local hitbox = arg and ((arg:FindFirstChild("Hitbox") or arg:FindFirstChild("HumanoidRootPart")) or arg.PrimaryPart)
 			return ((hitbox and hitbox:IsA("BasePart")) and hitbox) or nil
 		end
 
-		local function fn39(arg)
+		local function fn40(arg)
 			local attribute = arg:GetAttribute("Boss")
 			local king = (((type(attribute) == "string") and arg:FindFirstChild(attribute)) or arg:FindFirstChild("King")) or arg:FindFirstChild("Brute")
 			return ((king and king:IsA("Model")) and king) or nil
 		end
 
-		local function fn40(arg, arg2)
+		local function fn41(arg, arg2)
 			local magnitude, v8
 
 			for i2, v9 in ipairs(arg) do
@@ -35360,13 +35375,13 @@ local function fn2()
 			return v8, magnitude
 		end
 
-		local function fn41()
+		local function fn42()
 			local v8 = ctx.localPlayer
 			local character = v8.Character
 			return (character ~= nil) and (character:GetAttribute("IsTrapped") == true)
 		end
 
-		local function fn42(arg, arg2)
+		local function fn43(arg, arg2)
 			local cannons, v8 = arg:FindFirstChild("Cannons"), ipairs
 			local children, v9, child = (cannons and cannons:GetChildren()) or {}
 
@@ -35401,7 +35416,7 @@ local function fn2()
 
 		local ok2
 
-		local function fn43(arg, arg2)
+		local function fn44(arg, arg2)
 			if ok2 == nil then
 				local ok3, result = pcall(require, ReplicatedStorage.Shared.Util.ScrambleBossHazards)
 				ok2 = (ok3 and result) or false
@@ -35442,8 +35457,8 @@ local function fn2()
 			return false
 		end
 
-		local function fn44(arg, arg2, arg3, arg4)
-			if not (fn43(arg, arg4)) then
+		local function fn45(arg, arg2, arg3, arg4)
+			if not (fn44(arg, arg4)) then
 				return arg, false
 			end
 			local v8, tbl12, magnitude, i2 = ipairs, {arg3 * 0.6, arg3, arg3 + 15}
@@ -35455,7 +35470,7 @@ local function fn2()
 					local magnitude2 = (i3 - arg).Magnitude
 
 					if if magnitude then magnitude2 < magnitude else not magnitude then
-						if fn43(i3, arg4) then
+						if fn44(i3, arg4) then
 						else
 							magnitude, i2 = magnitude2, i3
 						end
@@ -35467,7 +35482,7 @@ local function fn2()
 			return i2 or arg, true
 		end
 
-		local function fn45()
+		local function fn46()
 			local v8 = hw.monBat()
 			if not (v8) then
 				return
@@ -35494,7 +35509,7 @@ local function fn2()
 			end
 		end
 
-		local function fn46(arg, arg2, arg3, arg4, arg5)
+		local function fn47(arg, arg2, arg3, arg4, arg5)
 			local v8 = ctx.fn11
 			local v9, humanoid = v8(), arena()
 			if not (v9) then
@@ -35552,7 +35567,7 @@ local function fn2()
 			return v8.Magnitude
 		end
 
-		local function fn47(arg, arg2, arg3)
+		local function fn48(arg, arg2, arg3)
 			local v8 = ctx.fn11
 			local v9 = v8()
 			if not (v9) then
@@ -35568,10 +35583,10 @@ local function fn2()
 				unit2 = (v8(0, 0, 1))
 			end
 
-			return fn46(arg + (unit2 * arg2), arg, arg3)
+			return fn47(arg + (unit2 * arg2), arg, arg3)
 		end
 
-		local function fn48(arg, arg2)
+		local function fn49(arg, arg2)
 			local position = ctx.fn11
 			local v8, now2 = position(), os.clock()
 			if not (v8) then
@@ -35601,17 +35616,17 @@ local function fn2()
 
 			arg2, now2 = arg.CFrame, arg.Size / 2
 			local n2, v9 = (math.abs(lp:Dot(arg2.RightVector)) * now2.X) + (math.abs(lp:Dot(arg2.LookVector)) * now2.Z), arena()
-			local v92, v10, v11 = (v9 and tonumber(v9:GetAttribute("FloorY"))) or (position.Y - now2.Y), fn44(position - ((lp * n2) * 0.6), position, math.max(now2.X, now2.Z) + 3, true)
+			local v92, v10, v11 = (v9 and tonumber(v9:GetAttribute("FloorY"))) or (position.Y - now2.Y), fn45(position - ((lp * n2) * 0.6), position, math.max(now2.X, now2.Z) + 3, true)
 
 			if v11 then
 				pb.say = "Dodging the boss attack"
 			end
 
 			pb.nc = true
-			fn46(v10, position, ((hw.flat(v10 - v8.Position).Magnitude > 25) and (((position.Y + now2.Y) - v92) + 10)) or math.max((position.Y + (now2.Y / 2)) - v92, ((position.Y - now2.Y) - v92) + 12, 12), nil, ((lp2.Magnitude < 400) and lp2) or nil)
+			fn47(v10, position, ((hw.flat(v10 - v8.Position).Magnitude > 25) and (((position.Y + now2.Y) - v92) + 10)) or math.max((position.Y + (now2.Y / 2)) - v92, ((position.Y - now2.Y) - v92) + 12, 12), nil, ((lp2.Magnitude < 400) and lp2) or nil)
 		end
 
-		local function fn49(arg)
+		local function fn50(arg)
 			local v8, attribute = arena(), ctx.fn11
 			local v9 = attribute()
 			if not (v8 and v9) then
@@ -35644,7 +35659,7 @@ local function fn2()
 
 			if v10 then
 				pb.say = "Collecting Pumpkin Stubs"
-				local v11, flag = ctx.slot28, (fn46(fn44(v10.Position, v10.Position, 12, false), nil, 0, ctx.slot28.pbSp) <= ((tonumber(v10.Radius) or 7) - 1)) and ((os.clock() - (v10.req or -9)) >= 0.6)
+				local v11, flag = ctx.slot28, (fn47(fn45(v10.Position, v10.Position, 12, false), nil, 0, ctx.slot28.pbSp) <= ((tonumber(v10.Radius) or 7) - 1)) and ((os.clock() - (v10.req or -9)) >= 0.6)
 
 				if flag then
 					local tbl12, v12 = {}, ctx.fn11
@@ -35667,20 +35682,20 @@ local function fn2()
 				return
 			end
 
-			if fn41() then
+			if fn42() then
 				attribute = v8:FindFirstChild("Vines")
-				vines = attribute and fn40(attribute:GetChildren(), v9.Position)
+				vines = attribute and fn41(attribute:GetChildren(), v9.Position)
 				pb.say = "Breaking the vines"
 
 				if vines then
-					fn47(hw.posOf(vines), 4)
+					fn48(hw.posOf(vines), 4)
 				end
 
-				return fn45()
+				return fn46()
 			end
 
 			if str == "Shield" then
-				vines = fn42(v8, v9)
+				vines = fn43(v8, v9)
 				local operatorZone, rootHitbox = vines and (vines:FindFirstChild("OperatorZone")), vines and (vines:FindFirstChild("RootHitbox"))
 
 				if vines then
@@ -35688,18 +35703,18 @@ local function fn2()
 						if rootHitbox then
 							if rootHitbox:IsA("BasePart") then
 								pb.say = "Breaking the roots on the cannon"
-								fn47(rootHitbox.Position, (math.max(rootHitbox.Size.X, rootHitbox.Size.Z) / 2) + 3)
-								return fn45()
+								fn48(rootHitbox.Position, (math.max(rootHitbox.Size.X, rootHitbox.Size.Z) / 2) + 3)
+								return fn46()
 							end
 						end
 					end
 				end
 
 				pb.say = "Shield up, firing the cannon"
-				rootHitbox = operatorZone and fn44(operatorZone.Position, operatorZone.Position, 14, false)
+				rootHitbox = operatorZone and fn45(operatorZone.Position, operatorZone.Position, 14, false)
 
 				if operatorZone then
-					if fn46(rootHitbox) <= 2.5 then
+					if fn47(rootHitbox) <= 2.5 then
 						if vines:GetAttribute("Ready") == true then
 							if (os.clock() - pb.at) >= 1.05 then
 								pb.at, pb.shot = os.clock(), pb.shot + 1
@@ -35712,20 +35727,20 @@ local function fn2()
 				return
 			end
 
-			v9 = fn39(v8)
-			v8 = fn38(v9)
+			v9 = fn40(v8)
+			v8 = fn39(v9)
 
 			if v8 and (((str == "Brute") or (str == "King")) or (str == "Stunned")) then
 				pb.say = ((str == "Stunned") and "King stunned, hitting hard") or ("Fighting the Pumpkin " .. (((v9.Name == "King") and "King") or "Brute"))
-				fn48(v8, v9)
-				return fn45()
+				fn49(v8, v9)
+				return fn46()
 			end
 
 			pb.say = ((str == "Defeated") and "Boss defeated, collecting drops") or ("Waiting for the fight (" .. (str .. ")"))
 			return hw.pause(0.2, arg)
 		end
 
-		local function fn50(arg)
+		local function fn51(arg)
 			local v8 = CollectionService:GetTagged("PumpkinBossExit")[1]
 			local v82 = v8 and ((v8:IsA("BasePart") and v8) or v8:FindFirstChildWhichIsA("BasePart", true))
 			if not (v82) then
@@ -35742,7 +35757,7 @@ local function fn2()
 					break
 				end
 
-				fn46(v82.Position)
+				fn47(v82.Position)
 				i2 = ctx.fn11
 				M(i2(), v82)
 				i2 = ctx.fn12
@@ -35750,7 +35765,7 @@ local function fn2()
 			end
 		end
 
-		local function fn51(arg)
+		local function fn52(arg)
 			local bossPortal = hw.map() and hw.map():FindFirstChild("BossPortal")
 			local hitbox = bossPortal and (bossPortal:FindFirstChild("Hitbox"))
 
@@ -35776,12 +35791,12 @@ local function fn2()
 			return hw.wfor(inArena, 3, arg)
 		end
 
-		local v8 = fn14({name = "PumpkinBoss", mover = true, gap = 1, pri = 3.5, where = "any", vis = true, hold = true})
+		local v8 = fn15({name = "PumpkinBoss", mover = true, gap = 1, pri = 3.5, where = "any", vis = true, hold = true})
 		pb.job = v8
 
 		v8.on = function()
 			local v9 = ctx.slot28
-			return v9.pumpkin and (inArena() or ((fn35() and (pb.done ~= fn36())) and hw.dimOk()))
+			return v9.pumpkin and (inArena() or ((fn36() and (pb.done ~= fn37())) and hw.dimOk()))
 		end
 
 		v8.ready = function()
@@ -35817,7 +35832,7 @@ local function fn2()
 					end
 				end
 
-				if not (fn51(arg2)) then
+				if not (fn52(arg2)) then
 					v8.at = os.clock() + 15
 					local v9 = ctx.fn6
 					v9("Pumpkin portal did not take you", "warn")
@@ -35832,10 +35847,10 @@ local function fn2()
 				arg.godHunt = true
 				hw2.ghost = true
 				hw2.move = pb.nc == true
-				fn49(arg2)
+				fn50(arg2)
 				say(pb.say or "Pumpkin Boss")
 
-				if pb.done == fn36() then
+				if pb.done == fn37() then
 					if (os.clock() - (pb.doneAt or 0)) > 8 then
 						if not (next(pb.drops)) then
 							break
@@ -35854,8 +35869,8 @@ local function fn2()
 
 			if arg2() then
 				if inArena() then
-					if pb.done == fn36() then
-						fn50(arg2)
+					if pb.done == fn37() then
+						fn51(arg2)
 					end
 				end
 			end
@@ -35867,17 +35882,17 @@ local function fn2()
 			return (os.clock() - now2) > 1
 		end
 
-		local function fn52()
+		local function fn53()
 			local HalloweenDimension = hw.save("HalloweenDimension")
 			return (((type(HalloweenDimension) == "table") and (type(HalloweenDimension.Manor) == "table")) and HalloweenDimension.Manor) or {}
 		end
 
-		local function fn53()
-			return fn33("InSewerCave") == true
+		local function fn54()
+			return fn34("InSewerCave") == true
 		end
 
 		hw2.keyRide = function()
-			local v9, v10 = fn52(), ctx.slot28
+			local v9, v10 = fn53(), ctx.slot28
 			return ((v10.hwKey == true) and (v9.KeyClaimed ~= true)) and (v9.GateUnlocked ~= true)
 		end
 
@@ -35894,12 +35909,12 @@ local function fn2()
 			if v10 then
 				if hw.flat(position - v10.Position).Magnitude > 10 then
 					v9 = ctx.vector3New
-					fn20(v9(position.X, v10.Position.Y, position.Z), arg, 8, (hw.flat(position - v10.Position).Magnitude / fn6()) + 5)
+					fn21(v9(position.X, v10.Position.Y, position.Z), arg, 8, (hw.flat(position - v10.Position).Magnitude / fn6()) + 5)
 				end
 			end
 
 			for i2 = 1, 80, 1 do
-				if fn53() then
+				if fn54() then
 					break
 				elseif not (arg()) then
 					break
@@ -35910,36 +35925,36 @@ local function fn2()
 				task.wait(0.1)
 			end
 
-			return hw.wfor(fn53, 5, function()
+			return hw.wfor(fn54, 5, function()
 				return true
 			end)
 		end
 
-		local function fn54(arg)
+		local function fn55(arg)
 			local trainEventAssets = workspace:FindFirstChild("TrainEventAssets")
 			local sewerCave = trainEventAssets and (trainEventAssets:FindFirstChild("SewerCave"))
 			sewerCave = sewerCave and (sewerCave:FindFirstChild("Markers"))
 			return sewerCave and (sewerCave:FindFirstChild(arg))
 		end
 
-		local v9 = fn14({name = "HwKey", mover = true, gap = 1, pri = 3.2, where = "any", vis = true, hold = true})
+		local v9 = fn15({name = "HwKey", mover = true, gap = 1, pri = 3.2, where = "any", vis = true, hold = true})
 
-		local function fn55()
-			return fn33("InManorInterior") == true
+		local function fn56()
+			return fn34("InManorInterior") == true
 		end
 
 		v9.on = function()
-			local v10, v11 = fn52(), ctx.slot28
+			local v10, v11 = fn53(), ctx.slot28
 			local flag, v112 = v11.hwKey == true
 
 			if flag then
-				v11 = fn55()
+				v11 = fn56()
 
 				if v11 then
 					v112 = v11
 				else
 					local keyDone = pb.keyDone
-					v112 = (if keyDone then not keyDone else v10.GateUnlocked ~= true) and (fn53() or ((v10.KeyClaimed == true) and hw.dimOk()))
+					v112 = (if keyDone then not keyDone else v10.GateUnlocked ~= true) and (fn54() or ((v10.KeyClaimed == true) and hw.dimOk()))
 				end
 			else
 				v112 = flag
@@ -35949,7 +35964,7 @@ local function fn2()
 		end
 
 		v9.ready = function()
-			local v10 = fn53()
+			local v10 = fn54()
 			local v102
 
 			if v10 then
@@ -35970,9 +35985,9 @@ local function fn2()
 		end
 
 		v9.run = function(arg, arg2)
-			arg = fn52()
+			arg = fn53()
 
-			if fn55() then
+			if fn56() then
 				local ok3, result = pcall(require, ReplicatedStorage.Shared.Util.ManorInterior)
 				local ok4 = ok3 and result.Marker(result.Markers.Exit)
 				if not (ok4) then
@@ -35981,7 +35996,7 @@ local function fn2()
 				say("Leaving the manor")
 
 				for i2 = 1, 50, 1 do
-					if fn55() then
+					if fn56() then
 						if not (arg2()) then
 							break
 						end
@@ -35995,11 +36010,11 @@ local function fn2()
 				end
 
 				return hw.wfor(function()
-					return not fn55()
+					return not fn56()
 				end, 8, arg2)
 			end
 
-			if fn53() then
+			if fn54() then
 				if arg.KeyClaimed ~= true then
 					if not (pb.met) then
 						pb.met = true
@@ -36017,15 +36032,15 @@ local function fn2()
 				end
 			end
 
-			if fn53() then
-				arg = fn54("Pipe")
+			if fn54() then
+				arg = fn55("Pipe")
 				if not arg then
 					return false
 				end
 				say("Taking the pipe to the manor door")
 
 				for i2 = 1, 60, 1 do
-					if fn53() then
+					if fn54() then
 						if not (arg2()) then
 							break
 						end
@@ -36039,7 +36054,7 @@ local function fn2()
 				end
 
 				return hw.wfor(function()
-					return not fn53()
+					return not fn54()
 				end, 10, arg2)
 			end
 
@@ -36084,12 +36099,12 @@ local function fn2()
 		end
 
 		pb.keySay = function()
-			local st, v10 = fn52(), ctx.slot28
+			local st, v10 = fn53(), ctx.slot28
 			if not (v10.hwKey) then
 				return "Off"
 			end
 
-			if fn55() then
+			if fn56() then
 				return "Leaving the manor"
 			end
 
@@ -36099,7 +36114,7 @@ local function fn2()
 				return "Done, the manor door is unlocked"
 			end
 
-			if fn53() then
+			if fn54() then
 				return ((st.KeyClaimed == true) and "Taking the pipe to the manor door") or "Fishing for the Manor Key"
 			end
 
@@ -36143,8 +36158,8 @@ local function fn2()
 		local riding = hw.riding
 		local carrying = hw.carrying
 
-		local function fn33(arg)
-			local function fn34(arg2)
+		local function fn34(arg)
+			local function fn35(arg2)
 				if not (arg2) then
 					if ctx.lastMV == arg then
 						H(arg)
@@ -36152,13 +36167,13 @@ local function fn2()
 				end
 			end
 
-			return fn34
+			return fn35
 		end
 
 		halloweenDimension = tbl3["Halloween Dimension"]
-		local hwSt, tbl12 = n("hwSt", halloweenDimension:Text("Halloween Status", "Off")), ctx.state
+		local hwSt, tbl12 = fn13("hwSt", halloweenDimension:Text("Halloween Status", "Off")), ctx.state
 
-		tbl12.hwEggsT = fn13(halloweenDimension, "Auto Steal Halloween Eggs", "hwEggs", false, function(arg)
+		tbl12.hwEggsT = fn14(halloweenDimension, "Auto Steal Halloween Eggs", "hwEggs", false, function(arg)
 			if not (arg) then
 				if ctx.lastMV then
 					if ctx.lastMV.name == "Steal" then
@@ -36183,14 +36198,14 @@ local function fn2()
 			end
 		end)
 
-		fn13(halloweenDimension, "Instant Steal Halloween Eggs", "hwInstant", true)
-		fn13(halloweenDimension, "Take Halloween Eggs From Holders", "thief", true)
+		fn14(halloweenDimension, "Instant Steal Halloween Eggs", "hwInstant", true)
+		fn14(halloweenDimension, "Take Halloween Eggs From Holders", "thief", true)
 
-		fn13(halloweenDimension, "Steal Missing Halloween Index", "hwIndex", false, function()
+		fn14(halloweenDimension, "Steal Missing Halloween Index", "hwIndex", false, function()
 			hw2.ixAt = 0
 		end)
 
-		fn13(halloweenDimension, "Place And Hatch Missing Index Eggs", "placeIdx", false)
+		fn14(halloweenDimension, "Place And Hatch Missing Index Eggs", "placeIdx", false)
 		local tbl13, tbl14 = {}, {}
 
 		pcall(function()
@@ -36213,7 +36228,7 @@ local function fn2()
 			end
 		end)
 
-		local tbl132, fn34 = ((#tbl13 > 0) and tbl13) or {"Whiskers"}, function(arg)
+		local tbl132, fn35 = ((#tbl13 > 0) and tbl13) or {"Whiskers"}, function(arg)
 			local v4 = ctx.slot28
 			v4.hwEggOnly = nil
 			v4 = ipairs
@@ -36226,7 +36241,7 @@ local function fn2()
 			end
 		end
 
-		halloweenDimension:Dropdown("Halloween Eggs To Steal", tbl132, {}, fn34, true)
+		halloweenDimension:Dropdown("Halloween Eggs To Steal", tbl132, {}, fn35, true)
 
 		tbl12, tbl132 = {"Epic", "Legendary", "Mythic", "Cosmic", "Secret", "Eternal", "Divine"}, function(arg)
 			local v4 = ctx.slot28
@@ -36242,8 +36257,8 @@ local function fn2()
 
 		local halloweenMonsters, farmMonstersWhileFishing = tbl3["Halloween Monsters"]
 
-		local autoFarmMonsters, tbl15, fn35 = fn13(halloweenMonsters, "Auto Farm Monsters", "hwMon", false, function(arg)
-			fn33(mj)(arg)
+		local autoFarmMonsters, tbl15, fn36 = fn14(halloweenMonsters, "Auto Farm Monsters", "hwMon", false, function(arg)
+			fn34(mj)(arg)
 
 			if not (arg) then
 				local v4 = ctx.slot28
@@ -36267,9 +36282,9 @@ local function fn2()
 			end
 		end
 
-		halloweenMonsters:Dropdown("Monsters To Kill", tbl15, {}, fn35, true)
-		fn35 = ctx.slot28
-		fn35.hwMonOrder = "Closest"
+		halloweenMonsters:Dropdown("Monsters To Kill", tbl15, {}, fn36, true)
+		fn36 = ctx.slot28
+		fn36.hwMonOrder = "Closest"
 
 		halloweenMonsters:Dropdown("Monster Order", {"Closest", "Most Tokens"}, "Closest", function(arg)
 			local v4 = ctx.slot28
@@ -36277,9 +36292,9 @@ local function fn2()
 		end)
 
 		K(halloweenMonsters, "Walk Speed", "hwMonSp", 100, 1000, 300, " st/s", 10).Quick = false
-		fn13(halloweenMonsters, "Teleport To Monsters", "hwMonTp", true)
+		fn14(halloweenMonsters, "Teleport To Monsters", "hwMonTp", true)
 
-		local function fn36()
+		local function fn37()
 			local tbl16, v4, v5 = {}, ipairs, ctx.state
 			local v6 = table.pack(v5.ownedWeapons())
 
@@ -36299,7 +36314,7 @@ local function fn2()
 			return ((#tbl16 > 0) and tbl16) or {"No Weapons"}
 		end
 
-		local function fn37(arg)
+		local function fn38(arg)
 			local v4 = ctx.slot28
 			v4.hwWeap = nil
 			v4 = ipairs
@@ -36312,21 +36327,21 @@ local function fn2()
 			end
 		end
 
-		halloweenMonsters:Dropdown("Use Weapons", fn36, fn36(), fn37, true)
-		fn13(halloweenMonsters, "Only During Blood Moon", "hwMonBlood", false)
-		fn13(halloweenMonsters, "Farm All Monsters In Blood Moon", "hwBlood", false, (fn33(hw.bm)))
-		fn13(halloweenDimension, "Auto Pumpkin Moon", "hwPump", true, (fn33(pj)))
+		halloweenMonsters:Dropdown("Use Weapons", fn37, fn37(), fn38, true)
+		fn14(halloweenMonsters, "Only During Blood Moon", "hwMonBlood", false)
+		fn14(halloweenMonsters, "Farm All Monsters In Blood Moon", "hwBlood", false, (fn34(hw.bm)))
+		fn14(halloweenDimension, "Auto Pumpkin Moon", "hwPump", true, (fn34(pj)))
 		K(halloweenDimension, "Walk Speed", "hwPumpSp", 100, 1000, 300, " st/s", 10).Quick = false
-		fn13(halloweenDimension, "Teleport To Pumpkins", "hwPumpTp", true)
-		fn13(halloweenDimension, "Auto Buy Halloween Dimension Egg", "hwBuy", false)
+		fn14(halloweenDimension, "Teleport To Pumpkins", "hwPumpTp", true)
+		fn14(halloweenDimension, "Auto Buy Halloween Dimension Egg", "hwBuy", false)
 		tbl12 = tbl3["Ghost Dog & Fishing"]
-		local hwDog = n("hwDog", tbl12:Text("Ghost Dog Status", "Off"))
-		fn13(tbl12, "Auto Ghost Dog Quest", "hwDog", false, (fn33(dj)))
-		fn13(tbl12, "Auto Fishing", "hwFish", false, (fn33(fj)))
+		local hwDog = fn13("hwDog", tbl12:Text("Ghost Dog Status", "Off"))
+		fn14(tbl12, "Auto Ghost Dog Quest", "hwDog", false, (fn34(dj)))
+		fn14(tbl12, "Auto Fishing", "hwFish", false, (fn34(fj)))
 		halloweenDimension = tbl3["Priority Rotation"]
-		local hwRot = n("hwRot", halloweenDimension:Text("Rotation Status", "Off"))
+		local hwRot = fn13("hwRot", halloweenDimension:Text("Rotation Status", "Off"))
 
-		fn13(halloweenDimension, "Rotate Fishing And Treadmill", "rot", false, function(arg)
+		fn14(halloweenDimension, "Rotate Fishing And Treadmill", "rot", false, function(arg)
 			local v4 = ctx.state
 			v4.rotToggle(arg)
 		end)
@@ -36342,7 +36357,7 @@ local function fn2()
 		K(halloweenDimension, "Fishing Minutes", "rotFishMin", 1, 120, 5, " min", 1).Quick = false
 		K(halloweenDimension, "Treadmill Minutes", "rotTreadMin", 1, 120, 5, " min", 1).Quick = false
 
-		farmMonstersWhileFishing = fn13(tbl12, "Farm Monsters While Fishing", "hwFishMon", false, function(arg)
+		farmMonstersWhileFishing = fn14(tbl12, "Farm Monsters While Fishing", "hwFishMon", false, function(arg)
 			if arg then
 				local v4 = ctx.slot28
 
@@ -36379,11 +36394,11 @@ local function fn2()
 			local font = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.ExtraBold, Enum.FontStyle.Normal)
 			local font2, n2, n3, n4, n5, n6, n7, str, n8, tbl16, tbl17 = Font.new("rbxassetid://12187365977", Enum.FontWeight.Bold, Enum.FontStyle.Normal), 0.7, 2.1, 2.6, 4.6, 0.95, 0.0909, "#9AA3B5", 12, {{131116540264095, "Catches", "FFFFFF"}, {112785428441728, "Candy Corn", "FFD24A"}, {97499770821177, "Eggs", "8CE8FF"}, {108054256583165, "Mutations", "B48CFF"}}, {W = 0, U = 0, Want = true, Rows = {}, Stats = {}, N = 0}
 
-			local function fn38(arg2)
+			local function fn39(arg2)
 				return (tostring(arg2 or ""):gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;"))
 			end
 
-			local function fn39(arg2)
+			local function fn40(arg2)
 				pcall(function()
 					local v5 = arg2.Get()
 
@@ -36395,7 +36410,7 @@ local function fn2()
 				end)
 			end
 
-			local function fn40(arg2)
+			local function fn41(arg2)
 				local assets
 
 				if arg2 then
@@ -36422,16 +36437,16 @@ local function fn2()
 				return "#" .. (if v7 < 0.7 then Color3.fromHSV(v5, math.min(v6, 0.6), ((v6 < 0.15) and 1) or 0.95) else arg2):ToHex()
 			end
 
-			local function fn41(arg2)
+			local function fn42(arg2)
 				local tbl18 = {Icon = arg2:Image({Parent = tbl17.Frame, X = 0, Y = 0, Width = n3, Height = n3, Corner = 0.35, Background = "#000000", BackgroundTransparency = 0.45, StrokeThickness = n7, StrokeTransparency = 0, Visible = false}), Name = arg2:Text({Parent = tbl17.Frame, X = 0, Y = 0, Width = 1, Height = 1.1, Scale = 1.05, Wrap = false, Font = font, TextStrokeTransparency = 1, Visible = false}), Chip = arg2:Frame({Parent = tbl17.Frame, X = 0, Y = 0, Width = n5, Height = n6, Corner = 0.3, Background = "#000000", BackgroundTransparency = 0.35, StrokeThickness = n7, StrokeTransparency = 0, Visible = false})}
 				tbl18.ChipText = arg2:Text({Parent = tbl18.Chip, X = 0, Y = 0, Width = n5, Height = n6, Scale = 0.78, Wrap = false, Align = "Center", VAlign = "center", Font = font2, TextStrokeTransparency = 1})
 				tbl18.Detail = arg2:Text({Parent = tbl17.Frame, X = 0, Y = 0, Width = 1, Height = 1, Scale = 0.92, Wrap = false, Visible = false})
-				fn39(tbl18.Name)
-				fn39(tbl18.Detail)
+				fn40(tbl18.Name)
+				fn40(tbl18.Detail)
 				return tbl18
 			end
 
-			local function fn42(arg2, arg3, arg4, arg5, arg6)
+			local function fn43(arg2, arg3, arg4, arg5, arg6)
 				arg2.Icon.Set({Visible = arg6, X = n2, Y = arg3 + 0.25, Width = n3, Height = n3})
 				local set, tbl18 = arg2.Name.Set, {Visible = arg6, X = arg4, Y = arg3 + 0.3}
 				tbl18.Width, tbl18.Height = math.max(1, (arg5 - n5) - 0.3), 1.1
@@ -36441,7 +36456,7 @@ local function fn2()
 				arg2.Detail.Set({Visible = arg6, X = arg4, Y = arg3 + 1.4, Width = arg5, Height = 1})
 			end
 
-			local function fn43()
+			local function fn44()
 				if tbl17.S then
 					if tbl17.U <= 0 then
 						return
@@ -36471,10 +36486,10 @@ local function fn2()
 				tbl17.BestBg.Set({Visible = tbl17.HasBest, X = n2 - 0.25, Y = 3.6500000000000004, Width = n9 + 0.5, Height = n4 + 0.15})
 
 				if tbl17.HasBest then
-					fn42(tbl17.Best, 3.7, h2, n10, true)
+					fn43(tbl17.Best, 3.7, h2, n10, true)
 					n11 += (1.1 + n4) + 0.75
 				else
-					fn42(tbl17.Best, n11, h2, n10, false)
+					fn43(tbl17.Best, n11, h2, n10, false)
 				end
 
 				tbl17.Div2.Set({Visible = tbl17.HasBest and (tbl17.N > 0), X = n2, Y = n11 - 0.35, Width = n9, Height = 0.06})
@@ -36482,7 +36497,7 @@ local function fn2()
 				n11 = if tbl17.N > 0 then n11 + 1 else n11
 
 				for i2, row in ipairs(tbl17.Rows) do
-					fn42(row, n11 + ((i2 - 1) * n4), h2, n10, i2 <= tbl17.N)
+					fn43(row, n11 + ((i2 - 1) * n4), h2, n10, i2 <= tbl17.N)
 				end
 
 				h2 = (n11 + (math.max(tbl17.N, (tbl17.HasBest and 0) or 1) * n4)) + 0.15
@@ -36495,7 +36510,7 @@ local function fn2()
 				end
 			end
 
-			local function fn44(arg2)
+			local function fn45(arg2)
 				local tbl18, n9 = {}, 0
 
 				for _, v5 in next, arg2.muts, nil do
@@ -36521,7 +36536,7 @@ local function fn2()
 				for _, v5 in tbl19(strokeColor) do
 					for k, v6 in next, v5, nil do
 						local v7, v8, v9 = hw2.icon(k)
-						tbl18[#tbl18 + 1] = {n = k, k = v6, img = v7, rar = v8, col = fn40(v9)}
+						tbl18[#tbl18 + 1] = {n = k, k = v6, img = v7, rar = v8, col = fn41(v9)}
 					end
 				end
 
@@ -36533,14 +36548,14 @@ local function fn2()
 				tbl17.HasBest = tbl20 ~= nil
 
 				if tbl20 then
-					strokeColor, tbl19, arg2 = fn40(v7), tbl17.Best.Icon.Set, {}
+					strokeColor, tbl19, arg2 = fn41(v7), tbl17.Best.Icon.Set, {}
 					arg2.Image, arg2.StrokeColor = v6 or "", strokeColor
 					tbl19(arg2)
 					local set2, tbl21 = tbl17.Best.Name.Set, {}
-					tbl21.Text = "<b>" .. (fn38(tbl20) .. "</b>")
+					tbl21.Text = "<b>" .. (fn39(tbl20) .. "</b>")
 					set2(tbl21)
 					tbl17.Best.Chip.Set({StrokeColor = strokeColor})
-					tbl17.Best.ChipText.Set({Text = fn38(v5 or ""), Color = Color3.fromHex(strokeColor)})
+					tbl17.Best.ChipText.Set({Text = fn39(v5 or ""), Color = Color3.fromHex(strokeColor)})
 					set2, tbl21 = tbl17.Best.Detail.Set, {}
 					tbl21.Text = (set and ("<font color=\"#3CFF5A\"><b>" .. (hw2.money(set.v) .. ("</b></font>" .. ((set.s and ("  <font color=\"" .. (str .. ("\">x" .. (("%.2f"):format(set.s) .. "</font>"))))) or ""))))) or ""
 					set2(tbl21)
@@ -36552,12 +36567,12 @@ local function fn2()
 					v7, v6 = tbl18[i2], tbl17.Rows[i2]
 					v6.Icon.Set({Image = v7.img or "", StrokeColor = v7.col})
 					set, strokeColor = v6.Name.Set, {}
-					strokeColor.Text = "<b>" .. (fn38(v7.n) .. "</b>")
+					strokeColor.Text = "<b>" .. (fn39(v7.n) .. "</b>")
 					set(strokeColor)
 					v6.Chip.Set({StrokeColor = v7.col})
 					v6.ChipText.Set({Text = "x" .. hw2.num(v7.k), Color = Color3.fromHex(v7.col)})
 					tbl19, tbl20 = v6.Detail.Set, {}
-					tbl20.Text = "<font color=\"" .. (v7.col .. ("\"><b>" .. (fn38(v7.rar or "") .. "</b></font>")))
+					tbl20.Text = "<font color=\"" .. (v7.col .. ("\"><b>" .. (fn39(v7.rar or "") .. "</b></font>")))
 					tbl19(tbl20)
 				end
 
@@ -36581,12 +36596,12 @@ local function fn2()
 				tbl17.Div1 = s:Frame({Parent = tbl17.Frame, X = 0, Y = 0, Width = 1, Height = 0.06, Background = "#FFFFFF", BackgroundTransparency = 0.85})
 				tbl17.BestTag = s:Text({Parent = tbl17.Frame, X = 0, Y = 0, Width = 1, Height = 1, Scale = 0.82, Wrap = false, Font = font2, Text = "<font color=\"#FFD27A\">BEST EGG</font>", TextStrokeTransparency = 1, Visible = false})
 				tbl17.BestBg = s:Frame({Parent = tbl17.Frame, X = 0, Y = 0, Width = 1, Height = 1, Corner = 0.4, Background = "#FFD27A", BackgroundTransparency = 0.88, StrokeColor = "#FFD27A", StrokeThickness = 0.0909, StrokeTransparency = 0.35, Visible = false})
-				tbl17.Best = fn41(s)
+				tbl17.Best = fn42(s)
 				tbl17.EggTag = s:Text({Parent = tbl17.Frame, X = 0, Y = 0, Width = 1, Height = 1, Scale = 0.82, Wrap = false, Font = font2, Text = "<font color=\"#8CE8FF\">EGGS CAUGHT</font>", TextStrokeTransparency = 1, Visible = false})
 				tbl17.Div2 = s:Frame({Parent = tbl17.Frame, X = 0, Y = 0, Width = 1, Height = 0.06, Background = "#FFFFFF", BackgroundTransparency = 0.85, Visible = false})
 
 				for i2 = 1, n8, 1 do
-					tbl17.Rows[i2] = fn41(s)
+					tbl17.Rows[i2] = fn42(s)
 				end
 
 				tbl17.Empty = s:Text({Parent = tbl17.Frame, X = 0, Y = 0, Width = 1, Height = 1, Scale = 0.92, Wrap = false, Align = "Center", Text = "<font color=\"" .. (str .. "\">No eggs caught yet</font>"), Visible = false})
@@ -36608,7 +36623,7 @@ local function fn2()
 					if tbl17.S then
 						if tbl17.L then
 							tbl17.Dirty = false
-							pcall(fn44, tbl17.L)
+							pcall(fn45, tbl17.L)
 						end
 					end
 				end
@@ -36616,7 +36631,7 @@ local function fn2()
 				if tbl17.Want then
 					if tbl17.S then
 						tbl17.Want = false
-						pcall(fn43)
+						pcall(fn44)
 					end
 				end
 			end)
@@ -36630,9 +36645,9 @@ local function fn2()
 		hw2.onLog = hw2.fishCard(tbl12)
 		hw2.onLog(hw2.flog())
 		halloweenDimension = tbl3["Phantom Express"]
-		local hwTr = n("hwTr", halloweenDimension:Text("Phantom Express Status", "Off"))
+		local hwTr = fn13("hwTr", halloweenDimension:Text("Phantom Express Status", "Off"))
 
-		fn13(halloweenDimension, "Auto Phantom Express", "train", false, function(arg)
+		fn14(halloweenDimension, "Auto Phantom Express", "train", false, function(arg)
 			if not (arg) then
 				if ctx.lastMV == tj then
 					if not (riding()) then
@@ -36642,7 +36657,7 @@ local function fn2()
 			end
 		end)
 
-		fn13(halloweenDimension, "Auto Vacuum Ghouler Boss", "hwBoss", true, (fn33(gj)))
+		fn14(halloweenDimension, "Auto Vacuum Ghouler Boss", "hwBoss", true, (fn34(gj)))
 		tbl15 = ctx.slot28
 		tbl15.hwGhost = "Rarest first"
 
@@ -36652,11 +36667,11 @@ local function fn2()
 		end)
 
 		K(halloweenDimension, "Walk Speed", "hwGhostSp", 100, 1000, 300, " st/s", 10).Quick = false
-		fn13(halloweenDimension, "Teleport To Ghosts", "hwGhostTp", true)
-		fn13(halloweenDimension, "Auto Trade Souls", "hwSouls", false)
-		local hwPb = n("hwPb", tbl3["Pumpkin Boss"]:Text("Pumpkin Boss Status", "Off"))
+		fn14(halloweenDimension, "Teleport To Ghosts", "hwGhostTp", true)
+		fn14(halloweenDimension, "Auto Trade Souls", "hwSouls", false)
+		local hwPb = fn13("hwPb", tbl3["Pumpkin Boss"]:Text("Pumpkin Boss Status", "Off"))
 
-		fn13(tbl3["Pumpkin Boss"], "Auto Pumpkin Boss", "pumpkin", false, function(arg)
+		fn14(tbl3["Pumpkin Boss"], "Auto Pumpkin Boss", "pumpkin", false, function(arg)
 			if not (arg) then
 				local v5 = ctx.state
 
@@ -36674,7 +36689,7 @@ local function fn2()
 			end
 		end)
 
-		fn13(tbl3["Pumpkin Boss"], "Auto Dodge Attacks", "pbDodge", true)
+		fn14(tbl3["Pumpkin Boss"], "Auto Dodge Attacks", "pbDodge", true)
 
 		fj, dj = tbl3["Pumpkin Boss"], function(arg)
 			local v5 = ctx.slot28
@@ -36689,15 +36704,15 @@ local function fn2()
 			end
 		end
 
-		fj:Dropdown("Use Weapons", fn36, fn36(), dj, true)
-		fn13(tbl3["Pumpkin Boss"], "Auto Claim Boss Mastery", "pbClaim", true)
+		fj:Dropdown("Use Weapons", fn37, fn37(), dj, true)
+		fn14(tbl3["Pumpkin Boss"], "Auto Claim Boss Mastery", "pbClaim", true)
 		K(tbl3["Pumpkin Boss"], "Stubs Pickup Speed", "pbSp", 100, 500, 300, " st/s", 10).Quick = false
-		fn13(tbl3["Pumpkin Boss"], "Auto Manor Key", "hwKey", false)
-		local hwKeySt = n("hwKeySt", tbl3["Pumpkin Boss"]:Text("Manor Key Status", "Off"))
-		fn34 = tbl3["Cursed Island Wars"]
-		local ciw = n("ciw", fn34:Text("Cursed Island Wars Status", "Waiting for Cursed Island Wars"))
+		fn14(tbl3["Pumpkin Boss"], "Auto Manor Key", "hwKey", false)
+		local hwKeySt = fn13("hwKeySt", tbl3["Pumpkin Boss"]:Text("Manor Key Status", "Off"))
+		fn35 = tbl3["Cursed Island Wars"]
+		local ciw = fn13("ciw", fn35:Text("Cursed Island Wars Status", "Waiting for Cursed Island Wars"))
 
-		fn13(fn34, "Auto Play Cursed Island Wars", "ciw", true, function(arg)
+		fn14(fn35, "Auto Play Cursed Island Wars", "ciw", true, function(arg)
 			knock(arg and iw.held())
 
 			if not (arg) then
@@ -36708,7 +36723,7 @@ local function fn2()
 		tbl12 = ctx.slot28
 		tbl12.ciwT = "Enemies and base"
 
-		fn34:Dropdown("Island Wars Target", {"Enemies And Base", "Walls And Crystal"}, "Enemies And Base", function(arg)
+		fn35:Dropdown("Island Wars Target", {"Enemies And Base", "Walls And Crystal"}, "Enemies And Base", function(arg)
 			local v5 = ctx.slot28
 			v5.ciwT = ((arg == "Walls And Crystal") and "Walls and crystal") or "Enemies and base"
 		end)
@@ -36739,7 +36754,7 @@ local function fn2()
 			hwRot(str or "Off")
 		end
 
-		local v6 = fn14({name = "HalloweenInfo", gap = 1})
+		local v6 = fn15({name = "HalloweenInfo", gap = 1})
 
 		v6.on = function()
 			return c.open
@@ -36853,11 +36868,11 @@ local function fn2()
 		local gm, player, RunService2, ReplicatedStorage2, v5 = v4.GM, ctx.localPlayer, ctx.RunService, ReplicatedStorage, ctx.networking
 		local hui = (gethui and gethui()) or getService("CoreGui")
 
-		local function fn33(arg)
+		local function fn34(arg)
 			table.insert(ctx.state.cleanup, arg)
 		end
 
-		local function fn34()
+		local function fn35()
 			local tbl12 = {}
 
 			for i2 = 1, math.random(10, 16), 1 do
@@ -36867,17 +36882,17 @@ local function fn2()
 			return table.concat(tbl12)
 		end
 
-		fn13(esp, "Inventory Values", "espInv", true)
+		fn14(esp, "Inventory Values", "espInv", true)
 		local tbl12 = {};
 
 		(function()
-			local function fn35(arg, arg2)
+			local function fn36(arg, arg2)
 				local ok, result = pcall(Font.new, arg, arg2, Enum.FontStyle.Normal)
 				return (ok and result) or nil
 			end
 
-			tbl12.MainFont = fn35("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.ExtraBold)
-			tbl12.StatusFont = fn35("rbxasset://fonts/families/FredokaOne.json", Enum.FontWeight.Regular)
+			tbl12.MainFont = fn36("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.ExtraBold)
+			tbl12.StatusFont = fn36("rbxasset://fonts/families/FredokaOne.json", Enum.FontWeight.Regular)
 		end)()
 
 		tbl12.Sequence = function(arg)
@@ -36931,7 +36946,7 @@ local function fn2()
 
 		tbl12.CreateRuntime = function()
 			local screenGui = Instance.new("ScreenGui")
-			screenGui.Name = fn34()
+			screenGui.Name = fn35()
 			screenGui.Archivable = false
 			screenGui.ResetOnSpawn = false
 			screenGui.IgnoreGuiInset = true
@@ -36943,18 +36958,18 @@ local function fn2()
 
 		tbl12.CreateTag = function(parent, maxDistance)
 			local billboardGui = Instance.new("BillboardGui")
-			billboardGui.Name = fn34()
+			billboardGui.Name = fn35()
 			billboardGui.AlwaysOnTop = true
 			billboardGui.LightInfluence = 0
 			billboardGui.MaxDistance = maxDistance
 			maxDistance = Instance.new("Frame")
-			maxDistance.Name = fn34()
+			maxDistance.Name = fn35()
 			maxDistance.BackgroundTransparency = 1
 			maxDistance.BorderSizePixel = 0
 			maxDistance.Size = UDim2.fromScale(1, 1)
 			maxDistance.Parent = billboardGui
 			local uiListLayout = Instance.new("UIListLayout")
-			uiListLayout.Name = fn34()
+			uiListLayout.Name = fn35()
 			uiListLayout.FillDirection = Enum.FillDirection.Vertical
 			uiListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 			uiListLayout.VerticalAlignment = Enum.VerticalAlignment.Center
@@ -36966,7 +36981,7 @@ local function fn2()
 
 		tbl12.CreateTextRow = function(parent, fontFace, layoutOrder, arg)
 			local frame = Instance.new("Frame")
-			frame.Name = fn34()
+			frame.Name = fn35()
 			frame.BackgroundTransparency = 1
 			frame.BorderSizePixel = 0
 			frame.Size = UDim2.fromScale(1, arg)
@@ -36975,7 +36990,7 @@ local function fn2()
 
 			local function createTextLabel(zIndex)
 				local textLabel = Instance.new("TextLabel")
-				textLabel.Name = fn34()
+				textLabel.Name = fn35()
 				textLabel.BackgroundTransparency = 1
 				textLabel.Size = UDim2.fromScale(1, 1)
 				textLabel.Text = ""
@@ -37002,7 +37017,7 @@ local function fn2()
 			parent = createTextLabel(3)
 			parent.TextColor3 = Color3.new(1, 1, 1)
 			local uiStroke = Instance.new("UIStroke")
-			uiStroke.Name = fn34()
+			uiStroke.Name = fn35()
 			uiStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
 			uiStroke.LineJoinMode = Enum.LineJoinMode.Round
 			uiStroke.Color = Color3.new(1, 1, 1)
@@ -37014,11 +37029,11 @@ local function fn2()
 
 			uiStroke.Parent = parent
 			arg = Instance.new("UIGradient")
-			arg.Name = fn34()
+			arg.Name = fn35()
 			arg.Rotation = 90
 			arg.Parent = uiStroke
 			createTextLabel = Instance.new("UIGradient")
-			createTextLabel.Name = fn34()
+			createTextLabel.Name = fn35()
 			createTextLabel.Rotation = 90
 			createTextLabel.Parent = parent
 			return {Holder = frame, Shadow = layoutOrder, Label = parent, StrokeGradient = arg, TextGradient = createTextLabel, Palette = nil}
@@ -37075,7 +37090,7 @@ local function fn2()
 				return tbl14
 			end
 
-			local function fn35(child)
+			local function fn36(child)
 				local guard = child:FindFirstChild("Guard")
 
 				if guard then
@@ -37094,10 +37109,10 @@ local function fn2()
 			end
 
 			for _, child in ipairs(v6:GetChildren()) do
-				fn35(child)
+				fn36(child)
 			end
 
-			table.insert(tbl14, v6.ChildAdded:Connect(fn35))
+			table.insert(tbl14, v6.ChildAdded:Connect(fn36))
 			return tbl14
 		end
 
@@ -37152,7 +37167,7 @@ local function fn2()
 			local flag, n12, n13, flag2, v11 = false, 0, 0, false
 			local n14 = 0
 
-			local function fn35(arg)
+			local function fn36(arg)
 				local directory = tbl22[arg]
 				if directory then
 					return directory
@@ -37189,7 +37204,7 @@ local function fn2()
 				return tbl25
 			end
 
-			local function fn36(arg)
+			local function fn37(arg)
 				local areaEggSlotsClient = workspace:FindFirstChild("AreaEggSlotsClient")
 				local areaEggSlotsClient2 = areaEggSlotsClient and (areaEggSlotsClient:FindFirstChild(arg))
 
@@ -37203,7 +37218,7 @@ local function fn2()
 				return nil, nil
 			end
 
-			local function fn37()
+			local function fn38()
 				if v11 then
 					if not (v11.Parent) then
 						v11 = tbl12.CreateRuntime()
@@ -37213,7 +37228,7 @@ local function fn2()
 				end
 			end
 
-			local function fn38(arg)
+			local function fn39(arg)
 				local tbl24 = {"", "K", "M", "B", "T", "Qa", "Qi"}
 				arg = tonumber(arg) or 0
 				local n15 = 1
@@ -37225,7 +37240,7 @@ local function fn2()
 				return string.format(((n15 == 1) and "%.0f%s") or "%.2f%s", arg, tbl24[n15])
 			end
 
-			local function fn39(arg)
+			local function fn40(arg)
 				local currentCamera = workspace.CurrentCamera
 				if not (currentCamera) then
 					return tbl20.MaxDistance
@@ -37234,7 +37249,7 @@ local function fn2()
 				return math.min(tbl20.MaxDistance, (arg * currentCamera.ViewportSize.Y) / ((2 * n7) * v12))
 			end
 
-			local function fn40(arg)
+			local function fn41(arg)
 				local tbl24, n15 = {{arg.IconHolder, tbl17.Icon, arg.ShowIcon}, {arg.NameRow.Holder, tbl17.Name, arg.ShowName}, {arg.RarityRow.Holder, tbl17.Rarity, arg.ShowRarity}, {arg.MutationRow.Holder, tbl17.Mutation, arg.ShowMutation}, {arg.ValueRow.Holder, tbl17.Value, arg.ShowValue}, {arg.ExtraRow.Holder, tbl17.Info, arg.ShowExtra}}, 0
 
 				for _, v12 in ipairs(tbl24) do
@@ -37258,7 +37273,7 @@ local function fn2()
 					if tbl20.FixedSize then
 						tbl24 = n6 * tbl20.SizeScale
 						arg.Billboard.Size = UDim2.fromScale(tbl24, (tbl24 * height) / v12)
-						arg.Billboard.MaxDistance = fn39(tbl24)
+						arg.Billboard.MaxDistance = fn40(tbl24)
 					else
 						arg.Billboard.Size = UDim2.fromOffset(v12, height)
 						arg.Billboard.MaxDistance = tbl20.MaxDistance
@@ -37266,21 +37281,21 @@ local function fn2()
 				end
 			end
 
-			local function fn41(arg)
+			local function fn42(arg)
 				arg.Width = nil
-				fn40(arg)
+				fn41(arg)
 			end
 
 			local function createUIAspectRatioConstraint()
 				local v12, v13 = tbl12.CreateTag(v11, tbl20.MaxDistance)
 				local frame = Instance.new("Frame")
-				frame.Name = fn34()
+				frame.Name = fn35()
 				frame.BackgroundTransparency = 1
 				frame.BorderSizePixel = 0
 				frame.LayoutOrder = 0
 				frame.Parent = v13
 				local imageLabel = Instance.new("ImageLabel")
-				imageLabel.Name = fn34()
+				imageLabel.Name = fn35()
 				imageLabel.AnchorPoint = Vector2.new(0.5, 1)
 				imageLabel.BackgroundTransparency = 1
 				imageLabel.Position = UDim2.fromScale(0.5, 1)
@@ -37288,16 +37303,16 @@ local function fn2()
 				imageLabel.ScaleType = Enum.ScaleType.Fit
 				imageLabel.Parent = frame
 				local uiAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
-				uiAspectRatioConstraint.Name = fn34()
+				uiAspectRatioConstraint.Name = fn35()
 				uiAspectRatioConstraint.AspectRatio = 1
 				uiAspectRatioConstraint.DominantAxis = Enum.DominantAxis.Height
 				uiAspectRatioConstraint.Parent = imageLabel
 				uiAspectRatioConstraint = {Billboard = v12, IconHolder = frame, Icon = imageLabel, NameRow = tbl12.CreateTextRow(v13, tbl12.MainFont, 1, 0.4), RarityRow = tbl12.CreateTextRow(v13, v6, 2, 0.2), MutationRow = tbl12.CreateTextRow(v13, tbl12.MainFont, 3, 0.2), ValueRow = tbl12.CreateTextRow(v13, tbl12.MainFont, 4, 0.2), ExtraRow = tbl12.CreateTextRow(v13, tbl12.MainFont, 5, 0.2), Highlight = nil, Anchor = nil, CFrame = nil, Width = nil, Height = nil, ShowIcon = false, ShowName = true, ShowRarity = false, ShowMutation = false, ShowValue = false, ShowExtra = false}
-				fn40(uiAspectRatioConstraint)
+				fn41(uiAspectRatioConstraint)
 				return uiAspectRatioConstraint
 			end
 
-			local function fn42(arg)
+			local function fn43(arg)
 				if arg.Highlight then
 					arg.Highlight:Destroy()
 					arg.Highlight = nil
@@ -37305,7 +37320,7 @@ local function fn2()
 				end
 			end
 
-			local function fn43(arg, arg2)
+			local function fn44(arg, arg2)
 				local n15 = tonumber(arg.AssetScale) or 1
 				local n16, n17, mutations = ((n15 > 5) and (((n15 / 5) ^ 1.2) * 19.637875755794113)) or (n15 ^ 1.85), 1, gm.Mutations
 
@@ -37321,7 +37336,7 @@ local function fn2()
 				return (arg2.EarningRate * n16) * n17
 			end
 
-			local function fn44(arg, arg2, arg3)
+			local function fn45(arg, arg2, arg3)
 				local tbl24, eggState, placedEggRenders = {}, gm.EggState, workspace:FindFirstChild("PlacedEggRenders")
 
 				if arg then
@@ -37383,10 +37398,10 @@ local function fn2()
 			end
 
 			local function getYourBase()
-				return fn44(player, "Your Base", "base:")
+				return fn45(player, "Your Base", "base:")
 			end
 
-			local function fn45(arg, arg2)
+			local function fn46(arg, arg2)
 				if arg.State == "Claimed" then
 					return false
 				end
@@ -37398,7 +37413,7 @@ local function fn2()
 				end
 
 				if tbl20.MinValue > 0 then
-					if fn43(arg, arg2) < tbl20.MinValue then
+					if fn44(arg, arg2) < tbl20.MinValue then
 						return false
 					end
 				end
@@ -37406,7 +37421,7 @@ local function fn2()
 				return true
 			end
 
-			local function fn46(arg, arg2, arg3)
+			local function fn47(arg, arg2, arg3)
 				local model, hitbox
 
 				if typeof(arg2.Model) == "Instance" then
@@ -37414,7 +37429,7 @@ local function fn2()
 					local hitbox2 = model:FindFirstChild("Hitbox", true) or model:FindFirstChildWhichIsA("BasePart", true)
 					hitbox = ((hitbox2 and hitbox2:IsA("BasePart")) and hitbox2) or nil
 				else
-					model, hitbox = fn36(arg2.Uid)
+					model, hitbox = fn37(arg2.Uid)
 				end
 
 				local bottomCFrame = arg2.BottomCFrame
@@ -37436,7 +37451,7 @@ local function fn2()
 				do
 					local tbl25 = {}
 
-					local function fn47(arg4)
+					local function fn48(arg4)
 						if type(arg4) == "string" then
 							if arg4 ~= "" then
 								if arg4 ~= "Normal" then
@@ -37449,15 +37464,15 @@ local function fn2()
 						end
 					end
 
-					fn47(baseMutation)
+					fn48(baseMutation)
 
 					if type(arg2.Mutations) == "table" then
 						for k, mutation in pairs(arg2.Mutations) do
 							if type(mutation) == "string" then
-								fn47(mutation)
+								fn48(mutation)
 							elseif mutation == true then
 								if type(k) == "string" then
-									fn47(k)
+									fn48(k)
 								end
 							end
 						end
@@ -37503,7 +37518,7 @@ local function fn2()
 				showValue = info.Value == true
 
 				if showValue then
-					tbl12.SetRow(arg.ValueRow, "$" .. (fn38(fn43(arg2, arg3)) .. "/s"), v8)
+					tbl12.SetRow(arg.ValueRow, "$" .. (fn39(fn44(arg2, arg3)) .. "/s"), v8)
 				end
 
 				local highlight, eggRecords = {}, gm.EggRecords
@@ -37515,7 +37530,7 @@ local function fn2()
 
 							if ok then
 								if tonumber(result) then
-									table.insert(highlight, fn38(result) .. " kg")
+									table.insert(highlight, fn39(result) .. " kg")
 								end
 							end
 						end
@@ -37533,7 +37548,7 @@ local function fn2()
 
 							if ok then
 								if tonumber(result) then
-									table.insert(highlight, "$" .. fn38(result))
+									table.insert(highlight, "$" .. fn39(result))
 								end
 							end
 						end
@@ -37578,7 +37593,7 @@ local function fn2()
 					arg.ShowMutation = showValue2
 					arg.ShowValue = showValue
 					arg.ShowExtra = showExtra
-					fn40(arg)
+					fn41(arg)
 				end
 
 				showIcon = (tbl20.Highlight == tbl16[3]) or ((tbl20.Highlight == tbl16[2]) and (arg3.Number >= tbl20.HighlightMin))
@@ -37588,7 +37603,7 @@ local function fn2()
 						if not (arg.Highlight) then
 							if n14 < n2 then
 								highlight = Instance.new("Highlight")
-								highlight.Name = fn34()
+								highlight.Name = fn35()
 								highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 								highlight.FillTransparency = 0.82
 								highlight.OutlineTransparency = 0.05
@@ -37606,19 +37621,19 @@ local function fn2()
 							end
 						end
 					else
-						fn42(arg)
+						fn43(arg)
 					end
 				else
-					fn42(arg)
+					fn43(arg)
 				end
 			end
 
-			local function fn47(arg)
-				fn42(arg)
+			local function fn48(arg)
+				fn43(arg)
 				arg.Billboard:Destroy()
 			end
 
-			local function fn48()
+			local function fn49()
 				local tbl212, v112 = tbl21, v11
 				tbl21, v11, n14 = {}, nil, 0
 
@@ -37645,13 +37660,13 @@ local function fn2()
 				end)
 			end
 
-			local function fn49(arg, arg2, arg3)
-				local function fn50()
+			local function fn50(arg, arg2, arg3)
+				local function fn51()
 					local flag3 = ((arg2 == n13) and (arg3 == n12)) and flag
 					return flag3
 				end
 
-				fn37()
+				fn38()
 				local tbl24, now2 = {}, os.clock()
 
 				for k, v12 in pairs(arg) do
@@ -37659,10 +37674,10 @@ local function fn2()
 
 					if type(k) == "string" then
 						if type(v12.AssetCategory) == "string" then
-							local v13 = fn35(v12.AssetCategory)
+							local v13 = fn36(v12.AssetCategory)
 
 							if tbl20.Eggs then
-								if fn45(v12, v13) then
+								if fn46(v12, v13) then
 									tbl24[k] = true
 									local v14 = tbl21[k]
 
@@ -37672,7 +37687,7 @@ local function fn2()
 										tbl21[k] = v14
 									end
 
-									fn46(v14, v12, v13)
+									fn47(v14, v12, v13)
 								end
 							end
 						end
@@ -37681,7 +37696,7 @@ local function fn2()
 					if (os.clock() - now2) > n10 then
 						RunService2.Heartbeat:Wait()
 						now2 = os.clock()
-						if not (fn50()) then
+						if not (fn51()) then
 							return
 						end
 					else
@@ -37689,12 +37704,12 @@ local function fn2()
 				end
 
 				if tbl20.Eggs and tbl20.OwnBase then
-					arg, fn50 = ipairs, table.pack(getYourBase())
+					arg, fn51 = ipairs, table.pack(getYourBase())
 
-					for k, v12 in arg(table.unpack(fn50, 1, fn50.n)) do
-						k = fn35(v12.AssetCategory)
+					for k, v12 in arg(table.unpack(fn51, 1, fn51.n)) do
+						k = fn36(v12.AssetCategory)
 
-						if fn45(v12, k) then
+						if fn46(v12, k) then
 							tbl24[v12.Uid] = true
 							local tbl212 = tbl21
 							local v13 = tbl212[v12.Uid]
@@ -37706,22 +37721,22 @@ local function fn2()
 								tbl212[v12.Uid] = v13
 							end
 
-							fn46(v13, v12, k)
+							fn47(v13, v12, k)
 						end
 					end
 				end
 
 				if tbl20.Eggs and tbl20.OtherBases then
-					arg, fn50 = ipairs, table.pack(Players:GetPlayers())
+					arg, fn51 = ipairs, table.pack(Players:GetPlayers())
 
-					for k, v12 in arg(table.unpack(fn50, 1, fn50.n)) do
+					for k, v12 in arg(table.unpack(fn51, 1, fn51.n)) do
 						if v12 ~= player then
-							local v13, v14 = ipairs, table.pack(fn44(v12, v12.DisplayName .. " Base", "base" .. (tostring(v12.UserId) .. ":")))
+							local v13, v14 = ipairs, table.pack(fn45(v12, v12.DisplayName .. " Base", "base" .. (tostring(v12.UserId) .. ":")))
 
 							for k2, v15 in v13(table.unpack(v14, 1, v14.n)) do
-								k = fn35(v15.AssetCategory)
+								k = fn36(v15.AssetCategory)
 
-								if fn45(v15, k) then
+								if fn46(v15, k) then
 									tbl24[v15.Uid] = true
 									k2 = tbl21
 									local v16 = k2[v15.Uid]
@@ -37733,19 +37748,19 @@ local function fn2()
 										tbl212[v15.Uid] = v16
 									end
 
-									fn46(v16, v15, k)
+									fn47(v16, v15, k)
 								end
 							end
 						end
 					end
 				end
 
-				fn50 = tbl21
+				fn51 = tbl21
 
-				for k, v12 in pairs(fn50) do
+				for k, v12 in pairs(fn51) do
 					if not (tbl24[k]) then
 						tbl21[k] = nil
-						fn47(v12)
+						fn48(v12)
 					end
 				end
 
@@ -37754,7 +37769,7 @@ local function fn2()
 
 			local flag3, flag4 = false, false
 
-			local function fn50()
+			local function fn51()
 				if flag then
 					if not (v10) then
 						return
@@ -37777,7 +37792,7 @@ local function fn2()
 						end
 						flag3 = false
 						n13 += 1
-						local ok, result = pcall(fn49, v10, n13, n12)
+						local ok, result = pcall(fn50, v10, n13, n12)
 
 						if ok then
 							if result ~= true then
@@ -37792,12 +37807,12 @@ local function fn2()
 				end)
 			end
 
-			local function fn51()
+			local function fn52()
 				local n122 = n12
 
 				if v10 then
 					if next(tbl21) == nil then
-						fn50()
+						fn51()
 					end
 				end
 
@@ -37843,15 +37858,15 @@ local function fn2()
 				end
 
 				if v10 then
-					fn50()
+					fn51()
 				end
 			end
 
-			local function fn52()
-				task.spawn(pcall, fn51)
+			local function fn53()
+				task.spawn(pcall, fn52)
 			end
 
-			local function fn53()
+			local function fn54()
 				if flag2 then
 					return
 				end
@@ -37861,30 +37876,30 @@ local function fn2()
 					flag2 = false
 
 					if flag then
-						fn52()
+						fn53()
 					end
 				end)
 			end
 
-			local function fn54()
+			local function fn55()
 				local tbl212 = tbl21
 
 				for _, v12 in pairs(tbl212) do
-					fn41(v12)
+					fn42(v12)
 				end
 			end
 
-			local function fn55()
+			local function fn56()
 				flag = false
 				n12 += 1
 				n13 += 1
 				tbl12.DisconnectAll(tbl23)
-				fn48()
+				fn49()
 			end
 
-			local function fn56()
+			local function fn57()
 				if flag then
-					fn52()
+					fn53()
 					return
 				end
 				flag = true
@@ -37899,7 +37914,7 @@ local function fn2()
 
 						if type(i2) == "table" then
 							if type(i2.Connect) == "function" then
-								local ok, result = pcall(i2.Connect, i2, fn53)
+								local ok, result = pcall(i2.Connect, i2, fn54)
 
 								if ok then
 									if result then
@@ -37917,8 +37932,8 @@ local function fn2()
 					i2 = workspace:FindFirstChild(v12)
 
 					if i2 then
-						table.insert(tbl23, i2.ChildAdded:Connect(fn53))
-						table.insert(tbl23, i2.ChildRemoved:Connect(fn53))
+						table.insert(tbl23, i2.ChildAdded:Connect(fn54))
+						table.insert(tbl23, i2.ChildRemoved:Connect(fn54))
 					end
 				end
 
@@ -37932,7 +37947,7 @@ local function fn2()
 						if n122 ~= n12 then
 							break
 						end
-						fn53()
+						fn54()
 					end
 				end)
 
@@ -37948,25 +37963,25 @@ local function fn2()
 						end
 
 						if tbl20.Info.Distance then
-							fn50()
+							fn51()
 						end
 					end
 				end)
 
-				fn52()
+				fn53()
 			end
 
-			local function fn57()
+			local function fn58()
 				if tbl20.Eggs then
-					fn56()
+					fn57()
 				else
-					fn55()
+					fn56()
 				end
 			end
 
 			local tbl24, tbl25, flag5 = {Eggs = nil}, {Eggs = false}, false
 
-			local function fn58()
+			local function fn59()
 				if flag5 then
 					return
 				end
@@ -37979,16 +37994,16 @@ local function fn2()
 				end
 
 				tbl20.Eggs = v12
-				fn57()
+				fn58()
 			end
 
-			fn33(function()
+			fn34(function()
 				flag5 = true
 				tbl20.Eggs = false
-				fn55()
+				fn56()
 			end)
 
-			local function fn59(arg)
+			local function fn60(arg)
 				local tbl26 = {}
 
 				if type(arg) == "table" then
@@ -38006,7 +38021,7 @@ local function fn2()
 
 			tbl24.Eggs = esp:Toggle("ESP Eggs", false, function(arg)
 				tbl25.Eggs = arg == true
-				tbl12.SyncSoon(fn58)
+				tbl12.SyncSoon(fn59)
 			end)
 
 			esp:Toggle("ESP Fixed Size", false, function(fixedSize)
@@ -38014,18 +38029,18 @@ local function fn2()
 
 				if tbl20.FixedSize ~= fixedSize then
 					tbl20.FixedSize = fixedSize
-					fn54()
+					fn55()
 				end
 			end, nil, tbl24.Eggs)
 
 			esp:Toggle("ESP Own Base Eggs", true, function(arg)
 				tbl20.OwnBase = arg ~= false
-				fn50()
+				fn51()
 			end, "Also show the eggs placed in your own base", tbl24.Eggs)
 
 			esp:Toggle("ESP Other Base Eggs", false, function(arg)
 				tbl20.OtherBases = arg == true
-				fn50()
+				fn51()
 			end, "Also show the eggs placed in other players bases", tbl24.Eggs)
 
 			do
@@ -38099,17 +38114,17 @@ local function fn2()
 					return tbl26[1]
 				end)(5), function(arg)
 					tbl20.MinRarity = tbl27[((type(arg) == "table") and arg[1]) or arg] or 0
-					fn50()
+					fn51()
 				end, false, "Show eggs of the chosen rarity and every rarity above it", tbl24.Eggs)
 
 				esp:Dropdown("ESP Show Info", tbl14, tbl15, function(arg)
-					tbl20.Info = fn59(arg)
-					fn50()
+					tbl20.Info = fn60(arg)
+					fn51()
 				end, true, nil, tbl24.Eggs)
 
 				local tbl33, n15, str3 = {["K/s"] = {Min = 0, Max = 1000, Mult = 1000}, ["M/s"] = {Min = 0, Max = 1000, Mult = 1000000}, ["B/s"] = {Min = 0, Max = 100, Mult = 1000000000}}, 0, "M/s"
 
-				local function fn60(arg, arg2)
+				local function fn61(arg, arg2)
 					if arg ~= nil then
 						n15 = math.max(0, math.floor(tonumber(arg) or n15))
 					end
@@ -38120,11 +38135,11 @@ local function fn2()
 
 					arg2, arg = tbl33[str3] or tbl33["M/s"], n15
 					tbl20.MinValue = arg * arg2.Mult
-					fn50()
+					fn51()
 				end
 
 				esp:Slider("Min ESP Value", 0, 0, 0, function(arg)
-					fn60(math.floor(arg / 1000), "K/s")
+					fn61(math.floor(arg / 1000), "K/s")
 				end, "log", nil, nil, tbl24.Eggs)
 
 				esp:Slider("ESP Egg Size", 50, 200, 75, function(arg)
@@ -38133,7 +38148,7 @@ local function fn2()
 					if num then
 						if tbl20.SizeScale ~= (num / 100) then
 							tbl20.SizeScale = num / 100
-							fn54()
+							fn55()
 						end
 					end
 				end, "%", 5, nil, tbl24.Eggs)
@@ -38147,7 +38162,7 @@ local function fn2()
 			tbl14.Chasing = tbl12.Palettes.Red
 			local orange, tbl15, tbl16, flag, v6 = tbl12.Palettes.Orange, {}, {}, false
 
-			local function fn35(arg)
+			local function fn36(arg)
 				local attribute = arg:GetAttribute("GuardState")
 
 				if attribute == "Sleeping" then
@@ -38166,18 +38181,18 @@ local function fn2()
 				return (attribute and tostring(attribute)) or "Awake"
 			end
 
-			local function fn36(arg, arg2)
+			local function fn37(arg, arg2)
 				local orange2 = tbl14[arg2:GetAttribute("GuardState")] or orange
 				arg.Highlight.FillColor = orange2.Outline
 				arg.Highlight.OutlineColor = orange2.Outline
-				tbl12.SetRow(arg.StateRow, fn35(arg2), orange2)
-			end
-
-			local function fn37(arg)
-				arg.Tag.Size = UDim2.fromOffset(tbl12.ScaledWidth(n3, n5), math.floor(tbl12.RowHeight(n5) * 1.6))
+				tbl12.SetRow(arg.StateRow, fn36(arg2), orange2)
 			end
 
 			local function fn38(arg)
+				arg.Tag.Size = UDim2.fromOffset(tbl12.ScaledWidth(n3, n5), math.floor(tbl12.RowHeight(n5) * 1.6))
+			end
+
+			local function fn39(arg)
 				local v7 = tbl15[arg]
 				if not (v7) then
 					return
@@ -38188,7 +38203,7 @@ local function fn2()
 				v7.Tag:Destroy()
 			end
 
-			local function fn39(arg, adornee)
+			local function fn40(arg, adornee)
 				if tbl15[adornee] then
 					return
 				end
@@ -38206,7 +38221,7 @@ local function fn2()
 				end
 
 				local highlight = Instance.new("Highlight")
-				highlight.Name = fn34()
+				highlight.Name = fn35()
 				highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 				highlight.FillTransparency = 0.76
 				highlight.OutlineTransparency = 0.02
@@ -38220,31 +38235,31 @@ local function fn2()
 				tbl12.SetRow(result, tostring(arg) .. " Guard", tbl12.Palettes.Sheen)
 				local tbl17 = {Highlight = highlight, Tag = v8, StateRow = v7, Connections = {}}
 				tbl15[adornee] = tbl17
-				fn37(tbl17)
-				fn36(tbl17, adornee)
+				fn38(tbl17)
+				fn37(tbl17, adornee)
 
-				local function fn40()
-					fn36(tbl17, adornee)
+				local function fn41()
+					fn37(tbl17, adornee)
 				end
 
-				table.insert(tbl17.Connections, adornee:GetAttributeChangedSignal("GuardState"):Connect(fn40))
-				table.insert(tbl17.Connections, adornee:GetAttributeChangedSignal("TargetPlayer"):Connect(fn40))
+				table.insert(tbl17.Connections, adornee:GetAttributeChangedSignal("GuardState"):Connect(fn41))
+				table.insert(tbl17.Connections, adornee:GetAttributeChangedSignal("TargetPlayer"):Connect(fn41))
 
 				table.insert(tbl17.Connections, adornee.AncestryChanged:Connect(function()
 					local workspaceRef = workspace
 
 					if not (adornee:IsDescendantOf(workspaceRef)) then
-						fn38(adornee)
+						fn39(adornee)
 					end
 				end))
 			end
 
-			local function fn40()
+			local function fn41()
 				flag = false
 				tbl12.DisconnectAll(tbl16)
 
 				for k in pairs(tbl15) do
-					fn38(k)
+					fn39(k)
 				end
 
 				if v6 then
@@ -38253,37 +38268,37 @@ local function fn2()
 				end
 			end
 
-			local function fn41()
+			local function fn42()
 				if flag then
 					return
 				end
 				flag = true
-				tbl16 = tbl12.WatchGuards(fn39)
+				tbl16 = tbl12.WatchGuards(fn40)
 			end
 
 			local v7
 			local flag2, flag3 = false, false
 
-			local function fn42()
+			local function fn43()
 				if flag3 then
 					return
 				end
 
 				if tbl12.ReadToggle(v7, flag2) then
-					fn41()
+					fn42()
 				elseif flag then
-					fn40()
+					fn41()
 				end
 			end
 
-			fn33(function()
+			fn34(function()
 				flag3 = true
-				fn40()
+				fn41()
 			end)
 
 			v7 = esp:Toggle("ESP Guards", false, function(arg)
 				flag2 = arg == true
-				tbl12.SyncSoon(fn42)
+				tbl12.SyncSoon(fn43)
 			end)
 
 			esp:Slider("ESP Guard Size", 50, 200, 75, function(arg)
@@ -38301,7 +38316,7 @@ local function fn2()
 					n5 = num / 100
 
 					for _, v8 in pairs(tbl15) do
-						fn37(v8)
+						fn38(v8)
 					end
 				end
 			end, "%", 5, nil, v7)
@@ -38315,7 +38330,7 @@ local function fn2()
 			local tbl14, tbl15, tbl16, tbl17, n4, tbl18, v7 = {}, {}, {}, {}, 0.75, {Name = true, Username = false, Avatar = false, Tool = true}
 			local flag2, flag3 = false, false
 
-			local function fn35(arg)
+			local function fn36(arg)
 				arg = tostring(arg or "")
 				if arg:match("^%d+$") then
 					return "rbxassetid://" .. arg
@@ -38323,7 +38338,7 @@ local function fn2()
 				return arg
 			end
 
-			local function fn36(arg)
+			local function fn37(arg)
 				if arg then
 					if not (arg:IsA("Tool")) then
 						return ""
@@ -38332,7 +38347,7 @@ local function fn2()
 					return ""
 				end
 
-				local v8 = fn35(arg.TextureId)
+				local v8 = fn36(arg.TextureId)
 				if v8 ~= "" then
 					return v8
 				end
@@ -38342,14 +38357,14 @@ local function fn2()
 					i2 = arg:GetAttribute(v9)
 
 					if type(i2) == "string" then
-						if fn35(i2) ~= "" then
-							return fn35(i2)
+						if fn36(i2) ~= "" then
+							return fn36(i2)
 						end
 					end
 				end
 
 				for _, descendant in ipairs(arg:GetDescendants()) do
-					v8 = if descendant:IsA("Decal") then fn35(descendant.Texture) else if descendant:IsA("Texture") then fn35(descendant.Texture) else if descendant:IsA("ImageLabel") then fn35(descendant.Image) else if descendant:IsA("ImageButton") then fn35(descendant.Image) else v8
+					v8 = if descendant:IsA("Decal") then fn36(descendant.Texture) else if descendant:IsA("Texture") then fn36(descendant.Texture) else if descendant:IsA("ImageLabel") then fn36(descendant.Image) else if descendant:IsA("ImageButton") then fn36(descendant.Image) else v8
 					if v8 ~= "" then
 						return v8
 					end
@@ -38358,14 +38373,14 @@ local function fn2()
 				return ""
 			end
 
-			local function fn37()
+			local function fn38()
 				local currentCamera = workspace.CurrentCamera
 				local y2, max, floor = (currentCamera and currentCamera.ViewportSize.Y) or 1080, math.max, math.floor
 				local n5, n42 = math.clamp(y2 * 0.024, 26, 35), n4
 				return max(1, floor(n5 * n42))
 			end
 
-			local function fn38(text, size)
+			local function fn39(text, size)
 				local str = text .. ("@" .. size)
 				local x2 = tbl17[str]
 				if x2 then
@@ -38387,7 +38402,7 @@ local function fn2()
 				return x2
 			end
 
-			local function fn39(uiStroke, color, arg, arg2)
+			local function fn40(uiStroke, color, arg, arg2)
 				uiStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
 				uiStroke.Color = color
 				uiStroke.LineJoinMode = Enum.LineJoinMode.Round
@@ -38400,7 +38415,7 @@ local function fn2()
 
 			local function createTextLabel(parent, zIndex)
 				local textLabel = Instance.new("TextLabel")
-				textLabel.Name = fn34()
+				textLabel.Name = fn35()
 				textLabel.AnchorPoint = Vector2.new(0, 0.5)
 				textLabel.BackgroundTransparency = 1
 				textLabel.FontFace = font
@@ -38416,25 +38431,25 @@ local function fn2()
 
 			local function createImageLabel(parent, zIndex)
 				local imageLabel = Instance.new("ImageLabel")
-				imageLabel.Name = fn34()
+				imageLabel.Name = fn35()
 				imageLabel.AnchorPoint = Vector2.new(0, 0.5)
 				imageLabel.BackgroundTransparency = 1
 				imageLabel.ScaleType = Enum.ScaleType.Fit
 				imageLabel.ZIndex = zIndex
 				imageLabel.Parent = parent
 				parent = Instance.new("UIAspectRatioConstraint")
-				parent.Name = fn34()
+				parent.Name = fn35()
 				parent.AspectRatio = 1
 				parent.Parent = imageLabel
 				return imageLabel
 			end
 
-			local function fn40(arg)
-				local v8, visible, visible2, visible3 = fn37(), (tbl18.Name == true) or (tbl18.Username == true), tbl18.Avatar == true, (tbl18.Tool == true) and (arg.ToolIcon.Image ~= "")
+			local function fn41(arg)
+				local v8, visible, visible2, visible3 = fn38(), (tbl18.Name == true) or (tbl18.Username == true), tbl18.Avatar == true, (tbl18.Tool == true) and (arg.ToolIcon.Image ~= "")
 				local visible4, visible5, n5, n6, name = (visible2 and math.floor(v8 * 0.72)) or 0, (visible3 and math.floor(v8 * 0.82)) or 0, math.floor(v8 * 0.7), math.max(1, math.floor(v8 * 0.04)), ((tbl18.Username == true) and arg.Player.Name) or arg.Player.DisplayName
 				arg.Name.Text = name
 				arg.Shadow.Text = name
-				local visible6, visible7 = (visible and math.floor(math.clamp(fn38(name, n5) + 4, n5, 230))) or 0, (visible2 and visible4) or 0
+				local visible6, visible7 = (visible and math.floor(math.clamp(fn39(name, n5) + 4, n5, 230))) or 0, (visible2 and visible4) or 0
 				name = ((visible7 > 0) and (visible7 + n6)) or 0
 				local visible8 = (visible and (name + visible6)) or visible7
 				visible7 = ((visible8 > 0) and (visible8 + n6)) or 0
@@ -38461,7 +38476,7 @@ local function fn2()
 
 			local function createUIGradient(arg, adornee, arg2, parent)
 				local highlight = Instance.new("Highlight")
-				highlight.Name = fn34()
+				highlight.Name = fn35()
 				highlight.Adornee = adornee
 				highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 				highlight.FillColor = Color3.fromRGB(0, 67, 148)
@@ -38471,7 +38486,7 @@ local function fn2()
 				highlight.Parent = v6
 				adornee = parent or arg2
 				local n5, billboardGui = if adornee ~= arg2 then math.clamp((arg2.Position.Y - adornee.Position.Y) + 3.1, 3.8, 6) else 3.1, Instance.new("BillboardGui")
-				billboardGui.Name = fn34()
+				billboardGui.Name = fn35()
 				billboardGui.Adornee = adornee
 				billboardGui.AlwaysOnTop = true
 				billboardGui.LightInfluence = 0
@@ -38480,14 +38495,14 @@ local function fn2()
 				billboardGui.StudsOffsetWorldSpace = Vector3.new(0, n5, 0)
 				billboardGui.Parent = v6
 				arg2 = Instance.new("Frame")
-				arg2.Name = fn34()
+				arg2.Name = fn35()
 				arg2.Size = UDim2.fromScale(1, 1)
 				arg2.BackgroundTransparency = 1
 				arg2.Parent = billboardGui
 				parent = createImageLabel(arg2, 2)
 				parent.ScaleType = Enum.ScaleType.Crop
 				adornee = Instance.new("UICorner")
-				adornee.Name = fn34()
+				adornee.Name = fn35()
 				adornee.CornerRadius = UDim.new(1, 0)
 				adornee.Parent = parent
 				adornee = createTextLabel(arg2, 1)
@@ -38496,16 +38511,16 @@ local function fn2()
 				local v8 = createTextLabel(arg2, 2)
 				v8.TextColor3 = Color3.fromRGB(255, 255, 255)
 				local uiStroke = Instance.new("UIStroke")
-				uiStroke.Name = fn34()
-				fn39(uiStroke, Color3.fromRGB(255, 255, 255), 0.044, 1.4)
+				uiStroke.Name = fn35()
+				fn40(uiStroke, Color3.fromRGB(255, 255, 255), 0.044, 1.4)
 				uiStroke.Parent = v8
 				local uiGradient = Instance.new("UIGradient")
-				uiGradient.Name = fn34()
+				uiGradient.Name = fn35()
 				uiGradient.Color = colorSequence2
 				uiGradient.Rotation = 90
 				uiGradient.Parent = uiStroke
 				uiGradient = Instance.new("UIGradient")
-				uiGradient.Name = fn34()
+				uiGradient.Name = fn35()
 				uiGradient.Color = colorSequence
 				uiGradient.Rotation = 90
 				uiGradient.Parent = v8
@@ -38513,11 +38528,11 @@ local function fn2()
 				uiStroke.ImageColor3 = Color3.fromRGB(0, 0, 0)
 				uiStroke.ImageTransparency = 0.35
 				uiGradient = {Player = arg, Highlight = highlight, Billboard = billboardGui, Avatar = parent, Shadow = adornee, Name = v8, ToolShadow = uiStroke, ToolIcon = createImageLabel(arg2, 2)}
-				fn40(uiGradient)
+				fn41(uiGradient)
 				return uiGradient
 			end
 
-			local function fn41(arg)
+			local function fn42(arg)
 				if arg.NameHumanoid then
 					if arg.NameHumanoid.Parent then
 						if arg.NameDistance ~= nil then
@@ -38532,14 +38547,14 @@ local function fn2()
 				arg.NameDistance = nil
 			end
 
-			local function fn42(arg, arg2)
+			local function fn43(arg, arg2)
 				local humanoid = arg2 and (arg2:FindFirstChildOfClass("Humanoid"))
 				if not humanoid then
 					return
 				end
 
 				if arg.NameHumanoid ~= humanoid then
-					fn41(arg)
+					fn42(arg)
 					arg.NameHumanoid = humanoid
 					arg.NameDistance = humanoid.NameDisplayDistance
 				end
@@ -38549,7 +38564,7 @@ local function fn2()
 				end)
 			end
 
-			local function fn43(arg)
+			local function fn44(arg)
 				tbl12.DisconnectAll(arg.CharacterConnections)
 
 				if arg.Tag then
@@ -38564,11 +38579,11 @@ local function fn2()
 					arg.Tag = nil
 				end
 
-				fn41(arg)
+				fn42(arg)
 				arg.Character = nil
 			end
 
-			local function fn44(arg)
+			local function fn45(arg)
 				if arg.Tag then
 					if not (arg.Character) then
 						return
@@ -38577,13 +38592,13 @@ local function fn2()
 					return
 				end
 
-				local v8 = fn36(arg.Character:FindFirstChildOfClass("Tool"))
+				local v8 = fn37(arg.Character:FindFirstChildOfClass("Tool"))
 				arg.Tag.ToolIcon.Image = v8
 				arg.Tag.ToolShadow.Image = v8
-				fn40(arg.Tag)
+				fn41(arg.Tag)
 			end
 
-			local function fn45(arg, arg2, arg3)
+			local function fn46(arg, arg2, arg3)
 				local ok = tbl16[arg2.UserId]
 
 				if ok == nil then
@@ -38606,8 +38621,8 @@ local function fn2()
 				end
 			end
 
-			local function fn46(arg, arg2, character)
-				fn43(arg)
+			local function fn47(arg, arg2, character)
+				fn44(arg)
 				arg.Version = arg.Version + 1
 				local version = arg.Version
 
@@ -38653,13 +38668,13 @@ local function fn2()
 
 					local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
 					arg.Tag = createUIGradient(arg2, character, head, ((humanoidRootPart and humanoidRootPart:IsA("BasePart")) and humanoidRootPart) or nil)
-					fn42(arg, character)
+					fn43(arg, character)
 
-					local function fn47()
+					local function fn48()
 						task.defer(function()
 							if flag then
 								if arg.Version == version then
-									fn44(arg)
+									fn45(arg)
 								end
 							end
 						end)
@@ -38667,15 +38682,15 @@ local function fn2()
 
 					table.insert(arg.CharacterConnections, character.ChildAdded:Connect(function(child)
 						if child:IsA("Tool") then
-							fn47()
+							fn48()
 						elseif child:IsA("Humanoid") then
-							fn42(arg, character)
+							fn43(arg, character)
 						end
 					end))
 
 					table.insert(arg.CharacterConnections, character.ChildRemoved:Connect(function(child)
 						if child:IsA("Tool") then
-							fn47()
+							fn48()
 						end
 					end))
 
@@ -38685,28 +38700,28 @@ local function fn2()
 
 							if not (character:IsDescendantOf(workspaceRef)) then
 								arg.Version = arg.Version + 1
-								fn43(arg)
+								fn44(arg)
 							end
 						end
 					end))
 
-					fn44(arg)
-					fn45(arg, arg2, version)
+					fn45(arg)
+					fn46(arg, arg2, version)
 				end)
 			end
 
-			local function fn47(player2)
+			local function fn48(player2)
 				local v8 = tbl14[player2]
 				if not (v8) then
 					return
 				end
 				v8.Version = v8.Version + 1
-				fn43(v8)
+				fn44(v8)
 				tbl12.DisconnectAll(v8.PlayerConnections)
 				tbl14[player2] = nil
 			end
 
-			local function fn48(player2)
+			local function fn49(player2)
 				if player2 == player then
 					return
 				elseif tbl14[player2] then
@@ -38717,28 +38732,28 @@ local function fn2()
 				tbl14[player2] = tbl19
 
 				table.insert(tbl19.PlayerConnections, player2.CharacterAdded:Connect(function(character)
-					fn46(tbl19, player2, character)
+					fn47(tbl19, player2, character)
 				end))
 
 				table.insert(tbl19.PlayerConnections, player2.CharacterRemoving:Connect(function(character)
 					if tbl19.Character == character then
 						tbl19.Version = tbl19.Version + 1
-						fn43(tbl19)
+						fn44(tbl19)
 					end
 				end))
 
-				fn46(tbl19, player2, player2.Character)
+				fn47(tbl19, player2, player2.Character)
 			end
 
-			local function fn49()
+			local function fn50()
 				for _, v8 in pairs(tbl14) do
 					if v8.Tag then
-						fn40(v8.Tag)
+						fn41(v8.Tag)
 					end
 				end
 			end
 
-			local function fn50()
+			local function fn51()
 				flag = false
 				n3 += 1
 				tbl12.DisconnectAll(tbl15)
@@ -38749,7 +38764,7 @@ local function fn2()
 				end
 
 				for _, v8 in ipairs(tbl19) do
-					fn47(v8)
+					fn48(v8)
 				end
 
 				if v6 then
@@ -38758,7 +38773,7 @@ local function fn2()
 				end
 			end
 
-			local function fn51()
+			local function fn52()
 				if flag then
 					return
 				end
@@ -38768,15 +38783,15 @@ local function fn2()
 				v6 = tbl12.CreateRuntime()
 
 				for _, player2 in ipairs(Players:GetPlayers()) do
-					fn48(player2)
+					fn49(player2)
 				end
 
-				table.insert(tbl15, Players.PlayerAdded:Connect(fn48))
-				table.insert(tbl15, Players.PlayerRemoving:Connect(fn47))
+				table.insert(tbl15, Players.PlayerAdded:Connect(fn49))
+				table.insert(tbl15, Players.PlayerRemoving:Connect(fn48))
 				local currentCamera = workspace.CurrentCamera
 
 				if currentCamera then
-					table.insert(tbl15, currentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(fn49))
+					table.insert(tbl15, currentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(fn50))
 				end
 
 				task.spawn(function()
@@ -38803,10 +38818,10 @@ local function fn2()
 
 								if character:IsDescendantOf(flag4) then
 									if v8.Character ~= character then
-										fn46(v8, k, character)
+										fn47(v8, k, character)
 									elseif adornee then
 									else
-										fn46(v8, k, character)
+										fn47(v8, k, character)
 									end
 								end
 							end
@@ -38815,26 +38830,26 @@ local function fn2()
 				end)
 			end
 
-			local function fn52()
+			local function fn53()
 				if flag3 then
 					return
 				end
 
 				if tbl12.ReadToggle(v7, flag2) then
-					fn51()
+					fn52()
 				elseif flag then
-					fn50()
+					fn51()
 				end
 			end
 
-			fn33(function()
+			fn34(function()
 				flag3 = true
-				fn50()
+				fn51()
 			end)
 
 			v7 = esp:Toggle("ESP Players", false, function(arg)
 				flag2 = arg == true
-				tbl12.SyncSoon(fn52)
+				tbl12.SyncSoon(fn53)
 			end)
 
 			esp:Dropdown("ESP Player Info", {"Name", "Username", "Avatar", "Tool"}, {"Name", "Tool"}, function(arg)
@@ -38847,7 +38862,7 @@ local function fn2()
 				end
 
 				tbl18 = tbl19
-				fn49()
+				fn50()
 			end, true, nil, v7)
 
 			esp:Slider("ESP Player Size", 50, 200, 75, function(arg)
@@ -38858,7 +38873,7 @@ local function fn2()
 
 					if arg ~= (num / 100) then
 						n4 = math.clamp(num / 100, 0.5, 2)
-						fn49()
+						fn50()
 					end
 				end
 			end, "%", 5, nil, v7)
@@ -38871,12 +38886,12 @@ local function fn2()
 		do
 			local ScreenGui, Frame, tbl12
 
-			local function fn33()
+			local function fn34()
 				ScreenGui = fn3("ScreenGui", {Parent = (gethui and gethui()) or getService("CoreGui"), ResetOnSpawn = false, ZIndexBehavior = Enum.ZIndexBehavior.Sibling, DisplayOrder = 49, Enabled = false})
 				Frame, tbl12 = fn3("Frame", {Parent = ScreenGui, BackgroundTransparency = 1, ClipsDescendants = true}), {}
 			end
 
-			fn33()
+			fn34()
 			local flag = false
 
 			table.insert(ctx.state.cleanup, function()
@@ -38889,7 +38904,7 @@ local function fn2()
 			local v5
 			local n2, tbl14 = 0, {"K", "M", "B", "T", "Qa", "Qi"}
 
-			local function fn34(arg)
+			local function fn35(arg)
 				local n3 = 0
 
 				while (arg >= 1000) and (n3 < #tbl14) do
@@ -38902,7 +38917,7 @@ local function fn2()
 			RunService2, tbl13 = setmetatable, {__mode = "k"}
 			local v6 = RunService2({}, tbl13)
 
-			local function fn35(arg, arg2, arg3, arg4)
+			local function fn36(arg, arg2, arg3, arg4)
 				if arg3 > 4 then
 					return
 				elseif arg4[arg] then
@@ -38915,7 +38930,7 @@ local function fn2()
 					local ok, result = pcall(debug.getupvalues, arg)
 
 					for k, v7 in next, (ok and result) or {}, nil do
-						k = fn35(v7, arg2, arg3 + 1, arg4)
+						k = fn36(v7, arg2, arg3 + 1, arg4)
 						if k then
 							return k
 						end
@@ -38927,7 +38942,7 @@ local function fn2()
 
 					for k, v7 in next, arg, nil do
 						if (type(v7) == "table") or (type(v7) == "function") then
-							k = fn35(v7, arg2, arg3 + 1, arg4)
+							k = fn36(v7, arg2, arg3 + 1, arg4)
 							if k then
 								return k
 							end
@@ -38936,7 +38951,7 @@ local function fn2()
 				end
 			end
 
-			local function fn36()
+			local function fn37()
 				local backpack = ctx.localPlayer
 				local backpackGui = backpack.PlayerGui:FindFirstChild("BackpackGui")
 				backpack = backpackGui and (backpackGui:FindFirstChild("Backpack"))
@@ -38971,7 +38986,7 @@ local function fn2()
 								backpack, backpackGui = pcall(getconnections, v9.Activated)
 
 								for _, v10 in ipairs((backpack and backpackGui) or {}) do
-									k = v10.Function and fn35(v10.Function, v9, 0, {})
+									k = v10.Function and fn36(v10.Function, v9, 0, {})
 									if k then
 										break
 									end
@@ -38991,13 +39006,13 @@ local function fn2()
 				return tbl15
 			end
 
-			local function fn37(arg, arg2)
+			local function fn38(arg, arg2)
 				local ok, result = pcall(arg.GetAttribute, arg, arg2)
 				return (ok and result) or nil
 			end
 
-			local function fn38(arg)
-				local str, scale = ("%s|%s|%s|%s"):format(tostring(fn37(arg, "Category")), tostring(fn37(arg, "Scale")), tostring(fn37(arg, "BaseMutation")), tostring(fn37(arg, "Mutations"))), v4[arg]
+			local function fn39(arg)
+				local str, scale = ("%s|%s|%s|%s"):format(tostring(fn38(arg, "Category")), tostring(fn38(arg, "Scale")), tostring(fn38(arg, "BaseMutation")), tostring(fn38(arg, "Mutations"))), v4[arg]
 
 				if scale then
 					if scale[1] == str then
@@ -39007,7 +39022,7 @@ local function fn2()
 
 				local tbl15, tbl16 = {}, {}
 
-				local function fn39(arg2)
+				local function fn40(arg2)
 					arg2 = ((type(arg2) == "string") and arg2:match("^%s*(.-)%s*$")) or ""
 
 					if arg2 ~= "" then
@@ -39022,26 +39037,26 @@ local function fn2()
 					end
 				end
 
-				fn39(fn37(arg, "BaseMutation"))
+				fn40(fn38(arg, "BaseMutation"))
 
-				for match in tostring(fn37(arg, "Mutations") or ""):gmatch("[^,]+") do
-					fn39(match)
+				for match in tostring(fn38(arg, "Mutations") or ""):gmatch("[^,]+") do
+					fn40(match)
 				end
 
-				scale = fn37(arg, "Scale")
+				scale = fn38(arg, "Scale")
 
 				if scale then
 				else
-					local num, v7, num2 = tonumber(fn37(arg, "Weight")), ctx.fn17, tonumber(ctx.fn17("Rec", "WeightKgForScale", fn37(arg, "Category"), 1))
+					local num, v7, num2 = tonumber(fn38(arg, "Weight")), ctx.fn17, tonumber(ctx.fn17("Rec", "WeightKgForScale", fn38(arg, "Category"), 1))
 					scale = (((num and num2) and (num2 > 0)) and ((num / num2) ^ 0.3333333333333333)) or 1
 				end
 
-				fn39 = A(fn37(arg, "Category"), scale, tbl15)
-				v4[arg] = {str, fn39}
-				return fn39
+				fn40 = A(fn38(arg, "Category"), scale, tbl15)
+				v4[arg] = {str, fn40}
+				return fn40
 			end
 
-			local function fn39()
+			local function fn40()
 				local TextLabel = fn3("TextLabel", {BackgroundTransparency = 1, FontFace = font, TextScaled = true, TextColor3 = Color3.new(1, 1, 1), Text = "", ZIndex = 5})
 				fn3("UIGradient", {Parent = TextLabel, Rotation = 90, Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(196, 255, 176)), ColorSequenceKeypoint.new(0.5, Color3.fromRGB(88, 255, 74)), ColorSequenceKeypoint.new(1, Color3.fromRGB(32, 176, 14))})})
 				local UIStroke = fn3("UIStroke", {Parent = TextLabel, Color = Color3.new(1, 1, 1), Thickness = 1.6, Transparency = 0.05, LineJoinMode = Enum.LineJoinMode.Round})
@@ -39049,7 +39064,7 @@ local function fn2()
 				return {l = TextLabel, k = UIStroke}
 			end
 
-			local function fn40(arg, arg2)
+			local function fn41(arg, arg2)
 				while arg and (arg ~= arg2) do
 					if arg:IsA("GuiObject") then
 						if not (arg.Visible) then
@@ -39072,7 +39087,7 @@ local function fn2()
 
 				if (ScreenGui.Parent == nil) or (Frame.Parent ~= ScreenGui) then
 					pcall(ScreenGui.Destroy, ScreenGui)
-					fn33()
+					fn34()
 				end
 
 				local absoluteSize = ctx.localPlayer
@@ -39089,7 +39104,7 @@ local function fn2()
 
 				if os.clock() > n2 then
 					n2 = os.clock() + 2
-					v5 = fn36() or v5
+					v5 = fn37() or v5
 				end
 
 				if not (v5) then
@@ -39104,7 +39119,7 @@ local function fn2()
 				backpack = backpack and (backpack:FindFirstChild("Main"))
 				backpack = backpack and (backpack:FindFirstChild("Inventory"))
 				backpack = backpack and (backpack:FindFirstChild("ScrollingFrame"))
-				ScreenGui2, ScreenGui4 = (backpack ~= nil) and fn40(backpack, backpackGui), ScreenGui.AbsolutePosition
+				ScreenGui2, ScreenGui4 = (backpack ~= nil) and fn41(backpack, backpackGui), ScreenGui.AbsolutePosition
 				Frame.Visible = ScreenGui2
 
 				if ScreenGui2 then
@@ -39120,12 +39135,12 @@ local function fn2()
 					k, ScreenGui3 = (type(v7) == "table") and rawget(v7, "Frame"), (type(v7) == "table") and rawget(v7, "Tool")
 					displayOrder = (typeof(k) == "Instance") and (((typeof(ScreenGui3) == "Instance") and (ScreenGui3.Parent ~= nil)) or ((type(ScreenGui3) == "table") and (type(rawget(ScreenGui3, "GetAttribute")) == "function")))
 
-					if (displayOrder and ((fn37(ScreenGui3, "ItemType") or "Asset"):sub(1, 5) == "Asset")) and fn37(ScreenGui3, "Category") then
+					if (displayOrder and ((fn38(ScreenGui3, "ItemType") or "Asset"):sub(1, 5) == "Asset")) and fn38(ScreenGui3, "Category") then
 						playerGui = (backpack ~= nil) and k:IsDescendantOf(backpack)
-						screenInsets = (((if playerGui then ScreenGui2 else not playerGui) and fn40(k, backpackGui)) and fn38(ScreenGui3)) or 0
+						screenInsets = (((if playerGui then ScreenGui2 else not playerGui) and fn41(k, backpackGui)) and fn39(ScreenGui3)) or 0
 
 						if screenInsets > 0 then
-							local v8 = tbl12[v7] or fn39()
+							local v8 = tbl12[v7] or fn40()
 							tbl12[v7] = v8
 							ScreenGui5[v7] = true
 							local Frame2 = (playerGui and Frame) or ScreenGui
@@ -39142,7 +39157,7 @@ local function fn2()
 							local text, absoluteSize2 = k.AbsolutePosition - ((playerGui and backpack.AbsolutePosition) or ScreenGui4), k.AbsoluteSize
 							v8.l.Position, v8.l.Size = UDim2.fromOffset(text.X + (absoluteSize2.X * 0.06), text.Y + (absoluteSize2.Y * 0.05)), UDim2.fromOffset(absoluteSize2.X * 0.88, absoluteSize2.Y * 0.23)
 							v8.k.Thickness = math.clamp(absoluteSize2.Y / 52, 1, 2.2)
-							text = fn34(screenInsets)
+							text = fn35(screenInsets)
 
 							if v8.l.Text ~= text then
 								v8.l.Text = text
@@ -39169,8 +39184,8 @@ local function fn2()
 	g("41_move#1", function()
 		local movement, flag = tbl3.Movement, false
 
-		fn13(movement, "Speed Boost", "boostOn", false, function(arg)
-			fn21("boost", arg and heartbeat, function()
+		fn14(movement, "Speed Boost", "boostOn", false, function(arg)
+			fn22("boost", arg and heartbeat, function()
 				local v4 = ctx.fn4
 				local v5, v6 = v4(), ctx.fn11
 				v4 = v6()
@@ -39280,7 +39295,7 @@ local function fn2()
 			flag2 = jump3
 		end)
 
-		fn13(movement, "Infinite Jump", "jump", false)
+		fn14(movement, "Infinite Jump", "jump", false)
 		movement = ctx.slot28
 		movement.god = false
 		local ok, result = pcall(require, ReplicatedStorage.Shared.Modules.Ragdoll)
@@ -39289,7 +39304,7 @@ local function fn2()
 		tbl12[Enum.HumanoidStateType.Ragdoll] = true
 		tbl12[Enum.HumanoidStateType.FallingDown] = true
 
-		local function fn33()
+		local function fn34()
 			local assemblyLinearVelocity = ctx.localPlayer
 			local character, v4 = assemblyLinearVelocity.Character, ctx.fn4
 			local v5, v6 = v4(), ctx.fn11
@@ -39370,7 +39385,7 @@ local function fn2()
 
 			task.spawn(function()
 				for i2 = 1, 15, 1 do
-					pcall(fn33)
+					pcall(fn34)
 					task.wait(0.033)
 				end
 			end)
@@ -39381,7 +39396,7 @@ local function fn2()
 		local character, v4 = tbl3.Character, ctx.state
 		v4.prot = character
 
-		fn13(character, "Invisibility", "invis", false, function(arg)
+		fn14(character, "Invisibility", "invis", false, function(arg)
 			local v5 = ctx.state
 
 			if v5.invPin then
@@ -39390,7 +39405,7 @@ local function fn2()
 			end
 		end, "Makes you invisible to other players")
 
-		fn13(character, "Anti Ragdoll", "antiRag", true, function(arg)
+		fn14(character, "Anti Ragdoll", "antiRag", true, function(arg)
 			local attributeChangedSignal
 
 			if arg then
@@ -39400,7 +39415,7 @@ local function fn2()
 				attributeChangedSignal = arg
 			end
 
-			fn21("ragAttr", attributeChangedSignal, function()
+			fn22("ragAttr", attributeChangedSignal, function()
 				local v5 = ctx.fn19
 
 				if v5() then
@@ -39408,12 +39423,12 @@ local function fn2()
 				end
 			end)
 
-			fn21("ragRemote", ((arg and ok) and result.ClientRagdollRemote) and result.ClientRagdollRemote.OnClientEvent, burst)
+			fn22("ragRemote", ((arg and ok) and result.ClientRagdollRemote) and result.ClientRagdollRemote.OnClientEvent, burst)
 		end)
 
 		local tbl13 = {}
 
-		local function fn34(arg)
+		local function fn35(arg)
 			local v5 = ctx.localPlayer
 			if arg:GetAttribute("Owner") == v5.Name then
 				return
@@ -39432,14 +39447,14 @@ local function fn2()
 
 		local CollectionService = getService("CollectionService")
 
-		fn13(character, "Anti Trap", "traps", true, function(arg)
-			fn21("trap", arg and CollectionService:GetInstanceAddedSignal("PlacedTrap"), function(arg2)
-				task.defer(pcall, fn34, arg2)
+		fn14(character, "Anti Trap", "traps", true, function(arg)
+			fn22("trap", arg and CollectionService:GetInstanceAddedSignal("PlacedTrap"), function(arg2)
+				task.defer(pcall, fn35, arg2)
 			end)
 
 			if arg then
 				for _, v5 in ipairs(CollectionService:GetTagged("PlacedTrap")) do
-					pcall(fn34, v5)
+					pcall(fn35, v5)
 				end
 			else
 				local tbl132 = tbl13
@@ -39456,7 +39471,7 @@ local function fn2()
 
 		local tbl14, tbl15, tbl16, flag3 = {}, {ClaimLostPart = true, CatchPrompt = true}, {}, false
 
-		local function fn35(arg)
+		local function fn36(arg)
 			if not (arg:IsA("ProximityPrompt")) then
 				return
 			end
@@ -39479,14 +39494,14 @@ local function fn2()
 			end
 		end
 
-		local function fn36(arg)
+		local function fn37(arg)
 			if arg.Name ~= "CatchPrompt" then
 				return
 			elseif flag3 then
 				return
 			end
 
-			fn35(arg)
+			fn36(arg)
 			flag3 = true
 
 			task.spawn(function()
@@ -39522,10 +39537,10 @@ local function fn2()
 			end)
 		end
 
-		fn13(character, "Instant Prompts", "prompts", true, function(arg)
+		fn14(character, "Instant Prompts", "prompts", true, function(arg)
 			local ProximityPromptService = getService("ProximityPromptService")
-			fn21("prompt", arg and ProximityPromptService.PromptShown, fn35)
-			fn21("starTap", arg and ProximityPromptService.PromptButtonHoldBegan, fn36)
+			fn22("prompt", arg and ProximityPromptService.PromptShown, fn36)
+			fn22("starTap", arg and ProximityPromptService.PromptButtonHoldBegan, fn37)
 
 			if not (arg) then
 				ProximityPromptService = tbl14
@@ -39553,7 +39568,7 @@ local function fn2()
 
 		local v6 = v5({}, tbl18)
 
-		local function fn37()
+		local function fn38()
 			tbl17.act = {}
 			local ok2, result2 = pcall(getgc, false)
 
@@ -39588,7 +39603,7 @@ local function fn2()
 			end
 		end
 
-		local function fn38(arg)
+		local function fn39(arg)
 			if arg then
 				local v7, v8, v82 = ipairs, getconnections
 
@@ -39621,13 +39636,13 @@ local function fn2()
 			tbl17.act = nil
 		end
 
-		fn13(tbl3.Utility, "Anti AFK", "afk", true, fn38)
+		fn14(tbl3.Utility, "Anti AFK", "afk", true, fn39)
 
 		table.insert(ctx.state.cleanup, function()
-			fn38(false)
+			fn39(false)
 		end)
 
-		local v7 = fn14({name = "Afk", gap = 120, at = os.clock() + 60})
+		local v7 = fn15({name = "Afk", gap = 120, at = os.clock() + 60})
 
 		v7.on = function()
 			local v8 = ctx.slot28
@@ -39635,10 +39650,10 @@ local function fn2()
 		end
 
 		v7.fn = function()
-			fn38(true)
+			fn39(true)
 
 			if not (tbl17.act) then
-				fn37()
+				fn38()
 			end
 
 			for _, v8 in ipairs(tbl17.act) do
@@ -39652,19 +39667,19 @@ local function fn2()
 			local v8 = ctx.slot28
 
 			if v8.afk then
-				task.delay(1, fn38, true)
+				task.delay(1, fn39, true)
 			end
 		end)
 	end)
 
 	g("41_move#2", function()
 		local v4 = ctx.state
-		local prot, fn33 = v4.prot
+		local prot, fn34 = v4.prot
 		local invisBusy, v5 = false
 		local v6 = ctx.state
 
 		v6.invPin = function(arg)
-			fn21("invisPin", arg and heartbeat, fn33)
+			fn22("invisPin", arg and heartbeat, fn34)
 		end
 
 		local function invisible()
@@ -39673,7 +39688,7 @@ local function fn2()
 			return (character ~= nil) and (character:GetAttribute("InvisApplied") == true)
 		end
 
-		local function fn34()
+		local function fn35()
 			local state = ctx.state
 			local flag, v7 = state.inDim ~= nil
 
@@ -39691,7 +39706,7 @@ local function fn2()
 		v7.invisible = invisible
 		v8.keepVis = 0
 
-		local function fn35(arg)
+		local function fn36(arg)
 			local v9 = ctx.fn4
 			local v10 = v9()
 
@@ -39722,8 +39737,8 @@ local function fn2()
 			end
 			n2, v9 = ctx.state, ctx.state
 			n2.invisBusy, v9.respawnAt = true, os.clock()
-			fn22()
-			fn35(character)
+			fn23()
+			fn36(character)
 			n2 = ctx.fn5
 			n2("RF/Treadmill/AskDoff")
 
@@ -39763,7 +39778,7 @@ local function fn2()
 		v4.respawn = respawn
 		local flag = false
 
-		local function fn36()
+		local function fn37()
 			if flag then
 				return
 			end
@@ -39791,7 +39806,7 @@ local function fn2()
 			end
 		end
 
-		local function fn37(parent)
+		local function fn38(parent)
 			local v9 = ctx.state
 			v9.invisBusy = true
 			local humanoid, humanoidRootPart = parent:WaitForChild("Humanoid", 10), parent:WaitForChild("HumanoidRootPart", 10)
@@ -39799,7 +39814,7 @@ local function fn2()
 
 			if humanoid then
 				if humanoidRootPart then
-					if fn34() then
+					if fn35() then
 						v9 = ctx.state
 						invisBusy = false
 						v9.invisBusy = false
@@ -39886,10 +39901,10 @@ local function fn2()
 			cFrame = ctx.state
 			invisBusy = false
 			cFrame.invisBusy = false
-			task.delay(1, fn36)
+			task.delay(1, fn37)
 		end
 
-		local function fn38()
+		local function fn39()
 			local v9, v92 = ctx.lastMV
 
 			if v9 then
@@ -39947,7 +39962,7 @@ local function fn2()
 				invis = flag3
 			end
 
-			flag3, flag2 = invis and not fn34()
+			flag3, flag2 = invis and not fn35()
 
 			if flag3 then
 				invis = ctx.state
@@ -39965,7 +39980,7 @@ local function fn2()
 				flag2 = flag3
 			end
 
-			return flag2 and not fn38()
+			return flag2 and not fn39()
 		end
 
 		v4 = ctx.state
@@ -39980,7 +39995,7 @@ local function fn2()
 
 		local tbl12 = {}
 
-		local function fn39()
+		local function fn40()
 			local flag2 = ctx.fn16
 			local v10 = flag2()
 			flag2 = nil
@@ -40012,14 +40027,14 @@ local function fn2()
 			if arg then
 				local v11 = ctx.slot28
 				local invis = v11.invis
-				flag2 = if invis then fn34() else not invis
+				flag2 = if invis then fn35() else not invis
 			else
 				flag2 = arg
 			end
 
 			if flag2 then
 				return false
-			elseif fn39() then
+			elseif fn40() then
 				return false
 			elseif #tbl12 >= 6 then
 				return false
@@ -40070,13 +40085,13 @@ local function fn2()
 			v52 = if v52 == nil then (invisWant()) else v52
 
 			if v52 then
-				if not (fn34()) then
+				if not (fn35()) then
 					v11 = ctx.state
 					invisBusy = true
 					v11.invisBusy = true
 
 					task.defer(function()
-						if not (pcall(fn37, character)) then
+						if not (pcall(fn38, character)) then
 							local v12 = ctx.state
 							invisBusy = false
 							v12.invisBusy = false
@@ -40086,7 +40101,7 @@ local function fn2()
 			end
 		end)
 
-		fn33 = function()
+		fn34 = function()
 			local v11 = ctx.localPlayer
 			local character = v11.Character
 
@@ -40143,7 +40158,7 @@ local function fn2()
 			end
 		end
 
-		local v11 = fn14({name = "Invis", gap = 1})
+		local v11 = fn15({name = "Invis", gap = 1})
 
 		v11.on = function()
 			local v12 = ctx.slot28
@@ -40160,7 +40175,7 @@ local function fn2()
 				lock2 = v12.invisBusy
 			end
 
-			local invisBusy2, invisBusy3 = (lock2 or invisBusy) or fn39()
+			local invisBusy2, invisBusy3 = (lock2 or invisBusy) or fn40()
 
 			if invisBusy2 then
 				invisBusy3 = invisBusy2
@@ -40200,7 +40215,7 @@ local function fn2()
 					if os.clock() < lock2.keepVis then
 						invisBusy3 = ctx.state
 						invisBusy3.body(false)
-					elseif fn38() then
+					elseif fn39() then
 						local v12 = ctx.state
 						v12.body(false)
 					end
@@ -40224,7 +40239,7 @@ local function fn2()
 		tbl13.chase = 400
 		local n2, n3, n4 = 0, 0, 0
 
-		local function fn33(arg, arg2)
+		local function fn34(arg, arg2)
 			local character = ctx.localPlayer
 
 			if arg == character then
@@ -40266,7 +40281,7 @@ local function fn2()
 			return humanoidRootPart
 		end
 
-		local function fn34(arg)
+		local function fn35(arg)
 			if arg then
 			else
 				local v7 = ctx.state
@@ -40277,14 +40292,14 @@ local function fn2()
 			return ((17 + (arg or 0)) * ((workspace:GetAttribute("DragonEggEventActive") and 2.5) or 1)) - 1
 		end
 
-		local function fn35(arg, arg2)
+		local function fn36(arg, arg2)
 			if workspace:GetAttribute("PvPDisabled") then
 				return
 			end
 			local v7 = ctx.state
 			local v8, n5 = v7.bat()
 			v7 = ctx.fn11
-			local v9, v10 = v7(), fn34(n5)
+			local v9, v10 = v7(), fn35(n5)
 
 			if v8 then
 				if v9 then
@@ -40349,7 +40364,7 @@ local function fn2()
 		local v7 = ctx.state
 
 		v7.chase = function(arg, s)
-			local v8, v9 = fn33(arg, s), ctx.fn11
+			local v8, v9 = fn34(arg, s), ctx.fn11
 			local v10, assemblyAngularVelocity = v9(), ctx.fn4
 			s = assemblyAngularVelocity()
 
@@ -40380,7 +40395,7 @@ local function fn2()
 			assemblyAngularVelocity = ctx.vector
 			v10.AssemblyLinearVelocity = assemblyLinearVelocity
 			v10.AssemblyAngularVelocity = assemblyAngularVelocity
-			fn35(arg, v8)
+			fn36(arg, v8)
 			return true
 		end
 
@@ -40439,7 +40454,7 @@ local function fn2()
 			flag = n5(-hd2.Z, 0, hd2.X)
 			flag = if flag:Dot(v9.Position - n6) < 0 then -flag else flag
 			hd = (os.clock() * 2) * 3.141592653589793
-			local v12, v13, n9, n10 = ctx.slot28, ctx.vector3New, ((n6 + ((((hd2 * ((math.sin(hd / 1.1) * 0.5) + 0.5)) * math.max(5, math.min(fn34() * 0.7, 6 + (magnitude * 0.07)))) * ctx.slot28.hitSweep) / 100)) + (flag * (((magnitude < 35) and 3) or 1.5))) + ctx.vector3New(0, math.sin(hd / 0.8) * 2.5, 0), ctx.fn19
+			local v12, v13, n9, n10 = ctx.slot28, ctx.vector3New, ((n6 + ((((hd2 * ((math.sin(hd / 1.1) * 0.5) + 0.5)) * math.max(5, math.min(fn35() * 0.7, 6 + (magnitude * 0.07)))) * ctx.slot28.hitSweep) / 100)) + (flag * (((magnitude < 35) and 3) or 1.5))) + ctx.vector3New(0, math.sin(hd / 0.8) * 2.5, 0), ctx.fn19
 			n6, n8 = (n10() and 1500) or ((n7.Magnitude > 60) and 1000)
 
 			if n6 then
@@ -40460,31 +40475,31 @@ local function fn2()
 			n10, assemblyAngularVelocity = ctx.vector3New
 			assemblyAngularVelocity, v9.AssemblyLinearVelocity = ctx.vector, n5 + n10(0, (workspace.Gravity * arg3) * 0.5, 0)
 			v9.AssemblyAngularVelocity = assemblyAngularVelocity
-			fn35(arg, arg2)
+			fn36(arg, arg2)
 		end
 
 		v6, tbl12 = setmetatable, {__mode = "k"}
 		local v9 = v6({}, tbl12)
 
-		local function fn36(arg)
+		local function fn37(arg)
 			task.spawn(function()
 				local v10, v11, ok, result = ctx.localPlayer, ctx.localPlayer, pcall(ctx.localPlayer.IsFriendsWith, ctx.localPlayer, arg.UserId)
 				v9[arg] = ok and result
 			end)
 		end
 
-		fn21("friends", Players.PlayerAdded, fn36)
+		fn22("friends", Players.PlayerAdded, fn37)
 
 		for _, player in ipairs(Players:GetPlayers()) do
-			fn36(player)
+			fn37(player)
 		end
 
-		local function fn37(arg)
+		local function fn38(arg)
 			local v10 = ctx.slot28
 			return not (v10.skipFr and v9[arg])
 		end
 
-		local function fn38(arg, arg2)
+		local function fn39(arg, arg2)
 			local player = ctx.fn11
 			local v10, n5 = player(), arg or (1 / 0)
 			if not (v10) then
@@ -40493,7 +40508,7 @@ local function fn2()
 			player, arg = nil
 
 			for i2, player2 in ipairs(Players:GetPlayers()) do
-				i2 = ((if arg2 then arg2[player2] else not arg2) and fn37(player2)) and fn33(player2)
+				i2 = ((if arg2 then arg2[player2] else not arg2) and fn38(player2)) and fn34(player2)
 
 				if i2 then
 					if (i2.Position - v10.Position).Magnitude < n5 then
@@ -40509,10 +40524,10 @@ local function fn2()
 		end
 
 		local n5 = 0
-		local v10 = fn14({name = "Combat", mover = true, gap = 0.5, pri = 7, soft = true})
-		local hitSt, tbl14, v11 = n("hitSt", combat:Text("Hit Status", "Idle")), {}
+		local v10 = fn15({name = "Combat", mover = true, gap = 0.5, pri = 7, soft = true})
+		local hitSt, tbl14, v11 = fn13("hitSt", combat:Text("Hit Status", "Idle")), {}
 
-		local function fn39(arg, arg2)
+		local function fn40(arg, arg2)
 			if arg.Value then
 				local v12 = ctx.slot28
 
@@ -40527,7 +40542,7 @@ local function fn2()
 			end
 		end
 
-		local function fn40(arg)
+		local function fn41(arg)
 			for _, v12 in ipairs(tbl14) do
 				if v12 ~= arg then
 					if v12.Value then
@@ -40539,7 +40554,7 @@ local function fn2()
 
 		local tbl15 = {"Nearest player", "Egg holders", "Chosen player"}
 
-		local function fn41()
+		local function fn42()
 			local v12, v13 = ctx.slot28, ctx.slot28
 			v12.combat = false
 			v13.hitWho = nil
@@ -40569,21 +40584,21 @@ local function fn2()
 			local v13
 
 			v13 = combat:Toggle(v12, false, function(arg)
-				if fn39(v13, v12) then
+				if fn40(v13, v12) then
 					return
 				end
 
 				if arg then
-					fn40(v13)
+					fn41(v13)
 				end
 
-				fn41()
+				fn42()
 			end)
 
 			tbl14[i2] = v13
 		end
 
-		local function fn42()
+		local function fn43()
 			local tbl16, v12, v13 = {}, ipairs, table.pack(Players:GetPlayers())
 
 			for k, v14 in v12(table.unpack(v13, 1, v13.n)) do
@@ -40598,25 +40613,25 @@ local function fn2()
 			return ((#tbl16 > 0) and tbl16) or {"No Players"}
 		end
 
-		combat:Dropdown("Hit Player", fn42, nil, function(arg)
+		combat:Dropdown("Hit Player", fn43, nil, function(arg)
 			v11 = arg
 		end, false, nil, tbl14[3])
 
 		local v12
 
 		v12 = combat:Toggle("Hit Aura", false, function(aura)
-			if fn39(v12, "Hit Aura") then
+			if fn40(v12, "Hit Aura") then
 				return
 			end
 
 			if aura then
-				fn40(v12)
+				fn41(v12)
 			end
 
 			local v13 = ctx.slot28
 			v13.aura = aura
 
-			fn21("aura", aura and heartbeat, function()
+			fn22("aura", aura and heartbeat, function()
 				if (os.clock() - n5) < 0.05 then
 					return
 				elseif ctx.lastMV then
@@ -40628,10 +40643,10 @@ local function fn2()
 				end
 
 				n5 = os.clock()
-				local v14, v15 = fn38(fn34() + 6)
+				local v14, v15 = fn39(fn35() + 6)
 
 				if v14 then
-					fn35(v14, v15)
+					fn36(v14, v15)
 				end
 			end)
 		end)
@@ -40639,7 +40654,7 @@ local function fn2()
 		tbl14[4] = v12
 		v5 = ctx.state
 
-		local function fn43(arg)
+		local function fn44(arg)
 			local v13 = ctx.slot28
 			v13.weap = nil
 			v13 = ipairs
@@ -40654,18 +40669,18 @@ local function fn2()
 			end
 		end
 
-		fn36, tbl13 = combat:Dropdown("Swap Weapons", v5.ownedWeapons, {}, fn43, true, "Pick up to 2 weapons you own to switch between while hitting (empty = best bat only)"), ctx.slot28
+		fn37, tbl13 = combat:Dropdown("Swap Weapons", v5.ownedWeapons, {}, fn44, true, "Pick up to 2 weapons you own to switch between while hitting (empty = best bat only)"), ctx.slot28
 		tbl13.swapT = 0.35
 
 		combat:Slider("Weapon 1 Hold", 0.2, 1.5, 0.3, function(swapT)
 			local v13 = ctx.slot28
 			v13.swapT = swapT
-		end, "s", 0.01, nil, fn36)
+		end, "s", 0.01, nil, fn37)
 
 		combat:Slider("Weapon 2 Hold", 0.2, 1.5, 0.4, function(swapT2)
 			local v13 = ctx.slot28
 			v13.swapT2 = swapT2
-		end, "s", 0.01, nil, fn36)
+		end, "s", 0.01, nil, fn37)
 
 		tbl13 = combat:Label("Chase Settings", "Chase Settings")
 		K(combat, "Hit Tween Speed", "chase", 100, 1000, 400, "studs/s", 10, nil, nil, tbl13)
@@ -40704,7 +40719,7 @@ local function fn2()
 			v13:Set(v15)
 		end, "Pin or unpin the hit toggles on Quick Bar 2", "Done!")
 
-		local v13 = fn14({name = "HitInfo", gap = 1, info = true})
+		local v13 = fn15({name = "HitInfo", gap = 1, info = true})
 
 		v13.on = function()
 			return getOpen("Player")
@@ -40732,7 +40747,7 @@ local function fn2()
 			hitSt(flag or "Idle")
 		end
 
-		local function fn44()
+		local function fn45()
 			local tbl16, v14, flag = {}, pairs, ctx.fn15
 			local v15 = table.pack(flag())
 
@@ -40756,17 +40771,17 @@ local function fn2()
 			return tbl16
 		end
 
-		local function fn45()
+		local function fn46()
 			local v14 = ctx.slot28
 			if v14.hitWho == "Egg holders" then
-				return fn38(nil, fn44())
+				return fn39(nil, fn45())
 			end
 			v14 = ctx.slot28
 			if v14.hitWho == "Chosen player" then
 				local v112 = v11 and Players:FindFirstChild(v11)
-				return v112 and fn38(nil, {[v112] = true})
+				return v112 and fn39(nil, {[v112] = true})
 			end
-			return fn38()
+			return fn39()
 		end
 
 		v10.on = function()
@@ -40775,7 +40790,7 @@ local function fn2()
 		end
 
 		v10.want = function()
-			return fn45()
+			return fn46()
 		end
 
 		v10.run = function(arg, arg2)
@@ -40798,7 +40813,7 @@ local function fn2()
 
 			while arg2() do
 				if (os.clock() - now2) > 0.3 then
-					now2, arg = os.clock(), fn45()
+					now2, arg = os.clock(), fn46()
 					if not (arg) then
 						break
 					end
@@ -40837,11 +40852,11 @@ local function fn2()
 			local UserInputService, ReplicatedStorage2, v5 = getService("UserInputService"), ReplicatedStorage, ctx.networking
 			local hui = (gethui and gethui()) or getService("CoreGui")
 
-			local function fn33(arg)
+			local function fn34(arg)
 				table.insert(ctx.state.cleanup, arg)
 			end
 
-			local function fn34()
+			local function fn35()
 				local tbl12 = {}
 
 				for i2 = 1, math.random(10, 16), 1 do
@@ -40865,7 +40880,7 @@ local function fn2()
 				tbl14[string.lower(v6)] = 10 ^ ((i2 - 1) * 3)
 			end
 
-			local function fn35(arg)
+			local function fn36(arg)
 				arg = math.abs(tonumber(arg) or 0)
 				local n4 = 1
 
@@ -40884,7 +40899,7 @@ local function fn2()
 				return string.format("%.2f%s", arg, tbl13[n4])
 			end
 
-			local function fn36(arg)
+			local function fn37(arg)
 				if type(arg) ~= "string" then
 					return nil
 				end
@@ -40895,14 +40910,14 @@ local function fn2()
 				return (arg and (num * arg)) or nil
 			end
 
-			local function fn37(arg)
+			local function fn38(arg)
 				arg = math.max(0, math.floor(arg))
 				return string.format("%02d:%02d:%02d", arg // 3600, (arg % 3600) // 60, arg % 60)
 			end
 
 			local tbl15, tbl16 = {}, {}
 
-			local function fn38(arg)
+			local function fn39(arg)
 				local playerGui = tbl15[arg]
 
 				if playerGui then
@@ -40944,13 +40959,13 @@ local function fn2()
 				return nil
 			end
 
-			local function fn39(arg)
+			local function fn40(arg)
 				local leaderstats = v4:FindFirstChild("leaderstats")
 				local leaderstats2 = leaderstats and (leaderstats:FindFirstChild(arg))
 				return (leaderstats2 and tonumber(leaderstats2.Value)) or nil
 			end
 
-			local function fn40()
+			local function fn41()
 				local ok, result = pcall(function()
 					return gm.Save.Get()
 				end)
@@ -40958,12 +40973,12 @@ local function fn2()
 				return ((ok and (type(result) == "table")) and result) or nil
 			end
 
-			local function fn41(arg)
+			local function fn42(arg)
 				local directory = gm.Assets and gm.Assets.Directory
 				return ((type(directory) == "table") and directory[tostring(arg)]) or nil
 			end
 
-			local function fn42(arg)
+			local function fn43(arg)
 				local rarity = ((type(arg) == "table") and arg.Rarity) or nil
 				if type(rarity) ~= "table" then
 					return "", 0, nil
@@ -40971,7 +40986,7 @@ local function fn2()
 				return tostring((rarity.DisplayName or rarity._id) or ""), tonumber(rarity.Rank or rarity.RarityNumber) or 0, rarity
 			end
 
-			local function fn43(arg)
+			local function fn44(arg)
 				local mutations = ((type(arg) == "table") and arg.Mutations) or nil
 
 				if type(mutations) ~= "table" then
@@ -40985,7 +41000,7 @@ local function fn2()
 
 			local v6, tbl17 = c:State("Farm HUD Stolen Eggs", {}), {Count = 0, Best = nil, BestRank = -1, History = {}}
 
-			local function fn44(arg)
+			local function fn45(arg)
 				if type(arg) == "table" then
 					table.clear(tbl17.History)
 					tbl17.Changed = true
@@ -41008,12 +41023,12 @@ local function fn2()
 				end
 			end
 
-			fn44(v6:Get())
+			fn45(v6:Get())
 
 			table.insert(v6.ls, function(arg)
 				if type(arg) == "table" then
 					if arg.History ~= tbl17.History then
-						fn44(arg)
+						fn45(arg)
 					end
 				end
 			end)
@@ -41021,7 +41036,7 @@ local function fn2()
 			local tbl18 = {}
 			tbl18.Started = os.clock()
 			tbl18.Money = nil
-			tbl18.Speed = fn39("Speed")
+			tbl18.Speed = fn40("Speed")
 			tbl18.Delivered = 0
 			local v7
 
@@ -41083,7 +41098,7 @@ local function fn2()
 
 					if ok then
 						if result then
-							fn33(function()
+							fn34(function()
 								pcall(function()
 									result:Disconnect()
 								end)
@@ -41093,7 +41108,7 @@ local function fn2()
 				end
 			end
 
-			local fn45
+			local fn46
 			carryChanged = v5:FindFirstChild("RE/EggWorld/FieldEggRedeemVerdict")
 
 			if carryChanged then
@@ -41101,8 +41116,8 @@ local function fn2()
 					tbl18.Delivered = tbl18.Delivered + 1
 
 					if type(arg) == "table" then
-						local v8 = fn41(arg.AssetCategory)
-						local v9, v10 = fn42(v8)
+						local v8 = fn42(arg.AssetCategory)
+						local v9, v10 = fn43(v8)
 
 						if v10 >= tbl17.BestRank then
 							tbl17.BestRank = v10
@@ -41113,14 +41128,14 @@ local function fn2()
 					tbl17.Count = tbl17.Count + 1
 
 					if type(arg) == "table" then
-						local v8, tbl19 = fn42((fn41(arg.AssetCategory))), v7
+						local v8, tbl19 = fn43((fn42(arg.AssetCategory))), v7
 						v7 = nil
 						local scale, v9
 
 						if tbl19 then
 							if tbl19.Category == tostring(arg.AssetCategory or "") then
 								if tbl19.Scale then
-									local scale2, v10 = tbl19.Scale, fn45(tbl19.Category, tbl19.Scale, tbl19.Mutations)
+									local scale2, v10 = tbl19.Scale, fn46(tbl19.Category, tbl19.Scale, tbl19.Mutations)
 									scale, v9 = scale2, v10
 								else
 								end
@@ -41143,16 +41158,16 @@ local function fn2()
 					end)
 				end)
 
-				fn33(function()
+				fn34(function()
 					connection:Disconnect()
 				end)
 			end
 
-			local function fn46(arg)
+			local function fn47(arg)
 				return arg / math.max((os.clock() - tbl18.Started) / 3600, 0.016666666666666666)
 			end
 
-			fn45 = function(arg, arg2, arg3)
+			fn46 = function(arg, arg2, arg3)
 				local tbl19 = {AssetCategory = arg}
 				tbl19.AssetScale = tonumber(arg2) or 1
 				tbl19.Mutations = ((type(arg3) == "table") and arg3) or {}
@@ -41169,11 +41184,11 @@ local function fn2()
 					end
 				end
 
-				arg3 = fn41(arg)
+				arg3 = fn42(arg)
 				return (arg3 and tonumber(arg3.EarningRate)) or 0
 			end
 
-			local function fn47(arg, arg2)
+			local function fn48(arg, arg2)
 				if type(arg2) ~= "table" then
 					return nil
 				elseif type(arg2.Placement) ~= "table" then
@@ -41211,7 +41226,7 @@ local function fn2()
 				return stringFormat("%dm %02ds", n4, n5)
 			end
 
-			local function fn48(arg)
+			local function fn49(arg)
 				local ok, result = pcall(function()
 					return gm.EggRecords.EggIcon(arg)
 				end)
@@ -41224,13 +41239,13 @@ local function fn2()
 					end
 				end
 
-				result = fn41(arg and arg.AssetCategory)
+				result = fn42(arg and arg.AssetCategory)
 				return (((result and (type(result.Egg) == "table")) and result.Egg.Icon) or (result and result.Icon)) or ""
 			end
 
 			local flag, tbl19, n4, tbl20 = false, {At = 0, TopPets = {}, TopEggs = {}, Key = ""}, 6, {Pets = {}, Eggs = {}, ResetAt = 0}
 
-			local function fn49(arg, arg2, arg3, arg4, arg5, arg6, arg7)
+			local function fn50(arg, arg2, arg3, arg4, arg5, arg6, arg7)
 				local n5, tbl21 = ((type(arg6) == "table") and #arg6) or 0, arg[arg2]
 
 				if tbl21 then
@@ -41247,21 +41262,21 @@ local function fn2()
 					end
 				end
 
-				local v8 = fn41(arg4)
-				local v9, v10 = fn42(v8)
-				tbl21 = {Uid = arg2, Record = arg3, Entry = v8, Rank = v10, Category = arg4, Scale = arg5, Mutations = arg6, MutationCount = n5, Size = tonumber(arg5) or arg7, Rate = fn45(arg4, arg5, arg6)}
+				local v8 = fn42(arg4)
+				local v9, v10 = fn43(v8)
+				tbl21 = {Uid = arg2, Record = arg3, Entry = v8, Rank = v10, Category = arg4, Scale = arg5, Mutations = arg6, MutationCount = n5, Size = tonumber(arg5) or arg7, Rate = fn46(arg4, arg5, arg6)}
 				arg[arg2] = tbl21
 				return tbl21
 			end
 
-			local function fn50(arg, arg2)
+			local function fn51(arg, arg2)
 				if arg.Rate ~= arg2.Rate then
 					return arg.Rate > arg2.Rate
 				end
 				return arg.Uid < arg2.Uid
 			end
 
-			local function fn51(arg, arg2)
+			local function fn52(arg, arg2)
 				if arg.Rank ~= arg2.Rank then
 					return arg.Rank > arg2.Rank
 				end
@@ -41272,7 +41287,7 @@ local function fn2()
 				return arg.Uid < arg2.Uid
 			end
 
-			local function fn52(arg, arg2, arg3)
+			local function fn53(arg, arg2, arg3)
 				local n5 = #arg
 
 				if n5 >= n4 then
@@ -41294,12 +41309,12 @@ local function fn2()
 				end
 			end
 
-			local function fn53()
+			local function fn54()
 				if (os.clock() - tbl19.At) < 3 then
 					return tbl19
 				end
 				tbl19.At = os.clock()
-				local v8 = fn40()
+				local v8 = fn41()
 				if not v8 then
 					return tbl19
 				end
@@ -41321,7 +41336,7 @@ local function fn2()
 				for k, v9 in pairs(((type(v8.Inventory) == "table") and v8.Inventory) or {}) do
 					if type(v9) == "table" then
 						pets += 1
-						fn52(topPets, fn49(tbl20.Pets, k, v9, v9.Category, v9.Scale, v9.Mutations, 1), fn50)
+						fn53(topPets, fn50(tbl20.Pets, k, v9, v9.Category, v9.Scale, v9.Mutations, 1), fn51)
 					else
 					end
 				end
@@ -41332,7 +41347,7 @@ local function fn2()
 					if type(v9) == "table" then
 						eggs += 1
 						growing = if v9.Placement then growing + 1 else growing
-						fn52(topEggs, fn49(tbl20.Eggs, k, v9, v9.AssetCategory, v9.AssetScale, v9.Mutations, 0), fn51)
+						fn53(topEggs, fn50(tbl20.Eggs, k, v9, v9.AssetCategory, v9.AssetScale, v9.Mutations, 0), fn52)
 					else
 					end
 				end
@@ -41353,12 +41368,12 @@ local function fn2()
 					end
 					local ok, result = pcall(Treadmills.GetByUpgradeLevel, n5 + 1)
 
-					local function fn54(arg)
+					local function fn55(arg)
 						return (string.gsub(tostring((arg.DisplayName or arg._id) or "Treadmill"), "%s*Treadmill$", ""))
 					end
 
-					n5 = if ok then if type(result) == "table" then "next " .. (fn54(result) .. (" $" .. fn35(tonumber(result.Price) or 0))) else "max treadmill" else "max treadmill"
-					tbl19.Treadmill = {Name = fn54(v9), Multiplier = tonumber(v9.SpeedMultiplier) or 1, Icon = (v9.Icon and tostring(v9.Icon)) or nil, Note = n5}
+					n5 = if ok then if type(result) == "table" then "next " .. (fn55(result) .. (" $" .. fn36(tonumber(result.Price) or 0))) else "max treadmill" else "max treadmill"
+					tbl19.Treadmill = {Name = fn55(v9), Multiplier = tonumber(v9.SpeedMultiplier) or 1, Icon = (v9.Icon and tostring(v9.Icon)) or nil, Note = n5}
 				end)
 
 				tbl19.Rift = ((type(v8.Rift) == "table") and v8.Rift) or {}
@@ -41367,7 +41382,7 @@ local function fn2()
 
 			local tbl21 = {}
 
-			local function fn54()
+			local function fn55()
 				local frame, label = tbl21.Frame, tbl21.Label
 
 				if ((frame and frame.Parent) and label) and label.Parent then
@@ -41397,7 +41412,7 @@ local function fn2()
 				return 0
 			end
 
-			local function fn55()
+			local function fn56()
 				local status = ctx.state
 				local doing, name, flag2, status2 = status.doing or "Idle", ctx.lastMV and ctx.lastMV.name, ctx.lastMV
 
@@ -41460,9 +41475,9 @@ local function fn2()
 						end
 
 						if flag3 then
-							local Speed = fn39("Speed")
+							local Speed = fn40("Speed")
 							local speed = ((Speed and tbl18.Speed) and (Speed - tbl18.Speed)) or 0
-							return "Running on the treadmill", ((speed > 0) and ("Treadmill  |  +" .. (fn35(fn46(speed)) .. " speed/h"))) or "Treadmill", tbl12.Speed
+							return "Running on the treadmill", ((speed > 0) and ("Treadmill  |  +" .. (fn36(fn47(speed)) .. " speed/h"))) or "Treadmill", tbl12.Speed
 						elseif name then
 							return status3, doing, tbl12.Eggs
 						end
@@ -41475,8 +41490,8 @@ local function fn2()
 			local tbl22 = {}
 
 			local tbl23, tbl24, tbl25, tbl26, tbl27, items, tbl28 = {Id = "Economy", Column = "Left", Colors = {Color3.fromRGB(60, 255, 0), Color3.fromRGB(136, 255, 0)}, Items = {{Id = "Money", Icon = tbl12.Money, Colors = {Color3.fromRGB(150, 255, 110), Color3.fromRGB(26, 220, 0)}, Read = function()
-				local Money = fn38("Money")
-				local v8 = fn36(Money)
+				local Money = fn39("Money")
+				local v8 = fn37(Money)
 
 				if v8 then
 					if not (tbl18.Money) then
@@ -41485,12 +41500,12 @@ local function fn2()
 				end
 
 				local money = ((v8 and tbl18.Money) and (v8 - tbl18.Money)) or 0
-				return Money or "-", ((money > 0) and ("+" .. (fn35(fn46(money)) .. "/h"))) or ""
+				return Money or "-", ((money > 0) and ("+" .. (fn36(fn47(money)) .. "/h"))) or ""
 			end}, {Id = "Income", Icon = tbl12.Shop, Colors = {Color3.fromRGB(255, 240, 140), Color3.fromRGB(255, 196, 0)}, Read = function()
-				local v8 = fn39("Money/s")
-				return (v8 and ("$" .. (fn35(v8) .. "/s"))) or "-", (v8 and ("$" .. (fn35(v8 * 3600) .. "/h"))) or ""
+				local v8 = fn40("Money/s")
+				return (v8 and ("$" .. (fn36(v8) .. "/s"))) or "-", (v8 and ("$" .. (fn36(v8 * 3600) .. "/h"))) or ""
 			end}, {Id = "Speed", Icon = tbl12.Speed, Colors = {Color3.fromRGB(120, 255, 240), Color3.fromRGB(0, 220, 255)}, Read = function()
-				local Speed = fn39("Speed")
+				local Speed = fn40("Speed")
 
 				if Speed then
 					if not (tbl18.Speed) then
@@ -41499,29 +41514,29 @@ local function fn2()
 				end
 
 				local speed = ((Speed and tbl18.Speed) and (Speed - tbl18.Speed)) or 0
-				return (Speed and fn35(Speed)) or "-", ((speed > 0) and ("+" .. (fn35(fn46(speed)) .. "/h"))) or ""
+				return (Speed and fn36(Speed)) or "-", ((speed > 0) and ("+" .. (fn36(fn47(speed)) .. "/h"))) or ""
 			end}, {Id = "Treadmill", Icon = tbl12.Speed, Colors = {Color3.fromRGB(255, 255, 255), Color3.fromRGB(170, 230, 255)}, Read = function()
-				local treadmill = fn53().Treadmill
+				local treadmill = fn54().Treadmill
 				if not (treadmill) then
 					return "-", "", nil
 				end
-				local flag2 = ((treadmill.Multiplier < 100000) and tostring(math.floor(treadmill.Multiplier + 0.5))) or fn35(treadmill.Multiplier)
+				local flag2 = ((treadmill.Multiplier < 100000) and tostring(math.floor(treadmill.Multiplier + 0.5))) or fn36(treadmill.Multiplier)
 				return treadmill.Name .. ("  x" .. flag2), treadmill.Note, treadmill.Icon
 			end}}}, {Id = "Stealing", Column = "Left", Colors = {Color3.fromRGB(255, 0, 4), Color3.fromRGB(255, 83, 86)}, Items = {{Id = "Eggs Stolen", Icon = tbl12.Eggs, Colors = {Color3.fromRGB(255, 150, 150), Color3.fromRGB(255, 40, 60)}, Read = function()
-				return fn35(tbl17.Count), ((tbl18.Delivered > 0) and ("+" .. (tbl18.Delivered .. " this session"))) or ""
+				return fn36(tbl17.Count), ((tbl18.Delivered > 0) and ("+" .. (tbl18.Delivered .. " this session"))) or ""
 			end}, {Id = "Best Steal", Icon = tbl12.Index, Colors = {Color3.fromRGB(225, 195, 255), Color3.fromRGB(160, 100, 240)}, Read = function()
 				local best = tbl17.Best
 				if not (best) then
 					return "None yet", "", nil
 				end
-				local v8 = fn41(best.Category)
+				local v8 = fn42(best.Category)
 				return tostring(best.Name), tostring(best.Rarity or ""), (v8 and v8.Icon) or nil
 			end}}}, {Id = "World", Column = "Right", Colors = {Color3.fromRGB(70, 110, 255), Color3.fromRGB(140, 190, 255)}, Items = {{Id = "Night Timer", Icon = tbl12.Night, Colors = {Color3.fromRGB(255, 255, 255), Color3.fromRGB(200, 212, 255)}, Read = function()
-				return fn38("NightTimer") or "-", "eggs reset"
+				return fn39("NightTimer") or "-", "eggs reset"
 			end}, {Id = "Session Time", Icon = tbl12.Night, Colors = {Color3.fromRGB(255, 255, 255), Color3.fromRGB(215, 215, 230)}, Read = function()
-				return fn37(os.clock() - tbl18.Started), tostring(#Players:GetPlayers()) .. " players"
+				return fn38(os.clock() - tbl18.Started), tostring(#Players:GetPlayers()) .. " players"
 			end}}}, {Id = "Status", Column = "Center", Colors = {Color3.fromRGB(255, 204, 0), Color3.fromRGB(255, 150, 30)}, Items = {{Id = "Activity", Icon = tbl12.Eggs, Wide = true, Colors = {Color3.fromRGB(255, 240, 170), Color3.fromRGB(255, 170, 60)}, Read = function()
-				return fn55()
+				return fn56()
 			end}}}, {Id = "Events", Column = "Right", Colors = {Color3.fromRGB(255, 212, 82), Color3.fromRGB(255, 150, 40)}}, {}, {Id = "Shooting Star", Icon = tbl12.Star, Colors = {Color3.fromRGB(255, 250, 200), Color3.fromRGB(255, 220, 90)}, Read = function()
 				local serverTime = ctx.state
 				local ss = serverTime.SS
@@ -41535,7 +41550,7 @@ local function fn2()
 				ss = workspace:GetServerTimeNow()
 				serverTime = tonumber(pay.LandAt) or ss
 				if ss < serverTime then
-					return "Falling", fn37(serverTime - ss) .. " to land"
+					return "Falling", fn38(serverTime - ss) .. " to land"
 				end
 				ss = ((ctx.lastMV and (ctx.lastMV.name == "Star")) and "catching") or str
 				return "Landed", ss
@@ -41545,27 +41560,27 @@ local function fn2()
 			tbl27.Items = items
 
 			tbl22[1], tbl22[2], tbl22[3], tbl22[4], tbl22[5], tbl22[6] = tbl23, tbl24, tbl25, tbl26, tbl27, {Id = "Collection", Column = "Right", Colors = {Color3.fromRGB(255, 116, 16), Color3.fromRGB(255, 185, 87)}, Items = {{Id = "Pets", Icon = tbl12.Pets, Colors = {Color3.fromRGB(255, 225, 170), Color3.fromRGB(255, 150, 60)}, Read = function()
-				local v8 = fn53()
+				local v8 = fn54()
 				return tostring(v8.Pets or 0), tostring(v8.PlacedPets or 0) .. " placed"
 			end}, {Id = "Eggs", Icon = tbl12.Eggs, Colors = {Color3.fromRGB(255, 200, 200), Color3.fromRGB(255, 90, 100)}, Read = function()
-				local v8 = fn53()
-				return tostring(v8.Eggs or 0), string.format("%d ready  %d growing", fn54(), v8.Growing or 0)
+				local v8 = fn54()
+				return tostring(v8.Eggs or 0), string.format("%d ready  %d growing", fn55(), v8.Growing or 0)
 			end}}}
 
 			local tbl29 = {}
 
 			tbl28, items = {Id = "Top Pets", Colors = {Color3.fromRGB(255, 116, 16), Color3.fromRGB(255, 185, 87)}, List = function()
-				return fn53().TopPets
+				return fn54().TopPets
 			end, Detail = function(arg)
-				return "$" .. (fn35(arg.Rate) .. "/s"), string.format("x%.2f", arg.Size), nil
+				return "$" .. (fn36(arg.Rate) .. "/s"), string.format("x%.2f", arg.Size), nil
 			end, Image = function(arg)
 				return (arg.Entry and tostring(arg.Entry.Icon or "")) or ""
 			end, Category = function(arg)
 				return arg.Record.Category
 			end}, {Id = "Top Eggs", Colors = {Color3.fromRGB(255, 0, 4), Color3.fromRGB(255, 83, 86)}, List = function()
-				return fn53().TopEggs
+				return fn54().TopEggs
 			end, Detail = function(arg)
-				return "$" .. (fn35(arg.Rate) .. "/s"), string.format("x%.2f", arg.Size), fn47(arg.Uid, arg.Record)
+				return "$" .. (fn36(arg.Rate) .. "/s"), string.format("x%.2f", arg.Size), fn48(arg.Uid, arg.Record)
 			end, Image = function(arg)
 				if flag then
 					if arg.Entry then
@@ -41575,7 +41590,7 @@ local function fn2()
 					end
 				end
 
-				return fn48(arg.Record)
+				return fn49(arg.Record)
 			end, Category = function(arg)
 				return arg.Record.AssetCategory
 			end}
@@ -41602,7 +41617,7 @@ local function fn2()
 
 			local tbl32 = {}
 
-			local function fn56(arg)
+			local function fn57(arg)
 				if not (tbl32[arg]) then
 					tbl32[arg] = c:State("Farm HUD " .. (arg .. " Position"), {})
 				end
@@ -41611,17 +41626,17 @@ local function fn2()
 			end
 
 			for _, v8 in ipairs(tbl22) do
-				fn56(v8.Id)
+				fn57(v8.Id)
 			end
 
 			for _, v8 in ipairs(tbl29) do
-				fn56(v8.Id)
+				fn57(v8.Id)
 			end
 
-			fn56("Steal History")
+			fn57("Steal History")
 
-			local function fn57(arg, arg2, arg3, arg4)
-				local v8 = fn56(arg):Get()
+			local function fn58(arg, arg2, arg3, arg4)
+				local v8 = fn57(arg):Get()
 
 				if type(v8) == "table" then
 					if type(v8.XOffset) == "number" then
@@ -41648,9 +41663,9 @@ local function fn2()
 			local n5, n6, tbl33, ScreenGui = touchEnabled / 100, 4, {}
 			local tbl34, tbl35, tbl36, tbl37, v8, v9 = {}, {}, {}, {}
 
-			local function fn58(arg, arg2, parent)
+			local function fn59(arg, arg2, parent)
 				local instance = Instance.new(arg)
-				instance.Name = fn34()
+				instance.Name = fn35()
 
 				for k, v10 in pairs(arg2) do
 					instance[k] = v10
@@ -41661,16 +41676,16 @@ local function fn2()
 			end
 
 			local function getUIGradient2(arg, arg2, arg3, arg4)
-				return fn58("UIGradient", {Color = ColorSequence.new(arg2, arg3), Rotation = arg4 or 90}, arg)
+				return fn59("UIGradient", {Color = ColorSequence.new(arg2, arg3), Rotation = arg4 or 90}, arg)
 			end
 
-			local function fn59(parent, arg, rotation)
+			local function fn60(parent, arg, rotation)
 				local rarityGradient = ((type(arg) == "table") and arg.RarityGradient) or nil
 
 				if typeof(rarityGradient) == "Instance" then
 					if rarityGradient:IsA("UIGradient") then
 						local clone = rarityGradient:Clone()
-						clone.Name = fn34()
+						clone.Name = fn35()
 						clone.Rotation = rotation or clone.Rotation
 						clone.Offset = Vector2.zero
 						clone.Parent = parent
@@ -41682,8 +41697,8 @@ local function fn2()
 				return getUIGradient2(parent, rarityGradient:Lerp(Color3.new(1, 1, 1), 0.35), rarityGradient, rotation)
 			end
 
-			local function fn60(arg, arg2, arg3, arg4)
-				local TextLabel, font3 = fn58("TextLabel", {BackgroundTransparency = 1, TextColor3 = Color3.new(1, 1, 1), TextSize = arg3, TextXAlignment = Enum.TextXAlignment.Left, TextYAlignment = Enum.TextYAlignment.Center, TextTruncate = Enum.TextTruncate.AtEnd, Text = ""}, arg), (arg2 and font2) or font
+			local function fn61(arg, arg2, arg3, arg4)
+				local TextLabel, font3 = fn59("TextLabel", {BackgroundTransparency = 1, TextColor3 = Color3.new(1, 1, 1), TextSize = arg3, TextXAlignment = Enum.TextXAlignment.Left, TextYAlignment = Enum.TextYAlignment.Center, TextTruncate = Enum.TextTruncate.AtEnd, Text = ""}, arg), (arg2 and font2) or font
 
 				if font3 then
 					TextLabel.FontFace = font3
@@ -41695,11 +41710,11 @@ local function fn2()
 					TextLabel[k] = v10
 				end
 
-				fn58("UIStroke", {Color = Color3.new(0, 0, 0), Thickness = (arg2 and 2.4) or 1.8, LineJoinMode = Enum.LineJoinMode.Round}, TextLabel)
+				fn59("UIStroke", {Color = Color3.new(0, 0, 0), Thickness = (arg2 and 2.4) or 1.8, LineJoinMode = Enum.LineJoinMode.Round}, TextLabel)
 				return TextLabel
 			end
 
-			local function fn61()
+			local function fn62()
 				local currentCamera = workspace.CurrentCamera
 				local viewportSize = (currentCamera and currentCamera.ViewportSize) or Vector2.new(1280, 720)
 				viewportSize = if viewportSize.Y < 1 then Vector2.new(1280, 720) else viewportSize
@@ -41707,29 +41722,29 @@ local function fn2()
 				return n7 * n52
 			end
 
-			local function fn62()
+			local function fn63()
 				local currentCamera = workspace.CurrentCamera
 				local viewportSize = (currentCamera and currentCamera.ViewportSize) or Vector2.new(1280, 720)
 				return if viewportSize.Y < 1 then Vector2.new(1280, 720) else viewportSize
 			end
 
-			local function fn63()
-				return fn61()
-			end
-
 			local function fn64()
-				return 16
+				return fn62()
 			end
 
 			local function fn65()
-				local v10 = fn61()
+				return 16
+			end
+
+			local function fn66()
+				local v10 = fn62()
 
 				for _, v11 in ipairs(tbl34) do
 					v11.Scale = v10
 				end
 			end
 
-			local function fn66(arg, arg2)
+			local function fn67(arg, arg2)
 				if ScreenGui then
 					if not (arg.Parent) then
 						return
@@ -41746,7 +41761,7 @@ local function fn2()
 					return
 				end
 
-				local n7, n8, absoluteSize2 = fn61(), arg.AbsolutePosition - ScreenGui.AbsolutePosition, arg.AbsoluteSize
+				local n7, n8, absoluteSize2 = fn62(), arg.AbsolutePosition - ScreenGui.AbsolutePosition, arg.AbsoluteSize
 				local arg22, n9 = (arg2 and math.floor(14 * n7)) or 0, if n8.X < 0 then -n8.X else if (n8.X + absoluteSize2.X) > absoluteSize.X then (absoluteSize.X - absoluteSize2.X) - n8.X else 0
 				n7 = if (n8.Y - arg22) < 0 then arg22 - n8.Y else if (n8.Y + absoluteSize2.Y) > absoluteSize.Y then (absoluteSize.Y - absoluteSize2.Y) - n8.Y else 0
 
@@ -41755,10 +41770,10 @@ local function fn2()
 				end
 			end
 
-			local function fn67(arg, arg2, arg3)
+			local function fn68(arg, arg2, arg3)
 				local flag3, input = false
 				local vector2Zero, position = Vector2.zero
-				local TextButton = fn58("TextButton", {Active = true, AutoButtonColor = false, BackgroundTransparency = 1, Position = (arg3 and UDim2.fromOffset(-12, -36)) or UDim2.fromOffset(0, 0), Size = (arg3 and UDim2.new(1, 24, 1, 45)) or UDim2.fromScale(1, 1), Text = "", ZIndex = 30}, arg)
+				local TextButton = fn59("TextButton", {Active = true, AutoButtonColor = false, BackgroundTransparency = 1, Position = (arg3 and UDim2.fromOffset(-12, -36)) or UDim2.fromOffset(0, 0), Size = (arg3 and UDim2.new(1, 24, 1, 45)) or UDim2.fromScale(1, 1), Text = "", ZIndex = 30}, arg)
 
 				tbl33[#tbl33 + 1] = TextButton.InputBegan:Connect(function(input2)
 					if flag3 then
@@ -41800,7 +41815,7 @@ local function fn2()
 
 					local n7 = Vector2.new(input2.Position.X, input2.Position.Y) - vector2Zero
 					arg.Position = UDim2.new(position.X.Scale, position.X.Offset + n7.X, position.Y.Scale, position.Y.Offset + n7.Y)
-					fn66(arg, arg3)
+					fn67(arg, arg3)
 				end)
 
 				tbl33[#tbl33 + 1] = UserInputService.InputEnded:Connect(function(input2)
@@ -41811,36 +41826,36 @@ local function fn2()
 
 					if input3 then
 						flag3, input, position = false, nil, nil
-						fn56(arg2):Set({XScale = arg.Position.X.Scale, XOffset = arg.Position.X.Offset, YScale = arg.Position.Y.Scale, YOffset = arg.Position.Y.Offset, Unit = fn63(), Top = fn64()})
+						fn57(arg2):Set({XScale = arg.Position.X.Scale, XOffset = arg.Position.X.Offset, YScale = arg.Position.Y.Scale, YOffset = arg.Position.Y.Offset, Unit = fn64(), Top = fn65()})
 					end
 				end)
 			end
 
-			local function fn68(arg, arg2, arg3, arg4)
-				local Frame = fn58("Frame", {Active = true, AnchorPoint = ((arg2 == "Left") and Vector2.new(1, 0)) or (((arg2 == "Right") and Vector2.new(0, 0)) or Vector2.new(0.5, 0)), AutomaticSize = Enum.AutomaticSize.XY, BackgroundColor3 = Color3.fromRGB(24, 24, 34), BackgroundTransparency = 0.22, BorderSizePixel = 0, Size = UDim2.fromOffset(0, 0)}, ScreenGui)
-				fn58("UICorner", {CornerRadius = UDim.new(0, 14)}, Frame)
-				fn58("UIStroke", {Color = Color3.fromRGB(82, 82, 107), Thickness = 1.6, Transparency = 0.3, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, Frame)
-				fn58("UIPadding", {PaddingTop = UDim.new(0, 24), PaddingBottom = UDim.new(0, 9), PaddingLeft = UDim.new(0, 12), PaddingRight = UDim.new(0, 12)}, Frame)
-				table.insert(tbl34, fn58("UIScale", {}, Frame))
-				local Frame2 = fn58("Frame", {AutomaticSize = Enum.AutomaticSize.X, BackgroundColor3 = Color3.new(1, 1, 1), BorderSizePixel = 0, Position = UDim2.new(0, -2, 0, -36), Size = UDim2.fromOffset(0, 24)}, Frame)
-				fn58("UICorner", {CornerRadius = UDim.new(0, 8)}, Frame2)
-				fn58("UIStroke", {Color = Color3.fromRGB(0, 0, 0), Thickness = 2, Transparency = 0.15, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, Frame2)
+			local function fn69(arg, arg2, arg3, arg4)
+				local Frame = fn59("Frame", {Active = true, AnchorPoint = ((arg2 == "Left") and Vector2.new(1, 0)) or (((arg2 == "Right") and Vector2.new(0, 0)) or Vector2.new(0.5, 0)), AutomaticSize = Enum.AutomaticSize.XY, BackgroundColor3 = Color3.fromRGB(24, 24, 34), BackgroundTransparency = 0.22, BorderSizePixel = 0, Size = UDim2.fromOffset(0, 0)}, ScreenGui)
+				fn59("UICorner", {CornerRadius = UDim.new(0, 14)}, Frame)
+				fn59("UIStroke", {Color = Color3.fromRGB(82, 82, 107), Thickness = 1.6, Transparency = 0.3, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, Frame)
+				fn59("UIPadding", {PaddingTop = UDim.new(0, 24), PaddingBottom = UDim.new(0, 9), PaddingLeft = UDim.new(0, 12), PaddingRight = UDim.new(0, 12)}, Frame)
+				table.insert(tbl34, fn59("UIScale", {}, Frame))
+				local Frame2 = fn59("Frame", {AutomaticSize = Enum.AutomaticSize.X, BackgroundColor3 = Color3.new(1, 1, 1), BorderSizePixel = 0, Position = UDim2.new(0, -2, 0, -36), Size = UDim2.fromOffset(0, 24)}, Frame)
+				fn59("UICorner", {CornerRadius = UDim.new(0, 8)}, Frame2)
+				fn59("UIStroke", {Color = Color3.fromRGB(0, 0, 0), Thickness = 2, Transparency = 0.15, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, Frame2)
 				getUIGradient2(Frame2, arg3[1], arg3[2], -90)
-				fn58("ImageLabel", {BackgroundTransparency = 1, Image = assetId, ImageTransparency = 0.55, ScaleType = Enum.ScaleType.Tile, TileSize = UDim2.fromOffset(28, 28), Size = UDim2.fromScale(1, 1)}, Frame2)
-				fn58("UIPadding", {PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10)}, Frame2)
-				fn60(Frame2, true, 15, {AutomaticSize = Enum.AutomaticSize.X, Text = string.upper(arg), Size = UDim2.fromOffset(0, 24), TextTruncate = Enum.TextTruncate.None})
-				Frame2 = {Id = arg, Frame = Frame, Column = arg2, Order = arg4, Body = fn58("Frame", {AutomaticSize = Enum.AutomaticSize.XY, BackgroundTransparency = 1, Size = UDim2.fromOffset(0, 0)}, Frame)}
+				fn59("ImageLabel", {BackgroundTransparency = 1, Image = assetId, ImageTransparency = 0.55, ScaleType = Enum.ScaleType.Tile, TileSize = UDim2.fromOffset(28, 28), Size = UDim2.fromScale(1, 1)}, Frame2)
+				fn59("UIPadding", {PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10)}, Frame2)
+				fn61(Frame2, true, 15, {AutomaticSize = Enum.AutomaticSize.X, Text = string.upper(arg), Size = UDim2.fromOffset(0, 24), TextTruncate = Enum.TextTruncate.None})
+				Frame2 = {Id = arg, Frame = Frame, Column = arg2, Order = arg4, Body = fn59("Frame", {AutomaticSize = Enum.AutomaticSize.XY, BackgroundTransparency = 1, Size = UDim2.fromOffset(0, 0)}, Frame)}
 				table.insert(tbl35, Frame2)
 				Frame2.Padded = true
-				fn67(Frame, arg, true)
+				fn68(Frame, arg, true)
 				return Frame2
 			end
 
-			local function fn69(item, arg, arg2)
-				local Frame = fn58("Frame", {BackgroundTransparency = 1, LayoutOrder = arg, Size = UDim2.fromOffset((item.Wide and 380) or 250, 46)}, arg2)
-				local ImageLabel, v10, v11 = fn58("ImageLabel", {BackgroundTransparency = 1, Image = item.Icon, Position = UDim2.fromOffset(0, 2), ScaleType = Enum.ScaleType.Fit, Size = UDim2.fromOffset(42, 42)}, Frame), fn60(Frame, false, 13, {RichText = true, Text = string.upper(item.Id), TextColor3 = color4, Position = UDim2.fromOffset(50, 3), Size = UDim2.new(1, -50, 0, 14)}), fn60(Frame, true, (item.Wide and 18) or 24, {Position = UDim2.fromOffset(50, 18), Size = UDim2.new(1, -50, 0, 26)})
+			local function fn70(item, arg, arg2)
+				local Frame = fn59("Frame", {BackgroundTransparency = 1, LayoutOrder = arg, Size = UDim2.fromOffset((item.Wide and 380) or 250, 46)}, arg2)
+				local ImageLabel, v10, v11 = fn59("ImageLabel", {BackgroundTransparency = 1, Image = item.Icon, Position = UDim2.fromOffset(0, 2), ScaleType = Enum.ScaleType.Fit, Size = UDim2.fromOffset(42, 42)}, Frame), fn61(Frame, false, 13, {RichText = true, Text = string.upper(item.Id), TextColor3 = color4, Position = UDim2.fromOffset(50, 3), Size = UDim2.new(1, -50, 0, 14)}), fn61(Frame, true, (item.Wide and 18) or 24, {Position = UDim2.fromOffset(50, 18), Size = UDim2.new(1, -50, 0, 26)})
 				getUIGradient2(v11, item.Colors[1], item.Colors[2], 90)
-				arg2 = if item.Badge then fn60(ImageLabel, true, 17, {Size = UDim2.fromScale(1, 1), TextXAlignment = Enum.TextXAlignment.Center, TextTruncate = Enum.TextTruncate.None}) else nil
+				arg2 = if item.Badge then fn61(ImageLabel, true, 17, {Size = UDim2.fromScale(1, 1), TextXAlignment = Enum.TextXAlignment.Center, TextTruncate = Enum.TextTruncate.None}) else nil
 				local id, tbl38 = item.Id, {Frame = Frame, Icon = ImageLabel, Value = v11, Caption = v10, Badge = arg2}
 				tbl38.Title, tbl38.Item, tbl36[id] = string.upper(item.Id), item, tbl38
 			end
@@ -41850,14 +41865,14 @@ local function fn2()
 			tbl38.Size = {Color3.fromRGB(255, 244, 200), Color3.fromRGB(235, 190, 95)}
 			tbl38.Time = {Color3.fromRGB(255, 200, 170), Color3.fromRGB(255, 120, 80)}
 
-			local function fn70(arg, arg2, arg3, arg4)
-				local Frame, value = fn58("Frame", {AutomaticSize = Enum.AutomaticSize.X, BackgroundTransparency = 1, BorderSizePixel = 0, LayoutOrder = arg3, Size = UDim2.fromOffset(0, arg4 + 5), Visible = false}, arg), tbl38[arg2] or tbl38.Value
-				arg2 = fn60(Frame, true, arg4, {AutomaticSize = Enum.AutomaticSize.X, Size = UDim2.fromScale(0, 1), TextXAlignment = Enum.TextXAlignment.Center, TextTruncate = Enum.TextTruncate.None})
+			local function fn71(arg, arg2, arg3, arg4)
+				local Frame, value = fn59("Frame", {AutomaticSize = Enum.AutomaticSize.X, BackgroundTransparency = 1, BorderSizePixel = 0, LayoutOrder = arg3, Size = UDim2.fromOffset(0, arg4 + 5), Visible = false}, arg), tbl38[arg2] or tbl38.Value
+				arg2 = fn61(Frame, true, arg4, {AutomaticSize = Enum.AutomaticSize.X, Size = UDim2.fromScale(0, 1), TextXAlignment = Enum.TextXAlignment.Center, TextTruncate = Enum.TextTruncate.None})
 				getUIGradient2(arg2, value[1], value[2], 90)
 				return {Frame = Frame, Text = arg2, Last = nil}
 			end
 
-			local function fn71(arg, last)
+			local function fn72(arg, last)
 				last = (last and tostring(last)) or ""
 				if arg.Last == last then
 					return
@@ -41867,40 +41882,40 @@ local function fn2()
 				arg.Frame.Visible = last ~= ""
 			end
 
-			local function fn72(arg, arg2, arg3, arg4)
-				local Frame = fn58("Frame", {BackgroundTransparency = 1, Position = (arg4 and UDim2.new(0, 4, 0, arg2)) or UDim2.fromOffset(52, arg2), Size = (arg4 and UDim2.new(1, -8, 0, arg3)) or UDim2.new(1, -146, 0, arg3)}, arg)
-				fn58("UIListLayout", {FillDirection = Enum.FillDirection.Horizontal, HorizontalAlignment = (arg4 and Enum.HorizontalAlignment.Center) or Enum.HorizontalAlignment.Left, VerticalAlignment = Enum.VerticalAlignment.Center, SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, 5)}, Frame)
+			local function fn73(arg, arg2, arg3, arg4)
+				local Frame = fn59("Frame", {BackgroundTransparency = 1, Position = (arg4 and UDim2.new(0, 4, 0, arg2)) or UDim2.fromOffset(52, arg2), Size = (arg4 and UDim2.new(1, -8, 0, arg3)) or UDim2.new(1, -146, 0, arg3)}, arg)
+				fn59("UIListLayout", {FillDirection = Enum.FillDirection.Horizontal, HorizontalAlignment = (arg4 and Enum.HorizontalAlignment.Center) or Enum.HorizontalAlignment.Left, VerticalAlignment = Enum.VerticalAlignment.Center, SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, 5)}, Frame)
 				return Frame
 			end
 
-			local function fn73(arg, arg2, arg3)
-				local v10 = fn60(arg, true, arg2, {AutomaticSize = Enum.AutomaticSize.X, LayoutOrder = 1, Size = UDim2.fromOffset(0, arg2 + 4)})
-				fn58("UISizeConstraint", {MaxSize = Vector2.new(arg3, arg2 + 4)}, v10)
+			local function fn74(arg, arg2, arg3)
+				local v10 = fn61(arg, true, arg2, {AutomaticSize = Enum.AutomaticSize.X, LayoutOrder = 1, Size = UDim2.fromOffset(0, arg2 + 4)})
+				fn59("UISizeConstraint", {MaxSize = Vector2.new(arg3, arg2 + 4)}, v10)
 				return v10
 			end
 
-			local function fn74(arg, arg2)
-				local Frame = fn58("Frame", {BackgroundColor3 = Color3.fromRGB(18, 18, 26), BackgroundTransparency = 0.02, BorderSizePixel = 0, LayoutOrder = arg2, Size = UDim2.fromOffset(180, 200)}, arg)
-				fn58("UICorner", {CornerRadius = UDim.new(0, 14)}, Frame)
-				arg2, arg = fn58("UIStroke", {Color = Color3.new(1, 1, 1), Thickness = 3, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, Frame), fn58("Frame", {BackgroundColor3 = Color3.new(1, 1, 1), BackgroundTransparency = 0.7, BorderSizePixel = 0, Size = UDim2.new(1, 0, 0, 136)}, Frame)
-				fn58("UICorner", {CornerRadius = UDim.new(0, 14)}, arg)
-				fn58("ImageLabel", {BackgroundTransparency = 1, Image = assetId, ImageTransparency = 0.82, ScaleType = Enum.ScaleType.Tile, TileSize = UDim2.fromOffset(30, 30), Size = UDim2.fromScale(1, 1)}, arg)
-				local ImageLabel, Frame2 = fn58("ImageLabel", {AnchorPoint = Vector2.new(0.5, 0), BackgroundTransparency = 1, Position = UDim2.new(0.5, 0, 0, 6), ScaleType = Enum.ScaleType.Fit, Size = UDim2.fromOffset(126, 126)}, Frame), fn58("Frame", {BackgroundColor3 = Color3.fromRGB(18, 18, 26), BorderSizePixel = 0, Position = UDim2.fromOffset(7, 7), Size = UDim2.fromOffset(32, 24)}, Frame)
-				fn58("UICorner", {CornerRadius = UDim.new(0, 7)}, Frame2)
-				fn58("UIStroke", {Color = Color3.fromRGB(0, 0, 0), Thickness = 1.6}, Frame2)
-				local v10, v11, v12 = fn60(Frame2, true, 15, {Size = UDim2.fromScale(1, 1), TextXAlignment = Enum.TextXAlignment.Center}), fn60(Frame, true, 13, {AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -7, 0, 10), Size = UDim2.new(1, -46, 0, 16), TextXAlignment = Enum.TextXAlignment.Right, TextColor3 = Color3.fromRGB(255, 230, 120)}), fn72(Frame, 135, 20, true)
-				local v13, size, v14, v15 = fn73(v12, 17, 108), fn70(v12, "Size", 2, 16), fn60(Frame, true, 15, {Position = UDim2.new(0, 6, 0, 155), Size = UDim2.new(1, -12, 0, 16), TextXAlignment = Enum.TextXAlignment.Center}), fn72(Frame, 172, 23, true)
-				return {Frame = Frame, Stroke = arg2, Glow = arg, Image = ImageLabel, Rank = v10, Mutation = v11, Name = v13, Rarity = v14, SizeChip = size, ValueChip = fn70(v15, "Value", 1, 18), HatchChip = fn70(v15, "Time", 2, 16), Key = nil, Gradients = {}}
+			local function fn75(arg, arg2)
+				local Frame = fn59("Frame", {BackgroundColor3 = Color3.fromRGB(18, 18, 26), BackgroundTransparency = 0.02, BorderSizePixel = 0, LayoutOrder = arg2, Size = UDim2.fromOffset(180, 200)}, arg)
+				fn59("UICorner", {CornerRadius = UDim.new(0, 14)}, Frame)
+				arg2, arg = fn59("UIStroke", {Color = Color3.new(1, 1, 1), Thickness = 3, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, Frame), fn59("Frame", {BackgroundColor3 = Color3.new(1, 1, 1), BackgroundTransparency = 0.7, BorderSizePixel = 0, Size = UDim2.new(1, 0, 0, 136)}, Frame)
+				fn59("UICorner", {CornerRadius = UDim.new(0, 14)}, arg)
+				fn59("ImageLabel", {BackgroundTransparency = 1, Image = assetId, ImageTransparency = 0.82, ScaleType = Enum.ScaleType.Tile, TileSize = UDim2.fromOffset(30, 30), Size = UDim2.fromScale(1, 1)}, arg)
+				local ImageLabel, Frame2 = fn59("ImageLabel", {AnchorPoint = Vector2.new(0.5, 0), BackgroundTransparency = 1, Position = UDim2.new(0.5, 0, 0, 6), ScaleType = Enum.ScaleType.Fit, Size = UDim2.fromOffset(126, 126)}, Frame), fn59("Frame", {BackgroundColor3 = Color3.fromRGB(18, 18, 26), BorderSizePixel = 0, Position = UDim2.fromOffset(7, 7), Size = UDim2.fromOffset(32, 24)}, Frame)
+				fn59("UICorner", {CornerRadius = UDim.new(0, 7)}, Frame2)
+				fn59("UIStroke", {Color = Color3.fromRGB(0, 0, 0), Thickness = 1.6}, Frame2)
+				local v10, v11, v12 = fn61(Frame2, true, 15, {Size = UDim2.fromScale(1, 1), TextXAlignment = Enum.TextXAlignment.Center}), fn61(Frame, true, 13, {AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -7, 0, 10), Size = UDim2.new(1, -46, 0, 16), TextXAlignment = Enum.TextXAlignment.Right, TextColor3 = Color3.fromRGB(255, 230, 120)}), fn73(Frame, 135, 20, true)
+				local v13, size, v14, v15 = fn74(v12, 17, 108), fn71(v12, "Size", 2, 16), fn61(Frame, true, 15, {Position = UDim2.new(0, 6, 0, 155), Size = UDim2.new(1, -12, 0, 16), TextXAlignment = Enum.TextXAlignment.Center}), fn73(Frame, 172, 23, true)
+				return {Frame = Frame, Stroke = arg2, Glow = arg, Image = ImageLabel, Rank = v10, Mutation = v11, Name = v13, Rarity = v14, SizeChip = size, ValueChip = fn71(v15, "Value", 1, 18), HatchChip = fn71(v15, "Time", 2, 16), Key = nil, Gradients = {}}
 			end
 
-			local function fn75(arg, arg2, arg3, arg4)
+			local function fn76(arg, arg2, arg3, arg4)
 				local v10, key = arg2.Category(arg3), tostring(arg3.Uid) .. ("|" .. tostring(arg4))
 				arg.Frame.Visible = true
 
 				if arg.Key ~= key then
 					arg.Key = key
 					local entry = arg3.Entry
-					local v11, v12, v13 = fn42(entry)
+					local v11, v12, v13 = fn43(entry)
 
 					for _, gradient in ipairs(arg.Gradients) do
 						pcall(function()
@@ -41909,25 +41924,25 @@ local function fn2()
 					end
 
 					table.clear(arg.Gradients)
-					table.insert(arg.Gradients, fn59(arg.Stroke, v13, 45))
-					table.insert(arg.Gradients, fn59(arg.Glow, v13, nil))
-					table.insert(arg.Gradients, fn59(arg.Rarity, v13, nil))
+					table.insert(arg.Gradients, fn60(arg.Stroke, v13, 45))
+					table.insert(arg.Gradients, fn60(arg.Glow, v13, nil))
+					table.insert(arg.Gradients, fn60(arg.Rarity, v13, nil))
 					arg.Image.Image = tostring(arg2.Image(arg3) or "")
 					arg.Rank.Text = "#" .. tostring(arg4)
-					arg.Mutation.Text = fn43(arg3.Record)
+					arg.Mutation.Text = fn44(arg3.Record)
 					arg.Name.Text = tostring((entry and entry.DisplayName) or v10)
 					arg.Rarity.Text = string.upper(v11)
 				end
 
 				arg4, v10, key = arg2.Detail(arg3)
-				fn71(arg.ValueChip, arg4)
-				fn71(arg.SizeChip, v10)
-				fn71(arg.HatchChip, key)
+				fn72(arg.ValueChip, arg4)
+				fn72(arg.SizeChip, v10)
+				fn72(arg.HatchChip, key)
 			end
 
 			local tbl39, stealHistory = {}
 
-			local function fn76(arg)
+			local function fn77(arg)
 				local n7 = math.max(0, os.time() - (tonumber(arg) or os.time()))
 
 				if n7 < 60 then
@@ -41941,15 +41956,15 @@ local function fn2()
 				return (n7 // 86400) .. "d ago"
 			end
 
-			local function fn77(arg, arg2)
-				local Frame = fn58("Frame", {BackgroundColor3 = Color3.fromRGB(14, 14, 20), BackgroundTransparency = 0.25, BorderSizePixel = 0, LayoutOrder = arg2, Size = UDim2.fromOffset(330, 52), Visible = false}, arg)
-				fn58("UICorner", {CornerRadius = UDim.new(0, 10)}, Frame)
-				local UIStroke, ImageLabel, v10 = fn58("UIStroke", {Color = Color3.new(1, 1, 1), Thickness = 2, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, Frame), fn58("ImageLabel", {BackgroundTransparency = 1, Position = UDim2.fromOffset(4, 3), ScaleType = Enum.ScaleType.Fit, Size = UDim2.fromOffset(46, 46)}, Frame), fn72(Frame, 3, 22, false)
-				local v11, size, v12 = fn73(v10, 17, 122), fn70(v10, "Size", 2, 16), fn72(Frame, 27, 22, false)
-				return {Frame = Frame, Stroke = UIStroke, Image = ImageLabel, Name = v11, Rarity = fn60(v12, true, 14, {AutomaticSize = Enum.AutomaticSize.X, LayoutOrder = 1, Size = UDim2.fromOffset(0, 18), TextTruncate = Enum.TextTruncate.None}), SizeChip = size, ValueChip = fn70(v12, "Value", 2, 16), When = fn60(Frame, true, 15, {AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -10, 0.5, 0), Size = UDim2.fromOffset(84, 20), TextXAlignment = Enum.TextXAlignment.Right, TextColor3 = color5}), Key = nil, Gradients = {}}
+			local function fn78(arg, arg2)
+				local Frame = fn59("Frame", {BackgroundColor3 = Color3.fromRGB(14, 14, 20), BackgroundTransparency = 0.25, BorderSizePixel = 0, LayoutOrder = arg2, Size = UDim2.fromOffset(330, 52), Visible = false}, arg)
+				fn59("UICorner", {CornerRadius = UDim.new(0, 10)}, Frame)
+				local UIStroke, ImageLabel, v10 = fn59("UIStroke", {Color = Color3.new(1, 1, 1), Thickness = 2, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, Frame), fn59("ImageLabel", {BackgroundTransparency = 1, Position = UDim2.fromOffset(4, 3), ScaleType = Enum.ScaleType.Fit, Size = UDim2.fromOffset(46, 46)}, Frame), fn73(Frame, 3, 22, false)
+				local v11, size, v12 = fn74(v10, 17, 122), fn71(v10, "Size", 2, 16), fn73(Frame, 27, 22, false)
+				return {Frame = Frame, Stroke = UIStroke, Image = ImageLabel, Name = v11, Rarity = fn61(v12, true, 14, {AutomaticSize = Enum.AutomaticSize.X, LayoutOrder = 1, Size = UDim2.fromOffset(0, 18), TextTruncate = Enum.TextTruncate.None}), SizeChip = size, ValueChip = fn71(v12, "Value", 2, 16), When = fn61(Frame, true, 15, {AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -10, 0.5, 0), Size = UDim2.fromOffset(84, 20), TextXAlignment = Enum.TextXAlignment.Right, TextColor3 = color5}), Key = nil, Gradients = {}}
 			end
 
-			local function fn78()
+			local function fn79()
 				if not (stealHistory) then
 					return
 				end
@@ -41966,8 +41981,8 @@ local function fn2()
 
 							if v10.Key ~= key then
 								v10.Key = key
-								local v12 = fn41(v11.Category)
-								local v13, v14, v15 = fn42(v12)
+								local v12 = fn42(v11.Category)
+								local v13, v14, v15 = fn43(v12)
 
 								for _, gradient in ipairs(v10.Gradients) do
 									pcall(function()
@@ -41976,8 +41991,8 @@ local function fn2()
 								end
 
 								table.clear(v10.Gradients)
-								table.insert(v10.Gradients, fn59(v10.Stroke, v15, 45))
-								table.insert(v10.Gradients, fn59(v10.Rarity, v15, nil))
+								table.insert(v10.Gradients, fn60(v10.Stroke, v15, 45))
+								table.insert(v10.Gradients, fn60(v10.Rarity, v15, nil))
 
 								if (flag and v12) and v12.Icon then
 									v10.Image.Image = tostring(v12.Icon)
@@ -41988,11 +42003,11 @@ local function fn2()
 
 								v10.Name.Text = tostring(v11.Name or v11.Category)
 								v10.Rarity.Text = string.upper(tostring(v11.Rarity or ""))
-								fn71(v10.ValueChip, (tonumber(v11.Value) and ("$" .. (fn35(v11.Value) .. "/s"))) or "")
-								fn71(v10.SizeChip, (tonumber(v11.Scale) and string.format("x%.2f", tonumber(v11.Scale))) or "")
+								fn72(v10.ValueChip, (tonumber(v11.Value) and ("$" .. (fn36(v11.Value) .. "/s"))) or "")
+								fn72(v10.SizeChip, (tonumber(v11.Scale) and string.format("x%.2f", tonumber(v11.Scale))) or "")
 							end
 
-							v10.When.Text = fn76(v11.At)
+							v10.When.Text = fn77(v11.At)
 							flag3 = true
 						else
 							v10.Frame.Visible = false
@@ -42007,7 +42022,7 @@ local function fn2()
 				end
 			end
 
-			local function fn79()
+			local function fn80()
 				for i2, v10 in ipairs(tbl37) do
 					i2 = tbl31
 					local visible = i2[v10.Showcase.Id] == true
@@ -42021,7 +42036,7 @@ local function fn2()
 
 							if i2 then
 								if k <= n6 then
-									fn75(card, v10.Showcase, i2, k)
+									fn76(card, v10.Showcase, i2, k)
 								else
 									card.Frame.Visible = false
 								end
@@ -42032,10 +42047,10 @@ local function fn2()
 					end
 				end
 
-				fn78()
+				fn79()
 			end
 
-			local function fn80()
+			local function fn81()
 				for _, v10 in pairs(tbl36) do
 					local frame, tbl312 = v10.Frame, tbl31
 					frame.Visible = tbl312[v10.Item.Id] == true
@@ -42054,36 +42069,36 @@ local function fn2()
 					end
 				end
 
-				fn79()
-			end
-
-			local function fn81()
-				local Frame = fn58("Frame", {Active = true, AnchorPoint = Vector2.new(0.5, 0), BackgroundColor3 = Color3.fromRGB(20, 18, 24), BackgroundTransparency = 0.12, BorderSizePixel = 0, Size = UDim2.fromOffset(470, 62)}, ScreenGui)
-				fn58("UICorner", {CornerRadius = UDim.new(0, 16)}, Frame)
-				getUIGradient2(fn58("UIStroke", {Color = Color3.new(1, 1, 1), Thickness = 2.4, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, Frame), Color3.fromRGB(255, 196, 60), Color3.fromRGB(255, 60, 40), 0)
-				fn58("ImageLabel", {BackgroundTransparency = 1, Image = assetId, ImageTransparency = 0.9, ScaleType = Enum.ScaleType.Tile, TileSize = UDim2.fromOffset(40, 40), Size = UDim2.fromScale(1, 1)}, Frame)
-				table.insert(tbl34, fn58("UIScale", {}, Frame))
-				local Frame2 = fn58("Frame", {BackgroundColor3 = Color3.fromRGB(30, 24, 30), BorderSizePixel = 0, Position = UDim2.fromOffset(9, 8), Size = UDim2.fromOffset(46, 46)}, Frame)
-				fn58("UICorner", {CornerRadius = UDim.new(0, 12)}, Frame2)
-				getUIGradient2(fn58("UIStroke", {Color = Color3.new(1, 1, 1), Thickness = 2}, Frame2), Color3.fromRGB(255, 196, 60), Color3.fromRGB(255, 60, 40), 45)
-				local ImageLabel = fn58("ImageLabel", {BackgroundTransparency = 1, Image = assetId2, ScaleType = Enum.ScaleType.Crop, Size = UDim2.fromScale(1, 1)}, Frame2)
-				fn58("UICorner", {CornerRadius = UDim.new(0, 12)}, ImageLabel)
-				getUIGradient2(fn60(Frame, true, 24, {Text = "CHILLI HUB", Position = UDim2.fromOffset(64, 8), Size = UDim2.fromOffset(200, 26)}), Color3.fromRGB(255, 226, 120), Color3.fromRGB(255, 80, 40), 90)
-				fn60(Frame, false, 12, {Text = "FARM STATS  |  STEAL AN EGG", TextColor3 = color4, Position = UDim2.fromOffset(65, 36), Size = UDim2.fromOffset(200, 16)})
-				Frame2 = fn58("Frame", {BackgroundColor3 = Color3.new(1, 1, 1), BackgroundTransparency = 0.82, BorderSizePixel = 0, Position = UDim2.fromOffset(282, 12), Size = UDim2.fromOffset(2, 38)}, Frame)
-				fn58("UICorner", {CornerRadius = UDim.new(1, 0)}, Frame2)
-				v8 = fn60(Frame, true, 26, {Position = UDim2.fromOffset(296, 6), Size = UDim2.fromOffset(78, 30), TextXAlignment = Enum.TextXAlignment.Center, TextColor3 = color})
-				fn60(Frame, false, 12, {Text = "FPS", TextColor3 = color4, Position = UDim2.fromOffset(296, 38), Size = UDim2.fromOffset(78, 14), TextXAlignment = Enum.TextXAlignment.Center})
-				v9 = fn60(Frame, true, 26, {Position = UDim2.fromOffset(380, 6), Size = UDim2.fromOffset(80, 30), TextXAlignment = Enum.TextXAlignment.Center, TextColor3 = color})
-				fn60(Frame, false, 12, {Text = "PING MS", TextColor3 = color4, Position = UDim2.fromOffset(380, 38), Size = UDim2.fromOffset(80, 14), TextXAlignment = Enum.TextXAlignment.Center})
-				table.insert(tbl35, {Id = "Signature", Frame = Frame, Column = "Top", Order = 0})
+				fn80()
 			end
 
 			local function fn82()
+				local Frame = fn59("Frame", {Active = true, AnchorPoint = Vector2.new(0.5, 0), BackgroundColor3 = Color3.fromRGB(20, 18, 24), BackgroundTransparency = 0.12, BorderSizePixel = 0, Size = UDim2.fromOffset(470, 62)}, ScreenGui)
+				fn59("UICorner", {CornerRadius = UDim.new(0, 16)}, Frame)
+				getUIGradient2(fn59("UIStroke", {Color = Color3.new(1, 1, 1), Thickness = 2.4, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, Frame), Color3.fromRGB(255, 196, 60), Color3.fromRGB(255, 60, 40), 0)
+				fn59("ImageLabel", {BackgroundTransparency = 1, Image = assetId, ImageTransparency = 0.9, ScaleType = Enum.ScaleType.Tile, TileSize = UDim2.fromOffset(40, 40), Size = UDim2.fromScale(1, 1)}, Frame)
+				table.insert(tbl34, fn59("UIScale", {}, Frame))
+				local Frame2 = fn59("Frame", {BackgroundColor3 = Color3.fromRGB(30, 24, 30), BorderSizePixel = 0, Position = UDim2.fromOffset(9, 8), Size = UDim2.fromOffset(46, 46)}, Frame)
+				fn59("UICorner", {CornerRadius = UDim.new(0, 12)}, Frame2)
+				getUIGradient2(fn59("UIStroke", {Color = Color3.new(1, 1, 1), Thickness = 2}, Frame2), Color3.fromRGB(255, 196, 60), Color3.fromRGB(255, 60, 40), 45)
+				local ImageLabel = fn59("ImageLabel", {BackgroundTransparency = 1, Image = assetId2, ScaleType = Enum.ScaleType.Crop, Size = UDim2.fromScale(1, 1)}, Frame2)
+				fn59("UICorner", {CornerRadius = UDim.new(0, 12)}, ImageLabel)
+				getUIGradient2(fn61(Frame, true, 24, {Text = "CHILLI HUB", Position = UDim2.fromOffset(64, 8), Size = UDim2.fromOffset(200, 26)}), Color3.fromRGB(255, 226, 120), Color3.fromRGB(255, 80, 40), 90)
+				fn61(Frame, false, 12, {Text = "FARM STATS  |  STEAL AN EGG", TextColor3 = color4, Position = UDim2.fromOffset(65, 36), Size = UDim2.fromOffset(200, 16)})
+				Frame2 = fn59("Frame", {BackgroundColor3 = Color3.new(1, 1, 1), BackgroundTransparency = 0.82, BorderSizePixel = 0, Position = UDim2.fromOffset(282, 12), Size = UDim2.fromOffset(2, 38)}, Frame)
+				fn59("UICorner", {CornerRadius = UDim.new(1, 0)}, Frame2)
+				v8 = fn61(Frame, true, 26, {Position = UDim2.fromOffset(296, 6), Size = UDim2.fromOffset(78, 30), TextXAlignment = Enum.TextXAlignment.Center, TextColor3 = color})
+				fn61(Frame, false, 12, {Text = "FPS", TextColor3 = color4, Position = UDim2.fromOffset(296, 38), Size = UDim2.fromOffset(78, 14), TextXAlignment = Enum.TextXAlignment.Center})
+				v9 = fn61(Frame, true, 26, {Position = UDim2.fromOffset(380, 6), Size = UDim2.fromOffset(80, 30), TextXAlignment = Enum.TextXAlignment.Center, TextColor3 = color})
+				fn61(Frame, false, 12, {Text = "PING MS", TextColor3 = color4, Position = UDim2.fromOffset(380, 38), Size = UDim2.fromOffset(80, 14), TextXAlignment = Enum.TextXAlignment.Center})
+				table.insert(tbl35, {Id = "Signature", Frame = Frame, Column = "Top", Order = 0})
+			end
+
+			local function fn83()
 				if not (ScreenGui) then
 					return
 				end
-				local v10, v11, v12, n7 = fn62(), fn63(), fn64(), 0
+				local v10, v11, v12, n7 = fn63(), fn64(), fn65(), 0
 
 				for _, v13 in ipairs(tbl35) do
 					n7 = if v13.Column == "Center" then if v13.Frame.Visible then math.max(n7, v13.Frame.AbsoluteSize.X) else n7 else n7
@@ -42106,7 +42121,7 @@ local function fn2()
 
 				for i2, v13 in ipairs(tbl35) do
 					if v13.Id ~= "Signature" then
-						local v14, column = fn57(v13.Id, v11, v12, v10.Y), v13.Column
+						local v14, column = fn58(v13.Id, v11, v12, v10.Y), v13.Column
 						i2 = tbl40[column] or left
 
 						if v14 then
@@ -42128,13 +42143,13 @@ local function fn2()
 
 			local n7 = 0
 
-			local function fn83()
+			local function fn84()
 				if not (ScreenGui) then
 					return
 				end
 				n7 += 1
 				local n72 = n7
-				fn65()
+				fn66()
 
 				task.defer(function()
 					RunService2.Heartbeat:Wait()
@@ -42146,7 +42161,7 @@ local function fn2()
 						return
 					end
 
-					fn82()
+					fn83()
 					RunService2.Heartbeat:Wait()
 
 					if n72 ~= n7 then
@@ -42156,12 +42171,12 @@ local function fn2()
 					end
 
 					for _, v10 in ipairs(tbl35) do
-						fn66(v10.Frame, v10.Padded)
+						fn67(v10.Frame, v10.Padded)
 					end
 				end)
 			end
 
-			local function fn84()
+			local function fn85()
 				local v10 = ctx.state
 
 				if v10.agShow then
@@ -42170,7 +42185,7 @@ local function fn2()
 				end
 			end
 
-			local function fn85()
+			local function fn86()
 				for _, v10 in ipairs(tbl33) do
 					pcall(function()
 						v10:Disconnect()
@@ -42194,57 +42209,57 @@ local function fn2()
 				stealHistory = nil
 			end
 
-			local function fn86()
-				fn85()
-				ScreenGui = fn58("ScreenGui", {Archivable = false, DisplayOrder = -101, IgnoreGuiInset = true, ResetOnSpawn = false, ZIndexBehavior = Enum.ZIndexBehavior.Sibling}, nil)
-				fn81()
+			local function fn87()
+				fn86()
+				ScreenGui = fn59("ScreenGui", {Archivable = false, DisplayOrder = -101, IgnoreGuiInset = true, ResetOnSpawn = false, ZIndexBehavior = Enum.ZIndexBehavior.Sibling}, nil)
+				fn82()
 
 				for i2, v10 in ipairs(tbl22) do
-					local v11 = fn68(v10.Id, v10.Column, v10.Colors, i2)
+					local v11 = fn69(v10.Id, v10.Column, v10.Colors, i2)
 					v11.Group = v10
-					fn58("UIListLayout", {SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, 4)}, v11.Body)
+					fn59("UIListLayout", {SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, 4)}, v11.Body)
 
 					for i3, item in ipairs(v10.Items) do
-						fn69(item, i3, v11.Body)
+						fn70(item, i3, v11.Body)
 					end
 				end
 
 				for i2, v10 in ipairs(tbl29) do
-					local center = fn68(v10.Id, "Center", v10.Colors, 100 + i2)
-					fn58("UIListLayout", {FillDirection = Enum.FillDirection.Horizontal, SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, 10)}, center.Body)
+					local center = fn69(v10.Id, "Center", v10.Colors, 100 + i2)
+					fn59("UIListLayout", {FillDirection = Enum.FillDirection.Horizontal, SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, 10)}, center.Body)
 					i2 = {}
 
 					for i3 = 1, 6, 1 do
-						i2[i3] = fn74(center.Body, i3)
+						i2[i3] = fn75(center.Body, i3)
 						i2[i3].Frame.Visible = false
 					end
 
 					table.insert(tbl37, {Panel = center, Showcase = v10, Cards = i2})
 				end
 
-				local stealHistory2 = fn68("Steal History", "Left", {Color3.fromRGB(255, 60, 90), Color3.fromRGB(255, 140, 160)}, 2.5)
-				fn58("UIListLayout", {SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, 6)}, stealHistory2.Body)
+				local stealHistory2 = fn69("Steal History", "Left", {Color3.fromRGB(255, 60, 90), Color3.fromRGB(255, 140, 160)}, 2.5)
+				fn59("UIListLayout", {SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, 6)}, stealHistory2.Body)
 				stealHistory = stealHistory2
 				table.clear(tbl39)
 
 				for i2 = 1, 7, 1 do
-					tbl39[i2] = fn77(stealHistory2.Body, i2)
+					tbl39[i2] = fn78(stealHistory2.Body, i2)
 				end
 
-				stealHistory2.Empty = fn60(stealHistory2.Body, true, 16, {LayoutOrder = 99, Text = "No steals yet", TextColor3 = color4, Size = UDim2.fromOffset(330, 30)})
+				stealHistory2.Empty = fn61(stealHistory2.Body, true, 16, {LayoutOrder = 99, Text = "No steals yet", TextColor3 = color4, Size = UDim2.fromOffset(330, 30)})
 
 				table.sort(tbl35, function(arg, arg2)
 					return arg.Order < arg2.Order
 				end)
 
-				fn80()
-				fn65()
+				fn81()
+				fn66()
 				ScreenGui.Parent = hui
-				fn83()
+				fn84()
 				stealHistory2 = workspace.CurrentCamera
 
 				if stealHistory2 then
-					tbl33[#tbl33 + 1] = stealHistory2:GetPropertyChangedSignal("ViewportSize"):Connect(fn83)
+					tbl33[#tbl33 + 1] = stealHistory2:GetPropertyChangedSignal("ViewportSize"):Connect(fn84)
 				end
 
 				local O, n8 = 0, 0
@@ -42342,19 +42357,19 @@ local function fn2()
 					if (now2 >= n10) or tbl17.Changed then
 						n10 = now2 + 1
 						tbl17.Changed = false
-						pcall(fn79)
+						pcall(fn80)
 					end
 				end)
 			end
 
 			local O = true
 
-			local function fn87()
+			local function fn88()
 				local v10 = ctx.state
 				v10.hideUI(false)
 			end
 
-			local function fn88()
+			local function fn89()
 				local v10 = ctx.state
 				v10.hideUI(O and flag2)
 			end
@@ -42362,9 +42377,9 @@ local function fn2()
 			local v10 = ctx.state
 
 			v10.hudUI = function(arg)
-				local farmHud = fn13(arg, "Farm HUD", "farmHud", false, function(arg2)
+				local farmHud = fn14(arg, "Farm HUD", "farmHud", false, function(arg2)
 					flag2 = arg2 == true
-					fn84()
+					fn85()
 					arg2 = ctx.state
 
 					if arg2.fpsShow then
@@ -42383,17 +42398,17 @@ local function fn2()
 					end
 
 					if flag2 then
-						fn86()
+						fn87()
 					else
-						fn85()
+						fn86()
 					end
 
-					fn88()
+					fn89()
 				end, "Drag any panel to place it where you like")
 
 				arg:Toggle("Hide Game UI", true, function(arg2)
 					O = arg2 == true
-					fn88()
+					fn89()
 				end, nil, farmHud):When(farmHud)
 
 				arg:Dropdown("HUD Items", tbl30, tbl30, function(arg2)
@@ -42410,18 +42425,18 @@ local function fn2()
 					end
 
 					tbl31 = tbl40
-					fn80()
-					fn83()
+					fn81()
+					fn84()
 				end, true, nil, farmHud):When(farmHud)
 
 				arg:Slider("Showcase Cards", 1, 6, 4, function(arg2)
 					n6 = math.clamp(math.floor(tonumber(arg2) or 4), 1, 6)
-					pcall(fn79)
+					pcall(fn80)
 				end, nil, 1, nil, farmHud):When(farmHud)
 
 				arg:Slider("HUD Size", 50, 120, touchEnabled, function(arg2)
 					n5 = math.clamp((tonumber(arg2) or touchEnabled) / 100, 0.5, 1.2)
-					fn83()
+					fn84()
 				end, "%", 1, nil, farmHud):When(farmHud)
 
 				arg:Dropdown("Egg Card Image", {"Egg Image", "Pet Image"}, "Egg Image", function(arg2)
@@ -42433,15 +42448,15 @@ local function fn2()
 						end
 					end
 
-					pcall(fn79)
+					pcall(fn80)
 				end, false, "Picture used for Top Eggs and Steal History", farmHud):When(farmHud)
 			end
 
-			fn33(function()
+			fn34(function()
 				flag2 = false
-				fn84()
 				fn85()
-				fn87()
+				fn86()
+				fn88()
 			end)
 		end)()
 
@@ -42484,7 +42499,7 @@ local function fn2()
 		local v5 = getUIGradient(Frame4, O.Off, O.Off, 0)
 		local Frame5, n3 = n2("Frame", {Parent = Frame4, AnchorPoint = Vector2.new(0, 0.5), Position = uDim2New(0, 3, 0.5, 0), Size = uDim2FromOffset(16, 16), BackgroundColor3 = color3FromRGB(245, 245, 250), ZIndex = 3, n2("UICorner", {CornerRadius = UDim.new(1, 0)})}), 0
 
-		local function fn33()
+		local function fn34()
 			local v6 = ctx.slot28
 			return (v6.antiGuard and O.A) or O.Off
 		end
@@ -42501,7 +42516,7 @@ local function fn2()
 			tw(UIStroke, {Transparency = (flag and 0) or 0.2}, 0.3, quint)
 
 			if os.clock() >= n3 then
-				tw(UIStroke2, {Color = fn33()}, n4, quint)
+				tw(UIStroke2, {Color = fn34()}, n4, quint)
 			end
 		end
 
@@ -42514,7 +42529,7 @@ local function fn2()
 			if arg2 then
 				task.delay(arg2, function()
 					if os.clock() >= n3 then
-						tw(UIStroke2, {Color = fn33()}, 0.3, quint)
+						tw(UIStroke2, {Color = fn34()}, 0.3, quint)
 					end
 				end)
 			end
@@ -42537,7 +42552,7 @@ local function fn2()
 
 		color3FromRGB = n2("TextButton", {Parent = Frame2, Size = UDim2.fromScale(1, 1), ZIndex = 10})
 
-		local function fn34()
+		local function fn35()
 			local antiGuardEnabled = c.St["Anti Guard Enabled"]
 
 			if antiGuardEnabled then
@@ -42552,22 +42567,22 @@ local function fn2()
 			end)
 		end
 
-		color3FromRGB.MouseButton1Click:Connect(fn34)
+		color3FromRGB.MouseButton1Click:Connect(fn35)
 
-		local function fn35()
+		local function fn36()
 			tw(Frame4, {Size = uDim2FromOffset(44, 24)}, 0.15, quint)
 		end
 
-		color3FromRGB.MouseEnter:Connect(fn35)
+		color3FromRGB.MouseEnter:Connect(fn36)
 
-		local function fn36()
+		local function fn37()
 			tw(Frame4, {Size = uDim2FromOffset(42, 22)}, 0.15, quint)
 		end
 
-		color3FromRGB.MouseLeave:Connect(fn36)
+		color3FromRGB.MouseLeave:Connect(fn37)
 		local tbl12, s, n4 = {Hotbar = 1, HotBar = 1, Toolbar = 1, ToolBar = 1, Backpack = 1, Inventory = 1}, {}
 
-		local function fn37(arg)
+		local function fn38(arg)
 			while arg do
 				if arg:IsA("GuiObject") then
 					if not (arg.Visible) then
@@ -42584,7 +42599,7 @@ local function fn2()
 			return false
 		end
 
-		local function fn38(arg)
+		local function fn39(arg)
 			local y2
 
 			for _, descendant in ipairs(arg:GetDescendants()) do
@@ -42594,7 +42609,7 @@ local function fn2()
 			return y2 or arg.AbsolutePosition.Y
 		end
 
-		local function fn39()
+		local function fn40()
 			table.clear(s)
 			local v9 = ctx.localPlayer
 			local playerGui = v9:FindFirstChildOfClass("PlayerGui")
@@ -42612,7 +42627,7 @@ local function fn2()
 			end
 		end
 
-		local function fn40()
+		local function fn41()
 			local viewportSize = workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize
 
 			if viewportSize then
@@ -42654,7 +42669,7 @@ local function fn2()
 			n5 = false
 
 			for _, v9 in ipairs(tbl13) do
-				local ok, result = pcall(fn37, v9)
+				local ok, result = pcall(fn38, v9)
 				local absoluteSize, y3 = v9.AbsoluteSize, v9.AbsolutePosition.Y
 
 				if ok then
@@ -42663,7 +42678,7 @@ local function fn2()
 							if absoluteSize.Y > 20 then
 								if absoluteSize.Y < (viewportSize.Y * 0.4) then
 									if (y3 + (absoluteSize.Y / 2)) > (viewportSize.Y * 0.5) then
-										local ok2, result2 = pcall(fn38, v9)
+										local ok2, result2 = pcall(fn39, v9)
 										local n7, flag = math.min(n6, ((ok2 and result2) or y3) + y2), true
 										n6, n5 = n7, flag
 									else
@@ -42701,12 +42716,12 @@ local function fn2()
 
 			if huge >= 30 then
 				huge = 0
-				task.spawn(pcall, fn39)
+				task.spawn(pcall, fn40)
 			end
 
 			if huge2 >= 0.5 then
 				huge2 = 0
-				pcall(fn40)
+				pcall(fn41)
 			end
 
 			n5 = ctx.slot28
@@ -42718,8 +42733,8 @@ local function fn2()
 			end
 		end)
 
-		fn35 = ctx.state
-		fn35.agPaint(true)
+		fn36 = ctx.state
+		fn36.agPaint(true)
 		getUIGradient = ctx.state
 		getUIGradient.agShow(ctx.slot28.agPanel)
 		tw(UIScale2, {Scale = 1}, 0.45, back)
@@ -42728,7 +42743,7 @@ local function fn2()
 	g("50_system#1", function()
 		local server, queueOnTeleport, s = tbl3.Server, ((queue_on_teleport or queueonteleport) or (syn and syn.queue_on_teleport)) or (fluxus and fluxus.queue_on_teleport), "local ok, on = pcall(function() return game:GetService(\"TeleportService\"):GetTeleportSetting(\"__ChilliAutoLoadScriptEnabled\") end)\nif ok and on == true then\n  if not game:IsLoaded() then game.Loaded:Wait() end\n  loadstring(game:HttpGet(\"https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua\"))()\nend"
 
-		local function fn33(arg)
+		local function fn34(arg)
 			pcall(function()
 				TeleportService:SetTeleportSetting("__ChilliAutoLoadScriptEnabled", arg == true)
 			end)
@@ -42742,8 +42757,8 @@ local function fn2()
 			end
 		end
 
-		fn13(server, "Auto Load Script", "autoExec", true, function(arg)
-			fn33(arg)
+		fn14(server, "Auto Load Script", "autoExec", true, function(arg)
+			fn34(arg)
 
 			if arg then
 				if not (queueOnTeleport) then
@@ -42758,7 +42773,7 @@ local function fn2()
 
 		v4.beforeTeleport = function()
 			local v5 = ctx.slot28
-			fn33(v5.autoExec)
+			fn34(v5.autoExec)
 		end
 
 		local v5 = ctx.localPlayer
@@ -42804,8 +42819,8 @@ local function fn2()
 			n2 = os.clock()
 		end)
 
-		fn13(server, "Auto Rejoin When Disconnect", "rejoin", true, function(O)
-			fn21("kick", O and getService("GuiService").ErrorMessageChanged, function(arg)
+		fn14(server, "Auto Rejoin When Disconnect", "rejoin", true, function(O)
+			fn22("kick", O and getService("GuiService").ErrorMessageChanged, function(arg)
 				local str = tostring(arg):lower()
 
 				if flag then
@@ -42880,7 +42895,7 @@ local function fn2()
 			end
 		end
 
-		fn13(discordWebhook, "Ping @everyone", "whPing", false)
+		fn14(discordWebhook, "Ping @everyone", "whPing", false)
 		txt = ctx.state
 		local nostat = txt.nostat
 
@@ -42900,12 +42915,12 @@ local function fn2()
 
 		v5 = ctx.state
 
-		local function fn33(arg)
+		local function fn34(arg)
 			local v6 = ctx.state
 			tbl12.rar = v6.minRar(arg)
 		end
 
-		discordWebhook:Dropdown("Webhook Min Rarity", v5.RANY, "Any", fn33, false, "Only post eggs of this rarity and above")
+		discordWebhook:Dropdown("Webhook Min Rarity", v5.RANY, "Any", fn34, false, "Only post eggs of this rarity and above")
 
 		discordWebhook:Slider("Webhook Min Value", 0, 0, 0, function(arg)
 			tbl12.minV = ((arg > 0) and arg) or nil
@@ -42913,12 +42928,12 @@ local function fn2()
 
 		i2 = ctx.state
 
-		local function fn34(arg)
+		local function fn35(arg)
 			local v6 = ctx.state
 			tbl12.sp = v6.names(arg)
 		end
 
-		discordWebhook:Dropdown("Webhook Eggs", i2.eggList, {}, fn34, true, "Only post these eggs (empty = all)")
+		discordWebhook:Dropdown("Webhook Eggs", i2.eggList, {}, fn35, true, "Only post these eggs (empty = all)")
 		local httpRequest, tbl13, flag, tbl14, tbl15, flag2 = ((request or http_request) or (syn and syn.request)) or (http and http.request), {}, false, {}, {}
 		local tbl16 = {}
 
@@ -42932,7 +42947,7 @@ local function fn2()
 			tbl16[i3] = i2
 		end
 
-		local function fn35(arg, arg2, arg3)
+		local function fn36(arg, arg2, arg3)
 			local n3 = 4294967295
 
 			for i3 = arg2, arg3, 1 do
@@ -42942,62 +42957,62 @@ local function fn2()
 			return bit32.bxor(n3, 4294967295)
 		end
 
-		local function fn36(arg, arg2, arg3)
+		local function fn37(arg, arg2, arg3)
 			local n3 = (arg2 * 4) + 1
 			local n4 = n3 * arg3
 			local n5 = ((2 + (math.ceil(n4 / 65535) * 5)) + n4) + 4
 			local v6, n6 = buffer.create((45 + n5) + 12), 0
 
-			local function fn37(arg4)
+			local function fn38(arg4)
 				buffer.writeu8(v6, n6, arg4)
 				n6 += 1
 			end
 
-			local function fn38(arg4)
+			local function fn39(arg4)
 				for i3 = 24, 0, -8 do
-					fn37(bit32.band(bit32.rshift(arg4, i3), 255))
+					fn38(bit32.band(bit32.rshift(arg4, i3), 255))
 				end
 			end
 
 			local tbl17 = {137, 80, 78, 71, 13, 10, 26, 10}
 
 			for _, v7 in ipairs(tbl17) do
-				fn37(v7)
+				fn38(v7)
 			end
 
-			fn38(13)
+			fn39(13)
 			tbl17 = n6
-			fn38(1229472850)
-			fn38(arg2)
-			fn38(arg3)
+			fn39(1229472850)
+			fn39(arg2)
+			fn39(arg3)
 			local tbl18 = {8, 6, 0, 0, 0}
 
 			for _, v7 in ipairs(tbl18) do
-				fn37(v7)
+				fn38(v7)
 			end
 
-			fn38(fn35(v6, tbl17, n6 - 1))
+			fn39(fn36(v6, tbl17, n6 - 1))
 			tbl18 = buffer.create(n4)
 
 			for i3 = 0, arg3 - 1, 1 do
 				buffer.copy(tbl18, (i3 * n3) + 1, arg, (i3 * arg2) * 4, arg2 * 4)
 			end
 
-			fn38(n5)
+			fn39(n5)
 			tbl17 = n6
-			fn38(1229209940)
-			fn37(120)
-			fn37(1)
+			fn39(1229209940)
+			fn38(120)
+			fn38(1)
 			arg = 0
 
 			while arg < n4 do
 				arg3 = math.min(65535, n4 - arg)
-				fn37((((arg + arg3) >= n4) and 1) or 0)
-				fn37(bit32.band(arg3, 255))
-				fn37(bit32.rshift(arg3, 8))
+				fn38((((arg + arg3) >= n4) and 1) or 0)
+				fn38(bit32.band(arg3, 255))
+				fn38(bit32.rshift(arg3, 8))
 				arg2 = bit32.band(bit32.bnot(arg3), 65535)
-				fn37(bit32.band(arg2, 255))
-				fn37(bit32.rshift(arg2, 8))
+				fn38(bit32.band(arg2, 255))
+				fn38(bit32.rshift(arg2, 8))
 				buffer.copy(v6, n6, tbl18, arg, arg3)
 				n6 += arg3
 				arg = arg + arg3
@@ -43010,16 +43025,16 @@ local function fn2()
 				n5 = (n5 + n3) % 65521
 			end
 
-			fn38((n5 * 65536) + n3)
-			fn38(fn35(v6, tbl17, n6 - 1))
-			fn38(0)
+			fn39((n5 * 65536) + n3)
+			fn39(fn36(v6, tbl17, n6 - 1))
+			fn39(0)
 			tbl17 = n6
-			fn38(1229278788)
-			fn38(fn35(v6, tbl17, n6 - 1))
+			fn39(1229278788)
+			fn39(fn36(v6, tbl17, n6 - 1))
 			return buffer.tostring(v6)
 		end
 
-		local function fn37(arg)
+		local function fn38(arg)
 			if tbl14[arg] == nil then
 				local ok, result = pcall(function()
 					local v6 = getService("AssetService"):CreateEditableImageAsync(Content.fromUri("rbxassetid://" .. arg))
@@ -43038,7 +43053,7 @@ local function fn2()
 						end
 					end
 
-					return fn36(v6, n5, n6)
+					return fn37(v6, n5, n6)
 				end)
 
 				tbl14[arg] = ((ok and (type(result) == "string")) and result) or false
@@ -43047,7 +43062,7 @@ local function fn2()
 			return tbl14[arg] or nil
 		end
 
-		local function fn38(arg, arg2)
+		local function fn39(arg, arg2)
 			local ok, result = pcall(gameRef.HttpGet, gameRef, arg)
 			local ok2, result2 = pcall(HttpService.JSONDecode, HttpService, (ok and result) or "")
 			result = ((ok2 and (type(result2) == "table")) and (type(result2.data) == "table")) and result2.data[1]
@@ -43055,25 +43070,25 @@ local function fn2()
 			return (((type(result2) == "string") and (if arg2 then result2:find("/Image/", 1, true) else not arg2)) and result2) or nil
 		end
 
-		local function fn39(arg)
+		local function fn40(arg)
 			if tbl15[arg] == nil then
-				tbl15[arg] = fn38("https://thumbnails.roblox.com/v1/assets?assetIds=" .. (arg .. "&returnPolicy=PlaceHolder&size=420x420&format=Png&isCircular=false"), true) or false
+				tbl15[arg] = fn39("https://thumbnails.roblox.com/v1/assets?assetIds=" .. (arg .. "&returnPolicy=PlaceHolder&size=420x420&format=Png&isCircular=false"), true) or false
 			end
 
 			return tbl15[arg] or nil
 		end
 
-		local function fn40()
+		local function fn41()
 			if flag2 == nil then
 				local v6 = ctx.localPlayer
-				flag2 = fn38("https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=" .. (v6.UserId .. "&size=150x150&format=Png&isCircular=false")) or false
+				flag2 = fn39("https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=" .. (v6.UserId .. "&size=150x150&format=Png&isCircular=false")) or false
 			end
 
 			local flag22 = flag2 or nil
 			return flag22
 		end
 
-		local function fn41()
+		local function fn42()
 			if flag then
 				return
 			end
@@ -43129,7 +43144,7 @@ local function fn2()
 			return match:reverse():gsub("(%d%d%d)", "%1,"):reverse():gsub("^,", "") .. (v6 .. " kg")
 		end
 
-		local function fn42(arg)
+		local function fn43(arg)
 			local v6 = ctx.slot33
 			local areas, directory = v6.Areas
 
@@ -43151,12 +43166,12 @@ local function fn2()
 		local function O(arg, arg2)
 			local author, v6 = {}, ctx.localPlayer
 			author.name = v6.DisplayName
-			author.icon_url = fn40()
+			author.icon_url = fn41()
 			arg.author = author
 			v6, author = DateTime.now():ToIsoDate(), {}
 			author.text, author.icon_url, arg.timestamp = "Chilli Hub" .. (p .. "Steal An Egg"), losslessUrl, v6
 			arg.footer = author
-			local tbl17, arg22, arg23 = {username = "Chilli Hub", avatar_url = losslessUrl, embeds = {arg}}, arg2 and (fn37(arg2)), arg2 and (fn39(arg2))
+			local tbl17, arg22, arg23 = {username = "Chilli Hub", avatar_url = losslessUrl, embeds = {arg}}, arg2 and (fn38(arg2)), arg2 and (fn40(arg2))
 
 			if arg22 then
 				arg.thumbnail = {url = "attachment://egg.png"}
@@ -43178,7 +43193,7 @@ local function fn2()
 			end
 
 			tbl13[#tbl13 + 1] = {p = tbl17, png = arg22, alt = arg23}
-			task.spawn(fn41)
+			task.spawn(fn42)
 		end
 
 		local v6 = ctx.state
@@ -43201,7 +43216,7 @@ local function fn2()
 				local icon, tbl18, concat, tbl19, n3, str3 = str and (((arg4 and str.Egg) and str.Egg.Icon) or str.Icon), {title = arg, color = ((typeof(color) == "Color3") and (((math.floor((color.R * 255) + 0.5) * 65536) + (math.floor((color.G * 255) + 0.5) * 256)) + math.floor((color.B * 255) + 0.5))) or 9134335}, table.concat, {}, arg2.n, E[arg2.r]
 				num, str = ("**%s**%s%s"):format(n3, p, str3 or "?"), table.pack(d(arg2.v))
 				n3, str3, color = ("<:sae_value:1551645680718581871> **Value:** $%s/s"):format(table.unpack(str, 1, str.n)), ("<:sae_size:1551645444285800558> **Size:** %s"):format(str2), (#tbl17 > 0) and table.concat(tbl17, ", ")
-				str, tbl17 = ("<:sae_mutation:1551677914146275478> **Mutation:** %s"):format(color or "None"), table.pack(fn42(arg3))
+				str, tbl17 = ("<:sae_mutation:1551677914146275478> **Mutation:** %s"):format(color or "None"), table.pack(fn43(arg3))
 
 				do
 					local _vals = table.pack(num, n3, str3, str, ("<:sae_area:1551675973328441416> **Area:** %s"):format(table.unpack(tbl17, 1, tbl17.n)))
@@ -43246,7 +43261,7 @@ local function fn2()
 		end)
 
 		local flag3 = false
-		local v7 = fn14({name = "WebhookFull", gap = 2})
+		local v7 = fn15({name = "WebhookFull", gap = 2})
 
 		v7.on = function()
 			local v8 = ctx.slot28
@@ -43283,7 +43298,7 @@ local function fn2()
 			tbl19[k] = true
 		end
 
-		local v8 = fn14({name = "WebhookSteal", gap = 1.5})
+		local v8 = fn15({name = "WebhookSteal", gap = 1.5})
 
 		v8.on = function()
 			local v9 = ctx.slot28
@@ -43343,7 +43358,7 @@ local function fn2()
 			end
 		end
 
-		local v10 = fn14({name = "Webhook", gap = 2})
+		local v10 = fn15({name = "Webhook", gap = 2})
 
 		v10.on = function()
 			local v11 = ctx.slot28
@@ -43401,7 +43416,7 @@ local function fn2()
 		local v7, tbl14, tbl15, tbl16, tbl17, tbl18, tbl19, str, n2 = v6({}, tbl13), {}, {ParticleEmitter = "Enabled", Trail = "Enabled", Beam = "Enabled", Fire = "Enabled", Smoke = "Enabled", Sparkles = "Enabled", PointLight = "Enabled", SpotLight = "Enabled", SurfaceLight = "Enabled", Explosion = "Visible"}, {Part = 1, MeshPart = 1, UnionOperation = 1, WedgePart = 1, CornerWedgePart = 1, TrussPart = 1}, {"LeaderboardsController", "KrakenController", "Mushrooms", "Scenery", "WorkspaceRainbowPartsController", "SubBiomesController", "PlotSignManagerController", "AssetHoverDataDisplay", "AssetBillboardController", "WallTimer", "StaffTagController"}, {"PlacedEggRenderer", "OfflineMoneyInPlotUIController", "EggHolders"}, {"Heartbeat", "RenderStepped", "Stepped", "PreRender", "PreSimulation", "PostSimulation", "PreAnimation"}, "Strong", 0
 		local smoothPlastic, connection = Enum.Material.SmoothPlastic
 
-		local function fn33(arg, arg2, arg3)
+		local function fn34(arg, arg2, arg3)
 			local ok, result = pcall(function()
 				return arg[arg2]
 			end)
@@ -43417,7 +43432,7 @@ local function fn2()
 			end
 		end
 
-		local function fn34(arg, arg2, arg3)
+		local function fn35(arg, arg2, arg3)
 			local tbl20 = v4[arg]
 
 			if tbl20 then
@@ -43431,16 +43446,16 @@ local function fn2()
 			end
 		end
 
-		local function fn35(arg, arg2, arg3)
+		local function fn36(arg, arg2, arg3)
 			local v8 = arg[arg2]
 
 			if v8 ~= arg3 then
-				fn34(arg, arg2, v8)
+				fn35(arg, arg2, v8)
 				arg[arg2] = arg3
 			end
 		end
 
-		local function fn36(arg)
+		local function fn37(arg)
 			for i2, player in ipairs(Players:GetPlayers()) do
 				i2 = player.Character
 
@@ -43456,48 +43471,48 @@ local function fn2()
 
 		local forceField = Enum.Material.ForceField
 
-		local function fn37(arg)
+		local function fn38(arg)
 			local className = arg.ClassName
 
 			if tbl16[className] then
-				fn35(arg, "CastShadow", false)
+				fn36(arg, "CastShadow", false)
 
 				if n2 >= 2 then
 					local material = arg.Material
 
 					if material ~= smoothPlastic then
 						if material ~= forceField then
-							fn34(arg, "Material", material)
+							fn35(arg, "Material", material)
 							arg.Material = smoothPlastic
 						end
 					end
 
 					if arg.Reflectance > 0 then
-						fn35(arg, "Reflectance", 0)
+						fn36(arg, "Reflectance", 0)
 					end
 				end
 
 				if n2 >= 3 then
 					if className == "MeshPart" then
-						fn35(arg, "TextureID", "")
+						fn36(arg, "TextureID", "")
 					end
 				end
 			elseif tbl15[className] then
-				fn35(arg, tbl15[className], false)
+				fn36(arg, tbl15[className], false)
 			elseif className == "Animator" then
 				v5[arg] = true
 			else
 				local flag = (n2 >= 2) and ((className == "Decal") or (className == "Texture"))
 
 				if flag then
-					fn35(arg, "Transparency", 1)
+					fn36(arg, "Transparency", 1)
 				elseif (n2 >= 2) and (className == "Highlight") then
-					fn35(arg, "Enabled", false)
+					fn36(arg, "Enabled", false)
 				elseif (n2 >= 3) and (className == "SpecialMesh") then
-					fn35(arg, "TextureId", "")
+					fn36(arg, "TextureId", "")
 				elseif n2 >= 3 then
 					if className == "SurfaceAppearance" then
-						fn35(arg, "Parent", nil)
+						fn36(arg, "Parent", nil)
 					end
 				end
 			end
@@ -43505,7 +43520,7 @@ local function fn2()
 
 		local tbl20, n3 = {}, 1
 
-		local function fn38()
+		local function fn39()
 			if connection then
 				return
 			end
@@ -43535,7 +43550,7 @@ local function fn2()
 
 						if n2 > 0 then
 							if flag ~= workspace then
-								pcall(fn37, flag)
+								pcall(fn38, flag)
 							end
 						end
 					end
@@ -43551,7 +43566,7 @@ local function fn2()
 			end)
 		end
 
-		local function fn39(arg)
+		local function fn40(arg)
 			local flag, flag2 = n2 > 0
 
 			if flag then
@@ -43562,13 +43577,13 @@ local function fn2()
 			end
 
 			if flag2 then
-				if not (fn36(arg)) then
-					pcall(fn37, arg)
+				if not (fn37(arg)) then
+					pcall(fn38, arg)
 				end
 			end
 		end
 
-		local function fn40(arg)
+		local function fn41(arg)
 			for k, v8 in next, tbl14, nil do
 				if not (arg and arg[v8]) then
 					pcall(k.Enable, k)
@@ -43607,7 +43622,7 @@ local function fn2()
 			end
 		end
 
-		local function fn41(arg, arg2)
+		local function fn42(arg, arg2)
 			local currentCamera, model = workspace.CurrentCamera, ctx.localPlayer
 			local character, position = model.Character, currentCamera and currentCamera.CFrame.Position
 
@@ -43641,7 +43656,7 @@ local function fn2()
 			end
 		end
 
-		local v8 = fn14({name = "Optimizer", gap = 2, info = true})
+		local v8 = fn15({name = "Optimizer", gap = 2, info = true})
 
 		v8.on = function()
 			local n22 = n2
@@ -43677,15 +43692,15 @@ local function fn2()
 				end
 			end
 
-			fn40(tbl21)
-			fn41(true, ((n2 >= 3) and 60) or 120)
+			fn41(tbl21)
+			fn42(true, ((n2 >= 3) and 60) or 120)
 		end
 
-		local function fn42()
+		local function fn43()
 			n2 = 0
-			fn21("opt", nil)
-			fn40(nil)
-			fn41(false)
+			fn22("opt", nil)
+			fn41(nil)
+			fn42(false)
 
 			for i2 = #tbl12, 1, -1 do
 				local v9 = tbl12[i2]
@@ -43713,11 +43728,11 @@ local function fn2()
 
 			table.clear(v4)
 			table.clear(v5)
-			fn38()
+			fn39()
 		end
 
-		local function fn43()
-			fn42()
+		local function fn44()
+			fn43()
 			local flag = ctx.slot28
 			if not (flag.opt) then
 				return
@@ -43725,49 +43740,49 @@ local function fn2()
 			flag = ((str == "Max") and 3) or ((str == "Strong") and 2)
 			n2 = flag or 1
 			local rendering, Lighting, terrain = settings().Rendering, getService("Lighting"), workspace.Terrain
-			fn33(rendering, "QualityLevel", Enum.QualityLevel.Level01)
-			fn33(rendering, "MeshPartDetailLevel", Enum.MeshPartDetailLevel.Level01)
+			fn34(rendering, "QualityLevel", Enum.QualityLevel.Level01)
+			fn34(rendering, "MeshPartDetailLevel", Enum.MeshPartDetailLevel.Level01)
 
 			pcall(function()
-				fn33(UserSettings():GetService("UserGameSettings"), "SavedQualityLevel", Enum.SavedQualitySetting.QualityLevel1)
+				fn34(UserSettings():GetService("UserGameSettings"), "SavedQualityLevel", Enum.SavedQualitySetting.QualityLevel1)
 			end)
 
 			rendering, flag = next, {GlobalShadows = false, ShadowSoftness = 0, FogEnd = 9000000000, EnvironmentDiffuseScale = 0, EnvironmentSpecularScale = 0, Brightness = math.min(Lighting.Brightness, 2)}
 
 			for k, v9 in rendering, flag, nil do
-				fn33(Lighting, k, v9)
+				fn34(Lighting, k, v9)
 			end
 
 			if n2 >= 3 then
-				fn33(Lighting, "Technology", Enum.Technology.Compatibility)
+				fn34(Lighting, "Technology", Enum.Technology.Compatibility)
 			end
 
 			rendering = {Decoration = false, WaterWaveSize = 0, WaterWaveSpeed = 0, WaterReflectance = 0, WaterTransparency = 1}
 
 			for k, v9 in next, rendering, nil do
-				fn33(terrain, k, v9)
+				fn34(terrain, k, v9)
 			end
 
 			for _, child in ipairs(Lighting:GetChildren()) do
 				if child:IsA("PostEffect") then
-					fn33(child, "Enabled", false)
+					fn34(child, "Enabled", false)
 				elseif child:IsA("Atmosphere") then
-					fn33(child, "Density", 0)
-					fn33(child, "Haze", 0)
-					fn33(child, "Glare", 0)
+					fn34(child, "Density", 0)
+					fn34(child, "Haze", 0)
+					fn34(child, "Glare", 0)
 				elseif child:IsA("Clouds") then
-					fn33(child, "Enabled", false)
+					fn34(child, "Enabled", false)
 				end
 			end
 
-			fn21("opt", workspace.DescendantAdded, fn39)
+			fn22("opt", workspace.DescendantAdded, fn40)
 			Lighting = tbl20
 			Lighting[#Lighting + 1] = workspace
-			fn38()
+			fn39()
 			v8.at = 0
 		end
 
-		table.insert(ctx.state.cleanup, fn42)
+		table.insert(ctx.state.cleanup, fn43)
 		local v9 = ctx.state
 
 		v9.optLeft = function()
@@ -43775,18 +43790,18 @@ local function fn2()
 			return n4 + 1
 		end
 
-		optimizer = fn13(performance, "Optimizer", "opt", false, fn43)
+		optimizer = fn14(performance, "Optimizer", "opt", false, fn44)
 
 		performance:Dropdown("Optimizer Mode", {"Balanced", "Strong", "Max"}, "Strong", function(arg)
 			str = arg
 			arg = ctx.slot28
 
 			if arg.opt then
-				fn43()
+				fn44()
 			end
 		end, false, nil, optimizer):When(optimizer)
 
-		local function fn44(arg)
+		local function fn45(arg)
 			local v10 = ctx.state
 
 			if v10.fpsShow then
@@ -43802,19 +43817,19 @@ local function fn2()
 				local v11 = ctx.state
 				v11.fpsSize(arg)
 			end
-		end, "%", 1, nil, (fn13(performance, "FPS and Ping", "fpsHud", true, fn44)))
+		end, "%", 1, nil, (fn14(performance, "FPS and Ping", "fpsHud", true, fn45)))
 
 		local Folder, v10, tbl21 = fn3("Folder", {Name = "ChilliHidden"}), setmetatable, {__mode = "k"}
 		local v11, s, tbl22 = v10({}, tbl21), {ClientRenderedAssets = true, PlacedEggRenders = true}, ctx.state
 		tbl22.hidden = Folder
 
-		local function fn45(arg)
+		local function fn46(arg)
 			local v12 = ctx.localPlayer
 			return tonumber(arg:GetAttribute("OwnerUserId") or arg.Name:match("^(%d+)_")) == v12.UserId
 		end
 
-		local function fn46(arg)
-			local v12 = fn45(arg)
+		local function fn47(arg)
+			local v12 = fn46(arg)
 			arg = nil
 
 			if v12 then
@@ -43842,18 +43857,18 @@ local function fn2()
 			return v122
 		end
 
-		local function fn47(arg)
+		local function fn48(arg)
 			if arg.Parent ~= Folder then
-				if fn46(arg) then
+				if fn47(arg) then
 					v11[arg] = arg.Parent
 					arg.Parent = Folder
 				end
 			end
 		end
 
-		local function fn48()
+		local function fn49()
 			for k, v12 in next, v11, nil do
-				if not (fn46(k)) then
+				if not (fn47(k)) then
 					v11[k] = nil
 
 					if v12.Parent then
@@ -43878,17 +43893,17 @@ local function fn2()
 				hideMine = workspace:FindFirstChild(k)
 
 				for _, v13 in ipairs((hideMine and hideMine:GetChildren()) or {}) do
-					fn47(v13)
+					fn48(v13)
 				end
 
-				fn21("hide" .. k, (hideMine and hideMine2) and hideMine.ChildAdded, function(arg)
-					task.defer(fn47, arg)
+				fn22("hide" .. k, (hideMine and hideMine2) and hideMine.ChildAdded, function(arg)
+					task.defer(fn48, arg)
 				end)
 			end
 
-			fn21("hideW", hideMine2 and workspace.ChildAdded, function(arg)
+			fn22("hideW", hideMine2 and workspace.ChildAdded, function(arg)
 				if s[arg.Name] then
-					task.defer(fn48)
+					task.defer(fn49)
 				end
 			end)
 		end
@@ -43897,7 +43912,7 @@ local function fn2()
 			local v12, v13 = ctx.slot28, ctx.slot28
 			v12.hideMine = false
 			v13.hideOthers = false
-			fn48()
+			fn49()
 		end)
 
 		tbl22, RunService2 = {Name = "ChilliBlack", ResetOnSpawn = false, IgnoreGuiInset = true, DisplayOrder = -1000, Enabled = false}, ctx.localPlayer
@@ -43909,10 +43924,10 @@ local function fn2()
 			ScreenGui:Destroy()
 		end)
 
-		local v12 = fn14({name = "Render", gap = 180, at = 1 / 0})
+		local v12 = fn15({name = "Render", gap = 180, at = 1 / 0})
 		local qualityLevel
 
-		tbl13 = fn13(performance, "Disable 3D Render", "no3d", false, function(enabled)
+		tbl13 = fn14(performance, "Disable 3D Render", "no3d", false, function(enabled)
 			local v13, v14 = ctx.RunService, ctx.RunService
 			pcall(ctx.RunService.Set3dRenderingEnabled, ctx.RunService, not enabled)
 			local v15, v16, n4 = pcall, setfpscap
@@ -43982,12 +43997,12 @@ local function fn2()
 		local v14, v15, tbl24 = v13({}, tbl23), setmetatable, {__mode = "k"}
 		local v16, tbl25, tbl26 = v15({}, tbl24), {}, {}
 
-		local function fn49(arg)
+		local function fn50(arg)
 			v16[arg] = (v16[arg] or 0) + 1
 			arg.Enabled = false
 		end
 
-		local function fn50(arg)
+		local function fn51(arg)
 			if arg:IsA("LayerCollector") then
 				if arg == ScreenGui then
 					return
@@ -44008,7 +44023,7 @@ local function fn2()
 
 				if arg.Enabled then
 					v14[arg] = true
-					fn49(arg)
+					fn50(arg)
 				else
 					v17 = v16[arg]
 
@@ -44025,7 +44040,7 @@ local function fn2()
 			end)
 
 			if arg.Enabled then
-				fn49(arg)
+				fn50(arg)
 			end
 		end
 
@@ -44040,11 +44055,11 @@ local function fn2()
 			tbl262.hideUI = hideUI
 			tbl262 = ctx.localPlayer
 			local playerGui = tbl262:FindFirstChildOfClass("PlayerGui")
-			fn21("hideUI", (hideUI and playerGui) and playerGui.ChildAdded, fn50)
+			fn22("hideUI", (hideUI and playerGui) and playerGui.ChildAdded, fn51)
 
 			if hideUI then
 				for _, v18 in ipairs((playerGui and playerGui:GetChildren()) or {}) do
-					fn50(v18)
+					fn51(v18)
 				end
 
 				local v18, v19 = ipairs, table.pack(Enum.CoreGuiType:GetEnumItems())
@@ -44102,7 +44117,7 @@ local function fn2()
 		local ScreenGui2, Frame2, UIScale, v19, v20
 		local n4, n5, n6, _, str2 = 1, 0, 0
 
-		local function fn51()
+		local function fn52()
 			if UIScale then
 				local currentCamera = workspace.CurrentCamera
 				local viewportSize = (currentCamera and currentCamera.ViewportSize) or Vector2.new(1280, 720)
@@ -44112,7 +44127,7 @@ local function fn2()
 			end
 		end
 
-		local function fn52(arg, arg2, arg3, arg4)
+		local function fn53(arg, arg2, arg3, arg4)
 			local tbl27 = {Parent = Frame2, BackgroundTransparency = 1, Position = UDim2.fromOffset(arg, 9), Size = UDim2.fromOffset(arg2, 16), Text = arg4 or "", TextColor3 = arg3, TextScaled = true, TextXAlignment = Enum.TextXAlignment.Left, FontFace = font}
 			return fn3("TextLabel", tbl27)
 		end
@@ -44125,7 +44140,7 @@ local function fn2()
 			ScreenGui2, Frame2, UIScale, v19, v20, _, str2, n5 = nil, nil, nil, nil, nil, nil, nil, 0
 		end
 
-		local function fn53()
+		local function fn54()
 			p()
 			ScreenGui2 = fn3("ScreenGui", {DisplayOrder = 58, IgnoreGuiInset = true, ResetOnSpawn = false, ZIndexBehavior = Enum.ZIndexBehavior.Sibling})
 			local value = v18.Value
@@ -44133,12 +44148,12 @@ local function fn2()
 			fn3("UICorner", {Parent = Frame2, CornerRadius = UDim.new(0, 12)})
 			fn3("UIStroke", {Parent = Frame2, Color = Color3.new(1, 1, 1), Thickness = 1, Transparency = 0.9})
 			UIScale = fn3("UIScale", {Parent = Frame2})
-			fn51()
-			v19 = fn52(12, 34, color)
-			fn52(48, 22, color4, "FPS")
+			fn52()
+			v19 = fn53(12, 34, color)
+			fn53(48, 22, color4, "FPS")
 			fn3("Frame", {Parent = Frame2, AnchorPoint = Vector2.new(0.5, 0.5), BackgroundColor3 = Color3.new(1, 1, 1), BackgroundTransparency = 0.85, BorderSizePixel = 0, Position = UDim2.new(0, 74, 0.5, 0), Size = UDim2.fromOffset(1, 14)})
-			v20 = fn52(82, 30, color)
-			fn52(113, 14, color4, "ms")
+			v20 = fn53(82, 30, color)
+			fn53(113, 14, color4, "ms")
 			value = ScreenGui2
 			value.Parent = (gethui and gethui()) or getService("CoreGui")
 			local flag, input, vector2, position
@@ -44156,7 +44171,7 @@ local function fn2()
 				end
 			end)
 
-			fn21("fpsDrag", getService("UserInputService").InputChanged, function(arg)
+			fn22("fpsDrag", getService("UserInputService").InputChanged, function(arg)
 				local input2 = (flag and Frame2) and ((input and (arg == input)) or (if input then not input else arg.UserInputType == Enum.UserInputType.MouseMovement))
 
 				if input2 then
@@ -44165,7 +44180,7 @@ local function fn2()
 				end
 			end)
 
-			fn21("fpsEnd", getService("UserInputService").InputEnded, function(arg)
+			fn22("fpsEnd", getService("UserInputService").InputEnded, function(arg)
 				local input2 = flag and ((input and (arg == input)) or (if input then not input else arg.UserInputType == Enum.UserInputType.MouseButton1))
 
 				if input2 then
@@ -44180,7 +44195,7 @@ local function fn2()
 		end
 
 		if workspace.CurrentCamera then
-			trackConnection(workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"), fn51)
+			trackConnection(workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"), fn52)
 		end
 
 		table.insert(ctx.state.cleanup, p)
@@ -44188,14 +44203,14 @@ local function fn2()
 
 		v21.fpsSize = function(arg)
 			n4 = math.clamp((tonumber(arg) or 100) / 100, 0.6, 1.6)
-			fn51()
+			fn52()
 		end
 
 		local v22 = ctx.state
 
 		v22.fpsShow = function(arg)
 			if arg then
-				fn53()
+				fn54()
 			else
 				p()
 			end
@@ -44203,7 +44218,7 @@ local function fn2()
 
 		RunService2 = ctx.RunService
 
-		fn21("fpsC", RunService2.RenderStepped, function(arg)
+		fn22("fpsC", RunService2.RenderStepped, function(arg)
 			if not (v19) then
 				return
 			end
@@ -44271,7 +44286,7 @@ local function fn2()
 	g("finderhud", function()
 		for _, section in ipairs(c.setTab.Sections) do
 			if section.Name == "Interface" then
-				fn13(section, "Chilli Finder HUD", "finderHud", true, function(p)
+				fn14(section, "Chilli Finder HUD", "finderHud", true, function(p)
 					genv.ChilliFinderHidden = if p then nil else not p
 
 					if not (p) then
@@ -44307,7 +44322,7 @@ local function fn2()
 		local lshift = bit32.lshift
 		local rshift, n3 = bit32.rshift, 4294967296
 
-		local function fn33(arg, arg2)
+		local function fn34(arg, arg2)
 			local arg22 = arg2
 
 			for i2 = 1, #arg, 1 do
@@ -44318,10 +44333,10 @@ local function fn2()
 			return arg22
 		end
 
-		local function fn34(arg)
+		local function fn35(arg)
 			local v4 = Random.new()
 			local str = string.format("%08x%08x", v4:NextInteger(0, 4294967295), v4:NextInteger(0, 4294967295))
-			local v5, v6, _ = fn33(p.Secret .. str, 2166136261), fn33(str .. p.Secret, 2654435769), table.create(#arg)
+			local v5, v6, _ = fn34(p.Secret .. str, 2166136261), fn34(str .. p.Secret, 2654435769), table.create(#arg)
 
 			for i2 = 1, #arg, 1 do
 				v5 = bxor(v5, lshift(v5, 13))
@@ -44333,7 +44348,7 @@ local function fn2()
 			end
 
 			arg = table.concat(_)
-			return "c3." .. (str .. ("." .. (arg .. ("." .. string.format("%08x%08x", fn33(arg .. p.Secret, 3735928559), fn33(p.Secret .. arg, 3405691582))))))
+			return "c3." .. (str .. ("." .. (arg .. ("." .. string.format("%08x%08x", fn34(arg .. p.Secret, 3735928559), fn34(p.Secret .. arg, 3405691582))))))
 		end
 
 		local function s(arg)
@@ -44353,7 +44368,7 @@ local function fn2()
 
 		local tbl12 = {}
 
-		local function fn35(arg, arg2)
+		local function fn36(arg, arg2)
 			if tbl12[arg] == nil then
 				local ok, result = pcall(function()
 					return require(arg2())
@@ -44367,7 +44382,7 @@ local function fn2()
 
 		local tbl13
 
-		local function fn36(arg)
+		local function fn37(arg)
 			local tbl14 = {}
 
 			for _, descendant in ipairs(arg:GetDescendants()) do
@@ -44380,7 +44395,7 @@ local function fn2()
 			return table.concat(tbl14, ",")
 		end
 
-		local function fn37(arg, arg2)
+		local function fn38(arg, arg2)
 			local attribute = arg:GetAttribute("PreparedSourceName")
 
 			if type(attribute) == "string" then
@@ -44409,7 +44424,7 @@ local function fn2()
 					models = ((eggs and (type(v4) == "table")) and v4.EggModel) and eggs:FindFirstChild(v4.EggModel)
 
 					if models then
-						local v5, tbl132 = fn36(models), tbl13
+						local v5, tbl132 = fn37(models), tbl13
 						tbl132[v5] = tbl132[v5] or {}
 						table.insert(tbl13[v5], {id = v4.Id or k, zone = tonumber(v4.Zone)})
 					end
@@ -44417,7 +44432,7 @@ local function fn2()
 			end
 
 			arg2 = tbl13
-			local v4, num = arg2[fn36(arg)], tonumber(arg:GetAttribute("Zone"))
+			local v4, num = arg2[fn37(arg)], tonumber(arg:GetAttribute("Zone"))
 			if not (v4) then
 				return nil
 			end
@@ -44431,10 +44446,10 @@ local function fn2()
 			return ((#v4 == 1) and v4[1].id) or nil
 		end
 
-		local function fn38(arg, arg2)
+		local function fn39(arg, arg2)
 			local halloweenDimension = workspace:FindFirstChild("HalloweenDimension")
 
-			local worldEggs, HalloweenPets = halloweenDimension and (halloweenDimension:FindFirstChild("WorldEggs")), fn35("HalloweenPets", function()
+			local worldEggs, HalloweenPets = halloweenDimension and (halloweenDimension:FindFirstChild("WorldEggs")), fn36("HalloweenPets", function()
 				return ReplicatedStorage2.Data.HalloweenPets
 			end)
 
@@ -44453,7 +44468,7 @@ local function fn2()
 
 				if type(HalloweenPets) == "string" then
 					if child:GetAttribute("HalloweenEggCanPickUp") == true then
-						i2 = fn37(child, halloweenDimension)
+						i2 = fn38(child, halloweenDimension)
 						local i3 = (i2 and arg2[i2]) or nil
 						local rarity = (((type(i3) == "table") and (type(i3.Rarity) == "table")) and i3.Rarity) or {}
 						local n4 = tonumber(rarity.RarityNumber or rarity.Rank) or 0
@@ -44471,14 +44486,14 @@ local function fn2()
 			end
 		end
 
-		local function fn39()
-			local tbl14, EggState, Assets, Mutations, EggRecords = {}, fn35("EggState", function()
+		local function fn40()
+			local tbl14, EggState, Assets, Mutations, EggRecords = {}, fn36("EggState", function()
 				return ReplicatedStorage2.Client.EggState
-			end), fn35("Assets", function()
+			end), fn36("Assets", function()
 				return ReplicatedStorage2.Data.Assets
-			end), fn35("Mutations", function()
+			end), fn36("Mutations", function()
 				return ReplicatedStorage2.Shared.Modules.Mutations
-			end), fn35("EggRecords", function()
+			end), fn36("EggRecords", function()
 				return ReplicatedStorage2.Shared.Util.EggRecords
 			end)
 
@@ -44549,22 +44564,22 @@ local function fn2()
 				end
 			end
 
-			fn38(tbl14, directory)
+			fn39(tbl14, directory)
 			return tbl14
 		end
 
-		local function fn40(arg)
+		local function fn41(arg)
 			task.spawn(function()
 				pcall(function()
 					local json = HttpService2:JSONEncode({ts = math.floor(workspace:GetServerTimeNow() * 1000), token = p.Token, userId = localPlayer2.UserId, jobId = game.JobId, placeId = game.PlaceId, players = #Players2:GetPlayers(), maxPlayers = Players2.MaxPlayers, eggs = arg})
-					httpRequest({Url = p.Url, Method = "POST", Headers = {["Content-Type"] = "text/plain"}, Body = fn34(json)})
+					httpRequest({Url = p.Url, Method = "POST", Headers = {["Content-Type"] = "text/plain"}, Body = fn35(json)})
 				end)
 			end)
 		end
 
 		local tbl14, flag, O, flag2, n4 = {}, false, false, false, 0
 
-		local function fn41()
+		local function fn42()
 			if O then
 				return
 			elseif not ctx.flag then
@@ -44572,7 +44587,7 @@ local function fn2()
 			end
 
 			O = true
-			local ok, result = pcall(fn39)
+			local ok, result = pcall(fn40)
 
 			if ok and (#result > 0) then
 				if #Players2:GetPlayers() >= Players2.MaxPlayers then
@@ -44588,7 +44603,7 @@ local function fn2()
 							table.insert(tbl15, v4)
 
 							if #tbl15 == 10 then
-								fn40(tbl15)
+								fn41(tbl15)
 								task.wait(0.3)
 								tbl15 = {}
 							else
@@ -44597,7 +44612,7 @@ local function fn2()
 					end
 
 					if #tbl15 > 0 then
-						fn40(tbl15)
+						fn41(tbl15)
 					end
 				end
 			end
@@ -44605,7 +44620,7 @@ local function fn2()
 			O = false
 		end
 
-		local function fn42()
+		local function fn43()
 			local now2 = os.clock()
 
 			if (now2 - n4) < n2 then
@@ -44615,7 +44630,7 @@ local function fn2()
 					task.delay(n2, function()
 						flag2 = false
 						n4 = os.clock()
-						fn41()
+						fn42()
 					end)
 				end
 
@@ -44623,27 +44638,27 @@ local function fn2()
 			end
 
 			n4 = now2
-			task.spawn(fn41)
+			task.spawn(fn42)
 		end
 
-		local function fn43()
-			fn42()
-			task.delay(1.5, fn42)
+		local function fn44()
+			fn43()
+			task.delay(1.5, fn43)
 		end
 
 		if type(httpRequest) == "function" then
 			local areaEggSlotsClient = workspace:FindFirstChild("AreaEggSlotsClient")
 
 			if areaEggSlotsClient then
-				trackConnection(areaEggSlotsClient.ChildAdded, fn43)
+				trackConnection(areaEggSlotsClient.ChildAdded, fn44)
 			else
 				local v4
 
 				v4 = trackConnection(workspace.ChildAdded, function(child)
 					if child.Name == "AreaEggSlotsClient" then
 						v4:Disconnect()
-						trackConnection(child.ChildAdded, fn43)
-						fn43()
+						trackConnection(child.ChildAdded, fn44)
+						fn44()
 					end
 				end)
 			end
@@ -44654,19 +44669,19 @@ local function fn2()
 
 				if worldEggs then
 					if ctx.flag then
-						trackConnection(worldEggs.ChildAdded, fn43)
-						fn43()
+						trackConnection(worldEggs.ChildAdded, fn44)
+						fn44()
 					end
 				end
 			end)
 
 			trackConnection(Players2.PlayerRemoving, function()
 				if flag then
-					task.delay(0.2, fn42)
+					task.delay(0.2, fn43)
 				end
 			end)
 
-			task.defer(fn42)
+			task.defer(fn43)
 		end
 	end)
 
@@ -44725,7 +44740,7 @@ local function fn2()
 		local lshift = bit32.lshift
 		local rshift, n2 = bit32.rshift, 0
 
-		local function fn33(arg, arg2)
+		local function fn34(arg, arg2)
 			if arg then
 				if (arg2 % 2048) == 0 then
 					if (os.clock() - n2) > 0.003 then
@@ -44736,24 +44751,24 @@ local function fn2()
 			end
 		end
 
-		local function fn34(arg, arg2, arg3)
+		local function fn35(arg, arg2, arg3)
 			for i2 = 1, #arg, 1 do
 				arg2 = bxor(arg2, arg:byte(i2))
 				arg2 = (((arg2 % 256) * 16777216) + (arg2 * 403)) % 4294967296
-				fn33(arg3, i2)
+				fn34(arg3, i2)
 			end
 
 			return arg2
 		end
 
-		local function fn35(arg)
+		local function fn36(arg)
 			arg = bxor(arg, lshift(arg, 13))
 			arg = bxor(arg, rshift(arg, 17))
 			return bxor(arg, lshift(arg, 5))
 		end
 
-		local function fn36(arg, arg2, arg3)
-			local v4, v5 = fn34(arg .. arg2, 3735928559, arg3), table.pack(fn34(arg2 .. arg, 3405691582, arg3))
+		local function fn37(arg, arg2, arg3)
+			local v4, v5 = fn35(arg .. arg2, 3735928559, arg3), table.pack(fn35(arg2 .. arg, 3405691582, arg3))
 			return ("%08x%08x"):format(v4, table.unpack(v5, 1, v5.n))
 		end
 
@@ -44769,15 +44784,15 @@ local function fn2()
 
 		ctx2.fn4 = function(arg, arg2)
 			local str2 = ("%08x%08x"):format(math.random(0, 2147483646), math.random(0, 2147483646))
-			local v4, v5, v6 = fn34(arg2 .. str2, 2166136261), fn34(str2 .. arg2, 2654435769), table.create(#arg)
+			local v4, v5, v6 = fn35(arg2 .. str2, 2166136261), fn35(str2 .. arg2, 2654435769), table.create(#arg)
 
 			for i2 = 1, #arg, 1 do
-				v4, v5 = fn35(v4), fn35(v5)
+				v4, v5 = fn36(v4), fn36(v5)
 				v6[i2] = ("%02x"):format(bxor(arg:byte(i2), band(bxor(rshift(v4, 8), rshift(v5, 16)), 255)))
 			end
 
 			arg = table.concat(v6)
-			return "c3." .. (str2 .. ("." .. (arg .. ("." .. fn36(arg, arg2)))))
+			return "c3." .. (str2 .. ("." .. (arg .. ("." .. fn37(arg, arg2)))))
 		end
 
 		ctx2.fn5 = function(arg, arg2, arg3)
@@ -44787,21 +44802,21 @@ local function fn2()
 			if match then
 				if (#v4 % 2) == 1 then
 					return
-				elseif fn36(v4, arg2, arg3) ~= v5 then
+				elseif fn37(v4, arg2, arg3) ~= v5 then
 					return
 				end
 			else
 				return
 			end
 
-			local v6, v7, n3 = fn34(arg2 .. match, 2166136261), fn34(match .. arg2, 2654435769), #v4 // 2
+			local v6, v7, n3 = fn35(arg2 .. match, 2166136261), fn35(match .. arg2, 2654435769), #v4 // 2
 			v5 = buffer.create(n3)
 
 			for i2 = 1, n3, 1 do
-				v6, v7 = fn35(v6), fn35(v7)
+				v6, v7 = fn36(v6), fn36(v7)
 				arg, match = v4:byte((i2 * 2) - 1, i2 * 2)
 				buffer.writeu8(v5, i2 - 1, bxor((tbl13[arg] * 16) + tbl13[match], band(bxor(rshift(v6, 8), rshift(v7, 16)), 255)))
-				fn33(arg3, i2)
+				fn34(arg3, i2)
 			end
 
 			arg2, n3, match, arg3 = ctx2.HttpService, ctx2.HttpService, pcall(ctx2.HttpService.JSONDecode, ctx2.HttpService, buffer.tostring(v5))
@@ -44856,7 +44871,7 @@ local function fn2()
 
 		local tbl14, tbl15 = {{"Any", 0}, {"Secret+", 8}, {"Eternal+", 9}, {"Divine", 10}}, {{"Qi", 1e+18}, {"Qa", 1000000000000000}, {"T", 1000000000000}, {"B", 1000000000}, {"M", 1000000}, {"K", 1000}}
 
-		local function fn37(arg)
+		local function fn38(arg)
 			for _, v4 in ipairs(tbl15) do
 				if arg >= v4[2] then
 					return ("%.2f"):format(arg / v4[2]):gsub("%.?0+$", "") .. v4[1]
@@ -44866,7 +44881,7 @@ local function fn2()
 			return tostring(arg)
 		end
 
-		local function fn38(arg)
+		local function fn39(arg)
 			arg = tostring(arg):gsub("[%s,$]", ""):lower():gsub("/s$", "")
 
 			if arg == "" then
@@ -44933,11 +44948,11 @@ local function fn2()
 		tbl16.dur = nil
 		local n3
 
-		local function fn39()
+		local function fn40()
 			n3 = os.clock() + 1
 		end
 
-		local str2, tbl17 = ("%x"):format((fn34(gameRef2.JobId, 2166136261))), {eggs = {}, seen = {}, top = {}, sample = {}, failed = {}, inbox = {}, last = 0, wsAt = 0}
+		local str2, tbl17 = ("%x"):format((fn35(gameRef2.JobId, 2166136261))), {eggs = {}, seen = {}, top = {}, sample = {}, failed = {}, inbox = {}, last = 0, wsAt = 0}
 		ctx2.tbl17 = tbl17
 		ctx2.tbl17.arrived = os.clock()
 		ctx2.tbl17.me = ctx2.HttpService:GenerateGUID(false)
@@ -44947,7 +44962,7 @@ local function fn2()
 		ctx2.tbl17.dirty = true
 		ctx2.genv.ChilliFinderOwner = ctx2.tbl17.me
 
-		local function fn40()
+		local function fn41()
 			local v4, chilliFinderOwner = ctx2.genv, ctx2.tbl17
 
 			if v4.ChilliFinderOwner == chilliFinderOwner.me then
@@ -44980,7 +44995,7 @@ local function fn2()
 		local str4 = "cF9#vLt2" .. (ctx2.fn2() .. "qZ7!mW4x")
 		local str5 = "cF9#vLt2" .. (ctx2.fn3() .. "qZ7!mW4x")
 
-		local function fn41()
+		local function fn42()
 			local ok, result = pcall(readfile, str3)
 			local ok2
 
@@ -45006,7 +45021,7 @@ local function fn2()
 			pcall(writefile, str3, ctx2.fn4(ctx2.HttpService:JSONEncode(arg), str4))
 		end
 
-		local v4 = fn41()
+		local v4 = fn42()
 		ctx2.v4 = v4
 		s, Players2 = u2(chilliFinderSessionFile), false
 
@@ -45046,8 +45061,8 @@ local function fn2()
 			ctx2.fn6(ctx2.v4)
 		end
 
-		local function fn42()
-			ctx2.v4 = fn41()
+		local function fn43()
+			ctx2.v4 = fn42()
 			local s2 = ctx2.v4.s
 			local flag2, flag3 = (type(s2) == "table") and tonumber(s2.endTs)
 
@@ -45061,7 +45076,7 @@ local function fn2()
 			return (flag3 and s2) or nil
 		end
 
-		ctx2.tbl17.sess = fn42()
+		ctx2.tbl17.sess = fn43()
 
 		ctx2.fn8 = function()
 			local v5
@@ -45070,7 +45085,7 @@ local function fn2()
 			v5(ctx2.v4)
 		end
 
-		local function fn43()
+		local function fn44()
 			local v5 = ctx2.tbl17
 			local flag2, flag3 = v5.sess ~= nil
 
@@ -45087,8 +45102,8 @@ local function fn2()
 		s = (ctx2.tbl17.sess and ctx2.tbl17.sess.username) or (ctx2.v4.rt and (ctx2.v4.u or "?"))
 		ctx2.tbl17.who = s or nil
 
-		local function fn44()
-			local v5 = fn43()
+		local function fn45()
+			local v5 = fn44()
 			local v52
 
 			if v5 then
@@ -45101,7 +45116,7 @@ local function fn2()
 			return v52
 		end
 
-		local function fn45(arg)
+		local function fn46(arg)
 			local v5 = ctx2.getServerTimeNow
 			return math.max(0, v5() - ((arg.at or 0) / 1000))
 		end
@@ -45109,8 +45124,8 @@ local function fn2()
 		local tbl18 = {Golden = {"Golden", {255, 206, 70}}, Silver = {"Silver", {215, 225, 240}}, Rainbow = {"Rainbow"}, Scrambled = {"Scrambled", {190, 130, 255}}, Enchanted = {"Enchanted", {100, 225, 255}}, Sakura = {"Bloom", {255, 160, 210}}, Spectral = {"Spectral", {110, 240, 220}}}
 		local colorSequence = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 80, 80)), ColorSequenceKeypoint.new(0.25, Color3.fromRGB(255, 210, 60)), ColorSequenceKeypoint.new(0.5, Color3.fromRGB(90, 230, 110)), ColorSequenceKeypoint.new(0.75, Color3.fromRGB(70, 160, 255)), ColorSequenceKeypoint.new(1, Color3.fromRGB(210, 90, 255))})
 
-		local function fn46(arg)
-			local n4, str6 = math.floor(fn45(arg)), (fn43() and "") or " ago"
+		local function fn47(arg)
+			local n4, str6 = math.floor(fn46(arg)), (fn44() and "") or " ago"
 			return ((((n4 < 60) and (n4 .. "s")) or ((n4 < 3600) and ((n4 // 60) .. "m"))) or ((n4 // 3600) .. "h")) .. str6
 		end
 
@@ -45134,7 +45149,7 @@ local function fn2()
 
 		local v5
 
-		local function fn47(arg)
+		local function fn48(arg)
 			v5 = nil
 
 			if arg then
@@ -45146,13 +45161,13 @@ local function fn2()
 			arg.dirty = true
 		end
 
-		local function fn48()
+		local function fn49()
 			local n4, v6 = tonumber(workspace:GetAttribute("AreaEggCyclePeriodSeconds")) or 300, ctx2.getServerTimeNow
 			local v7 = v6()
 			return (tbl16.night > 0) and (((math.ceil(v7 / n4) * n4) - v7) < (tbl16.night + 10))
 		end
 
-		local function fn49()
+		local function fn50()
 			if not (v5) then
 				return
 			end
@@ -45217,13 +45232,13 @@ local function fn2()
 
 		ctx2.tbl17.tried = {}
 
-		local function fn50(arg, arg2)
-			if not (fn43()) then
+		local function fn51(arg, arg2)
+			if not (fn44()) then
 				local v6, v7 = ctx2.fn, ctx2.tbl17
 				return v6((v7.who and "No active booking. Book hours at chillihub.pro") or "Sign in with an active Finder booking first")
 			end
 
-			if not (fn40()) then
+			if not (fn41()) then
 				local v6 = ctx2.fn
 				return v6("Finder runs in another script")
 			end
@@ -45244,7 +45259,7 @@ local function fn2()
 				return
 			end
 
-			if fn48() then
+			if fn49() then
 				local v6 = ctx2.fn
 				return v6("Night is close, join again after the reset")
 			end
@@ -45253,7 +45268,7 @@ local function fn2()
 			v5 = tbl19
 			arg22 = ctx2.tbl17
 			arg22.dirty = true
-			fn49()
+			fn50()
 		end
 
 		trackConnection2(TeleportService2.TeleportInitFailed, function(arg, arg2, arg3)
@@ -45272,7 +45287,7 @@ local function fn2()
 				why = ctx2.tbl17
 				why.failed[v5.e.jobId] = os.clock() + (((v5.a and (tbl16.gap > 0)) and 1) or 120)
 				tbl19 = v5.a
-				fn47((if tbl19 then not tbl19 else "Could not join: " .. v5.why) or nil)
+				fn48((if tbl19 then not tbl19 else "Could not join: " .. v5.why) or nil)
 			end
 
 			tbl19 = ctx2.tbl17
@@ -45290,7 +45305,7 @@ local function fn2()
 
 		local tbl19
 
-		local function fn51()
+		local function fn52()
 			tbl19 = nil
 
 			if (type(tbl16.only) == "table") and (#tbl16.only > 0) then
@@ -45303,9 +45318,9 @@ local function fn2()
 			end
 		end
 
-		fn51()
+		fn52()
 
-		local function fn52(arg)
+		local function fn53(arg)
 			local flag2, flag3 = ((arg.value or 0) >= tbl16.min) and ((arg.rarity or 0) >= tbl16.rar)
 
 			if flag2 then
@@ -45325,16 +45340,16 @@ local function fn2()
 			return flag3
 		end
 
-		local function fn53()
+		local function fn54()
 			local n4 = tonumber(workspace:GetAttribute("AreaEggCyclePeriodSeconds")) or 300
 			local v6, n5 = ctx2.getServerTimeNow, (math.floor(ctx2.getServerTimeNow() / n4) * n4) - 5
 			return n5 * 1000
 		end
 
-		local function fn54()
-			local v6 = fn53()
+		local function fn55()
+			local v6 = fn54()
 
-			if not (fn43()) then
+			if not (fn44()) then
 				local v7, v8 = ctx2.tbl17, ctx2.tbl17
 				v7.top = v8.sample
 				return
@@ -45347,11 +45362,11 @@ local function fn2()
 				if egg.jh ~= str2 then
 					if egg.jobId ~= gameRef2.JobId then
 						if (egg.at or 0) >= v6 then
-							if fn52(egg) then
+							if fn53(egg) then
 								k = ctx2.tbl17
 
 								if k.auto then
-									if not ((tbl16.age > 0) and (fn45(egg) > tbl16.age)) then
+									if not ((tbl16.age > 0) and (fn46(egg) > tbl16.age)) then
 										if tbl16.age == 0 then
 											tbl20 = ctx2.tbl17
 
@@ -45428,7 +45443,7 @@ local function fn2()
 			eggs.top = pick
 		end
 
-		local function fn55(arg, arg2)
+		local function fn56(arg, arg2)
 			local n4, tbl20 = ipairs, ((type(arg) == "table") and arg) or {}
 
 			for k, v6 in n4(tbl20) do
@@ -45470,12 +45485,12 @@ local function fn2()
 			arg = ctx2.tbl17
 
 			if #arg.eggs > 60 then
-				local function fn56(arg3)
-					return (((fn52(arg3) and (arg3.jobId ~= gameRef2.JobId)) and (fn45(arg3) <= 300)) and 1) or 0
+				local function fn57(arg3)
+					return (((fn53(arg3) and (arg3.jobId ~= gameRef2.JobId)) and (fn46(arg3) <= 300)) and 1) or 0
 				end
 
 				table.sort(ctx2.tbl17.eggs, function(arg3, arg4)
-					local v6, v7 = fn56(arg3), fn56(arg4)
+					local v6, v7 = fn57(arg3), fn57(arg4)
 					if v6 ~= v7 then
 						return v6 > v7
 					end
@@ -45492,7 +45507,7 @@ local function fn2()
 			end
 		end
 
-		local function fn56(acct)
+		local function fn57(acct)
 			local v6, session = ctx2.tbl17, ctx2.tbl17
 			local who, who2 = session.who
 
@@ -45517,7 +45532,7 @@ local function fn2()
 			who2.sess = nil
 			session = ctx2.fn8
 			session()
-			fn47()
+			fn48()
 			who = ctx2.tbl17
 			who.auto = false
 			table.clear(ctx2.tbl17.eggs)
@@ -45531,7 +45546,7 @@ local function fn2()
 
 		local tbl20
 
-		local function fn57(arg)
+		local function fn58(arg)
 			if not (tbl20) then
 				tbl20 = {}
 
@@ -45558,7 +45573,7 @@ local function fn2()
 			return Color3.fromRGB(arg, arg2, arg3)
 		end
 
-		local function fn58(arg)
+		local function fn59(arg)
 			local tbl21 = {}
 
 			for i2, v6 in ipairs(arg) do
@@ -45569,24 +45584,24 @@ local function fn2()
 		end
 
 		local tbl21 = {}
-		tbl21.Hud = {Color = fn58({{0, getColor(255, 107, 2)}, {1, getColor(255, 238, 1)}}), Rotation = -90, Stroke = getColor(60, 24, 0), Light = getColor(255, 222, 55)}
-		tbl21.Join = {Color = fn58({{0, getColor(22, 211, 22)}, {1, getColor(153, 255, 106)}}), Rotation = -90, Stroke = getColor(8, 52, 8), Light = getColor(200, 255, 170)}
-		tbl21.Stop = {Color = fn58({{0, getColor(200, 15, 24)}, {1, getColor(255, 96, 96)}}), Rotation = -90, Stroke = getColor(70, 6, 6), Light = getColor(255, 180, 180)}
-		tbl21.Off = {Color = fn58({{0, getColor(70, 76, 90)}, {1, getColor(128, 136, 152)}}), Rotation = -90, Stroke = getColor(20, 22, 28), Light = getColor(190, 196, 210)}
-		tbl21.Blue = {Color = fn58({{0, getColor(41, 109, 211)}, {1, getColor(80, 217, 255)}}), Rotation = -90, Stroke = getColor(10, 30, 70), Light = getColor(170, 225, 255)}
-		tbl21.Field = {Color = fn58({{0, getColor(78, 74, 100)}, {1, getColor(52, 49, 70)}}), Rotation = -90, Stroke = getColor(18, 16, 28), Light = getColor(128, 122, 150)}
-		tbl21.Knob = {Color = fn58({{0, getColor(255, 255, 255)}, {1, getColor(200, 205, 218)}}), Rotation = -90, Stroke = getColor(34, 34, 46), Light = getColor(255, 255, 255)}
-		tbl21.Gold = {Color = fn58({{0, getColor(255, 107, 2)}, {1, getColor(255, 238, 1)}}), Rotation = -90, Stroke = getColor(60, 24, 0), Light = getColor(255, 222, 55)}
-		tbl21.Head = {Color = fn58({{0, getColor(255, 92, 30)}, {0.53, getColor(255, 184, 60)}, {1, getColor(236, 96, 24)}}), Rotation = 0}
-		tbl21.HeadVip = {Color = fn58({{0, getColor(196, 0, 255)}, {0.5, getColor(206, 36, 255)}, {0.72, getColor(232, 130, 255)}, {0.88, getColor(204, 0, 255)}, {1, getColor(150, 0, 240)}}), Rotation = 0}
-		tbl21.HudVip = {Color = fn58({{0, getColor(106, 31, 208)}, {1, getColor(230, 120, 255)}}), Rotation = -90, Stroke = getColor(40, 8, 70), Light = getColor(225, 170, 255)}
+		tbl21.Hud = {Color = fn59({{0, getColor(255, 107, 2)}, {1, getColor(255, 238, 1)}}), Rotation = -90, Stroke = getColor(60, 24, 0), Light = getColor(255, 222, 55)}
+		tbl21.Join = {Color = fn59({{0, getColor(22, 211, 22)}, {1, getColor(153, 255, 106)}}), Rotation = -90, Stroke = getColor(8, 52, 8), Light = getColor(200, 255, 170)}
+		tbl21.Stop = {Color = fn59({{0, getColor(200, 15, 24)}, {1, getColor(255, 96, 96)}}), Rotation = -90, Stroke = getColor(70, 6, 6), Light = getColor(255, 180, 180)}
+		tbl21.Off = {Color = fn59({{0, getColor(70, 76, 90)}, {1, getColor(128, 136, 152)}}), Rotation = -90, Stroke = getColor(20, 22, 28), Light = getColor(190, 196, 210)}
+		tbl21.Blue = {Color = fn59({{0, getColor(41, 109, 211)}, {1, getColor(80, 217, 255)}}), Rotation = -90, Stroke = getColor(10, 30, 70), Light = getColor(170, 225, 255)}
+		tbl21.Field = {Color = fn59({{0, getColor(78, 74, 100)}, {1, getColor(52, 49, 70)}}), Rotation = -90, Stroke = getColor(18, 16, 28), Light = getColor(128, 122, 150)}
+		tbl21.Knob = {Color = fn59({{0, getColor(255, 255, 255)}, {1, getColor(200, 205, 218)}}), Rotation = -90, Stroke = getColor(34, 34, 46), Light = getColor(255, 255, 255)}
+		tbl21.Gold = {Color = fn59({{0, getColor(255, 107, 2)}, {1, getColor(255, 238, 1)}}), Rotation = -90, Stroke = getColor(60, 24, 0), Light = getColor(255, 222, 55)}
+		tbl21.Head = {Color = fn59({{0, getColor(255, 92, 30)}, {0.53, getColor(255, 184, 60)}, {1, getColor(236, 96, 24)}}), Rotation = 0}
+		tbl21.HeadVip = {Color = fn59({{0, getColor(196, 0, 255)}, {0.5, getColor(206, 36, 255)}, {0.72, getColor(232, 130, 255)}, {0.88, getColor(204, 0, 255)}, {1, getColor(150, 0, 240)}}), Rotation = 0}
+		tbl21.HudVip = {Color = fn59({{0, getColor(106, 31, 208)}, {1, getColor(230, 120, 255)}}), Rotation = -90, Stroke = getColor(40, 8, 70), Light = getColor(225, 170, 255)}
 
-		local function fn59()
+		local function fn60()
 			local HttpService3 = ctx2.HttpService
 			return HttpService3:GenerateGUID(false):gsub("-", ""):sub(1, 14)
 		end
 
-		local function fn60(arg)
+		local function fn61(arg)
 			local ok, result = pcall(function()
 				return arg:Clone()
 			end)
@@ -45608,22 +45623,22 @@ local function fn2()
 			return result
 		end
 
-		local function fn61(arg)
-			arg.Name = fn59()
+		local function fn62(arg)
+			arg.Name = fn60()
 
 			for _, descendant in ipairs(arg:GetDescendants()) do
-				descendant.Name = fn59()
+				descendant.Name = fn60()
 			end
 		end
 
-		local function fn62(arg)
+		local function fn63(arg)
 			if not (arg) then
 				return nil
 			end
 			return {Button = arg, Gradient = arg:FindFirstChildOfClass("UIGradient"), Stroke = arg:FindFirstChild("UIStroke"), Light = arg:FindFirstChild("UIStrokeClr"), Label = arg:FindFirstChild("Label") or arg:FindFirstChild("TextLabel"), Scale = arg:FindFirstChild("PressScale") or arg:FindFirstChild("BtnScale")}
 		end
 
-		local function fn63(arg, style)
+		local function fn64(arg, style)
 			if arg then
 				if arg.Style == style then
 					return
@@ -45647,7 +45662,7 @@ local function fn2()
 			end
 		end
 
-		local function fn64(arg, text)
+		local function fn65(arg, text)
 			if arg then
 				if arg.Text ~= text then
 					arg.Text = text
@@ -45657,7 +45672,7 @@ local function fn2()
 
 		local tweenInfo = TweenInfo.new(0.16, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 
-		local function fn65(arg)
+		local function fn66(arg)
 			if not (arg) then
 				return
 			end
@@ -45665,28 +45680,28 @@ local function fn2()
 			scale.Scale, scale.Parent = 1, arg.Button
 			arg.Scale = scale
 
-			local function fn66(arg2)
+			local function fn67(arg2)
 				TweenService:Create(scale, tweenInfo, {Scale = arg2}):Play()
 			end
 
 			trackConnection2(arg.Button.MouseEnter, function()
-				fn66(1.06)
+				fn67(1.06)
 			end)
 
 			trackConnection2(arg.Button.MouseLeave, function()
-				fn66(1)
+				fn67(1)
 			end)
 
 			trackConnection2(arg.Button.MouseButton1Down, function()
-				fn66(0.94)
+				fn67(0.94)
 			end)
 
 			trackConnection2(arg.Button.MouseButton1Up, function()
-				fn66(1.06)
+				fn67(1.06)
 			end)
 		end
 
-		local function fn66()
+		local function fn67()
 			pcall(function()
 				local sound = Instance.new("Sound")
 				sound.SoundId, sound.Volume, sound.PlaybackSpeed = "rbxassetid://100671636189844", 3.4, 0.93 + (math.random() * 0.13)
@@ -45704,9 +45719,9 @@ local function fn2()
 			end)
 		end
 
-		local function fn67(arg, arg2)
+		local function fn68(arg, arg2)
 			trackConnection2(arg.Activated, function()
-				fn66()
+				fn67()
 				local ok, result = pcall(arg2)
 
 				if not (ok) then
@@ -45721,13 +45736,13 @@ local function fn2()
 		local n4, n5, n6, v6, tbl22 = 2.3120369911193848, 556, 86.24, setmetatable, {__mode = "k"}
 		local v7, tbl23 = v6({}, tbl22), {}
 
-		local function fn68(arg)
+		local function fn69(arg)
 			local x2 = arg and ((tbl23.panel and tbl23.panel.AbsoluteSize.X) or 0)
 			local x3 = x2 or ((tbl23.btn and tbl23.btn.Size.X.Offset) or 0)
 			return ((x3 > 0) and ((n4 * x3) / ((arg and n5) or n6))) or nil
 		end
 
-		local function fn69(arg, arg2, arg3)
+		local function fn70(arg, arg2, arg3)
 			for _, descendant in ipairs(arg:GetDescendants()) do
 				if descendant:IsA("UIStroke") then
 					if not (descendant:GetAttribute("own")) then
@@ -45743,9 +45758,9 @@ local function fn2()
 			end
 		end
 
-		local function fn70()
+		local function fn71()
 			for k, v8 in pairs(v7) do
-				local v9 = fn68(v8.p)
+				local v9 = fn69(v8.p)
 
 				if v9 then
 					if k.Parent then
@@ -45757,7 +45772,7 @@ local function fn2()
 
 		local hui, v8 = (gethui and gethui()) or getService2("CoreGui")
 
-		local function fn71()
+		local function fn72()
 			local playerGui = localPlayer2:FindFirstChildOfClass("PlayerGui")
 			local hud = playerGui and (playerGui:FindFirstChild("HUD"))
 			local gameHUD = hud and (hud:FindFirstChild("GameHUD"))
@@ -45789,7 +45804,7 @@ local function fn2()
 
 		local function createScreenGui(arg)
 			local screenGui = Instance.new("ScreenGui")
-			screenGui.Name, screenGui.Archivable, screenGui.ResetOnSpawn, screenGui.IgnoreGuiInset, screenGui.ZIndexBehavior, screenGui.DisplayOrder = fn59(), false, false, arg.IgnoreGuiInset, arg.ZIndexBehavior, arg.DisplayOrder
+			screenGui.Name, screenGui.Archivable, screenGui.ResetOnSpawn, screenGui.IgnoreGuiInset, screenGui.ZIndexBehavior, screenGui.DisplayOrder = fn60(), false, false, arg.IgnoreGuiInset, arg.ZIndexBehavior, arg.DisplayOrder
 
 			pcall(function()
 				screenGui.ScreenInsets = arg.ScreenInsets
@@ -45801,7 +45816,7 @@ local function fn2()
 		local tweenInfo2 = TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
 		local tweenInfo3, flag2, tween, tween2 = TweenInfo.new(0.24, Enum.EasingStyle.Quad, Enum.EasingDirection.In), false
 
-		local function fn72(arg)
+		local function fn73(arg)
 			local column = v8 and v8.Column
 
 			if column then
@@ -45821,7 +45836,7 @@ local function fn2()
 			tween2:Play()
 		end
 
-		local function fn73()
+		local function fn74()
 			local v9, tbl24, activePets = ipairs, {}, v8.ActivePets
 			tbl24[1], tbl24[2] = activePets, v8.Growing
 
@@ -45868,15 +45883,15 @@ local function fn2()
 				pcall(ctx2.genv.ChilliStealPanelClose, arg)
 			end
 
-			fn73()
-			fn72(true)
+			fn74()
+			fn73(true)
 			tbl23.gui.Enabled = true
 
 			if tween then
 				tween:Cancel()
 			end
 
-			fn70()
+			fn71()
 			v9 = ctx2.tbl17
 			v9.dirty = true
 			if arg then
@@ -45900,7 +45915,7 @@ local function fn2()
 			flag2 = false
 
 			if not (arg) then
-				fn72(false)
+				fn73(false)
 			end
 
 			if tween then
@@ -45930,7 +45945,7 @@ local function fn2()
 		ctx2.genv.ChilliFinderPanelClose = chilliFinderPanelClose
 		ctx2.genv.ChilliFinderPanelOpen = chilliFinderPanelOpen
 
-		local function fn74()
+		local function fn75()
 			local tbl24, tbl25, list, shop, index = {}, {c = v8.Left}, {}, v8.Shop, v8.Index
 			list[1], list[2], list[3] = shop, index, v8.Slow
 			tbl25.list = list
@@ -45949,8 +45964,8 @@ local function fn2()
 			return tbl24
 		end
 
-		local function fn75()
-			local v9 = fn60(v8.Shop)
+		local function fn76()
+			local v9 = fn61(v8.Shop)
 			if not v9 then
 				return false
 			end
@@ -45970,10 +45985,10 @@ local function fn2()
 				v9:SetAttribute(k, nil)
 			end
 
-			hp = fn62(v9)
+			hp = fn63(v9)
 			hp.Label = v9:FindFirstChild("txt")
-			fn64(hp.Label, "Finder")
-			fn63(hp, tbl21.Hud)
+			fn65(hp.Label, "Finder")
+			fn64(hp, tbl21.Hud)
 			local tbl232 = tbl23
 			tbl232.badge = v9:FindFirstChild("AlertBadge")
 			tbl232 = tbl23
@@ -45991,7 +46006,7 @@ local function fn2()
 			tbl23.left0 = {}
 			tbl233.lset = {}
 			tbl234.ldy = {}
-			tbl233, tbl232 = ipairs, table.pack(fn74())
+			tbl233, tbl232 = ipairs, table.pack(fn75())
 
 			for k, v10 in tbl233(table.unpack(tbl232, 1, tbl232.n)) do
 				k, tbl234 = ipairs, v10.list
@@ -46003,10 +46018,10 @@ local function fn2()
 
 			v9.Position = tbl23.left0[v8.Shop]
 			v9.Visible = false
-			fn61(v9)
+			fn62(v9)
 			v9.Parent = v8.Left
 
-			local function fn76()
+			local function fn77()
 				if flag2 then
 					chilliFinderPanelClose()
 				else
@@ -46019,7 +46034,7 @@ local function fn2()
 
 			local uiScale, n7, scale, n8, str6, connection = v9:FindFirstChildOfClass("UIScale") or Instance.new("UIScale", v9), 0, 1, 22, "Rest"
 
-			local function fn77(deltaTime)
+			local function fn78(deltaTime)
 				local n9, v10, n72 = uiScale.Scale - scale, math.exp(-n8 * deltaTime), n7
 				local n10 = (n72 + (n8 * n9)) * deltaTime
 				n72, deltaTime = (n9 + n10) * v10, n7
@@ -46041,7 +46056,7 @@ local function fn2()
 				end
 			end
 
-			local function fn78()
+			local function fn79()
 				local guiState = v9.GuiState
 				local mouseEnabled = (((guiState == Enum.GuiState.Press) and "Sunk") or (((guiState == Enum.GuiState.Hover) and UserInputService.MouseEnabled) and "Raised")) or "Rest"
 				if mouseEnabled == str6 then
@@ -46054,19 +46069,19 @@ local function fn2()
 				scale = guiState
 
 				if mouseEnabled == "Sunk" then
-					fn66()
+					fn67()
 				end
 
 				if not (connection) then
-					connection = RunService2.PreRender:Connect(fn77)
+					connection = RunService2.PreRender:Connect(fn78)
 					tbl12[#tbl12 + 1] = connection
 				end
 			end
 
-			trackConnection2(v9:GetPropertyChangedSignal("GuiState"), fn78)
+			trackConnection2(v9:GetPropertyChangedSignal("GuiState"), fn79)
 
 			trackConnection2(v9.Activated, function()
-				local ok, result = pcall(fn76)
+				local ok, result = pcall(fn77)
 
 				if not (ok) then
 					warn("[Chilli Finder] " .. tostring(result))
@@ -46080,7 +46095,7 @@ local function fn2()
 			return true
 		end
 
-		local function fn76(position, arg)
+		local function fn77(position, arg)
 			local udim2, list = ipairs, position.list
 
 			for _, v9 in udim2(list) do
@@ -46106,22 +46121,22 @@ local function fn2()
 			end
 		end
 
-		local function fn77()
-			local v9, v82 = ipairs, (v8 and fn74()) or {}
+		local function fn78()
+			local v9, v82 = ipairs, (v8 and fn75()) or {}
 
 			for _, v10 in v9(v82) do
 				if tbl23.left0 then
-					pcall(fn76, v10, false)
+					pcall(fn77, v10, false)
 				end
 			end
 		end
 
-		local function fn78()
+		local function fn79()
 			local btn = tbl23.btn
 			if not (btn) then
 				return
 			end
-			local v9 = fn40()
+			local v9 = fn41()
 			local visible
 
 			if v9 then
@@ -46131,12 +46146,12 @@ local function fn2()
 				visible = v9
 			end
 
-			v9 = fn74()
+			v9 = fn75()
 			local v10 = v9[1]
 			v10 = if v9[2] then if v9[2].on.Visible then if v9[1].on.Visible then v10 else v9[2] else v10 else v10
 
 			for _, v11 in ipairs(v9) do
-				fn76(v11, false)
+				fn77(v11, false)
 			end
 
 			v9 = v10.list[1]
@@ -46165,7 +46180,7 @@ local function fn2()
 			end
 		end
 
-		local function fn79()
+		local function fn80()
 			local cs, chilliStealPanelFrame = tbl23.cS
 
 			if cs then
@@ -46213,12 +46228,12 @@ local function fn2()
 			end
 		end
 
-		local function fn80()
+		local function fn81()
 			local ctx3 = {}
 			local frame = v8.ActivePets.Frame
 			local uiStroke, tbl232 = frame:FindFirstChildOfClass("UIStroke"), tbl23
 			tbl232.sbase = (uiStroke and uiStroke.Thickness) or n4
-			local v9 = fn60(frame)
+			local v9 = fn61(frame)
 			if not v9 then
 				return false
 			end
@@ -46315,7 +46330,7 @@ local function fn2()
 				listLayout2.AnchorPoint, listLayout2.Size = Vector2.new(0.5, 0.5), UDim2.new(0.235, 0, 1, 0)
 				listLayout2.LayoutOrder = i2
 				listLayout2.Parent = frame2
-				listLayout = fn62(listLayout2)
+				listLayout = fn63(listLayout2)
 				listLayout.Label.AnchorPoint, listLayout.Label.Position, listLayout.Label.Size = Vector2.new(0.5, 0.5), UDim2.new(0.5, 0, 0.68, 0), UDim2.new(0.88, 0, 0.52, 0)
 				listLayout.Cap = listLayout.Label:Clone()
 				listLayout.Cap.Position, listLayout.Cap.Size, listLayout.Cap.Parent = UDim2.new(0.5, 0, 0.25, 0), UDim2.new(0.88, 0, 0.33, 0), listLayout2
@@ -46338,7 +46353,7 @@ local function fn2()
 			local n9, tbl233 = (listLayout4 + (hPat * 1.6)) + listLayout5, tbl23
 			tbl233.geo = {top = tbl24, st = n9, bottom = textLabel2, aY = aspectRatio, gap = hPat, sx = scrollingFrame.Size.X, px = scrollingFrame.Position.X}
 
-			local function fn81(arg)
+			local function fn82(arg)
 				local clone = spacer:Clone()
 
 				for _, child in ipairs(clone:GetChildren()) do
@@ -46357,8 +46372,8 @@ local function fn2()
 				return clone
 			end
 
-			local v10 = fn81(((UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled) and 0.46) or 0.32)
-			tbl233, listLayout5 = fn81(0.13), Instance.new("UIGridLayout")
+			local v10 = fn82(((UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled) and 0.46) or 0.32)
+			tbl233, listLayout5 = fn82(0.13), Instance.new("UIGridLayout")
 			listLayout5.CellSize, listLayout5.CellPadding, listLayout5.HorizontalAlignment, listLayout5.VerticalAlignment, listLayout5.SortOrder = UDim2.new(0.15, 0, 0.64, 0), UDim2.new(0.025, 0, 0, 0), Enum.HorizontalAlignment.Center, Enum.VerticalAlignment.Center, Enum.SortOrder.LayoutOrder
 			listLayout5.Parent = tbl233
 			chilliStealPanelFrame = tbl23
@@ -46369,18 +46384,18 @@ local function fn2()
 				listLayout4 = unequip:Clone()
 				listLayout4.LayoutOrder = i2
 				listLayout4.Parent = tbl233
-				local v11 = fn62(listLayout4)
-				fn65(v11)
+				local v11 = fn63(listLayout4)
+				fn66(v11)
 
 				if v11.Label then
 					v11.Label.Size = UDim2.fromScale(0.88, 0.64)
 					tbl23.tsc[i2] = Instance.new("UITextSizeConstraint", v11.Label)
 				end
 
-				fn67(listLayout4, function()
+				fn68(listLayout4, function()
 					if v11.pick then
 						v11.pick()
-						fn39()
+						fn40()
 					end
 
 					local v12 = ctx2.tbl17
@@ -46391,9 +46406,9 @@ local function fn2()
 			end
 
 			local function listLayout6(arg, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
-				local v11, uiElement = fn81(0.13), fn62(unequip:Clone())
+				local v11, uiElement = fn82(0.13), fn63(unequip:Clone())
 				uiElement.Button.AnchorPoint, uiElement.Button.Position, uiElement.Button.Size, uiElement.Button.Parent = Vector2.new(1, 0.5), UDim2.new(0.96, 0, 0.5, 0), UDim2.new(0.24, 0, 0.66, 0), v11
-				fn63(uiElement, arg)
+				fn64(uiElement, arg)
 				uiElement.Label.Visible = false
 				local textBox = Instance.new("TextBox")
 				textBox.BackgroundTransparency, textBox.AnchorPoint, textBox.Position, textBox.Size, textBox.FontFace, textBox.TextScaled, textBox.TextColor3, textBox.ClearTextOnFocus, textBox.ZIndex, textBox.Parent = 1, Vector2.new(0.5, 0.5), UDim2.fromScale(0.5, 0.5), UDim2.fromScale(0.86, 0.7), uiElement.Label.FontFace, true, Color3.new(1, 1, 1), true, uiElement.Label.ZIndex + 1, uiElement.Button
@@ -46416,13 +46431,13 @@ local function fn2()
 				Instance.new("UICorner", frame4).CornerRadius = UDim.new(0.3, 0)
 				uiElement = Instance.new("UIGradient", frame4)
 				uiElement.Color, uiElement.Rotation = arg.Color, arg.Rotation
-				uiElement = fn62(unequip:Clone())
+				uiElement = fn63(unequip:Clone())
 				local button = uiElement.Button
 				button.AnchorPoint, button.Size = Vector2.new(0.5, 0.5), UDim2.fromScale(1.7, 1.7)
 				button.ZIndex = 5
 				button.Active = false
 				button.Parent = frame3
-				fn63(uiElement, tbl21.Knob)
+				fn64(uiElement, tbl21.Knob)
 				uiElement.Label.Visible = false
 				arg = Instance.new("UIAspectRatioConstraint", button)
 				arg.AspectRatio, arg.AspectType, arg.DominantAxis = 0.55, Enum.AspectType.FitWithinMaxSize, Enum.DominantAxis.Height
@@ -46432,18 +46447,18 @@ local function fn2()
 				uiElement.Parent = v11
 				local input
 
-				local function fn82(arg10)
+				local function fn83(arg10)
 					frame4.Size, button.Position = UDim2.fromScale(arg10, 1), UDim2.fromScale(arg10, 0.5)
 				end
 
-				local function fn83(arg10)
+				local function fn84(arg10)
 					local n10 = math.clamp((arg10 - frame3.AbsolutePosition.X) / math.max(1, frame3.AbsoluteSize.X), 0, 1)
-					fn82(n10)
+					fn83(n10)
 					arg10 = arg3(n10)
 
 					if arg10 ~= arg6() then
 						arg7(arg10)
-						fn64(textBox, arg4(arg10))
+						fn65(textBox, arg4(arg10))
 
 						if arg9 then
 							arg9(arg10)
@@ -46454,7 +46469,7 @@ local function fn2()
 				trackConnection2(uiElement.InputBegan, function(input2)
 					if (input2.UserInputType == Enum.UserInputType.MouseButton1) or (input2.UserInputType == Enum.UserInputType.Touch) then
 						input = input2
-						fn83(input2.Position.X)
+						fn84(input2.Position.X)
 					end
 				end)
 
@@ -46462,7 +46477,7 @@ local function fn2()
 					local input3 = input and ((input2 == input) or ((input.UserInputType == Enum.UserInputType.MouseButton1) and (input2.UserInputType == Enum.UserInputType.MouseMovement)))
 
 					if input3 then
-						fn83(input2.Position.X)
+						fn84(input2.Position.X)
 					end
 				end)
 
@@ -46471,8 +46486,8 @@ local function fn2()
 
 					if input3 then
 						input = nil
-						fn82(arg2(arg6()))
-						fn39()
+						fn83(arg2(arg6()))
+						fn40()
 						input2 = ctx2.tbl17
 						input2.dirty = true
 					end
@@ -46483,7 +46498,7 @@ local function fn2()
 
 					if v12 then
 						arg7(v12)
-						fn39()
+						fn40()
 					else
 						local v13 = ctx2.fn
 						v13(arg8)
@@ -46496,11 +46511,11 @@ local function fn2()
 
 				uiElement = {f = v11, sync = function()
 					if not (input) then
-						fn82(arg2(arg6()))
+						fn83(arg2(arg6()))
 					end
 
 					if not (textBox:IsFocused()) then
-						fn64(textBox, arg4(arg6()))
+						fn65(textBox, arg4(arg6()))
 					end
 				end}
 
@@ -46509,12 +46524,12 @@ local function fn2()
 
 			local n10 = 5.298317366548036
 
-			local function fn82(arg)
+			local function fn83(arg)
 				local n11 = 10 ^ math.floor(math.log10(arg) - 1)
 				return math.floor((arg / n11) + 0.5) * n11
 			end
 
-			local function fn83(arg)
+			local function fn84(arg)
 				return ((arg > 0) and (((((arg % 1) == 0) and ("%d"):format(arg)) or tostring(arg)) .. "s")) or "Off"
 			end
 
@@ -46524,7 +46539,7 @@ local function fn2()
 				return arg / 60
 			end, function(arg)
 				return math.floor((arg * 60) + 0.5)
-			end, fn83, function(arg)
+			end, fn84, function(arg)
 				arg = arg:lower():gsub("[%ss]", "")
 				local num = ((arg == "off") and 0) or tonumber(arg)
 				return num and math.clamp(math.floor(num + 0.5), 0, 60)
@@ -46533,22 +46548,22 @@ local function fn2()
 			end, function(gap)
 				tbl16.gap = gap
 			end, "Type seconds from 0 to 60, like 5", function(arg)
-				fn64(b2.force.Label, fn83(arg))
+				fn65(b2.force.Label, fn84(arg))
 			end), min = listLayout6(tbl21.Blue, function(arg)
 				return math.clamp(math.log(arg / 5000000000) / n10, 0, 1)
 			end, function(arg)
-				return math.clamp(fn82(5000000000 * (200 ^ arg)), 5000000000, 1000000000000)
+				return math.clamp(fn83(5000000000 * (200 ^ arg)), 5000000000, 1000000000000)
 			end, function(arg)
-				return fn37(arg) .. "/s"
+				return fn38(arg) .. "/s"
 			end, function(arg)
-				local v11 = fn38(arg)
+				local v11 = fn39(arg)
 				return v11 and math.max(5000000000, v11)
 			end, function()
 				return tbl16.min
 			end, function(min)
 				tbl16.min = min
 			end, "Type a value like 50B or 1.5T (5B/s or more)", function(arg)
-				fn64(b2.min.Label, fn37(arg) .. "/s")
+				fn65(b2.min.Label, fn38(arg) .. "/s")
 			end)}
 
 			listLayout5 = header:FindFirstChildOfClass("UIGradient")
@@ -46562,7 +46577,7 @@ local function fn2()
 			listLayout4.hStroke = tbl232
 			frame2.hPat = hPat
 			hPat = header:FindFirstChild("Title")
-			fn64(hPat, "Chilli Finder")
+			fn65(hPat, "Chilli Finder")
 
 			if hPat then
 				hPat:FindFirstChildOfClass("UIStroke")
@@ -46570,14 +46585,14 @@ local function fn2()
 				listLayout.edge.Color, listLayout.edge.Thickness, listLayout.edge.Enabled = Color3.new(1, 1, 1), 2, false
 				listLayout.edge:SetAttribute("own", true)
 				listLayout.eg = Instance.new("UIGradient", listLayout.edge)
-				listLayout.eg.Rotation, listLayout.eg.Color = -11, fn58({{0, getColor(225, 170, 255)}, {0.5, getColor(250, 225, 255)}, {1, getColor(190, 120, 255)}})
+				listLayout.eg.Rotation, listLayout.eg.Color = -11, fn59({{0, getColor(225, 170, 255)}, {0.5, getColor(250, 225, 255)}, {1, getColor(190, 120, 255)}})
 				listLayout.edge.Parent = header
 				listLayout.ink = Instance.new("ImageLabel")
 				listLayout.ink.BackgroundTransparency, listLayout.ink.Image, listLayout.ink.ImageColor3, listLayout.ink.ScaleType, listLayout.ink.AnchorPoint, listLayout.ink.ZIndex, listLayout.ink.Visible, listLayout.ink.Parent = 1, "rbxassetid://100155632293857", getColor(0, 0, 0), Enum.ScaleType.Stretch, Vector2.new(0.5, 0.5), math.max(1, hPat.ZIndex - 1), false, hPat.Parent
 				tbl23.glx = listLayout
 			end
 
-			local v11 = fn62(header:FindFirstChild("PlusEquip"))
+			local v11 = fn63(header:FindFirstChild("PlusEquip"))
 
 			if v11 then
 				v11.Button.AnchorPoint, v11.Button.Size, v11.Button.Position = Vector2.new(0.5, 0.5), UDim2.new(0.24, 0, 0.5, 0), UDim2.new(0.85, 0, 0.5, 0)
@@ -46586,7 +46601,7 @@ local function fn2()
 					v11.Label.Size = UDim2.fromScale(0.84, 0.62)
 				end
 
-				fn65(v11)
+				fn66(v11)
 
 				pcall(function()
 					v11.Button.Active, v11.Button.Interactable = true, true
@@ -46602,14 +46617,14 @@ local function fn2()
 
 				local n11 = 0
 
-				local function fn84()
+				local function fn85()
 					if (os.clock() - n11) < 0.25 then
 						return
 					end
 					n11 = os.clock()
-					fn66()
+					fn67()
 
-					if not (fn43()) then
+					if not (fn44()) then
 						local v12 = ctx2.tbl17
 						if v12.who then
 							local v13 = ctx2.fn
@@ -46626,7 +46641,7 @@ local function fn2()
 					v12.auto = not v13.auto
 					v12, v13 = ctx2.tbl17, ctx2.getServerTimeNow
 					v12.autoAt = v13() * 1000
-					fn54()
+					fn55()
 					v12 = ctx2.tbl17
 
 					if not (v12.auto) then
@@ -46639,13 +46654,13 @@ local function fn2()
 					v13.dirty = true
 				end
 
-				trackConnection2(v11.Button.Activated, fn84)
+				trackConnection2(v11.Button.Activated, fn85)
 
 				trackConnection2(v11.Button.InputBegan, function(input)
 					if input.UserInputType == Enum.UserInputType.MouseButton1 then
-						fn84()
+						fn85()
 					elseif input.UserInputType == Enum.UserInputType.Touch then
-						fn84()
+						fn85()
 					end
 				end)
 			end
@@ -46658,7 +46673,7 @@ local function fn2()
 				end
 			end
 
-			listLayout5 = fn62(close)
+			listLayout5 = fn63(close)
 
 			if listLayout5.Label then
 				if listLayout5.Label:IsA("TextLabel") then
@@ -46666,9 +46681,9 @@ local function fn2()
 				end
 			end
 
-			fn65(listLayout5)
+			fn66(listLayout5)
 
-			fn67(close, function()
+			fn68(close, function()
 				chilliFinderPanelClose()
 			end)
 
@@ -46692,7 +46707,7 @@ local function fn2()
 			n8:FindFirstChildOfClass("UIGradient"):Destroy()
 			n8.RichText = true
 			unequip.AnchorPoint, unequip.Size, unequip.Position = Vector2.new(1, 0.5), UDim2.new(0.2, 0, 0.7, 0), UDim2.new(0.975, 0, 0.5, 0)
-			listLayout5 = fn62(unequip).Label
+			listLayout5 = fn63(unequip).Label
 
 			if listLayout5 then
 				listLayout5.Size = UDim2.fromScale(0.8, 0.56)
@@ -46718,7 +46733,7 @@ local function fn2()
 				tbl25.icon = spacer2:FindFirstChild("Icon")
 				tbl25.name = spacer2:FindFirstChild("TextLabel")
 				tbl25.val = spacer2:FindFirstChild("Value")
-				tbl25.b = fn62(spacer2:FindFirstChild("Unequip"))
+				tbl25.b = fn63(spacer2:FindFirstChild("Unequip"))
 				tbl25.ng = tbl25.name:FindFirstChildOfClass("UIGradient")
 				tbl25.name.TextScaled, tbl25.name.TextTruncate, tbl25.name.Size = false, Enum.TextTruncate.AtEnd, UDim2.new(0.585, 0, 0.4, 0)
 				listLayout2 = tbl25.val:Clone()
@@ -46726,15 +46741,15 @@ local function fn2()
 				listLayout2.Visible = false
 				listLayout2.Parent = spacer2
 				tbl25.mh, tbl25.mg = listLayout2, Instance.new("UIGradient", listLayout2)
-				fn65(tbl25.b)
+				fn66(tbl25.b)
 
-				fn67(tbl25.b.Button, function()
+				fn68(tbl25.b.Button, function()
 					local e2 = tbl25.e
 					if not (e2) then
 						return
 					end
 
-					if not (fn43()) then
+					if not (fn44()) then
 						local v12 = ctx2.tbl17
 						if v12.who then
 							local v13 = ctx2.fn
@@ -46748,12 +46763,12 @@ local function fn2()
 
 					if v5 then
 						if v5.e == e2 then
-							fn47("Stopped")
+							fn48("Stopped")
 						else
-							fn50(e2)
+							fn51(e2)
 						end
 					else
-						fn50(e2)
+						fn51(e2)
 					end
 				end)
 
@@ -46766,7 +46781,7 @@ local function fn2()
 				tbl232 = tbl23.geo
 				header = tbl232.bottom - tbl232.top
 				frame2 = (uiStroke.Size.Y.Scale * header) * 0.72
-				listLayout = fn81(frame2 / n7)
+				listLayout = fn82(frame2 / n7)
 				listLayout.AnchorPoint, listLayout.Position = Vector2.new(0.5, 1), UDim2.new(0.5, 0, tbl232.bottom, 0)
 				listLayout.Visible = true
 				tbl232.bottom = (tbl232.bottom - frame2) - tbl232.gap
@@ -46796,21 +46811,21 @@ local function fn2()
 				listLayout4.Name, listLayout4.RichText, listLayout4.TextScaled, listLayout4.AnchorPoint, listLayout4.Position, listLayout4.Size = "Sub", true, true, Vector2.new(0, 0.5), UDim2.new(0.05, 0, 0.72, 0), UDim2.new(0.62, 0, 0.32, 0)
 				listLayout4.Text = "<font color=\"#C8C2DC\">Create your account and get Chilli Finder</font>"
 				listLayout4.Parent = listLayout
-				local v12 = fn62(unequip:Clone())
+				local v12 = fn63(unequip:Clone())
 				v12.Button.AnchorPoint, v12.Button.Position, v12.Button.Size, v12.Button.Parent = Vector2.new(1, 0.5), UDim2.new(0.97, 0, 0.5, 0), UDim2.new(0.27, 0, 0.62, 0), listLayout
-				fn64(v12.Label, "Copy Link")
+				fn65(v12.Label, "Copy Link")
 				v12.Label.Size = UDim2.fromScale(0.82, 0.56)
-				fn63(v12, tbl21.Gold)
-				fn65(v12)
+				fn64(v12, tbl21.Gold)
+				fn66(v12)
 
-				fn67(v12.Button, function()
+				fn68(v12.Button, function()
 					local ok = pcall(setclipboard, chillihubUrl)
-					fn64(v12.Label, (ok and "Copied!") or "chillihub.pro")
+					fn65(v12.Label, (ok and "Copied!") or "chillihub.pro")
 					local v13 = ctx2.fn
 					v13((ok and "chillihub.pro copied, paste it in your browser") or "Open chillihub.pro in your browser")
 
 					task.delay(2, function()
-						fn64(v12.Label, "Copy Link")
+						fn65(v12.Label, "Copy Link")
 					end)
 				end)
 			end
@@ -46825,7 +46840,7 @@ local function fn2()
 			listLayout2.Parent = frame3
 			local fontFace = textLabel.FontFace
 
-			local function fn84(layoutOrder, arg, text)
+			local function fn85(layoutOrder, arg, text)
 				local clone = textLabel:Clone()
 				local uiGradient = clone:FindFirstChildOfClass("UIGradient")
 
@@ -46849,30 +46864,30 @@ local function fn2()
 				return frame4
 			end
 
-			local function fn85(layoutOrder, arg, arg2, arg3, arg4, parent)
+			local function fn86(layoutOrder, arg, arg2, arg3, arg4, parent)
 				local clone = unequip:Clone()
 				clone.AnchorPoint, clone.Position, clone.Size = Vector2.new(1, 0.5), UDim2.new(1, 0, 0.5, 0), UDim2.new(arg, 0, 1, 0)
 				clone.LayoutOrder = layoutOrder
 				clone.ZIndex = 7
 				clone.Parent = parent
-				layoutOrder = fn62(clone)
-				fn64(layoutOrder.Label, arg2)
+				layoutOrder = fn63(clone)
+				fn65(layoutOrder.Label, arg2)
 
 				if layoutOrder.Label then
 					layoutOrder.Label.Size = UDim2.fromScale(0.84, 0.6)
 				end
 
-				fn63(layoutOrder, arg3)
-				fn65(layoutOrder)
-				fn67(clone, arg4)
+				fn64(layoutOrder, arg3)
+				fn66(layoutOrder)
+				fn68(clone, arg4)
 				return layoutOrder
 			end
 
-			local function fn86(arg, arg2, arg3)
-				local v12, v13 = createFrame(arg, (chilliFinderEmbedded and 0.085) or 0.07), fn84(0, 1, arg2)
+			local function fn87(arg, arg2, arg3)
+				local v12, v13 = createFrame(arg, (chilliFinderEmbedded and 0.085) or 0.07), fn85(0, 1, arg2)
 				v13.AnchorPoint, v13.Position, v13.Size, v13.TextXAlignment = Vector2.new(0, 0.5), UDim2.new(0.02, 0, 0.5, 0), UDim2.new(0.64, 0, 0.62, 0), Enum.TextXAlignment.Left
 				v13.Parent = v12
-				return fn85(0, 0.3, "", tbl21.Blue, arg3, v12)
+				return fn86(0, 0.3, "", tbl21.Blue, arg3, v12)
 			end
 
 			tbl232 = createFrame(9, 0)
@@ -46892,12 +46907,12 @@ local function fn2()
 			listLayout4.FillDirection, listLayout4.HorizontalAlignment, listLayout4.VerticalAlignment, listLayout4.SortOrder, listLayout4.Padding = Enum.FillDirection.Horizontal, Enum.HorizontalAlignment.Center, Enum.VerticalAlignment.Center, Enum.SortOrder.LayoutOrder, UDim.new(0.025, 0)
 			listLayout4.Parent = frame4
 
-			local function fn87(arg, placeholderText)
-				local uiStroke2 = fn62(unequip:Clone())
+			local function fn88(arg, placeholderText)
+				local uiStroke2 = fn63(unequip:Clone())
 				local button = uiStroke2.Button
 				button.AnchorPoint, button.Position, button.Size = Vector2.new(0.5, 0), UDim2.new(0.5, 0, arg, 0), UDim2.new(0.92, 0, 0.22, 0)
 				button.Active = false
-				fn63(uiStroke2, tbl21.Field)
+				fn64(uiStroke2, tbl21.Field)
 				uiStroke2.Label.Visible = false
 				arg = Instance.new("TextBox")
 				arg.BackgroundTransparency, arg.AnchorPoint, arg.Position, arg.Size, arg.FontFace, arg.TextScaled, arg.TextColor3, arg.PlaceholderText, arg.PlaceholderColor3, arg.Text, arg.ClearTextOnFocus, arg.TextXAlignment = 1, Vector2.new(0, 0.5), UDim2.new(0.05, 0, 0.5, 0), UDim2.new(0.9, 0, 1, 0), fontFace, true, Color3.new(1, 1, 1), placeholderText, getColor(196, 190, 214), "", false, Enum.TextXAlignment.Left
@@ -46913,16 +46928,16 @@ local function fn2()
 				return arg
 			end
 
-			local function fn88(arg, arg2, arg3, arg4)
+			local function fn89(arg, arg2, arg3, arg4)
 				local clone = unequip:Clone()
 				clone.AnchorPoint, clone.Position, clone.Size = Vector2.new(0.5, 0), UDim2.new(arg, 0, 0.73, 0), UDim2.new(0.44, 0, 0.22, 0)
 				clone.Parent = v10
-				arg = fn62(clone)
-				fn64(arg.Label, arg2)
+				arg = fn63(clone)
+				fn65(arg.Label, arg2)
 				arg.Label.Size = UDim2.fromScale(0.86, 0.82)
-				fn63(arg, arg3)
-				fn65(arg)
-				fn67(clone, arg4)
+				fn64(arg, arg3)
+				fn66(arg)
+				fn68(clone, arg4)
 				return arg
 			end
 
@@ -46932,9 +46947,9 @@ local function fn2()
 			tbl23.hint0 = "<font color=\"#C8C2DC\">Sign in with your </font><font color=\"#FFFFFF\">chillihub.pro</font><font color=\"#C8C2DC\"> account</font>"
 			listLayout6 = tbl23
 			tbl232.Text, listLayout6.hint = listLayout6.hint0, tbl232
-			local usernameOrEmail = fn87(0.23, "Username or email")
+			local usernameOrEmail = fn88(0.23, "Username or email")
 			ctx3.usernameOrEmail = usernameOrEmail
-			local password = fn87(0.48, "Password")
+			local password = fn88(0.48, "Password")
 			ctx3.usernameOrEmail.Text = tostring(ctx2.v4.u or "")
 			listLayout6 = ctx2.tbl17
 			local sess, flag3, flag4 = (listLayout6.sess and "") or tostring(ctx2.v4.p or ""), false, false
@@ -46976,29 +46991,31 @@ local function fn2()
 			end)
 
 			password.Size = UDim2.new(0.74, 0, 1, 0)
-			local v12 = fn62(unequip:Clone())
+			local v12 = fn63(unequip:Clone())
 			v12.Button.AnchorPoint, v12.Button.Position, v12.Button.Size, v12.Button.ZIndex, v12.Button.Parent = Vector2.new(1, 0.5), UDim2.new(0.985, 0, 0.5, 0), UDim2.new(0.19, 0, 0.78, 0), password.ZIndex, password.Parent
 			v12.Label.Size = UDim2.fromScale(0.84, 0.6)
-			fn64(v12.Label, "Show")
-			fn63(v12, tbl21.Off)
-			fn65(v12)
+			fn65(v12.Label, "Show")
+			fn64(v12, tbl21.Off)
+			fn66(v12)
 
-			fn67(v12.Button, function()
+			fn68(v12.Button, function()
 				flag4 = not flag4
-				fn64(v12.Label, (flag4 and "Hide") or "Show")
-				fn63(v12, (flag4 and tbl21.Blue) or tbl21.Off)
+				fn65(v12.Label, (flag4 and "Hide") or "Show")
+				fn64(v12, (flag4 and tbl21.Blue) or tbl21.Off)
 				local v13 = ctx3.fn
 				v13()
 			end)
 
-			local function fn89(arg)
+			local function fn90(arg)
+				local n11 = 3299582468
+
 				if ctx2.httpRequest then
 					local tbl25
 
 					if arg then
 						tbl25 = { rt = ctx2.v4.rt }
 					else
-						local n11 = 3124504501
+						local n12 = 3124504501
 						local match = ctx3.usernameOrEmail.Text:match("^%s*(.-)%s*$")
 						if match == "" then
 							return ctx2.fn("Enter your username or email")
@@ -47023,35 +47040,35 @@ local function fn2()
 						ctx2.tbl17.acct = "Signing in..."
 					end
 
-					local n11 = 499365794
+					local n12 = 499365794
 
-					local function fn90()
-						local v15 = pcall
-						local tbl26 = { Url = ctx2.robloxMcpUrl .. "joiner/login", Method = "POST" }
-						local headers = {}
-						local v16 = table.pack(bit32.band(nil, 4294967295))
-						local v17 = table.pack(bit32.band(v16[1], 65535))
-						local v18 = bit32.band(v17[1] * 49038 + bit32.lshift(bit32.band(v17[1] * 0 + bit32.rshift(v16[1], 16) * 49038, 65535), 16), 4294967295)
-						headers["Content-Type"] = "text/plain"
-						tbl26.Headers = headers
-						tbl26.Body = ctx2.fn4(ctx2.HttpService:JSONEncode(tbl25), ctx2.slot86)
-						local flag5, v19 = v15(ctx2.httpRequest, tbl26)
-						flag5 = flag5 and type(v19) == "table" and ctx2.fn5(v19.Body, ctx2.slot86)
+					local function fn91()
+						local n13 = 1416514517
+						local n14 = 2793430022
+
+						local ok, result = pcall(ctx2.httpRequest, {
+							Url = ctx2.robloxMcpUrl .. "joiner/login",
+							Method = "POST",
+							Headers = { ["Content-Type"] = "text/plain" },
+							Body = ctx2.fn4(ctx2.HttpService:JSONEncode(tbl25), ctx2.slot86),
+						})
+
+						ok = ok and type(result) == "table" and ctx2.fn5(result.Body, ctx2.slot86)
 						ctx2.tbl17.dirty = true
 
-						if flag5 then
-							if flag5.rt == false then
-								local v20 = ctx2.tbl17
+						if ok then
+							if ok.rt == false then
+								local v15 = ctx2.tbl17
 								ctx2.v4.rt = nil
-								v20.who = nil
+								v15.who = nil
 								ctx2.fn6(ctx2.v4)
 							end
 
-							if flag5.rt then
-								ctx2.v4.rt = flag5.rt
-								local v20 = bit32.bor(nil, n11)
+							if ok.rt then
+								ctx2.v4.rt = ok.rt
+								local v15 = bit32.bor(n13, n12)
 								ctx2.fn6(ctx2.v4)
-								local n12 = v20 + 4294963168
+								n13 = v15 + 4294963168
 							end
 
 							if not arg then
@@ -47059,79 +47076,79 @@ local function fn2()
 								ctx3.fn()
 							end
 
-							if flag5.ok then
-								local v20 = ctx2.tbl17
-								v20.who = flag5.username
-								local n112 = n11
+							if ok.ok then
+								local v15 = ctx2.tbl17
+								v15.who = ok.username
+								local n122 = n12
 
-								if flag5.active then
+								if ok.active then
 									ctx2.fn7()
 									ctx2.genv.ChilliFinderOwner = ctx2.tbl17.me
-									local n12 = 1411781489
+									local n15 = 1411781489
 
 									ctx2.tbl17.sess = {
-										token = flag5.token,
-										secret = flag5.secret,
-										plan = flag5.plan,
-										delayMs = flag5.delayMs,
-										endTs = flag5.endTs,
-										username = flag5.username,
+										token = ok.token,
+										secret = ok.secret,
+										plan = ok.plan,
+										delayMs = ok.delayMs,
+										endTs = ok.endTs,
+										username = ok.username,
 									}
 
 									table.clear(ctx2.tbl17.eggs)
 									table.clear(ctx2.tbl17.seen)
-									local v21 = ctx2.tbl17
-									local v22 = ctx2.tbl17
-									local v23 = ctx2.tbl17
-									local v24 = ctx2.tbl17
-									local v25 = ctx2.tbl17
-									local n113 = n11
-									local n1122 = n112
+									local v16 = ctx2.tbl17
+									local v17 = ctx2.tbl17
+									local v18 = ctx2.tbl17
+									local v19 = ctx2.tbl17
+									local v20 = ctx2.tbl17
+									local n123 = n12
+									local n1222 = n122
 
-									if v20 then
-										bit32.bor(n1122, n113)
-										v21.last = 0
-										v22.wsAt = 0
-										v23.acct = nil
-										v24.view = nil
-										v25.drawer = nil
+									if v15 then
+										bit32.bor(n1222, n123)
+										v16.last = 0
+										v17.wsAt = 0
+										v18.acct = nil
+										v19.view = nil
+										v20.drawer = nil
 										ctx2.fn8()
 									end
 
 									return
 								end
 
-								local booking = flag5.booking or {}
-								local v21 = ctx2.tbl17
+								local booking = ok.booking or {}
+								local v16 = ctx2.tbl17
 								local now2 = os.clock()
 								local clamp = math.clamp
 								local startsInMs = booking.startsInMs
-								v21.whoAt = now2 + clamp((startsInMs or 60000) / 1000 + 2, 5, 30)
+								v16.whoAt = now2 + clamp((startsInMs or 60000) / 1000 + 2, 5, 30)
 
 								if ctx2.tbl17.drawer == "sign" then
 									ctx2.tbl17.drawer = nil
 								end
 
-								local v22 = ctx2.tbl17
+								local v17 = ctx2.tbl17
 								local acct
 
 								if booking.state ~= "upcoming" then
-									acct = ("Hi %s, no active booking. Book hours at chillihub.pro"):format(flag5.username)
+									acct = ("Hi %s, no active booking. Book hours at chillihub.pro"):format(ok.username)
 								else
-									acct = ("Hi %s, your %s booking starts in %d min"):format(flag5.username, booking.plan or "", (booking.startsInMs or 0) // 60000)
+									acct = ("Hi %s, your %s booking starts in %d min"):format(ok.username, booking.plan or "", (booking.startsInMs or 0) // 60000)
 
 									if not acct then
-										acct = ("Hi %s, no active booking. Book hours at chillihub.pro"):format(flag5.username)
-										v22.acct = acct
+										acct = ("Hi %s, no active booking. Book hours at chillihub.pro"):format(ok.username)
+										v17.acct = acct
 										return
 									end
 								end
 
-								v22.acct = acct
+								v17.acct = acct
 								return
 							end
 
-							ctx2.tbl17.acct = flag5.error or "Sign in failed"
+							ctx2.tbl17.acct = ok.error or "Sign in failed"
 							if arg then
 								return
 							end
@@ -47145,8 +47162,8 @@ local function fn2()
 						ctx2.tbl17.acct = "Could not reach chillihub.pro, try again"
 					end
 
-					n11 = 4741284
-					task.spawn(fn90)
+					n12 = 4741284
+					task.spawn(fn91)
 					return
 				end
 
@@ -47161,19 +47178,19 @@ local function fn2()
 
 			trackConnection2(password.FocusLost, function(enterPressed)
 				if enterPressed then
-					fn89()
+					fn90()
 				end
 			end)
 
-			fn88(0.26, "Sign In", tbl21.Join, fn89)
+			fn89(0.26, "Sign In", tbl21.Join, fn90)
 			local signUp
 
-			signUp = fn88(0.74, "Sign Up", tbl21.Gold, function()
+			signUp = fn89(0.74, "Sign Up", tbl21.Gold, function()
 				local ok = pcall(setclipboard, chillihubUrl)
-				fn64(signUp.Label, (ok and "Copied!") or "chillihub.pro")
+				fn65(signUp.Label, (ok and "Copied!") or "chillihub.pro")
 
 				task.delay(2, function()
-					fn64(signUp.Label, "Sign Up")
+					fn65(signUp.Label, "Sign Up")
 				end)
 
 				local Z = ctx2.fn
@@ -47185,21 +47202,21 @@ local function fn2()
 			local session = ctx2.tbl17
 
 			session.relogin = function()
-				fn89(true)
+				fn90(true)
 			end
 
 			header = ctx2.tbl17
 
 			if not (header.sess) then
 				if ctx2.v4.rt then
-					task.defer(fn89, true)
+					task.defer(fn90, true)
 				elseif ctx3.sess ~= "" then
-					task.defer(fn89)
+					task.defer(fn90)
 				end
 			end
 
 			tbl232 = {ac = {}}
-			tbl232.ac.head = fn84(-1, 0.07, "")
+			tbl232.ac.head = fn85(-1, 0.07, "")
 			listLayout = spacer:Clone()
 
 			for _, child in ipairs(listLayout:GetChildren()) do
@@ -47242,7 +47259,7 @@ local function fn2()
 			end
 
 			local function Z(arg, _, arg2, arg3, arg4)
-				local v13 = fn86(arg, _, function()
+				local v13 = fn87(arg, _, function()
 				end)
 
 				local label = v13.Label
@@ -47261,8 +47278,8 @@ local function fn2()
 
 					if match2 then
 						tbl16[arg3] = math.clamp(math.floor(match2 + 0.5), 0, arg2)
-						fn39()
-						fn54()
+						fn40()
+						fn55()
 					else
 						str6 = ctx2.fn
 						str6(arg4)
@@ -47281,36 +47298,36 @@ local function fn2()
 			tbl232.ac.age = Z(3, "Max egg age for Auto Join", 120, "age", "Type seconds from 0 to 120, like 45 or 1.5m (0 = Off)")
 			tbl232.ac.night = Z(4, "Skip joins before night", 60, "night", "Type seconds from 0 to 60, like 15 (0 = Off)")
 
-			tbl232.ac.hold = fn86(5, "Wait if egg here matches filter", function()
+			tbl232.ac.hold = fn87(5, "Wait if egg here matches filter", function()
 				tbl16.hold = not tbl16.hold
-				fn39()
+				fn40()
 			end)
 
-			tbl232.ac.rel = (if chilliFinderEmbedded then not chilliFinderEmbedded else fn86(6, "Auto load after join", function()
+			tbl232.ac.rel = (if chilliFinderEmbedded then not chilliFinderEmbedded else fn87(6, "Auto load after join", function()
 				tbl16.reload = not tbl16.reload
-				fn39()
+				fn40()
 			end)) or nil
 
-			tbl232.ac.out = fn85(2, 0.31, "Sign Out", tbl21.Stop, function()
+			tbl232.ac.out = fn86(2, 0.31, "Sign Out", tbl21.Stop, function()
 				ctx2.v4.rt = nil
 				ctx3.sess = ""
 				local v13 = ctx3.fn
 				v13()
-				fn56("Signed out")
+				fn57("Signed out")
 				local v14, _ = ctx2.tbl17, ctx2.tbl17
 				v14.who = nil
 				_.view = nil
 			end, frame4)
 
-			tbl232.ac.back = fn85(3, 0.31, "Back", tbl21.Off, function()
+			tbl232.ac.back = fn86(3, 0.31, "Back", tbl21.Off, function()
 				local v13 = ctx2.tbl17
 				v13.view = nil
 			end, frame4)
 
-			tbl232.ac.list = fn86(1, "Egg list", function()
+			tbl232.ac.list = fn87(1, "Egg list", function()
 				tbl16.list = ((tbl16.list or 0) + 1) % 3
-				fn39()
-				fn54()
+				fn40()
+				fn55()
 			end)
 
 			do
@@ -47322,12 +47339,12 @@ local function fn2()
 				frame5.Parent = frame3
 				frame5:SetAttribute("eg", true)
 				local _ = ""
-				listLayout = fn62(unequip:Clone())
+				listLayout = fn63(unequip:Clone())
 				parent = listLayout.Button
 				parent.AnchorPoint, parent.Position, parent.Size = Vector2.zero, UDim2.new(0.005, 0, 0, 0), UDim2.new(0.6, 0, 0.07, 0)
 				parent.Active = false
 				parent.Parent = frame5
-				fn63(listLayout, tbl21.Field)
+				fn64(listLayout, tbl21.Field)
 
 				if listLayout.Label then
 					listLayout.Label.Visible = false
@@ -47368,7 +47385,7 @@ local function fn2()
 				header = Instance.new("UIPadding", scrollingFrame2)
 				header.PaddingTop, header.PaddingBottom, header.PaddingLeft, header.PaddingRight = UDim.new(0, 4), UDim.new(0, 6), UDim.new(0, 4), UDim.new(0, 9)
 
-				local function fn90()
+				local function fn91()
 					local n11 = scrollingFrame2.AbsoluteSize.X - 13
 
 					if n11 > 40 then
@@ -47377,16 +47394,16 @@ local function fn2()
 					end
 				end
 
-				trackConnection2(scrollingFrame2:GetPropertyChangedSignal("AbsoluteSize"), fn90)
+				trackConnection2(scrollingFrame2:GetPropertyChangedSignal("AbsoluteSize"), fn91)
 				local tbl25, n11, flag5, tbl26, tbl27 = {}, 0, false, {{"All", 0}, {"Divine", 10}, {"Eternal", 9}, {"Secret", 8}, {"Picked", -1}}, {}
 
-				local function fn91()
+				local function fn92()
 					local n12 = #(tbl16.only or {})
 					clone.Text = ((n12 > 0) and ("<font color=\"#7CF25A\">" .. (n12 .. " picked</font>"))) or "<font color=\"#C8C2DC\">All eggs</font>"
 
 					for i2, v15 in ipairs(tbl26) do
 						local v16, n112 = tbl27[i2], n11
-						fn63(v16, ((n112 == v15[2]) and tbl21.Gold) or tbl21.Off)
+						fn64(v16, ((n112 == v15[2]) and tbl21.Gold) or tbl21.Off)
 					end
 
 					for i2, v15 in ipairs(tbl25) do
@@ -47408,9 +47425,9 @@ local function fn2()
 				end
 
 				for i2, v15 in ipairs(tbl26) do
-					tbl27[i2] = fn85(i2, 0.18, v15[1], tbl21.Off, function()
+					tbl27[i2] = fn86(i2, 0.18, v15[1], tbl21.Off, function()
 						n11 = v15[2]
-						fn91()
+						fn92()
 						scrollingFrame2.CanvasPosition = Vector2.zero
 					end, v13)
 
@@ -47421,11 +47438,11 @@ local function fn2()
 
 				trackConnection2(textBox:GetPropertyChangedSignal("Text"), function()
 					_ = textBox.Text:lower():gsub("^%s+", ""):gsub("%s+$", "")
-					fn91()
+					fn92()
 					scrollingFrame2.CanvasPosition = Vector2.zero
 				end)
 
-				local function fn92(arg)
+				local function fn93(arg)
 					local only = ((type(tbl16.only) == "table") and tbl16.only) or {}
 					local v15 = table.find(only, arg)
 
@@ -47436,13 +47453,13 @@ local function fn2()
 					end
 
 					tbl16.only = only
-					fn51()
-					fn39()
-					fn54()
-					fn91()
+					fn52()
+					fn40()
+					fn55()
+					fn92()
 				end
 
-				local function fn93()
+				local function fn94()
 					if flag5 then
 						return
 					end
@@ -47477,7 +47494,7 @@ local function fn2()
 					end)
 
 					for i2, v15 in ipairs(tbl28) do
-						local v16, textButton = fn57(v15.n), Instance.new("TextButton")
+						local v16, textButton = fn58(v15.n), Instance.new("TextButton")
 						textButton.Text, textButton.AutoButtonColor, textButton.BackgroundColor3 = "", false, getColor(24, 21, 34)
 						textButton.BackgroundTransparency = 0.05
 						textButton.LayoutOrder = i2
@@ -47533,15 +47550,15 @@ local function fn2()
 
 						tbl25[#tbl25 + 1] = {b = textButton, st = i2, dot = uiElement, n = v15.n, l = v15.n:lower(), r = v15.r, c = v16.color}
 
-						fn67(textButton, function()
-							fn92(v15.n)
+						fn68(textButton, function()
+							fn93(v15.n)
 						end)
 					end
 
-					fn90()
+					fn91()
 				end
 
-				fn85(1, 0.3, "Select all", tbl21.Blue, function()
+				fn86(1, 0.3, "Select all", tbl21.Blue, function()
 					local only = ((type(tbl16.only) == "table") and tbl16.only) or {}
 
 					for _, v15 in ipairs(tbl25) do
@@ -47553,29 +47570,29 @@ local function fn2()
 					end
 
 					tbl16.only = only
-					fn51()
-					fn39()
-					fn54()
-					fn91()
+					fn52()
+					fn40()
+					fn55()
+					fn92()
 				end, v14)
 
-				fn85(2, 0.3, "Clear", tbl21.Off, function()
+				fn86(2, 0.3, "Clear", tbl21.Off, function()
 					tbl16.only = {}
-					fn51()
-					fn39()
-					fn54()
-					fn91()
+					fn52()
+					fn40()
+					fn55()
+					fn92()
 				end, v14)
 
-				fn85(3, 0.3, "Done", tbl21.Join, function()
+				fn86(3, 0.3, "Done", tbl21.Join, function()
 					local v15 = ctx2.tbl17
 					v15.view = "ac"
 				end, v14)
 
-				tbl232.ac.only = fn86(2, "Only these eggs", function()
-					fn93()
+				tbl232.ac.only = fn87(2, "Only these eggs", function()
+					fn94()
 					n11 = 0
-					fn91()
+					fn92()
 					local v15 = ctx2.tbl17
 					v15.view = "eg"
 				end)
@@ -47591,7 +47608,7 @@ local function fn2()
 
 			tbl23.pk = tbl233
 
-			local function fn90(_)
+			local function fn91(_)
 				local v13, v14, v15 = ctx2.tbl17, ctx2.tbl17, ctx2.tbl17
 				v13.drawer = ((v15.drawer ~= _) and _) or nil
 				v14.view = nil
@@ -47600,24 +47617,24 @@ local function fn2()
 			n8 = {"force", "min", "rar"}
 
 			for _, v13 in ipairs(n8) do
-				fn67(b2[v13].Button, function()
-					fn90(v13)
+				fn68(b2[v13].Button, function()
+					fn91(v13)
 				end)
 			end
 
 			local function _()
-				if fn44() then
+				if fn45() then
 					local v13, v14, v15 = ctx2.tbl17, ctx2.tbl17, ctx2.tbl17
 					v13.drawer, v14.view = nil, ((v15.view ~= "ac") and "ac") or nil
 				else
-					fn90("sign")
+					fn91("sign")
 				end
 			end
 
-			fn67(b2.acct.Button, _)
+			fn68(b2.acct.Button, _)
 
 			if v11 then
-				chilliStealPanelFrame = fn62(v11.Button:Clone())
+				chilliStealPanelFrame = fn63(v11.Button:Clone())
 				frame2 = chilliStealPanelFrame.Button
 
 				for _, descendant in ipairs(frame2:GetDescendants()) do
@@ -47648,9 +47665,9 @@ local function fn2()
 					listLayout6.Parent = frame2
 				end
 
-				fn63(chilliStealPanelFrame, tbl21.Blue)
-				fn65(chilliStealPanelFrame)
-				fn67(frame2, _)
+				fn64(chilliStealPanelFrame, tbl21.Blue)
+				fn66(chilliStealPanelFrame)
+				fn68(frame2, _)
 				frame2.Parent = v11.Button.Parent
 				tbl23.gear = chilliStealPanelFrame
 			end
@@ -47658,22 +47675,22 @@ local function fn2()
 			frame2 = {"force", "min", "rar", "acct"}
 
 			for _, v13 in ipairs(frame2) do
-				fn65(b2[v13])
+				fn66(b2[v13])
 			end
 
-			listLayout4, header, tbl24, fn88, parent, listLayout2 = tbl23, tbl23, tbl23, tbl23, tbl23, tbl23
+			listLayout4, header, tbl24, fn89, parent, listLayout2 = tbl23, tbl23, tbl23, tbl23, tbl23, tbl23
 			tbl23.B = b2
 			listLayout4.V = tbl232
 			header.ov = frame3
 			tbl24.stat = mouseEnabled
-			fn88.scroll = scrollingFrame
+			fn89.scroll = scrollingFrame
 			parent.title = hPat
 			listLayout2.autoB = v11
-			fn87, _, tbl232 = tbl23, tbl23, frame.Position
-			fn87.panel = v9
+			fn88, _, tbl232 = tbl23, tbl23, frame.Position
+			fn88.panel = v9
 			_.home = tbl232
 			v9.Position = tbl23.home
-			fn69(v9, true, tbl23.sbase)
+			fn70(v9, true, tbl23.sbase)
 
 			if chilliFinderEmbedded then
 				tbl23.cS = {}
@@ -47687,13 +47704,13 @@ local function fn2()
 				end
 			end
 
-			fn61(v9)
-			fn88 = tbl23
-			fn88.gui = createScreenGui(v8.ActivePets)
+			fn62(v9)
+			fn89 = tbl23
+			fn89.gui = createScreenGui(v8.ActivePets)
 			tbl23.gui.Enabled = false
 			v9.Parent = tbl23.gui
 			tbl23.gui.Parent = hui
-			trackConnection2(v9:GetPropertyChangedSignal("AbsoluteSize"), fn70)
+			trackConnection2(v9:GetPropertyChangedSignal("AbsoluteSize"), fn71)
 			_, header, listLayout = ipairs, {}, v8.ActivePets
 			header[1], header[2] = listLayout, v8.Growing
 
@@ -47736,12 +47753,12 @@ local function fn2()
 			end)
 		end}
 
-		local function fn81()
+		local function fn82()
 			if not (tbl23.panel) then
 				return
 			end
-			local v9 = fn43()
-			local v92, sess = v9 and (fn40()), fn44()
+			local v9 = fn44()
+			local v92, sess = v9 and (fn41()), fn45()
 			local view
 
 			if sess then
@@ -47804,7 +47821,7 @@ local function fn2()
 					flag4 = v10.acct
 				end
 
-				fn64(tbl23.hint, (flag4 and ("<font color=\"#FFD24A\">" .. (flag4:gsub("[<>&]", ""):gsub("chillihub%.pro", "<font color=\"#FFFFFF\">chillihub.pro</font>") .. "</font>"))) or tbl23.hint0)
+				fn65(tbl23.hint, (flag4 and ("<font color=\"#FFD24A\">" .. (flag4:gsub("[<>&]", ""):gsub("chillihub%.pro", "<font color=\"#FFFFFF\">chillihub.pro</font>") .. "</font>"))) or tbl23.hint0)
 			end
 
 			view = tbl23
@@ -47835,8 +47852,8 @@ local function fn2()
 					opt.Button.Visible = v10 ~= nil
 
 					if v10 then
-						fn64(opt.Label, v10[1])
-						fn63(opt, (v10[2] and tbl21.Join) or tbl21.Blue)
+						fn65(opt.Label, v10[1])
+						fn64(opt, (v10[2] and tbl21.Join) or tbl21.Blue)
 						opt.pick = v10[3]
 					end
 				end
@@ -47873,7 +47890,7 @@ local function fn2()
 				end
 
 				if tbl23.hp then
-					fn63(tbl23.hp, (view and tbl21.HudVip) or tbl21.Hud)
+					fn64(tbl23.hp, (view and tbl21.HudVip) or tbl21.Hud)
 				end
 
 				hPat = tbl23.title
@@ -47882,7 +47899,7 @@ local function fn2()
 					local tbl232 = tbl23
 					tbl232.t0 = tbl232.t0 or {f = hPat.FontFace, c = hPat.TextColor3}
 					local uiGradient, uiStroke = hPat:FindFirstChildOfClass("UIGradient"), hPat:FindFirstChildOfClass("UIStroke")
-					fn64(hPat, "Chilli Finder")
+					fn65(hPat, "Chilli Finder")
 					tbl23.t0.sz, tbl23.t0.ps = tbl23.t0.sz or hPat.Size, tbl23.t0.ps or hPat.Position
 					hPat.Size, hPat.Position = tbl23.t0.sz, tbl23.t0.ps
 					hPat.FontFace = (view and Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Heavy)) or tbl23.t0.f
@@ -47932,16 +47949,16 @@ local function fn2()
 			end
 
 			local b2, v10 = tbl23.B, tbl23.V
-			fn64(b2.force.Cap, "FORCE JOIN")
-			fn64(b2.force.Label, ((tbl16.gap > 0) and (((((tbl16.gap % 1) == 0) and ("%d"):format(tbl16.gap)) or tostring(tbl16.gap)) .. "s")) or "Off")
+			fn65(b2.force.Cap, "FORCE JOIN")
+			fn65(b2.force.Label, ((tbl16.gap > 0) and (((((tbl16.gap % 1) == 0) and ("%d"):format(tbl16.gap)) or tostring(tbl16.gap)) .. "s")) or "Off")
 			view, size = b2.force, ((size2 == "force") and tbl21.Gold) or ((tbl16.gap > 0) and tbl21.Join)
-			fn63(view, size or tbl21.Off)
-			fn64(b2.min.Cap, "MIN VALUE")
-			fn64(b2.min.Label, fn37(tbl16.min) .. "/s")
-			fn63(b2.min, ((size2 == "min") and tbl21.Gold) or tbl21.Blue)
-			fn64(b2.rar.Cap, "RARITY")
-			fn64(b2.rar.Label, tbl14[table.find({0, 8, 9, 10}, tbl16.rar) or 1][1])
-			fn63(b2.rar, ((size2 == "rar") and tbl21.Gold) or tbl21.Blue)
+			fn64(view, size or tbl21.Off)
+			fn65(b2.min.Cap, "MIN VALUE")
+			fn65(b2.min.Label, fn38(tbl16.min) .. "/s")
+			fn64(b2.min, ((size2 == "min") and tbl21.Gold) or tbl21.Blue)
+			fn65(b2.rar.Cap, "RARITY")
+			fn65(b2.rar.Label, tbl14[table.find({0, 8, 9, 10}, tbl16.rar) or 1][1])
+			fn64(b2.rar, ((size2 == "rar") and tbl21.Gold) or tbl21.Blue)
 			size = nil
 
 			if v9 then
@@ -47960,18 +47977,18 @@ local function fn2()
 				str6 = v9
 			end
 
-			fn64(geo, str6 or "ACCOUNT")
+			fn65(geo, str6 or "ACCOUNT")
 			size, str6 = b2.acct.Label, (v9 and ("%dh%02dm"):format(view // 3600, (view % 3600) // 60)) or (sess and "No plan")
-			fn64(size, (str6 or ((size2 == "sign") and "Hide")) or "Sign In")
-			fn63(b2.acct, (((size2 == "sign") or sess2) and tbl21.Off) or tbl21.Gold)
+			fn65(size, (str6 or ((size2 == "sign") and "Hide")) or "Sign In")
+			fn64(b2.acct, (((size2 == "sign") or sess2) and tbl21.Off) or tbl21.Gold)
 
 			if tbl23.autoB then
-				fn64(tbl23.autoB.Label, (ctx2.tbl17.auto and "AUTO ON") or "AUTO OFF")
-				fn63(tbl23.autoB, (ctx2.tbl17.auto and tbl21.Join) or tbl21.Off)
+				fn65(tbl23.autoB.Label, (ctx2.tbl17.auto and "AUTO ON") or "AUTO OFF")
+				fn64(tbl23.autoB, (ctx2.tbl17.auto and tbl21.Join) or tbl21.Off)
 			end
 
 			if tbl23.gear then
-				fn63(tbl23.gear, (((sess2 == "ac") or (size2 == "sign")) and tbl21.Join) or tbl21.Blue)
+				fn64(tbl23.gear, (((sess2 == "ac") or (size2 == "sign")) and tbl21.Join) or tbl21.Blue)
 			end
 
 			geo = nil
@@ -47996,7 +48013,7 @@ local function fn2()
 						if v92 then
 							size = ctx2.tbl17
 
-							if size.auto and fn48() then
+							if size.auto and fn49() then
 								geo = "Auto waits: night is close"
 							else
 								local auto = ctx2.tbl17
@@ -48044,7 +48061,7 @@ local function fn2()
 				end
 			end
 
-			fn64(tbl23.stat, geo)
+			fn65(tbl23.stat, geo)
 			tbl23.stat.TextColor3 = (v5 and getColor(255, 196, 77)) or getColor(255, 255, 255)
 
 			if sess2 == "ac" then
@@ -48069,12 +48086,12 @@ local function fn2()
 					size = b2
 				end
 
-				fn64(v10.ac.head, "Signed in as " .. tostring(size.username or "?"))
+				fn65(v10.ac.head, "Signed in as " .. tostring(size.username or "?"))
 				local v11, n7 = ctx2.getServerTimeNow, math.max(0, math.floor((size.endTs / 1000) - ctx2.getServerTimeNow()))
 
-				local function fn82(arg, arg2, arg3)
+				local function fn83(arg, arg2, arg3)
 					local v12 = v10.ac.info[arg]
-					fn64(v12.l, arg2)
+					fn65(v12.l, arg2)
 
 					if v12.g then
 						v12.g.Color = ColorSequence.new(arg3)
@@ -48082,10 +48099,10 @@ local function fn2()
 					end
 				end
 
-				fn82("PLAN", (v9 and tostring(size.plan or "?"):upper()) or "NONE", (v9 and getColor(255, 214, 90)) or getColor(255, 120, 110))
+				fn83("PLAN", (v9 and tostring(size.plan or "?"):upper()) or "NONE", (v9 and getColor(255, 214, 90)) or getColor(255, 120, 110))
 				local flag3 = not v9
-				fn82("TIME LEFT", ((if v9 then flag3 else "-") or ((n7 >= 3600) and ("%dh %02dm"):format(n7 // 3600, (n7 % 3600) // 60))) or ("%dm %02ds"):format(n7 // 60, n7 % 60), ((n7 < 600) and getColor(255, 120, 110)) or getColor(255, 255, 255))
-				fn82("ENDS AT", (v9 and os.date("%H:%M", math.floor(size.endTs / 1000))) or "-", getColor(255, 255, 255))
+				fn83("TIME LEFT", ((if v9 then flag3 else "-") or ((n7 >= 3600) and ("%dh %02dm"):format(n7 // 3600, (n7 % 3600) // 60))) or ("%dm %02ds"):format(n7 // 60, n7 % 60), ((n7 < 600) and getColor(255, 120, 110)) or getColor(255, 255, 255))
+				fn83("ENDS AT", (v9 and os.date("%H:%M", math.floor(size.endTs / 1000))) or "-", getColor(255, 255, 255))
 				local flag32, flag322 = if v9 then flag3 else "Off"
 
 				if flag32 then
@@ -48095,25 +48112,25 @@ local function fn2()
 					flag322 = n7.ws and "Live"
 				end
 
-				fn82("FEED", flag322 or "Polling", (ctx2.tbl17.ws and getColor(124, 242, 90)) or getColor(255, 200, 80))
-				fn82("DELAY", ((if v9 then flag3 else "-") or (((size.delayMs or 0) > 0) and ("+" .. ((size.delayMs / 1000) .. "s")))) or "Instant", (((size.delayMs or 0) > 0) and getColor(255, 200, 80)) or getColor(124, 242, 90))
-				fn82("FINDER", ((if v9 then flag3 else "-") or (v92 and "Here")) or "Other", (v92 and getColor(124, 242, 90)) or getColor(255, 120, 110))
+				fn83("FEED", flag322 or "Polling", (ctx2.tbl17.ws and getColor(124, 242, 90)) or getColor(255, 200, 80))
+				fn83("DELAY", ((if v9 then flag3 else "-") or (((size.delayMs or 0) > 0) and ("+" .. ((size.delayMs / 1000) .. "s")))) or "Instant", (((size.delayMs or 0) > 0) and getColor(255, 200, 80)) or getColor(124, 242, 90))
+				fn83("FINDER", ((if v9 then flag3 else "-") or (v92 and "Here")) or "Other", (v92 and getColor(124, 242, 90)) or getColor(255, 120, 110))
 				flag322 = #(tbl16.only or {})
-				fn64(v10.ac.only.Label, ((flag322 > 0) and (flag322 .. (((flag322 == 1) and " egg") or " eggs"))) or "All")
-				fn63(v10.ac.only, ((flag322 > 0) and tbl21.Gold) or tbl21.Blue)
-				fn64(v10.ac.list.Label, ({[0] = "Matching", "Top value", "Newest"})[tbl16.list or 0])
-				fn63(v10.ac.list, (((tbl16.list or 0) > 0) and tbl21.Gold) or tbl21.Blue)
-				fn64(v10.ac.hold.Label, (tbl16.hold and "ON") or "OFF")
-				fn63(v10.ac.hold, (tbl16.hold and tbl21.Join) or tbl21.Off)
+				fn65(v10.ac.only.Label, ((flag322 > 0) and (flag322 .. (((flag322 == 1) and " egg") or " eggs"))) or "All")
+				fn64(v10.ac.only, ((flag322 > 0) and tbl21.Gold) or tbl21.Blue)
+				fn65(v10.ac.list.Label, ({[0] = "Matching", "Top value", "Newest"})[tbl16.list or 0])
+				fn64(v10.ac.list, (((tbl16.list or 0) > 0) and tbl21.Gold) or tbl21.Blue)
+				fn65(v10.ac.hold.Label, (tbl16.hold and "ON") or "OFF")
+				fn64(v10.ac.hold, (tbl16.hold and tbl21.Join) or tbl21.Off)
 				n7, flag3 = v10.ac.age.Label, (tbl16.age > 0) and (((tbl16.age < 60) and (tbl16.age .. "s")) or ((tbl16.age // 60) .. ("m" .. ((((tbl16.age % 60) > 0) and (" " .. ((tbl16.age % 60) .. "s"))) or ""))))
-				fn64(n7, flag3 or "Off")
-				fn63(v10.ac.age, ((tbl16.age > 0) and tbl21.Blue) or tbl21.Off)
-				fn64(v10.ac.night.Label, ((tbl16.night > 0) and (tbl16.night .. "s")) or "Off")
-				fn63(v10.ac.night, ((tbl16.night > 0) and tbl21.Blue) or tbl21.Off)
+				fn65(n7, flag3 or "Off")
+				fn64(v10.ac.age, ((tbl16.age > 0) and tbl21.Blue) or tbl21.Off)
+				fn65(v10.ac.night.Label, ((tbl16.night > 0) and (tbl16.night .. "s")) or "Off")
+				fn64(v10.ac.night, ((tbl16.night > 0) and tbl21.Blue) or tbl21.Off)
 
 				if v10.ac.rel then
-					fn64(v10.ac.rel.Label, (tbl16.reload and "ON") or "OFF")
-					fn63(v10.ac.rel, (tbl16.reload and tbl21.Join) or tbl21.Off)
+					fn65(v10.ac.rel.Label, (tbl16.reload and "ON") or "OFF")
+					fn64(v10.ac.rel, (tbl16.reload and tbl21.Join) or tbl21.Off)
 				end
 			end
 
@@ -48143,7 +48160,7 @@ local function fn2()
 					if (v11.ek ~= k) or (v11.eh ~= y2) then
 						v11.ek = k
 						v11.eh = y2
-						local v12 = fn57(k.name)
+						local v12 = fn58(k.name)
 
 						if v11.icon then
 							if v11.icon.Image ~= v12.icon then
@@ -48163,12 +48180,12 @@ local function fn2()
 						if flag3 then
 							if v11.mk ~= match then
 								v11.mk = match
-								fn64(v11.mh, flag3[1])
+								fn65(v11.mh, flag3[1])
 								v11.mg.Color = (flag3[2] and ColorSequence.new(Color3.fromRGB(unpack(flag3[2])))) or colorSequence
 							end
 						end
 
-						fn64(v11.name, tostring(k.name))
+						fn65(v11.name, tostring(k.name))
 						textSize = math.max(7, math.floor(y2 * 0.2))
 
 						if v11.mh.TextSize ~= textSize then
@@ -48186,10 +48203,10 @@ local function fn2()
 					end
 
 					y2 = tostring(k.valueText or "")
-					fn64(v11.val, "<font color=\"#7CF25A\">$" .. ((((y2 ~= "") and y2) or tostring(k.value)) .. ("</font>" .. (((((tonumber(k.size) or 0) > 0) and ("  <font color=\"#FFD24A\">x%.2f</font>"):format(k.size)) or "") .. ((((v9 and ((k.pm or 0) > 0)) and ("  <font color=\"#9FD1FF\">%d/%d</font>"):format(k.pc or 0, k.pm)) or "") .. ("  <font color=\"#B8B4C8\">" .. (fn46(k) .. "</font>")))))))
+					fn65(v11.val, "<font color=\"#7CF25A\">$" .. ((((y2 ~= "") and y2) or tostring(k.value)) .. ("</font>" .. (((((tonumber(k.size) or 0) > 0) and ("  <font color=\"#FFD24A\">x%.2f</font>"):format(k.size)) or "") .. ((((v9 and ((k.pm or 0) > 0)) and ("  <font color=\"#9FD1FF\">%d/%d</font>"):format(k.pc or 0, k.pm)) or "") .. ("  <font color=\"#B8B4C8\">" .. (fn47(k) .. "</font>")))))))
 					y2 = v5 and (v5.e == k)
 					local label, tbl192 = v11.b.Label, (y2 and "Stop") or (if v9 then not v9 else "Join")
-					fn64(label, (tbl192 or ((v92 and k.jobId) and "Join")) or "Locked")
+					fn65(label, (tbl192 or ((v92 and k.jobId) and "Join")) or "Locked")
 					local b3, stop, stop2 = v11.b, (y2 and tbl21.Stop) or (if v9 then not v9 else tbl21.Gold)
 
 					if stop then
@@ -48213,7 +48230,7 @@ local function fn2()
 						end
 					end
 
-					fn63(b3, stop2 or tbl21.Off)
+					fn64(b3, stop2 or tbl21.Off)
 				else
 				end
 			end
@@ -48237,7 +48254,7 @@ local function fn2()
 
 					if sess then
 						geo = ctx2.tbl17
-						str6 = fn57(geo.top[1].name).icon
+						str6 = fn58(geo.top[1].name).icon
 					else
 						str6 = sess
 					end
@@ -48249,7 +48266,7 @@ local function fn2()
 					end
 				end
 
-				fn64(tbl23.badgeT, ((sess2 > 99) and "99+") or tostring(sess2))
+				fn65(tbl23.badgeT, ((sess2 > 99) and "99+") or tostring(sess2))
 			end
 		end
 
@@ -48268,8 +48285,8 @@ local function fn2()
 
 					if os.clock() < v11.wsAt then
 						return
-					elseif fn43() then
-						if not (fn40()) then
+					elseif fn44() then
+						if not (fn41()) then
 							return
 						end
 					else
@@ -48373,7 +48390,7 @@ local function fn2()
 			end)
 		end
 
-		local function fn82(arg, arg2)
+		local function fn83(arg, arg2)
 			local ok, result = pcall(gameRef2.HttpGet, gameRef2, arg)
 			if not (ok) then
 				return nil, (tostring(result):find("401") and "expired") or ""
@@ -48382,7 +48399,7 @@ local function fn2()
 			return arg(result, arg2, true), tostring(result)
 		end
 
-		local function fn83()
+		local function fn84()
 			local v9, n7 = ctx2.tbl17, os.clock() - ctx2.tbl17.arrived
 			if n7 < 8 then
 				return true
@@ -48413,7 +48430,7 @@ local function fn2()
 					if flag4 and (((rarity and tonumber(rarity.RarityNumber or rarity.Rank)) or 0) >= tbl16.rar) then
 						local tbl24, tbl25 = {}, {}
 
-						local function fn84(arg)
+						local function fn85(arg)
 							if type(arg) == "string" then
 								if arg ~= "" then
 									if arg ~= "Normal" then
@@ -48428,17 +48445,17 @@ local function fn2()
 							end
 						end
 
-						fn84(record.BaseMutation)
+						fn85(record.BaseMutation)
 
 						if type(record.Mutations) == "table" then
 							for k2, v10 in next, record.Mutations, nil do
-								fn84((((type(k2) == "string") and (v10 == true)) and k2) or v10)
+								fn85((((type(k2) == "string") and (v10 == true)) and k2) or v10)
 							end
 						end
 
 						local ok, result = pcall(Mutations.EarningsFor, tbl24)
-						fn84 = tonumber(record.AssetScale) or 1
-						if (((tonumber(k.EarningRate) or 0) * (((fn84 > 5) and (((fn84 / 5) ^ 1.2) * 19.637875755794113)) or (fn84 ^ 1.85))) * ((ok and tonumber(result)) or 1)) >= math.max(tbl16.min, 1) then
+						fn85 = tonumber(record.AssetScale) or 1
+						if (((tonumber(k.EarningRate) or 0) * (((fn85 > 5) and (((fn85 / 5) ^ 1.2) * 19.637875755794113)) or (fn85 ^ 1.85))) * ((ok and tonumber(result)) or 1)) >= math.max(tbl16.min, 1) then
 							flag3 = true
 							break
 						end
@@ -48465,13 +48482,13 @@ local function fn2()
 		local O, n7, n8, n9, n10 = false, 0, 0, 0, 0
 
 		local function _()
-			v8 = fn71()
+			v8 = fn72()
 			if not (v8) then
 				return false
 			end
 
-			if not (fn75() and fn80()) then
-				fn77()
+			if not (fn76() and fn81()) then
+				fn78()
 				local tbl24 = {"hudGui", "gui"}
 
 				for i2, v9 in ipairs(tbl24) do
@@ -48508,12 +48525,12 @@ local function fn2()
 		tbl24.Bright = getColor(168, 85, 247)
 		local tbl25, tbl26 = {"\226\151\162", "\226\151\163", "\226\151\164", "\226\151\165", "\226\150\178", "\226\150\188", "\226\151\134", "\226\150\147", "\226\150\146", "\226\150\145", "/", "\\", "X", "#", "%"}, {Parts = nil, NextBurst = 0, Burst = nil}
 		tbl26.Rng = Random.new()
-		local fn84
+		local fn85
 
-		local function fn85()
+		local function fn86()
 			if tbl26.Burst then
-				if fn84 then
-					pcall(fn84, tbl26.Burst)
+				if fn85 then
+					pcall(fn85, tbl26.Burst)
 				end
 			end
 
@@ -48531,12 +48548,12 @@ local function fn2()
 			tbl26.Burst = nil
 		end
 
-		local function fn86(arg)
-			fn85()
+		local function fn87(arg)
+			fn86()
 			local parent = arg.Parent
 			local uiStroke, parts = arg:FindFirstChildOfClass("UIStroke"), {All = {}, Ghosts = {}, Shards = {}}
 
-			local function fn87(arg2)
+			local function fn88(arg2)
 				table.insert(parts.All, arg2)
 				return arg2
 			end
@@ -48544,7 +48561,7 @@ local function fn2()
 			local function parent2()
 				local clone = arg:Clone()
 				clone:ClearAllChildren()
-				clone.Name = fn59()
+				clone.Name = fn60()
 				clone.BackgroundTransparency = 1
 
 				if uiStroke then
@@ -48554,9 +48571,9 @@ local function fn2()
 				return clone
 			end
 
-			local function fn88()
+			local function fn89()
 				local frame = Instance.new("Frame")
-				frame.Name = fn59()
+				frame.Name = fn60()
 				frame.BackgroundTransparency = 1
 				frame.BorderSizePixel = 0
 				frame.ClipsDescendants = true
@@ -48564,22 +48581,22 @@ local function fn2()
 				frame.ZIndex = arg.ZIndex
 				frame.Visible = false
 				frame.Parent = parent
-				return fn87(frame)
+				return fn88(frame)
 			end
 
-			parts.TearTop = fn88()
-			parts.TearBottom = fn88()
-			parts.TearTopText = fn87((parent2()))
+			parts.TearTop = fn89()
+			parts.TearBottom = fn89()
+			parts.TearTopText = fn88((parent2()))
 			parts.TearTopText.AnchorPoint = Vector2.new(0, 0)
 			parts.TearTopText.Position = UDim2.fromScale(0, 0)
 			parts.TearTopText.Parent = parts.TearTop
-			parts.TearBottomText = fn87((parent2()))
+			parts.TearBottomText = fn88((parent2()))
 			parts.TearBottomText.AnchorPoint = Vector2.new(0, 0)
 			parts.TearBottomText.Parent = parts.TearBottom
 
 			local function uiCorner(backgroundColor3, backgroundTransparency, arg2)
 				local frame = Instance.new("Frame")
-				frame.Name = fn59()
+				frame.Name = fn60()
 				frame.BorderSizePixel = 0
 				frame.BackgroundColor3 = backgroundColor3
 				frame.BackgroundTransparency = backgroundTransparency
@@ -48590,25 +48607,25 @@ local function fn2()
 				backgroundTransparency.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.5, 0), NumberSequenceKeypoint.new(1, 1)})
 				backgroundTransparency.Parent = frame
 				frame.Parent = parent
-				return fn87(frame)
+				return fn88(frame)
 			end
 
 			parts.SeamGlow = uiCorner(tbl24.Bright, 0.72, 1)
 			parts.SeamCore = uiCorner(tbl24.Core, 0.05, 2)
-			uiCorner, fn88 = ipairs, {tbl24.GhostA, tbl24.GhostB}
+			uiCorner, fn89 = ipairs, {tbl24.GhostA, tbl24.GhostB}
 
-			for k, v9 in uiCorner(fn88) do
+			for k, v9 in uiCorner(fn89) do
 				k = parent2()
 				k.TextColor3 = v9
 				k.TextTransparency = 1
 				k.ZIndex = math.max(arg.ZIndex - 1, 1)
 				k.Parent = parent
-				table.insert(parts.Ghosts, (fn87(k)))
+				table.insert(parts.Ghosts, (fn88(k)))
 			end
 
 			for i2 = 1, tbl24.Shards, 1 do
 				parent2 = Instance.new("Frame")
-				parent2.Name = fn59()
+				parent2.Name = fn60()
 				parent2.BorderSizePixel = 0
 				parent2.BackgroundColor3 = (((i2 % 2) == 0) and tbl24.Lilac) or tbl24.Core
 				parent2.BackgroundTransparency = 1
@@ -48618,14 +48635,14 @@ local function fn2()
 				uiCorner.CornerRadius = UDim.new(0, 1)
 				uiCorner.Parent = parent2
 				parent2.Parent = parent
-				table.insert(parts.Shards, (fn87(parent2)))
+				table.insert(parts.Shards, (fn88(parent2)))
 			end
 
 			tbl26.Parts = parts
 			tbl26.NextBurst = os.clock() + tbl26.Rng:NextNumber(0.6, 1.6)
 		end
 
-		fn84 = function(arg)
+		fn85 = function(arg)
 			local parts, label = tbl26.Parts, tbl26.Label
 
 			if label then
@@ -48673,7 +48690,7 @@ local function fn2()
 			end
 		end
 
-		local function fn87(arg)
+		local function fn88(arg)
 			local tbl27 = {}
 
 			for i2 = 1, #arg, 1 do
@@ -48693,9 +48710,9 @@ local function fn2()
 			return table.concat(tbl27)
 		end
 
-		local function fn88(arg, arg2, arg3)
+		local function fn89(arg, arg2, arg3)
 			local rng, orig, n11 = tbl26.Rng, arg.Orig, math.clamp(arg.Elapsed / arg.Duration, 0, 1)
-			local n12, v9, rotation, text = rng:NextInteger(-tbl24.JitterX, tbl24.JitterX), rng:NextInteger(-tbl24.JitterY, tbl24.JitterY), orig.Rotation + rng:NextNumber(-tbl24.RotJitter, tbl24.RotJitter), ((rng:NextNumber() < tbl24.ScrambleChance) and fn87(orig.Text)) or orig.Text
+			local n12, v9, rotation, text = rng:NextInteger(-tbl24.JitterX, tbl24.JitterX), rng:NextInteger(-tbl24.JitterY, tbl24.JitterY), orig.Rotation + rng:NextNumber(-tbl24.RotJitter, tbl24.RotJitter), ((rng:NextNumber() < tbl24.ScrambleChance) and fn88(orig.Text)) or orig.Text
 			arg2.Position = orig.Position + UDim2.fromOffset(n12, v9)
 			arg2.Rotation = rotation
 			arg2.Text = text
@@ -48760,7 +48777,7 @@ local function fn2()
 			end
 		end
 
-		local function fn89(arg)
+		local function fn90(arg)
 			local parts, label = tbl26.Parts, tbl26.Label
 
 			if parts then
@@ -48799,13 +48816,13 @@ local function fn2()
 			burst.Elapsed = arg - burst.Start
 
 			if burst.Elapsed >= burst.Duration then
-				fn84(burst)
+				fn85(burst)
 				tbl26.Burst = nil
 				tbl26.NextBurst = arg + rng:NextNumber(tbl24.BurstMin, tbl24.BurstMax)
 				return
 			end
 
-			fn88(burst, label, parts)
+			fn89(burst, label, parts)
 		end
 
 		trackConnection2(RunService2.RenderStepped, function(deltaTime)
@@ -48834,14 +48851,14 @@ local function fn2()
 
 					if tbl23.vip and flag2 then
 						if tbl26.Label ~= title then
-							fn85()
+							fn86()
 							tbl26.Label = title
-							fn86(title)
+							fn87(title)
 						end
 
-						fn89(now2)
+						fn90(now2)
 					elseif tbl26.Burst then
-						fn84(tbl26.Burst)
+						fn85(tbl26.Burst)
 						tbl26.Burst = nil
 					end
 				end
@@ -48862,7 +48879,7 @@ local function fn2()
 
 			if not (((v8.Eggs:IsDescendantOf(gameRef2) and v8.ActivePets:IsDescendantOf(gameRef2)) and tbl23.btn) and tbl23.btn:IsDescendantOf(gameRef2)) then
 				O = false
-				fn77()
+				fn78()
 				glx = {"hudGui", "gui"}
 
 				for _, v9 in ipairs(glx) do
@@ -48879,33 +48896,33 @@ local function fn2()
 
 			if now2 >= n10 then
 				n10 = now2 + 0.25
-				fn78()
-				pcall(fn79)
+				fn79()
+				pcall(fn80)
 
 				if flag2 then
 					title = ctx2.genv
 
 					if title.ChilliFinderHidden then
 						chilliFinderPanelClose()
-					elseif not (fn40()) then
+					elseif not (fn41()) then
 						chilliFinderPanelClose()
 					end
 				end
 			end
 
 			if v5 then
-				if (now2 > v5.stop) or not fn43() then
+				if (now2 > v5.stop) or not fn44() then
 					glx = ctx2.tbl17
 					glx.failed[v5.e.jobId] = now2 + (((v5.a and (tbl16.gap > 0)) and 1) or 300)
 					deltaTime = v5.a
 					title = if deltaTime then not deltaTime else ((v5.tries > 1) and ("Gave up after %d tries"):format(v5.tries)) or "Could not join"
-					fn47(title or nil)
+					fn48(title or nil)
 				end
 
 				if v5 then
 					if not (v5.fly) then
-						if fn48() then
-							fn47("Night is close, join stopped")
+						if fn49() then
+							fn48("Night is close, join stopped")
 						end
 					end
 				end
@@ -48914,9 +48931,9 @@ local function fn2()
 					if now2 >= v5.next then
 						if not (v5.fly and ((now2 - v5.fly) < 10)) then
 							if v5.force then
-								fn49()
+								fn50()
 							elseif v5.tries == 0 then
-								fn49()
+								fn50()
 							end
 						end
 					end
@@ -48944,8 +48961,8 @@ local function fn2()
 				n9 = now2 + 0.25
 				deltaTime.drawn = now2
 				title.dirty = false
-				fn54()
-				local ok, result = pcall(fn81)
+				fn55()
+				local ok, result = pcall(fn82)
 
 				if not (ok) then
 					warn("[Chilli Finder] " .. tostring(result))
@@ -48978,13 +48995,13 @@ local function fn2()
 
 					if L then
 						if L.eggs then
-							fn55(L.eggs)
+							fn56(L.eggs)
 						end
 					end
 				end
 
 				if now2 >= n7 then
-					local v9 = fn43()
+					local v9 = fn44()
 					local ws
 
 					if v9 then
@@ -48996,8 +49013,8 @@ local function fn2()
 
 					n7 = now2 + (ws or 3)
 
-					if fn43() then
-						if fn40() then
+					if fn44() then
+						if fn41() then
 							ws = ctx2.tbl17
 
 							if ws.ws then
@@ -49014,12 +49031,12 @@ local function fn2()
 
 							if not (v10.ws) then
 								local flag3, v11 = ctx2.robloxMcpUrl, ctx2.tbl17
-								local v12, v13, v14, L = ctx2.tbl17, ctx2.tbl17, fn82(flag3 .. ("joiner/feed?s=" .. (v11.sess.token .. ("&since=" .. ctx2.tbl17.last))), ctx2.tbl17.sess.secret)
+								local v12, v13, v14, L = ctx2.tbl17, ctx2.tbl17, fn83(flag3 .. ("joiner/feed?s=" .. (v11.sess.token .. ("&since=" .. ctx2.tbl17.last))), ctx2.tbl17.sess.secret)
 
 								if v14 then
-									fn55(v14.eggs)
+									fn56(v14.eggs)
 								elseif L:find("expired") then
-									v11 = fn42()
+									v11 = fn43()
 									flag3 = nil
 
 									if v11 then
@@ -49061,7 +49078,7 @@ local function fn2()
 											session = ctx2.tbl17
 											session.relogin()
 										else
-											fn56("Signed in somewhere else. Sign in again to use it here")
+											fn57("Signed in somewhere else. Sign in again to use it here")
 											local v15 = ctx2.tbl17
 											v15.who = nil
 										end
@@ -49076,7 +49093,7 @@ local function fn2()
 						local v10 = ctx2.tbl17
 
 						if v10.sess then
-							fn56("Your booking ended. Book more hours at chillihub.pro")
+							fn57("Your booking ended. Book more hours at chillihub.pro")
 							local v11 = ctx2.tbl17
 							v11.whoAt = now2 + 30
 						else
@@ -49090,7 +49107,7 @@ local function fn2()
 								relogin = rt2
 							end
 
-							rt, rt2 = relogin and (fn40())
+							rt, rt2 = relogin and (fn41())
 
 							if rt then
 								relogin = ctx2.tbl17
@@ -49107,7 +49124,7 @@ local function fn2()
 							elseif flag2 then
 								n7 = (now2 + 2.5) + math.random()
 								local v11, v12 = ctx2.robloxMcpUrl, ctx2.slot86
-								local v13 = fn82(v11 .. "eggtop.js", v12)
+								local v13 = fn83(v11 .. "eggtop.js", v12)
 
 								if v13 and (type(v13.eggs) == "table") then
 									for _, egg in ipairs(v13.eggs) do
@@ -49146,7 +49163,7 @@ local function fn2()
 				end
 
 				local auto = ctx2.tbl17
-				local hold, hold2 = ((auto.auto and tbl16.hold) and fn83()) or false, ctx2.tbl17
+				local hold, hold2 = ((auto.auto and tbl16.hold) and fn84()) or false, ctx2.tbl17
 
 				if hold ~= hold2.hold then
 					auto = ctx2.tbl17
@@ -49155,7 +49172,7 @@ local function fn2()
 						if not (hold) then
 							local v9, v10 = ctx2.tbl17, ctx2.getServerTimeNow
 							v9.autoAt = v10() * 1000
-							fn54()
+							fn55()
 						end
 					end
 
@@ -49166,7 +49183,7 @@ local function fn2()
 				end
 
 				hold2 = ctx2.tbl17
-				auto, hold = (hold2.auto and fn43()) and fn40()
+				auto, hold = (hold2.auto and fn44()) and fn41()
 
 				if auto then
 					hold2 = ctx2.tbl17
@@ -49185,7 +49202,7 @@ local function fn2()
 				end
 
 				if auto then
-					fn54()
+					fn55()
 					hold, hold2 = ipairs, ctx2.tbl17
 					local pick, v9, L = hold2.pick or {}
 
@@ -49236,7 +49253,7 @@ local function fn2()
 						v10 = ctx2.tbl17
 
 						if not (v10.gate) then
-							if not (fn48()) then
+							if not (fn49()) then
 								if v9.placeId == gameRef2.PlaceId then
 									if v9.jobId then
 										if v5 then
@@ -49248,7 +49265,7 @@ local function fn2()
 														if not (hold3.tried[v9.jobId]) then
 															if (v9.at or 0) > (v5.e.at or 0) then
 																v5 = nil
-																fn50(v9, true)
+																fn51(v9, true)
 															end
 														end
 													end
@@ -49256,7 +49273,7 @@ local function fn2()
 											end
 										else
 											v5 = nil
-											fn50(v9, true)
+											fn51(v9, true)
 										end
 									end
 								end
@@ -49285,7 +49302,7 @@ local function fn2()
 		ctx2.genv.ChilliFinderPanelCleanup = function()
 			local v9 = ctx2.genv
 			v9.ChilliFinderHidden = nil
-			pcall(fn85)
+			pcall(fn86)
 			flag = false
 			v9 = ctx2.fn7
 			v9()
@@ -49307,7 +49324,7 @@ local function fn2()
 				pcall(v11.Disconnect, v11)
 			end
 
-			fn77()
+			fn78()
 			tbl27 = {"hudGui", "gui"}
 
 			for _, v11 in ipairs(tbl27) do
@@ -49351,7 +49368,7 @@ local function fn2()
 		local colorSequence = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 218, 96)), ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 152, 60)), ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 82, 64))})
 		local colorSequence2, tbl13, n13 = ColorSequence.new(Color3.fromRGB(74, 24, 18), Color3.fromRGB(14, 11, 15)), {Perks = {}}, 0
 
-		local function fn33()
+		local function fn34()
 			local v4 = setclipboard or toclipboard
 			local ok = ((type(v4) == "function") and pcall(v4, cJK4bs2mgTUrl)) or false
 			fn12((ok and "Discord Link Copied") or "Discord Link", cJK4bs2mgTUrl)
@@ -49398,7 +49415,7 @@ local function fn2()
 			tbl13.Tip.Set({Width = n14})
 		end
 
-		local function fn34(arg)
+		local function fn35(arg)
 			tbl13.Hero = arg:Frame({Name = "Hero", X = O, Y = O, Width = 14, Height = L, Background = "#FFFFFF", Gradient = colorSequence2, GradientRotation = 0, Corner = 0.35, StrokeColor = "#FF6A40", StrokeThickness = n3, StrokeTransparency = 0.55})
 			tbl13.Logo = arg:Image({Parent = tbl13.Hero, X = 0.5, Y = (L - n4) / 2, Width = n4, Height = n4, Image = assetId})
 			tbl13.Title = arg:Text({Parent = tbl13.Hero, X = n5, Y = 0.45, Width = 1, Height = 1.6, Scale = 1.45, Wrap = false, Text = "<b>Chilli Hub</b>", Gradient = colorSequence, GradientRotation = 0, TextStrokeTransparency = 1})
@@ -49407,7 +49424,7 @@ local function fn2()
 			tbl13.Invite = arg:Frame({Name = "Invite", X = O, Y = s + O, Width = 14, Height = n6, Background = "#000000", BackgroundTransparency = 0.5, Corner = 0.35, StrokeColor = "#5865F2", StrokeThickness = n3, StrokeTransparency = 0.35})
 			tbl13.Label = arg:Text({Parent = tbl13.Invite, X = n2 + 0.1, Y = 0.35, Width = 1, Height = 0.9, Scale = 0.78, Wrap = false, Text = "<b>INVITE LINK</b>", Color = "#9C9CB4"})
 			tbl13.Link = arg:Text({Parent = tbl13.Invite, X = n2 + 0.1, Y = 1.35, Width = 1, Height = 1.6, Scale = 1.05, Wrap = false, Font = "code", Text = str})
-			tbl13.Copy = arg:Button({Parent = tbl13.Invite, X = (14 - n7) - n2, Y = (n6 - n8) / 2, Width = n7, Height = n8, Text = "<b>Copy Link</b>", Color = "#FFFFFF", Scale = 1, Background = "#5865F2", BackgroundTransparency = 0, HoverTransparency = 0.15, PressTransparency = 0.3, StrokeColor = "#9AA3FF", StrokeThickness = n3, Corner = 0.3, Callback = fn33})
+			tbl13.Copy = arg:Button({Parent = tbl13.Invite, X = (14 - n7) - n2, Y = (n6 - n8) / 2, Width = n7, Height = n8, Text = "<b>Copy Link</b>", Color = "#FFFFFF", Scale = 1, Background = "#5865F2", BackgroundTransparency = 0, HoverTransparency = 0.15, PressTransparency = 0.3, StrokeColor = "#9AA3FF", StrokeThickness = n3, Corner = 0.3, Callback = fn34})
 			tbl13.Header = arg:Text({X = O + 0.1, Y = (n9 - 1.15) + O, Width = 14, Height = 1, Scale = 0.8, Wrap = false, Text = "<b>WHAT YOU GET</b>", Color = "#9C9CB4"})
 
 			for i2, v4 in ipairs(tbl12) do
@@ -49428,8 +49445,8 @@ local function fn2()
 			Z(arg:Width() / math.max(arg:Unit(), 1))
 		end
 
-		community:Surface({Name = "Discord", ShowTitle = false, Layout = "free", Style = {TextScale = 0.84, LineHeight = 1.1, MinLines = math.ceil(n12), MaxLines = math.ceil(n12), BackgroundTransparency = 0.5, ScrollBarColor = Color3.fromRGB(170, 174, 184), TextColor = Color3.fromRGB(255, 255, 255), TextStrokeTransparency = 0.7}, Build = fn34})
-		community:Button("Copy Discord Link", nil, fn33)
+		community:Surface({Name = "Discord", ShowTitle = false, Layout = "free", Style = {TextScale = 0.84, LineHeight = 1.1, MinLines = math.ceil(n12), MaxLines = math.ceil(n12), BackgroundTransparency = 0.5, ScrollBarColor = Color3.fromRGB(170, 174, 184), TextColor = Color3.fromRGB(255, 255, 255), TextStrokeTransparency = 0.7}, Build = fn35})
+		community:Button("Copy Discord Link", nil, fn34)
 	end)
 
 	g("53_promo#2", function()
@@ -49499,7 +49516,7 @@ local function fn2()
 
 		local flag, n10 = false, 0
 
-		local function fn33()
+		local function fn34()
 			local v4 = setclipboard or toclipboard
 			local ok2 = ((type(v4) == "function") and pcall(v4, str)) or false
 			fn12((ok2 and "Venyx Loader Copied") or "Venyx Loader", (ok2 and "Paste it into your executor to run Venyx.") or str)
@@ -49521,7 +49538,7 @@ local function fn2()
 			end)
 		end
 
-		local function fn34()
+		local function fn35()
 			pcall(function()
 				TeleportService:SetTeleportSetting("__ChilliAutoLoadScriptEnabled", false)
 			end)
@@ -49545,18 +49562,18 @@ local function fn2()
 
 		local tbl14, tbl15, str4 = {"Divine", "Eternal", "Secret", "Cosmic", "Mythic", "Legendary", "Epic", "Rare", "Uncommon", "Common"}, {A = "Steal / Auto Steal/Auto steal/", F = "Steal / Auto Steal/Filter/", H = "Steal / Auto Steal/Auto hop server/", B = "Event / Butterfly/Butterfly bloom/", M = "Event / Butterfly/Butterfly machine/", C = "Event / Butterfly/Wisp companion/", U = "Farm / Mutate/Auto mutate/", V = "Farm / Mutate/Mutate filter/", G = "Farm / Pen/Auto place/", T = "Farm / Pen/Auto hatch/", D = "Farm / Treadmill/Treadmill/", O = "Farm / Treadmill/Progress/", S = "Farm / Sell/Pets/", E = "Farm / Sell/Eggs/", J = "Farm / Sell/Favorite/", X = "Farm / Fuse/Fuse machine/", Y = "Farm / Fuse/Fuse filter/", Z = "Event / AA/", N = "Player / ESP/", I = "Player / Move/", Cb = "Player / Combat/", Wb = "System / Webhook/", Sv = "System / Server/", Op = "System / Optimizer/", St = "Steal / Egg Predictor/Egg showcase/", Ss = "Event / Star/Shooting Star/"}, "@Farm|Auto Steal\nTarget Areas=F:Zones:z|Min Rarity=F:Rarities:r|Min Steal Value=F:Min value /s:m|Target Specific Eggs=F:Only these eggs:e|Steal Missing Index Eggs=A:|Drop Eggs At Safe Zone=A:|Steal Priority=F:Steal first:Best Rarity>Best rarity,Biggest Weight>Biggest,Best Mutation>Best mutation,Highest Value>Best value,Lowest Value>Lowest value\n@Farm|Shooting Star\nAuto Catch Shooting Star=Ss:\n@Farm|Butterfly Bloom\nAuto Butterfly Bloom=B:|Catch Mode=B:|Catch Priority=B:|Catch Butterflies=B:Catch:b|Tween Speed  =B:Catch speed|Auto Trade Up=M:|Trade Up Tiers=M:Trade:t|Smart Trade For Essence=M:|Auto Craft Essence=M:\n@Farm|Butterfly Bloom\nAuto Wisp=C:Auto wisp quest|Auto Banjo Cricket=C:\n@Farm|Auto Mutation\nAuto Mutate=U:|Mutations To Use=U:Use items|Mutate Min Rarity=V:Rarities:r|Mutate Min Value=V:Min value /s:m|Mutate Target Eggs=V:Only these eggs:e|Mutate Priority=U:Mutate first:Highest Value>Best value,Best Rarity>Best rarity,Biggest Size>Biggest\n@Farm|Auto Place Egg\nAuto Place Egg=G:Auto place|Place Egg Rule=G:Place when:Always>Always,Steal Idle>Steal is idle,After Steal>Right after a steal,Night Only>Only at night|Place Egg Order=G:Place first:Biggest Size>Biggest,Highest Value>Best value,Smallest Size>Smallest|Place Rarities=G:Rarities:l|Place Specific Eggs=G:Only these eggs:e|Min Place Value=G:Min value /s:m\n@Farm|Auto Treadmill\nAuto Treadmill=D:\n@Farm|Auto Hatch & Equip\nAuto Hatch=T:|Hatch Min Rarity=T:Rarities:r|Min Hatch Value=T:Min value /s:m|Hatch Specific Eggs=T:Only these eggs:e|Auto Equip Best=T:Equip best pets\n@Farm|Auto Sell\nAuto Sell Pet=S:Auto sell pets|Pet Max Rarity=S:Sell rarities:x|Pet Sell Value=S:Only below /s:m|Keep Mutated Pets=S:Keep mutated|Blacklist Sell Pets=S:Never sell:e|Auto Sell Egg=E:Auto sell eggs|Egg Max Rarity=E:Sell rarities:x|Egg Sell Value=E:Only below /s:m|Keep Mutated Eggs=E:Keep mutated|Blacklist Sell Eggs=E:Never sell:e\n@Farm|Auto Fuse Machine\nAuto Fuse Machine=X:Auto fuse|Fuse Priority Mode=X:Fuse first:Lowest Rarity First>Lowest rarity,Highest Rarity First>Highest rarity,Most Copies First>Most copies,Lowest Value First>Lowest value|Pets To Use=X:Use pets:Lowest To Highest>Lowest value first,Highest To Lowest>Highest value first|Max Rarity to Fuse=Y:Rarities:x|Specific Species to Fuse=Y:Only these pets:e|Skip Mutated Pets=X:Skip mutated|Eject Incomplete Slots=X:Eject odd pets\n@Farm|Auto Favorite\nAuto Favorite Pet=J:Auto favorite|Favorite Rule=J:Match:Match Any>Any picked rule,Match All>All picked rules|Favorite Min Rarity=J:Rarities:r|Min Favorite Value=J:Min value /s:m|Always Favorite Species=J:Always favorite:e|Auto Favorite Equipped=J:Favorite equipped\n@Admin Abuse|Capture The Egg\nAuto Capture Event Egg=Z:Capture the egg/|Take It From The Holder=Z:Capture the egg/|Hold Height=Z:Capture the egg/|Keep Away Distance=Z:Capture the egg/Keep away\n@Admin Abuse|Admin Treadmill\nUse Admin Treadmill=Z:Admin abuse/Admin treadmill\n@Admin Abuse|Minigame Eggs\nAuto Steal Minigame Egg=Z:Minigame eggs/\n@Player|ESP\nESP Eggs=N:Field eggs/Egg ESP|ESP Fixed Size=N:Field eggs/Fixed size|ESP Own Base Eggs=N:Others/Pen egg ESP|ESP Other Base Eggs=N:Others/Other pens ESP|ESP Min Rarity=N:Field eggs/Rarities:r|ESP Show Info=N:Field eggs/Show:i|Min ESP Value=N:Field eggs/Min value /s:m|ESP Guards=N:Others/Guard ESP|ESP Players=N:Others/Player ESP\n@Player|Movement\nSpeed Boost=I:Movement/|Boost Speed=I:Movement/|Infinite Jump=I:Movement/\n@Player|Character\nInvisibility=I:Protection/Invisible|Anti Ragdoll=I:Protection/|Anti Trap=I:Protection/Ignore traps|Instant Prompts=I:Protection/\n@Player|Combat\nAuto Hit Nearest Player=Cb:Auto hit/Hit who:h|Auto Hit Egg Holders=Cb:Auto hit/Hit who:h|Hit Aura=Cb:Hit aura/|Hit Tween Speed=Cb:Auto hit/Chase speed\n@Predictor|Discord Webhook\nWebhook URL=Wb:Discord webhook/Webhook URL|Ping @everyone=Wb:Discord webhook/Ping everyone|Notify On=Wb:What to post/:w|Webhook Min Rarity=Wb:What to post/Rarities:r|Webhook Min Value=Wb:What to post/Min value /s:m\n@Predictor|Egg Predictor\nSort By=St:Sort eggs:Value>Value,Rarity>Rarity,Time Left>Time left|Preview Card=St:\n@Progress|Auto Progression\nAuto Buy Trail=O:Auto buy trails|Auto Upgrade Base=O:|Auto Upgrade Treadmill=D:|Auto Claim=O:Auto claim offline cash|Auto Claim Index=O:Auto claim index rewards\n@Server|Server\nAuto Load Script=Sv:Join and stay/|Server Hop Mode=Sv:Server/Hop to:Least Players>Least players,Most Players>Most players,Random>Random|Auto Rejoin When Disconnect=Sv:Join and stay/Rejoin on kick\n@Misc|Performance\nFPS Cap=Op:Frame rate/FPS cap|Optimizer=Op:Graphics/Low graphics|FPS and Ping=Op:Frame rate/Show FPS and ping|Disable 3D Render=Op:Graphics/Disable 3D Render|Background Color=Op:Graphics/\n@Misc|Utility\nAnti AFK=I:Protection/Anti AFK\n@Auto Hop|Egg Finder\nAuto Hop=H:|Hop Mode=H:Hop when:Until An Egg Matches>No egg matches here,Steal Then Hop>After stealing a match,After A Rare Spawns>A rare egg spawned|Rarity To Wait For=H:Rare from|First Hop Delay=H:First hop after\n"
 
-		local function fn35(arg)
+		local function fn36(arg)
 			return ((type(arg) == "table") and arg) or {}
 		end
 
-		local function fn36(arg)
+		local function fn37(arg)
 			return table.find(tbl14, (tostring(arg or ""):gsub("^%d+ %- ", "")))
 		end
 
-		local function fn37(arg, arg2)
+		local function fn38(arg, arg2)
 			local tbl16 = {}
 
-			for i2, v4 in ipairs(fn35(arg)) do
+			for i2, v4 in ipairs(fn36(arg)) do
 				i2 = arg2(tostring(v4))
 
 				if i2 then
@@ -49577,41 +49594,41 @@ local function fn2()
 			if arg == "Off" then
 				return {}
 			end
-			local v5 = fn36(arg)
+			local v5 = fn37(arg)
 			return v5 and {table.unpack(tbl14, 1, v5)}
 		end, x = function(arg)
 			if arg == "Off" then
 				return {}
 			end
-			local v5 = fn36(arg)
+			local v5 = fn37(arg)
 			return v5 and {table.unpack(tbl14, v5)}
 		end, m = function(arg)
 			arg = tonumber(arg) or 0
 			return ((arg > 0) and math.floor((10 ^ (3 + (arg * 0.009))) + 0.5)) or 0
 		end, e = function(arg)
-			return fn37(arg, function(arg2)
+			return fn38(arg, function(arg2)
 				return (arg2:gsub(" %(%d+%)$", ""):gsub(" %[[^%]]*%]$", ""))
 			end)
 		end, z = function(arg)
-			return ((#fn35(arg) < 13) and fn35(arg)) or {}
+			return ((#fn36(arg) < 13) and fn36(arg)) or {}
 		end, l = function(arg)
-			return ((#fn35(arg) > 0) and arg) or nil
+			return ((#fn36(arg) > 0) and arg) or nil
 		end, b = function(arg)
-			return fn37(arg, function(arg2)
+			return fn38(arg, function(arg2)
 				return (arg2:gsub(" Butterfly$", ""))
 			end)
 		end, t = function(arg)
-			return fn37(arg, function(arg2)
+			return fn38(arg, function(arg2)
 				return (arg2:gsub(" To ", " to "))
 			end)
 		end, i = function(arg)
-			return fn37(arg, function(arg2)
+			return fn38(arg, function(arg2)
 				return v4[arg2] and arg2
 			end)
 		end}
 
-		local function fn38(arg)
-			local tbl16, antiGuardEnabled = {}, fn35(arg.Values)
+		local function fn39(arg)
+			local tbl16, antiGuardEnabled = {}, fn36(arg.Values)
 			local flag2
 
 			for match in str4:gmatch("[^\n]+") do
@@ -49643,7 +49660,7 @@ local function fn2()
 										tbl16[tbl15.Cb .. "Auto hit/Auto hit"], tbl16[str6] = true, (match4:find("Holders") and "Egg holders") or "Nearest player"
 									end
 								elseif v6 == "w" then
-									match3 = q(fn35(flag3)) or {}
+									match3 = q(fn36(flag3)) or {}
 									tbl16[str6 .. "Post stolen eggs"], tbl16[str6 .. "Post fused eggs"], tbl16[str6 .. "Post when bag is full"] = match3["Egg Stolen"] == true, match3["Egg Fused"] == true, match3["Inventory Full"] == true
 								else
 									if handlers[v6] then
@@ -49656,7 +49673,7 @@ local function fn2()
 												tbl17[match5] = match22
 											end
 
-											flag3 = ((type(flag3) == "table") and fn37(flag3, function(arg2)
+											flag3 = ((type(flag3) == "table") and fn38(flag3, function(arg2)
 												return tbl17[arg2] or arg2
 											end)) or tbl17[flag3]
 										else
@@ -49684,7 +49701,7 @@ local function fn2()
 			return tbl16
 		end
 
-		local function fn39()
+		local function fn40()
 			pcall(function()
 				local HttpService2 = game:GetService("HttpService")
 				local str5, str6 = "ChilliLibrary/Games/" .. tostring(((game.GameId ~= 0) and game.GameId) or game.PlaceId), "Default"
@@ -49698,7 +49715,7 @@ local function fn2()
 				local str7 = str5 .. ("/configs/" .. (str6 .. ".json"))
 				local flag2 = (isfile(str7) and readfile(str7)) or (isfile(str7 .. ".bak") and readfile(str7 .. ".bak"))
 				str7 = (type(flag2) == "string") and HttpService2:JSONDecode(flag2)
-				flag2 = (type(str7) == "table") and fn38(str7)
+				flag2 = (type(str7) == "table") and fn39(str7)
 
 				if flag2 then
 					if next(flag2) then
@@ -49726,8 +49743,8 @@ local function fn2()
 				connection = nil
 			end
 
-			fn39()
-			fn34()
+			fn40()
+			fn35()
 			local ok2, L = pcall(game.HttpGet, game, venyxHubUrl)
 			local chunk = (ok2 and (type(L) == "string")) and loadstring(L)
 
@@ -49755,7 +49772,7 @@ local function fn2()
 			flag = true
 		end
 
-		local function fn40(L)
+		local function fn41(L)
 			if not (tbl13.Hero) then
 				return
 			end
@@ -49800,14 +49817,14 @@ local function fn2()
 
 			tbl13.Loader = arg:Frame({Name = "Loader", X = n2, Y = n8, Width = 14, Height = n9, Background = O, BackgroundTransparency = 0, Corner = 0.4, StrokeColor = "#FFFFFF", StrokeThickness = p, StrokeTransparency = 0.82})
 			tbl13.Code = arg:Text({Parent = tbl13.Loader, X = 0.55, Y = 0.35, Width = 1, Height = n9 - 0.7, Scale = 0.8, Wrap = true, Font = font4, Text = str, Color = "#E8E9EE", TextStrokeTransparency = 1})
-			tbl13.Copy = arg:Button({Parent = tbl13.Loader, X = 10.4, Y = (n9 - 2) / 2, Width = 3.4, Height = 2, Text = "Copy", Font = font2, Color = "#FFFFFF", Scale = 1, Background = "#2B2D35", BackgroundTransparency = 0, HoverTransparency = 0.15, PressTransparency = 0.3, Corner = 0.35, Callback = fn33})
+			tbl13.Copy = arg:Button({Parent = tbl13.Loader, X = 10.4, Y = (n9 - 2) / 2, Width = 3.4, Height = 2, Text = "Copy", Font = font2, Color = "#FFFFFF", Scale = 1, Background = "#2B2D35", BackgroundTransparency = 0, HoverTransparency = 0.15, PressTransparency = 0.3, Corner = 0.35, Callback = fn34})
 			arg:SetContentLines(_)
 
 			arg:OnResize(function(_, arg2, arg3)
-				fn40(arg2 / math.max(arg3, 1))
+				fn41(arg2 / math.max(arg3, 1))
 			end)
 
-			fn40(arg:Width() / math.max(arg:Unit(), 1))
+			fn41(arg:Width() / math.max(arg:Unit(), 1))
 		end
 
 		venyx:Surface({Name = "Venyx", ShowTitle = false, Layout = "free", Style = {TextScale = 1.15, LineHeight = 1.1, MinLines = _, MaxLines = 18, Padding = 0, BackgroundTransparency = 1, StrokeTransparency = 1, ScrollBarColor = Color3.fromRGB(170, 174, 184), TextColor = Color3.fromRGB(255, 255, 255), TextStrokeTransparency = 1}, Build = L})
@@ -49827,7 +49844,7 @@ local function fn2()
 			return (p.rank[arg.name] or arg.pri) or 9
 		end
 
-		local function fn33(p)
+		local function fn34(p)
 			local ok, result = pcall(p.on)
 			return ok and result
 		end
@@ -49846,7 +49863,7 @@ local function fn2()
 		W.order = order
 		order()
 
-		local function fn34(p)
+		local function fn35(p)
 			local v4 = ctx.state
 			local lock, lock2 = v4.lock
 
@@ -49891,7 +49908,7 @@ local function fn2()
 			return invisBusy2
 		end
 
-		local function fn35(arg, arg2)
+		local function fn36(arg, arg2)
 			local where = arg.where
 			return (if type(where) == "function" then where(arg2) else where) or "field"
 		end
@@ -49923,8 +49940,8 @@ local function fn2()
 			return false
 		end
 
-		local function fn36(arg, arg2, O)
-			local state, L = fn35(arg, arg2), ctx.state
+		local function fn37(arg, arg2, O)
+			local state, L = fn36(arg, arg2), ctx.state
 			local v6 = L.needVis(arg, arg2)
 
 			if v6 then
@@ -49975,7 +49992,7 @@ local function fn2()
 			return O()
 		end
 
-		local function fn37(lastMV, plan)
+		local function fn38(lastMV, plan)
 			local q = ctx.lastMV
 
 			if q then
@@ -50001,10 +50018,10 @@ local function fn2()
 
 			ctx.lastMV, lastMV.busy, lastMV.t0, lastMV.plan, lastMV.idle, lastMV.erank = lastMV, true, os.clock(), plan, nil, getRank(lastMV)
 			local tok = lastMV.tok
-			local L, flag = fn35(lastMV, plan), false
+			local L, flag = fn36(lastMV, plan), false
 
-			local function fn38()
-				local flag2, s = ((((ctx.flag and (lastMV.tok == tok)) and fn33(lastMV)) and fn5()) and not fn34(lastMV)) and not p()
+			local function fn39()
+				local flag2, s = ((((ctx.flag and (lastMV.tok == tok)) and fn34(lastMV)) and fn5()) and not fn35(lastMV)) and not p()
 
 				if flag2 then
 					local v6, flag3 = flag
@@ -50047,11 +50064,11 @@ local function fn2()
 				local ok = ctx.state
 
 				local v6, ok2, state = ok.inDim(), pcall(function()
-					if not (fn36(lastMV, plan, fn38)) then
+					if not (fn37(lastMV, plan, fn39)) then
 						return "prep"
 					end
 					flag = true
-					return lastMV.run(plan, fn38)
+					return lastMV.run(plan, fn39)
 				end)
 
 				lastMV.acted = ok2 and (state == true)
@@ -50120,7 +50137,7 @@ local function fn2()
 			end)
 		end
 
-		local function fn38(arg)
+		local function fn39(arg)
 			if arg.ready then
 				local ok, O = pcall(arg.ready)
 				return ok and O
@@ -50128,7 +50145,7 @@ local function fn2()
 			return arg.lastWant ~= false
 		end
 
-		local function fn39(arg, O)
+		local function fn40(arg, O)
 			local q, L = getRank(arg), getRank(O)
 			if q ~= L then
 				return q < L
@@ -50136,7 +50153,7 @@ local function fn2()
 			return arg.i < O.i
 		end
 
-		local function fn40()
+		local function fn41()
 			local schedTok, q = {}, ctx.state
 			q.schedTok = schedTok
 
@@ -50161,8 +50178,8 @@ local function fn2()
 						if v6.mover then
 							if v6 ~= ctx.lastMV then
 								if v6.on then
-									if fn33(v6) then
-										k = fn38(v6)
+									if fn34(v6) then
+										k = fn39(v6)
 										v6.inq = (k and true) or nil
 
 										if k then
@@ -50180,8 +50197,8 @@ local function fn2()
 						end
 					end
 
-					table.sort(queue, fn39)
-					table.sort(tbl12, fn39)
+					table.sort(queue, fn40)
+					table.sort(tbl12, fn40)
 					local flag, v6 = ctx.state, ctx.state
 					flag.queue = queue
 					v6.queueAt = now2
@@ -50191,7 +50208,7 @@ local function fn2()
 						v6 = ipairs
 
 						for k, v7 in v6(tbl12) do
-							queue, s = ctx.lastMV, fn34(v7)
+							queue, s = ctx.lastMV, fn35(v7)
 							local flag2, flag22 = not s
 
 							if s then
@@ -50295,7 +50312,7 @@ local function fn2()
 
 								if v7.lastWant then
 									if ctx.lastMV == queue then
-										fn37(v7, result)
+										fn38(v7, result)
 										break
 									end
 								end
@@ -50318,7 +50335,7 @@ local function fn2()
 						if tbl12 then
 							if now2 >= v7.at then
 								if v7.on then
-									if fn33(v7) then
+									if fn34(v7) then
 										v7.at = now2 + v7.gap
 										v7.bAt = now2
 										v7.busy = true
@@ -50345,8 +50362,8 @@ local function fn2()
 			end
 		end
 
-		local function fn41()
-			local ok, result = xpcall(fn40, debug.traceback)
+		local function fn42()
+			local ok, result = xpcall(fn41, debug.traceback)
 
 			if not (ok) then
 				local v6 = ctx.state
@@ -50354,7 +50371,7 @@ local function fn2()
 			end
 		end
 
-		task.spawn(fn41)
+		task.spawn(fn42)
 
 		trackConnection(heartbeat, function()
 			if ctx.flag then
@@ -50368,13 +50385,13 @@ local function fn2()
 						v8.schedAt = os.clock()
 						v8 = ctx.fn6
 						v8("Scheduler restarted", "warn")
-						task.spawn(fn41)
+						task.spawn(fn42)
 					end
 				end
 			end
 		end)
 
-		local v6 = fn14({name = "Guard", gap = 0.5})
+		local v6 = fn15({name = "Guard", gap = 0.5})
 
 		v6.on = function()
 			local flag, flag2 = (ctx.lastMV ~= nil) and (ctx.lastMV.name ~= "Treadmill")
@@ -50421,7 +50438,7 @@ local function fn2()
 			end
 		end
 
-		local v7 = fn14({name = "Info", gap = 1})
+		local v7 = fn15({name = "Info", gap = 1})
 
 		v7.on = function()
 			return true
@@ -50461,11 +50478,11 @@ local function fn2()
 
 		W = ctx.slot28
 		W.god = false
-		pcall(fn22)
+		pcall(fn23)
 		W = ctx.fn4
 
 		if W() then
-			pcall(fn24, ctx.fn4())
+			pcall(fn25, ctx.fn4())
 		end
 
 		pcall(c.Destroy, c)
@@ -50507,11 +50524,11 @@ local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 local str = "chp-7E0Yzx4yddoAozc9VNLsqTnA"
 local beatUrl = "https://chillihub.pro/roblox-mcp/beat"
-local n = 4223197477
+local n2 = 4223197477
 local str2 = "SAE v1903"
-local n2 = 7
-local n3 = 500
-local n4 = 245760
+local n3 = 7
+local n4 = 500
+local n5 = 245760
 local flag = false
 local flag2 = false
 local flag3 = false
@@ -50525,12 +50542,12 @@ end
 local flag4 = true
 local flag5 = false
 local v2 = nil
-local n5 = 0
+local n6 = 0
 local flag6 = false
 local tbl = {}
 local tbl2 = {}
 local tbl3 = {}
-local n6 = 0
+local n7 = 0
 
 local function fn3(...)
 	if flag then
@@ -50584,6 +50601,9 @@ local function fn6(arg)
 end
 
 local function fn7()
+	local n8 = 3977615208
+	local n9 = 4190579429
+
 	if syn.websocket then
 		if type(syn.websocket.connect) == "function" then
 			return syn.websocket.connect, "syn.websocket.connect"
@@ -50591,15 +50611,15 @@ local function fn7()
 	end
 
 	if type(WebSocket.connect) ~= "function" then
-		local n7 = nil // nil
+		local n10 = n8 // n9
 
 		if type(WebSocket.new) ~= "function" then
-			local n8 = n7 - 317352088
+			local n11 = n10 - 317352088
 
 			if type(WebSocket.New) ~= "function" then
 				if type(websocket.connect) ~= "function" then
 					if syn.WebSocket then
-						local n82 = n8
+						local n112 = n11
 						if type(syn.WebSocket.new) ~= "function" then
 							return nil, nil
 						end
@@ -50622,14 +50642,14 @@ local function fn7()
 end
 
 local function fn8(arg, ...)
-	local n7 = 1
+	local n8 = 1
 	local value = select("#", ...)
 	local value2, ok, result
 
 	if 1 <= 0 then
-		if n7 >= value then
+		if n8 >= value then
 			while true do
-				value2 = select(n7, ...)
+				value2 = select(n8, ...)
 
 				ok, result = pcall(function()
 					return arg[value2]
@@ -50643,22 +50663,22 @@ local function fn8(arg, ...)
 
 				if U_1 <= 0 then
 					if J_1 >= w_1 then
-						n7 = J_1
+						n8 = J_1
 						continue
 					end
 					break
 				end
 
 				if J_1 <= w_1 then
-					n7 = J_1
+					n8 = J_1
 					continue
 				end
 				break
 			end
 		end
-	elseif n7 <= value then
+	elseif n8 <= value then
 		while true do
-			value2 = select(n7, ...)
+			value2 = select(n8, ...)
 
 			ok, result = pcall(function()
 				return arg[value2]
@@ -50671,28 +50691,28 @@ local function fn8(arg, ...)
 
 				if U_1 <= 0 then
 					if J_1 >= w_1 then
-						n7 = J_1
+						n8 = J_1
 						continue
 					end
 					return nil, nil
 				end
 
 				if J_1 <= w_1 then
-					n7 = J_1
+					n8 = J_1
 					continue
 				end
 				return nil, nil
 			else
 				if U_1 <= 0 then
 					if J_1 >= w_1 then
-						n7 = J_1
+						n8 = J_1
 						continue
 					end
 					return nil, nil
 				end
 
 				if J_1 <= w_1 then
-					n7 = J_1
+					n8 = J_1
 					continue
 				end
 				return nil, nil
@@ -50723,7 +50743,7 @@ local function fn9(arg, arg2)
 	return nil
 end
 
-local n7 = 205137414
+local n8 = 205137414
 
 local function fn10(arg)
 	if typeof(arg) ~= "Instance" then
@@ -50743,10 +50763,13 @@ local function fn10(arg)
 	return arg.Name
 end
 
-n7 = 457941806
+n8 = 457941806
 local fn11
 
 fn11 = function(color, arg, arg2)
+	local n9 = 1223943105
+	local n10 = 2975355512
+
 	if arg then
 		arg2 = arg2 or {}
 	else
@@ -50754,7 +50777,7 @@ fn11 = function(color, arg, arg2)
 		arg2 = arg2 or {}
 	end
 
-	if n2 < arg then
+	if n3 < arg then
 		return "<max-depth>"
 	end
 	local kind = typeof(color)
@@ -50772,24 +50795,24 @@ fn11 = function(color, arg, arg2)
 											if kind ~= "CFrame" then
 												if kind ~= "EnumItem" then
 													if kind ~= "BrickColor" then
-														bit32.bor(nil, nil)
+														bit32.bor(n10, n9)
 
 														if kind == "table" then
 															if arg2[color] then
 																return "<cycle>"
 															end
 															arg2[color] = true
-															local n8 = 0
+															local n11 = 0
 															local flag7 = true
-															local n9 = 0
+															local n12 = 0
 
 															for k in pairs(color) do
 																local exitTo = nil
 
 																while true do
-																	n8 += 1
+																	n11 += 1
 
-																	if n3 < n8 then
+																	if n4 < n11 then
 																		break
 																	else
 																		if type(k) ~= "number" then
@@ -50813,8 +50836,8 @@ fn11 = function(color, arg, arg2)
 																				k = v3[2]
 																				continue
 																			end
-																		elseif n9 < k then
-																			n9 = k
+																		elseif n12 < k then
+																			n12 = k
 																			local v3 = table.pack(J_1())
 																			if v3[1] then
 																				k = v3[2]
@@ -50835,47 +50858,47 @@ fn11 = function(color, arg, arg2)
 																break
 															end
 
-															local tbl4, v3, v4, v5, n10, v6, v7
+															local tbl4, v3, v4, v5, n13, v6, v7
 
 															if flag7 then
-																if n9 <= n3 then
+																if n12 <= n4 then
 																	tbl4 = {}
-																	local n11 = 1
-																	local k = n9
+																	local n14 = 1
+																	local k = n12
 
 																	if 1 <= 0 then
-																		if n11 >= k then
+																		if n14 >= k then
 																			while true do
-																				tbl4[n11] = fn11(color[n11], arg + 1, arg2)
+																				tbl4[n14] = fn11(color[n14], arg + 1, arg2)
 
 																				if U_1 <= 0 then
 																					if J_1 >= w_1 then
-																						n11 = J_1
+																						n14 = J_1
 																						continue
 																					end
 																					break
 																				else
 																					if J_1 <= w_1 then
-																						n11 = J_1
+																						n14 = J_1
 																						continue
 																					end
 																					break
 																				end
 																			end
 																		end
-																	elseif n11 <= k then
+																	elseif n14 <= k then
 																		while true do
-																			tbl4[n11] = fn11(color[n11], arg + 1, arg2)
+																			tbl4[n14] = fn11(color[n14], arg + 1, arg2)
 
 																			if U_1 <= 0 then
 																				if J_1 >= w_1 then
-																					n11 = J_1
+																					n14 = J_1
 																					continue
 																				end
 																				break
 																			else
 																				if J_1 <= w_1 then
-																					n11 = J_1
+																					n14 = J_1
 																					continue
 																				end
 																				break
@@ -50885,7 +50908,7 @@ fn11 = function(color, arg, arg2)
 																else
 																	tbl4 = {}
 																	v3, v4, v5 = pairs(color)
-																	n10 = 0
+																	n13 = 0
 																	local v8 = table.pack(J_1())
 
 																	if v8[1] then
@@ -50893,9 +50916,9 @@ fn11 = function(color, arg, arg2)
 																		v7 = v8[3]
 
 																		while true do
-																			n10 += 1
+																			n13 += 1
 
-																			if n3 < n10 then
+																			if n4 < n13 then
 																				tbl4.__truncated = true
 																				break
 																			else
@@ -50916,7 +50939,7 @@ fn11 = function(color, arg, arg2)
 															else
 																tbl4 = {}
 																v3, v4, v5 = pairs(color)
-																n10 = 0
+																n13 = 0
 																local v8 = table.pack(J_1())
 
 																if v8[1] then
@@ -50924,9 +50947,9 @@ fn11 = function(color, arg, arg2)
 																	v7 = v8[3]
 
 																	while true do
-																		n10 += 1
+																		n13 += 1
 
-																		if n3 < n10 then
+																		if n4 < n13 then
 																			tbl4.__truncated = true
 																			break
 																		else
@@ -51027,7 +51050,7 @@ local function fn12(arg)
 			if ok then
 				local json, ok2, result2
 
-				if n4 < #result then
+				if n5 < #result then
 					if type(arg) == "table" then
 						if arg.type == "rpc_result" then
 							json = HttpService:JSONEncode({
@@ -51077,7 +51100,7 @@ local function fn13(arg, arg2)
 end
 
 local Players2 = {}
-local v3 = bit32.rshift(nil, 29)
+local v3 = bit32.rshift(n, 29)
 Players2.Game = game
 Players2.game = game
 Players2.Workspace = Workspace
@@ -51123,13 +51146,13 @@ local function fn15(arg)
 		local result = Players2[v5[1]]
 
 		if not result then
-			local n8 = 392506645
+			local n9 = 392506645
 
 			local function getService()
 				return game:GetService(v5[1])
 			end
 
-			n8 = 411119028
+			n9 = 411119028
 			local ok
 			ok, result = pcall(getService)
 			if not ok then
@@ -51213,7 +51236,7 @@ local humanoid = {
 	CanQuery = true,
 }
 
-local v5 = table.pack(bit32.band(n, 4294967295))
+local v5 = table.pack(bit32.band(n2, 4294967295))
 local v6 = table.pack(bit32.band(v5[1], 65535))
 local v7 = bit32.band(v6[1] * 14798 + bit32.lshift(bit32.band(v6[1] * 3040 + bit32.rshift(v5[1], 16) * 14798, 65535), 16), 4294967295)
 humanoid.CanTouch = true
@@ -51249,7 +51272,7 @@ humanoid.Value = true
 humanoid.Velocity = true
 humanoid.Visible = true
 humanoid.WalkSpeed = true
-local n8 = v8 + 105694395
+local n9 = v8 + 105694395
 
 local tbl4 = {
 	"Archivable",
@@ -51299,16 +51322,16 @@ end
 
 local function fn18(arg, arg2, arg3)
 	local children = arg:GetChildren()
-	local n9 = 1
-	local n10 = 0
+	local n10 = 1
+	local n11 = 0
 
-	while n9 <= #children do
-		if n10 < arg2 then
-			local v9 = children[n9]
-			n9 += 1
+	while n10 <= #children do
+		if n11 < arg2 then
+			local v9 = children[n10]
 			n10 += 1
-			if arg3(v9, n10) then
-				return n10, true
+			n11 += 1
+			if arg3(v9, n11) then
+				return n11, true
 			end
 
 			if #children < arg2 then
@@ -51337,7 +51360,7 @@ local function fn18(arg, arg2, arg3)
 		break
 	end
 
-	return n10, false
+	return n11, false
 end
 
 local name = "CodexMCP"
@@ -51367,7 +51390,7 @@ local scrollingFrame = {
 	BackgroundColor3 = true,
 }
 
-local v9 = bit32.rshift(n8, 11)
+local v9 = bit32.rshift(n9, 11)
 scrollingFrame.BackgroundTransparency = true
 scrollingFrame.BorderSizePixel = true
 scrollingFrame.CanvasPosition = true
@@ -51405,7 +51428,7 @@ scrollingFrame.TextSize = true
 scrollingFrame.TextStrokeColor3 = true
 scrollingFrame.TextStrokeTransparency = true
 scrollingFrame.TextTransparency = true
-local n9 = v9 + 1682217118
+local n10 = v9 + 1682217118
 scrollingFrame.TextTruncate = true
 scrollingFrame.TextWrapped = true
 scrollingFrame.TextXAlignment = true
@@ -51452,6 +51475,7 @@ local tbl10 = {
 }
 
 local function fn19(arg)
+	local n11 = 1954647953
 	if type(arg) ~= "table" then
 		return nil
 	end
@@ -51463,8 +51487,13 @@ local function fn19(arg)
 		if num2 then
 			if num3 then
 				if num <= 1 then
-					return "Magnitude", nil --[[ constant not decoded ]]
+					if num2 <= 1 then
+						if num3 <= 1 then
+							return Color3.new(num, num2, num3)
+						end
+					end
 				end
+
 				return Color3.fromRGB(math.floor(fn5(num, 0, 255, 0)), math.floor(fn5(num2, 0, 255, 0)), math.floor(fn5(num3, 0, 255, 0)))
 			end
 
@@ -51489,12 +51518,12 @@ local function fn21(arg)
 		return nil
 	end
 	local vector2New = Vector2.new
-	local n10 = tonumber(arg[1] or arg.x) or 0
+	local n11 = tonumber(arg[1] or arg.x) or 0
 	local num = tonumber(arg[2] or arg.y)
 	if num then
-		return vector2New(n10, num)
+		return vector2New(n11, num)
 	end
-	return vector2New(n10, 0)
+	return vector2New(n11, 0)
 end
 
 local function fn22(arg)
@@ -51503,12 +51532,12 @@ local function fn22(arg)
 			return nil
 		end
 		local uDimNew = UDim.new
-		local n10 = tonumber(arg[1] or arg.scale) or 0
+		local n11 = tonumber(arg[1] or arg.scale) or 0
 		local num = tonumber(arg[2] or arg.offset)
 		if num then
-			return uDimNew(n10, num)
+			return uDimNew(n11, num)
 		end
-		return uDimNew(n10, 0)
+		return uDimNew(n11, 0)
 	end
 
 	return UDim.new(0, arg)
@@ -51547,7 +51576,7 @@ local function fn24(arg, arg2)
 	end
 	local tbl11 = {}
 	local v10, v11, v12 = pairs(arg2)
-	local n10 = 0
+	local n11 = 0
 	local v13 = table.pack(J_1())
 
 	if v13[1] then
@@ -51564,7 +51593,7 @@ local function fn24(arg, arg2)
 					end)
 
 					if ok then
-						n10 += 1
+						n11 += 1
 					else
 						table.insert(tbl11, { property = v14, reason = tostring(result) })
 					end
@@ -51587,7 +51616,7 @@ local function fn24(arg, arg2)
 		end
 	end
 
-	return { applied = n10, rejected = tbl11 }
+	return { applied = n11, rejected = tbl11 }
 end
 
 local function fn25()
@@ -51718,6 +51747,9 @@ end
 local fn29
 
 fn29 = function(arg, parent, arg2, arg3)
+	local n11 = 1381776516
+	local n12 = 4194703162
+
 	if arg2 > 10 then
 		error("UI tree exceeds maximum depth of 10")
 	end
@@ -51736,7 +51768,7 @@ fn29 = function(arg, parent, arg2, arg3)
 		error("UI class is not allowed: " .. uiClassIsNotAllowed)
 	end
 
-	local v10 = bit32.band(nil, nil)
+	local v10 = bit32.band(n11, n12)
 	arg3.count = arg3.count + 1
 	local instance = Instance.new(uiClassIsNotAllowed)
 	local name2
@@ -51810,8 +51842,8 @@ fn30 = function(arg, arg2, arg3)
 	return v10
 end
 
-local n10 = 60000
-local n11 = 80
+local n11 = 60000
+local n12 = 80
 local tbl12 = {}
 
 local function fn31(...)
@@ -51821,57 +51853,57 @@ local function fn31(...)
 	table.move(v11, 1, v11.n, 2, v11)
 	v11[1] = "#"
 	local tbl13 = {}
-	local n12 = 1
+	local n13 = 1
 	local v12 = v10(table.unpack(v11, 1, v11.n))
 	local v13, v14, v15, v16
 
 	if 1 <= 0 then
-		if n12 >= v12 then
+		if n13 >= v12 then
 			while true do
 				v13 = tostring
 				v14 = select
 				v15 = table.pack(...)
 				v15.n = 2 + v15.n - 1
 				table.move(v15, 1, v15.n, 2, v15)
-				v15[1] = n12
+				v15[1] = n13
 				v16 = v14(table.unpack(v15, 1, v15.n))
-				tbl13[n12] = v13(v16)
+				tbl13[n13] = v13(v16)
 
 				if U_1 <= 0 then
 					if J_1 >= w_1 then
-						n12 = J_1
+						n13 = J_1
 						continue
 					end
 					break
 				else
 					if J_1 <= w_1 then
-						n12 = J_1
+						n13 = J_1
 						continue
 					end
 					break
 				end
 			end
 		end
-	elseif n12 <= v12 then
+	elseif n13 <= v12 then
 		while true do
 			v13 = tostring
 			v14 = select
 			v15 = table.pack(...)
 			v15.n = 2 + v15.n - 1
 			table.move(v15, 1, v15.n, 2, v15)
-			v15[1] = n12
+			v15[1] = n13
 			v16 = v14(table.unpack(v15, 1, v15.n))
-			tbl13[n12] = v13(v16)
+			tbl13[n13] = v13(v16)
 
 			if U_1 <= 0 then
 				if J_1 >= w_1 then
-					n12 = J_1
+					n13 = J_1
 					continue
 				end
 				break
 			else
 				if J_1 <= w_1 then
-					n12 = J_1
+					n13 = J_1
 					continue
 				end
 				break
@@ -51961,46 +51993,46 @@ end
 local function fn35(arg, elapsedMs, arg2, outputTruncated)
 	local returns = {}
 	local returnsInfo = {}
-	local n12 = arg.n
-	local n13 = 2
+	local n13 = arg.n
+	local n14 = 2
 
 	if 1 <= 0 then
-		if n13 >= n12 then
+		if n14 >= n13 then
 			while true do
-				local n14 = n13 - 1
-				returns[n14] = fn11(arg[n13])
-				local n15 = n13 - 1
-				returnsInfo[n15] = fn34(arg[n13])
+				local n15 = n14 - 1
+				returns[n15] = fn11(arg[n14])
+				local n16 = n14 - 1
+				returnsInfo[n16] = fn34(arg[n14])
 
 				if U_1 <= 0 then
 					if J_1 >= w_1 then
-						n13 = J_1
+						n14 = J_1
 						continue
 					end
 					break
 				else
 					if J_1 <= w_1 then
-						n13 = J_1
+						n14 = J_1
 						continue
 					end
 					break
 				end
 			end
 		end
-	elseif n13 <= n12 then
+	elseif n14 <= n13 then
 		while true do
-			returns[n13 - 1] = fn11(arg[n13])
-			returnsInfo[n13 - 1] = fn34(arg[n13])
+			returns[n14 - 1] = fn11(arg[n14])
+			returnsInfo[n14 - 1] = fn34(arg[n14])
 
 			if U_1 <= 0 then
 				if J_1 >= w_1 then
-					n13 = J_1
+					n14 = J_1
 					continue
 				end
 				break
 			else
 				if J_1 <= w_1 then
-					n13 = J_1
+					n14 = J_1
 					continue
 				end
 				break
@@ -52030,7 +52062,7 @@ local function fn37(arg)
 	end
 end
 
-local n12 = 16751408
+local n13 = 16751408
 
 local function fn38(player, arg)
 	local character = player.Character
@@ -52106,8 +52138,8 @@ local function fn38(player, arg)
 	return tbl13
 end
 
-n12 = 411621676
-local n13 = 429604402
+n13 = 411621676
+local n14 = 429604402
 
 local function fn39(arg)
 	local v10 = getMatch(arg.path)
@@ -52126,7 +52158,7 @@ local function fn39(arg)
 	return { deleted = true, path = v13 }
 end
 
-n13 = 426436601
+n14 = 426436601
 
 local tbl13 = {
 	["system.ping"] = function(arg)
@@ -52146,7 +52178,7 @@ local tbl13 = {
 		local fn322 = fn32
 		local v10 = fn32(arg.code, arg.label)
 		local tbl13 = {}
-		local n14 = 0
+		local n15 = 0
 		local flag7 = false
 
 		local v11 = fn33(function(arg2, arg3)
@@ -52162,7 +52194,7 @@ local tbl13 = {
 			end
 
 			local str4 = str3 .. arg3
-			n14 = n14 + #str4 + 1
+			n15 = n15 + #str4 + 1
 			table.insert(tbl13, str4)
 		end)
 
@@ -52177,35 +52209,35 @@ local tbl13 = {
 		until fn322
 
 		local v12 = pack(v11(v10, fn36))
-		local n15 = math.floor((os.clock() - now) * 1000 + 0.5)
+		local n16 = math.floor((os.clock() - now) * 1000 + 0.5)
 
 		if not v12[1] then
 			error(string.format("Runtime error: %s\n--- output ---\n%s", tostring(v12[2]), table.concat(tbl13, "\n"):sub(-20000)), 0)
 		end
 
-		return fn35(v12, n15, tbl13, flag7)
+		return fn35(v12, n16, tbl13, flag7)
 	end,
 	["exec.async"] = function(arg)
 		local v10 = fn32(arg.code, arg.label)
-		local n14 = nil - 2840968490
+		local n15 = -1923669963
 		local tbl13 = { id = HttpService:GenerateGUID(false):sub(1, 8) }
 		tbl13.label = tostring(arg.label or "Script"):sub(1, 60)
 		tbl13.startedAt = os.clock()
 		tbl13.pending = {}
 		tbl13.lineCount = 0
 		tbl13.dropped = 0
-		local n15 = 453167084
+		local n16 = 453167084
 
 		local function fn40(arg2, arg3)
 			tbl13.lineCount = tbl13.lineCount + 1
-			if n11 <= #tbl13.pending then
+			if n12 <= #tbl13.pending then
 				tbl13.dropped = tbl13.dropped + 1
 				return
 			end
 			table.insert(tbl13.pending, { kind = arg2, text = arg3:sub(1, 1000) })
 		end
 
-		n15 = 159704366
+		n16 = 159704366
 		local v11 = fn33(fn40)
 		setfenv(v10, v11)
 		tbl12[tbl13.id] = tbl13
@@ -52223,22 +52255,23 @@ local tbl13 = {
 			end
 		end)
 
-		local n16 = 464695961
+		local n17 = 464695961
 
 		local function fn41()
+			local n18 = 2221896984
 			local v12 = table.pack(xpcall(v10, fn36))
 			if tbl12[tbl13.id] ~= tbl13 then
 				return
 			end
-			local n162 = n16
+			local n172 = n17
 			tbl12[tbl13.id] = nil
 			fn37(tbl13)
 			local startedAt = tbl13.startedAt
-			local n17 = math.floor((os.clock() - startedAt) * 1000 + 0.5)
-			local tbl14 = { runId = tbl13.id, label = tbl13.label, ok = v12[1] == true, elapsedMs = n17 }
+			local n19 = math.floor((os.clock() - startedAt) * 1000 + 0.5)
+			local tbl14 = { runId = tbl13.id, label = tbl13.label, ok = v12[1] == true, elapsedMs = n19 }
 
 			if v12[1] then
-				local v13 = fn35(v12, n17, {}, false)
+				local v13 = fn35(v12, n19, {}, false)
 				tbl14.returnsInfo = v13.returnsInfo
 				tbl14.returnCount = v13.returnCount
 			else
@@ -52248,11 +52281,13 @@ local tbl13 = {
 			fn13("exec.finished", tbl14)
 		end
 
-		n16 = 371529085
+		n17 = 371529085
 		tbl13.thread = task.defer(fn41)
 		return { runId = tbl13.id, label = tbl13.label }
 	end,
 	["exec.cancel"] = function(arg)
+		local n15 = 3977274649
+		local n16 = 267159603
 		local v10 = tbl12[tostring(arg.runId or "")]
 
 		if v10 then
@@ -52261,7 +52296,7 @@ local tbl13 = {
 			fn37(v10)
 			local tbl13 = { runId = v10.id }
 			local label = v10.label
-			bit32.bor(nil, nil)
+			bit32.bor(n16, n15)
 			tbl13.label = label
 			tbl13.ok = false
 			tbl13.cancelled = true
@@ -52307,18 +52342,19 @@ local tbl13 = {
 		return { count = #tbl13, runs = tbl13 }
 	end,
 	["console.tail"] = function(arg)
+		local n15 = 211964265
 		local logHistory = game:GetService("LogService"):GetLogHistory()
 		local v10 = fn5(arg.limit, 1, 500, 200)
 		local latest = tonumber(arg.since) or 0
 		local tbl13 = {}
-		local n14 = #logHistory
-		local n15 = 1
+		local n16 = #logHistory
+		local n17 = 1
 		local v11
 
 		if -1 <= 0 then
-			if n14 >= n15 then
+			if n16 >= n17 then
 				while true do
-					v11 = logHistory[n14]
+					v11 = logHistory[n16]
 
 					if v11.timestamp <= latest then
 						break
@@ -52332,11 +52368,11 @@ local tbl13 = {
 
 							if U_1 <= 0 then
 								if J_1 >= w_1 then
-									n14 = J_1
+									n16 = J_1
 									continue
 								end
 							elseif J_1 <= w_1 then
-								n14 = J_1
+								n16 = J_1
 								continue
 							end
 						end
@@ -52345,9 +52381,9 @@ local tbl13 = {
 					end
 				end
 			end
-		elseif n14 <= n15 then
+		elseif n16 <= n17 then
 			while true do
-				v11 = logHistory[n14]
+				v11 = logHistory[n16]
 
 				if v11.timestamp <= latest then
 					break
@@ -52361,11 +52397,11 @@ local tbl13 = {
 
 						if U_1 <= 0 then
 							if J_1 >= w_1 then
-								n14 = J_1
+								n16 = J_1
 								continue
 							end
 						elseif J_1 <= w_1 then
-							n14 = J_1
+							n16 = J_1
 							continue
 						end
 					end
@@ -52551,7 +52587,7 @@ local tbl13 = {
 		return { count = #tbl13, characters = tbl13 }
 	end,
 	["workspace.summary"] = function(arg)
-		local n14 = math.floor(fn5(arg.maxDescendants, 1, 5000, 2000))
+		local n15 = math.floor(fn5(arg.maxDescendants, 1, 5000, 2000))
 		local tbl13 = {}
 		local tbl14 = {}
 		local v10, v11, v12 = ipairs(Workspace:GetChildren())
@@ -52572,7 +52608,7 @@ local tbl13 = {
 			end
 		end
 
-		local v14 = fn18(Workspace, n14, function(arg2)
+		local v14 = fn18(Workspace, n15, function(arg2)
 			tbl13[arg2.ClassName] = (tbl13[arg2.ClassName] or 0) + 1
 			return false
 		end)
@@ -52581,7 +52617,7 @@ local tbl13 = {
 			topLevel = tbl14,
 			topLevelCount = #tbl14,
 			scannedDescendants = v14,
-			truncated = v14 >= n14,
+			truncated = v14 >= n15,
 			classCounts = tbl13,
 		}
 	end,
@@ -52595,7 +52631,7 @@ local tbl13 = {
 
 		local v12 = string.lower(getMatch(arg.nameContains))
 		local v13 = getMatch(arg.className)
-		local n14 = math.floor(fn5(arg.limit, 1, 200, 50))
+		local n15 = math.floor(fn5(arg.limit, 1, 200, 50))
 		local tbl13 = {}
 
 		local v14 = fn18(v10, math.floor(fn5(arg.scanLimit, 1, 10000, 3000)), function(arg2)
@@ -52650,7 +52686,7 @@ local tbl13 = {
 				end
 			end
 
-			return #tbl13 >= n14
+			return #tbl13 >= n15
 		end)
 
 		return { root = fn10(v10), scanned = v14, count = #tbl13, matches = tbl13 }
@@ -52662,50 +52698,50 @@ local tbl13 = {
 			error(v11)
 		end
 
-		local n14 = math.floor(fn5(arg.limit, 1, 500, 100))
+		local n15 = math.floor(fn5(arg.limit, 1, 500, 100))
 		local children = v10:GetChildren()
 		local children2 = {}
-		local n15 = math.min(#children, n14)
-		local n16 = 1
-		local n162
+		local n16 = math.min(#children, n15)
+		local n17 = 1
+		local n172
 
 		if 1 <= 0 then
-			if n16 >= n15 then
-				n162 = n16
+			if n17 >= n16 then
+				n172 = n17
 
 				while true do
-					table.insert(children2, fn17(children[n162]))
+					table.insert(children2, fn17(children[n172]))
 
 					if U_1 <= 0 then
 						if J_1 >= w_1 then
-							n162 = J_1
+							n172 = J_1
 							continue
 						end
 						break
 					else
 						if J_1 <= w_1 then
-							n162 = J_1
+							n172 = J_1
 							continue
 						end
 						break
 					end
 				end
 			end
-		elseif n16 <= n15 then
-			n162 = n16
+		elseif n17 <= n16 then
+			n172 = n17
 
 			while true do
-				table.insert(children2, fn17(children[n162]))
+				table.insert(children2, fn17(children[n172]))
 
 				if U_1 <= 0 then
 					if J_1 >= w_1 then
-						n162 = J_1
+						n172 = J_1
 						continue
 					end
 					break
 				else
 					if J_1 <= w_1 then
-						n162 = J_1
+						n172 = J_1
 						continue
 					end
 					break
@@ -52808,7 +52844,7 @@ local tbl13 = {
 
 		local fn112 = fn11
 		local tbl16 = { instance = fn17(v10), attributes = fn11(v10:GetAttributes()), tags = fn11(v10:GetTags()) }
-		local n14 = #v10:GetChildren()
+		local n15 = #v10:GetChildren()
 		return (nil)()
 	end,
 	["instance.attributes"] = function(arg)
@@ -52919,12 +52955,14 @@ local tbl13 = {
 		local v10, v11 = fn26(false)
 		local v112 = v11
 		if v10 then
-			local n14 = math.floor(fn5(arg.maxDepth, 1, 10, 6))
-			return { exists = true, tree = fn30(v10, 0, n14) }
+			local n15 = math.floor(fn5(arg.maxDepth, 1, 10, 6))
+			return { exists = true, tree = fn30(v10, 0, n15) }
 		end
 		return { exists = false, reason = v112 or "managed UI does not exist" }
 	end,
 	["ui.notify"] = function(arg)
+		local n15 = 1685112501
+		local n16 = 1430270535
 		local v10, v11 = fn26(true)
 
 		if not v10 then
@@ -52950,8 +52988,8 @@ local tbl13 = {
 
 		local textLabel = Instance.new("TextLabel")
 		local name2 = "Notification_" .. HttpService:GenerateGUID(false)
-		local v12 = table.pack(bit32.band(nil, 4294967295))
-		local v13 = table.pack(bit32.band(nil, 4294967295))
+		local v12 = table.pack(bit32.band(n15, 4294967295))
+		local v13 = table.pack(bit32.band(n16, 4294967295))
 		local v14 = table.pack(bit32.band(v12[1], 65535))
 		local v15 = table.pack(bit32.rshift(v12[1], 16))
 		local v16 = table.pack(bit32.band(v13[1], 65535))
@@ -52970,7 +53008,7 @@ local tbl13 = {
 		uiCorner.CornerRadius = UDim.new(0, 10)
 		uiCorner.Parent = textLabel
 		local v18 = fn5(arg.duration, 0.5, 30, 4)
-		local n14 = 299691277
+		local n17 = 299691277
 
 		local function fn40()
 			if textLabel.Parent then
@@ -52979,7 +53017,7 @@ local tbl13 = {
 			end
 		end
 
-		n14 = 460597496
+		n17 = 460597496
 		task.delay(v18, fn40)
 		return { shown = true, name = textLabel.Name, duration = v18 }
 	end,
@@ -53033,13 +53071,14 @@ local function fn40(arg)
 end
 
 local function fn41(arg)
-	local n14 = 400817572
+	local n15 = 4090399418
+	local n16 = 400817572
 
 	local function jsonDecode()
 		return HttpService:JSONDecode(tostring(arg))
 	end
 
-	n14 = 13581390
+	n16 = 13581390
 	local ok, result = pcall(jsonDecode)
 
 	if ok then
@@ -53063,7 +53102,7 @@ local function fn41(arg)
 			end
 
 			local v10 = tostring
-			bit32.bor(nil, 2753335375)
+			bit32.bor(n15, 2753335375)
 			fn3("PONG", v10(result.seq or ""))
 			return
 		end
@@ -53119,21 +53158,23 @@ local function fn42()
 end
 
 local function fn43()
+	local n15 = 1128031251
+	local n16 = 3926507404
 	local v10, v11 = fn7()
 	if not v10 then
 		fn4("No supported WebSocket API found")
 		return false
 	end
-	n5 += 1
-	local n52 = n5
+	n6 += 1
+	local n62 = n6
 	fn3("Connecting to", "wss://chillihub.pro/roblox-mcp?token=chp-7E0Yzx4yddoAozc9VNLsqTnA", "using", v11)
-	local n14 = 409832479
+	local n17 = 409832479
 
 	local function fn44()
 		return v10("wss://chillihub.pro/roblox-mcp?token=chp-7E0Yzx4yddoAozc9VNLsqTnA")
 	end
 
-	n14 = 526742413
+	n17 = 526742413
 	local ok, result = pcall(fn44)
 
 	if ok then
@@ -53143,41 +53184,41 @@ local function fn43()
 			local onMessage = fn8(v2, "OnMessage", "MessageReceived")
 			local onClose = fn8(v2, "OnClose", "Closed", "OnDisconnect")
 			local v22 = v2
-			local v12 = bit32.bor(nil, nil)
+			local v12 = bit32.bor(n15, n16)
 			local onError = fn8(v22, "OnError", "Error")
-			local n15 = 76768263
+			local n18 = 76768263
 
 			local function fn45(arg)
 				fn41(arg)
 			end
 
-			n15 = 270847763
+			n18 = 270847763
 			local v13 = fn9(onMessage, fn45)
 
 			if v13 then
 				table.insert(tbl2, v13)
-				local n16 = 392663274
+				local n19 = 392663274
 
 				local function fn46(...)
 					flag5 = false
 					fn4("Socket closed", ...)
 				end
 
-				n16 = 103730895
+				n19 = 103730895
 				local v14 = fn9(onClose, fn46)
 
 				if v14 then
 					table.insert(tbl2, v14)
 				end
 
-				local n17 = 497414052
+				local n20 = 497414052
 
 				local function fn47(...)
 					fn4("Socket error", ...)
 					flag5 = false
 				end
 
-				n17 = 43224398
+				n20 = 43224398
 				local v15 = fn9(onError, fn47)
 
 				if v15 then
@@ -53208,8 +53249,8 @@ local function fn43()
 
 							if flag4 then
 								if flag5 then
-									n6 += 1
-									local v18, v19 = fn12({ type = "ping", seq = n6 })
+									n7 += 1
+									local v18, v19 = fn12({ type = "ping", seq = n7 })
 
 									if not v18 then
 										fn4("Heartbeat failed:", tostring(v19))
@@ -53261,7 +53302,7 @@ table.insert(tbl, Players.PlayerRemoving:Connect(function(player)
 	end
 end))
 
-local n14 = 150664755
+local n15 = 150664755
 
 local function stopChilliLink()
 	if not flag4 then
@@ -53269,20 +53310,20 @@ local function stopChilliLink()
 	end
 	fn3("Stopping agent")
 	flag4 = false
-	n5 += 1
+	n6 += 1
 	fn6(tbl)
 	local tbl32 = tbl3
 	fn6(tbl3)
-	local n15, v10
+	local n16, v10
 
 	while true do
-		n15.table = 5
+		n16.table = 5
 		v10 = v10(nil, nil)
-		n15 = 90
+		n16 = 90
 	end
 end
 
-n14 = 336151760
+n15 = 336151760
 genv.StopChilliLink = stopChilliLink
 local httpRequest = syn.request or http_request
 
@@ -53347,7 +53388,7 @@ task.spawn(function()
 	end
 
 	local txt = nil
-	local n15 = 302108896
+	local n16 = 302108896
 
 	local function fn46()
 		if isfile("ChilliLibrary/SAE_ChatSeen.txt") then
@@ -53356,11 +53397,11 @@ task.spawn(function()
 		end
 	end
 
-	n15 = 255528724
+	n16 = 255528724
 	pcall(fn46)
 
 	local function fn47(arg, arg2)
-		local n16 = 467985205
+		local n17 = 467985205
 
 		local function fn48()
 			if not isfolder("ChilliLibrary") then
@@ -53370,38 +53411,38 @@ task.spawn(function()
 			writefile("ChilliLibrary/SAE_ChatSeen.txt", arg2)
 		end
 
-		n16 = 388932319
+		n17 = 388932319
 		pcall(fn48)
 	end
 
-	local n16 = 0
+	local n17 = 0
 
 	while flag4 do
 		local v10 = fn44()
 
 		if v10 then
-			n16 = 0
+			n17 = 0
 		else
-			n16 = math.min(n16 + 1, 4)
+			n17 = math.min(n17 + 1, 4)
 		end
 
-		local n17 = 60 * 2 ^ n16
+		local n18 = 60 * 2 ^ n17
 
 		if v10 then
-			n17 = fn5(v10.interval, 5, 600, 30)
+			n18 = fn5(v10.interval, 5, 600, 30)
 
 			if v10.connect == true then
 				if not flag6 then
 					if not flag5 then
 						flag6 = true
-						local n18 = 507361493
+						local n19 = 507361493
 
 						local function fn48()
 							pcall(fn43)
 							flag6 = false
 						end
 
-						n18 = 497693534
+						n19 = 497693534
 						task.spawn(fn48)
 					end
 				end
@@ -53426,7 +53467,7 @@ task.spawn(function()
 			end
 		end
 
-		task.wait(n17 * (0.85 + math.random() * 0.3))
+		task.wait(n18 * (0.85 + math.random() * 0.3))
 	end
 
 	fn3("Agent stopped")

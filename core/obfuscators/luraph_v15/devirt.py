@@ -3028,6 +3028,14 @@ def eval_fact(e, facts):
             except TypeError:
                 return None
         if e.op in ("CompareEq", "CompareNe"):
+            if isinstance(e.a, Reg) and isinstance(e.b, Reg):
+                ra = facts[e.a.n][1] if e.a.n in facts and facts[e.a.n][0] == "r" else e.a.n
+                rb = facts[e.b.n][1] if e.b.n in facts and facts[e.b.n][0] == "r" else e.b.n
+                if ra == rb:
+                    fa = facts.get(ra)
+                    if fa and (fa[0] in ("non_nan", "rng", "g", "tbl")
+                               or (fa[0] in ("c", "may_c") and fa[1] == fa[1])):
+                        return ("c", e.op == "CompareEq")
             if isinstance(e.a, Reg) and isinstance(e.b, Const):
                 ra = e.a.n
                 if ra in facts and facts[ra][0] == "r":
@@ -3038,14 +3046,19 @@ def eval_fact(e, facts):
                 if rb in facts and facts[rb][0] == "r":
                     rb = facts[rb][1]
                 return ("cmp", e.op, rb, e.a.v)
+        elif e.op in ("CompareLt", "CompareLe", "CompareGt", "CompareGe"):
+            ra = (facts[e.a.n][1] if e.a.n in facts and facts[e.a.n][0] == "r" else e.a.n) if isinstance(e.a, Reg) else None
+            rb = (facts[e.b.n][1] if e.b.n in facts and facts[e.b.n][0] == "r" else e.b.n) if isinstance(e.b, Reg) else None
+            if ra is not None or rb is not None:
+                return ("ord_cmp", ra, rb)
     return None
 
 def truth_of(f):
-    if f is None or f[0] in ("r", "m", "cmp", "idx_reg", "rng", "any", "may_c"):
+    if f is None or f[0] in ("r", "m", "cmp", "ord_cmp", "idx_reg", "rng", "any", "may_c"):
         return None
     if f[0] == "c":
         return S.truthy(f[1])
-    if f[0] in ("g", "tbl"):
+    if f[0] in ("g", "tbl", "non_nan"):
         return True
     return f[0] == "t"
 
@@ -3066,6 +3079,14 @@ def edge_facts(cond, taken, facts):
                 f[cf[2]] = ("c", cf[3])
                 learned_reg = (cf[2], cf[3])
             f[c.n] = ("c", bool(t))
+        elif cf and cf[0] == "ord_cmp":
+            if t:
+                for rr in (cf[1], cf[2]):
+                    if rr is not None and rr != c.n:
+                        cur = f.get(rr)
+                        if cur is None or cur[0] in ("t", "any"):
+                            f[rr] = ("non_nan",)
+            f[c.n] = ("c", bool(t))
         elif c.n not in f or f[c.n][0] != "c":
             f[c.n] = ("t",) if t else ("f",)
     elif isinstance(c, Bin) and c.op in ("CompareEq", "CompareNe"):
@@ -3077,6 +3098,13 @@ def edge_facts(cond, taken, facts):
             elif isinstance(c.b, Reg) and isinstance(c.a, Const):
                 f[c.b.n] = ("c", c.a.v)
                 learned_reg = (c.b.n, c.a.v)
+    elif isinstance(c, Bin) and c.op in ("CompareLt", "CompareLe", "CompareGt", "CompareGe") and t:
+        for operand in (c.a, c.b):
+            if isinstance(operand, Reg):
+                rr = f[operand.n][1] if operand.n in f and f[operand.n][0] == "r" else operand.n
+                cur = f.get(rr)
+                if cur is None or cur[0] in ("t", "any"):
+                    f[rr] = ("non_nan",)
     if learned_reg is not None:
         lr, lv = learned_reg
         for rk, rv in list(f.items()):
@@ -5331,11 +5359,64 @@ class FunctionLifter:
             if not restart:
                 break
         self.prog.requests |= lf.requests
-        if lf.reg_arrays:
+        vreg_init_map = {
+            vr: iv for vr, iv in getattr(st, "vreg_init", {}).items()
+            if vr in lf.vreg_set and iv is not None
+        }
+        vreg_inits = []
+        if vreg_init_map and order:
+            import variables as VR
+            used_vr = set()
+
+            def _scan_multi(m):
+                if m is None:
+                    return
+                for ev in getattr(m, "items", ()):
+                    used_vr.update(VR.expr_reg_occ(ev))
+                tl = getattr(m, "tail", None)
+                if tl is not None:
+                    used_vr.update(VR.expr_reg_occ(tl))
+
+            for _, root_n in order:
+                stk = [root_n]
+                while stk:
+                    cn = stk.pop()
+                    if cn is None:
+                        continue
+                    for si in (cn.stmts or ()):
+                        if isinstance(si, Assign):
+                            if not isinstance(si.target, (Reg, Pseudo)):
+                                used_vr.update(VR.expr_reg_occ(si.target))
+                            if isinstance(si.value, SymList):
+                                _scan_multi(si.value)
+                            else:
+                                used_vr.update(VR.expr_reg_occ(si.value))
+                        elif isinstance(si, CallStmt):
+                            used_vr.update(VR.expr_reg_occ(si.fn))
+                            _scan_multi(si.args)
+                        elif isinstance(si, SetList):
+                            used_vr.update(VR.expr_reg_occ(si.tbl))
+                            _scan_multi(si.values)
+                        elif isinstance(si, ForPrep):
+                            for ev in si.exprs:
+                                used_vr.update(VR.expr_reg_occ(ev))
+                    if cn.cond is not None:
+                        used_vr.update(VR.expr_reg_occ(cn.cond))
+                    if isinstance(cn.outcome, Ret):
+                        _scan_multi(cn.outcome.values)
+                    stk.append(cn.then)
+                    stk.append(cn.els)
+            vreg_inits = [
+                Assign(Reg(vr), Const(iv))
+                for vr, iv in sorted(vreg_init_map.items())
+                if vr in used_vr
+            ]
+        arr_inits = [Assign(Reg(REG_ARRAY + b), S.NewTable()) for b in sorted(lf.reg_arrays)]
+        if vreg_inits or arr_inits:
             k0 = s0.key(vm.kstack_link)
             for k, node in order:
                 if k == k0:
-                    node.stmts[0:0] = [Assign(Reg(REG_ARRAY + b), S.NewTable()) for b in sorted(lf.reg_arrays)]
+                    node.stmts[0:0] = vreg_inits + arr_inits
                     break
         frames = {}
         for c in lf.children:

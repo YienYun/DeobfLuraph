@@ -118,6 +118,63 @@ test('full Luraph v15.0 ChilliLibraryEngine2 devirtualizes cleanly into valid Lu
   assert.equal(result.lift_stats.fallbacks, 0);
   assert.doesNotMatch(text, /_lph_setlist/);
   assert.doesNotMatch(text, /error\("devirt:/);
+  assert.doesNotMatch(text, /constant not decoded/);
+  assert.doesNotMatch(text, /bit32\.\w+\([^)\n]*\bnil\b/);
+  assert.doesNotMatch(text, /(?<![\w.])nil\s*[+\-*/%^]|[+\-*/%^]\s*nil(?![\w])/);
+});
+
+test('full Luraph v15.1 StealAnEggg devirtualizes with zero nil bitwise/arithmetic operands and valid runtime behavior', { skip, timeout: 240000 }, async t => {
+  const dir = temp(t);
+  const sample = path.join(ROOT, 'samples', 'StealAnEggg_v15.1_obfuscated.lua');
+  const output = path.join(dir, 'steal_out.lua');
+  const report = path.join(dir, 'report.json');
+  const r = runCli([sample, '-o', output, '--report', report]);
+  assert.equal(r.status, 0, r.stderr);
+  const text = fs.readFileSync(output, 'utf8');
+  assert.equal(spawnSync(ast, [output], { stdio: 'ignore' }).status, 0);
+
+  const result = JSON.parse(fs.readFileSync(report, 'utf8'));
+  assert.equal(result.result_type, 'devirtualized');
+  assert.equal(result.lift_stats.errors, 0);
+  assert.equal(result.lift_stats.fallbacks, 0);
+  assert.doesNotMatch(text, /_lph_setlist/);
+  assert.doesNotMatch(text, /error\("devirt:/);
+  assert.doesNotMatch(text, /constant not decoded/);
+  assert.doesNotMatch(text, /bit32\.\w+\([^)\n]*\bnil\b/);
+  assert.doesNotMatch(text, /(?<![\w.])nil\s*[+\-*/%^]|[+\-*/%^]\s*nil(?![\w])/);
+  assert.doesNotMatch(text, /(?<![\w.])nil\s*(?:<=|>=|<|>|\.\.)|(?:<=|>=|<|>|\.\.)\s*nil(?![\w])/);
+  assert.match(text, /return Color3\.new\(num, num2, num3\)/);
+
+  // Runtime validation in offline Roblox Luau sandbox:
+  // 1) Full script executes cleanly without script errors.
+  // 2) Post-loop ChilliLink/MCP module executes through bit32.rshift(n, 29),
+  //    registers StopChilliLink, and converts both float [0..1] and byte [0..255] Color3 tables.
+  const { runOnce } = require('../src/harness');
+  const fullRun = await runOnce(luau, text, { devirt: true }, path.join(dir, 'harness_full.luau'), 45, false);
+  assert.ok(fullRun.body, fullRun.err || 'missing fullRun body');
+  const fullStatus = fullRun.body.split('\n').find(l => l.startsWith('-- run status:')) || '';
+  assert.doesNotMatch(fullStatus, /script error/);
+
+  const lines = text.split('\n');
+  const mcpIdx = lines.findIndex(l => l.startsWith('local HttpService = game:GetService("HttpService")'));
+  assert.ok(mcpIdx > 0, 'expected ChilliLink/MCP module');
+  const mcpHarness = [
+    lines[0],
+    ...lines.slice(mcpIdx),
+    'local g = (getgenv and getgenv()) or _G',
+    'assert(type(g.StopChilliLink) == "function")',
+    'local c1 = fn19({0.25, 0.5, 1})',
+    'local c2 = fn19({255, 128, 0})',
+    'assert(typeof(c1) == "Color3" and math.abs(c1.R - 0.25) < 1e-4 and math.abs(c1.B - 1) < 1e-4)',
+    'assert(typeof(c2) == "Color3" and math.abs(c2.R - 1) < 1e-2 and math.abs(c2.G - 128/255) < 1e-2)',
+    'g.StopChilliLink()',
+    'print("STEAL_RUNTIME_VERIFIED")',
+  ].join('\n');
+  const mcpRun = await runOnce(luau, mcpHarness, { devirt: true }, path.join(dir, 'harness_mcp.luau'), 30, false);
+  assert.ok(mcpRun.body, mcpRun.err || 'missing mcpRun body');
+  const mcpStatus = mcpRun.body.split('\n').find(l => l.startsWith('-- run status:')) || '';
+  assert.equal(mcpStatus, '-- run status: finished');
+  assert.match(mcpRun.body, /STEAL_RUNTIME_VERIFIED/);
 });
 
 test('debug mode never returns a stale devirtualization from a previous run', { skip }, t => {

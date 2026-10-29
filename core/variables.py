@@ -793,6 +793,11 @@ def extract_params(body):
             lead[st.values.items[0].i] = st.targets[0].name
             i += 1
             continue
+        if isinstance(st, CG.AssignS) and getattr(st, "is_local", False) \
+                and st.values.tail is None and all(isinstance(v, Const) for v in st.values.items) \
+                and all(isinstance(t, CG.LocalName) and t.name not in lead.values() for t in st.targets):
+            i += 1
+            continue
         if isinstance(st, CG.CommentS) and not st.text:
             i += 1
             continue

@@ -5,9 +5,9 @@ return function(arg, arg2)
 	local n2 = 461845907
 
 	for i = 1, #arg2 do
-		local v = string.byte(arg2, i)
-		n = bit32.bxor(bit32.lrotate(n, 5), v, i)
-		n2 = bit32.bxor(bit32.lrotate(n2, 7), n, v * 257 + i)
+		local arg22 = string.byte(arg2, i)
+		n = bit32.bxor(bit32.lrotate(n, 5), arg22, i)
+		n2 = bit32.bxor(bit32.lrotate(n2, 7), n, arg22 * 257 + i)
 	end
 
 	assert(n == 4128922676 and n2 == 842727784)
@@ -289,7 +289,7 @@ return function(arg, arg2)
 		v46[v45[2]] = v46[v45[3]]
 	end
 
-	local tbl2 = {
+	local valueMap = {
 		button = 1,
 		cycleselector = 2,
 		dynamicdropdown = 2,
@@ -316,10 +316,10 @@ return function(arg, arg2)
 
 	v2[101] = function(arg3)
 		local str = tostring(arg3):lower():gsub("[%s_%-]", "")
-		return tbl2[str], str
+		return valueMap[str], str
 	end
 
-	local tbl3 = { Height = 0.0749, Gap = 0.022, Tab = nil, Silent = false }
+	local tbl2 = { Height = 0.0749, Gap = 0.022, Tab = nil, Silent = false }
 
 	local function fn()
 		local searchBar = Instance.new("Frame")
@@ -329,8 +329,8 @@ return function(arg, arg2)
 		searchBar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 		searchBar.BackgroundTransparency = 0.4
 		searchBar.BorderSizePixel = 0
-		searchBar.Position = UDim2.fromScale(0.5, 1 + tbl3.Gap)
-		searchBar.Size = UDim2.fromScale(1, tbl3.Height)
+		searchBar.Position = UDim2.fromScale(0.5, 1 + tbl2.Gap)
+		searchBar.Size = UDim2.fromScale(1, tbl2.Height)
 		searchBar.ZIndex = 6
 		searchBar.Parent = v7
 		v28(searchBar, Enum.ApplyStrokeMode.Border, 0.05)
@@ -447,10 +447,10 @@ return function(arg, arg2)
 		end)
 
 		input:GetPropertyChangedSignal("Text"):Connect(function()
-			if tbl3.Silent then
+			if tbl2.Silent then
 				return
 			end
-			local tab = tbl3.Tab
+			local tab = tbl2.Tab
 
 			if tab and not tab._destroyed then
 				tab._searchQuery = input.Text
@@ -463,7 +463,7 @@ return function(arg, arg2)
 
 		K = function()
 			local y2 = v18.Y
-			local l, u = tbl3.Height / y2, tbl3.Gap / y2
+			local l, u = tbl2.Height / y2, tbl2.Gap / y2
 			searchBar.Size = UDim2.fromScale(1, l)
 			local y3 = v7.AbsoluteSize.Y
 			y2 = ((v7.AbsolutePosition.Y + y3) + ((l + u) * y3)) <= v6.AbsoluteSize.Y
@@ -490,11 +490,11 @@ return function(arg, arg2)
 		v7:GetPropertyChangedSignal("AbsoluteSize"):Connect(K)
 		task.defer(K)
 
-		tbl3.SetTab = function(tab)
-			tbl3.Tab = tab
-			tbl3.Silent = true
+		tbl2.SetTab = function(tab)
+			tbl2.Tab = tab
+			tbl2.Silent = true
 			input.Text = (tab and tab._searchQuery) or ""
-			tbl3.Silent = false
+			tbl2.Silent = false
 		end
 	end
 
@@ -763,7 +763,7 @@ return function(arg, arg2)
 			K()
 		end)
 
-		local M = {m._content:GetPropertyChangedSignal("AbsoluteSize"):Connect(K), m.Tab.Page:GetPropertyChangedSignal("AbsoluteSize"):Connect(K), q:GetAttributeChangedSignal("ChilliResponsiveAspect"):Connect(K)}
+		local connections = {m._content:GetPropertyChangedSignal("AbsoluteSize"):Connect(K), m.Tab.Page:GetPropertyChangedSignal("AbsoluteSize"):Connect(K), q:GetAttributeChangedSignal("ChilliResponsiveAspect"):Connect(K)}
 		table.insert(m._rowUpdaters, K)
 		K(true)
 
@@ -778,14 +778,14 @@ return function(arg, arg2)
 				end
 			end
 
-			for i = #M, 1, -1 do
-				local v46 = M[i]
+			for i = #connections, 1, -1 do
+				local v46 = connections[i]
 
 				if v46.Connected then
 					v46:Disconnect()
 				end
 
-				M[i] = nil
+				connections[i] = nil
 			end
 		end
 	end
@@ -912,8 +912,8 @@ return function(arg, arg2)
 		fn4[3][fn4[5]](m, resultGroup)
 
 		K = {Row = resultGroup, Label = uiElement, OpenLabel = uiElement2, Button = openTab, Target = nil, Connection = nil, Connection = v15(openTab, function()
-			if K.Target and tbl3.NavigateToOption then
-				tbl3.NavigateToOption(K.Target)
+			if K.Target and tbl2.NavigateToOption then
+				tbl2.NavigateToOption(K.Target)
 			end
 		end)}
 
@@ -986,10 +986,10 @@ return function(arg, arg2)
 		end
 	end
 
-	tbl3.ActiveScrollTween = nil
-	tbl3.NavigationSerial = 0
+	tbl2.ActiveScrollTween = nil
+	tbl2.NavigationSerial = 0
 
-	tbl3.NavigateToOption = function(m)
+	tbl2.NavigateToOption = function(m)
 		if (((not m or m._destroyed) or not m.Instance) or not m.Section) or m.Section._destroyed then
 			return
 		end
@@ -999,12 +999,12 @@ return function(arg, arg2)
 		if (not tab or tab._destroyed) or not window then
 			return
 		end
-		tbl3.NavigationSerial = tbl3.NavigationSerial + 1
-		local navigationSerial = tbl3.NavigationSerial
+		tbl2.NavigationSerial = tbl2.NavigationSerial + 1
+		local navigationSerial = tbl2.NavigationSerial
 
-		if tbl3.ActiveScrollTween then
-			tbl3.ActiveScrollTween:Cancel()
-			tbl3.ActiveScrollTween = nil
+		if tbl2.ActiveScrollTween then
+			tbl2.ActiveScrollTween:Cancel()
+			tbl2.ActiveScrollTween = nil
 		end
 
 		window:SelectTab(tab)
@@ -1025,7 +1025,7 @@ return function(arg, arg2)
 			end
 
 			RunService.Heartbeat:Wait()
-			if ((((navigationSerial ~= tbl3.NavigationSerial) or m._destroyed) or section._destroyed) or tab._destroyed) or (window.SelectedTab ~= tab) then
+			if ((((navigationSerial ~= tbl2.NavigationSerial) or m._destroyed) or section._destroyed) or tab._destroyed) or (window.SelectedTab ~= tab) then
 				return
 			end
 
@@ -1043,19 +1043,19 @@ return function(arg, arg2)
 			local canvasPosition = page.CanvasPosition
 			local q, K = ((visibilityHost.AbsolutePosition.Y - page.AbsolutePosition.Y) + canvasPosition.Y) - (page.AbsoluteSize.Y * 0.28), math.max(0, page.AbsoluteCanvasSize.Y - page.AbsoluteSize.Y)
 			q = math.clamp(q, 0, K)
-			tbl3.ActiveScrollTween = TweenService:Create(page, TweenInfo.new(0.46, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {CanvasPosition = Vector2.new(canvasPosition.X, q)})
-			local activeScrollTween = tbl3.ActiveScrollTween
+			tbl2.ActiveScrollTween = TweenService:Create(page, TweenInfo.new(0.46, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {CanvasPosition = Vector2.new(canvasPosition.X, q)})
+			local activeScrollTween = tbl2.ActiveScrollTween
 			activeScrollTween:Play()
 
 			pcall(function()
 				activeScrollTween.Completed:Wait()
 			end)
 
-			if tbl3.ActiveScrollTween == activeScrollTween then
-				tbl3.ActiveScrollTween = nil
+			if tbl2.ActiveScrollTween == activeScrollTween then
+				tbl2.ActiveScrollTween = nil
 			end
 
-			if ((navigationSerial ~= tbl3.NavigationSerial) or not visibilityHost.Parent) or not visibilityHost.Visible then
+			if ((navigationSerial ~= tbl2.NavigationSerial) or not visibilityHost.Parent) or not visibilityHost.Visible then
 				return
 			end
 			K = visibilityHost:FindFirstChild("ChilliSearchNavigationHighlight")
@@ -1100,7 +1100,7 @@ return function(arg, arg2)
 			fn10[3][fn10[5]](m)
 			return
 		end
-		local K, f = {}, 0
+		local list, f = {}, 0
 
 		for i, tab in ipairs(m.Window.Tabs) do
 			if ((tab ~= m) and not tab._destroyed) and tab.Button.Visible then
@@ -1118,7 +1118,7 @@ return function(arg, arg2)
 						end
 
 						if #i > 0 then
-							K[#K + 1] = {Tab = tab, Section = section, Options = i}
+							list[#list + 1] = {Tab = tab, Section = section, Options = i}
 						end
 					end
 				end
@@ -1131,23 +1131,23 @@ return function(arg, arg2)
 		end
 		local v47, g, l, layoutOrder = fn7[3][fn7[5]](m), {}, {}, 0
 
-		for _, v48 in ipairs(K) do
-			local str3 = v48.Tab.Name .. ("\000" .. v48.Section.Name)
-			q = fn8[3][fn8[5]](v47, str3)
+		for _, v48 in ipairs(list) do
+			local K = v48.Tab.Name .. ("\000" .. v48.Section.Name)
+			q = fn8[3][fn8[5]](v47, K)
 			layoutOrder += 1
 			q.Row.LayoutOrder = layoutOrder
 			q.Row.Visible = true
 			q.Label.Text = "GO TO  " .. (fn5[3][fn5[5]](v48.Tab) .. ("  >  " .. tostring(v48.Section.DisplayName or v48.Section.Name)))
 			q.Target = v48.Options[1]
-			g[str3] = true
+			g[K] = true
 
 			for _, option in ipairs(v48.Options) do
-				str3 = fn9[3][fn9[5]](v47, option)
+				K = fn9[3][fn9[5]](v47, option)
 
-				if str3 and str3.Instance then
+				if K and K.Instance then
 					layoutOrder += 1
-					str3.Instance.LayoutOrder = layoutOrder
-					str3.Instance.Visible = true
+					K.Instance.LayoutOrder = layoutOrder
+					K.Instance.Visible = true
 					l[fn6[3][fn6[5]](option)] = true
 				end
 			end
@@ -1182,7 +1182,7 @@ return function(arg, arg2)
 	local n5 = 6
 	local n6 = 0.115
 	local v47 = nil
-	local tbl4 = {}
+	local list = {}
 	local n7 = 0
 	local flag = true
 
@@ -1213,9 +1213,9 @@ return function(arg, arg2)
 	end
 
 	local function fn13(m)
-		for i = #tbl4, 1, -1 do
-			if tbl4[i] == m then
-				table.remove(tbl4, i)
+		for i = #list, 1, -1 do
+			if list[i] == m then
+				table.remove(list, i)
 				return
 			end
 		end
@@ -1273,8 +1273,8 @@ return function(arg, arg2)
 	end
 
 	local function fn15()
-		for i = #tbl4, 1, -1 do
-			fn14[3][fn14[5]](tbl4[i], true)
+		for i = #list, 1, -1 do
+			fn14[3][fn14[5]](list[i], true)
 		end
 
 		if v47[3][v47[5]] and v47[3][v47[5]].Parent then
@@ -1308,8 +1308,8 @@ return function(arg, arg2)
 		end
 		local frame = fn12[3][fn12[5]]()
 
-		while #tbl4 >= n5 do
-			fn14[3][fn14[5]](tbl4[1], true)
+		while #list >= n5 do
+			fn14[3][fn14[5]](list[1], true)
 		end
 
 		n7[3][n7[5]] += 1
@@ -1398,7 +1398,7 @@ return function(arg, arg2)
 		m.ZIndex = 103
 		m.Parent = parent
 		local q = {Card = frame, CardTween = nil, Dismissing = false, ProgressTween = nil, Slot = notificationSlot, Timer = nil}
-		table.insert(tbl4, q)
+		table.insert(list, q)
 		TweenService:Create(notificationSlot, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.fromScale(1, n6)}):Play()
 		q.CardTween = TweenService:Create(frame, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.fromScale(1, 0.5)})
 		q.CardTween:Play()
@@ -1560,20 +1560,20 @@ return function(arg, arg2)
 					end
 				end
 
-				local tbl5 = {}
+				local startups = {}
 
 				for _, v48 in pairs(x) do
 					if v48:lower() ~= startup:lower() then
-						table.insert(tbl5, v48)
+						table.insert(startups, v48)
 					end
 				end
 
-				table.sort(tbl5, function(arg3, arg4)
+				table.sort(startups, function(arg3, arg4)
 					return arg3:lower() < arg4:lower()
 				end)
 
-				table.insert(tbl5, 1, startup)
-				return tbl5
+				table.insert(startups, 1, startup)
+				return startups
 			end
 
 			local function fn17(arg3)
@@ -1667,7 +1667,7 @@ return function(arg, arg2)
 			end
 
 			local function fn20()
-				local tbl5 = {}
+				local nameMap = {}
 
 				for i, tab in ipairs(window.Tabs) do
 					if not tab._destroyed then
@@ -1712,28 +1712,28 @@ return function(arg, arg2)
 						end
 
 						if next(i) ~= nil then
-							tbl5[tab.Name] = i
+							nameMap[tab.Name] = i
 						end
 					end
 				end
 
-				return tbl5
+				return nameMap
 			end
 
 			local function fn21()
-				local W = {}
+				local nameMap = {}
 
 				for i, state in ipairs(window.States) do
 					if not state._destroyed and not state._configIgnored then
 						i = x(state:Get())
 
 						if i ~= nil then
-							W[state.Name] = {Value = i}
+							nameMap[state.Name] = {Value = i}
 						end
 					end
 				end
 
-				return W
+				return nameMap
 			end
 
 			local W, C
@@ -1787,17 +1787,17 @@ return function(arg, arg2)
 			end
 
 			local function E(D)
-				local O = {}
+				local list2 = {}
 
 				for i2 = 1, 4, 1 do
 					local _ = D[i2]
 
 					if _ and not _._destroyed then
-						table.insert(O, _)
+						table.insert(list2, _)
 					end
 				end
 
-				return O
+				return list2
 			end
 
 			local function D()
@@ -1903,14 +1903,14 @@ return function(arg, arg2)
 				V.Loading = true
 
 				local ok, L = xpcall(function()
-					local tbl5 = {}
+					local stateMap = {}
 
 					for i2, state in ipairs(window.States) do
 						i2 = fn27(states, R, state.Name)
 
 						if (not state._destroyed and not state._configIgnored) and i2 then
 							state:Set(i2.Value, false)
-							tbl5[state] = true
+							stateMap[state] = true
 						end
 					end
 
@@ -1923,7 +1923,7 @@ return function(arg, arg2)
 							for i4, option in ipairs(section.Options) do
 								i4 = fn27(i2, i3, option.Name)
 
-								if (((not option._destroyed and not option._configIgnored) and i4) and option._controller.SetValue) and not ((option.State and option.State._registered) and tbl5[option.State]) then
+								if (((not option._destroyed and not option._configIgnored) and i4) and option._controller.SetValue) and not ((option.State and option.State._registered) and stateMap[option.State]) then
 									local unit = i4.Unit
 
 									if (type(unit) == "string") and option._controller.SetUnit then
@@ -1985,7 +1985,7 @@ return function(arg, arg2)
 			end
 
 			fn24 = function()
-				local T = {}
+				local stateMap = {}
 
 				for _, tab in ipairs(window.Tabs) do
 					if not tab._destroyed then
@@ -1995,8 +1995,8 @@ return function(arg, arg2)
 									if (not option._destroyed and not option._configIgnored) and option._controller.GetValue then
 										local state = option.State
 
-										if (state and state._registered) and not T[state] then
-											T[state] = true
+										if (state and state._registered) and not stateMap[state] then
+											stateMap[state] = true
 											v38(state.Callback, state:Get(), state, nil)
 										end
 
@@ -2151,12 +2151,12 @@ return function(arg, arg2)
 			end
 
 			local function l(arg3, arg4)
-				local v49 = utf8.len(arg3)
-				if not v49 or (v49 <= arg4) then
+				local arg32 = utf8.len(arg3)
+				if not arg32 or (arg32 <= arg4) then
 					return arg3
 				end
-				v49 = utf8.offset(arg3, arg4 + 1)
-				return (v49 and (arg3:sub(1, v49 - 1))) or arg3
+				arg32 = utf8.offset(arg3, arg4 + 1)
+				return (arg32 and (arg3:sub(1, arg32 - 1))) or arg3
 			end
 
 			local function fn29(arg3)
@@ -2182,14 +2182,14 @@ return function(arg, arg2)
 				V.Loading = true
 
 				local ok, result = xpcall(function()
-					local Z = {}
+					local stateMap = {}
 
 					for i2, state in ipairs(window.States) do
 						i2 = W[state.Name]
 
 						if ((not state._destroyed and not state._configIgnored) and (type(i2) == "table")) and (i2.Value ~= nil) then
 							state:Set(i2.Value, false)
-							Z[state] = true
+							stateMap[state] = true
 						end
 					end
 
@@ -2204,7 +2204,7 @@ return function(arg, arg2)
 									for _, option in ipairs(section.Options) do
 										local H = i3[option.Name]
 
-										if ((((not option._destroyed and not option._configIgnored) and (type(H) == "table")) and (H.Value ~= nil)) and option._controller.SetValue) and not ((option.State and option.State._registered) and Z[option.State]) then
+										if ((((not option._destroyed and not option._configIgnored) and (type(H) == "table")) and (H.Value ~= nil)) and option._controller.SetValue) and not ((option.State and option.State._registered) and stateMap[option.State]) then
 											if (type(H.Unit) == "string") and option._controller.SetUnit then
 												pcall(function()
 													option:SetUnit(H.Unit, true)
@@ -2245,13 +2245,13 @@ return function(arg, arg2)
 				N("All features reset to defaults.")
 			end
 
-			local tbl5 = {Settings = true, Quick = true, Config = true}
+			local enabledFlags = {Settings = true, Quick = true, Config = true}
 
 			local function fn31()
 				local n9 = 0
 
 				for _, tab in ipairs(window.Tabs) do
-					if not tab._destroyed and not tbl5[tab.Name] then
+					if not tab._destroyed and not enabledFlags[tab.Name] then
 						for _, section in ipairs(tab.Sections) do
 							if not section._destroyed then
 								for _, option in ipairs(section.Options) do
@@ -2363,27 +2363,27 @@ return function(arg, arg2)
 					N("Tick at least one config to delete.")
 					return
 				end
-				local tbl6, tbl7, tbl8, tbl9, flag2, flag3 = {}, {}, {}, {}, false, false
+				local parts, is, parts2, parts3, flag2, flag3 = {}, {}, {}, {}, false, false
 
 				for i2, v49 in ipairs(arg32) do
 					i2 = tostring(v49)
 
 					if i2:lower() == startup:lower() then
-						table.insert(tbl7, i2)
+						table.insert(is, i2)
 					else
 						v49 = fn17(i2)
 
 						if not v49 then
-							table.insert(tbl8, i2)
+							table.insert(parts2, i2)
 						else
 							n8 += 1
 							local v50, v51 = o(c(v49))
 
 							if v50 then
-								table.insert(tbl6, v49)
+								table.insert(parts, v49)
 								flag2, flag3 = if v49:lower() == V.Active:lower() then true else flag2, if v49:lower() == V.Startup:lower() then true else flag3
 							else
-								table.insert(tbl9, v49 .. (" (" .. (tostring(v51) .. ")")))
+								table.insert(parts3, v49 .. (" (" .. (tostring(v51) .. ")")))
 							end
 						end
 					end
@@ -2400,7 +2400,7 @@ return function(arg, arg2)
 
 						if not arg32 then
 							D()
-							N("Deleted " .. (table.concat(tbl6, ", ") .. ("; default recovery failed: " .. tostring(arg3))))
+							N("Deleted " .. (table.concat(parts, ", ") .. ("; default recovery failed: " .. tostring(arg3))))
 							return
 						end
 					end
@@ -2418,20 +2418,20 @@ return function(arg, arg2)
 				end
 				flag2 = {}
 
-				if #tbl6 > 0 then
-					table.insert(flag2, "Deleted: " .. table.concat(tbl6, ", "))
+				if #parts > 0 then
+					table.insert(flag2, "Deleted: " .. table.concat(parts, ", "))
 				end
 
-				if #tbl7 > 0 then
+				if #is > 0 then
 					table.insert(flag2, "Default config cannot be deleted")
 				end
 
-				if #tbl8 > 0 then
-					table.insert(flag2, "Not found: " .. table.concat(tbl8, ", "))
+				if #parts2 > 0 then
+					table.insert(flag2, "Not found: " .. table.concat(parts2, ", "))
 				end
 
-				if #tbl9 > 0 then
-					table.insert(flag2, "Failed: " .. table.concat(tbl9, ", "))
+				if #parts3 > 0 then
+					table.insert(flag2, "Failed: " .. table.concat(parts3, ", "))
 				end
 
 				if #flag2 == 0 then
@@ -2577,8 +2577,8 @@ return function(arg, arg2)
 
 		(function()
 			local namespace = (tbl.Namespace and ("ChilliQuick_" .. tbl.Namespace)) or "ChilliQuickBar"
-			local u = {button = true, toggle = true, switch = true, slider = true, slidebar = true, input = true, textbox = true}
-			local U = {button = true, toggle = true, switch = true}
+			local enabledFlags = {button = true, toggle = true, switch = true, slider = true, slidebar = true, input = true, textbox = true}
+			local enabledFlags2 = {button = true, toggle = true, switch = true}
 			local s = 5
 			local A = 0.078
 			local k = 0.032
@@ -2590,13 +2590,13 @@ return function(arg, arg2)
 			local p = 0.1
 			local touchEnabled = (UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled) and not UserInputService.MouseEnabled
 			local touchEnabled2 = (touchEnabled and 150) or 120
-			local P, t, x = touchEnabled2 / 100, {true, true, true, true, true}, {Zero = "0", One = "1", Two = "2", Three = "3", Four = "4", Five = "5", Six = "6", Seven = "7", Eight = "8", Nine = "9", KeypadZero = "Num0", KeypadOne = "Num1", KeypadTwo = "Num2", KeypadThree = "Num3", KeypadFour = "Num4", KeypadFive = "Num5", KeypadSix = "Num6", KeypadSeven = "Num7", KeypadEight = "Num8", KeypadNine = "Num9", LeftControl = "LCtrl", RightControl = "RCtrl", LeftShift = "LShift", RightShift = "RShift", LeftAlt = "LAlt", RightAlt = "RAlt", Return = "Enter", Space = "Space", Backspace = "Back"}
+			local P, t, labelMap = touchEnabled2 / 100, {true, true, true, true, true}, {Zero = "0", One = "1", Two = "2", Three = "3", Four = "4", Five = "5", Six = "6", Seven = "7", Eight = "8", Nine = "9", KeypadZero = "Num0", KeypadOne = "Num1", KeypadTwo = "Num2", KeypadThree = "Num3", KeypadFour = "Num4", KeypadFive = "Num5", KeypadSix = "Num6", KeypadSeven = "Num7", KeypadEight = "Num8", KeypadNine = "Num9", LeftControl = "LCtrl", RightControl = "RCtrl", LeftShift = "LShift", RightShift = "RShift", LeftAlt = "LAlt", RightAlt = "RAlt", Return = "Enter", Space = "Space", Backspace = "Back"}
 
 			local function V(W)
 				if not W then
 					return nil
 				end
-				return x[W] or (tostring(W))
+				return labelMap[W] or (tostring(W))
 			end
 
 			for _, child in ipairs(v4:GetChildren()) do
@@ -2605,7 +2605,7 @@ return function(arg, arg2)
 				end
 			end
 
-			local function fn17(W)
+			local function x(W)
 				for _, tab in ipairs(window.Tabs) do
 					if not tab._destroyed then
 						for _, section in ipairs(tab.Sections) do
@@ -2622,22 +2622,22 @@ return function(arg, arg2)
 			end
 
 			local function W(C)
-				return (u[C.Type] == true) and (C._quickIgnored ~= true)
+				return (enabledFlags[C.Type] == true) and (C._quickIgnored ~= true)
 			end
 
-			local function fn18(C)
-				return (U[C.Type] == true) and (C._quickIgnored ~= true)
+			local function u(C)
+				return (enabledFlags2[C.Type] == true) and (C._quickIgnored ~= true)
 			end
 
-			local function fn19(C)
+			local function U(C)
 				return ("%s > %s > %s"):format(C.Section.Tab.Name, C.Section.Name, C.Name)
 			end
 
 			local function C(a)
 				local j
 
-				fn17(function(G)
-					local I = not j and (fn19(G) == a)
+				x(function(G)
+					local I = not j and (U(G) == a)
 
 					if I then
 						j = G
@@ -2663,10 +2663,10 @@ return function(arg, arg2)
 				return (ok and I) or nil
 			end
 
-			local j = {}
+			local kMap = {}
 
 			local function G(I)
-				local h = j[I]
+				local h = kMap[I]
 				if not h or not h.Parent then
 					return
 				end
@@ -2695,55 +2695,55 @@ return function(arg, arg2)
 				end
 			end
 
-			local h, w, tbl5 = {}, {}, {}
+			local list2, w, tbl3 = {}, {}, {}
 
-			fn17(function(e)
+			x(function(e)
 				if not W(e) then
 					return
 				end
-				local B = fn19(e)
+				local B = U(e)
 
 				if e._quickPinDefault then
-					table.insert(h, B)
+					table.insert(list2, B)
 				end
 
 				local z = tonumber(e._quickBarDefault)
 
 				if z then
-					tbl5[B] = math.clamp(math.floor(z), 1, 5)
+					tbl3[B] = math.clamp(math.floor(z), 1, 5)
 				end
 
-				z = (fn18(e) and (a(e._quickKeyDefault))) or nil
+				z = (u(e) and (a(e._quickKeyDefault))) or nil
 
 				if z then
 					w[B] = z.Name
 				end
 			end)
 
-			local function fn20(e)
-				local B = {}
+			local function fn17(e)
+				local iMap = {}
 
 				for i, v48 in ipairs(e or {}) do
-					B[i] = v48
+					iMap[i] = v48
 				end
 
-				return B
+				return iMap
 			end
 
 			local function e(B)
-				local z = {}
+				local kMap2 = {}
 
 				for k2, v48 in pairs(B or {}) do
-					z[k2] = v48
+					kMap2[k2] = v48
 				end
 
-				return z
+				return kMap2
 			end
 
 			local manualQuickDefaults = v40.ManualQuickDefaults
 
 			if (type(manualQuickDefaults) == "table") and (type(manualQuickDefaults.PinnedFeatures) == "table") then
-				h = fn20(manualQuickDefaults.PinnedFeatures)
+				list2 = fn17(manualQuickDefaults.PinnedFeatures)
 			end
 
 			if (type(manualQuickDefaults) == "table") and (type(manualQuickDefaults.Keybinds) == "table") then
@@ -2751,10 +2751,10 @@ return function(arg, arg2)
 			end
 
 			if (type(manualQuickDefaults) == "table") and (type(manualQuickDefaults.PinGroups) == "table") then
-				tbl5 = e(manualQuickDefaults.PinGroups)
+				tbl3 = e(manualQuickDefaults.PinGroups)
 			end
 
-			local z, v48, i, N, J, d, E = if type(manualQuickDefaults) == "table" then manualQuickDefaults.LeftCenterHidden == true else false, window:CreateState({Name = "Quick Pinned Features", Default = fn20(h)}), window:CreateState({Name = "Quick Keybinds", Default = e(w)}), window:CreateState({Name = "Quick Panel Position", Default = {}}), window:CreateState({Name = "Quick Panel Collapsed", Default = {}}), window:CreateState({Name = "Quick Pin Groups", Default = e(tbl5)}), window:CreateState({Name = "Quick Open Key", Default = "LeftControl"})
+			local z, v48, i, N, J, d, E = if type(manualQuickDefaults) == "table" then manualQuickDefaults.LeftCenterHidden == true else false, window:CreateState({Name = "Quick Pinned Features", Default = fn17(list2)}), window:CreateState({Name = "Quick Keybinds", Default = e(w)}), window:CreateState({Name = "Quick Panel Position", Default = {}}), window:CreateState({Name = "Quick Panel Collapsed", Default = {}}), window:CreateState({Name = "Quick Pin Groups", Default = e(tbl3)}), window:CreateState({Name = "Quick Open Key", Default = "LeftControl"})
 			local D = window:CreateState({Name = "Quick LeftCenter Hidden", Default = z})
 
 			local function O()
@@ -2782,7 +2782,7 @@ return function(arg, arg2)
 				J:Set(Z)
 			end
 
-			local function fn21(arg3)
+			local function fn18(arg3)
 				for _, v49 in ipairs(O()) do
 					if v49 == arg3 then
 						return true
@@ -2792,8 +2792,8 @@ return function(arg, arg2)
 				return false
 			end
 
-			local function fn22(F, R)
-				local Z = fn20(O())
+			local function fn19(F, R)
+				local Z = fn17(O())
 				local i2
 
 				for i3, v49 in ipairs(Z) do
@@ -2830,56 +2830,56 @@ return function(arg, arg2)
 				d:Set(v49)
 			end
 
-			local function fn23()
-				local H = {}
+			local function fn20()
+				local stateMap = {}
 
 				for _, state in ipairs(window.States) do
-					H[state] = true
+					stateMap[state] = true
 				end
 
-				fn17(function(L)
+				x(function(L)
 					if L.State then
-						H[L.State] = true
+						stateMap[L.State] = true
 					end
 				end)
 
-				return H
+				return stateMap
 			end
 
 			local function H()
-				local L = {}
+				local kMap2 = {}
 
-				local function fn24(arg3)
-					while L[arg3] and (L[arg3] ~= arg3) do
-						arg3 = L[arg3]
+				local function fn21(arg3)
+					while kMap2[arg3] and (kMap2[arg3] ~= arg3) do
+						arg3 = kMap2[arg3]
 					end
 
 					return arg3
 				end
 
-				local function fn25(arg3, arg4)
+				local function fn22(arg3, arg4)
 					if not arg3 or not arg4 then
 						return
 					end
-					L[arg3] = L[arg3] or arg3
-					L[arg4] = L[arg4] or arg4
-					local v49, v50 = fn24(arg3), fn24(arg4)
+					kMap2[arg3] = kMap2[arg3] or arg3
+					kMap2[arg4] = kMap2[arg4] or arg4
+					local v49, v50 = fn21(arg3), fn21(arg4)
 
 					if v49 ~= v50 then
-						L[v49] = v50
+						kMap2[v49] = v50
 					end
 				end
 
-				local v49 = fn23()
+				local v49 = fn20()
 
 				for k2 in pairs(v49) do
-					L[k2] = L[k2] or k2
+					kMap2[k2] = kMap2[k2] or k2
 				end
 
 				for k2 in pairs(v49) do
 					for _, link in ipairs(k2._links) do
 						if link.Connected then
-							fn25(k2, link.Target)
+							fn22(k2, link.Target)
 						end
 					end
 
@@ -2888,20 +2888,20 @@ return function(arg, arg2)
 
 						for k5 in pairs(k3._members) do
 							if k4 then
-								fn25(k4, k5)
+								fn22(k4, k5)
 							else
 								k4 = k5
 							end
 						end
 
-						fn25(k2, k4)
+						fn22(k2, k4)
 					end
 				end
 
-				return fn24
+				return fn21
 			end
 
-			local function fn24(L, arg3)
+			local function fn21(L, arg3)
 				if not arg3 then
 					return nil
 				end
@@ -2931,8 +2931,8 @@ return function(arg, arg2)
 				return nil
 			end
 
-			local function fn25(L, arg3)
-				if (arg3 and (fn24(L, arg3.Name))) or nil then
+			local function fn22(L, arg3)
+				if (arg3 and (fn21(L, arg3.Name))) or nil then
 					return false
 				end
 				local v49 = e(T())
@@ -2941,9 +2941,9 @@ return function(arg, arg2)
 				return true
 			end
 
-			local fn26 = nil
+			local fn23 = nil
 
-			fn26 = function(parent, arg3, arg4, arg5, arg6)
+			fn23 = function(parent, arg3, arg4, arg5, arg6)
 				local switch = Instance.new("Frame")
 				switch.Name = "Switch"
 				switch.Active = false
@@ -3051,22 +3051,22 @@ return function(arg, arg2)
 			end
 
 			local str3 = nil
-			local fn27 = nil
+			local fn24 = nil
 
-			fn27 = function()
+			fn24 = function()
 				local v49, keyboardEnabled = T(), UserInputService.KeyboardEnabled
 
-				fn17(function(arg3)
+				x(function(arg3)
 					local mirrorOf = arg3._mirrorOf
 					mirrorOf = if mirrorOf and mirrorOf._destroyed then nil else mirrorOf
-					if not fn18(mirrorOf or arg3) then
+					if not u(mirrorOf or arg3) then
 						return
 					end
 					local main = arg3.Instance:FindFirstChild("Main")
 					if not main then
 						return
 					end
-					local label, note, optionKeyChip, keyboardEnabled2 = main:FindFirstChild("Label"), main:FindFirstChild("Note"), main:FindFirstChild("OptionKeyChip"), (keyboardEnabled and (V(v49[fn19(mirrorOf or arg3)]))) or nil
+					local label, note, optionKeyChip, keyboardEnabled2 = main:FindFirstChild("Label"), main:FindFirstChild("Note"), main:FindFirstChild("OptionKeyChip"), (keyboardEnabled and (V(v49[U(mirrorOf or arg3)]))) or nil
 
 					if not keyboardEnabled2 then
 						if optionKeyChip then
@@ -3095,7 +3095,7 @@ return function(arg, arg2)
 						optionKeyChip.Name = "OptionKeyChip"
 						optionKeyChip.Active = true
 						v35(optionKeyChip, 1.06, 0.94)
-						local L = fn19(mirrorOf or arg3)
+						local L = U(mirrorOf or arg3)
 
 						v15(optionKeyChip, function()
 							str3 = L
@@ -3128,7 +3128,7 @@ return function(arg, arg2)
 				end)
 			end
 
-			v46[3][v46[5]] = fn27
+			v46[3][v46[5]] = fn24
 			local screenGui = Instance.new("ScreenGui")
 			screenGui.Name = namespace
 			screenGui.ResetOnSpawn = false
@@ -3146,14 +3146,14 @@ return function(arg, arg2)
 			screenGui.Parent = v4
 			local l, n8 = 0.03, 0.97
 
-			local function fn28(arg3)
+			local function fn25(arg3)
 				local n9 = A * P
 				return math.clamp(arg3, 0, math.max(0, 0.998 - (n9 * n8)))
 			end
 
 			local n9
 
-			local function fn29()
+			local function fn26()
 				local absoluteSize, absoluteSize2, absolutePosition = screenGui.AbsoluteSize, v12.AbsoluteSize, v12.AbsolutePosition
 
 				if ((absoluteSize.X > 0) and (absoluteSize2.X > 0)) and (absolutePosition.X >= 0) then
@@ -3166,7 +3166,7 @@ return function(arg, arg2)
 
 			local n10
 
-			local function fn30()
+			local function fn27()
 				local absoluteSize, absoluteSize2, absolutePosition = screenGui.AbsoluteSize, v12.AbsoluteSize, v12.AbsolutePosition
 
 				if ((absoluteSize.Y > 0) and (absoluteSize2.Y > 0)) and (absolutePosition.X >= 0) then
@@ -3180,27 +3180,27 @@ return function(arg, arg2)
 			local n11 = 0.021
 			local flag2 = false
 			local flag3 = false
-			local fn31 = nil
+			local fn28 = nil
 
-			fn31 = function(arg3)
+			fn28 = function(arg3)
 				if ((arg3 ~= 4) and (arg3 ~= 5)) or (v11:GetAttribute("EffectiveLeftCenterHidden") ~= true) then
 					return 0
 				end
-				return n11 - fn29()
+				return n11 - fn26()
 			end
 
-			local fn32
+			local fn29
 
-			local function fn33(arg3, arg4)
-				local n12, v49, v50 = A * P, fn32(arg3)
-				v49 -= fn31(arg3)
+			local function fn30(arg3, arg4)
+				local n12, v49, v50 = A * P, fn29(arg3)
+				v49 -= fn28(arg3)
 				if arg4 < 0 then
 					return ((v49 + (n12 * l)) - (n12 * p)) - (n12 * n8), v50
 				end
 				return ((v49 + (n12 * n8)) + (n12 * p)) - (n12 * l), v50
 			end
 
-			local function fn34(arg3)
+			local function fn31(arg3)
 				local n12 = ((touchEnabled and Y) or y)[arg3] or 0.14
 				if (arg3 == 1) or (arg3 == 3) then
 					return 1, n12
@@ -3208,23 +3208,23 @@ return function(arg, arg2)
 
 				if arg3 == 2 then
 					if touchEnabled then
-						return fn33(1, -1)
+						return fn30(1, -1)
 					end
 					return 1, n12
 				end
 
 				if arg3 == 4 then
-					return fn29(), fn30()
+					return fn26(), fn27()
 				end
 
 				if touchEnabled then
-					return fn33(4, 1)
+					return fn30(4, 1)
 				end
-				return fn29(), math.min(fn30() + b, 0.86)
+				return fn26(), math.min(fn27() + b, 0.86)
 			end
 
-			fn32 = function(arg3)
-				local v49, num, num2 = N:Get(), fn34(arg3)
+			fn29 = function(arg3)
+				local v49, num, num2 = N:Get(), fn31(arg3)
 
 				if type(v49) == "table" then
 					if tonumber(v49.X) and (tonumber(v49.Y)) then
@@ -3240,30 +3240,30 @@ return function(arg, arg2)
 					end
 				end
 
-				return fn28(num + fn31(arg3)), math.clamp(num2, 0, 0.98)
+				return fn25(num + fn28(arg3)), math.clamp(num2, 0, 0.98)
 			end
 
-			local function fn35(arg3, arg4, arg5)
-				arg4 -= fn31(arg3)
-				local v49, o = N:Get(), {}
+			local function fn32(arg3, arg4, arg5)
+				arg4 -= fn28(arg3)
+				local v49, kMap2 = N:Get(), {}
 
 				if (type(v49) == "table") and not tonumber(v49.X) then
 					for k2, v50 in pairs(v49) do
 						if type(v50) == "table" then
-							o[k2] = {X = v50.X, Y = v50.Y}
+							kMap2[k2] = {X = v50.X, Y = v50.Y}
 						end
 					end
 				elseif (type(v49) == "table") and (tonumber(v49.X)) then
-					o["1"] = {X = v49.X, Y = v49.Y}
+					kMap2["1"] = {X = v49.X, Y = v49.Y}
 				end
 
-				o[tostring(arg3)] = {X = arg4, Y = arg5}
-				N:Set(o)
+				kMap2[tostring(arg3)] = {X = arg4, Y = arg5}
+				N:Set(kMap2)
 			end
 
-			local tbl6 = {}
+			local iMap = {}
 
-			local function fn36(arg3)
+			local function fn33(arg3)
 				local frame = Instance.new("Frame")
 				frame.Name = "QuickBar" .. tostring(arg3)
 				frame.Active = false
@@ -3380,20 +3380,20 @@ return function(arg, arg2)
 					i2.Parent = caret
 				end
 
-				local tbl7 = {Panel = frame, Body = body, BodyLayout = uiElement, Handle = handle, Caret = caret, Items = {}, Connections = {}, Index = arg3, Collapsed = S(arg3), BodyFraction = 0, SizeTween = nil}
+				local tbl4 = {Panel = frame, Body = body, BodyLayout = uiElement, Handle = handle, Caret = caret, Items = {}, Connections = {}, Index = arg3, Collapsed = S(arg3), BodyFraction = 0, SizeTween = nil}
 
 				local function toggleCollapsed()
-					tbl7.Collapsed = not tbl7.Collapsed
-					X(arg3, tbl7.Collapsed)
+					tbl4.Collapsed = not tbl4.Collapsed
+					X(arg3, tbl4.Collapsed)
 
-					if tbl7.SizeTween then
-						tbl7.SizeTween:Cancel()
+					if tbl4.SizeTween then
+						tbl4.SizeTween:Cancel()
 					end
 
 					local tweenInfo = TweenInfo.new(0.26, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
-					tbl7.SizeTween = TweenService:Create(body, tweenInfo, {Size = UDim2.fromScale(1.32, (tbl7.Collapsed and 0) or tbl7.BodyFraction)})
-					tbl7.SizeTween:Play()
-					TweenService:Create(caret, tweenInfo, {Rotation = (tbl7.Collapsed and 180) or 0}):Play()
+					tbl4.SizeTween = TweenService:Create(body, tweenInfo, {Size = UDim2.fromScale(1.32, (tbl4.Collapsed and 0) or tbl4.BodyFraction)})
+					tbl4.SizeTween:Play()
+					TweenService:Create(caret, tweenInfo, {Rotation = (tbl4.Collapsed and 180) or 0}):Play()
 				end
 
 				v15(collapse, toggleCollapsed)
@@ -3439,7 +3439,7 @@ return function(arg, arg2)
 						return
 					end
 					flag5 = true
-					frame.Position = UDim2.fromScale(fn28(vector22.X + (n12.X / absoluteSize.X)), math.clamp(vector22.Y + (n12.Y / absoluteSize.Y), 0, 0.98))
+					frame.Position = UDim2.fromScale(fn25(vector22.X + (n12.X / absoluteSize.X)), math.clamp(vector22.Y + (n12.Y / absoluteSize.Y), 0, 0.98))
 				end))
 
 				v10(UserInputService.InputEnded:Connect(function(input2)
@@ -3451,21 +3451,21 @@ return function(arg, arg2)
 						flag4, input = false, nil
 
 						if flag5 then
-							fn35(arg3, frame.Position.X.Scale, frame.Position.Y.Scale)
+							fn32(arg3, frame.Position.X.Scale, frame.Position.Y.Scale)
 						else
 							toggleCollapsed()
 						end
 					end
 				end))
 
-				return tbl7
+				return tbl4
 			end
 
 			for i2 = 1, s, 1 do
-				tbl6[i2] = fn36(i2)
+				iMap[i2] = fn33(i2)
 			end
 
-			local function fn37(arg3)
+			local function fn34(arg3)
 				for i2 = #arg3.Connections, 1, -1 do
 					local o = arg3.Connections[i2]
 
@@ -3482,7 +3482,7 @@ return function(arg, arg2)
 				end
 			end
 
-			local function fn38(arg3, o, arg4, layoutOrder, arg5)
+			local function fn35(arg3, o, arg4, layoutOrder, arg5)
 				local textButton = Instance.new("TextButton")
 				textButton.Name = "Item" .. tostring(layoutOrder)
 				textButton.Active = true
@@ -3512,18 +3512,18 @@ return function(arg, arg2)
 				arg5.Parent = textButton
 				v25(arg5)
 				createTextLabel(textButton, arg4)
-				local v49, v50 = fn26(textButton, 1, 0.955, 0.23, 0.56)
+				local v49, v50 = fn23(textButton, 1, 0.955, 0.23, 0.56)
 				local flag4 = false
 
-				local function fn39()
+				local function fn36()
 					v50(o:Get() == true, flag4)
 					flag4 = true
 				end
 
-				fn39()
+				fn36()
 
 				if o.State then
-					table.insert(arg3.Connections, o.State:Subscribe(fn39))
+					table.insert(arg3.Connections, o.State:Subscribe(fn36))
 				end
 
 				v15(textButton, function()
@@ -3533,7 +3533,7 @@ return function(arg, arg2)
 				table.insert(arg3.Items, textButton)
 			end
 
-			local function fn39(o, arg3, arg4, arg5, arg6)
+			local function fn36(o, arg3, arg4, arg5, arg6)
 				local v49 = v29(o.Body, arg3:GetQuickName(), arg5)
 				v49.Name = "Item" .. tostring(arg5)
 				v49.Size = UDim2.fromScale(0.7121, arg6)
@@ -3556,7 +3556,7 @@ return function(arg, arg2)
 					I(arg3)
 				end)
 
-				j[fn19(arg3)] = v49
+				kMap[U(arg3)] = v49
 				table.insert(o.Items, v49)
 			end
 
@@ -3607,7 +3607,7 @@ return function(arg, arg2)
 				return label
 			end
 
-			local function fn40(arg3, arg4, arg5, arg6)
+			local function fn37(arg3, arg4, arg5, arg6)
 				local v49 = createFrame(arg3, arg5, arg6)
 				arg5 = createTextLabel2(v49, arg4)
 				arg5.Position = UDim2.fromScale(0.035, 0.255)
@@ -3639,7 +3639,7 @@ return function(arg, arg2)
 				bar.Active = true
 				hold.Active = true
 
-				local function fn41()
+				local function fn38()
 					if not hold.Parent or not clone2.Parent then
 						return
 					end
@@ -3647,10 +3647,10 @@ return function(arg, arg2)
 					hold.Size = UDim2.fromOffset(n12, n12)
 				end
 
-				fn41()
-				table.insert(arg3.Connections, clone2:GetPropertyChangedSignal("AbsoluteSize"):Connect(fn41))
+				fn38()
+				table.insert(arg3.Connections, clone2:GetPropertyChangedSignal("AbsoluteSize"):Connect(fn38))
 
-				local function fn42()
+				local function fn39()
 					if arg4._destroyed then
 						return
 					end
@@ -3667,10 +3667,10 @@ return function(arg, arg2)
 					end
 				end
 
-				fn42()
+				fn39()
 
 				if arg4.State then
-					table.insert(arg3.Connections, arg4.State:Subscribe(fn42))
+					table.insert(arg3.Connections, arg4.State:Subscribe(fn39))
 				end
 
 				if clone and (clone:IsA("TextBox")) then
@@ -3683,38 +3683,38 @@ return function(arg, arg2)
 							arg4:Set(num, true)
 						end
 
-						fn42()
+						fn39()
 					end)
 				end
 
 				local flag4, input = false
 
-				local function fn43(arg7)
+				local function fn40(arg7)
 					if arg4._destroyed or (clone2.AbsoluteSize.X <= 0) then
 						return
 					end
 					local n12, range, v50 = math.clamp((arg7 - clone2.AbsolutePosition.X) / clone2.AbsoluteSize.X, 0, 1), arg4:GetRange()
 					arg4:Set(range + ((v50 - range) * n12), true)
-					fn42()
+					fn39()
 				end
 
-				local function fn44(input2)
+				local function fn41(input2)
 					if flag4 or (input2.UserInputState ~= Enum.UserInputState.Begin) then
 						return
 					end
 
 					if input2.UserInputType == Enum.UserInputType.MouseButton1 then
 						flag4, input = true, nil
-						fn43(input2.Position.X)
+						fn40(input2.Position.X)
 					elseif input2.UserInputType == Enum.UserInputType.Touch then
 						flag4, input = true, input2
-						fn43(input2.Position.X)
+						fn40(input2.Position.X)
 					end
 				end
 
-				clone2.InputBegan:Connect(fn44)
-				bar.InputBegan:Connect(fn44)
-				hold.InputBegan:Connect(fn44)
+				clone2.InputBegan:Connect(fn41)
+				bar.InputBegan:Connect(fn41)
+				hold.InputBegan:Connect(fn41)
 
 				table.insert(arg3.Connections, UserInputService.InputChanged:Connect(function(input2)
 					if not flag4 then
@@ -3723,10 +3723,10 @@ return function(arg, arg2)
 
 					if input then
 						if input2 == input then
-							fn43(input2.Position.X)
+							fn40(input2.Position.X)
 						end
 					elseif input2.UserInputType == Enum.UserInputType.MouseMovement then
-						fn43(input2.Position.X)
+						fn40(input2.Position.X)
 					end
 				end))
 
@@ -3737,7 +3737,7 @@ return function(arg, arg2)
 				end))
 			end
 
-			local function fn41(arg3, arg4, arg5, arg6)
+			local function fn38(arg3, arg4, arg5, arg6)
 				local v49 = createFrame(arg3, arg5, arg6)
 				arg5 = createTextLabel2(v49, arg4)
 				arg5.Position = UDim2.fromScale(0.035, 0.5)
@@ -3758,7 +3758,7 @@ return function(arg, arg2)
 				input.Text = tostring(arg4:Get() or "")
 				local underline = clone:FindFirstChild("Underline", true)
 
-				local function fn42(arg7)
+				local function fn39(arg7)
 					TweenService:Create(clone, TweenInfo.new(0.16), {BackgroundTransparency = (arg7 and 0.42) or 0.6}):Play()
 
 					if underline and (underline:IsA("GuiObject")) then
@@ -3767,39 +3767,39 @@ return function(arg, arg2)
 				end
 
 				input.Focused:Connect(function()
-					fn42(true)
+					fn39(true)
 				end)
 
-				local function fn43()
+				local function fn40()
 					if not input:IsFocused() then
 						input.Text = tostring(arg4:Get() or "")
 					end
 				end
 
 				if arg4.State then
-					table.insert(arg3.Connections, arg4.State:Subscribe(fn43))
+					table.insert(arg3.Connections, arg4.State:Subscribe(fn40))
 				end
 
 				input.FocusLost:Connect(function()
-					fn42(false)
+					fn39(false)
 					arg4:Set(input.Text, true)
-					fn43()
+					fn40()
 				end)
 			end
 
-			local function fn42(arg3)
+			local function fn39(arg3)
 				return 1
 			end
 
-			local function fn43()
-				for k2 in pairs(j) do
-					j[k2] = nil
+			local function fn40()
+				for k2 in pairs(kMap) do
+					kMap[k2] = nil
 				end
 
-				local keyboardEnabled, flag4, tbl7 = UserInputService.KeyboardEnabled, T(), {}
+				local keyboardEnabled, flag4, iMap2 = UserInputService.KeyboardEnabled, T(), {}
 
 				for i2 = 1, s, 1 do
-					tbl7[i2] = {}
+					iMap2[i2] = {}
 				end
 
 				for i2, v49 in ipairs(O()) do
@@ -3807,11 +3807,11 @@ return function(arg, arg2)
 
 					if i2 and (W(i2)) then
 						local n12 = math.clamp(math.floor(tonumber(R(v49)) or 1), 1, s)
-						table.insert(tbl7[n12], {Option = i2, KeyName = (keyboardEnabled and (V(flag4[v49]))) or nil})
+						table.insert(iMap2[n12], {Option = i2, KeyName = (keyboardEnabled and (V(flag4[v49]))) or nil})
 					end
 				end
 
-				flag4 = (t[4] and (#tbl7[4] > 0)) or (t[5] and (#tbl7[5] > 0))
+				flag4 = (t[4] and (#iMap2[4] > 0)) or (t[5] and (#iMap2[5] > 0))
 
 				if flag4 and not flag2 then
 					if D:Get() ~= true then
@@ -3822,20 +3822,20 @@ return function(arg, arg2)
 				flag2 = flag4
 
 				for i2 = 1, s, 1 do
-					keyboardEnabled = tbl6[i2]
-					fn37(keyboardEnabled)
-					flag4 = tbl7[i2]
+					keyboardEnabled = iMap[i2]
+					fn34(keyboardEnabled)
+					flag4 = iMap2[i2]
 					local n12 = #flag4
 
 					if not t[i2] or (n12 == 0) then
 						keyboardEnabled.Panel.Visible = false
 					else
-						local n13, n14, n15, tbl8 = k * P, r * P, Q * P, {}
+						local n13, n14, n15, iMap3 = k * P, r * P, Q * P, {}
 						local n16 = math.max(n12 - 1, 0) * n15
 
 						for i3, v49 in ipairs(flag4) do
-							local n17 = n13 * fn42(v49.Option)
-							tbl8[i3] = n17
+							local n17 = n13 * fn39(v49.Option)
+							iMap3[i3] = n17
 							n16 += n17
 						end
 
@@ -3856,41 +3856,41 @@ return function(arg, arg2)
 						keyboardEnabled.Caret.Rotation = (keyboardEnabled.Collapsed and 180) or 0
 
 						for i3, v49 in ipairs(flag4) do
-							n13, bodyFraction = tbl8[i3] / n16, v49.Option.Type
+							n13, bodyFraction = iMap3[i3] / n16, v49.Option.Type
 
 							if bodyFraction == "button" then
-								fn39(keyboardEnabled, v49.Option, v49.KeyName, i3, n13)
+								fn36(keyboardEnabled, v49.Option, v49.KeyName, i3, n13)
 							elseif (bodyFraction == "toggle") or (bodyFraction == "switch") then
-								fn38(keyboardEnabled, v49.Option, v49.KeyName, i3, n13)
+								fn35(keyboardEnabled, v49.Option, v49.KeyName, i3, n13)
 							elseif (bodyFraction == "slider") or (bodyFraction == "slidebar") then
-								fn40(keyboardEnabled, v49.Option, i3, n13)
+								fn37(keyboardEnabled, v49.Option, i3, n13)
 							elseif (bodyFraction == "input") or (bodyFraction == "textbox") then
-								fn41(keyboardEnabled, v49.Option, i3, n13)
+								fn38(keyboardEnabled, v49.Option, i3, n13)
 							end
 						end
 
-						n13, tbl8 = fn32(i2)
-						keyboardEnabled.Panel.Position = UDim2.fromScale(n13, tbl8)
+						n13, iMap3 = fn29(i2)
+						keyboardEnabled.Panel.Position = UDim2.fromScale(n13, iMap3)
 						keyboardEnabled.Panel.Visible = true
 					end
 				end
 			end
 
-			local function fn44(arg3)
+			local function fn41(arg3)
 				for i2 = 1, s, 1 do
-					local v49, v50 = fn32(i2)
+					local v49, v50 = fn29(i2)
 					local udim2 = UDim2.fromScale(v49, v50)
 
 					if arg3 then
-						TweenService:Create(tbl6[i2].Panel, TweenInfo.new(0.32, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = udim2}):Play()
+						TweenService:Create(iMap[i2].Panel, TweenInfo.new(0.32, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = udim2}):Play()
 					else
-						tbl6[i2].Panel.Position = udim2
+						iMap[i2].Panel.Position = udim2
 					end
 				end
 			end
 
 			v10(v11:GetAttributeChangedSignal("EffectiveLeftCenterHidden"):Connect(function()
-				fn44(true)
+				fn41(true)
 			end))
 
 			manualQuickDefaults = Instance.new("TextButton")
@@ -3924,14 +3924,14 @@ return function(arg, arg2)
 			caret.Size = UDim2.fromScale(0.62, 0.62)
 			caret.ZIndex = 41
 			caret.Parent = manualQuickDefaults
-			fn36 = Instance.new("UIAspectRatioConstraint")
-			fn36.AspectRatio = 1
-			fn36.AspectType = Enum.AspectType.FitWithinMaxSize
-			fn36.DominantAxis = Enum.DominantAxis.Width
-			fn36.Parent = caret
-			fn36 = {{0.335355, 45}, {0.664645, -45}}
+			fn33 = Instance.new("UIAspectRatioConstraint")
+			fn33.AspectRatio = 1
+			fn33.AspectType = Enum.AspectType.FitWithinMaxSize
+			fn33.DominantAxis = Enum.DominantAxis.Width
+			fn33.Parent = caret
+			fn33 = {{0.335355, 45}, {0.664645, -45}}
 
-			for i2, v49 in ipairs(fn36) do
+			for i2, v49 in ipairs(fn33) do
 				i2 = Instance.new("Frame")
 				i2.Name = "Arm"
 				i2.Active = false
@@ -3945,7 +3945,7 @@ return function(arg, arg2)
 				i2.Parent = caret
 			end
 
-			local function fn45(arg3)
+			local function fn42(arg3)
 				flag3 = D:Get() == true
 				v11:SetAttribute("QuickHudHidden", flag3)
 				v19(flag3 or v2.chilliIsOpen)
@@ -3957,7 +3957,7 @@ return function(arg, arg2)
 					caret.Rotation = flag32
 				end
 
-				fn44(arg3)
+				fn41(arg3)
 			end
 
 			v15(manualQuickDefaults, function()
@@ -3965,7 +3965,7 @@ return function(arg, arg2)
 			end)
 
 			D:Subscribe(function()
-				fn45(true)
+				fn42(true)
 			end)
 
 			local v49, v50 = window:CreateTab({Name = "Quick", DisplayName = "Quick & Keys", Side = "Right"}), window:CreateTab({Name = "Settings", Side = "Right"}):CreateSection({Name = "Interface", Expanded = true})
@@ -3984,11 +3984,11 @@ return function(arg, arg2)
 				v18.ApplyUiSize(arg3)
 			end})
 
-			local keyboardEnabled, v51, v52, tbl7, tbl8, handlers, B, tbl9, fn46, fn47 = UserInputService.KeyboardEnabled, v49:CreateSection({Name = "Pin Pad", DisplayName = "Quick Access", Expanded = true}), v49:CreateSection({Name = "Pin & Key List", DisplayName = "Quick Bar & Keybinds", Expanded = true}), {}, {}, {}, {}, {}
+			local keyboardEnabled, v51, v52, frames, tbl4, handlers, frames2, tbl5, fn43, fn44 = UserInputService.KeyboardEnabled, v49:CreateSection({Name = "Pin Pad", DisplayName = "Quick Access", Expanded = true}), v49:CreateSection({Name = "Pin & Key List", DisplayName = "Quick Bar & Keybinds", Expanded = true}), {}, {}, {}, {}, {}
 
 			v52:CreateButton({Name = "Reset Pins", DisplayName = "Reset Quick Access", ButtonText = "Reset", ConfirmText = "Done!", Note = "Restore default items, bars and positions", Quick = false, Callback = function()
-				v48:Set(fn20(h))
-				d:Set(e(tbl5))
+				v48:Set(fn17(list2))
+				d:Set(e(tbl3))
 				N:Set({})
 			end})
 
@@ -3996,28 +3996,28 @@ return function(arg, arg2)
 				i:Set(e(w))
 			end})
 
-			local v53, v54 = v51:CreateToggle({Name = "Enable Keybinds", Note = "Turn off to disable every feature hotkey", Default = true, Quick = false}), v51:CreateToggle({Name = "Show Pin Pads", DisplayName = "Show Quick Bars", Note = "Floating quick bars; drag a header to move one", Default = true, Quick = false, Callback = function(arg3)
+			local v53, h = v51:CreateToggle({Name = "Enable Keybinds", Note = "Turn off to disable every feature hotkey", Default = true, Quick = false}), v51:CreateToggle({Name = "Show Pin Pads", DisplayName = "Show Quick Bars", Note = "Floating quick bars; drag a header to move one", Default = true, Quick = false, Callback = function(arg3)
 				screenGui.Enabled = arg3 == true
 			end})
 
-			v51:CreateMultiDropdown({Name = "Visible Quick Bars", DisplayName = "Visible Quick Bars", Options = {"Quick Bar 1", "Quick Bar 2", "Quick Bar 3", "Quick Bar 4", "Quick Bar 5"}, Default = {"Quick Bar 1", "Quick Bar 2", "Quick Bar 3", "Quick Bar 4", "Quick Bar 5"}, Quick = false, SubOf = v54, Callback = function(arg3)
-				local tbl10 = {}
+			v51:CreateMultiDropdown({Name = "Visible Quick Bars", DisplayName = "Visible Quick Bars", Options = {"Quick Bar 1", "Quick Bar 2", "Quick Bar 3", "Quick Bar 4", "Quick Bar 5"}, Default = {"Quick Bar 1", "Quick Bar 2", "Quick Bar 3", "Quick Bar 4", "Quick Bar 5"}, Quick = false, SubOf = h, Callback = function(arg3)
+				local iMap2 = {}
 
-				for i2, v55 in ipairs(((type(arg3) == "table") and arg3) or {}) do
-					i2 = tonumber(tostring(v55):match("(%d+)$"))
+				for i2, v54 in ipairs(((type(arg3) == "table") and arg3) or {}) do
+					i2 = tonumber(tostring(v54):match("(%d+)$"))
 
 					if (i2 and (i2 >= 1)) and (i2 <= s) then
-						tbl10[i2] = true
+						iMap2[i2] = true
 					end
 				end
 
-				t = tbl10
-				fn43()
+				t = iMap2
+				fn40()
 			end})
 
-			local v55 = v51:CreateSlider({Name = "Pad Size", DisplayName = "Quick Bar Size", Min = 60, Max = 200, Default = touchEnabled2, AllowDecimals = false, Increment = 1, Quick = false, Unit = "%", Callback = function(arg3)
+			local v54 = v51:CreateSlider({Name = "Pad Size", DisplayName = "Quick Bar Size", Min = 60, Max = 200, Default = touchEnabled2, AllowDecimals = false, Increment = 1, Quick = false, Unit = "%", Callback = function(arg3)
 				P = (tonumber(arg3) or touchEnabled2) / 100
-				fn43()
+				fn40()
 			end})
 
 			v50:CreateToggle({Name = "Notifications", Note = "Show notification cards; turning this off hides every notify", Quick = false, State = window:CreateState({Name = "Notifications", Default = true, Callback = function(arg3)
@@ -4026,14 +4026,14 @@ return function(arg, arg2)
 
 			v50:CreateToggle({Name = "Open On Launch", Note = "Open the UI automatically when the script starts", Quick = false, State = window:CreateState({Name = "Open On Launch", Default = true})})
 
-			local v56 = v50:CreateButton({Name = "UI Toggle Key", ButtonText = "Rebind", ConfirmText = "", Note = "Current: " .. tostring((V(E:Get()))), Quick = false, Callback = function()
+			local v55 = v50:CreateButton({Name = "UI Toggle Key", ButtonText = "Rebind", ConfirmText = "", Note = "Current: " .. tostring((V(E:Get()))), Quick = false, Callback = function()
 				str3 = "__OPEN__"
-				fn47()
+				fn44()
 			end})
 
-			fn47 = function()
-				if not v56._destroyed then
-					v56:SetNote(((str3 == "__OPEN__") and "Press any key...") or ("Current: " .. tostring(V(E:Get()))))
+			fn44 = function()
+				if not v55._destroyed then
+					v55:SetNote(((str3 == "__OPEN__") and "Press any key...") or ("Current: " .. tostring(V(E:Get()))))
 				end
 			end
 
@@ -4042,14 +4042,14 @@ return function(arg, arg2)
 			local function activeDropdownCloser()
 			end
 
-			local function fn48(parent, arg3, arg4, arg5)
+			local function fn45(parent, arg3, arg4, arg5)
 				local flag4, tween = false
 				local barMenuAlpha = Instance.new("NumberValue")
 				barMenuAlpha.Name = "BarMenuAlpha"
 				barMenuAlpha.Value = 0
 				barMenuAlpha.Parent = parent
 
-				local function fn49(arg6)
+				local function fn46(arg6)
 					local n14 = v31 + ((n12 - v31) * arg6)
 					local n15 = v31 / n14
 					parent:SetAttribute("ChilliResponsiveAspect", n14)
@@ -4064,10 +4064,10 @@ return function(arg, arg2)
 					v52._refreshHeight()
 				end
 
-				barMenuAlpha.Changed:Connect(fn49)
-				fn49(0)
+				barMenuAlpha.Changed:Connect(fn46)
+				fn46(0)
 
-				local function fn50(arg6)
+				local function fn47(arg6)
 					if flag4 == arg6 then
 						return
 					end
@@ -4078,7 +4078,7 @@ return function(arg, arg2)
 						activeDropdownCloser()
 
 						function activeDropdownCloser()
-							fn50(false)
+							fn47(false)
 						end
 
 						v2.activeDropdownCloser = activeDropdownCloser
@@ -4106,15 +4106,15 @@ return function(arg, arg2)
 				end
 
 				return function()
-					fn50(not flag4)
+					fn47(not flag4)
 				end, function()
 					if flag4 then
-						fn50(false)
+						fn47(false)
 					end
 				end
 			end
 
-			local function fn49()
+			local function fn46()
 				activeDropdownCloser()
 
 				for i2 = #handlers, 1, -1 do
@@ -4122,19 +4122,19 @@ return function(arg, arg2)
 					handlers[i2] = nil
 				end
 
-				for i2 = #tbl7, 1, -1 do
-					tbl8[tbl7[i2]] = nil
-					tbl9[tbl7[i2]] = nil
-					tbl7[i2]:Destroy()
-					tbl7[i2] = nil
+				for i2 = #frames, 1, -1 do
+					tbl4[frames[i2]] = nil
+					tbl5[frames[i2]] = nil
+					frames[i2]:Destroy()
+					frames[i2] = nil
 				end
 
-				for i2 = #B, 1, -1 do
-					B[i2] = nil
+				for i2 = #frames2, 1, -1 do
+					frames2[i2] = nil
 				end
 			end
 
-			local v57 = fn5[3][fn5[5]]
+			local v56 = fn5[3][fn5[5]]
 
 			local function createFrame2(text, layoutOrder)
 				local frame = Instance.new("Frame")
@@ -4180,15 +4180,15 @@ return function(arg, arg2)
 				layoutOrder.Parent = frame
 				frame.Parent = v52._content
 				table.insert(handlers, fn4[3][fn4[5]](v52, frame))
-				table.insert(tbl7, frame)
-				table.insert(B, frame)
+				table.insert(frames, frame)
+				table.insert(frames2, frame)
 				return frame
 			end
 
-			local function fn50(arg3, layoutOrder, arg4, arg5)
-				local v58 = fn19(arg3)
-				local keyboardEnabled2 = keyboardEnabled and (fn18(arg3))
-				local v59, v60, frame = v36("QuickRow" .. tostring(layoutOrder), arg3:GetQuickName())
+			local function fn47(arg3, layoutOrder, arg4, arg5)
+				local v57 = U(arg3)
+				local keyboardEnabled2 = keyboardEnabled and (u(arg3))
+				local v58, v59, frame = v36("QuickRow" .. tostring(layoutOrder), arg3:GetQuickName())
 				frame.Size = UDim2.fromScale((keyboardEnabled2 and 0.47) or 0.63, 0.64)
 				local barPicker = Instance.new("TextButton")
 				barPicker.Name = "BarPicker"
@@ -4203,7 +4203,7 @@ return function(arg, arg2)
 				barPicker.Text = ""
 				barPicker.TextWrapped = false
 				barPicker.ZIndex = 6
-				barPicker.Parent = v60
+				barPicker.Parent = v59
 				v25(barPicker)
 				v28(barPicker, Enum.ApplyStrokeMode.Border, 0.1)
 				v35(barPicker, 1.04, 0.96)
@@ -4224,15 +4224,15 @@ return function(arg, arg2)
 				uiElement.Parent = frame
 				uiElement = {{0.335355, 45}, {0.664645, -45}}
 
-				for i2, v61 in ipairs(uiElement) do
+				for i2, v60 in ipairs(uiElement) do
 					i2 = Instance.new("Frame")
 					i2.Name = "Arm"
 					i2.Active = false
 					i2.AnchorPoint = Vector2.new(0.5, 0.5)
 					i2.BackgroundColor3 = v33
 					i2.BorderSizePixel = 0
-					i2.Position = UDim2.fromScale(v61[1], 0.535355)
-					i2.Rotation = v61[2]
+					i2.Position = UDim2.fromScale(v60[1], 0.535355)
+					i2.Rotation = v60[2]
 					i2.Size = UDim2.fromScale(0.6657, 0.22)
 					i2.ZIndex = 9
 					i2.Parent = frame
@@ -4254,7 +4254,7 @@ return function(arg, arg2)
 					keyChip.Text = ""
 					keyChip.TextWrapped = false
 					keyChip.ZIndex = 6
-					keyChip.Parent = v60
+					keyChip.Parent = v59
 					v25(keyChip)
 					v28(keyChip, Enum.ApplyStrokeMode.Border, 0.1)
 					v35(keyChip, 1.04, 0.96)
@@ -4271,8 +4271,8 @@ return function(arg, arg2)
 				keyboardEnabled2.Size = UDim2.fromScale(0.115, 0.74)
 				keyboardEnabled2.Text = ""
 				keyboardEnabled2.ZIndex = 6
-				keyboardEnabled2.Parent = v60
-				local v61, v62 = fn26(keyboardEnabled2, 0.5, 0.5, 0.95, 0.78)
+				keyboardEnabled2.Parent = v59
+				local v60, v61 = fn23(keyboardEnabled2, 0.5, 0.5, 0.95, 0.78)
 				uiElement = Instance.new("Frame")
 				uiElement.Name = "BarMenu"
 				uiElement.Active = false
@@ -4283,7 +4283,7 @@ return function(arg, arg2)
 				uiElement.Size = UDim2.fromScale(0.4, 0)
 				uiElement.Visible = false
 				uiElement.ZIndex = 5
-				uiElement.Parent = v59
+				uiElement.Parent = v58
 				local uiElement2 = Instance.new("UIListLayout")
 				uiElement2.Name = "MenuLayout"
 				uiElement2.FillDirection = Enum.FillDirection.Horizontal
@@ -4292,7 +4292,7 @@ return function(arg, arg2)
 				uiElement2.SortOrder = Enum.SortOrder.LayoutOrder
 				uiElement2.Padding = UDim.new(0.024, 0)
 				uiElement2.Parent = uiElement
-				local tbl10, v63, v64 = {}
+				local iMap2, v62, v63 = {}
 
 				for i2 = 1, s, 1 do
 					uiElement2 = Instance.new("TextButton")
@@ -4311,36 +4311,36 @@ return function(arg, arg2)
 					v25(uiElement2)
 					v28(uiElement2, Enum.ApplyStrokeMode.Border, 0.09)
 					v35(uiElement2, 1.06, 0.94)
-					tbl10[i2] = uiElement2
+					iMap2[i2] = uiElement2
 				end
 
-				local function fn51()
-					local v65 = fn21(v58)
-					v62(v65, false)
-					barPicker.Text = tostring(R(v58))
-					barPicker.TextTransparency = (v65 and 0) or 0.5
-					v65 = R(v58)
+				local function fn48()
+					local v64 = fn18(v57)
+					v61(v64, false)
+					barPicker.Text = tostring(R(v57))
+					barPicker.TextTransparency = (v64 and 0) or 0.5
+					v64 = R(v57)
 
-					for i2, v66 in ipairs(tbl10) do
-						v66.BackgroundTransparency = ((i2 == v65) and 0.15) or 0.4
-						v66.TextTransparency = ((i2 == v65) and 0) or 0.2
+					for i2, v65 in ipairs(iMap2) do
+						v65.BackgroundTransparency = ((i2 == v64) and 0.15) or 0.4
+						v65.TextTransparency = ((i2 == v64) and 0) or 0.2
 					end
 
 					if keyChip then
-						if str3 == v58 then
+						if str3 == v57 then
 							keyChip.Text = "?"
 						else
-							keyChip.Text = V(T()[v58]) or "-"
+							keyChip.Text = V(T()[v57]) or "-"
 						end
 					end
 				end
 
 				if keyChip then
 					v15(keyChip, function()
-						str3 = v58
+						str3 = v57
 
-						for i2, v65 in ipairs(tbl7) do
-							i2 = tbl8[v65]
+						for i2, frame2 in ipairs(frames) do
+							i2 = tbl4[frame2]
 
 							if i2 then
 								i2()
@@ -4349,52 +4349,52 @@ return function(arg, arg2)
 					end)
 				end
 
-				v63, v64 = fn48(v59, v60, uiElement, frame)
+				v62, v63 = fn45(v58, v59, uiElement, frame)
 
-				for i2, v65 in ipairs(tbl10) do
-					v15(v65, function()
-						Z(v58, i2)
-						v64()
-						fn51()
+				for i2, v64 in ipairs(iMap2) do
+					v15(v64, function()
+						Z(v57, i2)
+						v63()
+						fn48()
 					end)
 				end
 
 				v15(barPicker, function()
-					v63()
+					v62()
 				end)
 
 				v15(keyboardEnabled2, function()
-					fn22(v58, not fn21(v58))
-					fn51()
+					fn19(v57, not fn18(v57))
+					fn48()
 				end)
 
-				tbl8[v59] = fn51
-				tbl9[v59] = {Header = arg4, Search = (arg3:GetQuickName() .. (" " .. arg5)):lower()}
-				v59.LayoutOrder = layoutOrder
-				v59.Parent = v52._content
-				table.insert(handlers, fn4[3][fn4[5]](v52, v59))
-				table.insert(tbl7, v59)
-				fn51()
+				tbl4[v58] = fn48
+				tbl5[v58] = {Header = arg4, Search = (arg3:GetQuickName() .. (" " .. arg5)):lower()}
+				v58.LayoutOrder = layoutOrder
+				v58.Parent = v52._content
+				table.insert(handlers, fn4[3][fn4[5]](v52, v58))
+				table.insert(frames, v58)
+				fn48()
 			end
 
-			fn46 = function()
-				fn49()
-				local nextOptionOrder, v58, v59 = v52._nextOptionOrder
+			fn43 = function()
+				fn46()
+				local nextOptionOrder, v57, v58 = v52._nextOptionOrder
 
-				fn17(function(arg3, arg4, arg5)
+				x(function(arg3, arg4, j)
 					if not W(arg3) then
 						return
 					end
-					local str4 = v57(arg5) .. ("  >  " .. arg4.Name)
+					local str4 = v56(j) .. ("  >  " .. arg4.Name)
 
-					if str4 ~= v58 then
-						v58 = str4
+					if str4 ~= v57 then
+						v57 = str4
 						nextOptionOrder += 1
-						v59 = createFrame2(str4, nextOptionOrder)
+						v58 = createFrame2(str4, nextOptionOrder)
 					end
 
 					nextOptionOrder += 1
-					fn50(arg3, nextOptionOrder, v59, str4)
+					fn47(arg3, nextOptionOrder, v58, str4)
 				end)
 
 				v52._container.Visible = true
@@ -4403,9 +4403,9 @@ return function(arg, arg2)
 			end
 
 			v52._searchExtra = function(arg3)
-				local tbl10, searchPaint = {}, v49._searchPaint
+				local headerMap, searchPaint = {}, v49._searchPaint
 
-				local function fn51(arg4)
+				local function fn48(arg4)
 					if not searchPaint then
 						return
 					end
@@ -4415,17 +4415,17 @@ return function(arg, arg2)
 
 				local flag4 = false
 
-				for i2, v58 in ipairs(tbl7) do
-					i2 = tbl9[v58]
+				for i2, frame in ipairs(frames) do
+					i2 = tbl5[frame]
 
 					if i2 then
 						local visible = (arg3 == "") or (i2.Search:find(arg3, 1, true) ~= nil)
-						v58.Visible = visible
-						fn51(v58)
+						frame.Visible = visible
+						fn48(frame)
 
 						if visible then
 							if i2.Header then
-								tbl10[i2.Header] = true
+								headerMap[i2.Header] = true
 							end
 
 							flag4 = true
@@ -4433,17 +4433,17 @@ return function(arg, arg2)
 					end
 				end
 
-				for _, v58 in ipairs(B) do
-					v58.Visible = (arg3 == "") or (tbl10[v58] == true)
-					fn51(v58)
+				for _, v57 in ipairs(frames2) do
+					v57.Visible = (arg3 == "") or (headerMap[v57] == true)
+					fn48(v57)
 				end
 
 				return flag4
 			end
 
-			local function fn51()
-				for i2, v58 in ipairs(tbl7) do
-					i2 = tbl8[v58]
+			local function fn48()
+				for i2, frame in ipairs(frames) do
+					i2 = tbl4[frame]
 
 					if i2 then
 						i2()
@@ -4461,23 +4461,23 @@ return function(arg, arg2)
 				end
 
 				if str3 then
-					local v58 = str3
+					local v57 = str3
 					str3 = nil
 
-					if v58 == "__OPEN__" then
+					if v57 == "__OPEN__" then
 						if input.KeyCode ~= Enum.KeyCode.Escape then
 							E:Set(input.KeyCode.Name)
 						end
 
-						fn47()
+						fn44()
 					else
 						if input.KeyCode == Enum.KeyCode.Escape then
-							fn25(v58, nil)
+							fn22(v57, nil)
 						else
-							fn25(v58, input.KeyCode)
+							fn22(v57, input.KeyCode)
 						end
 
-						fn51()
+						fn48()
 					end
 
 					return
@@ -4496,11 +4496,11 @@ return function(arg, arg2)
 					return
 				end
 
-				for k2, v58 in pairs(T()) do
-					if v58 == input.KeyCode.Name then
+				for k2, v57 in pairs(T()) do
+					if v57 == input.KeyCode.Name then
 						gameProcessed = C(k2)
 
-						if gameProcessed and (fn18(gameProcessed)) then
+						if gameProcessed and (u(gameProcessed)) then
 							I(gameProcessed)
 							G(k2)
 						end
@@ -4509,27 +4509,27 @@ return function(arg, arg2)
 			end))
 
 			v48:Subscribe(function()
-				fn43()
-				fn51()
+				fn40()
+				fn48()
 			end)
 
 			d:Subscribe(function()
-				fn43()
-				fn51()
+				fn40()
+				fn48()
 			end)
 
 			i:Subscribe(function()
-				fn43()
-				fn27()
-				fn51()
+				fn40()
+				fn24()
+				fn48()
 			end)
 
-			N:Subscribe(fn44)
-			E:Subscribe(fn47)
+			N:Subscribe(fn41)
+			E:Subscribe(fn44)
 
 			v2.quickRefreshHook = function()
+				fn40()
 				fn43()
-				fn46()
 			end
 
 			v6.Destroying:Connect(function()
@@ -4540,40 +4540,40 @@ return function(arg, arg2)
 
 			if not keyboardEnabled then
 				v53:SetVisible(false)
-				v56:SetVisible(false)
+				v55:SetVisible(false)
 			end
 
 			local function configLoadedHook()
-				if not v54._destroyed then
-					screenGui.Enabled = v54:Get() == true
+				if not h._destroyed then
+					screenGui.Enabled = h:Get() == true
 				end
 
-				local destroyed = v55._destroyed
+				local destroyed = v54._destroyed
 
 				if not destroyed then
-					P = (tonumber(v55:Get()) or touchEnabled2) / 100
+					P = (tonumber(v54:Get()) or touchEnabled2) / 100
 				end
 
 				if v18.UiSizeOption and not v18.UiSizeOption._destroyed then
 					v18.ApplyUiSize(v18.UiSizeOption:Get())
 				end
 
-				fn47()
-				fn27()
+				fn44()
+				fn24()
 
-				for i2, v58 in ipairs(tbl6) do
-					v58.Collapsed = S(i2)
+				for i2, v57 in ipairs(iMap) do
+					v57.Collapsed = S(i2)
 				end
 
-				fn45(false)
-				fn43()
-				fn44(false)
-				fn51()
+				fn42(false)
+				fn40()
+				fn41(false)
+				fn48()
 			end
 
 			v2.configLoadedHook = configLoadedHook
 			v52:SetExpanded(true, false)
-			fn46()
+			fn43()
 			configLoadedHook()
 
 			task.defer(function()
@@ -4691,7 +4691,7 @@ return function(arg, arg2)
 	v[1] = fn4
 
 	v[2] = function(m)
-		tbl3.SetTab(m)
+		tbl2.SetTab(m)
 	end
 
 	v[3] = fn2

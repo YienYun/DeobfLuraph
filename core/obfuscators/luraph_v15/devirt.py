@@ -3058,8 +3058,10 @@ def truth_of(f):
         return None
     if f[0] == "c":
         return S.truthy(f[1])
-    if f[0] in ("g", "tbl", "non_nan"):
+    if f[0] in ("tbl", "non_nan"):
         return True
+    if f[0] == "g":
+        return True if S.is_guaranteed_global(f[1]) else None
     return f[0] == "t"
 
 def edge_facts(cond, taken, facts):

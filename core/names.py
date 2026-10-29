@@ -204,6 +204,88 @@ def singular(name):
     return None
 
 
+def plural(name):
+    if not name or name in KEYWORDS:
+        return None
+    if name.endswith(("List", "Map", "Set", "Data", "Options", "Props", "Info", "Cache", "State", "Palette", "s")):
+        return name
+    if name.endswith("y") and len(name) > 2 and name[-2].lower() not in "aeiou":
+        return name[:-1] + "ies"
+    return name + "s"
+
+
+_NOISE_WORDS = {
+    "the", "and", "for", "with", "from", "into", "true", "false", "nil", "none", "off",
+    "all", "any", "new", "old", "get", "set", "has", "can", "auto", "is", "in", "on", "to",
+    "by", "of", "at", "or", "not", "max", "min", "cur", "last", "first", "next", "prev",
+    "good", "bad", "ready", "active", "most", "least", "lowest", "highest", "default",
+    "main", "sub", "item", "value", "key", "data", "info", "type", "kind", "mode", "state",
+}
+
+_ROBLOX_CLASSES = {
+    "Part", "BasePart", "MeshPart", "UnionOperation", "Model", "Folder", "Configuration",
+    "Attachment", "Weld", "WeldConstraint", "Motor6D", "JointInstance", "Constraint",
+    "BodyMover", "BodyVelocity", "BodyPosition", "BodyGyro", "LinearVelocity", "AlignPosition",
+    "AlignOrientation", "Sound", "ForceField", "Highlight", "ProximityPrompt", "ClickDetector",
+    "BillboardGui", "SurfaceGui", "ScreenGui", "Frame", "ScrollingFrame", "TextLabel",
+    "TextButton", "TextBox", "ImageLabel", "ImageButton", "ViewportFrame", "CanvasGroup",
+    "UIStroke", "UICorner", "UIGradient", "UIListLayout", "UIGridLayout", "UIPadding",
+    "UIScale", "UIAspectRatioConstraint", "LuaSourceContainer", "Script", "LocalScript",
+    "ModuleScript", "RemoteEvent", "RemoteFunction", "BindableEvent", "BindableFunction",
+    "ParticleEmitter", "Beam", "Trail", "PointLight", "SpotLight", "SurfaceLight",
+    "Accessory", "Tool", "Humanoid", "Animator", "Animation",
+}
+
+_GUI_PART_PROPS = {
+    "Anchored", "BackgroundColor3", "BackgroundTransparency", "BorderColor3", "BorderSizePixel",
+    "CanCollide", "CanTouch", "CanvasPosition", "CanvasSize", "CFrame", "ClipsDescendants",
+    "Color", "CornerRadius", "DisplayOrder", "Enabled", "FieldOfView", "FillDirection", "Font",
+    "Health", "HorizontalAlignment", "Image", "ImageColor3", "ImageTransparency", "JumpPower",
+    "LayoutOrder", "LineJoinMode", "Material", "MaxHealth", "MaxTextSize", "MinTextSize",
+    "MoveDirection", "Name", "Orientation", "Padding", "PaddingBottom", "PaddingLeft",
+    "PaddingRight", "PaddingTop", "Position", "RichText", "Rotation", "ScrollBarThickness",
+    "Size", "SortOrder", "Text", "TextColor3", "TextScaled", "TextSize", "TextStrokeColor3",
+    "TextStrokeTransparency", "TextTransparency", "TextTruncate", "TextWrapped",
+    "TextXAlignment", "TextYAlignment", "Thickness", "Transparency", "Value", "Velocity",
+    "VerticalAlignment", "Visible", "WalkSpeed", "ZIndex",
+}
+
+
+def _words_of_string(s):
+    if not s or len(s) > 64 or "/" in s or ":" in s or "." in s:
+        return []
+    raw = re.findall(r"[A-Z]?[a-z]+|[A-Z]+(?=[A-Z][a-z]|\b)", s)
+    return [w.lower() for w in raw if len(w) >= 3 and w.lower() not in _NOISE_WORDS]
+
+
+def _dominant_string_noun(strings, suffix="List"):
+    """Find a shared domain noun across a list/set of strings (e.g. 'LimitedEgg',
+    'MonsterEgg' -> 'eggList'; 'Radiant Butterfly', 'Sapphire Butterfly' -> 'butterflyList')."""
+    valid = [s for s in strings if isinstance(s, str) and s.strip()]
+    if len(valid) < 2:
+        return None
+    tail_counts = {}
+    any_counts = {}
+    tokenized = 0
+    for s in valid:
+        ws = _words_of_string(s)
+        if not ws:
+            continue
+        tokenized += 1
+        tail_counts[ws[-1]] = tail_counts.get(ws[-1], 0) + 1
+        for w in set(ws):
+            any_counts[w] = any_counts.get(w, 0) + 1
+    if tokenized < 2:
+        return None
+    best_tail = max(tail_counts.items(), key=lambda kv: kv[1]) if tail_counts else (None, 0)
+    if best_tail[1] >= 2 and best_tail[1] * 100 >= tokenized * 40:
+        return camel(best_tail[0] + " " + suffix)
+    best_any = max(any_counts.items(), key=lambda kv: kv[1]) if any_counts else (None, 0)
+    if best_any[1] >= 2 and best_any[1] * 100 >= tokenized * 50:
+        return camel(best_any[0] + " " + suffix)
+    return None
+
+
 def const_str(e):
     return e.get("value") if e and e.get("type") == "AstExprConstantString" else None
 
@@ -256,6 +338,7 @@ class Namer:
                 "hint": None, "hints": [], "members": set(), "inst_names": [],
                 "empty_tbl_init": False, "reassigned": False, "raw_use": False,
                 "slot_spans": [], "slot_hints": {}, "slot_members": {},
+                "elem_hints": [], "index_keys": [], "concat_tbl": False, "disconnect_map": False,
             }
             self.order.append(key)
         return info
@@ -297,7 +380,8 @@ class Namer:
                 if i < len(vals):
                     val = vals[i]
                     info["hints"].append((val, 0))
-                    if val.get("type") == "AstExprTable" and not val.get("entries"):
+                    t_items = val.get("items") if val.get("items") is not None else val.get("entries")
+                    if val.get("type") == "AstExprTable" and not t_items:
                         info["empty_tbl_init"] = True
                 elif vals and vals[-1]["type"] == "AstExprCall":
                     info["hints"].append((vals[-1], i - len(vals) + 1))
@@ -319,6 +403,17 @@ class Namer:
                 else:
                     self.visit_expr(var)
             for var, v in zip(st["vars"], vals):
+                if var.get("type") == "AstExprIndexExpr" and var["expr"].get("type") == "AstExprLocal" \
+                        and const_slot_int(var.get("index")) is None:
+                    t_info = self.locals.get(var["expr"]["local"]["location"])
+                    if t_info is not None:
+                        idx_e = var.get("index", {})
+                        if idx_e.get("type") == "AstExprBinary" and idx_e.get("op") == "Add":
+                            t_info["elem_hints"].append(v)
+                        elif const_str(idx_e):
+                            t_info["members"].add(const_str(idx_e))
+                        else:
+                            t_info["index_keys"].append(idx_e)
                 if v.get("type") == "AstExprBinary" and v.get("op") == "Or":
                     v = v["left"]
                 if var.get("type") == "AstExprIndexName" and v.get("type") == "AstExprLocal":
@@ -435,6 +530,23 @@ class Namer:
                     return
         if t == "AstExprCall":
             f = e.get("func", {})
+            d_call = dotted(f)
+            if d_call == "table.insert" and len(e.get("args") or []) >= 2 \
+                    and e["args"][0].get("type") == "AstExprLocal":
+                t_info = self.locals.get(e["args"][0]["local"]["location"])
+                if t_info is not None:
+                    t_info["elem_hints"].append(e["args"][-1])
+            elif d_call == "table.concat" and (e.get("args") or []) \
+                    and e["args"][0].get("type") == "AstExprLocal":
+                t_info = self.locals.get(e["args"][0]["local"]["location"])
+                if t_info is not None:
+                    t_info["concat_tbl"] = True
+            elif f.get("type") == "AstExprIndexName" and f.get("index") == "Disconnect":
+                recv = f.get("expr", {})
+                if recv.get("type") == "AstExprIndexExpr" and recv["expr"].get("type") == "AstExprLocal":
+                    t_info = self.locals.get(recv["expr"]["local"]["location"])
+                    if t_info is not None:
+                        t_info["disconnect_map"] = True
             if f.get("type") == "AstExprIndexExpr" and f["expr"].get("type") == "AstExprLocal" \
                     and const_str(f.get("index")) is None and const_slot_int(f.get("index")) is None:
                 info = self.locals.get(f["expr"]["local"]["location"])
@@ -510,8 +622,102 @@ class Namer:
             if info is not None and info["hint"] in (None, "arg"):
                 info["hint"] = nm
 
+    def _ctor_datatype(self, e):
+        """If `e` constructs a Roblox datatype (`Color3.new(...)`, local alias
+        `uDim2New(...)`, etc.), return its canonical datatype name ('Color3',
+        'UDim2', 'Vector2', 'Vector3', 'UDim', 'CFrame'), else None."""
+        if not isinstance(e, dict) or e.get("type") != "AstExprCall":
+            return None
+        f = e.get("func", {})
+        d = dotted(f)
+        if d and "." in d:
+            head = d.split(".", 1)[0]
+            if head in ("Color3", "UDim2", "Vector2", "Vector3", "UDim", "CFrame", "TweenInfo", "ColorSequenceKeypoint"):
+                return head
+        if f.get("type") == "AstExprLocal":
+            src = self.locals.get(f["local"]["location"])
+            cands = [strip_num_suffix((src.get("new") or src.get("name") or "") if src else "").lower()]
+            for h_ex, h_i in (src.get("hints", ()) if src else ()):
+                if h_i == 0:
+                    hd = dotted(h_ex)
+                    if hd:
+                        cands.append(hd.lower())
+            for raw in cands:
+                for dt in ("color3", "udim2", "vector2", "vector3", "udim", "cframe"):
+                    if raw.startswith(dt):
+                        return {"color3": "Color3", "udim2": "UDim2", "vector2": "Vector2",
+                                "vector3": "Vector3", "udim": "UDim", "cframe": "CFrame"}[dt]
+        return None
+
+    def _scan_fn_shallow(self, blk, out):
+        """Collect returns, calls, string literals, globals, and member accesses
+        in a function body without descending into unrelated nested functions
+        (except immediate `pcall(function() ... end)` thunks)."""
+        for st in blk.get("body", ()):
+            self._scan_node_shallow(st, out, allow_rets=True)
+
+    def _scan_node_shallow(self, node, out, allow_rets=True):
+        if not isinstance(node, dict):
+            return
+        tp = node.get("type", "")
+        if tp == "AstExprFunction":
+            return
+        if tp.startswith("AstStat"):
+            out["stmt_count"] = out.get("stmt_count", 0) + 1
+        if tp == "AstStatReturn" and allow_rets:
+            for r in node.get("list", ()):
+                if r.get("type") != "AstExprConstantNil":
+                    out["rets"].append(r)
+        if tp == "AstExprConstantString":
+            s = node.get("value")
+            if isinstance(s, str):
+                out["strs"].append(s)
+            return
+        if tp == "AstExprGlobal":
+            out["globals"].add(node.get("global", ""))
+            return
+        if tp == "AstExprLocal":
+            src = self.locals.get(node["local"]["location"])
+            if src:
+                out["local_refs"].add(strip_num_suffix(src.get("new") or src.get("name") or ""))
+            return
+        if tp == "AstExprCall":
+            f = node.get("func", {})
+            d = dotted(f)
+            if d:
+                out["calls"].add(d)
+            elif f.get("type") == "AstExprIndexName":
+                out["methods"].add(f["index"])
+            elif f.get("type") == "AstExprLocal":
+                src = self.locals.get(f["local"]["location"])
+                if src:
+                    out["local_calls"].add(strip_num_suffix(src.get("new") or src.get("name") or ""))
+            # Descend into immediate `pcall(function() ... end)` / `xpcall` body for calls/props (not outer returns)
+            is_pcall = d in ("pcall", "xpcall")
+            if not is_pcall and f.get("type") == "AstExprLocal":
+                f_src = self.locals.get(f["local"]["location"])
+                if f_src and any(dotted(hx) in ("pcall", "xpcall") for hx, hi in f_src.get("hints", ()) if hi == 0):
+                    is_pcall = True
+            if is_pcall:
+                for a_node in node.get("args", ()):
+                    if isinstance(a_node, dict) and a_node.get("type") == "AstExprFunction":
+                        for p_st in a_node.get("body", {}).get("body", ()):
+                            self._scan_node_shallow(p_st, out, allow_rets=False)
+        elif tp == "AstExprIndexName":
+            out["props"].add(node.get("index", ""))
+        for k, v in node.items():
+            if k == "location":
+                continue
+            if isinstance(v, dict):
+                self._scan_node_shallow(v, out, allow_rets=allow_rets)
+            elif isinstance(v, list):
+                for item in v:
+                    if isinstance(item, dict):
+                        self._scan_node_shallow(item, out, allow_rets=allow_rets)
+
     def function_name(self, fn):
-        """Infer descriptive function names from toggle, factory, wrapper, and getter bodies."""
+        """Infer descriptive function names from toggle, factory, parser,
+        formatter, remote, filesystem, and helper bodies."""
         body = fn.get("body", {}).get("body", [])
         if not body:
             return None
@@ -539,16 +745,104 @@ class Namer:
         if last["type"] == "AstStatReturn" and len(last.get("list", [])) == 1 \
                 and last["list"][0].get("type") == "AstExprLocal":
             where = last["list"][0]["local"]["location"]
-            for st in body:
-                if st["type"] == "AstStatLocal" and len(st["vars"]) == 1 and st.get("values") \
-                        and st["vars"][0]["location"] == where:
-                    v = st["values"][0]
+            ret_info = self.locals.get(where)
+            if ret_info and "Window" in ret_info.get("members", set()):
+                return "createUiLibrary"
+            for st_i in body:
+                if st_i["type"] == "AstStatLocal" and len(st_i["vars"]) == 1 and st_i.get("values") \
+                        and st_i["vars"][0]["location"] == where:
+                    v = st_i["values"][0]
                     if v.get("type") == "AstExprCall" and dotted(v["func"]) in ("Instance.new", "Drawing.new") \
                             and v.get("args") and const_str(v["args"][0]):
                         return camel("create " + const_str(v["args"][0]))
                     if v.get("type") == "AstExprCall" and v["func"].get("type") == "AstExprIndexName" \
                             and v["func"]["index"] == "Connect":
                         return "trackConnection"
+                    if v.get("type") == "AstExprCall" and len(v.get("args") or []) >= 2 \
+                            and v["args"][1].get("type") == "AstExprTable":
+                        for ent in (v["args"][1].get("items") or v["args"][1].get("entries") or ()):
+                            if isinstance(ent.get("key"), dict) and const_str(ent["key"]) == "Name" \
+                                    and const_str(ent.get("value")):
+                                c_nm = camel("create " + const_str(ent["value"]))
+                                if c_nm and c_nm not in KEYWORDS:
+                                    return c_nm
+
+        if len(body) > 45:
+            return None
+        scan = {
+            "rets": [], "calls": set(), "methods": set(), "local_calls": set(),
+            "local_refs": set(), "globals": set(), "strs": [], "props": set(), "stmt_count": 0,
+        }
+        self._scan_fn_shallow(fn.get("body", {}), scan)
+        n_stmts = scan["stmt_count"]
+        if n_stmts > 45:
+            return None
+        rets = scan["rets"]
+        calls = scan["calls"] | scan["globals"]
+        methods = scan["methods"]
+        lcalls = scan["local_calls"] | scan["local_refs"]
+        strs = scan["strs"]
+        props = scan["props"]
+        has_args = bool(fn.get("args"))
+
+        # 1. Pure datatype parser / converter functions (e.g. parseColor3, toUDim2, toVector2, toUDim)
+        if rets:
+            dts = {self._ctor_datatype(r) for r in rets}
+            if len(dts) == 1 and None not in dts:
+                dt = next(iter(dts))
+                prefix = "parse" if n_stmts >= 6 and has_args else ("to" if has_args else "get")
+                return prefix + dt
+
+        # 2. Filesystem & JSON config helpers
+        if "makefolder" in calls and "writefile" not in calls and n_stmts <= 12:
+            return "ensureFolder"
+        if "writefile" in calls and n_stmts <= 15:
+            return "saveFile"
+        if "readfile" in calls and ("JSONDecode" in methods or "HttpService.JSONDecode" in calls) and n_stmts <= 20:
+            return "readJsonFile"
+        if "delfile" in calls and n_stmts <= 10:
+            return "deleteFile"
+
+        # 3. RichText / compact number / rate formatters
+        if has_args and any("<font color=" in s for s in strs) and n_stmts <= 15:
+            return "colorizeText"
+        if has_args and any(s in (" K/s", " M/s", " B/s") for s in strs) and n_stmts <= 20:
+            return "formatRate"
+        if has_args and any(s in ("k", "K", "M", "B", "T") or s.startswith("$%.") for s in strs) and n_stmts <= 18:
+            return "formatCompact"
+        if has_args and ("string.format" in calls or "format" in methods) \
+                and any(s in ("%.2f", "%.1f", "%.0f") for s in strs) and "0+$" in strs and n_stmts <= 12:
+            return "formatDecimal"
+
+        # 4. Roblox Instance / Remote / HTTP / State helpers
+        if "GetFullName" in (methods | props) and n_stmts <= 12:
+            return "getInstancePath"
+        if "Archivable" in props and "Clone" in (methods | props) and n_stmts <= 20:
+            return "cloneInstance"
+        if "closeDD" in (methods | props) and n_stmts <= 8:
+            return "closeDropdown"
+        if "UnbindFromRenderStep" in (methods | props) and n_stmts <= 18:
+            return "cleanupRenderStep"
+        if ("httpRequest" in lcalls or "request" in calls or "http_request" in calls or "syn.request" in calls) \
+                and ("JSONEncode" in (methods | props) or "POST" in strs) and n_stmts <= 35:
+            return "sendHeartbeat" if ("beatUrl" in lcalls or any("beat" in s.lower() for s in strs)) else "sendHttpPost"
+        if "InvokeServer" in methods and len(body) <= 12:
+            return "invokeRemote"
+        if "FireServer" in methods and len(body) <= 12:
+            return "fireRemote"
+        if "Carried" in strs and "CarrierUserId" in props and len(body) <= 15:
+            return "isCarried"
+        if len(rets) == 1 and rets[0].get("type") == "AstExprBinary":
+            rop = rets[0].get("op", "")
+            if rop.startswith("Compare"):
+                if "Health" in props and len(body) <= 12:
+                    return "isAlive"
+                r_right = rets[0].get("right", {})
+                if r_right.get("type") == "AstExprLocal":
+                    r_info = self.locals.get(r_right["local"]["location"])
+                    r_nm = (r_info.get("new") or r_info.get("name") or "") if r_info else ""
+                    if "bagMax" in r_nm and len(body) <= 10:
+                        return "isBagFull"
         return None
 
     def same(self, a, b):
@@ -630,7 +924,7 @@ class Namer:
                 return DATATYPES[d.split(".")[0]]
             if d in GLOBAL_CALLS:
                 return GLOBAL_CALLS[d]
-            if f.get("type") == "AstExprIndexName" and f.get("op") == ":":
+            if f.get("type") == "AstExprIndexName" and f.get("op") in (":", "."):
                 m = f["index"]
                 arg = const_str(e["args"][0]) if e["args"] else None
                 if m == "GetService" and arg and re.match(r"^[A-Za-z]\w*$", arg):
@@ -644,6 +938,10 @@ class Namer:
                     return METHOD_NAMES[m]
                 if m.startswith("Get") and len(m) > 3:
                     return camel(m[3:])
+                if f.get("op") == "." and e.get("args"):
+                    a0_nm = self.infer(e["args"][0], 0, _seen)
+                    if a0_nm and a0_nm not in WEAK_1CHAR:
+                        return a0_nm
                 return str_arg_name(e)
             if f.get("type") == "AstExprCall":
                 inner = dotted(f.get("func", {}))
@@ -685,13 +983,7 @@ class Namer:
         if t == "AstExprFunction":
             return self.function_name(e) or "fn"
         if t == "AstExprTable":
-            keys = {ent["key"]["value"] for ent in e.get("entries", [])
-                    if isinstance(ent.get("key"), dict) and ent["key"].get("type") == "AstExprConstantString"}
-            if keys & {"tpOk", "inDim"} or ("cleanup" in keys and len(keys) >= 2):
-                return "state"
-            if keys & {"Callback", "Title"} and len(keys) >= 2:
-                return "options"
-            return "tbl"
+            return self.table_name(e, None, _seen)
         if t == "AstExprBinary":
             if e["op"] == "Or":
                 left = self.infer(e["left"], 0, _seen)
@@ -721,6 +1013,169 @@ class Namer:
         if t == "AstExprIfElse":
             return self.infer(e["trueExpr"], 0, _seen) or self.infer(e["falseExpr"], 0, _seen)
         return None
+
+    def table_name(self, e, info=None, _seen=()):
+        """Infer a semantic name for a Luau table literal from its entries,
+        keys, element types, string nouns, and downstream member/element uses."""
+        entries = e.get("items") if e.get("items") is not None else e.get("entries", [])
+        kv = {}
+        arr = []
+        for ent in entries:
+            k = ent.get("key")
+            v = ent.get("value")
+            if isinstance(k, dict) and k.get("type") == "AstExprConstantString":
+                kv[k["value"]] = v
+            elif k is None and isinstance(v, dict):
+                arr.append(v)
+
+        members = set(kv) | (set(info["members"]) if info else set())
+
+        # 1. Well-known structural shapes
+        if members & {"tpOk", "inDim"} or ("cleanup" in members and len(members) >= 2):
+            return "state"
+        if members & {"Callback", "Title"} and len(members) >= 2:
+            return "options"
+        if "Url" in members and (members & {"Method", "Headers", "Body"}):
+            return "requestData"
+        if "Value" in members and "Set" in members:
+            return "control"
+        if {"Center", "Distance", "Zoom"} <= members:
+            return "cameraOrbit"
+        if {"Rows", "Header"} <= members:
+            return "tableView"
+        if {"Tabs", "Opts"} <= members:
+            return "window"
+        if {"Hud", "Eggs"} <= members:
+            return "hudElements"
+        if {"On", "Toggle"} <= members:
+            return "toggleState"
+
+        # 2. Named item / egg / entity record (`{..., Name = "Halloween egg", Uid = "carry"}`)
+        if "Name" in kv and "Parent" not in members and "Size" not in members and "Position" not in members:
+            nm_s = const_str(kv["Name"])
+            if nm_s and re.match(r"^[A-Za-z][A-Za-z0-9 _-]{1,28}$", nm_s):
+                c = camel(nm_s)
+                if c and c not in KEYWORDS and c not in WEAK_1CHAR:
+                    return c
+
+        # 3. Unit multiplier / suffix tables
+        if kv and set(kv) <= {"k", "m", "b", "t", "qa", "qi", "sx", "K", "M", "B", "T"} and len(kv) >= 3:
+            return "unitMultipliers"
+        arr_strs = [const_str(x) for x in arr if const_str(x) is not None]
+        if len(arr_strs) >= 4 and len(arr_strs) == len(arr) \
+                and set(arr_strs) <= {"", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "k", "m", "b", "t"}:
+            return "unitSuffixes"
+
+        # 4. Key-value maps (Enum maps, boolean property filters, function dispatchers, score maps)
+        if len(kv) >= 2 and not arr:
+            vals = list(kv.values())
+            if all(dotted(v) and dotted(v).startswith("Enum.") for v in vals):
+                return "enumProps"
+            if all(v.get("type") == "AstExprConstantBool" for v in vals):
+                kset = set(kv) | (set(info["members"]) if info else set())
+                if all(k.endswith(("Color", "Color3")) for k in kset):
+                    return "colorProps"
+                if kset <= {"Position", "Size", "CanvasSize", "CanvasPosition"}:
+                    return "udim2Props"
+                if kset <= {"AnchorPoint", "CanvasPosition"}:
+                    return "vector2Props"
+                if "CornerRadius" in kset or any(k.startswith("Padding") for k in kset):
+                    return "udimProps"
+                if kset & {"Activated", "MouseButton1Click", "FocusLost", "InputBegan", "TouchTap"}:
+                    return "eventNames"
+                if len(kset & _GUI_PART_PROPS) >= max(4, len(kset) // 2):
+                    return "allowedProps"
+                dom = _dominant_string_noun(list(kset), "Flags")
+                return dom or "enabledFlags"
+            if sum(1 for v in vals if v.get("type") == "AstExprFunction") >= max(2, len(vals) - 1):
+                klow = " ".join(kv).lower()
+                if any(w in klow for w in ("rarity", "lowest", "highest", "copies")):
+                    return "sortComparators"
+                if any(w in klow for w in ("ping", "eval", "get_tree", "set_property", "click", "teleport")) \
+                        or (info and info.get("dispatch")):
+                    return "commandHandlers"
+                return "handlers"
+            if all(v.get("type") == "AstExprConstantNumber" for v in vals):
+                dom = _dominant_string_noun(list(kv), "Values")
+                return dom or "valueMap"
+            if all(v.get("type") == "AstExprConstantString" for v in vals):
+                dom = _dominant_string_noun(list(kv) + [const_str(v) for v in vals], "Map")
+                return dom or "labelMap"
+            if {"Default", "Labels"} <= set(kv):
+                return "priorityConfig"
+
+        # 5. Homogeneous array literals (`{Color3..., }`, `{Enum..., }`, string lists, nested presets)
+        if arr and not kv:
+            dts = [self._ctor_datatype(x) for x in arr]
+            if all(d == "Color3" for d in dts):
+                return "colorPalette"
+            if all(d == "ColorSequenceKeypoint" for d in dts):
+                return "keypoints"
+            if all(x.get("type") == "AstExprTable" for x in arr):
+                # Nested array of Color3 pairs or string presets or weight tiers
+                sub_entries = [(x.get("items") if x.get("items") is not None else x.get("entries", [])) for x in arr]
+                if sub_entries and all(
+                    se and all(e0.get("key") is None and self._ctor_datatype(e0.get("value")) == "Color3" for e0 in se)
+                    for se in sub_entries
+                ):
+                    return "colorPalettes"
+                sub_keys = [
+                    {e0["key"]["value"] for e0 in se if isinstance(e0.get("key"), dict) and const_str(e0["key"])}
+                    for se in sub_entries
+                ]
+                if sub_keys and all({"min", "max", "weight"} <= sk for sk in sub_keys):
+                    return "weightTiers"
+                nested_strs = [
+                    const_str(e0.get("value"))
+                    for se in sub_entries for e0 in se
+                    if e0.get("key") is None and const_str(e0.get("value"))
+                ]
+                dom = _dominant_string_noun(nested_strs, "Presets")
+                if dom:
+                    return dom
+            enum_types = []
+            for x in arr:
+                dx = dotted(x)
+                if dx and dx.startswith("Enum.") and dx.count(".") == 2:
+                    enum_types.append(dx.split(".")[1])
+            if len(enum_types) == len(arr) and len(set(enum_types)) == 1:
+                return plural(camel(enum_types[0])) or "enumItems"
+            if all(x.get("type") == "AstExprCall" and x["func"].get("type") == "AstExprIndexName"
+                   and x["func"]["index"] in ("Connect", "Once") for x in arr):
+                return "connections"
+            if len(arr_strs) == len(arr) and len(arr_strs) >= 2:
+                if sum(1 for s in arr_strs if s in _ROBLOX_CLASSES) >= max(2, len(arr_strs) // 2):
+                    return "classNames"
+                dom = _dominant_string_noun(arr_strs, "List")
+                if dom:
+                    return dom
+                return "nameList"
+
+        # 6. Downstream usage on initially-empty tables (`local tbl = {}`)
+        if info is not None:
+            if info.get("disconnect_map"):
+                return "connections"
+            if info.get("dispatch"):
+                return "handlers"
+            if info.get("concat_tbl"):
+                return "parts"
+            if info.get("elem_hints"):
+                for eh in info["elem_hints"]:
+                    el_nm = self.infer(eh, 0, _seen + (id(info),))
+                    if el_nm and el_nm not in WEAK_1CHAR:
+                        pl = plural(el_nm)
+                        if pl and pl not in KEYWORDS:
+                            return pl
+                return "list"
+            if len(members) >= 2 and all(m in _GUI_PART_PROPS for m in members):
+                return "allowedProps"
+            if info.get("index_keys"):
+                for ik in info["index_keys"]:
+                    ik_nm = self.infer(ik, 0, _seen + (id(info),))
+                    if ik_nm and ik_nm not in WEAK_1CHAR and len(ik_nm) <= 18:
+                        return camel(ik_nm + " map")
+
+        return "tbl"
 
     def base_name(self, info, _seen=()):
         if info.get("spill"):
@@ -761,7 +1216,8 @@ class Namer:
         if len(inst_classes) == 1 and len(info["hints"]) == 1 and len(info["inst_names"]) == 1:
             return info["inst_names"][0]
         for expr, idx in info["hints"]:
-            nm = self.infer(expr, idx, _seen)
+            nm = self.table_name(expr, info, _seen) if (idx == 0 and expr.get("type") == "AstExprTable") \
+                else self.infer(expr, idx, _seen)
             if nm:
                 if nm == "tbl" and info.get("dispatch"):
                     return "handlers"

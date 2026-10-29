@@ -733,6 +733,44 @@ def _random_next_integer(rng, a, b):
 
 _GLOBAL_TABLES = {"_G", "shared", "math", "string", "table", "bit32", "coroutine", "os", "debug", "utf8", "buffer", "task"}
 _GLOBAL_INSTANCES = {"game", "workspace", "Workspace", "script"}
+_GLOBAL_CTORS = {
+    "Axes", "BrickColor", "CatalogSearchParams", "CFrame", "Color3",
+    "ColorSequence", "ColorSequenceKeypoint", "DateTime", "DockWidgetPluginGuiInfo",
+    "Faces", "FloatCurveKey", "Font", "Instance", "NumberRange",
+    "NumberSequence", "NumberSequenceKeypoint", "OverlapParams", "Path2D",
+    "Path2DControlPoint", "PathWaypoint", "PhysicalProperties", "Random",
+    "Ray", "RaycastParams", "Rect", "Region3", "Region3int16",
+    "RotationCurveKey", "SharedTable", "TweenInfo", "UDim", "UDim2",
+    "Vector2", "Vector2int16", "Vector3", "Vector3int16", "vector",
+}
+_STD_GLOBALS = (
+    _GLOBAL_TABLES
+    | _GLOBAL_INSTANCES
+    | _GLOBAL_CTORS
+    | {
+        "Enum", "Game", "plugin",
+        "assert", "collectgarbage", "delay", "elapsedTime", "error", "gcinfo",
+        "getfenv", "getmetatable", "ipairs", "loadstring", "newproxy", "next",
+        "pairs", "pcall", "print", "rawequal", "rawget", "rawlen", "rawset",
+        "require", "select", "setfenv", "setmetatable", "settings", "spawn",
+        "stats", "tick", "time", "tonumber", "tostring", "type", "typeof",
+        "unpack", "UserSettings", "version", "wait", "warn", "xpcall",
+    }
+)
+
+def is_guaranteed_global(name):
+    """True only for standard Luau / Roblox engine globals guaranteed to be
+    non-nil in every environment. Executor-specific globals (`syn`, `http`,
+    `request`, `http_request`, `gethui`, `WebSocket`, `isfolder`, etc.) may be
+    nil at runtime and must keep their nil-guards."""
+    if not isinstance(name, str) or not name:
+        return False
+    if name in _STD_GLOBALS or name in FACT_CONCRETE:
+        return True
+    if "." in name:
+        head, _ = name.split(".", 1)
+        return head in _GLOBAL_TABLES or head in _GLOBAL_CTORS
+    return False
 
 def _lua_type(v):
     if v is None:
@@ -746,9 +784,11 @@ def _lua_type(v):
     if isinstance(v, (dict, LTable)):
         return b"table"
     if isinstance(v, tuple) and len(v) == 2 and v[0] == "g":
+        if not is_guaranteed_global(v[1]):
+            raise ValueError("optional global")
         if v[1] in _GLOBAL_TABLES:
             return b"table"
-        if v[1] in _GLOBAL_INSTANCES or v[1] == "Enum":
+        if v[1] in _GLOBAL_INSTANCES or v[1] in ("Game", "Enum", "plugin"):
             return b"userdata"
         return b"function"
     raise ValueError("unknown type")
@@ -758,6 +798,8 @@ def _lua_typeof(v):
         t = v[b"__type"]
         return t.encode() if isinstance(t, str) else t
     if isinstance(v, tuple) and len(v) == 2 and v[0] == "g":
+        if not is_guaranteed_global(v[1]):
+            raise ValueError("optional global")
         if v[1] in _GLOBAL_TABLES:
             return b"table"
         if v[1] == "Enum":

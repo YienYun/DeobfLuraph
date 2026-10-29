@@ -144,11 +144,16 @@ test('full Luraph v15.1 StealAnEggg devirtualizes with zero nil bitwise/arithmet
   assert.doesNotMatch(text, /(?<![\w.])nil\s*[+\-*/%^]|[+\-*/%^]\s*nil(?![\w])/);
   assert.doesNotMatch(text, /(?<![\w.])nil\s*(?:<=|>=|<|>|\.\.)|(?:<=|>=|<|>|\.\.)\s*nil(?![\w])/);
   assert.match(text, /return Color3\.new\(num, num2, num3\)/);
+  assert.match(text, /local function parseColor3\(/);
+  assert.match(text, /local eggPresets = \{/);
+  assert.match(text, /if syn then/);
 
   // Runtime validation in offline Roblox Luau sandbox:
   // 1) Full script executes cleanly without script errors.
-  // 2) Post-loop ChilliLink/MCP module executes through bit32.rshift(n, 29),
-  //    registers StopChilliLink, and converts both float [0..1] and byte [0..255] Color3 tables.
+  // 2) Post-loop ChilliLink/MCP module executes on a modern executor where
+  //    `syn = nil` and `http_request = nil` (only `request` exists), proving
+  //    zero `attempt to index nil with 'request'`, registers StopChilliLink,
+  //    and converts both float [0..1] and byte [0..255] Color3 tables via parseColor3.
   const { runOnce } = require('../src/harness');
   const fullRun = await runOnce(luau, text, { devirt: true }, path.join(dir, 'harness_full.luau'), 45, false);
   assert.ok(fullRun.body, fullRun.err || 'missing fullRun body');
@@ -159,14 +164,23 @@ test('full Luraph v15.1 StealAnEggg devirtualizes with zero nil bitwise/arithmet
   const mcpIdx = lines.findIndex(l => l.startsWith('local HttpService = game:GetService("HttpService")'));
   assert.ok(mcpIdx > 0, 'expected ChilliLink/MCP module');
   const mcpHarness = [
+    'local syn = nil',
+    'local http_request = nil',
+    'local http = nil',
+    'local fluxus = nil',
+    'local _reqCalled = 0',
+    'local function request(opts) _reqCalled += 1; return { StatusCode = 200, Body = "{}" } end',
     lines[0],
     ...lines.slice(mcpIdx),
     'local g = (getgenv and getgenv()) or _G',
     'assert(type(g.StopChilliLink) == "function")',
-    'local c1 = fn19({0.25, 0.5, 1})',
-    'local c2 = fn19({255, 128, 0})',
+    'assert(type(httpRequest) == "function", "httpRequest fallback to request failed")',
+    'local c1 = parseColor3({0.25, 0.5, 1})',
+    'local c2 = parseColor3({255, 128, 0})',
     'assert(typeof(c1) == "Color3" and math.abs(c1.R - 0.25) < 1e-4 and math.abs(c1.B - 1) < 1e-4)',
     'assert(typeof(c2) == "Color3" and math.abs(c2.R - 1) < 1e-2 and math.abs(c2.G - 128/255) < 1e-2)',
+    'sendHeartbeat()',
+    'assert(_reqCalled >= 1, "sendHeartbeat did not invoke fallback request")',
     'g.StopChilliLink()',
     'print("STEAL_RUNTIME_VERIFIED")',
   ].join('\n');

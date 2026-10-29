@@ -191,6 +191,50 @@ test('full Luraph v15.1 StealAnEggg devirtualizes with zero nil bitwise/arithmet
   assert.match(mcpRun.body, /STEAL_RUNTIME_VERIFIED/);
 });
 
+test('deobfuscates Luraph v15.1 RideAPet (external UI bootstrap + LPH_NO_VIRTUALIZE) with zero errors and runs cleanly', { skip }, async t => {
+  const sample = path.join(ROOT, 'samples', 'RideAPet_v15.1_obfuscated.lua');
+  const dir = temp(t);
+  const out = path.join(dir, 'out.lua');
+  const report = path.join(dir, 'report.json');
+  const r = runCli([sample, '-o', out, '--report', report]);
+  assert.equal(r.status, 0, r.stderr);
+  const rep = JSON.parse(fs.readFileSync(report, 'utf8'));
+  assert.equal(rep.result_type, 'devirtualized');
+  assert.equal(rep.trace_status, 'finished');
+  assert.equal(rep.lift_stats.errors, 0);
+  assert.equal(rep.lift_stats.fallbacks, 0);
+  assert.equal(rep.warnings.length, 0);
+
+  const text = fs.readFileSync(out, 'utf8');
+  assert.ok(text.split('\n').length > 10000);
+  assert.doesNotMatch(text, /error\("devirt:/);
+  assert.doesNotMatch(text, /constant not decoded/);
+  assert.doesNotMatch(text, /_lph_setlist/);
+  assert.doesNotMatch(text, /bit32\.\w+\([^)\n]*\bnil\b/);
+  assert.doesNotMatch(text, /function\(\.\.\.\)\s*end/);
+  assert.doesNotMatch(text, /\b\w+\[\d+\]\[\w+\[\d+\]\]/);
+  assert.match(text, /Auto Collect Eggs/);
+  assert.match(text, /Auto Hop/);
+  assert.match(text, /httpRequest and syn\.request/);
+
+  const luauAst = path.join(ROOT, 'bin', 'luau-ast');
+  const astCheck = spawnSync(luauAst, [out], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+  assert.equal(astCheck.status, 0, astCheck.stderr);
+
+  const { runOnce } = require('../src/harness');
+  const modRun = await runOnce(
+    luau,
+    'local syn = nil\nlocal http_request = nil\n' + text,
+    { devirt: true },
+    path.join(dir, 'harness_ride.luau'),
+    45,
+    false,
+  );
+  assert.ok(modRun.body, modRun.err || 'missing modRun body');
+  const modStatus = modRun.body.split('\n').find(l => l.startsWith('-- run status:')) || '';
+  assert.equal(modStatus, '-- run status: finished');
+});
+
 test('debug mode never returns a stale devirtualization from a previous run', { skip }, t => {
   const dir = temp(t);
   const input = path.join(dir, 'input.lua');

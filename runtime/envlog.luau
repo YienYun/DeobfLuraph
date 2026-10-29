@@ -2326,7 +2326,23 @@ if name == "HttpGet" or name == "HttpGetAsync" or name == "HttpPost" or name == 
         else
                 hint = "result"
         end
-        return callP(calleeText .. "(" .. fmtArgs(R.unpack(args, 1, args.n)) .. ")", hint)
+        local ctext = calleeText .. "(" .. fmtArgs(R.unpack(args, 1, args.n)) .. ")"
+        if info.ls_chunk then
+                local bp = callP(ctext, hint, "function")
+                INFO[bp].ls_boot = true
+                return bp
+        end
+        if info.ls_boot then
+                local up = callP(ctext, "lib", "table")
+                INFO[up].ui_lib = true
+                return up
+        end
+        if info.ui_fn or info.ui_lib or (info.parent and isP(info.parent) and INFO[info.parent].ui_lib) then
+                local cp = callP(ctext, hint, "table")
+                INFO[cp].ui_lib = true
+                return cp
+        end
+        return callP(ctext, hint)
 end
 
 -- values that are certainly not numbers/strings in Roblox: arithmetic on
@@ -2660,6 +2676,22 @@ PMT.__index = function(p, k)
                         end
                         return c
                 end
+        end
+        if info.ls_boot then
+                info.ls_boot = nil
+                info.tname = "table"
+                info.ui_lib = true
+        end
+        if info.ui_lib and R.type(k) == "string" then
+                local c = indexP(p, k)
+                if k == "Flags" or k == "Options" or k == "Tabs" or k == "Theme" then
+                        INFO[c].tname = "table"
+                        INFO[c].ui_lib = true
+                else
+                        INFO[c].tname = "function"
+                        INFO[c].ui_fn = true
+                end
+                return c
         end
         if isMethodName(k) and info.tname ~= "table" then
                 return methodFn(p, k)
@@ -3120,7 +3152,7 @@ E.type = function(...)
         local v = ...
         if isP(v) then
                 local t = INFO[v].tname
-                if t == "string" or t == "number" or t == "table" or t == "boolean" then return t end
+                if t == "string" or t == "number" or t == "table" or t == "boolean" or t == "function" then return t end
                 return "userdata"
         end
         return R.type(...)
@@ -3228,7 +3260,9 @@ local function srcKey(src)
 end
 E.loadstring = function(src, chunkname)
         if isP(src) then
-                return exprP("loadstring(" .. tok(src) .. ")", "function")
+                local lp = exprP("loadstring(" .. tok(src) .. ")", "function")
+                INFO[lp].ls_chunk = true
+                return lp
         end
         local patched = nil
         if R.type(src) == "string" and #src >= PROTO.chunk_min then
@@ -3995,6 +4029,29 @@ local function nativeFn(label, f)
         FNAME[f] = label
         return f
 end
+E.rawget = nativeFn("rawget", function(...)
+        local t, k = ...
+        if R.select("#", ...) >= 2 and isP(t) and INFO[t].tname == "table" then
+                return INFO[t].props[k]
+        end
+        return REAL_G.rawget(...)
+end)
+E.rawset = nativeFn("rawset", function(...)
+        local t, k, v = ...
+        if R.select("#", ...) >= 3 and isP(t) and INFO[t].tname == "table" then
+                if k == nil then REAL_G.rawset({}, nil, v) end
+                INFO[t].props[k] = v
+                return t
+        end
+        return REAL_G.rawset(...)
+end)
+E.rawlen = nativeFn("rawlen", function(...)
+        local t = ...
+        if R.select("#", ...) >= 1 and isP(t) and INFO[t].tname == "table" then
+                return REAL_G.rawlen(INFO[t].props)
+        end
+        return REAL_G.rawlen(...)
+end)
 local function namespace(name, fields)
         local t = fields or {}
         for k, v in R.pairs(t) do

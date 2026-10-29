@@ -3,6 +3,7 @@ import gzip
 import hashlib
 import hmac
 import json
+import math
 import os
 import re
 import struct
@@ -441,6 +442,14 @@ def _classify_vm_method(vmobj, fn_node):
                         return "setlist"
     if len(args) == 7 and not fn_node.get("vararg"):
         return "closure"
+    if len(args) == 2 and not fn_node.get("vararg") and len(body) <= 5:
+        nums = {int(n["value"]) for n in iter_nodes(fn_node) if n.get("type") == "AstExprConstantNumber" and float(n["value"]).is_integer()}
+        if 4294967296 in nums and 65535 not in nums:
+            return "u32_trunc"
+    if len(args) == 3 and not fn_node.get("vararg"):
+        nums = {int(n["value"]) for n in iter_nodes(fn_node) if n.get("type") == "AstExprConstantNumber" and float(n["value"]).is_integer()}
+        if 4294967295 in nums and 65535 in nums:
+            return "u32_mul"
     return None
 
 
@@ -537,9 +546,91 @@ class _PlainPrinter(LA.Printer):
                 if self.fl is not None:
                     self.fl.prog.dump.needs_setlist = True
                 return "_lph_setlist(%s)" % ", ".join(self.expr(a, depth) for a in rep[1])
+            if kind == "u32_trunc":
+                cv = self._eval_const_num(rep[1])
+                if cv is not None:
+                    return str((math.floor(cv) % 4294967296) if math.isfinite(cv) else 0)
+                if self.fl is not None:
+                    self.fl.prog.dump.needs_u32_trunc = True
+                return "u32Trunc(%s)" % self.expr(rep[1], depth)
+            if kind == "u32_mul":
+                ca = self._eval_const_num(rep[1][0])
+                cb = self._eval_const_num(rep[1][1])
+                if ca is not None and cb is not None and math.isfinite(ca) and math.isfinite(cb):
+                    ua = int(math.floor(ca)) & 0xFFFFFFFF
+                    ub = int(math.floor(cb)) & 0xFFFFFFFF
+                    return str((ua * ub) & 0xFFFFFFFF)
+                if self.fl is not None:
+                    self.fl.prog.dump.needs_u32_mul = True
+                return "u32Mul(%s, %s)" % (self.expr(rep[1][0], depth), self.expr(rep[1][1], depth))
             if kind == "wkk":
                 return self._lift_wkk(rep[1], depth)
         return super().expr(e, depth)
+
+    def _eval_const_num(self, e):
+        if not isinstance(e, dict):
+            return None
+        while e.get("type") == "AstExprGroup":
+            e = e["expr"]
+        rep = self.node_reps.get(id(e))
+        if rep is not None:
+            k = rep[0]
+            if k == "const" and isinstance(rep[1], (int, float)) and not isinstance(rep[1], bool):
+                return rep[1]
+            if k == "u32_trunc":
+                cv = self._eval_const_num(rep[1])
+                return ((math.floor(cv) % 4294967296) if math.isfinite(cv) else 0) if cv is not None else None
+            if k == "u32_mul":
+                ca, cb = self._eval_const_num(rep[1][0]), self._eval_const_num(rep[1][1])
+                if ca is not None and cb is not None and math.isfinite(ca) and math.isfinite(cb):
+                    return ((int(math.floor(ca)) & 0xFFFFFFFF) * (int(math.floor(cb)) & 0xFFFFFFFF)) & 0xFFFFFFFF
+                return None
+            return None
+        t = e.get("type")
+        if t == "AstExprConstantNumber":
+            v = e["value"]
+            return int(v) if isinstance(v, float) and v.is_integer() else v
+        if t == "AstExprUnary" and e.get("op") == "Minus":
+            a = self._eval_const_num(e["expr"])
+            return -a if a is not None else None
+        if t == "AstExprBinary":
+            op = e.get("op")
+            a, b = self._eval_const_num(e["left"]), self._eval_const_num(e["right"])
+            if a is not None and b is not None:
+                if op == "Add": return a + b
+                if op == "Sub": return a - b
+                if op == "Mul": return a * b
+                if op == "Mod" and b != 0: return a % b
+            return None
+        if t == "AstExprCall" and not e.get("self"):
+            fn_rep = self.node_reps.get(id(e.get("func")))
+            fname = fn_rep[1] if fn_rep and fn_rep[0] in ("global", "builtin") else None
+            if fname and fname.startswith("bit32."):
+                vals = [self._eval_const_num(a) for a in (e.get("args") or [])]
+                if vals and all(v is not None and math.isfinite(v) for v in vals):
+                    ivs = [int(math.floor(v)) & 0xFFFFFFFF for v in vals]
+                    op = fname.split(".", 1)[1]
+                    if op == "band":
+                        acc = 0xFFFFFFFF
+                        for x in ivs: acc &= x
+                        return acc
+                    if op == "bor":
+                        acc = 0
+                        for x in ivs: acc |= x
+                        return acc
+                    if op == "bxor":
+                        acc = 0
+                        for x in ivs: acc ^= x
+                        return acc
+                    if op == "bnot" and len(ivs) >= 1:
+                        return (~ivs[0]) & 0xFFFFFFFF
+                    if op == "lshift" and len(ivs) >= 2:
+                        s = ivs[1] if ivs[1] < 0x80000000 else ivs[1] - 0x100000000
+                        return ((ivs[0] << s) & 0xFFFFFFFF) if 0 <= s < 32 else ((ivs[0] >> -s) if -32 < s < 0 else 0)
+                    if op == "rshift" and len(ivs) >= 2:
+                        s = ivs[1] if ivs[1] < 0x80000000 else ivs[1] - 0x100000000
+                        return (ivs[0] >> s) if 0 <= s < 32 else (((ivs[0] << -s) & 0xFFFFFFFF) if -32 < s < 0 else 0)
+        return None
 
     def prefix(self, e, depth):
         rep = self.node_reps.get(id(e))
@@ -1659,6 +1750,24 @@ class ProtoLifter:
                         node_reps[id(p)] = ("reg", item.n)
                         continue
                     if isinstance(item, MaybeBox):
+                        gp, _ = parent_map.get(id(p), (None, None))
+                        ggp, _ = parent_map.get(id(gp), (None, None)) if gp else (None, None)
+                        if gp and gp.get("type") == "AstExprIndexExpr" and gp.get("expr") is p \
+                                and gp["index"].get("type") == "AstExprConstantNumber" \
+                                and ggp and ggp.get("type") == "AstExprIndexExpr":
+                            other = ggp["index"] if ggp.get("expr") is gp else (ggp["expr"] if ggp.get("index") is gp else None)
+                            oexpr = other.get("expr") if isinstance(other, dict) and other.get("type") == "AstExprIndexExpr" \
+                                and other["index"].get("type") == "AstExprConstantNumber" else None
+                            if isinstance(oexpr, dict) and oexpr.get("type") == "AstExprIndexExpr" \
+                                    and oexpr.get("expr", {}).get("type") == "AstExprLocal" \
+                                    and oexpr["expr"]["local"]["location"] == loc \
+                                    and oexpr.get("index", {}).get("type") == "AstExprConstantNumber" \
+                                    and int(oexpr["index"]["value"]) == k:
+                                if ggp.get("expr") is gp:
+                                    self.captured_regs.add(item.reg)
+                                    ups.append(Reg(item.reg))
+                                    node_reps[id(ggp)] = ("reg", item.reg)
+                                continue
                         self.captured_regs.add(item.reg)
                         ups.append(Reg(item.reg))
                         node_reps[id(p)] = ("reg", item.reg)
@@ -1696,12 +1805,32 @@ class ProtoLifter:
                     if mkind == "setlist" and len(cargs) >= 2:
                         node_reps[id(gp)] = ("setlist", cargs)
                         continue
+                    if mkind == "u32_trunc" and len(cargs) == 1:
+                        node_reps[id(gp)] = ("u32_trunc", cargs[0])
+                        continue
+                    if mkind == "u32_mul" and len(cargs) == 2:
+                        node_reps[id(gp)] = ("u32_mul", cargs)
+                        continue
             elif isinstance(val, Reg):
                 self.captured_regs.add(val.n)
                 ups.append(val)
                 node_reps[id(n)] = ("reg", val.n)
                 continue
             elif isinstance(val, MaybeBox):
+                gp, _ = parent_map.get(id(p), (None, None)) if p else (None, None)
+                if p and p.get("type") == "AstExprIndexExpr" and p.get("expr") is n \
+                        and p["index"].get("type") == "AstExprConstantNumber" \
+                        and gp and gp.get("type") == "AstExprIndexExpr":
+                    other = gp["index"] if gp.get("expr") is p else (gp["expr"] if gp.get("index") is p else None)
+                    oexpr = other.get("expr") if isinstance(other, dict) and other.get("type") == "AstExprIndexExpr" \
+                        and other["index"].get("type") == "AstExprConstantNumber" else None
+                    if isinstance(oexpr, dict) and oexpr.get("type") == "AstExprLocal" \
+                            and oexpr["local"]["location"] == loc:
+                        if gp.get("expr") is p:
+                            self.captured_regs.add(val.reg)
+                            ups.append(Reg(val.reg))
+                            node_reps[id(gp)] = ("reg", val.reg)
+                        continue
                 self.captured_regs.add(val.reg)
                 ups.append(Reg(val.reg))
                 node_reps[id(n)] = ("reg", val.reg)
@@ -2051,12 +2180,36 @@ class ProtoLifter:
             return
         if isinstance(obj, LTable):
             if id(obj) in self.proto_arrays:
+                def _collect_out_regs(ex):
+                    out_r = list(expr_regs(ex))
+                    tmap = {st.t: st for st in self.out if isinstance(st, CallStmt)}
+                    seen_t = set()
+                    tqueue = [ex]
+                    while tqueue:
+                        cur = tqueue.pop()
+                        if isinstance(cur, TempVal):
+                            if cur.t not in seen_t and cur.t in tmap:
+                                seen_t.add(cur.t)
+                                cst = tmap[cur.t]
+                                out_r.extend(expr_regs(cst.fn))
+                                for ax in cst.args.items:
+                                    out_r.extend(expr_regs(ax))
+                                    tqueue.append(ax)
+                        elif isinstance(cur, Bin):
+                            tqueue.append(cur.a)
+                            tqueue.append(cur.b)
+                        elif isinstance(cur, Un):
+                            tqueue.append(cur.a)
+                        elif isinstance(cur, Index):
+                            tqueue.append(cur.obj)
+                            tqueue.append(cur.key)
+                    return out_r
                 if is_sym(key):
                     rk = self._resolve_jval(key)
                     if rk is not None:
                         key = rk
                     else:
-                        for r in expr_regs(key):
+                        for r in _collect_out_regs(key):
                             if isinstance(r.n, int) and r.n not in self.jump_regs:
                                 self.need_jump_regs.add(r.n)
                 if is_sym(v):
@@ -2064,7 +2217,7 @@ class ProtoLifter:
                     if rv is not None:
                         v = rv
                     else:
-                        for r in expr_regs(v):
+                        for r in _collect_out_regs(v):
                             if isinstance(r.n, int) and r.n not in self.jump_regs:
                                 self.need_jump_regs.add(r.n)
             if is_sym(key):
@@ -2811,6 +2964,8 @@ def meet(a, b):
         return x is None or (x[0] == "c" and x[1] is None)
 
     for r, f in a.items():
+        if r == ("__live_cap__",):
+            continue
         g = b.get(r)
         if g is None:
             if f[0] == "c" and ((isinstance(r, int) and 800000 < r < 810000) or (isinstance(r, tuple) and r[0] in ("up", "vararg"))):
@@ -2870,6 +3025,8 @@ def meet(a, b):
             elif not (_is_nil(f) and _is_nil(g)):
                 out[r] = ("any",)
     for r, g in b.items():
+        if r == ("__live_cap__",):
+            continue
         if r not in a:
             if g[0] == "c" and ((isinstance(r, int) and 800000 < r < 810000) or (isinstance(r, tuple) and r[0] in ("up", "vararg"))):
                 out[r] = g
@@ -2879,6 +3036,10 @@ def meet(a, b):
                     out[r] = ("may_c", nv)
                 elif not _is_nil(g):
                     out[r] = ("any",)
+    lca = a.get(("__live_cap__",))
+    lcb = b.get(("__live_cap__",))
+    if lca or lcb:
+        out[("__live_cap__",)] = ("__live_cap__", (lca[1] if lca else frozenset()) | (lcb[1] if lcb else frozenset()))
     return out
 
 def fact_of(value):
@@ -2891,8 +3052,8 @@ def fact_of(value):
         return ("g", value.name)
     if isinstance(value, S.NewTable) and not value.items:
         return ("tbl", {})
-    if isinstance(value, SymList) and value.tail is None:
-        return ("tbl", {i + 1: item.v for i, item in enumerate(value.items) if isinstance(item, Const)})
+    if isinstance(value, SymList) and value.tail is None and all(isinstance(item, Const) for item in value.items):
+        return ("tbl", {i + 1: item.v for i, item in enumerate(value.items)})
     if isinstance(value, ClosureExpr):
         return ("t", value)     
     if isinstance(value, (S.NewTable, Vec, Opaque)):
@@ -2906,8 +3067,28 @@ def eval_fact(e, facts):
         return ("c", e.v)
     if isinstance(e, (Global, Builtin)):
         return ("g", e.name)
-    if isinstance(e, SymList) and e.tail is None:
-        return ("tbl", {i + 1: item.v for i, item in enumerate(e.items) if isinstance(item, Const)})
+    if isinstance(e, SymList):
+        d = {}
+        for i, item in enumerate(e.items):
+            iv = eval_fact(item, facts)
+            if iv and iv[0] == "c":
+                d[i + 1] = iv[1]
+            elif iv and iv[0] == "rng":
+                d[i + 1] = iv
+        if e.tail is None:
+            if getattr(e, "nkey", None):
+                d[e.nkey] = len(e.items)
+            return ("tbl", d)
+        if isinstance(e.tail, TempTail):
+            tf = facts.get(("tmp", e.tail.t))
+            if tf and tf[0] == "m":
+                rest = tf[1][e.tail.start - 1:]
+                for j, tv in enumerate(rest):
+                    d[len(e.items) + j + 1] = tv
+                if getattr(e, "nkey", None):
+                    d[e.nkey] = len(e.items) + len(rest)
+                return ("tbl", d)
+        return None
     if isinstance(e, Reg):
         f = facts.get(e.n)
         if getattr(e, "_u32_trunc", False) and f and f[0] == "c" and isinstance(f[1], (int, float)) and not isinstance(f[1], bool):
@@ -3204,6 +3385,12 @@ def _capture_closure_up_facts(c, facts, lf=None):
             up_facts[("up", i)] = uf
     c.up_facts = up_facts
     c._open_up_regs = {i: r for i, u in enumerate(c.upvals, 1) for r in (_upval_open_reg(u),) if r is not None}
+    cregs = set(c._open_up_regs.values())
+    if lf is not None and any(isinstance(u, (RegFile, FrameProxy)) for u in c.upvals):
+        cregs |= set(lf.captured_regs)
+    if cregs:
+        prev_lc = facts.get(("__live_cap__",))
+        facts[("__live_cap__",)] = ("__live_cap__", (prev_lc[1] if prev_lc else frozenset()) | frozenset(cregs))
 
 def apply_stmt_facts(st, facts, lf, pos=None):
     if isinstance(st, Close):
@@ -3406,6 +3593,15 @@ def apply_stmt_facts(st, facts, lf, pos=None):
                     return rc0[1]
             return None
         invoked_closures = []
+        if isinstance(st.fn, ClosureExpr):
+            if pos is not None and not hasattr(st.fn, "_created_at"):
+                st.fn._created_at = pos
+            _capture_closure_up_facts(st.fn, facts, lf)
+        for ax in st.args.items:
+            if isinstance(ax, ClosureExpr):
+                if pos is not None and not hasattr(ax, "_created_at"):
+                    ax._created_at = pos
+                _capture_closure_up_facts(ax, facts, lf)
         fc_direct = _clos_of_expr(st.fn)
         if fc_direct is not None:
             invoked_closures.append(fc_direct)
@@ -3528,8 +3724,10 @@ def apply_stmt_facts(st, facts, lf, pos=None):
             for r, v in st.frame_eval.items():
                 facts[r] = ("c", v)
 
-        if lf.captured_regs and not is_pure_g:
-            kill_regs = lf.captured_regs
+        live_lc = facts.get(("__live_cap__",))
+        live_cap_regs = live_lc[1] if live_lc else frozenset()
+        if live_cap_regs and not is_pure_g:
+            kill_regs = live_cap_regs
             ff0 = facts.get(st.fn.n) if isinstance(st.fn, Reg) else None
             is_known_cl = bool(ff0 and ff0[0] == "t" and len(ff0) > 1 and isinstance(ff0[1], ClosureExpr))
             is_global_fn = bool(fn_f and fn_f[0] == "g")
@@ -5022,6 +5220,7 @@ class Program:
                 st.vreg_of.update(hvr)
                 lf.vreg_set |= hvrs
         lf.children.clear()
+        lf.captured_regs.clear()
         lf.reg_const_fact = {}
         lf.reg_closure_fact = {}
         lf.rcf_single_val = {}
@@ -5046,6 +5245,18 @@ class Program:
             init_f.setdefault(p_idx, ("any",))
         for vr, iv in getattr(st, "vreg_init", {}).items():
             init_f[vr] = ("c", iv)
+        if lf.vreg_set & lf.jump_regs and getattr(st, "vreg_init", None):
+            jmap0 = dict(s0.jregs)
+            jch0 = False
+            for vr in lf.vreg_set & lf.jump_regs:
+                iv = st.vreg_init.get(vr)
+                if isinstance(iv, int) and not isinstance(iv, bool) and jmap0.get(vr) != iv:
+                    jmap0[vr] = iv
+                    jch0 = True
+            if jch0:
+                s0 = State(s0.mode, s0.pc, s0.kstack, tuple(sorted(jmap0.items())), s0.ov, s0.packs, s0.locs)
+                work = deque([s0.key(link)])
+                states = {work[0]: s0}
         facts[work[0]] = init_f
         inwork = {work[0]}
         pack_sets = {}      
@@ -5740,6 +5951,16 @@ def lift_program(source, protos_path, chunk_paths=(), fetch=None):
         out.append("return vm_root_%s(...)" % payload_pid)
 
     shared = []
+    if getattr(prog.dump, "needs_u32_trunc", False):
+        shared += ["local function u32Trunc(x)",
+                   "\tx %= 4294967296",
+                   "\treturn if x == x then x // 1 else 0",
+                   "end", ""]
+    if getattr(prog.dump, "needs_u32_mul", False):
+        shared += ["local function u32Mul(a, b)",
+                   "\ta, b = bit32.band(a, 4294967295), bit32.band(b, 4294967295)",
+                   "\treturn bit32.band(bit32.band(a, 65535) * b + bit32.lshift(bit32.rshift(a, 16) * bit32.band(b, 65535), 16), 4294967295)",
+                   "end", ""]
     if getattr(prog.dump, "needs_setlist", False):
         shared += ["local function _lph_setlist(t, off, ...)",
                    "\tlocal p = table.pack(...)",

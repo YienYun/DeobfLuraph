@@ -12,8 +12,8 @@ const { getPythonBin } = require('./pyenv');
 const { isValidLuaSyntax } = require('./luac_decompile');
 
 const ROOT = path.resolve(__dirname, '..');
-const TOOLS = path.join(ROOT, 'tools');
 const CORE = path.join(ROOT, 'core');
+const OBFUSCATORS = path.join(CORE, 'obfuscators');
 
 function binPath(name) {
   const ext = process.platform === 'win32' ? '.exe' : '';
@@ -74,14 +74,14 @@ function runPythonCli(pyArgs, timeoutSec, opts = {}) {
 }
 
 async function runPrometheus(job) {
-  const cli = path.join(TOOLS, 'prometheus', 'bin', 'pdeobf.js');
+  const cli = path.join(OBFUSCATORS, 'prometheus', 'bin', 'pdeobf.js');
   const out = job.path('.prometheus.lua');
   runNodeCli([cli, job.sourcePath, '-o', out], job.args.timeout);
   return finalizeStaticResult(job, out, 'Prometheus');
 }
 
 async function runLuaObfuscator(job) {
-  const cli = path.join(TOOLS, 'luaobfuscator', 'src', 'cli.js');
+  const cli = path.join(OBFUSCATORS, 'luaobfuscator', 'src', 'cli.js');
   const stdout = runNodeCli([cli, job.sourcePath, '--stdout'], job.args.timeout);
   if (!stdout.trim()) throw new Error('LuaObfuscator returned empty stdout');
   const out = job.write(job.path('.luaobfuscator.lua'), stdout);
@@ -89,23 +89,23 @@ async function runLuaObfuscator(job) {
 }
 
 async function runPsu(job) {
-  const cli = path.join(TOOLS, 'psu', 'src', 'cli.js');
+  const cli = path.join(OBFUSCATORS, 'psu', 'src', 'cli.js');
   const out = job.path('.psu.lua');
   runNodeCli([cli, job.sourcePath, '-o', out], job.args.timeout);
   return finalizeStaticResult(job, out, 'PSU');
 }
 
 async function runHercules(job) {
-  const cli = path.join(TOOLS, 'hercules', 'deobfhercules.py');
+  const cli = path.join(OBFUSCATORS, 'hercules', 'deobfhercules.py');
   const out = job.path('.hercules.lua');
   runPythonCli([cli, job.sourcePath, out, '--timeout', String(job.args.timeout)], job.args.timeout + 10, {
-    env: { PYTHONPATH: path.join(TOOLS, 'hercules') },
+    env: { PYTHONPATH: path.join(OBFUSCATORS, 'hercules') },
   });
   return finalizeStaticResult(job, out, 'Hercules');
 }
 
 async function runGoofyscator(job) {
-  const cli = path.join(TOOLS, 'goofyscator', 'cli.js');
+  const cli = path.join(OBFUSCATORS, 'goofyscator', 'cli.js');
   const out = job.path('.goofyscator.lua');
   const luaRuntime = fs.existsSync(binPath('lua5.1')) ? binPath('lua5.1') : binPath('luau');
   runNodeCli([cli, job.sourcePath, '-o', out, '--lua', luaRuntime], job.args.timeout);
@@ -117,12 +117,12 @@ async function runMoonsec(job) {
   const isV2 = job.source.slice(0, 1500).includes('..:::MoonSec::..') || job.source.slice(0, 1500).includes('MoonSec V2');
 
   const tryV3 = () => {
-    const { deobfuscateToSource } = require(path.join(TOOLS, 'moonsec', 'src', 'decompiler.js'));
+    const { deobfuscateToSource } = require(path.join(OBFUSCATORS, 'moonsec', 'src', 'decompiler.js'));
     const code = deobfuscateToSource(job.source, { timeout: job.args.timeout * 1000 });
     return job.write(out, code);
   };
   const tryV2 = () => {
-    const cli = path.join(TOOLS, 'ironbrew2', 'cli.js');
+    const cli = path.join(OBFUSCATORS, 'ironbrew2', 'cli.js');
     runNodeCli([cli, job.sourcePath, '-o', out, '--mode', 'moonsec_v2'], job.args.timeout);
     return out;
   };
@@ -140,7 +140,7 @@ async function runMoonsec(job) {
 }
 
 async function runIronbrew2(job) {
-  const cli = path.join(TOOLS, 'ironbrew2', 'cli.js');
+  const cli = path.join(OBFUSCATORS, 'ironbrew2', 'cli.js');
   const out = job.path('.ironbrew2.lua');
   runNodeCli([cli, job.sourcePath, '-o', out, '--mode', 'ironbrew2'], job.args.timeout);
   return finalizeStaticResult(job, out, 'IronBrew v2');
@@ -148,7 +148,7 @@ async function runIronbrew2(job) {
 
 async function runMoonveil(job) {
   const out = job.path('.moonveil.lua');
-  const mvDir = path.join(TOOLS, 'moonveil');
+  const mvDir = path.join(OBFUSCATORS, 'moonveil');
   const mvTimeout = Math.max(job.args.timeout || 90, 120);
   const r = spawnSync(
     getPythonBin(),

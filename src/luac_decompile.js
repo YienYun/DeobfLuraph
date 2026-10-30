@@ -7,7 +7,7 @@ const { spawnSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const BIN_DIR = path.join(ROOT, 'bin');
-const DECOM_LUA = path.join(ROOT, 'tools', 'moonsec-lua', 'decom.lua');
+const DECOM_LUA = path.join(ROOT, 'core', 'obfuscators', 'moonsec', 'decom.lua');
 
 function binPath(name) {
   const ext = process.platform === 'win32' ? '.exe' : '';
@@ -116,7 +116,7 @@ function isValidLuaSyntax(source) {
  * Tries:
  *  1) Optional `java -jar unluac.jar` if both Java and unluac.jar are present
  *  2) Native `bin/luadec` (with automatic 32->64 bit size_t conversion when needed)
- *  3) `bin/lua5.1 tools/moonsec-lua/decom.lua` (pure Lua 5.1 decompiler fallback)
+ *  3) `bin/lua5.1 core/obfuscators/moonsec/decom.lua` (pure Lua 5.1 decompiler fallback)
  */
 function decompileLua51Bytecode(bytecode, options = {}) {
   const rawBuf = Buffer.isBuffer(bytecode) ? bytecode : Buffer.from(bytecode, 'binary');

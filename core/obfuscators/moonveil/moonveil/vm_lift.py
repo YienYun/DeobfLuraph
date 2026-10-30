@@ -53,7 +53,10 @@ from .beautify import (
 )
 
 
-ROOT_DIR = Path(__file__).resolve().parents[3]
+ROOT_DIR = next(
+    (p for p in Path(__file__).resolve().parents if (p / "deob.js").is_file()),
+    Path(__file__).resolve().parents[4],
+)
 LUAU_BIN = ROOT_DIR / "bin" / "luau"
 KEYWORDS = {
     "and", "break", "do", "else", "elseif", "end", "false", "for",

@@ -138,6 +138,24 @@ class Job {
   }
 }
 
+function walkInputDir(dirPath, seen, files) {
+  const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+  for (const entry of entries) {
+    if (entry.name.startsWith('.')) continue;
+    const full = path.join(dirPath, entry.name);
+    if (entry.isDirectory()) {
+      const lower = entry.name.toLowerCase();
+      if (lower === 'output' || lower === 'node_modules') continue;
+      walkInputDir(full, seen, files);
+    } else if (entry.isFile() && DIRECTORY_EXTENSIONS.includes(path.extname(entry.name).toLowerCase())) {
+      if (!seen.has(full)) {
+        seen.add(full);
+        files.push(full);
+      }
+    }
+  }
+}
+
 function collectInputFiles(rawPaths) {
   const files = [];
   const seen = new Set();
@@ -150,16 +168,7 @@ function collectInputFiles(rawPaths) {
     }
     const stat = fs.statSync(abs);
     if (stat.isDirectory()) {
-      const entries = fs.readdirSync(abs, { withFileTypes: true });
-      for (const entry of entries) {
-        if (entry.isFile() && DIRECTORY_EXTENSIONS.includes(path.extname(entry.name).toLowerCase())) {
-          const filePath = path.join(abs, entry.name);
-          if (!seen.has(filePath)) {
-            seen.add(filePath);
-            files.push(filePath);
-          }
-        }
-      }
+      walkInputDir(abs, seen, files);
     } else if (stat.isFile()) {
       const ext = path.extname(abs).toLowerCase();
       if (!FILE_EXTENSIONS.includes(ext)) {
@@ -174,6 +183,24 @@ function collectInputFiles(rawPaths) {
   }
 
   return files;
+}
+
+function resolveDefaultOutdir(absInput) {
+  const parentDir = path.dirname(absInput);
+  const parts = parentDir.split(path.sep);
+  let inputIdx = -1;
+  for (let i = parts.length - 1; i >= 0; i--) {
+    if (parts[i].toLowerCase() === 'input') {
+      inputIdx = i;
+      break;
+    }
+  }
+  if (inputIdx >= 0) {
+    const baseDir = parts.slice(0, inputIdx).join(path.sep) || path.sep;
+    const subParts = parts.slice(inputIdx + 1);
+    return path.join(baseDir, 'output', ...subParts);
+  }
+  return path.join(parentDir, 'output');
 }
 
 function sameExistingFile(a, b) {
@@ -217,10 +244,7 @@ async function processFile(absInput, args) {
 
   process.stderr.write(`[*] obfuscator: ${plugin.label} (detected, ${confidence.toFixed(2)})\n`);
 
-  const parentDir = path.dirname(absInput);
-  const outdir = path.basename(parentDir).toLowerCase() === 'input'
-    ? path.join(path.dirname(parentDir), 'output')
-    : path.join(parentDir, 'output');
+  const outdir = resolveDefaultOutdir(absInput);
   const defaultOutName = path.basename(absInput).replace(/\.txt$/i, '.luau');
   const final = args.output && args.singleFile
     ? path.resolve(args.output)

@@ -95,6 +95,20 @@ test('input/ subfolder automatically routes deobfuscated output to sibling outpu
   assert.equal(rep.obfuscator, 'luaobfuscator');
   assert.equal(rep.result_type, 'devirtualized');
   assert.equal(rep.rename_stats, undefined, 'renamer must stay off unless --rename is explicitly passed');
+
+  // Nested per-obfuscator subfolder inside input/ (e.g. input/MoonVeil/sub.lua -> output/MoonVeil/sub.lua)
+  const subInDir = path.join(inDir, 'MoonVeil');
+  fs.mkdirSync(subInDir, { recursive: true });
+  const subInFile = path.join(subInDir, 'nested.lua');
+  fs.writeFileSync(subInFile, '-- LuaObfuscator.com\nlocal v0 = "Nested Subfolder OK"\nprint(v0)\n', 'utf8');
+  const r2 = spawnSync(process.execPath, [path.join(ROOT, 'deob.js'), subInFile], {
+    cwd: ROOT,
+    encoding: 'utf8',
+    timeout: 60000,
+  });
+  assert.equal(r2.status, 0, r2.stderr);
+  assert.ok(fs.existsSync(path.join(outDir, 'MoonVeil', 'nested.lua')), 'expected mirrored subfolder inside output/');
+  assert.equal(fs.existsSync(path.join(subInDir, 'output')), false, 'must not pollute input/MoonVeil/ with output/');
 });
 
 test('native Lua 5.1 bytecode compiler + luac32To64 + luadec/decom pipeline recovers Lua source cleanly', t => {
@@ -135,7 +149,7 @@ test('MoonVeil beautifier folds expressions, unboxes upvalue cells, and reconstr
       '-c',
       [
         'import sys',
-        'sys.path.insert(0, "tools/moonveil")',
+        'sys.path.insert(0, "core/obfuscators/moonveil")',
         'from moonveil.front import parse',
         'from moonveil.beautify import beautify_reconstructed',
         'sample = b"""',

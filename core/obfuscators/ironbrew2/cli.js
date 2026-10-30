@@ -6,7 +6,7 @@ const path = require('path');
 const luamin = require('./utility/luamin');
 const ironbrew = require('./obfuscators/ironbrew/deobfuscate');
 const moonsecV2 = require('./obfuscators/moonsec/deobfuscate');
-const { decompileLua51Bytecode } = require(path.resolve(__dirname, '../../src/luac_decompile.js'));
+const { decompileLua51Bytecode } = require(path.resolve(__dirname, '../../../src/luac_decompile.js'));
 
 function deobfuscateSource(script, mode = 'auto', options = {}) {
   const origLog = console.log;

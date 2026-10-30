@@ -4,7 +4,7 @@ const path = require('path');
 const { Deobfuscator } = require('./deobf/deobfuscator.js');
 const { Serializer } = require('./deobf/bytecode/serializer.js');
 const { Disassembler } = require('./deobf/bytecode/disassembler.js');
-const { decompileLua51Bytecode } = require(path.resolve(__dirname, '../../../src/luac_decompile.js'));
+const { decompileLua51Bytecode } = require(path.resolve(__dirname, '../../../../src/luac_decompile.js'));
 
 function deobfuscateToBytecode(code) {
   const result = new Deobfuscator().deobfuscate(code);

@@ -312,6 +312,28 @@ func (e *Engine) offline(f *luau.File, perr error, src string, comments string) 
 		return res
 	}
 	out, applied := f.Rename(f.SuggestNames())
+	totalRenamed := len(applied)
+	// Pass 2: Rename generated fields on pure context tables (`ctx.fn11` -> `ctx.waitHeartbeat`)
+	// and run a follow-up local pass so variables initialized from newly-named functions/fields inherit clean names.
+	if rf, err := luau.Parse(out); err == nil {
+		if fieldOut, nFields := rf.RenameContextFields(); nFields > 0 {
+			out = fieldOut
+			totalRenamed += nFields
+			if rf2, err2 := luau.Parse(out); err2 == nil {
+				rf2Out, applied2 := rf2.Rename(rf2.SuggestNames())
+				if len(applied2) > 0 {
+					out = rf2Out
+					totalRenamed += len(applied2)
+				}
+			}
+		} else {
+			out2, applied2 := rf.Rename(rf.SuggestNames())
+			if len(applied2) > 0 {
+				out = out2
+				totalRenamed += len(applied2)
+			}
+		}
+	}
 	numComments := 0
 	if comments != "" && comments != "none" {
 		if rf, err := luau.Parse(out); err == nil {
@@ -322,7 +344,7 @@ func (e *Engine) offline(f *luau.File, perr error, src string, comments string) 
 			}
 		}
 	}
-	res.Source, res.Renamed, res.Comments = luau.CompactBlankLines(out), len(applied), numComments
+	res.Source, res.Renamed, res.Comments = luau.TidyFormatting(luau.CompactBlankLines(out)), totalRenamed, numComments
 	return res
 }
 

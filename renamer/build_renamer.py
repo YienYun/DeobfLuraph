@@ -22,12 +22,12 @@ def find_or_bootstrap_go() -> str:
     if go:
         return go
     sdk_dir = Path("/tmp/go-sdk")
-    candidates = list(sdk_dir.glob("**/bin/go"))
+    candidates = [p for p in sdk_dir.glob("**/bin/go") if "go/bin/go" in p.as_posix()] or list(sdk_dir.glob("**/bin/go"))
     if candidates:
         return str(candidates[0])
     print("[*] Go not found on PATH; bootstrapping portable go-bin into /tmp/go-sdk ...")
     subprocess.check_call([sys.executable, "-m", "pip", "install", "--quiet", "--target", str(sdk_dir), "go-bin"])
-    candidates = list(sdk_dir.glob("**/bin/go"))
+    candidates = [p for p in sdk_dir.glob("**/bin/go") if "go/bin/go" in p.as_posix()] or list(sdk_dir.glob("**/bin/go"))
     if not candidates:
         raise RuntimeError("go-bin installed but `go` binary was not found under /tmp/go-sdk")
     return str(candidates[0])
@@ -38,6 +38,8 @@ def main() -> None:
     OUT_BIN.parent.mkdir(parents=True, exist_ok=True)
     env = os.environ.copy()
     env["CGO_ENABLED"] = "0"
+    if "/tmp/go-sdk" in go:
+        env["PYTHONPATH"] = "/tmp/go-sdk" + (os.pathsep + env["PYTHONPATH"] if env.get("PYTHONPATH") else "")
     if LUAU_BIN.exists():
         env["LUAU_BIN"] = str(LUAU_BIN)
 

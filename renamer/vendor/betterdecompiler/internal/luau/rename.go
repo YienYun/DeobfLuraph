@@ -116,12 +116,36 @@ func (f *File) Rename(want map[int]string) (string, map[int]string) {
 	for id, n := range base {
 		target[id] = n
 	}
+	used := map[string]bool{}
+	for _, t := range f.Toks {
+		if t.Kind == Name {
+			used[t.Text] = true
+		}
+	}
+	nextSuffix := map[string]int{}
+	allocUnique := func(bname string) string {
+		n := nextSuffix[bname]
+		if n < 2 {
+			n = 2
+		}
+		for {
+			cand := bname + strconv.Itoa(n)
+			n++
+			if !used[cand] {
+				nextSuffix[bname] = n
+				used[cand] = true
+				return cand
+			}
+		}
+	}
+
 	attempts := map[int]int{}
 	for iter := 0; iter < 64 && len(target) > 0; iter++ {
 		p, err := analyze(f.Toks, f.namesWith(target))
 		if err != nil { // cannot happen for identifier-only changes, but be safe
 			return f.Src, map[int]string{}
 		}
+		culpritList := make([]int, 0)
 		culprits := map[int]bool{}
 		for i, orig := range f.Resolve {
 			if orig == NotVar {
@@ -134,21 +158,40 @@ func (f *File) Rename(want map[int]string) (string, map[int]string) {
 			// Blame the renamed binding that captured the reference, else the
 			// renamed binding that lost it.
 			if _, ok := target[now]; ok && now >= 0 {
-				culprits[now] = true
+				if !culprits[now] {
+					culprits[now] = true
+					culpritList = append(culpritList, now)
+				}
 			} else if _, ok := target[orig]; ok && orig >= 0 {
-				culprits[orig] = true
+				if !culprits[orig] {
+					culprits[orig] = true
+					culpritList = append(culpritList, orig)
+				}
 			}
 		}
-		if len(culprits) == 0 {
+		if len(culpritList) == 0 {
 			return f.applyNames(target), target
 		}
-		for id := range culprits {
+		sort.Ints(culpritList)
+		for _, id := range culpritList {
 			attempts[id]++
-			if attempts[id] > 8 {
+			if attempts[id] > 32 {
 				delete(target, id)
 				continue
 			}
-			target[id] = base[id] + strconv.Itoa(attempts[id]+1)
+			if attempts[id] == 1 {
+				// First try simple base2 if completely unused, else allocate guaranteed-unused suffix
+				cand2 := base[id] + "2"
+				if !used[cand2] {
+					used[cand2] = true
+					if nextSuffix[base[id]] < 3 {
+						nextSuffix[base[id]] = 3
+					}
+					target[id] = cand2
+					continue
+				}
+			}
+			target[id] = allocUnique(base[id])
 		}
 	}
 	if len(target) == 0 {
@@ -359,3 +402,93 @@ func CompactBlankLines(src string) string {
 	}
 	return sb.String()
 }
+
+// TidyFormatting performs lexer-safe Luau syntax tidying without altering
+// string literals, comments, or evaluation semantics:
+//   - Simplifies `not (a.b)` -> `not a.b` when not followed by suffix ops
+//   - Simplifies `for k, v in next, tbl, nil do` -> `for k, v in next, tbl do`
+func TidyFormatting(src string) string {
+	all, err := Lex(src)
+	if err != nil {
+		return src
+	}
+	var toks []Token
+	for _, t := range all {
+		if t.Kind != Comment {
+			toks = append(toks, t)
+		}
+	}
+	type span struct{ start, end int }
+	var drops []span
+
+	isSuffixStart := func(t Token) bool {
+		if t.Kind == String {
+			return true
+		}
+		if t.Kind == Op {
+			switch t.Text {
+			case ".", ":", "[", "(", "{":
+				return true
+			}
+		}
+		return false
+	}
+
+	for i := 0; i < len(toks); i++ {
+		// Pattern 1: `not ( ident(.ident)* )` not followed by suffix op
+		if toks[i].Kind == Keyword && toks[i].Text == "not" &&
+			i+3 < len(toks) && toks[i+1].Kind == Op && toks[i+1].Text == "(" &&
+			toks[i+2].Kind == Name {
+			j := i + 3
+			for j+1 < len(toks) && toks[j].Kind == Op && toks[j].Text == "." && toks[j+1].Kind == Name {
+				j += 2
+			}
+			if j < len(toks) && toks[j].Kind == Op && toks[j].Text == ")" {
+				if j+1 >= len(toks) || !isSuffixStart(toks[j+1]) {
+					// Ensure a space remains between `not` and the identifier if `not(` had none
+					if toks[i].End == toks[i+1].Start {
+						// leave `not(` alone or replace `(` with ` `; easiest: skip rare `not(x)` without space
+					} else {
+						drops = append(drops, span{toks[i+1].Start, toks[i+1].End})
+						drops = append(drops, span{toks[j].Start, toks[j].End})
+						i = j
+						continue
+					}
+				}
+			}
+		}
+		// Pattern 2: `in next , <ident(.ident)*> , nil do` -> drop `, nil`
+		if toks[i].Kind == Keyword && toks[i].Text == "in" &&
+			i+5 < len(toks) && toks[i+1].Kind == Name && toks[i+1].Text == "next" &&
+			toks[i+2].Kind == Op && toks[i+2].Text == "," && toks[i+3].Kind == Name {
+			j := i + 4
+			for j+1 < len(toks) && toks[j].Kind == Op && toks[j].Text == "." && toks[j+1].Kind == Name {
+				j += 2
+			}
+			if j+2 < len(toks) && toks[j].Kind == Op && toks[j].Text == "," &&
+				toks[j+1].Kind == Keyword && toks[j+1].Text == "nil" &&
+				toks[j+2].Kind == Keyword && toks[j+2].Text == "do" {
+				drops = append(drops, span{toks[j].Start, toks[j+1].End})
+				i = j + 1
+			}
+		}
+	}
+
+	if len(drops) == 0 {
+		return src
+	}
+	sort.Slice(drops, func(i, j int) bool { return drops[i].start < drops[j].start })
+	var sb strings.Builder
+	sb.Grow(len(src))
+	last := 0
+	for _, d := range drops {
+		if d.start < last {
+			continue
+		}
+		sb.WriteString(src[last:d.start])
+		last = d.end
+	}
+	sb.WriteString(src[last:])
+	return sb.String()
+}
+

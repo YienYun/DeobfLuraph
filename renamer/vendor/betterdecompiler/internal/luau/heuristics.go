@@ -7,12 +7,32 @@ import (
 )
 
 var generatedRes = []*regexp.Regexp{
-	regexp.MustCompile(`(?i)^(?:v|u|p|a|r|l|var|arg|args|upv|upval|upvalue|param|slot|reg|loc|local|val|tbl|func|fn|num|str|flag|res|ret|tmp|idx|obj|inst|item|list|map|imap|smap|n|k|ok|result)_?\d+$`),
-	regexp.MustCompile(`^(?:arg|args|tbl|fn|func|val|tmp|inst|obj)$`),
+	regexp.MustCompile(`(?i)^(?:v|u|p|a|r|l|var|arg|args|upv|upval|upvalue|param|slot|reg|loc|local|val|tbl|func|fn|num|str|txt|flag|res|ret|tmp|idx|obj|inst|item|list|map|imap|smap|numval|strval|n|k|ok|result)_?\d+$`),
+	regexp.MustCompile(`^(?:arg|args|tbl|fn|func|val|tmp|inst|obj|flag|str|txt|num|res|ret|numVal|strVal)$`),
 	regexp.MustCompile(`^l_[A-Za-z_][A-Za-z0-9_]*_\d+$`), // l_Players_0 (Medal/Konstant)
 	regexp.MustCompile(`^[A-Z]\d+_\d+$`),                 // L0_1 (unluac style)
 	regexp.MustCompile(`^(?:[vupal]_)+\d+$`),             // v_u_1 (Medal upvalues)
 	regexp.MustCompile(`^_\d+$`),
+}
+
+func shouldRenameBinding(b *Binding) bool {
+	if !b.Renamable() || b.Name == "_" {
+		return false
+	}
+	if LooksGenerated(b.Name) {
+		return true
+	}
+	if len(b.Name) == 1 {
+		switch b.Kind {
+		case BindForNum:
+			return false
+		case BindFor:
+			return b.Name != "k" && b.Name != "v" && b.Name != "i"
+		default:
+			return true
+		}
+	}
+	return false
 }
 
 var lNameRe = regexp.MustCompile(`^l_([A-Za-z_][A-Za-z0-9_]*)_\d+$`)
@@ -117,38 +137,54 @@ func (f *File) SuggestNames() map[int]string {
 		}
 		return f.Bindings[id].Name
 	}
-	for _, b := range f.Bindings {
-		if !b.Renamable() || !LooksGenerated(b.Name) {
-			continue
-		}
-		var n string
-		if m := lNameRe.FindStringSubmatch(b.Name); m != nil {
-			n = m[1]
-		}
-		if n == "" {
-			switch b.Kind {
-			case BindLocal:
-				if b.Body[0] >= 0 {
-					n = f.inferFuncBody(b.Body[0], b.Body[1])
-				} else if b.Init[0] >= 0 {
-					n = f.inferExpr(b.Init[0], b.Init[1], nameOf)
+	for pass := 0; pass < 2; pass++ {
+		changed := false
+		for _, b := range f.Bindings {
+			if !shouldRenameBinding(b) {
+				continue
+			}
+			if _, already := out[b.ID]; already {
+				continue
+			}
+			var n string
+			if m := lNameRe.FindStringSubmatch(b.Name); m != nil {
+				n = m[1]
+			}
+			if n == "" {
+				switch b.Kind {
+				case BindLocal:
+					if b.Body[0] >= 0 {
+						n = f.inferFuncBodyNamed(b.Body[0], b.Body[1], nameOf)
+					} else if b.Init[0] >= 0 {
+						n = f.inferExpr(b.Init[0], b.Init[1], nameOf)
+					}
+					if n == "" {
+						n = f.inferFromRefs(b, nameOf)
+					}
+				case BindLocalFunc:
+					if b.Body[0] >= 0 {
+						n = f.inferFuncBodyNamed(b.Body[0], b.Body[1], nameOf)
+					}
+				case BindParam:
+					if ps, ok := eventParams[b.Event]; ok && b.ParamIndex < len(ps) {
+						n = ps[b.ParamIndex]
+					}
+					if n == "" {
+						n = f.inferParam(b, nameOf)
+					}
+				case BindForNum:
+					n = "i"
+				case BindFor:
+					n = f.inferIter(b, nameOf)
 				}
-			case BindLocalFunc:
-				if b.Body[0] >= 0 {
-					n = f.inferFuncBody(b.Body[0], b.Body[1])
-				}
-			case BindParam:
-				if ps, ok := eventParams[b.Event]; ok && b.ParamIndex < len(ps) {
-					n = ps[b.ParamIndex]
-				}
-			case BindForNum:
-				n = "i"
-			case BindFor:
-				n = f.inferIter(b, nameOf)
+			}
+			if n != "" && ValidName(n) && n != b.Name {
+				out[b.ID] = n
+				changed = true
 			}
 		}
-		if n != "" && ValidName(n) && n != b.Name {
-			out[b.ID] = n
+		if !changed {
+			break
 		}
 	}
 	return out
@@ -273,16 +309,33 @@ func (f *File) inferExpr(s, e int, nameOf func(int) string) string {
 	if s >= e {
 		return ""
 	}
+	// Strip outer parentheses or simple fallback `(a and b) or c` for getgenv/gethui
+	for s+1 < e && f.Toks[s].Kind == Op && f.Toks[s].Text == "(" && f.matchingClose(s, e) == e-1 {
+		s++
+		e--
+	}
 	root, rootTok, segs, ok := f.chain(s, e)
 	if !ok {
-		return ""
+		return f.inferCompositeExpr(s, e)
 	}
 	// require(...) -> module name
 	if root == "require" && f.Resolve[rootTok] == Global && len(segs) == 1 && segs[0].call {
 		return pascal(f.lastNameIn(s+1, e))
 	}
 	if len(segs) == 0 {
-		return "" // plain alias of another variable
+		// Function reference alias `local c = Instance.new` / `local fn = trackConnection` / `local sm = setmetatable`
+		if id := f.Resolve[rootTok]; id >= 0 {
+			callee := nameOf(id)
+			if !LooksGenerated(callee) && len(callee) > 1 {
+				return callee
+			}
+		} else if f.Resolve[rootTok] == Global {
+			switch root {
+			case "setmetatable", "getmetatable", "tonumber", "tostring", "ipairs", "pairs", "next", "pcall", "xpcall", "select", "unpack", "rawget", "rawset":
+				return root + "Fn"
+			}
+		}
+		return ""
 	}
 	last := segs[len(segs)-1]
 	prevName := func() string {
@@ -295,7 +348,7 @@ func (f *File) inferExpr(s, e int, nameOf func(int) string) string {
 			}
 		}
 		if f.Resolve[rootTok] >= 0 {
-			if n := nameOf(f.Resolve[rootTok]); !LooksGenerated(n) {
+			if n := nameOf(f.Resolve[rootTok]); !LooksGenerated(n) && len(n) > 1 {
 				return n
 			}
 		}
@@ -303,6 +356,9 @@ func (f *File) inferExpr(s, e int, nameOf func(int) string) string {
 	}
 	if f.Resolve[rootTok] == Global {
 		if len(segs) == 2 && segs[0].field == "new" && segs[1].call && root == "Instance" && last.arg != "" {
+			if propName := f.tableNameProp(s+1, e); propName != "" {
+				return camel(propName)
+			}
 			return camel(last.arg)
 		}
 		if len(segs) == 2 && segs[1].call && segs[0].field != "" {
@@ -312,9 +368,51 @@ func (f *File) inferExpr(s, e int, nameOf func(int) string) string {
 			if n, ok := plainCalls[root+"."+segs[0].field]; ok {
 				return n
 			}
+			switch root + "." + segs[0].field {
+			case "string.format":
+				return "formatted"
+			case "string.lower", "string.upper", "string.sub", "string.gsub":
+				return "text"
+			case "math.clamp", "math.min", "math.max", "math.floor", "math.ceil", "math.round":
+				if fld := f.firstFieldInArgs(s+1, e); fld != "" {
+					return camel(fld)
+				}
+			}
+		}
+		if len(segs) == 1 && !segs[0].call && segs[0].field != "" {
+			// Function alias like `local v = Vector3.new` or `local c = Color3.fromRGB`
+			if constructors[root] != "" || root == "Instance" || root == "math" || root == "string" || root == "table" {
+				return camel(root) + pascal(segs[0].field)
+			}
 		}
 		if len(segs) == 1 && last.call && last.method == "" {
-			return plainCalls[root]
+			if n := plainCalls[root]; n != "" {
+				return n
+			}
+			if root == "tostring" {
+				if fld := f.firstFieldInArgs(s+1, e); fld != "" {
+					return camel(fld) + "Text"
+				}
+				return "textValue"
+			}
+			if root == "tonumber" {
+				if fld := f.firstFieldInArgs(s+1, e); fld != "" {
+					return camel(fld)
+				}
+				return "numValue"
+			}
+		}
+	}
+	// Call to a local/upvalue helper function (`sendHeartbeat()`, `getService("Players")`, `c("Frame", {Name="Switch"})`, `ctx.waitHeartbeat()`)
+	if last.call && last.method == "" {
+		callee := ""
+		if len(segs) == 1 && f.Resolve[rootTok] >= 0 {
+			callee = nameOf(f.Resolve[rootTok])
+		} else if len(segs) >= 2 && segs[len(segs)-2].field != "" {
+			callee = segs[len(segs)-2].field
+		}
+		if n := f.inferFromCallee(callee, last.arg, s, e); n != "" {
+			return n
 		}
 	}
 	switch {
@@ -337,6 +435,7 @@ func (f *File) inferExpr(s, e int, nameOf func(int) string) string {
 			if ps := eventParams[p]; len(ps) > 0 {
 				return ps[0]
 			}
+			return camel(p) + "Result"
 		}
 	case last.method == "Create" && len(segs) >= 1:
 		if strings.Contains(strings.ToLower(f.Toks[rootTok].Text+prevName()), "tween") {
@@ -352,8 +451,339 @@ func (f *File) inferExpr(s, e int, nameOf func(int) string) string {
 		if n, ok := fieldNames[last.field]; ok {
 			return n
 		}
-		if len(last.field) >= 2 {
+		if len(last.field) >= 2 && !LooksGenerated(last.field) {
 			return camel(last.field)
+		}
+	}
+	return ""
+}
+
+func (f *File) matchingClose(s, e int) int {
+	depth := 0
+	for i := s; i < e; i++ {
+		if f.Toks[i].Kind == Op {
+			switch f.Toks[i].Text {
+			case "(", "{", "[":
+				depth++
+			case ")", "}", "]":
+				depth--
+				if depth == 0 {
+					return i
+				}
+			}
+		}
+	}
+	return -1
+}
+
+func (f *File) inferCompositeExpr(s, e int) string {
+	// Table literal `{__index = ...}` -> `metatable`
+	if f.Toks[s].Text == "{" {
+		for i := s + 1; i < e && i < s+12; i++ {
+			if f.Toks[i].Kind == Name && (f.Toks[i].Text == "__index" || f.Toks[i].Text == "__newindex" || f.Toks[i].Text == "__tostring") {
+				return "metatable"
+			}
+		}
+	}
+	for i := s; i < e; i++ {
+		t := f.Toks[i]
+		if t.Kind == Name && f.Resolve[i] == Global {
+			switch t.Text {
+			case "getgenv":
+				return "globalEnv"
+			case "gethui":
+				return "hiddenGui"
+			}
+		}
+	}
+	return ""
+}
+
+func (f *File) tableNameProp(s, e int) string {
+	for i := s; i+2 < e; i++ {
+		if f.Toks[i].Kind == Name && f.Toks[i].Text == "Name" &&
+			f.Toks[i+1].Kind == Op && f.Toks[i+1].Text == "=" &&
+			f.Toks[i+2].Kind == String {
+			v := unquote(f.Toks[i+2].Text)
+			if len(v) >= 2 && len(v) <= 28 {
+				return v
+			}
+		}
+	}
+	return ""
+}
+
+func (f *File) firstFieldInArgs(s, e int) string {
+	for i := s; i+1 < e; i++ {
+		if f.Toks[i].Kind == Op && f.Toks[i].Text == "." && f.Toks[i+1].Kind == Name {
+			fld := f.Toks[i+1].Text
+			if len(fld) >= 2 && !LooksGenerated(fld) && fld != "new" && fld != "fromRGB" && fld != "fromScale" && fld != "fromOffset" {
+				return fld
+			}
+		}
+	}
+	return ""
+}
+
+var uiClassNames = map[string]bool{
+	"ScreenGui": true, "Frame": true, "ScrollingFrame": true, "TextLabel": true, "TextButton": true,
+	"TextBox": true, "ImageLabel": true, "ImageButton": true, "ViewportFrame": true, "CanvasGroup": true,
+	"UIListLayout": true, "UIGridLayout": true, "UIPadding": true, "UICorner": true, "UIStroke": true,
+	"UIGradient": true, "UIAspectRatioConstraint": true, "UISizeConstraint": true, "UIScale": true,
+	"Folder": true, "Highlight": true, "BillboardGui": true, "SurfaceGui": true, "Sound": true,
+}
+
+func (f *File) inferFromCallee(callee, firstStrArg string, s, e int) string {
+	// UI factory pattern: `c("Frame", {Parent = ..., Name = "Switch"})`
+	if firstStrArg != "" && uiClassNames[firstStrArg] {
+		if prop := f.tableNameProp(s+1, e); prop != "" {
+			return camel(prop)
+		}
+		return camel(firstStrArg)
+	}
+	if callee == "" || LooksGenerated(callee) {
+		return ""
+	}
+	if callee == "getService" && firstStrArg != "" {
+		return pascal(firstStrArg)
+	}
+	if strings.HasPrefix(callee, "clamp") {
+		if fld := f.firstFieldInArgs(s+1, e); fld != "" {
+			return camel(fld)
+		}
+	}
+	for _, pfx := range []string{"get", "find", "fetch", "load", "read", "resolve", "compute", "calc", "create", "make", "build", "new"} {
+		if strings.HasPrefix(callee, pfx) && len(callee) > len(pfx) && unicode.IsUpper(rune(callee[len(pfx)])) {
+			return camel(callee[len(pfx):])
+		}
+	}
+	for _, pfx := range []string{"send", "request", "dispatch"} {
+		if strings.HasPrefix(callee, pfx) && len(callee) > len(pfx) && unicode.IsUpper(rune(callee[len(pfx)])) {
+			return camel(callee[len(pfx):]) + "Resp"
+		}
+	}
+	for _, pfx := range []string{"parse", "decode"} {
+		if strings.HasPrefix(callee, pfx) && len(callee) > len(pfx) && unicode.IsUpper(rune(callee[len(pfx)])) {
+			return "parsed" + callee[len(pfx):]
+		}
+	}
+	if strings.HasPrefix(callee, "format") && len(callee) > 6 && unicode.IsUpper(rune(callee[6])) {
+		return "formatted" + callee[6:]
+	}
+	for _, pfx := range []string{"is", "has", "can", "should"} {
+		if strings.HasPrefix(callee, pfx) && len(callee) > len(pfx) && unicode.IsUpper(rune(callee[len(pfx)])) {
+			return callee
+		}
+	}
+	return ""
+}
+
+var safePropParamNames = map[string]string{
+	"Parent": "parent", "Name": "name", "Text": "text", "Title": "title",
+	"ZIndex": "zIndex", "Color": "color", "TextColor3": "textColor",
+	"BackgroundColor3": "bgColor", "BackgroundTransparency": "bgAlpha",
+	"Transparency": "transparency", "Thickness": "thickness",
+	"Size": "size", "Position": "position", "AnchorPoint": "anchorPoint",
+	"Font": "font", "FontFace": "fontFace", "TextSize": "textSize",
+	"CornerRadius": "cornerRadius", "Rotation": "rotation",
+	"Visible": "visible", "Image": "imageId", "LayoutOrder": "layoutOrder",
+	"CFrame": "cframe", "CameraSubject": "cameraSubject",
+}
+
+func (f *File) inferParam(b *Binding, nameOf func(int) string) string {
+	// Check enclosing function header:
+	//  - `xpcall(fn, function(err) ...)` -> `err`
+	//  - `Set<Prop> = function([_,] val)` -> `camel(Prop)`
+	if b.Decl >= 3 {
+		for k := b.Decl - 1; k >= 0 && k >= b.Decl-8; k-- {
+			if f.Toks[k].Kind == Keyword && f.Toks[k].Text == "function" {
+				if b.ParamIndex == 0 && k >= 4 && f.Toks[k-1].Text == "," && f.Toks[k-3].Text == "(" &&
+					f.Toks[k-4].Kind == Name && f.Toks[k-4].Text == "xpcall" {
+					return "err"
+				}
+				if k >= 2 && f.Toks[k-1].Text == "=" && f.Toks[k-2].Kind == Name {
+					fnProp := f.Toks[k-2].Text
+					// `SetTitle = function(v)` or `SetTitle = function(_, v)`
+					isSetterVal := (b.ParamIndex == 0) || (b.ParamIndex == 1 && k+2 < len(f.Toks) && f.Toks[k+2].Text == "_")
+					if isSetterVal && strings.HasPrefix(fnProp, "Set") && len(fnProp) > 3 && unicode.IsUpper(rune(fnProp[3])) {
+						return camel(fnProp[3:])
+					}
+				}
+				break
+			}
+		}
+	}
+	var propCandidate, fieldCandidate, typeCandidate string
+	calledDirect := false
+	usedStringOps := false
+	for _, r := range b.Refs {
+		if r == b.Decl {
+			continue
+		}
+		// `typeof(param) == "Instance"` / `type(param) == "table"`
+		if r >= 2 && r+4 < len(f.Toks) && f.Toks[r-1].Text == "(" &&
+			(f.Toks[r-2].Text == "type" || f.Toks[r-2].Text == "typeof") &&
+			f.Toks[r+1].Text == ")" && (f.Toks[r+2].Text == "==" || f.Toks[r+2].Text == "~=") && f.Toks[r+3].Kind == String {
+			switch unquote(f.Toks[r+3].Text) {
+			case "Instance":
+				typeCandidate = "instance"
+			case "table":
+				typeCandidate = "options"
+			case "function":
+				typeCandidate = "callback"
+			case "string":
+				typeCandidate = "text"
+			case "number":
+				typeCandidate = "num"
+			case "boolean":
+				typeCandidate = "enabled"
+			}
+		}
+		if r+2 < len(f.Toks) && (f.Toks[r+1].Text == "==" || f.Toks[r+1].Text == "~=") &&
+			(f.Toks[r+2].Text == "true" || f.Toks[r+2].Text == "false") && typeCandidate == "" {
+			typeCandidate = "enabled"
+		}
+		// Direct call `param(...)`
+		if r+1 < len(f.Toks) && f.Toks[r+1].Kind == Op && f.Toks[r+1].Text == "(" {
+			calledDirect = true
+		}
+		// Method call `param:Method(...)`
+		if r+2 < len(f.Toks) && f.Toks[r+1].Kind == Op && f.Toks[r+1].Text == ":" && f.Toks[r+2].Kind == Name {
+			m := f.Toks[r+2].Text
+			switch m {
+			case "Connect", "Once":
+				return "signal"
+			case "Disconnect":
+				return "connection"
+			case "Play", "Cancel", "Pause":
+				return "tween"
+			case "FireServer", "InvokeServer":
+				return "remote"
+			case "GetService":
+				return "gameObj"
+			case "FindFirstChild", "WaitForChild", "FindFirstChildOfClass", "FindFirstChildWhichIsA", "GetChildren", "GetDescendants", "IsA", "Destroy":
+				fieldCandidate = "instance"
+			case "gsub", "match", "gmatch", "sub", "lower", "upper", "find":
+				usedStringOps = true
+			}
+		}
+		// Field access `param.Field`
+		if r+2 < len(f.Toks) && f.Toks[r+1].Kind == Op && f.Toks[r+1].Text == "." && f.Toks[r+2].Kind == Name {
+			fld := f.Toks[r+2].Text
+			switch fld {
+			case "Character", "UserId", "DisplayName", "Backpack":
+				return "player"
+			case "Humanoid", "HumanoidRootPart":
+				return "character"
+			case "CFrame", "AssemblyLinearVelocity", "Velocity":
+				if fieldCandidate == "" {
+					fieldCandidate = "part"
+				}
+			case "FontFace", "TextScaled", "TextBounds", "TextColor3":
+				if fieldCandidate == "" {
+					fieldCandidate = "label"
+				}
+			case "AbsoluteSize", "AbsolutePosition", "BackgroundTransparency":
+				if fieldCandidate == "" {
+					fieldCandidate = "frame"
+				}
+			case "CameraSubject", "ViewportSize":
+				return "camera"
+			case "Default", "Callback", "Options", "Multi", "Placeholder":
+				if fieldCandidate == "" {
+					fieldCandidate = "config"
+				}
+			}
+		}
+		// Used as table lookup key `tbl[param]` (when inside `__index = function(_, key)`)
+		if r >= 2 && r+1 < len(f.Toks) && f.Toks[r-1].Text == "[" && f.Toks[r+1].Text == "]" && fieldCandidate == "" {
+			fieldCandidate = "key"
+		}
+		// First parameter with custom `:Method(...)` call (e.g. `section:Toggle(...)`)
+		if b.ParamIndex == 0 && r+2 < len(f.Toks) && f.Toks[r+1].Text == ":" && f.Toks[r+2].Kind == Name && fieldCandidate == "" {
+			fieldCandidate = "target"
+		}
+		// Table property assignment `{..., Prop = param}` or `obj.Prop = param`
+		if r >= 2 && f.Toks[r-1].Kind == Op && f.Toks[r-1].Text == "=" && f.Toks[r-2].Kind == Name {
+			if p, ok := safePropParamNames[f.Toks[r-2].Text]; ok && propCandidate == "" {
+				propCandidate = p
+			}
+		}
+		// Passed as 1st or 2nd argument to known global/method calls
+		if r >= 2 && f.Toks[r-1].Kind == Op && f.Toks[r-1].Text == "(" && f.Toks[r-2].Kind == Name {
+			fn := f.Toks[r-2].Text
+			switch fn {
+			case "GetService":
+				return "serviceName"
+			case "pcall", "xpcall", "spawn", "defer":
+				return "callback"
+			case "Connect", "Once":
+				return "callback"
+			case "readfile", "isfile", "delfile", "loadfile":
+				return "filePath"
+			case "writefile", "appendfile":
+				return "filePath"
+			case "isfolder", "makefolder", "delfolder", "listfiles":
+				return "folderPath"
+			}
+		}
+		if r >= 4 && f.Toks[r-1].Kind == Op && f.Toks[r-1].Text == "," && f.Toks[r-3].Kind == Op && f.Toks[r-3].Text == "(" && f.Toks[r-4].Kind == Name {
+			switch f.Toks[r-4].Text {
+			case "writefile", "appendfile":
+				return "content"
+			}
+		}
+	}
+	if calledDirect {
+		return "callback"
+	}
+	if propCandidate != "" {
+		return propCandidate
+	}
+	if fieldCandidate != "" {
+		return fieldCandidate
+	}
+	if typeCandidate != "" {
+		return typeCandidate
+	}
+	if usedStringOps {
+		return "rawText"
+	}
+	return ""
+}
+
+func (f *File) inferFromRefs(b *Binding, nameOf func(int) string) string {
+	// `local ok, res = pcall(...)` / `xpcall(...)` -> 2nd variable is `result`
+	if b.Decl >= 2 && f.Toks[b.Decl-1].Text == "," && f.Toks[b.Decl-2].Kind == Name {
+		first := f.Toks[b.Decl-2].Text
+		if first == "ok" || first == "success" {
+			for k := b.Decl + 1; k < len(f.Toks) && k <= b.Decl+6; k++ {
+				if f.Toks[k].Kind == Name && (f.Toks[k].Text == "pcall" || f.Toks[k].Text == "xpcall") {
+					return "result"
+				}
+			}
+		}
+	}
+	for _, r := range b.Refs {
+		if r == b.Decl {
+			continue
+		}
+		// `x:Disconnect()` -> connection
+		if r+2 < len(f.Toks) && f.Toks[r+1].Text == ":" && f.Toks[r+2].Kind == Name {
+			switch f.Toks[r+2].Text {
+			case "Disconnect":
+				return "connection"
+			case "Cancel", "Play":
+				return "tween"
+			}
+		}
+		// `x.Completed:Connect` -> tween
+		if r+2 < len(f.Toks) && f.Toks[r+1].Text == "." && f.Toks[r+2].Text == "Completed" {
+			return "tween"
+		}
+		// `task.wait(x ...)` -> waitSeconds
+		if r >= 4 && f.Toks[r-1].Text == "(" && f.Toks[r-2].Text == "wait" && f.Toks[r-3].Text == "." && f.Toks[r-4].Text == "task" {
+			return "waitSeconds"
 		}
 	}
 	return ""

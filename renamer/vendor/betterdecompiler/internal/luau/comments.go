@@ -2,24 +2,45 @@ package luau
 
 import (
 	"fmt"
+	"sort"
+	"strconv"
 	"strings"
 )
 
 // inferFuncBody infers a concise camelCase function name from the direct
 // operations inside f.Toks[s:e] (skipping nested function literals).
 func (f *File) inferFuncBody(s, e int) string {
-	info := f.scanSpan(s, e)
+	return f.inferFuncBodyNamed(s, e, nil)
+}
+
+func (f *File) inferFuncBodyNamed(s, e int, nameOf func(int) string) string {
+	resolveName := func(tokIdx int) string {
+		if tokIdx < 0 || tokIdx >= len(f.Toks) {
+			return ""
+		}
+		if nameOf != nil && f.Resolve[tokIdx] >= 0 {
+			return nameOf(f.Resolve[tokIdx])
+		}
+		return f.Toks[tokIdx].Text
+	}
+	info := f.scanSpanNamed(s, e, resolveName)
 	switch {
 	case info.methods["JSONDecode"] && info.globals["readfile"]:
 		return "loadJsonFile"
 	case info.methods["JSONEncode"] && (info.globals["writefile"] || info.globals["appendfile"]):
 		return "saveJsonFile"
+	case info.globals["writefile"] && !info.globals["readfile"]:
+		return "saveFileData"
+	case info.globals["readfile"] && !info.globals["writefile"]:
+		return "readFileData"
 	case info.methods["Raycast"]:
 		return "raycastSurface"
 	case info.methods["Disconnect"] && info.dotted["table.clear"]:
 		return "disconnectAll"
 	case info.methods["Disconnect"] && len(info.methods) <= 2:
 		return "disconnectSignal"
+	case info.methods["Destroy"] && len(info.methods) <= 2 && info.hasLoop:
+		return "destroyItems"
 	case info.globals["fireproximityprompt"]:
 		return "triggerProximityPrompt"
 	case info.globals["firetouchinterest"]:
@@ -44,8 +65,36 @@ func (f *File) inferFuncBody(s, e int) string {
 		return "findNearest" + pascal(info.firstChildArg)
 	case info.methods["PivotTo"] && len(info.methods) <= 3:
 		return "pivotCharacterTo"
+	case info.methods["MoveTo"] && len(info.methods) <= 3:
+		return "moveToTarget"
+	case info.methods["Wait"] && len(info.methods) == 1 && info.waitTarget != "":
+		return "wait" + pascal(info.waitTarget)
+	case info.methods["GetService"] && len(info.methods) == 1:
+		return "getService"
+	case info.fields["CameraSubject"] && len(info.methods) <= 2:
+		return "setCameraSubject"
+	case info.fields["FontFace"] && (info.fields["TextColor3"] || info.fields["TextScaled"]):
+		return "applyTextStyle"
+	case info.fields["Visible"] && (info.fields["AbsolutePosition"] || info.fields["CanvasPosition"]):
+		return "updateViewportVisibility"
+	case info.fields["BackgroundTransparency"] && len(info.methods) <= 2 && !info.hasLoop:
+		return "updateBackgroundAlpha"
+	case info.fields["BackgroundTransparency"] && info.hasLoop && len(info.methods) <= 2:
+		return "setFramesAlpha"
+	case (info.dotted["string.format"] || info.globals["stringFormat"]) && info.methods["gsub"]:
+		return "formatDecimal"
+	case info.methods["match"] && info.globals["tonumber"]:
+		return "parseNumberText"
+	case info.wrappedFn != "" && !LooksGenerated(info.wrappedFn) && len(info.wrappedFn) > 1:
+		return info.wrapperPrefix + pascal(info.wrappedFn)
+	case info.uiWidgetName != "":
+		return "create" + pascal(info.uiWidgetName)
 	case len(info.uiClasses) > 0 && info.uiClasses[0] == "ScreenGui":
 		return "createScreenGui"
+	case len(info.uiClasses) == 1 && len(info.methods) == 0:
+		return "create" + pascal(info.uiClasses[0])
+	case len(info.services) >= 3 && e-s > 400:
+		return "runMainHub"
 	}
 	return ""
 }
@@ -61,11 +110,19 @@ type spanSummary struct {
 	events        []string
 	remoteName    string
 	firstChildArg string
+	waitTarget    string
+	wrappedFn     string
+	wrapperPrefix string
+	uiWidgetName  string
 	hasLoop       bool
 	hasPcall      bool
 }
 
 func (f *File) scanSpan(s, e int) spanSummary {
+	return f.scanSpanNamed(s, e, func(idx int) string { return f.Toks[idx].Text })
+}
+
+func (f *File) scanSpanNamed(s, e int, resolveName func(int) string) spanSummary {
 	out := spanSummary{
 		methods: map[string]bool{},
 		globals: map[string]bool{},
@@ -134,7 +191,13 @@ func (f *File) scanSpan(s, e int) spanSummary {
 				out.firstChildArg = arg
 			}
 			if (m == "FireServer" || m == "InvokeServer") && out.remoteName == "" && i >= 1 && f.Toks[i-1].Kind == Name {
-				out.remoteName = f.Toks[i-1].Text
+				out.remoteName = resolveName(i - 1)
+			}
+			if m == "Wait" && out.waitTarget == "" && i >= 1 && f.Toks[i-1].Kind == Name {
+				cand := resolveName(i - 1)
+				if !LooksGenerated(cand) && len(cand) > 1 {
+					out.waitTarget = cand
+				}
 			}
 			if connectMethods[m] && i >= 1 && f.Toks[i-1].Kind == Name {
 				ev := f.Toks[i-1].Text
@@ -159,6 +222,23 @@ func (f *File) scanSpan(s, e int) spanSummary {
 						out.uiClasses = append(out.uiClasses, arg)
 					}
 				}
+				if (pair == "task.spawn" || pair == "task.defer") && i+4 < e && f.Toks[i+2].Text == "(" && f.Toks[i+3].Kind == Name {
+					out.wrappedFn = resolveName(i + 3)
+					out.wrapperPrefix = "spawn"
+				}
+			}
+		}
+
+		// UI factory call `c("Frame", {..., Name = "Switch", ...})`
+		if tk.Kind == Op && tk.Text == "(" && i >= 1 && f.Toks[i-1].Kind == Name && i+1 < e && f.Toks[i+1].Kind == String {
+			cls := unquote(f.Toks[i+1].Text)
+			if uiClassNames[cls] && out.uiWidgetName == "" {
+				endCall := f.matchingClose(i, e)
+				if endCall > i {
+					if prop := f.tableNameProp(i+1, endCall); prop != "" && prop != "OFF" && prop != "ON" && prop != "Hold" && prop != "Color" {
+						out.uiWidgetName = prop
+					}
+				}
 			}
 		}
 
@@ -167,10 +247,171 @@ func (f *File) scanSpan(s, e int) spanSummary {
 			out.globals[tk.Text] = true
 			if tk.Text == "pcall" || tk.Text == "xpcall" {
 				out.hasPcall = true
+				if e-s < 120 && i+3 < e && f.Toks[i+1].Text == "(" && f.Toks[i+2].Kind == Name &&
+					(f.Toks[i+3].Text == ")" || f.Toks[i+3].Text == ",") {
+					cand := resolveName(i + 2)
+					if !LooksGenerated(cand) && len(cand) > 1 && !reserved[cand] {
+						out.wrappedFn = cand
+						out.wrapperPrefix = "safe"
+					}
+				}
+			}
+		} else if tk.Kind == Name && f.Resolve[i] >= 0 {
+			rn := resolveName(i)
+			if rn == "stringFormat" {
+				out.globals["stringFormat"] = true
 			}
 		}
 	}
 	return out
+}
+
+// RenameContextFields renames generated field names (e.g. `ctx.fn11`, `ctx.slot33`, `ctx2.n2`)
+// on local context tables (`local ctx = {}`) when every reference to that table uses static `.Field`
+// property syntax (never dynamic `ctx[...]` indexing), guaranteeing 100% collision-free safety.
+func (f *File) RenameContextFields() (string, int) {
+	type edit struct {
+		start, end int
+		text       string
+	}
+	var edits []edit
+	renamedFields := 0
+
+	nameOf := func(id int) string {
+		if id >= 0 && id < len(f.Bindings) {
+			return f.Bindings[id].Name
+		}
+		return ""
+	}
+
+	for _, b := range f.Bindings {
+		if b.Kind != BindLocal || b.Init[0] < 0 {
+			continue
+		}
+		// Must be initialized to `{}` or `{...}` table literal
+		s, e := b.Init[0], b.Init[1]
+		if e-s < 2 || f.Toks[s].Text != "{" || f.Toks[e-1].Text != "}" {
+			continue
+		}
+		if len(b.Refs) < 4 {
+			continue
+		}
+		// Verify every non-decl ref is strictly `ctx.Field` (no dynamic `ctx[k]`, no passing `ctx` raw)
+		pureDot := true
+		existingFields := map[string]bool{}
+		fieldToks := map[string][]int{}
+		fieldAssigns := map[string][][2]int{}
+
+		for _, r := range b.Refs {
+			if r == b.Decl {
+				continue
+			}
+			if r+2 >= len(f.Toks) || f.Toks[r+1].Kind != Op || f.Toks[r+1].Text != "." || f.Toks[r+2].Kind != Name {
+				pureDot = false
+				break
+			}
+			fld := f.Toks[r+2].Text
+			existingFields[fld] = true
+			fieldToks[fld] = append(fieldToks[fld], r+2)
+
+			// Check if `ctx.fld = <expr>`
+			if r+4 < len(f.Toks) && f.Toks[r+3].Kind == Op && f.Toks[r+3].Text == "=" {
+				rhsStart := r + 4
+				if f.Toks[rhsStart].Kind == Keyword && f.Toks[rhsStart].Text == "function" {
+					endFn := f.findFunctionEnd(rhsStart)
+					if endFn > rhsStart {
+						fieldAssigns[fld] = append(fieldAssigns[fld], [2]int{rhsStart + 1, endFn})
+					}
+				} else {
+					// Single-line simple expression up to end of line
+					ln := f.Toks[rhsStart].Line
+					rhsEnd := rhsStart
+					for rhsEnd < len(f.Toks) && f.Toks[rhsEnd].Line == ln && f.Toks[rhsEnd].Text != ";" {
+						rhsEnd++
+					}
+					if rhsEnd > rhsStart {
+						fieldAssigns[fld] = append(fieldAssigns[fld], [2]int{rhsStart, rhsEnd})
+					}
+				}
+			}
+		}
+		if !pureDot {
+			continue
+		}
+
+		// Sort generated fields deterministically
+		var genFields []string
+		for fld := range fieldToks {
+			if LooksGenerated(fld) {
+				genFields = append(genFields, fld)
+			}
+		}
+		sort.Strings(genFields)
+
+		for _, fld := range genFields {
+			spans := fieldAssigns[fld]
+			if len(spans) == 0 {
+				continue
+			}
+			var cand string
+			for _, sp := range spans {
+				if sp[0] > 0 && f.Toks[sp[0]-1].Kind == Keyword && f.Toks[sp[0]-1].Text == "function" {
+					cand = f.inferFuncBodyNamed(sp[0], sp[1], nameOf)
+				} else {
+					cand = f.inferExpr(sp[0], sp[1], nameOf)
+				}
+				if cand != "" {
+					break
+				}
+			}
+			if cand == "" || !ValidName(cand) || LooksGenerated(cand) {
+				continue
+			}
+			finalName := cand
+			for n := 2; existingFields[finalName]; n++ {
+				finalName = cand + strconv.Itoa(n)
+			}
+			existingFields[finalName] = true
+			renamedFields++
+			for _, ti := range fieldToks[fld] {
+				tk := f.Toks[ti]
+				edits = append(edits, edit{tk.Start, tk.End, finalName})
+			}
+		}
+	}
+
+	if len(edits) == 0 {
+		return f.Src, 0
+	}
+	sort.Slice(edits, func(i, j int) bool { return edits[i].start < edits[j].start })
+	var sb strings.Builder
+	sb.Grow(len(f.Src) + len(edits)*8)
+	last := 0
+	for _, ed := range edits {
+		sb.WriteString(f.Src[last:ed.start])
+		sb.WriteString(ed.text)
+		last = ed.end
+	}
+	sb.WriteString(f.Src[last:])
+	return sb.String(), renamedFields
+}
+
+func (f *File) findFunctionEnd(fnTok int) int {
+	depth := 0
+	for i := fnTok; i < len(f.Toks); i++ {
+		if f.Toks[i].Kind == Keyword {
+			switch f.Toks[i].Text {
+			case "function", "if", "for", "while", "do":
+				depth++
+			case "end":
+				depth--
+				if depth == 0 {
+					return i + 1
+				}
+			}
+		}
+	}
+	return -1
 }
 
 // SuggestComments produces clean, human-readable contextual comments (1-based

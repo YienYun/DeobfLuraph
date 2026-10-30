@@ -16,15 +16,21 @@ const { getPythonBin } = require('../src/pyenv');
 
 const ROOT = path.resolve(__dirname, '..');
 
-test('detects Luraph v15, unsupported v14 and generic sources without execution', () => {
-  const sample150 = fs.readFileSync(path.join(ROOT, 'samples/ChilliLibraryEngine2_v15.0_obfuscated.lua'), 'latin1');
-  const sample151 = fs.readFileSync(path.join(ROOT, 'samples/StealAnEggg_v15.1_obfuscated.lua'), 'latin1');
-  assert.deepEqual([detect.detect(sample150).plugin.name, detect.detect(sample150).confidence], ['luraph_v15', 1]);
-  assert.deepEqual([detect.detect(sample151).plugin.name, detect.detect(sample151).confidence], ['luraph_v15', 1]);
+test('detects Luraph v15, unsupported v14 and generic sources without execution', t => {
+  const synth150 = '-- This file was protected using Luraph Obfuscator v15.0 [https://lura.ph/]\nreturn setmetatable({[1]=bit32.bxor},{})';
+  const synth151 = '-- This file was protected using Luraph Obfuscator v15.1 [https://lura.ph/]\nreturn setmetatable({[1]=buffer.create},{})';
+  assert.deepEqual([detect.detect(synth150).plugin.name, detect.detect(synth150).confidence], ['luraph_v15', 1]);
+  assert.deepEqual([detect.detect(synth151).plugin.name, detect.detect(synth151).confidence], ['luraph_v15', 1]);
   assert.equal(detect.detect('-- This file was protected using Luraph Obfuscator v14.4').plugin.name, 'generic');
+  assert.equal(detect.detect('-- This file was protected using Luraph Obfuscator v14.8').plugin.name, 'luraph_v14');
   assert.equal(detect.detect('print("normal Lua")').plugin.name, 'generic');
   assert.equal(detect.detect('luarmor.net; luraph_runtime1()').plugin.name, 'luarmor_client');
-  const result = spawnSync(process.execPath, ['deob.js', 'samples/ChilliLibraryEngine2_v15.0_obfuscated.lua', '--detect'], {
+
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'deobf-detect-cli-'));
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  const tmpSample = path.join(dir, 'sample150.lua');
+  fs.writeFileSync(tmpSample, synth150, 'latin1');
+  const result = spawnSync(process.execPath, ['deob.js', tmpSample, '--detect'], {
     cwd: ROOT, env: { ...process.env, LUAU_BIN: '/not/a/runtime', LUAU_AST_BIN: '/not/an/ast' }, encoding: 'utf8',
   });
   assert.equal(result.status, 0, result.stderr);

@@ -2973,6 +2973,8 @@ def meet(a, b):
         if g is None:
             if f[0] == "c" and ((isinstance(r, int) and 800000 < r < 810000) or (isinstance(r, tuple) and r[0] in ("up", "vararg"))):
                 out[r] = f
+            elif f[0] == "t" and isinstance(r, tuple) and r[0] in ("up", "vararg"):
+                out[r] = ("t",)
             elif isinstance(r, int) and r < 800000:
                 nv = _num_c(f)
                 if nv is not None:
@@ -3033,6 +3035,8 @@ def meet(a, b):
         if r not in a:
             if g[0] == "c" and ((isinstance(r, int) and 800000 < r < 810000) or (isinstance(r, tuple) and r[0] in ("up", "vararg"))):
                 out[r] = g
+            elif g[0] == "t" and isinstance(r, tuple) and r[0] in ("up", "vararg"):
+                out[r] = ("t",)
             elif isinstance(r, int) and r < 800000:
                 nv = _num_c(g)
                 if nv is not None:
@@ -3386,6 +3390,10 @@ def _capture_closure_up_facts(c, facts, lf=None):
                     up_facts[("up", (i, rk[1][1]))] = rv
         if uf and uf[0] == "c" and isinstance(uf[1], (int, float)) and not isinstance(uf[1], bool):
             up_facts[("up", i)] = uf
+        elif isinstance(u, Reg) and ("up", i) not in up_facts:
+            rc_c = (getattr(lf, "reg_closure_fact", None) or {}).get(u.n) if lf is not None else None
+            if truth_of(uf) is True or isinstance(rc_c, tuple):
+                up_facts[("up", i)] = ("t",)
     c.up_facts = up_facts
     c._open_up_regs = {i: r for i, u in enumerate(c.upvals, 1) for r in (_upval_open_reg(u),) if r is not None}
     cregs = set(c._open_up_regs.values())
@@ -3533,6 +3541,18 @@ def apply_stmt_facts(st, facts, lf, pos=None):
                                     open_ups.pop(ui, None)
                                     if post_uf:
                                         post_uf.pop(("up", ui), None)
+    elif isinstance(st, Assign) and isinstance(st.target, Upval):
+        fv = fact_of(st.value)
+        if fv is None:
+            fv = eval_fact(st.value, facts)
+        uk = ("up", st.target.idx)
+        if fv is None:
+            facts[uk] = ("any",)
+        elif fv[0] in ("r", "cmp", "ord_cmp", "idx_reg", "m"):
+            t0 = truth_of(fv)
+            facts[uk] = ("t",) if t0 is True else (("f",) if t0 is False else ("any",))
+        else:
+            facts[uk] = fv
     elif isinstance(st, Assign) and isinstance(st.target, Index) and isinstance(st.target.obj, Reg):
         tf = facts.get(st.target.obj.n)
         kf = eval_fact(st.target.key, facts)

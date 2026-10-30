@@ -2114,7 +2114,7 @@ local function onCall(p, ...)
                         -- the run, the serve driver fetches + plants, resume
                         -- re-scans the plant list above
                         if R.find(a1, "luarmor", 1, true)
-                                and CFG.serve and SERVE_PAD and coroutine.isyieldable()
+                                and CFG.serve_fetchwait and SERVE_PAD and coroutine.isyieldable()
                                 and liveTries < 4 then
                                 liveTries += 1
                                 R.print(MARK .. "NEEDFETCH " .. a1)
@@ -3935,7 +3935,7 @@ return jsonEncode, jsonDecode
                 -- [SUPERZ] in-run live fetch loop: suspend the whole run for
                 -- the serve driver (same process = same session nonce); the
                 -- driver plants the response and resumes this exact thread
-                if CFG.serve and SERVE_PAD and coroutine.isyieldable() then
+                if CFG.serve_fetchwait and SERVE_PAD and coroutine.isyieldable() then
                         local tries = urls.__sz_tries or {}
                         urls.__sz_tries = tries
                         local nk = method .. " " .. url
@@ -4802,7 +4802,7 @@ local function httpRequest(label)
                 -- run replay cannot work: b embeds a 24-bit allocation-derived
                 -- nonce that shifts whenever the driver plants anything.
                 if R.type(opts.Url) == "string" and R.find(opts.Url, "luarmor", 1, true)
-                        and CFG.serve and SERVE_PAD and coroutine.isyieldable() then
+                        and CFG.serve_fetchwait and SERVE_PAD and coroutine.isyieldable() then
                         local tries = urls.__lrm_tries or {}
                         urls.__lrm_tries = tries
                         local n = (tries[opts.Url] or 0) + 1
@@ -5875,12 +5875,39 @@ do
                 end
                 if R.type(CFG.force_req) == "string" then
                         local derivedCache = {}
+                        local pending = {}
                         for path in string.gmatch(CFG.force_req, "[^;]+") do
-                                local v, derived = decodeAny(path, derivedCache, forced)
-                                if derived then
-                                        fstats.over = fstats.over or {}
-                                        R.insert(fstats.over, path .. "=" .. (v ~= nil and enc(v) or "null"))
+                                R.insert(pending, path)
+                        end
+                        local pass = 0
+                        while #pending > 0 and pass < 8 do
+                                pass += 1
+                                local deferred = {}
+                                local prevSeqCount = 0
+                                for _ in R.next, PA do prevSeqCount += 1 end
+                                for _, path in R.ipairs(pending) do
+                                        local seq0 = R.tonumber(string.match(path, "^!?(%d+)[,~]"))
+                                        if seq0 and not byseq[seq0] then
+                                                for proto, cap in R.next, PA do
+                                                        if R.type(cap) == "table" and cap.__seq and not byseq[cap.__seq] then
+                                                                byseq[cap.__seq] = R.setmetatable({ self = proto }, { __index = cap })
+                                                        end
+                                                end
+                                        end
+                                        if seq0 and not byseq[seq0] then
+                                                R.insert(deferred, path)
+                                        else
+                                                local v, derived = decodeAny(path, derivedCache, forced)
+                                                if derived then
+                                                        fstats.over = fstats.over or {}
+                                                        R.insert(fstats.over, path .. "=" .. (v ~= nil and enc(v) or "null"))
+                                                end
+                                        end
                                 end
+                                local afterSeqCount = 0
+                                for _ in R.next, PA do afterSeqCount += 1 end
+                                if afterSeqCount == prevSeqCount and pass >= 2 then break end
+                                pending = deferred
                         end
                 end
                 revertBufs(bufRestore)

@@ -121,6 +121,10 @@ def patch_entries(source, path):
         lines[l] = lines[l][:c] + code + lines[l][c:]
     return "\n".join(lines)
 
+def _req_sort_key(r):
+    m = re.match(r"^!?(\d+)[,~]", r)
+    return (0 if not r.startswith("!") else 1, int(m.group(1)) if m else 10**9, r)
+
 def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None):
     """Lift the captured protos; constants that only Luraph's lazy decoder can
     produce (code that never ran) are requested from further runs. With a
@@ -131,6 +135,7 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None):
     from obfuscators.luraph_v15 import devirt
     args = job.args
     requested = set()
+    ordered_reqs = []
     last_bufs = ""
     text = None
     rounds = args.devirt_rounds
@@ -142,6 +147,7 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None):
     last_full_stats = None
     converged = False
     pending_constants = 0
+    no_new_full_streak = 0
     for rnd in range(1, rounds + 1):
         t1 = time.time()
 
@@ -169,7 +175,8 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None):
             new = reqs - requested
             last_full_stats = dict(stats)
             pending_constants = len(new)
-            converged = not new and (not (requested | reqs) or devirt.same_patches(last_bufs, bufs))
+            no_new_full_streak = (no_new_full_streak + 1) if not new else 0
+            converged = not new and (not (requested | reqs) or devirt.same_patches(last_bufs, bufs) or no_new_full_streak >= 2)
             print("[*]   %d functions, %d unlifted blocks, %d unstructured jumps, %d new constant requests (%.1fs)"
                   % (stats["functions"], stats["errors"], stats["fallbacks"], len(new), time.time() - t1),
                   file=sys.stderr)
@@ -178,10 +185,12 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None):
             if quick:
                 print("[*]   the full lift needs more constants: continuing with full lifts", file=sys.stderr)
                 quick = False
+        new_batch = sorted(reqs - requested, key=_req_sort_key)
+        ordered_reqs.extend(new_batch)
         requested |= reqs
         last_bufs = bufs
         c = dict(cfg)
-        c["force_req"] = ";".join(sorted(requested))
+        c["force_req"] = ";".join(ordered_reqs)
 
         c["force_buf"] = bufs
         t1 = time.time()

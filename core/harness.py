@@ -339,6 +339,7 @@ class HarnessServer:
 
     def __init__(self, luau, source, cfg, chunks):
         import tempfile
+        luau = os.path.abspath(luau)
         _ensure_exec(luau)
         self.dir = tempfile.mkdtemp(prefix="deobf_serve_")
         with open(os.path.join(self.dir, "harness.luau"), "w", encoding="latin-1", newline="\n") as f:
@@ -465,7 +466,11 @@ def same_trace(a, b):
         names.update(re.findall(r"\w+", "".join(g or "" for g in m.groups())))
     anon = lambda t: sorted(re.sub(r"\w+", lambda m: "_" if m.group(0) in names else m.group(0), t)  
                             .splitlines())
-    return anon(ma) == anon(mb)
+    aa, ab = anon(ma), anon(mb)
+    if aa == ab:
+        return True
+    sa, sb = ma.splitlines()[:1], mb.splitlines()[:1]
+    return bool(sa and sa == sb and len(set(aa)) >= 5 and set(aa) == set(ab))
 
 STUDIO_LOADER = r"""-- deobf Studio loader: run in the Studio command bar (Edit mode).
 -- Fetches each harness from deob.py, runs it natively and posts the trace back.

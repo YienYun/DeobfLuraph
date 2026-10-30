@@ -9,23 +9,42 @@ if CORE_DIR not in sys.path:
 
 cmd = sys.argv[1]
 
-if cmd == "patch-entries":
-    # Preserve source bytes: Lua string literals in protected files need not
-    # be UTF-8. AST locations and the original Python mapper use latin-1.
-    source_path = sys.argv[2]
-    with open(source_path, "rb") as f:
-        source = f.read().decode("latin-1")
-    from obfuscators.luraph_v15 import driver
-    sys.stdout.buffer.write(driver.patch_entries(source, source_path).encode("latin-1"))
 
-elif cmd == "pipeline":
+def _strip_credit_headers(dpath):
+    if not os.path.exists(dpath):
+        return
+    with open(dpath, "r", encoding="utf-8", errors="replace") as f:
+        lines = f.readlines()
+    clean = []
+    skip_header = True
+    for line in lines:
+        stripped = line.strip()
+        if skip_header and (
+            stripped.startswith("-- Deobfuscated by") or
+            stripped.startswith("-- Detected obfuscation") or
+            stripped.startswith("-- Local names are inferred") or
+            stripped.startswith("-- source:") or
+            stripped.startswith("-- NOTE: reconstructed") or
+            stripped.startswith("--       during the trace")
+        ):
+            continue
+        if skip_header and stripped == "":
+            continue
+        skip_header = False
+        clean.append(line)
+    with open(dpath, "w", encoding="utf-8", newline="\n") as f:
+        f.writelines(clean)
 
-    config_file = sys.argv[2]
+
+def _run_luraph_pipeline(config_file, v14=False):
     with open(config_file, "r", encoding="utf-8") as f:
         c = json.load(f)
 
     from obfuscators.base import Job
-    from obfuscators.luraph_v15 import driver
+    if v14:
+        from obfuscators.luraph_v14 import driver
+    else:
+        from obfuscators.luraph_v15 import driver
     import harness
 
     class DummyArgs:
@@ -84,27 +103,59 @@ elif cmd == "pipeline":
 
     dpath = c["dpath"]
     if stats is not None and os.path.exists(dpath):
-        with open(dpath, "r", encoding="utf-8", errors="replace") as f:
-            lines = f.readlines()
-        clean = []
-        skip_header = True
-        for line in lines:
-            stripped = line.strip()
-            if skip_header and (
-                stripped.startswith("-- Deobfuscated by") or
-                stripped.startswith("-- Detected obfuscation") or
-                stripped.startswith("-- Local names are inferred") or
-                stripped.startswith("-- source:") or
-                stripped.startswith("-- NOTE: reconstructed") or
-                stripped.startswith("--       during the trace")
-            ):
-                continue
-            if skip_header and stripped == "":
-                continue
-            skip_header = False
-            clean.append(line)
-        with open(dpath, "w", encoding="utf-8", newline="\n") as f:
-            f.writelines(clean)
+        _strip_credit_headers(dpath)
+
+
+if cmd == "patch-entries":
+    # Preserve source bytes: Lua string literals in protected files need not
+    # be UTF-8. AST locations and the original Python mapper use latin-1.
+    source_path = sys.argv[2]
+    with open(source_path, "rb") as f:
+        source = f.read().decode("latin-1")
+    from obfuscators.luraph_v15 import driver
+    sys.stdout.buffer.write(driver.patch_entries(source, source_path).encode("latin-1"))
+
+elif cmd == "patch-entries-v14":
+    source_path = sys.argv[2]
+    with open(source_path, "rb") as f:
+        source = f.read().decode("latin-1")
+    from obfuscators.luraph_v14 import driver
+    sys.stdout.buffer.write(driver.patch_entries(source, source_path).encode("latin-1"))
+
+elif cmd == "pipeline":
+    _run_luraph_pipeline(sys.argv[2], v14=False)
+
+elif cmd == "pipeline-v14":
+    _run_luraph_pipeline(sys.argv[2], v14=True)
+
+elif cmd == "ironbrew1-instrument":
+    source_path = sys.argv[2]
+    with open(source_path, "rb") as f:
+        source = f.read().decode("latin-1")
+    import backend
+    from obfuscators.ironbrew1 import instrument
+    patched, _ = backend.run_big_stack(instrument.instrument, source)
+    sys.stdout.buffer.write(patched.encode("latin-1"))
+
+elif cmd == "ironbrew1-lift":
+    config_file = sys.argv[2]
+    with open(config_file, "r", encoding="utf-8") as f:
+        c = json.load(f)
+    import backend
+    from obfuscators.ironbrew1 import devirt
+    with open(c["source_path"], "rb") as f:
+        source = f.read().decode("latin-1")
+    with open(c["dump_path"], "r", encoding="utf-8") as f:
+        dump = json.load(f)
+    text, prog = backend.run_big_stack(devirt.lift_program, source, dump)
+    text = backend.run_big_stack(lambda: backend.finish_text(backend.polish(text)))
+    with open(c["dpath"], "w", encoding="utf-8", newline="\n") as f:
+        f.write(text.strip() + "\n")
+    if c.get("stats_path"):
+        st = dict(prog.stats)
+        st["converged"] = True
+        with open(c["stats_path"], "w", encoding="utf-8", newline="\n") as f:
+            json.dump(st, f)
 
 else:
-    sys.exit(f"Unknown command: {cmd} (expected: patch-entries or pipeline)")
+    sys.exit("Unknown command: %s" % cmd)

@@ -101,7 +101,7 @@ test('trace mode in debug still writes a result and strings sidecar', { skip }, 
   assert.ok(fs.existsSync(output + '.strings.txt'));
 });
 
-test('full Luraph v15.0 ChilliLibraryEngine2 devirtualizes cleanly into valid Luau', { skip, timeout: 180000 }, t => {
+test('full Luraph v15.0 ChilliLibraryEngine2 devirtualizes cleanly into valid Luau', { skip: skip || !fs.existsSync(path.join(ROOT, 'samples', 'ChilliLibraryEngine2_v15.0_obfuscated.lua')), timeout: 180000 }, t => {
   const dir = temp(t);
   const sample = path.join(ROOT, 'samples', 'ChilliLibraryEngine2_v15.0_obfuscated.lua');
   const output = path.join(dir, 'chilli_out.lua');
@@ -123,7 +123,7 @@ test('full Luraph v15.0 ChilliLibraryEngine2 devirtualizes cleanly into valid Lu
   assert.doesNotMatch(text, /(?<![\w.])nil\s*[+\-*/%^]|[+\-*/%^]\s*nil(?![\w])/);
 });
 
-test('full Luraph v15.1 StealAnEggg devirtualizes with zero nil bitwise/arithmetic operands and valid runtime behavior', { skip, timeout: 240000 }, async t => {
+test('full Luraph v15.1 StealAnEggg devirtualizes with zero nil bitwise/arithmetic operands and valid runtime behavior', { skip: skip || !fs.existsSync(path.join(ROOT, 'samples', 'StealAnEggg_v15.1_obfuscated.lua')), timeout: 240000 }, async t => {
   const dir = temp(t);
   const sample = path.join(ROOT, 'samples', 'StealAnEggg_v15.1_obfuscated.lua');
   const output = path.join(dir, 'steal_out.lua');
@@ -196,7 +196,7 @@ test('full Luraph v15.1 StealAnEggg devirtualizes with zero nil bitwise/arithmet
   assert.match(mcpRun.body, /STEAL_RUNTIME_VERIFIED/);
 });
 
-test('deobfuscates Luraph v15.1 RideAPet (external UI bootstrap + LPH_NO_VIRTUALIZE) with zero errors and runs cleanly', { skip }, async t => {
+test('deobfuscates Luraph v15.1 RideAPet (external UI bootstrap + LPH_NO_VIRTUALIZE) with zero errors and runs cleanly', { skip: skip || !fs.existsSync(path.join(ROOT, 'samples', 'RideAPet_v15.1_obfuscated.lua')) }, async t => {
   const sample = path.join(ROOT, 'samples', 'RideAPet_v15.1_obfuscated.lua');
   const dir = temp(t);
   const out = path.join(dir, 'out.lua');

@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const detectModule = require('./src/detect');
 const driver = require('./src/driver');
+const multiDriver = require('./src/multi_driver');
 
 const DIRECTORY_EXTENSIONS = ['.lua', '.luau'];
 const FILE_EXTENSIONS = ['.lua', '.luau', '.txt'];
@@ -216,7 +217,10 @@ async function processFile(absInput, args) {
 
   process.stderr.write(`[*] obfuscator: ${plugin.label} (detected, ${confidence.toFixed(2)})\n`);
 
-  const outdir = path.join(path.dirname(absInput), 'output');
+  const parentDir = path.dirname(absInput);
+  const outdir = path.basename(parentDir).toLowerCase() === 'input'
+    ? path.join(path.dirname(parentDir), 'output')
+    : path.join(parentDir, 'output');
   const defaultOutName = path.basename(absInput).replace(/\.txt$/i, '.luau');
   const final = args.output && args.singleFile
     ? path.resolve(args.output)
@@ -256,8 +260,10 @@ async function processFile(absInput, args) {
       throw new Error('Luarmor whitelist client detected — this loader is not supported by this project.');
     } else if (plugin.name === 'luraph_v15') {
       result = await driver.run(job);
-    } else {
+    } else if (plugin.name === 'generic') {
       result = await driver.runGeneric(job);
+    } else {
+      result = await multiDriver.runPlugin(plugin.name, job);
     }
 
     if (final && result && fs.existsSync(result)) {

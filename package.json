@@ -22,5 +22,11 @@
     "luau"
   ],
   "license": "MIT",
-  "type": "commonjs"
+  "type": "commonjs",
+  "dependencies": {
+    "fengari": "^0.1.5",
+    "luaparse": "^0.3.1",
+    "smart-buffer": "^4.2.0",
+    "unicode-substring": "^1.0.0"
+  }
 }

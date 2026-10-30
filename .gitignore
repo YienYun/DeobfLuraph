@@ -10,7 +10,7 @@ __pycache__/
 .local-bin/
 
 # Generated analysis output
-output/
+/output/
 *.path2d
 .deobf-write-*/
 coverage/

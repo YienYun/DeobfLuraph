@@ -949,7 +949,7 @@ def _is_state_independent_multi(m):
             continue
         if isinstance(x, CG.NewTableE) and not x.items and x.tail is None:
             continue
-        if isinstance(x, Global) and x.name in ("ipairs", "pairs", "next", "select", "tostring", "tonumber"):
+        if isinstance(x, CG.Global) and x.name in ("ipairs", "pairs", "next", "select", "tostring", "tonumber"):
             continue
         return False
     return True

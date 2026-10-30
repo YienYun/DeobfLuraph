@@ -1,7 +1,7 @@
 local chilliGithubFastManualDefaultsRu, uiLibrary, mainWindow, defaultTab, espTab, miscTab, serverTab, tab, Players, RunService
 local Workspace, Lighting, CoreGui, HttpService, ReplicatedStorage, UserInputService, TeleportService, TextService, Stats, localPlayer
-local generateRandomId, weakCache, tbl, section, flag, fn, tbl2, runUntilTimeout, characterSection, invisibilitySection
-local respawnSection
+local rng, generateRandomId, weakCache, tbl, section, flag, fn, tbl2, runUntilTimeout, characterSection
+local invisibilitySection, respawnSection
 
 do
 	local playerTab, ContextActionService, helperSection, aimbotSection
@@ -153,7 +153,7 @@ do
 				Stats = game:GetService("Stats")
 				localPlayer = Players.LocalPlayer
 				local charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-				local rng = Random.new()
+				rng = Random.new()
 
 				generateRandomId = function()
 					local list = table.create(64)
@@ -446,7 +446,7 @@ do
 
 					if arg2 ~= nil then
 						str3 = tostring(arg2)
-					elseif autoKickMinValueSlider.GetUnit then
+					elseif autoKickMinValueSlider and autoKickMinValueSlider.GetUnit then
 						local unit = autoKickMinValueSlider:GetUnit()
 
 						if unit and unit ~= "" then
@@ -463,7 +463,7 @@ do
 					str3 = tostring(arg)
 					local configEntry = configMap[str3] or configMap["M/s"]
 
-					if autoKickMinValueSlider.SetRange then
+					if autoKickMinValueSlider and autoKickMinValueSlider.SetRange then
 						autoKickMinValueSlider:SetRange(configEntry.Min, configEntry.Max)
 						local min = autoKickMinValueSlider:Get() or configEntry.Min
 						local min2 = configEntry.Min
@@ -1353,27 +1353,49 @@ do
 				textLabel4.Text = "Đang quét tìm brainrot gần nhất..."
 				textLabel4.Parent = targetCard
 				local flag8 = false
-				local v8 = nil
+				local input = nil
 				local vector2 = Vector2.new(0, 0)
-				local v9 = nil
+				local position2 = nil
 
-				fn2(targetCard.InputBegan:Connect(function()
-				end))
+				fn2(targetCard.InputBegan:Connect(function(input2)
+					local flag82 = flag8
+					local flag822
 
-				fn2(UserInputService2.InputChanged:Connect(function(input)
-					if input == v8 or not v8 then
-						local n12 = Vector2.new(input.Position.X, input.Position.Y) - vector2
-						targetCard.Position = UDim2.new(v9.X.Scale, v9.X.Offset + n12.X, v9.Y.Scale, v9.Y.Offset + n12.Y)
+					if flag8 then
+						flag822 = flag82
+					else
+						flag822 = input2.UserInputState ~= Enum.UserInputState.Begin
+					end
+
+					if not flag822 then
+						local flag9 = input2.UserInputType == Enum.UserInputType.Touch
+
+						if not (not (input2.UserInputType == Enum.UserInputType.MouseButton1) and not flag9) then
+							local vector22 = Vector2.new(input2.Position.X, input2.Position.Y)
+
+							if fn17(targetCard, vector22) then
+								flag8 = true
+								input = flag9 and input2 or nil
+								vector2 = vector22
+								position2 = targetCard.Position
+								return
+							end
+						end
 					end
 				end))
 
-				fn2(UserInputService2.InputEnded:Connect(function(input)
-					local flag9 = input == v8
+				fn2(UserInputService2.InputChanged:Connect(function(input2)
+					if not (not flag8 or not position2) and (input and input2 == input or not input and input2.UserInputType == Enum.UserInputType.MouseMovement) then
+						local n12 = Vector2.new(input2.Position.X, input2.Position.Y) - vector2
+						targetCard.Position = UDim2.new(position2.X.Scale, position2.X.Offset + n12.X, position2.Y.Scale, position2.Y.Offset + n12.Y)
+					end
+				end))
 
-					if flag9 or not v8 then
+				fn2(UserInputService2.InputEnded:Connect(function(input2)
+					if flag8 and (input and input2 == input or not input and input2.UserInputType == Enum.UserInputType.MouseButton1) then
 						flag8 = false
-						v8 = nil
-						v9 = nil
+						input = nil
+						position2 = nil
 					end
 				end))
 
@@ -1940,6 +1962,7 @@ do
 			end
 
 			local n12 = 0.22
+			local n13 = 10
 			local color = Color3.fromRGB(255, 255, 255)
 			part = nil
 			local cylinderHandleAdornment = nil
@@ -2014,9 +2037,15 @@ do
 				end
 
 				fn20()
-				local n13 = math.max(tonumber(n3), 1)
-				math.min(arg or 0.016, 0.1)
-				radius = n13
+				local n14 = math.max(tonumber(n3) or 20, 1)
+				local n15 = math.min(arg or 0.016, 0.1)
+
+				if radius <= 0 then
+					radius = n14
+				else
+					radius += (n14 - radius) * (1 - math.exp(-n15 * n13))
+				end
+
 				part.CFrame = CFrame.new(character_.Position - Vector3.new(0, 2.9, 0)) * CFrame.Angles(-1.5707963267948966, 0, 0)
 				cylinderHandleAdornment.Radius = radius
 				cylinderHandleAdornment.InnerRadius = math.max(radius - n12, 0)
@@ -2635,9 +2664,7 @@ do
 		local fn22
 
 		fn22 = function()
-			local get = autoStealToggle.Get
-
-			if get and autoStealToggle:Get() ~= true then
+			if autoStealToggle and autoStealToggle.Get and autoStealToggle:Get() ~= true then
 				autoStealToggle:Set(true, true)
 			end
 		end
@@ -3402,20 +3429,48 @@ do
 					handle.Parent = frame7
 					local fn33 = nil
 					local flag11 = false
-					local v3 = nil
+					local input = nil
 					local flag12 = false
 					local vector2 = Vector2.new(0, 0)
 					local vector22 = Vector2.new(0, 0)
 
-					handle.InputBegan:Connect(function()
+					handle.InputBegan:Connect(function(input2)
+						if not (flag11 or input2.UserInputState ~= Enum.UserInputState.Begin) and not (input2.UserInputType ~= Enum.UserInputType.MouseButton1 and input2.UserInputType ~= Enum.UserInputType.Touch) then
+							local vector23 = Vector2.new(input2.Position.X, input2.Position.Y)
+							local absolutePosition = handle.AbsolutePosition
+							local absoluteSize = handle.AbsoluteSize
+
+							if not (vector23.X < absolutePosition.X or vector23.X > absolutePosition.X + absoluteSize.X or vector23.Y < absolutePosition.Y or vector23.Y > absolutePosition.Y + absoluteSize.Y) then
+								for _, child in ipairs(handle:GetChildren()) do
+									if child:IsA("GuiButton") and child.Visible then
+										local absolutePosition2 = child.AbsolutePosition
+										local absoluteSize2 = child.AbsoluteSize
+										if vector23.X >= absolutePosition2.X and vector23.X <= absolutePosition2.X + absoluteSize2.X and vector23.Y >= absolutePosition2.Y and vector23.Y <= absolutePosition2.Y + absoluteSize2.Y then
+											return
+										end
+									end
+								end
+
+								local absoluteSize2 = screenGui.AbsoluteSize
+
+								if not (absoluteSize2.X <= 0 or absoluteSize2.Y <= 0) then
+									flag11 = true
+									flag12 = false
+									input = input2.UserInputType == Enum.UserInputType.Touch and input2 or nil
+									vector2 = Vector2.new(input2.Position.X, input2.Position.Y)
+									vector22 = Vector2.new(frame7.Position.X.Scale + frame7.Position.X.Offset / absoluteSize2.X, frame7.Position.Y.Scale + frame7.Position.Y.Offset / absoluteSize2.Y)
+									return
+								end
+							end
+						end
 					end)
 
-					fn2(UserInputService2.InputChanged:Connect(function(input)
-						if not (not (input == v3 or not v3) or not frame3) then
+					fn2(UserInputService2.InputChanged:Connect(function(input2)
+						if flag11 and not (not (input and input2 == input or not input and input2.UserInputType == Enum.UserInputType.MouseMovement) or not frame3) then
 							local absoluteSize = screenGui.AbsoluteSize
 
 							if not (absoluteSize.X <= 0 or absoluteSize.Y <= 0) then
-								local n24 = Vector2.new(input.Position.X, input.Position.Y) - vector2
+								local n24 = Vector2.new(input2.Position.X, input2.Position.Y) - vector2
 
 								if not (not flag12 and n24.Magnitude < 6) then
 									flag12 = true
@@ -3426,10 +3481,10 @@ do
 						end
 					end))
 
-					fn2(UserInputService2.InputEnded:Connect(function(input)
-						if input.UserInputType == Enum.UserInputType.MouseButton1 or input == v3 then
+					fn2(UserInputService2.InputEnded:Connect(function(input2)
+						if flag11 and (input2.UserInputType == Enum.UserInputType.MouseButton1 or input2 == input) then
 							flag11 = false
-							v3 = nil
+							input = nil
 
 							if flag12 then
 								fn25(frame7.Position)
@@ -3483,13 +3538,13 @@ do
 					uiAspectRatioConstraint.DominantAxis = Enum.DominantAxis.Height
 					uiAspectRatioConstraint.Parent = frame8
 
-					for _, v4 in ipairs({ { 0.335355, 45 }, { 0.664645, -45 } }) do
+					for _, v3 in ipairs({ { 0.335355, 45 }, { 0.664645, -45 } }) do
 						local frame9 = Instance.new("Frame")
 						frame9.AnchorPoint = Vector2.new(0.5, 0.5)
 						frame9.BackgroundColor3 = Color3.fromRGB(58, 255, 55)
 						frame9.BorderSizePixel = 0
-						frame9.Position = UDim2.fromScale(v4[1], 0.535355)
-						frame9.Rotation = v4[2]
+						frame9.Position = UDim2.fromScale(v3[1], 0.535355)
+						frame9.Rotation = v3[2]
 						frame9.Size = UDim2.fromScale(0.6657, 0.2)
 						frame9.Parent = frame8
 					end
@@ -4109,7 +4164,7 @@ do
 								str4 = v2.Name
 								str5 = fn5(v2.Generation)
 								generation = v2.Generation
-								local n27 = math.max(tonumber(n3), 1)
+								local n27 = math.max(tonumber(n3) or 20, 1)
 								n26 = 1 - math.clamp(v2.Distance / n27, 0, 1)
 
 								if visible then
@@ -4190,11 +4245,9 @@ do
 				destroyAll2()
 				fn23()
 
-				if chilliAutoGetBarGui then
-					pcall(function()
-						chilliAutoGetBarGui:Destroy()
-					end)
-				end
+				pcall(function()
+					chilliAutoGetBarGui:Destroy()
+				end)
 
 				if chilliMacLibTargetGui then
 					pcall(function()
@@ -4240,16 +4293,118 @@ do
 				localPlayer:SetAttribute("ChilliDropBrainrotActive", arg == true)
 			end
 
+			local function getFlag11(arg, arg2)
+				return flag11 and arg == n22 and localPlayer.Character == arg2
+			end
+
 			local function fn26()
+				if not (flag12 or localPlayer:GetAttribute("Stealing") ~= true) then
+					local character_ = localPlayer.Character
+					local humanoid = character_ and character_:FindFirstChildOfClass("Humanoid")
+					local humanoidRootPart = character_ and character_:FindFirstChild("HumanoidRootPart")
+
+					if not (not humanoid or not humanoidRootPart) then
+						n22 += 1
+						local n222 = n22
+						flag12 = true
+						fn25(true)
+
+						task.spawn(function()
+							local cFrame = humanoidRootPart.CFrame
+							local assemblyLinearVelocity = humanoidRootPart.AssemblyLinearVelocity
+							local health = humanoid.Health
+							local breakJointsOnDeath = humanoid.BreakJointsOnDeath
+							local requiresNeck = humanoid.RequiresNeck
+							local flag13 = true
+
+							pcall(function()
+								flag13 = humanoid:GetStateEnabled(Enum.HumanoidStateType.Dead)
+								humanoid.BreakJointsOnDeath = false
+								humanoid.RequiresNeck = false
+								humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
+							end)
+
+							local connection3 = humanoid.HealthChanged:Connect(function(health2)
+								local v = getFlag11(n222, character_)
+
+								if v and health2 <= 0 then
+									pcall(function()
+										humanoid.Health = math.max(humanoid.MaxHealth, health, 1)
+									end)
+								end
+							end)
+
+							pcall(function()
+								local now = os.clock()
+
+								while getFlag11(n222, character_) and humanoidRootPart.Parent and humanoid.Parent and os.clock() - now < 0.35 do
+									if humanoid.Health <= 0 then
+										humanoid.Health = math.max(humanoid.MaxHealth, health, 1)
+									end
+
+									humanoidRootPart.AssemblyLinearVelocity = Vector3.new(0, 1000, 0)
+									humanoidRootPart.CFrame = cFrame
+									task.wait()
+								end
+
+								if getFlag11(n222, character_) and humanoidRootPart.Parent then
+									humanoidRootPart.CFrame = cFrame
+									humanoidRootPart.AssemblyLinearVelocity = assemblyLinearVelocity
+								end
+
+								local now2 = os.clock()
+
+								while getFlag11(n222, character_) and humanoid.Parent and localPlayer:GetAttribute("Stealing") == true and os.clock() - now2 < 1.5 do
+									if humanoid.Health <= 0 then
+										humanoid.Health = math.max(humanoid.MaxHealth, health, 1)
+									end
+
+									task.wait()
+								end
+							end)
+
+							if connection3 then
+								connection3:Disconnect()
+							end
+
+							if localPlayer.Character == character_ and humanoid.Parent then
+								pcall(function()
+									humanoid.BreakJointsOnDeath = breakJointsOnDeath
+									humanoid.RequiresNeck = requiresNeck
+									humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, flag13)
+
+									if health > 0 and humanoid.Health <= 0 then
+										humanoid.Health = health
+									end
+								end)
+							end
+
+							if n222 == n22 then
+								flag12 = false
+
+								if flag11 then
+									fn25(false)
+								end
+							end
+						end)
+
+						return
+					end
+				end
 			end
 
 			local function fn27()
-				flag11 = false
-				n22 += 1
-				flag12 = false
-				fn25(false)
-				connection2:Disconnect()
-				connection2 = nil
+				if flag11 then
+					flag11 = false
+					n22 += 1
+					flag12 = false
+					fn25(false)
+
+					if connection2 then
+						connection2:Disconnect()
+						connection2 = nil
+					end
+				end
 			end
 
 			fn25(false)
@@ -4573,7 +4728,7 @@ do
 			end
 
 			local connection2 = ProximityPromptService.PromptButtonHoldBegan:Connect(function(prompt3, player)
-				if not (player and player ~= localPlayer or not fn35(prompt3)) then
+				if not (not flag11 or player and player ~= localPlayer or not fn35(prompt3)) then
 					local v = fn29(prompt3) or fn28()
 
 					if v then
@@ -4635,79 +4790,82 @@ do
 
 			local function fn37()
 				flag11 = false
-				connection2:Disconnect()
-				connection2 = nil
+
+				if connection2 then
+					connection2:Disconnect()
+					connection2 = nil
+				end
 			end
 
 			cleanup2.Event:Connect(fn37)
 			chilliUnlockBaseRuntime.Destroying:Connect(fn37)
 		end
-	end
 
-	local chilliHelperLocalRuntime = CoreGui:FindFirstChild("__ChilliHelperLocalRuntime")
+		local chilliHelperLocalRuntime = CoreGui:FindFirstChild("__ChilliHelperLocalRuntime")
 
-	if chilliHelperLocalRuntime then
-		local cleanup = chilliHelperLocalRuntime:FindFirstChild("Cleanup")
+		if chilliHelperLocalRuntime then
+			local cleanup2 = chilliHelperLocalRuntime:FindFirstChild("Cleanup")
 
-		if cleanup and cleanup:IsA("BindableEvent") then
+			if cleanup2 and cleanup2:IsA("BindableEvent") then
+				pcall(function()
+					cleanup2:Fire()
+				end)
+			end
+
 			pcall(function()
-				cleanup:Fire()
+				chilliHelperLocalRuntime:Destroy()
 			end)
 		end
 
-		pcall(function()
-			chilliHelperLocalRuntime:Destroy()
-		end)
-	end
+		do
+			local chilliHelperLocalRuntime2 = Instance.new("Folder")
+			chilliHelperLocalRuntime2.Name = "__ChilliHelperLocalRuntime"
+			chilliHelperLocalRuntime2.Archivable = false
+			chilliHelperLocalRuntime2.Parent = CoreGui
+			local cleanup2 = Instance.new("BindableEvent")
+			cleanup2.Name = "Cleanup"
+			cleanup2.Parent = chilliHelperLocalRuntime2
+			flag = true
+			local list = {}
 
-	do
-		local chilliHelperLocalRuntime2 = Instance.new("Folder")
-		chilliHelperLocalRuntime2.Name = "__ChilliHelperLocalRuntime"
-		chilliHelperLocalRuntime2.Archivable = false
-		chilliHelperLocalRuntime2.Parent = CoreGui
-		local cleanup = Instance.new("BindableEvent")
-		cleanup.Name = "Cleanup"
-		cleanup.Parent = chilliHelperLocalRuntime2
-		flag = true
-		local list = {}
+			fn = function(arg)
+				list[#list + 1] = arg
+			end
 
-		fn = function(arg)
-			list[#list + 1] = arg
+			local function fn25()
+				if not flag then
+					return
+				end
+				flag = false
+
+				for _, v in ipairs(list) do
+					pcall(v)
+				end
+
+				table.clear(list)
+			end
+
+			cleanup2.Event:Connect(fn25)
+			chilliHelperLocalRuntime2.Destroying:Connect(fn25)
 		end
 
-		local function fn2()
-			if not flag then
-				return
-			end
-			flag = false
-
-			for _, v in ipairs(list) do
-				pcall(v)
+		do
+			local function fn25()
+				if localPlayer:GetAttribute("BlockTools") == true then
+					localPlayer:SetAttribute("BlockTools", false)
+				end
 			end
 
-			table.clear(list)
+			fn25()
+			local connection2 = localPlayer:GetAttributeChangedSignal("BlockTools"):Connect(fn25)
+
+			fn(function()
+				if connection2 then
+					connection2:Disconnect()
+					connection2 = nil
+				end
+			end)
 		end
-
-		cleanup.Event:Connect(fn2)
-		chilliHelperLocalRuntime2.Destroying:Connect(fn2)
-	end
-
-	do
-		local function fn2()
-			if localPlayer:GetAttribute("BlockTools") == true then
-				localPlayer:SetAttribute("BlockTools", false)
-			end
-		end
-
-		fn2()
-		local connection = localPlayer:GetAttributeChangedSignal("BlockTools"):Connect(fn2)
-
-		fn(function()
-			if connection then
-				connection:Disconnect()
-				connection = nil
-			end
-		end)
 	end
 
 	tbl2 = { ProtectedHumanoid = nil, RescueSerial = 0 }
@@ -4717,6 +4875,7 @@ do
 		local humanoid = nil
 		local tbl3 = nil
 		local connections = {}
+		local flag2 = false
 		local n2 = 0
 
 		local function disconnectAll()
@@ -4736,7 +4895,7 @@ do
 			humanoid = nil
 			tbl3 = nil
 			tbl2.ProtectedHumanoid = nil
-			if not humanoid2.Parent or not tbl32 then
+			if not humanoid2 or not humanoid2.Parent or not tbl32 then
 				return
 			end
 
@@ -4760,7 +4919,28 @@ do
 		end
 
 		local function fn4(arg)
-			if arg ~= humanoid or not arg or not arg.Parent then
+			if not (arg ~= humanoid or not arg or not arg.Parent or flag2) then
+				local maxHealth = arg.MaxHealth
+
+				if not (maxHealth <= 0) then
+					if maxHealth == math.huge or arg.Health >= maxHealth then
+						return true
+					end
+					local flag3 = arg.Health <= 0
+					flag2 = true
+
+					local ok = pcall(function()
+						arg.Health = maxHealth
+					end)
+
+					flag2 = false
+
+					if ok and flag3 and arg.Health > 0 then
+						tbl2.RescueSerial = tbl2.RescueSerial + 1
+					end
+
+					return ok and arg.Health >= maxHealth
+				end
 			end
 
 			return false
@@ -4816,8 +4996,13 @@ do
 
 		local connection2 = RunService.Heartbeat:Connect(function()
 			local now = os.clock()
+			local humanoid2 = humanoid
 
-			if now - n2 >= n then
+			if humanoid then
+				humanoid2 = now - n2 >= n
+			end
+
+			if humanoid2 then
 				n2 = now
 				fn3(humanoid)
 				fn4(humanoid)
@@ -4830,10 +5015,16 @@ do
 
 		fn(function()
 			fn2()
-			connection:Disconnect()
-			connection = nil
-			connection2:Disconnect()
-			connection2 = nil
+
+			if connection then
+				connection:Disconnect()
+				connection = nil
+			end
+
+			if connection2 then
+				connection2:Disconnect()
+				connection2 = nil
+			end
 		end)
 	end
 
@@ -4936,17 +5127,20 @@ do
 		local n3 = 0.02
 		local n4 = 5
 		local n5 = 7
-		local n6 = 2
+		local n6 = 5
+		local n7 = 12
+		local n8 = 4
+		local n9 = 2
 		local flag2 = false
 		local flag3 = false
-		local n7 = 0
+		local n10 = 0
 		local connection = nil
 		local connection2 = nil
 		local connection3 = nil
 		local position = nil
 		local playerMap = {}
-		local n8 = 0
-		local n9 = 0
+		local n11 = 0
+		local n12 = 0
 		local v = nil
 		local fn6 = nil
 
@@ -4963,12 +5157,95 @@ do
 			return nil
 		end
 
-		local function fn8()
+		local function fn8(arg)
+			local magnitude = nil
+			local player = nil
+
+			for _, player2 in ipairs(Players:GetPlayers()) do
+				if player2 ~= localPlayer then
+					local v2 = fn7(player2)
+
+					if v2 then
+						local magnitude2 = (v2.Position - arg.Position).Magnitude
+
+						if not magnitude or magnitude2 < magnitude then
+							magnitude = magnitude2
+							player = player2
+						end
+					end
+				end
+			end
+
+			return player
+		end
+
+		local function fn9()
 			local character_ = localPlayer.Character
 			return character_ and character_:FindFirstChild("Body Swap Potion") or localPlayer.Backpack:FindFirstChild("Body Swap Potion")
 		end
 
-		local function fn9(arg)
+		local function fn10(arg, arg2)
+			local ok, result = pcall(getconnections, arg.Activated)
+
+			if ok then
+				for _, v2 in ipairs(result) do
+					local function_ = nil
+
+					pcall(function()
+						function_ = v2.Function
+					end)
+
+					if typeof(function_) == "function" then
+						local ok2, result2 = pcall(debug.getinfo, function_)
+						ok2 = ok2 and result2
+
+						if ok2 then
+							ok2 = string.find(result2.source or "", "BodySwapScript", 1, true)
+						end
+
+						if ok2 then
+							local n13 = tonumber(result2.nups) or 0
+							local flag4 = false
+
+							for idx = 1, n13 do
+								local ok3, result3, result4 = pcall(debug.getupvalue, function_, idx)
+								local flag5 = string.find(string.lower(tostring(result3 or "")), "target", 1, true) ~= nil
+								local isPlayer = typeof(result4) == "Instance" and result4:IsA("Player") and result4 ~= localPlayer
+								flag5 = flag5 and (result4 == nil or typeof(result4) == "Instance" and result4:IsA("Player"))
+
+								if ok3 and (flag5 or isPlayer) then
+									flag4 = pcall(debug.setupvalue, function_, idx, arg2) or flag4
+								end
+							end
+
+							local flag5 = not flag4
+
+							if flag5 then
+								flag5 = (tonumber(result2.nups) or 0) >= 2
+							end
+
+							if flag5 then
+								pcall(debug.setupvalue, function_, 2, arg2)
+							end
+						end
+					end
+				end
+			end
+		end
+
+		local function fn11(arg)
+			local childs = {}
+
+			for _, child in ipairs(arg:GetChildren()) do
+				if child:IsA("Tool") then
+					childs[#childs + 1] = child
+				end
+			end
+
+			return childs
+		end
+
+		local function fn12(arg)
 			if arg then
 				local previousToolState = arg.PreviousToolStates[1]
 				local bodySwapTool = arg.BodySwapTool
@@ -5018,9 +5295,9 @@ do
 			end
 		end
 
-		local function fn10()
+		local function fn13()
 			local character_ = localPlayer.Character
-			local v2 = fn8()
+			local v2 = fn9()
 			if not v2 or not v2.Parent then
 				return
 			end
@@ -5035,43 +5312,249 @@ do
 			end)
 		end
 
-		local v2, v3, v4, v5, v6, v7
+		local function fn14(arg)
+			local character_ = localPlayer.Character
+			local humanoid = character_ and character_:FindFirstChildOfClass("Humanoid")
+			local bodySwapPotion
 
-		local function fn11()
+			if character_ then
+				bodySwapPotion = fn9() or fn3("Body Swap Potion")
+			else
+				bodySwapPotion = character_
+			end
+
+			if not character_ or not humanoid or not bodySwapPotion then
+				return nil
+			end
+			runUntilTimeout(2)
+			local list = {}
+
+			for _, v2 in ipairs(fn11(character_)) do
+				if v2 ~= bodySwapPotion then
+					list[#list + 1] = { Tool = v2, Enabled = v2.Enabled }
+
+					pcall(function()
+						v2:Deactivate()
+						v2.Enabled = false
+						v2.Parent = localPlayer.Backpack
+					end)
+				end
+			end
+
+			humanoid:UnequipTools()
+			runUntilTimeout(2)
+			local n13 = os.clock() + 0.45
+
+			while true do
+				pcall(function()
+					humanoid:EquipTool(bodySwapPotion)
+				end)
+
+				if bodySwapPotion.Parent == character_ then
+					break
+				else
+					task.wait(0.03)
+					if not (n13 <= os.clock()) then
+						continue
+					end
+					break
+				end
+			end
+
+			for _, v2 in ipairs(fn11(character_)) do
+				if v2 ~= bodySwapPotion then
+					pcall(function()
+						v2:Deactivate()
+						v2.Parent = localPlayer.Backpack
+					end)
+				end
+			end
+
+			fn10(bodySwapPotion, arg)
+
+			return {
+				Character = character_,
+				Humanoid = humanoid,
+				BodySwapTool = bodySwapPotion,
+				PreviousToolStates = list,
+				StartedAt = os.clock(),
+			}
+		end
+
+		local function fn15(arg, arg2, arg3)
+			if flag3 then
+				return
+			end
+			flag3 = true
+			local n102 = n10
+
+			task.spawn(function()
+				local v2 = nil
+
+				local ok = pcall(function()
+					local arg32 = arg3 and n7 + 3 or 12
+					local n13 = os.clock() + arg32
+					local arg22 = arg2
+
+					while true do
+						if flag2 and n10 == n102 and os.clock() < n13 then
+							local v3 = fn7(localPlayer)
+
+							if not v3 then
+								task.wait(0.08)
+								continue
+							elseif not ((v3.Position - arg).Magnitude <= n6) then
+								local v22 = v2
+
+								if v2 then
+									local startedAt = v2.StartedAt
+									v22 = os.clock() - startedAt >= n8
+								end
+
+								if not v22 then
+									if not arg22 or not fn7(arg22) then
+										arg22 = fn8(v3)
+									end
+
+									if not arg22 then
+										task.wait(0.08)
+										continue
+									else
+										local character_, humanoid, bodySwapTool, tool
+
+										if not v2 or localPlayer.Character ~= v2.Character or not v2.BodySwapTool.Parent then
+											fn12(v2)
+											v = nil
+											v2 = fn14(arg22)
+											v = v2
+
+											if not v2 then
+												task.wait(0.12)
+												continue
+											else
+												character_ = v2.Character
+												humanoid = v2.Humanoid
+												bodySwapTool = v2.BodySwapTool
+												tool = character_:FindFirstChildWhichIsA("Tool")
+												tool = tool and tool ~= bodySwapTool
+
+												if not tool then
+													if bodySwapTool.Parent ~= character_ then
+														pcall(function()
+															runUntilTimeout(1)
+															humanoid:EquipTool(bodySwapTool)
+														end)
+													end
+
+													if bodySwapTool.Parent == character_ then
+														fn10(bodySwapTool, arg22)
+
+														if bodySwapTool.Enabled ~= false then
+															pcall(function()
+																bodySwapTool:Deactivate()
+																bodySwapTool:Activate()
+															end)
+														end
+													end
+
+													task.wait(0.08)
+													continue
+												end
+											end
+										else
+											character_ = v2.Character
+											humanoid = v2.Humanoid
+											bodySwapTool = v2.BodySwapTool
+											tool = character_:FindFirstChildWhichIsA("Tool")
+											tool = tool and tool ~= bodySwapTool
+
+											if not tool then
+												if bodySwapTool.Parent ~= character_ then
+													pcall(function()
+														runUntilTimeout(1)
+														humanoid:EquipTool(bodySwapTool)
+													end)
+												end
+
+												if bodySwapTool.Parent == character_ then
+													fn10(bodySwapTool, arg22)
+
+													if bodySwapTool.Enabled ~= false then
+														pcall(function()
+															bodySwapTool:Deactivate()
+															bodySwapTool:Activate()
+														end)
+													end
+												end
+
+												task.wait(0.08)
+												continue
+											end
+										end
+									end
+								end
+							end
+						end
+
+						break
+					end
+				end)
+
+				fn12(v2)
+
+				if v == v2 then
+					v = nil
+				end
+
+				fn13()
+				task.wait(0.2)
+
+				if n10 == n102 then
+					flag3 = false
+
+					if fn6 then
+						fn6()
+					end
+
+					if not ok then
+						fn13()
+					end
+				end
+			end)
 		end
 
 		fn6 = function()
 			position = nil
 			table.clear(playerMap)
-			n8 = 0
+			n11 = 0
 		end
 
-		local function fn12(deltaTime)
+		local function fn16(deltaTime)
 			if localPlayer:GetAttribute("Stealing") == true then
-				n9 = os.clock() + n6
+				n12 = os.clock() + n9
 			end
 
-			n8 += deltaTime
+			n11 += deltaTime
 
-			if not (n8 < n3) then
-				n8 = 0
-				local v8 = fn7(localPlayer)
-				if not v8 then
+			if not (n11 < n3) then
+				n11 = 0
+				local v2 = fn7(localPlayer)
+				if not v2 then
 					fn6()
 					return
 				end
-				local position2 = v8.Position
+				local position2 = v2.Position
 
 				if position and not flag3 then
 					for _, player in ipairs(Players:GetPlayers()) do
 						if player ~= localPlayer then
-							local v9 = fn7(player)
+							local v3 = fn7(player)
 							local playerEntry = playerMap[player]
 
-							if v9 and playerEntry then
-								local position3 = v9.Position
+							if v3 and playerEntry then
+								local position3 = v3.Position
 								if (position2 - position).Magnitude >= n4 and (position3 - playerEntry).Magnitude >= n4 and (position2 - playerEntry).Magnitude <= n5 and (position3 - position).Magnitude <= n5 then
-									fn11(position, player, localPlayer:GetAttribute("Stealing") == true or os.clock() <= n9)
+									fn15(position, player, localPlayer:GetAttribute("Stealing") == true or os.clock() <= n12)
 									break
 								end
 							end
@@ -5083,21 +5566,34 @@ do
 
 				for _, player in ipairs(Players:GetPlayers()) do
 					if player ~= localPlayer then
-						local v9 = fn7(player)
-						playerMap[player] = v9 and v9.Position or nil
+						local v3 = fn7(player)
+						playerMap[player] = v3 and v3.Position or nil
 					end
 				end
 			end
 		end
 
-		local function fn13()
-			local v8 = v
+		local function fn17()
+			local flag32 = flag3
+			local flag322
+
+			if flag3 then
+				flag322 = flag32
+			else
+				flag322 = v ~= nil
+			end
+
+			local v2 = v
 			v = nil
 			flag2 = false
 			flag3 = false
-			n7 += 1
-			fn9(v8)
-			fn10()
+			n10 += 1
+			fn12(v2)
+
+			if flag322 then
+				fn13()
+			end
+
 			fn6()
 
 			if connection then
@@ -5116,50 +5612,50 @@ do
 			end
 		end
 
-		local function fn14()
-			fn13()
+		local function fn18()
+			fn17()
 			flag2 = true
 			fn6()
-			local bodySwapPotion, v8 = fn3("Body Swap Potion")
+			local bodySwapPotion, v2 = fn3("Body Swap Potion")
 
 			if not bodySwapPotion then
-				fn4("Body Swap Potion", v8)
+				fn4("Body Swap Potion", v2)
 			end
 
 			connection2 = localPlayer.CharacterAdded:Connect(function()
-				n7 += 1
-				local v9 = v
+				n10 += 1
+				local v22 = v
 				v = nil
-				fn9(v9)
+				fn12(v22)
 				flag3 = false
 				fn6()
-				task.defer(fn10)
+				task.defer(fn13)
 			end)
 
 			connection3 = localPlayer:GetAttributeChangedSignal("Stealing"):Connect(function()
 				if localPlayer:GetAttribute("Stealing") == true then
-					n9 = os.clock() + n6
+					n12 = os.clock() + n9
 				end
 			end)
 
 			if localPlayer:GetAttribute("Stealing") == true then
-				n9 = os.clock() + n6
+				n12 = os.clock() + n9
 			end
 
-			connection = RunService.Heartbeat:Connect(fn12)
+			connection = RunService.Heartbeat:Connect(fn16)
 			return true
 		end
 
-		fn(fn13)
+		fn(fn17)
 
 		helperSection:CreateToggle({
 			Name = "Anti Body Swap",
 			Default = true,
 			Callback = function(arg)
 				if arg then
-					fn14()
+					fn18()
 				else
-					fn13()
+					fn17()
 				end
 			end,
 		})
@@ -5175,10 +5671,10 @@ do
 		local weakCache4 = setmetatable({}, { __mode = "k" })
 		local weakCache5 = setmetatable({}, { __mode = "k" })
 		local weakCache6 = setmetatable({}, { __mode = "k" })
-		local v = nil
-		local v2 = nil
-		local v3 = nil
-		local v4 = nil
+		local controls = nil
+		local moveFunction = nil
+		local move = nil
+		local moveFunction2 = nil
 		local n3 = 0
 		local n4 = 0
 		local currentCamera = nil
@@ -5191,9 +5687,9 @@ do
 		local fn6 = nil
 
 		local function disconnectAll(arg)
-			for _, v5 in ipairs(arg) do
-				if typeof(v5) == "RBXScriptConnection" then
-					v5:Disconnect()
+			for _, v in ipairs(arg) do
+				if typeof(v) == "RBXScriptConnection" then
+					v:Disconnect()
 				end
 			end
 
@@ -5211,9 +5707,9 @@ do
 				local flag6 = false
 
 				if ok then
-					for _, v5 in ipairs(result) do
-						if type(v5) == "string" then
-							local str = string.lower(v5)
+					for _, v in ipairs(result) do
+						if type(v) == "string" then
+							local str = string.lower(v)
 
 							if string.find(str, "discoeffect", 1, true) then
 								flag5 = true
@@ -5234,8 +5730,8 @@ do
 					local ok2, result2 = pcall(debug.getprotos, arg)
 
 					if ok2 then
-						for _, v5 in ipairs(result2) do
-							if fn7(v5, arg2 + 1, arg3) then
+						for _, v in ipairs(result2) do
+							if fn7(v, arg2 + 1, arg3) then
 								return true
 							end
 						end
@@ -5267,7 +5763,7 @@ do
 		end
 
 		local function fn10(arg)
-			if flag and fn8(arg) and pcall(function()
+			if not (not flag2 or not flag) and fn8(arg) and pcall(function()
 				arg:Disable()
 			end) then
 				weakCache5[arg] = true
@@ -5275,22 +5771,22 @@ do
 		end
 
 		local function fn11(arg)
-			if not (not flag or not arg or not arg.Parent or not arg:IsA("RemoteEvent")) then
+			if not (not flag2 or not flag or not arg or not arg.Parent or not arg:IsA("RemoteEvent")) then
 				local ok, result = pcall(getconnections, arg.OnClientEvent)
 
 				if ok then
-					for _, v5 in ipairs(result) do
-						if not weakCache6[v5] then
-							weakCache6[v5] = true
+					for _, v in ipairs(result) do
+						if not weakCache6[v] then
+							weakCache6[v] = true
 							local function_ = nil
 
 							pcall(function()
-								function_ = v5.Function
+								function_ = v.Function
 							end)
 
 							if fn7(function_, 1, {}) or fn9(function_) then
-								weakCache4[v5] = true
-								fn10(v5)
+								weakCache4[v] = true
+								fn10(v)
 							end
 						end
 					end
@@ -5312,21 +5808,21 @@ do
 
 				local n5 = 1
 
-				while flag and n4 == n42 and n5 <= #list do
+				while flag2 and flag and n4 == n42 and n5 <= #list do
 					local now = os.clock()
 					local n6 = 0
 
 					while true do
-						local v5 = list[n5]
+						local v = list[n5]
 						n5 += 1
-						local object = v5.Object
+						local object = v.Object
 
 						if object and object.Parent then
-							if v5.Kind == "Lighting" then
+							if v.Kind == "Lighting" then
 								destroyAll(object)
-							elseif v5.Kind == "Sounds" then
+							elseif v.Kind == "Sounds" then
 								fn6(object)
-							elseif v5.Kind == "Remotes" and object:IsA("RemoteEvent") then
+							elseif v.Kind == "Remotes" and object:IsA("RemoteEvent") then
 								fn11(object)
 							end
 
@@ -5336,8 +5832,8 @@ do
 								tbl3 = object:GetChildren()
 							end)
 
-							for _, v6 in ipairs(tbl3) do
-								list[#list + 1] = { Object = v6, Kind = v5.Kind }
+							for _, v2 in ipairs(tbl3) do
+								list[#list + 1] = { Object = v2, Kind = v.Kind }
 							end
 						end
 
@@ -5463,29 +5959,57 @@ do
 		end
 
 		local function fn18()
-			pcall(function()
-				v.moveFunction = v3
-			end)
+			if controls then
+				pcall(function()
+					controls.moveFunction = move or moveFunction
+				end)
+			end
 
-			v = nil
-			v2 = nil
-			v3 = nil
-			v4 = nil
+			controls = nil
+			moveFunction = nil
+			move = nil
+			moveFunction2 = nil
 		end
 
 		local function fn19()
-			if v.moveFunction ~= v4 then
-				v.moveFunction = v4
+			if controls and moveFunction2 then
+				if controls.moveFunction ~= moveFunction2 then
+					controls.moveFunction = moveFunction2
+				end
+
+				return
 			end
+
+			pcall(function()
+				local playerScripts = localPlayer:FindFirstChild("PlayerScripts")
+				playerScripts = playerScripts and playerScripts:FindFirstChild("PlayerModule")
+
+				if playerScripts then
+					local controls2 = require(playerScripts):GetControls()
+
+					if controls2 then
+						controls = controls2
+						moveFunction = controls2.moveFunction
+						move = localPlayer.Move
+
+						moveFunction2 = function(arg, arg2, arg3)
+							return localPlayer:Move(arg2, arg3)
+						end
+
+						controls.moveFunction = moveFunction2
+						return
+					end
+				end
+			end)
 		end
 
 		local function fn20()
 			disconnectAll(connections2)
 
-			for k, v5 in pairs(weakCache3) do
+			for k, v in pairs(weakCache3) do
 				if k and k.Parent then
 					pcall(function()
-						k.Volume = v5
+						k.Volume = v
 					end)
 				end
 			end
@@ -5691,7 +6215,7 @@ do
 		end
 
 		local function fn10(arg)
-			if not tbl3[arg] then
+			if not (not flag2 or tbl3[arg]) then
 				local open = fn6(arg, "Open")
 				local close = fn6(arg, "Close")
 
@@ -5769,10 +6293,17 @@ do
 
 		local function fn12()
 			flag2 = false
-			connection2:Disconnect()
-			connection2 = nil
-			connection:Disconnect()
-			connection = nil
+
+			if connection2 then
+				connection2:Disconnect()
+				connection2 = nil
+			end
+
+			if connection then
+				connection:Disconnect()
+				connection = nil
+			end
+
 			fn8()
 		end
 
@@ -5821,8 +6352,8 @@ do
 		local connection = nil
 		local kMap = {}
 		local tbl3 = {}
+		local tool = nil
 		local v = nil
-		local v2 = nil
 		local n4 = 0
 		local str = "Sentry_" .. tostring(localPlayer.UserId)
 
@@ -5870,23 +6401,23 @@ do
 		end
 
 		local function fn10()
-			local v3 = v
-			local v22 = v2
+			local tool2 = tool
+			local v2 = v
+			tool = nil
 			v = nil
-			v2 = nil
 
-			if v3.Parent then
+			if not (not tool2 or not tool2.Parent) then
 				local character_ = localPlayer.Character
 				local humanoid = character_ and character_:FindFirstChildOfClass("Humanoid")
 				local backpack = localPlayer:FindFirstChildOfClass("Backpack")
 
-				if not (not character_ or not humanoid or humanoid.Health <= 0 or v3.Parent ~= character_ and v3.Parent ~= backpack) then
-					local tool = character_:FindFirstChildWhichIsA("Tool")
+				if not (not character_ or not humanoid or humanoid.Health <= 0 or tool2.Parent ~= character_ and tool2.Parent ~= backpack) then
+					local tool3 = character_:FindFirstChildWhichIsA("Tool")
 
-					if tool ~= v3 and not (tool and tool ~= v22) then
+					if tool3 ~= tool2 and not (tool3 and tool3 ~= v2) then
 						pcall(function()
 							runUntilTimeout(0.5)
-							humanoid:EquipTool(v3)
+							humanoid:EquipTool(tool2)
 						end)
 
 						return
@@ -5910,12 +6441,12 @@ do
 		end
 
 		local function fn13()
-			for k, v3 in pairs(tbl3) do
+			for k, v2 in pairs(tbl3) do
 				if k and k.Parent then
 					pcall(function()
-						k.CanCollide = v3.CanCollide
-						k.Transparency = v3.Transparency
-						k.Size = v3.Size
+						k.CanCollide = v2.CanCollide
+						k.Transparency = v2.Transparency
+						k.Size = v2.Size
 					end)
 				end
 			end
@@ -5930,7 +6461,7 @@ do
 				local humanoidRootPart = character_ and character_:FindFirstChild("HumanoidRootPart")
 
 				if not (not humanoid or humanoid.Health <= 0 or not humanoidRootPart) then
-					local v3 = nil
+					local v2 = nil
 					local huge = math.huge
 					local k = nil
 
@@ -5938,13 +6469,13 @@ do
 						if not k2.Parent then
 							kMap[k2] = nil
 						elseif fn8(k2) then
-							local v4 = fn7(k2)
+							local v3 = fn7(k2)
 
-							if v4 then
-								local magnitude = (humanoidRootPart.Position - v4.Position).Magnitude
+							if v3 then
+								local magnitude = (humanoidRootPart.Position - v3.Position).Magnitude
 
 								if magnitude < huge then
-									v3 = v4
+									v2 = v3
 									huge = magnitude
 									k = k2
 								end
@@ -5952,34 +6483,35 @@ do
 						end
 					end
 
-					if not (not k or not k.Parent or not v3 or not v3.Parent) then
+					if not (not k or not k.Parent or not v2 or not v2.Parent) then
 						pcall(function()
-							fn12(v3)
-							v3.CFrame = humanoidRootPart.CFrame
+							fn12(v2)
+							v2.CFrame = humanoidRootPart.CFrame
 						end)
 
-						local v4 = fn9(character_)
+						local v3 = fn9(character_)
 
-						if v4 then
-							if v4.Parent ~= character_ then
-								local tool = character_:FindFirstChildWhichIsA("Tool")
+						if v3 then
+							if v3.Parent ~= character_ then
+								local tool2 = character_:FindFirstChildWhichIsA("Tool")
 
-								if tool and tool ~= v4 then
+								if tool2 and tool2 ~= v3 and not tool then
+									tool = tool2
 								end
 
-								v2 = v4
+								v = v3
 
 								pcall(function()
 									runUntilTimeout(1)
-									humanoid:EquipTool(v4)
+									humanoid:EquipTool(v3)
 								end)
 							end
 
-							if v4.Parent == character_ then
+							if v3.Parent == character_ then
 								n4 = os.clock()
 
 								pcall(function()
-									v4:Activate()
+									v3:Activate()
 								end)
 							end
 						end
@@ -5993,8 +6525,12 @@ do
 			n3 += 1
 			n4 = 0
 			fn10()
-			connection:Disconnect()
-			connection = nil
+
+			if connection then
+				connection:Disconnect()
+				connection = nil
+			end
+
 			kMap = {}
 			fn13()
 		end
@@ -6029,7 +6565,7 @@ do
 						local humanoidRootPart = character_ and character_:FindFirstChild("HumanoidRootPart")
 
 						if humanoid and humanoid.Health > 0 and humanoidRootPart then
-							local v3 = nil
+							local v2 = nil
 							local huge = math.huge
 							local k = nil
 
@@ -6037,13 +6573,13 @@ do
 								if not k2.Parent then
 									kMap[k2] = nil
 								elseif fn8(k2) then
-									local v4 = fn7(k2)
+									local v3 = fn7(k2)
 
-									if v4 then
-										local magnitude = (humanoidRootPart.Position - v4.Position).Magnitude
+									if v3 then
+										local magnitude = (humanoidRootPart.Position - v3.Position).Magnitude
 
 										if magnitude < huge then
-											v3 = v4
+											v2 = v3
 											huge = magnitude
 											k = k2
 										end
@@ -6051,35 +6587,36 @@ do
 								end
 							end
 
-							if k and k.Parent and v3 and v3.Parent then
+							if k and k.Parent and v2 and v2.Parent then
 								pcall(function()
-									fn12(v3)
-									v3.CFrame = humanoidRootPart.CFrame
+									fn12(v2)
+									v2.CFrame = humanoidRootPart.CFrame
 								end)
 
 								local now = os.clock()
 
 								if now - n42 >= 0.01 then
-									local v4 = fn9(character_)
+									local v3 = fn9(character_)
 
-									if v4 then
-										if v4.Parent ~= character_ then
-											local tool = character_:FindFirstChildWhichIsA("Tool")
+									if v3 then
+										if v3.Parent ~= character_ then
+											local tool2 = character_:FindFirstChildWhichIsA("Tool")
 
-											if tool and tool ~= v4 then
+											if tool2 and tool2 ~= v3 and not tool then
+												tool = tool2
 											end
 
-											v2 = v4
+											v = v3
 
 											pcall(function()
 												runUntilTimeout(1)
-												humanoid:EquipTool(v4)
+												humanoid:EquipTool(v3)
 											end)
 										end
 
-										if v4.Parent == character_ then
+										if v3.Parent == character_ then
 											pcall(function()
-												v4:Activate()
+												v3:Activate()
 											end)
 										end
 									end
@@ -6115,13 +6652,220 @@ do
 	end
 
 	do
-		local v, v2, v3, v4, v5, v6, v7
+		local n3 = 0.6
+		local n4 = 2
+		local n5 = 0.2
+		local n6 = 0.6
+		local n7 = 1.5
+		local flag2 = false
+
+		local function fn6()
+			local character_ = localPlayer.Character
+			local backpack = localPlayer:FindFirstChildOfClass("Backpack")
+			return character_ and character_:FindFirstChild("Quantum Cloner") or backpack and backpack:FindFirstChild("Quantum Cloner")
+		end
+
+		local function fn7(arg)
+			local character_ = localPlayer.Character
+			local backpack = localPlayer:FindFirstChildOfClass("Backpack")
+			local humanoid = character_ and character_:FindFirstChildOfClass("Humanoid")
+			if not character_ or not backpack or not humanoid or humanoid.Health <= 0 then
+				return false
+			end
+			runUntilTimeout(5)
+
+			for _, child in ipairs(character_:GetChildren()) do
+				if child:IsA("Tool") and child ~= arg then
+					pcall(function()
+						child:Deactivate()
+					end)
+
+					child.Parent = backpack
+				end
+			end
+
+			if arg.Parent ~= character_ then
+				humanoid:EquipTool(arg)
+			end
+
+			local now = os.clock()
+
+			while arg.Parent ~= character_ and os.clock() - now < 0.5 do
+				RunService.Heartbeat:Wait()
+			end
+
+			return arg.Parent == character_
+		end
+
+		local function fn8(arg, arg2)
+			if not (not arg or not arg.Parent) then
+				local character_ = localPlayer.Character
+				local humanoid = character_ and character_:FindFirstChildOfClass("Humanoid")
+				local backpack = localPlayer:FindFirstChildOfClass("Backpack")
+
+				if not (not character_ or not humanoid or humanoid.Health <= 0 or arg.Parent ~= character_ and arg.Parent ~= backpack) then
+					local tool = character_:FindFirstChildWhichIsA("Tool")
+
+					if tool ~= arg and not (tool and tool ~= arg2) then
+						pcall(function()
+							runUntilTimeout(0.5)
+							humanoid:EquipTool(arg)
+						end)
+
+						return
+					end
+				end
+			end
+		end
+
+		local function fn9(arg, arg2, arg3)
+			local magnitude = (arg2 - arg3).Magnitude
+			local now = os.clock()
+
+			repeat
+				local n8 = os.clock() - now
+				local character_ = localPlayer.Character
+				character_ = character_ and character_:FindFirstChild("HumanoidRootPart")
+				local humanoidRootPart = arg and arg.Parent and arg:FindFirstChild("HumanoidRootPart")
+				if n8 >= n5 and character_ and (character_.Position - arg3).Magnitude <= n7 and (not arg or not arg.Parent or humanoidRootPart and (humanoidRootPart.Position - arg2).Magnitude <= n7) then
+					return true
+				end
+
+				if magnitude <= n7 and n8 >= n6 then
+					return true
+				end
+				RunService.Heartbeat:Wait()
+			until os.clock() - now >= n4
+
+			return false
+		end
+
+		local function fn10()
+			local playerGui = localPlayer:FindFirstChildOfClass("PlayerGui")
+			local toolsFrames = playerGui and playerGui:FindFirstChild("ToolsFrames")
+			toolsFrames = toolsFrames and toolsFrames:FindFirstChild("QuantumCloner")
+			local teleportToClone = toolsFrames and toolsFrames:FindFirstChild("TeleportToClone")
+
+			if teleportToClone then
+				local ok, result = pcall(function()
+					return getconnections(teleportToClone.MouseButton1Up)
+				end)
+
+				if not (not ok or type(result) ~= "table") then
+					for _, v in ipairs(result) do
+						local function_ = v.Function
+						function_ = function_ and debug.getinfo(function_) or nil
+						function_ = function_ and function_.source or ""
+						if v.Enabled and type(v.Fire) == "function" and string.find(function_, "QuantumClonerScript", 1, true) then
+							return v
+						end
+					end
+
+					return
+				end
+			end
+
+			return nil
+		end
 
 		helperSection:CreateButton({
 			Name = "Instant Clone Swap",
 			ButtonText = "Swap",
 			Callback = function()
-				return false
+				if flag2 then
+					return false
+				end
+				flag2 = true
+				local character_ = localPlayer.Character
+				character_ = character_ and character_:FindFirstChildWhichIsA("Tool")
+				local quantumCloner = fn6()
+
+				if not quantumCloner then
+					local v
+					quantumCloner, v = fn3("Quantum Cloner")
+
+					if not quantumCloner then
+						fn4("Quantum Cloner", v)
+						flag2 = false
+						return false
+					end
+				end
+
+				if character_ == quantumCloner then
+					character_ = nil
+				end
+
+				if not quantumCloner or not quantumCloner:IsA("Tool") or not fn7(quantumCloner) then
+					fn8(character_, quantumCloner)
+					flag2 = false
+					return false
+				end
+
+				local v = fn10()
+
+				if not v then
+					fn8(character_, quantumCloner)
+					flag2 = false
+					return false
+				end
+
+				local str = tostring(localPlayer.UserId) .. "_Clone"
+				local v2 = Workspace:FindFirstChild(str)
+				local child = nil
+				local now = os.clock()
+
+				local connection = Workspace.ChildAdded:Connect(function(child2)
+					if child2.Name == str and child2 ~= v2 then
+						child = child2
+					end
+				end)
+
+				local ok
+
+				while true do
+					if not child then
+						pcall(function()
+							quantumCloner:Activate()
+						end)
+
+						local v3 = Workspace:FindFirstChild(str)
+
+						if v3 and v3 ~= v2 then
+							child = v3
+						end
+					end
+
+					local humanoidRootPart = child and child:FindFirstChild("HumanoidRootPart")
+
+					if humanoidRootPart then
+						local humanoidRootPart2 = localPlayer.Character and localPlayer.Character:FindFirstChild("HumanoidRootPart")
+						humanoidRootPart2 = humanoidRootPart2 and humanoidRootPart2.Position
+						local position = humanoidRootPart.Position
+
+						ok = pcall(function()
+							v:Fire()
+						end)
+
+						if ok and humanoidRootPart2 then
+							fn9(child, humanoidRootPart2, position)
+						end
+
+						break
+					else
+						RunService.Heartbeat:Wait()
+						ok = false
+						if not (os.clock() - now >= n3) then
+							continue
+						end
+					end
+
+					break
+				end
+
+				connection:Disconnect()
+				fn8(character_, quantumCloner)
+				flag2 = false
+				return ok
 			end,
 		})
 	end
@@ -6325,7 +7069,7 @@ do
 		local function fn15(arg)
 			local v2 = fn8()
 
-			if v2 then
+			if not (not flag2 and not flag3 and not flag4 or not v2) then
 				local v3 = fn10(arg)
 
 				if v3 then
@@ -6346,6 +7090,19 @@ do
 			return false
 		end
 
+		local function fn16()
+			if not flag5 then
+				return
+			end
+			flag5 = false
+			v = nil
+			n8 = 0
+			PlayerMouse.Hit = hit
+			PlayerMouse.Target = target
+			hit = nil
+			target = nil
+		end
+
 		local function cleanupRenderStep()
 			flag2 = false
 			ContextActionService:UnbindAction("ChilliToolAimbotAction")
@@ -6358,9 +7115,13 @@ do
 				connection:Disconnect()
 				connection = nil
 			end
+
+			if not flag3 and not flag4 then
+				fn16()
+			end
 		end
 
-		local function fn16()
+		local function fn17()
 			cleanupRenderStep()
 			flag2 = true
 
@@ -6384,30 +7145,36 @@ do
 				if fn8() then
 					fn6()
 					fn15(false)
+				elseif not flag3 and not flag4 then
+					fn16()
 				end
 			end)
 		end
 
-		local function fn17()
+		local function fn18()
 			local character_ = localPlayer.Character
 			character_ = character_ and character_:FindFirstChild("Paintball Gun")
 			return character_ and character_:IsA("Tool") and character_ or nil
 		end
 
-		local function fn18()
+		local function fn19()
 			flag3 = false
 			n6 += 1
-			local v2 = fn17()
+			local v2 = fn18()
 
 			if v2 then
 				pcall(function()
 					v2:Deactivate()
 				end)
 			end
+
+			if not flag2 and not flag4 then
+				fn16()
+			end
 		end
 
-		local function fn19()
-			fn18()
+		local function fn20()
+			fn19()
 			local paintballGun, v2 = fn3("Paintball Gun")
 
 			if not paintballGun then
@@ -6420,7 +7187,7 @@ do
 
 			task.spawn(function()
 				while flag3 and n62 == n6 and flag do
-					local v3 = fn17()
+					local v3 = fn18()
 
 					if v3 then
 						fn6()
@@ -6430,6 +7197,8 @@ do
 								v3:Activate()
 							end)
 						end
+					elseif not flag2 and not flag4 then
+						fn16()
 					end
 
 					task.wait(0.04)
@@ -6439,26 +7208,30 @@ do
 			return true
 		end
 
-		local function fn20()
+		local function fn21()
 			local character_ = localPlayer.Character
 			character_ = character_ and character_:FindFirstChild("Laser Cape")
 			return character_ and character_:IsA("Tool") and character_ or nil
 		end
 
-		local function fn21()
+		local function fn22()
 			flag4 = false
 			n7 += 1
-			local v2 = fn20()
+			local v2 = fn21()
 
 			if v2 then
 				pcall(function()
 					v2:Deactivate()
 				end)
 			end
+
+			if not flag2 and not flag3 then
+				fn16()
+			end
 		end
 
-		local function fn22()
-			fn21()
+		local function fn23()
+			fn22()
 			local laserCape, v2 = fn3("Laser Cape")
 
 			if not laserCape then
@@ -6471,7 +7244,7 @@ do
 
 			task.spawn(function()
 				while flag4 and n72 == n7 and flag do
-					local v3 = fn20()
+					local v3 = fn21()
 
 					if v3 then
 						fn6()
@@ -6481,6 +7254,8 @@ do
 								v3:Activate()
 							end)
 						end
+					elseif not flag2 and not flag3 then
+						fn16()
 					end
 
 					task.wait(0.04)
@@ -6491,8 +7266,8 @@ do
 		end
 
 		fn(function()
-			fn21()
-			fn18()
+			fn22()
+			fn19()
 			cleanupRenderStep()
 		end)
 
@@ -6501,7 +7276,7 @@ do
 			Default = true,
 			Callback = function(arg)
 				if arg then
-					fn16()
+					fn17()
 				else
 					cleanupRenderStep()
 				end
@@ -6514,9 +7289,9 @@ do
 			Default = true,
 			Callback = function(arg)
 				if arg then
-					fn19()
+					fn20()
 				else
-					fn18()
+					fn19()
 				end
 			end,
 		})
@@ -6527,9 +7302,9 @@ do
 			Default = false,
 			Callback = function(arg)
 				if arg then
-					fn22()
+					fn23()
 				else
-					fn21()
+					fn22()
 				end
 			end,
 		})
@@ -6942,7 +7717,7 @@ do
 	local str2
 	str2 = "Grapple Hook"
 	local tool, n23, toolSpeedBoostToggle, toggle, flag6, flag7, speedToolDropdown, adjustToolSpeedSlider, flag8, flag9
-	local connection, connection2, connection3, connection4, flag10, flag11, n24
+	local connection, connection2, connection3, connection4, connection5, flag10, flag11, n24, isTool
 
 	do
 		local n25 = 0.8
@@ -6957,13 +7732,13 @@ do
 		adjustToolSpeedSlider = nil
 		flag8 = false
 		flag9 = false
-		local connection5 = nil
+		local connection6 = nil
 		local v3 = nil
 		connection = nil
 		connection2 = nil
 		connection3 = nil
 		connection4 = nil
-		local connection6 = nil
+		connection5 = nil
 		local connection7 = nil
 		local flag13 = false
 		flag10 = false
@@ -6993,7 +7768,7 @@ do
 			return character_:FindFirstChild("HumanoidRootPart"), findFirstChildOfClass(character_, "Humanoid")
 		end
 
-		local function isTool(arg)
+		isTool = function(arg)
 			return arg and arg:IsA("Tool")
 		end
 
@@ -7032,8 +7807,11 @@ do
 			local flag15 = v7 == str2
 			local flag152 = flag15 and 270 or 210
 			n182 = math.clamp(flag15 and n18 or n19, 50, flag152)
-			adjustToolSpeedSlider:SetRange(50, flag152, false)
-			adjustToolSpeedSlider:Set(n182, false)
+
+			if adjustToolSpeedSlider then
+				adjustToolSpeedSlider:SetRange(50, flag152, false)
+				adjustToolSpeedSlider:Set(n182, false)
+			end
 		end
 
 		local function disconnectAll()
@@ -7105,9 +7883,6 @@ do
 				end)
 
 				flag14 = false
-				if flag15 then
-					return true
-				end
 				v4 = nil
 			end
 
@@ -7170,9 +7945,9 @@ do
 		local function fn12()
 			v3 = nil
 
-			if connection5 then
-				connection5:Disconnect()
-				connection5 = nil
+			if connection6 then
+				connection6:Disconnect()
+				connection6 = nil
 			end
 		end
 
@@ -7183,7 +7958,7 @@ do
 			fn12()
 			v3 = arg
 
-			connection5 = arg:GetAttributeChangedSignal("CooldownTime"):Connect(function()
+			connection6 = arg:GetAttributeChangedSignal("CooldownTime"):Connect(function()
 				if (flag10 or flag11) and arg:GetAttribute("CooldownTime") == nil then
 					runUntilTimeout2(arg)
 				end
@@ -7226,7 +8001,10 @@ do
 
 		local function fn16()
 			fn15()
-			toolSpeedBoostToggle:Set(false, true)
+
+			if toolSpeedBoostToggle then
+				toolSpeedBoostToggle:Set(false, true)
+			end
 		end
 
 		local function fn17()
@@ -7363,7 +8141,10 @@ do
 			end
 
 			fn8()
-			speedToolDropdown:SetOptions(v8, v7, false)
+
+			if speedToolDropdown then
+				speedToolDropdown:SetOptions(v8, v7, false)
+			end
 		end
 
 		local function fn22()
@@ -7453,17 +8234,19 @@ do
 				connection4 = nil
 			end
 
-			if connection6 then
-				connection6:Disconnect()
-				connection6 = nil
+			if connection5 then
+				connection5:Disconnect()
+				connection5 = nil
 			end
 
-			connection7:Disconnect()
-			connection7 = nil
+			if connection7 then
+				connection7:Disconnect()
+				connection7 = nil
+			end
 
 			if arg then
 				connection4 = arg.ChildAdded:Connect(fn22)
-				connection6 = arg.ChildRemoved:Connect(fn22)
+				connection5 = arg.ChildRemoved:Connect(fn22)
 			end
 		end
 
@@ -7795,8 +8578,10 @@ do
 				end)
 			end
 
-			connection10:Disconnect()
-			connection10 = nil
+			if connection10 then
+				connection10:Disconnect()
+				connection10 = nil
+			end
 
 			if connection then
 				connection:Disconnect()
@@ -7818,13 +8603,15 @@ do
 				connection4 = nil
 			end
 
-			if connection6 then
-				connection6:Disconnect()
-				connection6 = nil
+			if connection5 then
+				connection5:Disconnect()
+				connection5 = nil
 			end
 
-			connection9:Disconnect()
-			connection9 = nil
+			if connection9 then
+				connection9:Disconnect()
+				connection9 = nil
+			end
 		end)
 
 		speedBoostSection:CreateSlider({
@@ -7883,7 +8670,9 @@ do
 				if arg then
 					if not fn20() then
 						task.defer(function()
-							toolSpeedBoostToggle:Set(false, true)
+							if toolSpeedBoostToggle then
+								toolSpeedBoostToggle:Set(false, true)
+							end
 						end)
 					end
 				else
@@ -8067,7 +8856,7 @@ do
 		local n31 = 10
 		local n32 = 60
 		local flag12 = false
-		local connection5 = nil
+		local connection6 = nil
 		local n33 = 0
 		local flag13 = false
 		local n34 = 0
@@ -8080,9 +8869,9 @@ do
 		local flag16 = false
 
 		local function fn6()
-			if connection5 then
-				connection5:Disconnect()
-				connection5 = nil
+			if connection6 then
+				connection6:Disconnect()
+				connection6 = nil
 			end
 
 			flag12 = false
@@ -8108,8 +8897,13 @@ do
 			task.defer(function()
 				flag16 = false
 				fn6()
+				local floatToggle2 = floatToggle
 
-				if floatToggle:Get() == true then
+				if floatToggle then
+					floatToggle2 = floatToggle:Get() == true
+				end
+
+				if floatToggle2 then
 					floatToggle:Set(false, true)
 				end
 			end)
@@ -8174,7 +8968,7 @@ do
 				runUntilTimeout2(character_)
 			end
 
-			connection5 = RunService.Heartbeat:Connect(function(deltaTime)
+			connection6 = RunService.Heartbeat:Connect(function(deltaTime)
 				if flag12 then
 					if flag15 and localPlayer:GetAttribute("Stealing") == true then
 						fn7()
@@ -8277,37 +9071,36 @@ do
 			fn6()
 		end)
 	end
-end
 
-local brainrotEspSection, brainrotNotificationsSection, baseEspSection, fn2, fn3, disconnectAll, fn4, fn5, isBasePart, tbl3
-local fn6, fn7, fn8, v, chilliBaseLockTimerRuntime, flag2, n, v2, folder, childMap
-local connections, fn9, fn10, fn11
-
-do
 	do
-		local n2 = 1
-		local flag3 = false
-		local connection = nil
+		local n25 = 1
+		local flag12 = false
+		local connection6 = nil
 		local part = nil
-		local n3 = 5
+		local n26 = 5
 
 		local function destroyAll()
-			pcall(function()
-				part:Destroy()
-			end)
+			if part then
+				pcall(function()
+					part:Destroy()
+				end)
 
-			part = nil
+				part = nil
+			end
 		end
 
-		local function fn12()
-			connection:Disconnect()
-			connection = nil
-			flag3 = false
+		local function fn6()
+			if connection6 then
+				connection6:Disconnect()
+				connection6 = nil
+			end
+
+			flag12 = false
 			destroyAll()
 		end
 
 		local function createPart()
-			if part.Parent then
+			if part and part.Parent then
 				return part
 			end
 			destroyAll()
@@ -8326,12 +9119,12 @@ do
 			return part2
 		end
 
-		local function fn13()
-			fn12()
-			flag3 = true
+		local function fn7()
+			fn6()
+			flag12 = true
 
-			connection = RunService.Heartbeat:Connect(function(deltaTime)
-				if flag3 then
+			connection6 = RunService.Heartbeat:Connect(function(deltaTime)
+				if flag12 then
 					local character_ = localPlayer.Character
 					local humanoidRootPart = character_ and character_:FindFirstChild("HumanoidRootPart")
 					if not humanoidRootPart then
@@ -8339,31 +9132,31 @@ do
 						return
 					end
 					local part2 = createPart()
-					local n4 = math.min(deltaTime, 0.1) * n3
+					local n27 = math.min(deltaTime, 0.1) * n26
 					local humanoid = character_:FindFirstChildOfClass("Humanoid")
-					local n5 = 3.2
+					local n28 = 3.2
 
 					if humanoid then
-						n5 = humanoid.HipHeight + humanoidRootPart.Size.Y * 0.5
+						n28 = humanoid.HipHeight + humanoidRootPart.Size.Y * 0.5
 					end
 
-					local n6 = humanoidRootPart.Position.Y - n5
-					local y = part2.Position.Y
-					local n7
+					local n29 = humanoidRootPart.Position.Y - n28
+					local y2 = part2.Position.Y
+					local n30
 
-					if math.abs(y + n2 * 0.5 - n6) > 6 then
-						n7 = n6 - n2 * 0.5
+					if math.abs(y2 + n25 * 0.5 - n29) > 6 then
+						n30 = n29 - n25 * 0.5
 					else
-						n7 = y + n4
+						n30 = y2 + n27
 					end
 
-					part2.CFrame = CFrame.new(humanoidRootPart.Position.X, n7, humanoidRootPart.Position.Z)
-					local n8 = n7 + n2 * 0.5
+					part2.CFrame = CFrame.new(humanoidRootPart.Position.X, n30, humanoidRootPart.Position.Z)
+					local n31 = n30 + n25 * 0.5
 
-					if n8 > n6 then
-						local n9 = n8 + n5
-						local n10 = humanoidRootPart.CFrame - humanoidRootPart.CFrame.Position
-						humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position.X, n9, humanoidRootPart.Position.Z) * n10
+					if n31 > n29 then
+						local n32 = n31 + n28
+						local n33 = humanoidRootPart.CFrame - humanoidRootPart.CFrame.Position
+						humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position.X, n32, humanoidRootPart.Position.Z) * n33
 						local assemblyLinearVelocity = humanoidRootPart.AssemblyLinearVelocity
 						humanoidRootPart.AssemblyLinearVelocity = Vector3.new(assemblyLinearVelocity.X, 0, assemblyLinearVelocity.Z)
 					end
@@ -8386,31 +9179,36 @@ do
 				Default = false,
 				Callback = function(arg)
 					if arg then
-						fn13()
+						fn7()
 					else
-						fn12()
+						fn6()
 					end
 				end,
 			}),
 			Callback = function(arg)
-				n3 = math.clamp(tonumber(arg) or 5, 5, 40)
+				n26 = math.clamp(tonumber(arg) or 5, 5, 40)
 			end,
 		})
 	end
+end
 
+local brainrotEspSection, brainrotNotificationsSection, baseEspSection, fn2, fn3, disconnectAll, fn4, fn5, fn6, tbl3
+local fn7, fn8, fn9, n, fn10, destroyAll, fn11
+
+do
 	do
 		local n2 = 0.01
-		local flag3 = false
+		local flag2 = false
 		local n3 = 50
 		local connection = nil
 		local connection2 = nil
-		local v3 = nil
-		local v4 = nil
+		local v = nil
+		local v2 = nil
 		local autoRotate = true
 		local tool = nil
-		local v5 = nil
+		local v3 = nil
+		local flag3 = false
 		local flag4 = false
-		local flag5 = false
 		local n4 = 0
 		local weakCache2 = setmetatable({}, { __mode = "k" })
 
@@ -8432,24 +9230,24 @@ do
 
 		local function fn13(arg)
 			local huge = math.huge
-			local v6 = nil
+			local v4 = nil
 
 			for _, player in ipairs(Players:GetPlayers()) do
 				if player ~= localPlayer then
-					local v7, v8, v9 = fn12(player)
+					local v5, v6, v7 = fn12(player)
 
-					if v9 then
-						local magnitude = (v9.Position - arg.Position).Magnitude
+					if v7 then
+						local magnitude = (v7.Position - arg.Position).Magnitude
 
 						if magnitude < huge then
 							huge = magnitude
-							v6 = v9
+							v4 = v7
 						end
 					end
 				end
 			end
 
-			return v6
+			return v4
 		end
 
 		local function fn14(arg)
@@ -8469,36 +9267,36 @@ do
 		end
 
 		local function fn15(arg, arg2)
-			local v6 = fn14(arg)
+			local v4 = fn14(arg)
 
-			if not v6 then
-				if not flag5 then
-					flag5 = true
+			if not v4 then
+				if not flag4 then
+					flag4 = true
 					uiLibrary.Notify("Bat unavailable", "Bat was not found in your character or Backpack.", 5)
 				end
 
 				return nil
 			end
 
-			flag5 = false
+			flag4 = false
 
-			if v6.Parent ~= arg then
+			if v4.Parent ~= arg then
 				local tool2 = arg:FindFirstChildWhichIsA("Tool")
 
-				if tool2 and tool2 ~= v6 and not tool then
+				if tool2 and tool2 ~= v4 and not tool then
 					tool = tool2
 				end
 
-				v5 = v6
-				flag4 = true
+				v3 = v4
+				flag3 = true
 
 				pcall(function()
 					runUntilTimeout(1)
-					arg2:EquipTool(v6)
+					arg2:EquipTool(v4)
 				end)
 			end
 
-			return v6.Parent == arg and v6 or nil
+			return v4.Parent == arg and v4 or nil
 		end
 
 		local function fn16(arg)
@@ -8514,10 +9312,10 @@ do
 		end
 
 		local function fn17()
-			for k, v6 in pairs(weakCache2) do
+			for k, v4 in pairs(weakCache2) do
 				if k.Parent then
 					pcall(function()
-						k.CanCollide = v6
+						k.CanCollide = v4
 					end)
 				end
 
@@ -8526,11 +9324,14 @@ do
 		end
 
 		local function fn18(arg)
-			if v3 ~= arg then
-				connection2:Disconnect()
-				connection2 = nil
+			if v ~= arg then
+				if connection2 then
+					connection2:Disconnect()
+					connection2 = nil
+				end
+
 				fn17()
-				v3 = arg
+				v = arg
 
 				if arg then
 					for _, descendant in ipairs(arg:GetDescendants()) do
@@ -8538,7 +9339,9 @@ do
 					end
 
 					connection2 = arg.DescendantAdded:Connect(function(descendant)
-						fn16(descendant)
+						if flag2 then
+							fn16(descendant)
+						end
 					end)
 
 					return
@@ -8547,26 +9350,26 @@ do
 		end
 
 		local function fn19()
-			local v42 = v4
-			v4 = nil
-			if not v42.Parent then
+			local v22 = v2
+			v2 = nil
+			if not v22 or not v22.Parent then
 				return
 			end
 
 			pcall(function()
-				v42.AutoRotate = autoRotate
+				v22.AutoRotate = autoRotate
 				local physics = Enum.HumanoidStateType.Physics
 
-				if v42:GetState() == physics then
-					v42:ChangeState(Enum.HumanoidStateType.Freefall)
+				if v22:GetState() == physics then
+					v22:ChangeState(Enum.HumanoidStateType.Freefall)
 				end
 			end)
 		end
 
 		local function fn20(arg)
-			if v4 ~= arg then
+			if v2 ~= arg then
 				fn19()
-				v4 = arg
+				v2 = arg
 				autoRotate = arg.AutoRotate
 			end
 
@@ -8581,17 +9384,17 @@ do
 		local function fn21()
 			local character_ = localPlayer.Character
 			local humanoid = character_ and character_:FindFirstChildOfClass("Humanoid")
-			local v6 = v5
+			local v4 = v3
 			local tool2 = tool
-			v5 = nil
+			v3 = nil
 			tool = nil
-			if not flag4 or not character_ or not humanoid or humanoid.Health <= 0 then
-				flag4 = false
+			if not flag3 or not character_ or not humanoid or humanoid.Health <= 0 then
+				flag3 = false
 				return
 			end
-			flag4 = false
+			flag3 = false
 			local tool3 = character_:FindFirstChildWhichIsA("Tool")
-			if tool3 and tool3 ~= v6 then
+			if tool3 and tool3 ~= v4 then
 				return
 			end
 
@@ -8607,14 +9410,21 @@ do
 		end
 
 		local function fn22()
-			flag3 = false
+			flag2 = false
 			n4 = 0
-			flag5 = false
-			connection:Disconnect()
-			connection = nil
-			connection2:Disconnect()
-			connection2 = nil
-			v3 = nil
+			flag4 = false
+
+			if connection then
+				connection:Disconnect()
+				connection = nil
+			end
+
+			if connection2 then
+				connection2:Disconnect()
+				connection2 = nil
+			end
+
+			v = nil
 			fn19()
 			fn17()
 			fn21()
@@ -8622,29 +9432,29 @@ do
 
 		local function fn23()
 			fn22()
-			flag3 = true
+			flag2 = true
 
 			connection = RunService.Heartbeat:Connect(function(deltaTime)
-				local v6, v7, v8 = fn12(localPlayer)
+				local v4, v5, v6 = fn12(localPlayer)
 
-				if not v6 or not v7 or not v8 then
+				if not v4 or not v5 or not v6 then
 					n4 = 0
 					fn19()
 					return
 				end
 
-				fn18(v6)
-				local v9 = fn15(v6, v7)
-				local v10 = fn13(v8)
+				fn18(v4)
+				local v7 = fn15(v4, v5)
+				local v8 = fn13(v6)
 
-				if not v10 then
+				if not v8 then
 					n4 = 0
 					fn19()
 					return
 				end
 
-				fn20(v7)
-				local lookVector = v10.CFrame.LookVector
+				fn20(v5)
+				local lookVector = v8.CFrame.LookVector
 				local vector = Vector3.new(lookVector.X, 0, lookVector.Z)
 				local vector2
 
@@ -8654,18 +9464,18 @@ do
 					vector2 = vector.Unit
 				end
 
-				local position = v10.Position
-				local n5 = position - v8.Position
+				local position = v8.Position
+				local n5 = position - v6.Position
 				local magnitude = n5.Magnitude
 
 				if magnitude > 0.001 then
-					position = v8.Position + n5.Unit * math.min(magnitude, n3 * deltaTime)
+					position = v6.Position + n5.Unit * math.min(magnitude, n3 * deltaTime)
 				end
 
-				v8.CFrame = CFrame.lookAt(position, position + vector2, Vector3.new(0, 1, 0))
-				v8.AssemblyLinearVelocity = v10.AssemblyLinearVelocity
-				v8.AssemblyAngularVelocity = Vector3.zero
-				if not v9 then
+				v6.CFrame = CFrame.lookAt(position, position + vector2, Vector3.new(0, 1, 0))
+				v6.AssemblyLinearVelocity = v8.AssemblyLinearVelocity
+				v6.AssemblyAngularVelocity = Vector3.zero
+				if not v7 then
 					n4 = 0
 					return
 				end
@@ -8677,8 +9487,8 @@ do
 
 					for idx = 1, n6 do
 						pcall(function()
-							v9:Deactivate()
-							v9:Activate()
+							v7:Deactivate()
+							v7:Activate()
 						end)
 					end
 				end
@@ -8724,71 +9534,83 @@ do
 		local n2 = 12
 		local n3 = 5
 		local n4 = 0
-		local v3 = nil
+		local v = nil
 
 		local ok, result = pcall(function()
 			return require(ReplicatedStorage.Controllers.RagdollController)
 		end)
 
 		if ok then
-			v3 = result
+			v = result
 		end
 
-		local v4 = nil
+		local v2 = nil
 
-		local function getV5()
-			return v4
+		local function fn12()
+			if v2 then
+				return v2
+			end
+
+			local ok2, result2 = pcall(function()
+				return require(localPlayer:WaitForChild("PlayerScripts", 5):WaitForChild("PlayerModule", 5)):GetControls()
+			end)
+
+			if ok2 then
+				v2 = result2
+			end
+
+			return v2
 		end
 
-		local flag3 = false
+		local flag2 = false
 		local connection = nil
 		local n5 = 0
 		local list = {}
 		local list2 = {}
 		local n6 = 0
-		local v5 = nil
+		local v3 = nil
 		local humanoid = nil
 
 		local function disconnectAll2(arg)
-			for _, v6 in ipairs(arg) do
-				if v6.Connected then
-					v6:Disconnect()
+			for _, v4 in ipairs(arg) do
+				if v4.Connected then
+					v4:Disconnect()
 				end
 			end
 
 			table.clear(arg)
 		end
 
-		local function fn12(arg)
+		local function fn13(arg)
 			list[#list + 1] = arg
 		end
 
-		local function fn13(arg)
+		local function fn14(arg)
 			list2[#list2 + 1] = arg
 		end
 
-		local function fn14()
-			if not (not v5 or not humanoid) then
-				local humanoidRootPart = v5:FindFirstChild("HumanoidRootPart")
+		local function fn15()
+			if not (not v3 or not humanoid) then
+				local humanoidRootPart = v3:FindFirstChild("HumanoidRootPart")
 
 				if humanoidRootPart then
 					local assemblyLinearVelocity = humanoidRootPart.AssemblyLinearVelocity
 					local vector = Vector3.new(assemblyLinearVelocity.X, 0, assemblyLinearVelocity.Z)
 					local n7 = humanoid.WalkSpeed + n3
 					local y = assemblyLinearVelocity.Y
-					local flag4 = false
+					local flag3 = false
 
 					if n7 < vector.Magnitude then
 						vector = vector.Unit * n7
-						flag4 = true
+						flag3 = true
 					end
 
 					if n4 < y then
 						y = n4
-						flag4 = true
+						flag3 = true
 					end
 
-					if flag4 then
+					if flag3 then
 						pcall(function()
 							humanoidRootPart.AssemblyLinearVelocity = Vector3.new(vector.X, y, vector.Z)
 						end)
@@ -8797,9 +9619,9 @@ do
 			end
 		end
 
-		local function destroyAll()
-			if not (not v5 or not v5.Parent) then
-				for _, descendant in ipairs(v5:GetDescendants()) do
+		local function destroyAll2()
+			if not (not v3 or not v3.Parent) then
+				for _, descendant in ipairs(v3:GetDescendants()) do
 					if constraintFlags[descendant.ClassName] then
 						pcall(function()
 							descendant:Destroy()
@@ -8809,9 +9631,9 @@ do
 			end
 		end
 
-		local function fn15()
-			if not (not v5 or not v5.Parent) then
-				for _, descendant in ipairs(v5:GetDescendants()) do
+		local function fn16()
+			if not (not v3 or not v3.Parent) then
+				for _, descendant in ipairs(v3:GetDescendants()) do
 					if descendant:IsA("AnimationConstraint") and not descendant.Enabled then
 						pcall(function()
 							descendant.Enabled = true
@@ -8821,17 +9643,17 @@ do
 			end
 		end
 
-		local function fn16()
-			local v6 = getV5()
+		local function fn17()
+			local v4 = fn12()
 
-			if v6 and v6.controlsEnabled == false then
+			if v4 and v4.controlsEnabled == false then
 				pcall(function()
-					v6:Enable()
+					v4:Enable()
 				end)
 			end
 		end
 
-		local function fn17()
+		local function fn18()
 			local currentCamera = Workspace.CurrentCamera
 
 			if currentCamera and humanoid and currentCamera.CameraSubject ~= humanoid then
@@ -8841,7 +9663,7 @@ do
 			end
 		end
 
-		local function fn18()
+		local function fn19()
 			if not (not humanoid or not humanoid.Parent or humanoid.Health <= 0) then
 				if tbl4[humanoid:GetState()] then
 					pcall(function()
@@ -8855,40 +9677,49 @@ do
 			end
 		end
 
-		local function fn19()
+		local function fn20()
+			if not v then
+				return false
+			end
+
 			local ok2, result2 = pcall(function()
-				return v3.IsInRagdoll()
+				return v.IsInRagdoll()
 			end)
 
 			return ok2 and result2 == true
 		end
 
-		local function fn20()
+		local function fn21()
 			if connection then
 				connection:Disconnect()
 				connection = nil
 			end
 		end
 
-		local function fn21()
-			if not (not v5 or v5 ~= localPlayer.Character or not humanoid or not humanoid:IsDescendantOf(v5)) then
+		local function fn22()
+			if not (not flag2 or not v3 or v3 ~= localPlayer.Character or not humanoid or not humanoid:IsDescendantOf(v3)) then
 				n5 = os.clock() + n2
 
 				if not connection then
 					connection = RunService.Heartbeat:Connect(function()
-						if v5 ~= localPlayer.Character or not humanoid or not humanoid:IsDescendantOf(v5) then
-							fn20()
+						if not flag2 then
+							fn21()
 							return
 						end
-						fn14()
-						destroyAll()
-						fn15()
-						fn18()
-						fn16()
-						fn17()
 
-						if os.clock() > n5 or not fn19() then
-							fn20()
+						if v3 ~= localPlayer.Character or not humanoid or not humanoid:IsDescendantOf(v3) then
+							fn21()
+							return
+						end
+						fn15()
+						destroyAll2()
+						fn16()
+						fn19()
+						fn17()
+						fn18()
+
+						if os.clock() > n5 or not fn20() then
+							fn21()
 						end
 					end)
 
@@ -8897,76 +9728,77 @@ do
 			end
 		end
 
-		local function fn22(arg)
+		local function fn23(arg)
 			n6 += 1
+			local n62 = n6
 			disconnectAll2(list2)
-			fn20()
-			v5 = arg
+			fn21()
+			v3 = arg
 			humanoid = nil
 
-			if arg then
+			if not (not flag2 or not arg) then
 				humanoid = arg:FindFirstChildOfClass("Humanoid") or arg:WaitForChild("Humanoid", 5)
 
-				if not (arg ~= localPlayer.Character or not humanoid or not humanoid:IsA("Humanoid")) then
-					fn13(humanoid.StateChanged:Connect(function(old, new)
-						if tbl4[new] then
-							fn21()
+				if not (not flag2 or n6 ~= n62 or arg ~= localPlayer.Character or not humanoid or not humanoid:IsA("Humanoid")) then
+					fn14(humanoid.StateChanged:Connect(function(old, new)
+						if flag2 and tbl4[new] then
+							fn22()
 						end
 					end))
 
-					fn13(arg.DescendantAdded:Connect(function(descendant)
-						if constraintFlags[descendant.ClassName] then
-							fn21()
+					fn14(arg.DescendantAdded:Connect(function(descendant)
+						if flag2 and constraintFlags[descendant.ClassName] then
+							fn22()
 						end
 					end))
 
-					fn17()
+					fn18()
 
-					if fn19() then
-						fn21()
+					if fn20() then
+						fn22()
 					end
 				end
 			end
 		end
 
-		local function fn23()
-			flag3 = false
+		local function fn24()
+			flag2 = false
 			n6 += 1
-			fn20()
+			fn21()
 			disconnectAll2(list2)
 			disconnectAll2(list)
-			v5 = nil
+			v3 = nil
 			humanoid = nil
 		end
 
-		local function fn24()
-			fn23()
-			flag3 = true
-			getV5()
+		local function fn25()
+			fn24()
+			flag2 = true
+			fn12()
 
-			fn12(localPlayer.CharacterAdded:Connect(function(character_)
-				if flag3 then
+			fn13(localPlayer.CharacterAdded:Connect(function(character_)
+				if flag2 then
 					task.defer(function()
-						if flag3 and character_ == localPlayer.Character then
-							fn22(character_)
+						if flag2 and character_ == localPlayer.Character then
+							fn23(character_)
 						end
 					end)
 				end
 			end))
 
-			fn12(localPlayer.CharacterRemoving:Connect(function(character_)
-				if flag3 and character_ == v5 then
+			fn13(localPlayer.CharacterRemoving:Connect(function(character_)
+				if flag2 and character_ == v3 then
 					n6 += 1
-					fn20()
+					fn21()
 					disconnectAll2(list2)
-					v5 = nil
+					v3 = nil
 					humanoid = nil
 				end
 			end))
 
-			fn12(localPlayer:GetAttributeChangedSignal("RagdollEndTime"):Connect(function()
-				if flag3 then
-					fn21()
+			fn13(localPlayer:GetAttributeChangedSignal("RagdollEndTime"):Connect(function()
+				if flag2 then
+					fn22()
 				end
 			end))
 
@@ -8975,36 +9807,36 @@ do
 			net = net and net:FindFirstChild("RE/CombatService/ApplyImpulse")
 
 			if net then
-				fn12(net.OnClientEvent:Connect(function()
-					if flag3 then
-						fn14()
-						fn21()
+				fn13(net.OnClientEvent:Connect(function()
+					if flag2 then
+						fn15()
+						fn22()
 					end
 				end))
 			end
 
 			if localPlayer.Character then
-				fn22(localPlayer.Character)
+				fn23(localPlayer.Character)
 			end
 		end
 
-		fn(fn23)
+		fn(fn24)
 
 		characterSection:CreateToggle({
 			Name = "Anti Ragdoll",
 			Default = true,
 			Callback = function(arg)
 				if arg then
-					fn24()
+					fn25()
 				else
-					fn23()
+					fn24()
 				end
 			end,
 		})
 	end
 
 	do
-		local flag3 = false
+		local flag2 = false
 		local n2 = 0
 		local connection = nil
 		local connection2 = nil
@@ -9022,41 +9854,48 @@ do
 			local str = string.lower(tostring(arg.Name or ""))
 			local str2 = string.lower(tostring(animation and animation.Name or ""))
 			local priority = arg.Priority
-			local flag4 = priority == Enum.AnimationPriority.Action or priority == Enum.AnimationPriority.Action2 or priority == Enum.AnimationPriority.Action3 or priority == Enum.AnimationPriority.Action4
-			local flag5 = string.find(str, "tool", 1, true) ~= nil or string.find(str, "paint", 1, true) ~= nil or string.find(str, "gun", 1, true) ~= nil or string.find(str2, "tool", 1, true) ~= nil or string.find(str2, "paint", 1, true) ~= nil or string.find(str2, "gun", 1, true) ~= nil
-			return flag5 or flag4, flag5
+			local flag3 = priority == Enum.AnimationPriority.Action or priority == Enum.AnimationPriority.Action2 or priority == Enum.AnimationPriority.Action3 or priority == Enum.AnimationPriority.Action4
+			local flag4 = string.find(str, "tool", 1, true) ~= nil or string.find(str, "paint", 1, true) ~= nil or string.find(str, "gun", 1, true) ~= nil or string.find(str2, "tool", 1, true) ~= nil or string.find(str2, "paint", 1, true) ~= nil or string.find(str2, "gun", 1, true) ~= nil
+			return flag4 or flag3, flag4
 		end
 
 		local function fn13()
-			connection3:Disconnect()
-			connection3 = nil
+			if connection3 then
+				connection3:Disconnect()
+				connection3 = nil
+			end
 		end
 
 		local function fn14()
-			connection:Disconnect()
-			connection = nil
-			connection2:Disconnect()
-			connection2 = nil
+			if connection then
+				connection:Disconnect()
+				connection = nil
+			end
+
+			if connection2 then
+				connection2:Disconnect()
+				connection2 = nil
+			end
 		end
 
 		local function fn15(arg, arg2)
-			local v3 = tbl4[arg]
+			local v = tbl4[arg]
 
-			if v3 then
+			if v then
 				tbl4[arg] = nil
 
-				if v3.WeightConnection then
-					v3.WeightConnection:Disconnect()
+				if v.WeightConnection then
+					v.WeightConnection:Disconnect()
 				end
 
-				if v3.StoppedConnection then
-					v3.StoppedConnection:Disconnect()
+				if v.StoppedConnection then
+					v.StoppedConnection:Disconnect()
 				end
 
 				if arg2 then
 					pcall(function()
 						if arg.IsPlaying then
-							arg:AdjustWeight(v3.DesiredWeight, 0.1)
+							arg:AdjustWeight(v.DesiredWeight, 0.1)
 						end
 					end)
 				end
@@ -9070,79 +9909,81 @@ do
 				ks[#ks + 1] = k
 			end
 
-			for _, v3 in ipairs(ks) do
-				fn15(v3, arg)
+			for _, v in ipairs(ks) do
+				fn15(v, arg)
 			end
 		end
 
 		local function fn17(arg)
-			local v3, v4 = fn12(arg)
+			if flag2 then
+				local v, v2 = fn12(arg)
 
-			if v3 then
-				if tbl4[arg] then
-					fn15(arg, true)
-				elseif v4 then
+				if v then
+					if tbl4[arg] then
+						fn15(arg, true)
+					elseif v2 then
+						pcall(function()
+							if arg.IsPlaying and arg.WeightTarget <= 0 and arg.WeightCurrent <= 0.01 then
+								arg:AdjustWeight(1, 0.05)
+							end
+						end)
+					end
+				elseif not tbl4[arg] then
+					local n3 = 1
+
 					pcall(function()
-						if arg.IsPlaying and arg.WeightTarget <= 0 and arg.WeightCurrent <= 0.01 then
-							arg:AdjustWeight(1, 0.05)
+						if arg.WeightTarget > 0 then
+							n3 = arg.WeightTarget
+						elseif arg.WeightCurrent > 0 then
+							n3 = arg.WeightCurrent
 						end
 					end)
-				end
-			elseif not tbl4[arg] then
-				local n3 = 1
 
-				pcall(function()
-					if arg.WeightTarget > 0 then
-						n3 = arg.WeightTarget
-					elseif arg.WeightCurrent > 0 then
-						n3 = arg.WeightCurrent
-					end
-				end)
+					local tbl5 = { Applying = false, DesiredWeight = n3 }
+					tbl4[arg] = tbl5
 
-				local tbl5 = { Applying = false, DesiredWeight = n3 }
-				tbl4[arg] = tbl5
-
-				tbl5.WeightConnection = arg:GetPropertyChangedSignal("WeightTarget"):Connect(function()
-					if tbl5.Applying then
-						return
-					end
-
-					if fn12(arg) then
-						fn15(arg, true)
-						return
-					end
-
-					pcall(function()
-						local weightTarget = arg.WeightTarget
-
-						if weightTarget > 0 then
-							tbl5.DesiredWeight = weightTarget
+					tbl5.WeightConnection = arg:GetPropertyChangedSignal("WeightTarget"):Connect(function()
+						if not flag2 or tbl5.Applying then
+							return
 						end
 
-						tbl5.Applying = true
+						if fn12(arg) then
+							fn15(arg, true)
+							return
+						end
+
+						pcall(function()
+							local weightTarget = arg.WeightTarget
+
+							if weightTarget > 0 then
+								tbl5.DesiredWeight = weightTarget
+							end
+
+							tbl5.Applying = true
+							arg:AdjustWeight(0, 0)
+						end)
+
+						tbl5.Applying = false
+					end)
+
+					tbl5.StoppedConnection = arg.Stopped:Connect(function()
+						fn15(arg, false)
+					end)
+
+					tbl5.Applying = true
+
+					pcall(function()
 						arg:AdjustWeight(0, 0)
 					end)
 
 					tbl5.Applying = false
-				end)
-
-				tbl5.StoppedConnection = arg.Stopped:Connect(function()
-					fn15(arg, false)
-				end)
-
-				tbl5.Applying = true
-
-				pcall(function()
-					arg:AdjustWeight(0, 0)
-				end)
-
-				tbl5.Applying = false
-				return
+					return
+				end
 			end
 		end
 
 		local function fn18(arg)
-			if arg == animator then
+			if not (not flag2 or arg ~= animator) then
 				for _, playingAnimationTrack in ipairs(arg:GetPlayingAnimationTracks()) do
 					fn17(playingAnimationTrack)
 				end
@@ -9158,20 +9999,21 @@ do
 
 		local function fn20(arg)
 			n2 += 1
+			local n22 = n2
 
 			task.spawn(function()
 				local humanoid = arg:FindFirstChildOfClass("Humanoid") or arg:WaitForChild("Humanoid", 5)
 
-				if not (arg ~= localPlayer.Character or not humanoid) then
+				if not (not flag2 or n2 ~= n22 or arg ~= localPlayer.Character or not humanoid) then
 					local animator2 = humanoid:FindFirstChildOfClass("Animator") or humanoid:WaitForChild("Animator", 5)
 
-					if not (arg ~= localPlayer.Character or not animator2) then
+					if not (not flag2 or n2 ~= n22 or arg ~= localPlayer.Character or not animator2) then
 						fn19(false)
 						animator = animator2
 						fn18(animator2)
 
 						connection3 = animator2.AnimationPlayed:Connect(function(arg2)
-							if animator == animator2 then
+							if flag2 and animator == animator2 then
 								fn17(arg2)
 							end
 						end)
@@ -9182,7 +10024,7 @@ do
 							end
 
 							task.defer(function()
-								if arg == localPlayer.Character and animator == animator2 then
+								if flag2 and n2 == n22 and arg == localPlayer.Character and animator == animator2 then
 									fn18(animator2)
 								end
 							end)
@@ -9197,24 +10039,29 @@ do
 		end
 
 		local connection4 = localPlayer.CharacterAdded:Connect(function(character_)
-			fn20(character_)
+			if flag2 then
+				fn20(character_)
+			end
 		end)
 
 		fn(function()
-			flag3 = false
+			flag2 = false
 			n2 += 1
 			fn19(true)
-			connection4:Disconnect()
-			connection4 = nil
+
+			if connection4 then
+				connection4:Disconnect()
+				connection4 = nil
+			end
 		end)
 
 		characterSection:CreateToggle({
 			Name = "No Animation",
 			Default = true,
 			Callback = function(arg)
-				flag3 = arg == true
+				flag2 = arg == true
 
-				if flag3 then
+				if flag2 then
 					local character_ = localPlayer.Character
 
 					if character_ then
@@ -9229,41 +10076,116 @@ do
 	end
 
 	do
-		local flag3 = false
+		local flag2 = false
 		local n2 = 0
-		local v3 = nil
-		local v4 = nil
-		local v5 = nil
-		local v6 = nil
+		local connection = nil
+		local connection2 = nil
+		local connection3 = nil
+		local connection4 = nil
 		local tbl4 = {}
 		local tbl5 = {}
 		local weakCache2 = setmetatable({}, { __mode = "k" })
 
-		local function fn12(arg, arg2)
-			local v7 = weakCache2[arg]
+		local function fn12(arg)
+			local flag3 = arg and arg:GetAttribute("Web") == true
+			local flag4
 
-			if v7 then
-				weakCache2[arg] = nil
+			if flag3 then
+				local name = localPlayer.Name
+				flag4 = arg:GetAttribute("WebTo") == name
+			else
+				flag4 = flag3
+			end
 
-				if v7.CollisionConnection then
-					v7.CollisionConnection:Disconnect()
+			return flag4
+		end
+
+		local function fn13(arg, arg2)
+			if not (not flag2 or not arg.Parent or arg2.Applying) then
+				local canCollide = false
+
+				if fn12(arg2.OwnerPlayer) then
+					canCollide = arg2.OriginalCanCollide
 				end
 
-				if v7.DestroyingConnection then
-					v7.DestroyingConnection:Disconnect()
+				if arg.CanCollide ~= canCollide then
+					arg2.Applying = true
+
+					pcall(function()
+						arg.CanCollide = canCollide
+					end)
+
+					arg2.Applying = false
+				end
+			end
+		end
+
+		local function fn14(arg, arg2)
+			local v = weakCache2[arg]
+
+			if v then
+				weakCache2[arg] = nil
+
+				if v.CollisionConnection then
+					v.CollisionConnection:Disconnect()
+				end
+
+				if v.DestroyingConnection then
+					v.DestroyingConnection:Disconnect()
 				end
 
 				if arg2 and arg.Parent then
 					pcall(function()
-						v7.Applying = true
-						arg.CanCollide = v7.OriginalCanCollide
-						v7.Applying = false
+						v.Applying = true
+						arg.CanCollide = v.OriginalCanCollide
+						v.Applying = false
 					end)
 				end
 			end
 		end
 
-		local function fn13(arg, arg2)
+		local function fn15(arg, ownerPlayer)
+			if not flag2 then
+				return
+			end
+			local v = weakCache2[arg]
+
+			if v then
+				v.OwnerPlayer = ownerPlayer
+				fn13(arg, v)
+				return
+			end
+
+			local tbl6 = { Applying = false, OwnerPlayer = ownerPlayer, OriginalCanCollide = arg.CanCollide }
+			weakCache2[arg] = tbl6
+
+			tbl6.CollisionConnection = arg:GetPropertyChangedSignal("CanCollide"):Connect(function()
+				if flag2 and not tbl6.Applying and arg.Parent then
+					fn13(arg, tbl6)
+				end
+			end)
+
+			tbl6.DestroyingConnection = arg.Destroying:Connect(function()
+				fn14(arg, false)
+			end)
+
+			fn13(arg, tbl6)
+		end
+
+		local function fn16(arg, ownerPlayer)
+			if flag2 then
+				local v = weakCache2[arg]
+
+				if not v then
+					fn15(arg, ownerPlayer)
+				else
+					v.OwnerPlayer = ownerPlayer
+					fn13(arg, v)
+				end
+			end
+		end
+
+		local function fn17(arg, arg2)
 			if arg.DescendantAddedConnection then
 				arg.DescendantAddedConnection:Disconnect()
 				arg.DescendantAddedConnection = nil
@@ -9286,71 +10208,217 @@ do
 					end
 				end
 
-				for _, v7 in ipairs(ks) do
-					fn12(v7, arg2)
+				for _, v in ipairs(ks) do
+					fn14(v, arg2)
 				end
 			end
 		end
 
-		local function fn14(arg, arg2)
-			local v7 = tbl5[arg]
-			if not v7 then
+		local function fn18(arg, character_)
+			local v = tbl4[arg]
+			if not flag2 or not v or arg == localPlayer then
+				return
+			end
+			fn17(v, false)
+			v.Character = character_
+
+			for _, descendant in ipairs(character_:GetDescendants()) do
+				if descendant:IsA("BasePart") then
+					fn16(descendant, arg)
+				end
+			end
+
+			v.DescendantAddedConnection = character_.DescendantAdded:Connect(function(descendant)
+				if flag2 and descendant:IsA("BasePart") then
+					fn16(descendant, arg)
+				end
+			end)
+
+			v.DescendantRemovingConnection = character_.DescendantRemoving:Connect(function(descendant)
+				if descendant:IsA("BasePart") then
+					fn14(descendant, false)
+				end
+			end)
+		end
+
+		local function fn19(arg)
+			if not arg:IsA("Model") then
+				return false
+			end
+			return string.sub(string.lower(arg.Name), -6) == "_clone"
+		end
+
+		local function fn20(arg, arg2)
+			local v = tbl5[arg]
+			if not v then
 				return
 			end
 			tbl5[arg] = nil
 
-			if v7.DestroyingConnection then
-				v7.DestroyingConnection:Disconnect()
-				v7.DestroyingConnection = nil
+			if v.DestroyingConnection then
+				v.DestroyingConnection:Disconnect()
+				v.DestroyingConnection = nil
 			end
 
-			fn13(v7, arg2)
+			fn17(v, arg2)
 		end
 
-		local function fn15(arg, arg2)
-			local v7 = tbl4[arg]
+		local function fn21(arg)
+			if not flag2 or tbl5[arg] or not fn19(arg) then
+				return
+			end
+			local tbl6 = { Character = arg }
+			tbl5[arg] = tbl6
 
-			if v7 then
+			for _, descendant in ipairs(arg:GetDescendants()) do
+				if descendant:IsA("BasePart") then
+					fn16(descendant, nil)
+				end
+			end
+
+			tbl6.DescendantAddedConnection = arg.DescendantAdded:Connect(function(descendant)
+				if flag2 and descendant:IsA("BasePart") then
+					fn16(descendant, nil)
+				end
+			end)
+
+			tbl6.DescendantRemovingConnection = arg.DescendantRemoving:Connect(function(descendant)
+				if descendant:IsA("BasePart") then
+					fn14(descendant, false)
+				end
+			end)
+
+			tbl6.DestroyingConnection = arg.Destroying:Connect(function()
+				fn20(arg, false)
+			end)
+		end
+
+		local function fn22()
+			for _, child in ipairs(Workspace:GetChildren()) do
+				if fn19(child) then
+					fn21(child)
+
+					for _, descendant in ipairs(child:GetDescendants()) do
+						if descendant:IsA("BasePart") then
+							fn16(descendant, nil)
+						end
+					end
+				end
+			end
+
+			local ks = {}
+
+			for k in pairs(tbl5) do
+				if not k:IsDescendantOf(Workspace) then
+					ks[#ks + 1] = k
+				end
+			end
+
+			for _, v in ipairs(ks) do
+				fn20(v, false)
+			end
+		end
+
+		local function fn23(arg)
+			for k, v in pairs(weakCache2) do
+				if v.OwnerPlayer == arg then
+					fn13(k, v)
+				end
+			end
+		end
+
+		local function fn24(arg, arg2)
+			local v = tbl4[arg]
+
+			if v then
 				tbl4[arg] = nil
-				fn13(v7, arg2)
+				fn17(v, arg2)
 
-				if v7.CharacterAddedConnection then
-					v7.CharacterAddedConnection:Disconnect()
+				if v.CharacterAddedConnection then
+					v.CharacterAddedConnection:Disconnect()
 				end
 
-				if v7.CharacterRemovingConnection then
-					v7.CharacterRemovingConnection:Disconnect()
+				if v.CharacterRemovingConnection then
+					v.CharacterRemovingConnection:Disconnect()
 				end
 
-				if v7.WebConnection then
-					v7.WebConnection:Disconnect()
+				if v.WebConnection then
+					v.WebConnection:Disconnect()
 				end
 
-				if v7.WebTargetConnection then
-					v7.WebTargetConnection:Disconnect()
+				if v.WebTargetConnection then
+					v.WebTargetConnection:Disconnect()
 				end
 			end
 		end
 
-		local function fn16()
-			flag3 = false
+		local function fn25(arg)
+			if not (arg == localPlayer or tbl4[arg]) then
+				local tbl6 = {}
+				tbl4[arg] = tbl6
+
+				tbl6.WebConnection = arg:GetAttributeChangedSignal("Web"):Connect(function()
+					if flag2 then
+						fn23(arg)
+					end
+				end)
+
+				tbl6.WebTargetConnection = arg:GetAttributeChangedSignal("WebTo"):Connect(function()
+					if flag2 then
+						fn23(arg)
+					end
+				end)
+
+				tbl6.CharacterAddedConnection = arg.CharacterAdded:Connect(function(character_)
+					if flag2 then
+						fn18(arg, character_)
+					end
+				end)
+
+				tbl6.CharacterRemovingConnection = arg.CharacterRemoving:Connect(function(character_)
+					if tbl6.Character == character_ then
+						fn17(tbl6, false)
+					end
+				end)
+
+				if arg.Character then
+					fn18(arg, arg.Character)
+				end
+			end
+		end
+
+		local function fn26()
+			flag2 = false
 			n2 += 1
-			v3:Disconnect()
-			v3 = nil
-			v4:Disconnect()
-			v4 = nil
-			v5:Disconnect()
-			v5 = nil
-			v6:Disconnect()
-			v6 = nil
+
+			if connection then
+				connection:Disconnect()
+				connection = nil
+			end
+
+			if connection2 then
+				connection2:Disconnect()
+				connection2 = nil
+			end
+
+			if connection3 then
+				connection3:Disconnect()
+				connection3 = nil
+			end
+
+			if connection4 then
+				connection4:Disconnect()
+				connection4 = nil
+			end
+
 			local ks = {}
 
 			for k in pairs(tbl4) do
 				ks[#ks + 1] = k
 			end
 
-			for _, v7 in ipairs(ks) do
-				fn15(v7, true)
+			for _, v in ipairs(ks) do
+				fn24(v, true)
 			end
 
 			local ks2 = {}
@@ -9359,8 +10427,8 @@ do
 				ks2[#ks2 + 1] = k
 			end
 
-			for _, v7 in ipairs(ks2) do
-				fn14(v7, true)
+			for _, v in ipairs(ks2) do
+				fn20(v, true)
 			end
 
 			local ks3 = {}
@@ -9369,17 +10437,89 @@ do
 				ks3[#ks3 + 1] = k
 			end
 
-			for _, v7 in ipairs(ks3) do
-				fn12(v7, true)
+			for _, v in ipairs(ks3) do
+				fn14(v, true)
 			end
 		end
 
-		local v7, v8, v9, v10, v11, v12
+		local function fn27()
+			n2 += 1
+			local n22 = n2
 
-		local function fn17()
+			task.spawn(function()
+				while flag2 and n2 == n22 do
+					for _, player in ipairs(Players:GetPlayers()) do
+						if player ~= localPlayer then
+							pcall(function()
+								fn25(player)
+								local v = tbl4[player]
+								local character_ = player.Character
+
+								if v and character_ then
+									if v.Character ~= character_ then
+										fn18(player, character_)
+									else
+										for _, descendant in ipairs(character_:GetDescendants()) do
+											if descendant:IsA("BasePart") then
+												fn16(descendant, player)
+											end
+										end
+									end
+								end
+							end)
+						end
+					end
+
+					fn22()
+					task.wait(1)
+				end
+			end)
 		end
 
-		fn(fn16)
+		local function fn28()
+			if flag2 then
+				return
+			end
+			flag2 = true
+
+			connection = Players.PlayerAdded:Connect(function(player)
+				fn25(player)
+
+				task.defer(function()
+					local v = tbl4[player]
+					local character_ = player.Character
+
+					if flag2 and v and character_ and v.Character ~= character_ then
+						fn18(player, character_)
+					end
+				end)
+			end)
+
+			connection2 = Players.PlayerRemoving:Connect(function(player)
+				fn24(player, false)
+			end)
+
+			connection3 = Workspace.ChildAdded:Connect(function(child)
+				if flag2 and fn19(child) then
+					fn21(child)
+				end
+			end)
+
+			connection4 = Workspace.ChildRemoved:Connect(function(child)
+				if tbl5[child] then
+					fn20(child, false)
+				end
+			end)
+
+			for _, player in ipairs(Players:GetPlayers()) do
+				fn25(player)
+			end
+
+			fn22()
+			fn27()
+		end
+
+		fn(fn26)
 
 		characterSection:CreateToggle({
 			Name = "Disable Player Collision",
@@ -9387,66 +10527,73 @@ do
 			Default = true,
 			Callback = function(arg)
 				if arg then
-					fn17()
+					fn28()
 				else
-					fn16()
+					fn26()
 				end
 			end,
 		})
 	end
 
-	local flag3
-	flag3 = false
-	local flag4
-	flag4 = false
-	local flag5
-	flag5 = false
-	local flag6
-	flag6 = true
-	local flag7
-	flag7 = false
-	local flag8
-	flag8 = false
+	local assetId
+	assetId = "rbxassetid://18537363391"
 	local n2
-	n2 = 0.09
+	n2 = 5
 	local n3
-	n3 = 225
-	local v3
-	v3 = nil
-	local v4
-	v4 = nil
-	local v5
-	v5 = nil
-	local n4, fn12
+	n3 = 1.5
+	local n4
+	n4 = 0.04
+	local flag2, flag3, flag4, flag5, flag6, flag7, n5, n6, clone, humanoidRootPart
+	local character_, n7
 
 	do
-		local v6 = nil
-		local v7 = nil
-		local n5 = 0
-		n4 = 0
-		local n6 = 0
-		local tbl4 = {}
-		local v8 = nil
-		local v9 = nil
-		local n7 = 0
-		local n8 = 0
-		local v10 = nil
+		local n8 = 0.01
+		flag2 = false
+		flag3 = false
+		flag4 = false
+		flag5 = true
+		flag6 = false
+		flag7 = false
+		n5 = 0.09
+		n6 = 225
+		clone = nil
+		humanoidRootPart = nil
+		character_ = nil
+		local hipHeight = nil
+		local v = nil
+		local n9 = 0
+		n7 = 0
+		local n10 = 0
+		local list = {}
+		local position = nil
+		local n11 = 0
+		local v2 = nil
+		local n12 = 0
+		local n13 = 0
+		local v3 = nil
+		local n14 = 0
+		local createSlider = nil
 
-		fn12 = function(arg)
+		local function fn12(arg)
 			if arg and arg.Connected then
 				arg:Disconnect()
 			end
 		end
 
 		local function fn13()
-			for _, v11 in ipairs(tbl4) do
-				fn12(v11)
+			for _, v4 in ipairs(list) do
+				fn12(v4)
 			end
 
-			table.clear(tbl4)
+			table.clear(list)
 		end
 
 		local function fn14(arg)
+			list[#list + 1] = arg
+			return arg
+		end
+
+		local function fn15(arg)
 			if not arg or tbl2.ProtectedHumanoid ~= arg or arg.Health <= 0 then
 				return false
 			end
@@ -9458,7 +10605,7 @@ do
 			return ok and result == true
 		end
 
-		local function fn15(arg, arg2)
+		local function fn16(arg, arg2)
 			for _, descendant in ipairs(arg:GetDescendants()) do
 				if descendant:IsA("Weld") or descendant:IsA("WeldConstraint") then
 					local part0 = descendant.Part0
@@ -9466,16 +10613,16 @@ do
 
 					if not (part0 and not part0:IsDescendantOf(arg)) then
 						local part = part1 and not part1:IsDescendantOf(arg)
-						local v11 = nil
-						local v12 = nil
+						local v4 = nil
+						local v5 = nil
 
 						if part then
 							local part2 = part0
 							part0 = part1
 							part1 = part2
 						else
-							part0 = v11
-							part1 = v12
+							part0 = v4
+							part1 = v5
 						end
 					end
 
@@ -9488,37 +10635,37 @@ do
 			return nil
 		end
 
-		local function fn16(arg)
+		local function fn17(arg)
 			if localPlayer:GetAttribute("Stealing") ~= true then
 				return nil
 			end
-			local character_ = localPlayer.Character
-			local v5s = { arg }
+			local character_2 = localPlayer.Character
+			local humanoidRootParts = { arg }
 
-			if v4 and v4.Parent and v4 ~= arg then
-				v5s[#v5s + 1] = v4
+			if humanoidRootPart and humanoidRootPart.Parent and humanoidRootPart ~= arg then
+				humanoidRootParts[#humanoidRootParts + 1] = humanoidRootPart
 			end
 
 			local huge = math.huge
 			local child = nil
 
 			for _, child2 in ipairs(Workspace:GetChildren()) do
-				if child2:IsA("Model") and child2 ~= character_ and not Players:GetPlayerFromCharacter(child2) and child2.Name:sub(-6) ~= "_Clone" then
+				if child2:IsA("Model") and child2 ~= character_2 and not Players:GetPlayerFromCharacter(child2) and child2.Name:sub(-6) ~= "_Clone" then
 					local rootPart = child2:FindFirstChild("RootPart") or child2.PrimaryPart or child2:FindFirstChildWhichIsA("BasePart")
 
 					if rootPart and rootPart:IsA("BasePart") then
-						for idx, v11 in ipairs(v5s) do
-							local v12, v13 = fn15(child2, v11)
+						for idx, humanoidRootPart2 in ipairs(humanoidRootParts) do
+							local v4, v5 = fn16(child2, humanoidRootPart2)
 
-							if v12 and v13 then
-								local vector = v11.CFrame:PointToObjectSpace(v12.Position)
-								local magnitude = (v13.Position - v11.Position).Magnitude
+							if v4 and v5 then
+								local vector = humanoidRootPart2.CFrame:PointToObjectSpace(v4.Position)
+								local magnitude = (v5.Position - humanoidRootPart2.Position).Magnitude
 
 								if math.abs(vector.X) <= 5 and vector.Y >= -3 and vector.Y <= 7 and vector.Z >= -7 and vector.Z <= 4 and magnitude <= 14 then
-									local n9 = (v12.Position - v11.Position).Magnitude + magnitude * 0.05 + (idx - 1) * 0.01
+									local n15 = (v4.Position - humanoidRootPart2.Position).Magnitude + magnitude * 0.05 + (idx - 1) * 0.01
 
-									if n9 < huge then
-										huge = n9
+									if n15 < huge then
+										huge = n15
 										child = child2
 									end
 								end
@@ -9531,24 +10678,31 @@ do
 			return child
 		end
 
-		local function fn17()
-			n7 += 1
-			local n72 = n7
-			v9 = nil
-			v10 = nil
-			if not flag or not flag4 or not flag8 or localPlayer:GetAttribute("Stealing") ~= true then
+		local function fn18()
+			if localPlayer:GetAttribute("Stealing") == true and v2 and v2.Parent then
+				return v2
+			end
+			return nil
+		end
+
+		local function fn19()
+			n12 += 1
+			local n122 = n12
+			v2 = nil
+			v3 = nil
+			if not flag or not flag3 or not flag7 or localPlayer:GetAttribute("Stealing") ~= true then
 				return
 			end
 
 			task.spawn(function()
-				while flag and n72 == n7 and flag4 and flag8 and localPlayer:GetAttribute("Stealing") == true do
-					local character_ = localPlayer.Character
-					character_ = character_ and character_:FindFirstChild("HumanoidRootPart")
+				while flag and n122 == n12 and flag3 and flag7 and localPlayer:GetAttribute("Stealing") == true do
+					local character_2 = localPlayer.Character
+					character_2 = character_2 and character_2:FindFirstChild("HumanoidRootPart")
 
-					if character_ then
-						local v11 = fn16(character_)
-						if v11 then
-							v9 = v11
+					if character_2 then
+						local v4 = fn17(character_2)
+						if v4 then
+							v2 = v4
 							return
 						end
 					end
@@ -9558,66 +10712,239 @@ do
 			end)
 		end
 
-		local function fn18()
-			local v52 = v5
+		local function raycastGround(arg, arg2)
+			local raycastParams = RaycastParams.new()
+			raycastParams.FilterType = Enum.RaycastFilterType.Exclude
+			raycastParams.IgnoreWater = true
+			raycastParams.FilterDescendantsInstances = { localPlayer.Character, arg2, humanoidRootPart }
+			local hit = Workspace:Raycast(arg.Position + Vector3.new(0, 8, 0), Vector3.new(0, -50, 0), raycastParams)
+			return hit and hit.Position.Y or nil
+		end
 
-			if not (not v4 or not v4:IsDescendantOf(game) or not v52) then
-				if not (v52 ~= localPlayer.Character or v52.Parent ~= Workspace) then
+		local function fn20(arg, arg2)
+			return math.abs((arg - arg2 + 180) % 360 - 180)
+		end
+
+		local function fn21(arg, humanoid)
+			local v4 = fn18()
+			if not v4 or not humanoidRootPart or not humanoidRootPart.Parent then
+				v3 = nil
+				return
+			end
+			local v5 = raycastGround(arg, v4)
+
+			if v5 then
+				local ok, result, vector = pcall(function()
+					local boundsCFrame, boundsSize = v4:GetBoundingBox()
+					return boundsCFrame, boundsSize
+				end)
+
+				if not (not ok or not result or not vector) then
+					local tbl4 = {}
+
+					for idx = -1, 1, 2 do
+						for idx2 = -1, 1, 2 do
+							for idx3 = -1, 1, 2 do
+								local n15 = #tbl4 + 1
+								local cFrame = humanoidRootPart.CFrame
+								local pointToObjectSpace = cFrame.PointToObjectSpace
+								local v6 = result:PointToWorldSpace(Vector3.new(vector.X * 0.5 * idx, vector.Y * 0.5 * idx2, vector.Z * 0.5 * idx3))
+								tbl4[n15] = pointToObjectSpace(cFrame, v6)
+							end
+						end
+					end
+
+					local n15 = arg.CFrame - Vector3.new(0, humanoid.HipHeight + arg.Size.Y * 0.5 - 1 + n5, 0)
+					local n16 = n6 % 360
+					local huge = math.huge
+					local n162 = n16
+
+					for idx = 0, 13 do
+						local n17 = 217 + idx
+						local n18 = n15 * CFrame.Angles(math.rad(n17), 0, 0)
+						local ys = {}
+						local n19 = -math.huge
+
+						for _, v6 in ipairs(tbl4) do
+							local y = n18:PointToWorldSpace(v6).Y
+							ys[#ys + 1] = y
+
+							if n19 < y then
+								n19 = y
+							end
+						end
+
+						local n20 = n19 - v5
+						local v6, v7, v8 = ipairs(ys)
+						local n21 = 0
+						local n22 = 0
+						local n23 = 0
+
+						for _, v9 in v6, v7, v8 do
+							local n24 = v9 - v5
+
+							if n8 < n24 then
+								n21 += 1
+								n22 += n24
+							end
+
+							if n19 - v9 <= 0.035 then
+								n23 += 1
+							end
+						end
+
+						local n24
+
+						if n21 == 0 then
+							n24 = n20 * 100 + fn20(n17, n16) * 0.001
+						else
+							n24 = n21 * 1000 + n23 * 100 + math.max(n20, 0) * 50 + n22 * 10 + fn20(n17, n16) * 0.001
+						end
+
+						if n24 < huge then
+							huge = n24
+							n162 = n17
+						end
+					end
+
+					v3 = n162
+					return
+				end
+			end
+		end
+
+		local function fn22(arg, arg2, arg3)
+			return (arg + ((arg2 - arg + 180) % 360 - 180) * arg3) % 360
+		end
+
+		local function destroyAll2()
+			local v4 = Workspace:FindFirstChild(localPlayer.Name)
+			if not v4 then
+				return
+			end
+			local doubleRig = v4:FindFirstChild("DoubleRig")
+
+			if doubleRig then
+				doubleRig:Destroy()
+			end
+
+			local constraints = v4:FindFirstChild("Constraints")
+
+			if constraints then
+				constraints:Destroy()
+			end
+
+			fn14(v4.ChildAdded:Connect(function(child)
+				if child.Name == "DoubleRig" or child.Name == "Constraints" then
+					task.defer(function()
+						if flag3 and child.Parent then
+							child:Destroy()
+						end
+					end)
+				end
+			end))
+		end
+
+		local function fn23()
+			local character_2 = localPlayer.Character
+			local humanoid = character_2 and character_2:FindFirstChildOfClass("Humanoid")
+
+			if not (not character_2 or not humanoid or not fn15(humanoid)) then
+				hipHeight = humanoid.HipHeight
+				humanoidRootPart = character_2:FindFirstChild("HumanoidRootPart")
+
+				if not (not humanoidRootPart or not humanoidRootPart.Parent) then
+					character_ = character_2
+					local model = Instance.new("Model")
+					model.Parent = game
+					character_2.Parent = model
+					clone = humanoidRootPart:Clone()
+					clone.Parent = character_2
+					humanoidRootPart.Parent = Workspace.CurrentCamera
+					clone.CFrame = humanoidRootPart.CFrame
+					character_2.PrimaryPart = clone
+					character_2.Parent = Workspace
+
+					for _, descendant in ipairs(character_2:GetDescendants()) do
+						if descendant:IsA("Weld") or descendant:IsA("Motor6D") then
+							if descendant.Part0 == humanoidRootPart then
+								descendant.Part0 = clone
+							end
+
+							if descendant.Part1 == humanoidRootPart then
+								descendant.Part1 = clone
+							end
+						end
+					end
+
+					model:Destroy()
+					return true
+				end
+			end
+
+			return false
+		end
+
+		local function fn24()
+			local character_2 = character_
+
+			if not (not humanoidRootPart or not humanoidRootPart:IsDescendantOf(game) or not character_2) then
+				if not (character_2 ~= localPlayer.Character or character_2.Parent ~= Workspace) then
 					local ok = pcall(function()
 						local model = Instance.new("Model")
 						model.Parent = game
-						v52.Parent = model
-						v4.Parent = v52
-						v52.PrimaryPart = v4
-						v52.Parent = Workspace
-						v4.CanCollide = true
+						character_2.Parent = model
+						humanoidRootPart.Parent = character_2
+						character_2.PrimaryPart = humanoidRootPart
+						character_2.Parent = Workspace
+						humanoidRootPart.CanCollide = true
 
-						for _, descendant in ipairs(v52:GetDescendants()) do
+						for _, descendant in ipairs(character_2:GetDescendants()) do
 							if descendant:IsA("Weld") or descendant:IsA("Motor6D") then
-								if descendant.Part0 == v3 then
-									descendant.Part0 = v4
+								if descendant.Part0 == clone then
+									descendant.Part0 = humanoidRootPart
 								end
 
-								if descendant.Part1 == v3 then
-									descendant.Part1 = v4
+								if descendant.Part1 == clone then
+									descendant.Part1 = humanoidRootPart
 								end
 							end
 						end
 
-						if v3 then
-							local cFrame = v3.CFrame
-							v3:Destroy()
-							v3 = nil
-							v4.CFrame = cFrame
+						if clone then
+							local cFrame = clone.CFrame
+							clone:Destroy()
+							clone = nil
+							humanoidRootPart.CFrame = cFrame
 						end
 
-						local humanoid = v52:FindFirstChildOfClass("Humanoid")
+						local humanoid = character_2:FindFirstChildOfClass("Humanoid")
 
-						if humanoid and v6 ~= nil then
-							humanoid.HipHeight = v6
+						if humanoid and hipHeight ~= nil then
+							humanoid.HipHeight = hipHeight
 						end
 
 						model:Destroy()
 					end)
 
-					if not ok and v4 and v4.Parent then
+					if not ok and humanoidRootPart and humanoidRootPart.Parent then
 						pcall(function()
-							v4:Destroy()
+							humanoidRootPart:Destroy()
 						end)
 					end
 
 					return ok
 				end
 
-				if v3 and v3.Parent then
+				if clone and clone.Parent then
 					pcall(function()
-						v3:Destroy()
+						clone:Destroy()
 					end)
 				end
 
-				if v4 and v4.Parent then
+				if humanoidRootPart and humanoidRootPart.Parent then
 					pcall(function()
-						v4:Destroy()
+						humanoidRootPart:Destroy()
 					end)
 				end
 			end
@@ -9625,53 +10952,258 @@ do
 			return false
 		end
 
-		local flag9 = false
+		local fn25 = nil
 
-		local function fn19(arg)
+		fn25 = function()
+			if flag3 then
+				local character_2 = localPlayer.Character
+				local humanoid = character_2 and character_2:FindFirstChildOfClass("Humanoid")
+
+				if not (not character_2 or not humanoid or humanoid.Health <= 0) then
+					local animation = Instance.new("Animation")
+					animation.AnimationId = assetId
+					local v4 = (humanoid:FindFirstChildOfClass("Animator") or Instance.new("Animator", humanoid)):LoadAnimation(animation)
+					animation:Destroy()
+					v = v4
+					v4.Priority = Enum.AnimationPriority.Action4
+					v4:Play(0, 1, 0)
+
+					fn14(v4.Stopped:Connect(function()
+						if flag3 and v == v4 then
+							fn25()
+						end
+					end))
+
+					task.defer(function()
+						if flag3 and v == v4 then
+							pcall(function()
+								v4.TimePosition = 0.7
+							end)
+
+							task.delay(1, function()
+								if flag3 and v == v4 then
+									pcall(function()
+										v4:AdjustSpeed(math.huge)
+									end)
+								end
+							end)
+						end
+					end)
+
+					return
+				end
+			end
+		end
+
+		local flag8 = false
+
+		local function fn26(arg)
 			if arg ~= false then
-				n4 += 1
-				flag9 = false
+				n7 += 1
+				flag8 = false
 			end
 
-			n5 += 1
-			n6 += 1
-			flag4 = false
-			n7 += 1
-			v9 = nil
-			v10 = nil
-			n8 = 0
-			v8 = nil
+			n9 += 1
+			n10 += 1
+			flag3 = false
+			n12 += 1
+			v2 = nil
+			v3 = nil
+			n13 = 0
+			position = nil
 
-			if v7 then
+			if v then
 				pcall(function()
-					v7:Stop()
+					v:Stop()
 				end)
 
 				pcall(function()
-					v7:Destroy()
+					v:Destroy()
 				end)
 
-				v7 = nil
+				v = nil
 			end
 
 			fn13()
-			fn18()
-			v3 = nil
-			v4 = nil
-			v5 = nil
-			v6 = nil
+			fn24()
+			clone = nil
+			humanoidRootPart = nil
+			character_ = nil
+			hipHeight = nil
 		end
 
-		local fn20 = nil
-		local v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23
+		local fn27 = nil
 
-		fn20 = function()
-			return true
+		local function fn28()
+			if flag8 then
+				return
+			end
+			flag8 = true
+			n7 += 1
+			local n72 = n7
+
+			task.spawn(function()
+				fn26(false)
+				local character_2 = localPlayer.Character
+
+				if character_2 then
+					character_2 = character_2.PrimaryPart or character_2:FindFirstChild("HumanoidRootPart")
+				end
+
+				character_2 = character_2 and character_2.Position or nil
+				local now = os.clock()
+				local n15 = 0
+
+				while true do
+					if flag and n72 == n7 and flag2 and os.clock() - now < 3.5 then
+						local result = RunService.Heartbeat:Wait()
+
+						if not (n72 ~= n7 or not flag2) then
+							local character_3 = localPlayer.Character
+							local primaryPart = character_3 and (character_3.PrimaryPart or character_3:FindFirstChild("HumanoidRootPart"))
+							character_3 = character_3 and character_3:FindFirstChildOfClass("Humanoid")
+
+							if primaryPart and character_3 and character_3.Health > 0 then
+								local position2 = primaryPart.Position
+
+								if character_2 then
+									if (position2 - character_2).Magnitude > 4 then
+										n15 = 0
+										character_2 = position2
+										continue
+									else
+										n15 += result
+										local n16 = os.clock() - now
+										if not (n15 >= 0.6 and n16 >= 0.7) then
+											character_2 = position2
+											continue
+										end
+									end
+								else
+									character_2 = position2
+									continue
+								end
+							else
+								n15 = 0
+								continue
+							end
+						end
+					end
+
+					break
+				end
+
+				flag8 = false
+
+				if n72 == n7 and flag and flag2 and fn27 then
+					fn27()
+				end
+			end)
 		end
 
-		local function fn21(arg, arg2)
-			n6 += 1
-			local n62 = n6
+		fn27 = function()
+			if flag3 then
+				return true
+			end
+
+			if humanoidRootPart or clone or character_ then
+				fn26()
+			end
+
+			local character_2 = localPlayer.Character
+			local humanoid = character_2 and character_2:FindFirstChildOfClass("Humanoid")
+			local humanoidRootPart2 = character_2 and character_2:FindFirstChild("HumanoidRootPart")
+
+			if not (not character_2 or character_2.Parent ~= Workspace or not humanoid or humanoid.Health <= 0 or not humanoidRootPart2 or humanoidRootPart2.Parent ~= character_2 or character_2.PrimaryPart ~= humanoidRootPart2) then
+				n9 += 1
+				local n92 = n9
+				fn13()
+				destroyAll2()
+				if not fn23() then
+					fn13()
+					return false
+				end
+				flag3 = true
+				task.wait(0.1)
+
+				if not (n92 ~= n9 or not flag3) then
+					fn25()
+					fn19()
+
+					fn14(RunService.PreSimulation:Connect(function()
+						local character_3 = localPlayer.Character
+						local humanoid2 = character_3 and character_3:FindFirstChildOfClass("Humanoid")
+						character_3 = character_3 and character_3.PrimaryPart
+						if not flag3 or not humanoid2 or humanoid2.Health <= 0 or not humanoidRootPart or not humanoidRootPart.Parent or not character_3 then
+							return
+						end
+
+						if flag7 and localPlayer:GetAttribute("Stealing") == true then
+							local now = os.clock()
+
+							if n4 <= now - n13 then
+								n13 = now
+								fn21(character_3, humanoid2)
+							end
+
+							if v3 ~= nil then
+								n6 = fn22(n6, v3, 0.42)
+							end
+
+							if createSlider and now >= n14 then
+								n14 = now + 0.1
+								createSlider:Set(math.floor(n6 + 0.5), false)
+							end
+						else
+							v2 = nil
+							v3 = nil
+						end
+
+						local cFrameAngles = CFrame.Angles
+						humanoidRootPart.CFrame = (character_3.CFrame - Vector3.new(0, humanoid2.HipHeight + character_3.Size.Y * 0.5 - 1 + n5, 0)) * cFrameAngles(math.rad(n6), 0, 0)
+						humanoidRootPart.Velocity = character_3.Velocity
+						humanoidRootPart.CanCollide = false
+					end))
+
+					position = nil
+
+					fn14(RunService.PreAnimation:Connect(function()
+						if not flag3 or not humanoidRootPart or not humanoidRootPart.Parent then
+							position = nil
+							return
+						end
+						local position2 = humanoidRootPart.Position
+
+						if position then
+							local magnitude = (position2 - position).Magnitude
+							local now = os.clock()
+
+							if magnitude > n2 and now - n11 > n3 then
+								n11 = now
+
+								if flag5 then
+									uiLibrary.Notify("Lagback detected", "Invisible position was corrected by the server.", 5)
+								end
+
+								if flag6 then
+									fn28()
+								end
+							end
+						end
+
+						position = position2
+					end))
+
+					return true
+				end
+			end
+
+			return false
+		end
+
+		local function fn29(arg, arg2)
+			n10 += 1
+			local n102 = n10
 
 			task.spawn(function()
 				if arg2 and arg2 > 0 then
@@ -9679,12 +11211,12 @@ do
 				end
 
 				for idx = 1, 50 do
-					if not flag or n62 ~= n6 or not flag3 or arg ~= localPlayer.Character then
+					if not flag or n102 ~= n10 or not flag2 or arg ~= localPlayer.Character then
 						return
 					end
 					local humanoid = arg and arg:FindFirstChildOfClass("Humanoid")
-					local humanoidRootPart = arg and arg:FindFirstChild("HumanoidRootPart")
-					if humanoid and fn14(humanoid) and humanoidRootPart and humanoidRootPart.Parent == arg and fn20() then
+					local humanoidRootPart2 = arg and arg:FindFirstChild("HumanoidRootPart")
+					if humanoid and fn15(humanoid) and humanoidRootPart2 and humanoidRootPart2.Parent == arg and fn27() then
 						return
 					end
 					task.wait(0.1)
@@ -9697,29 +11229,33 @@ do
 			Default = false,
 			Keybind = Enum.KeyCode.U,
 			Callback = function(arg)
-				flag3 = arg == true
+				flag2 = arg == true
 
-				if flag3 then
-					fn21(localPlayer.Character, 0.15)
+				if flag2 then
+					fn29(localPlayer.Character, 0.15)
 				else
-					fn19()
+					fn26()
 				end
 			end,
 		})
 
-		local function fn22()
-			if not (not flag5 or not invisibleToggle) then
-				local flag10 = localPlayer:GetAttribute("Stealing") == true
-				if invisibleToggle:Get() ~= flag10 then
-					invisibleToggle:Set(flag10, true)
+		local function fn30()
+			if not (not flag4 or not invisibleToggle) then
+				local flag9 = localPlayer:GetAttribute("Stealing") == true
+				if invisibleToggle:Get() ~= flag9 then
+					invisibleToggle:Set(flag9, true)
 					return
 				end
 
-				if flag10 then
-					flag3 = true
-				else
-					flag3 = false
-					fn19()
+				if flag9 then
+					flag2 = true
+
+					if not flag3 then
+						fn29(localPlayer.Character, 0.05)
+					end
+				elseif flag2 or flag3 or humanoidRootPart ~= nil or clone ~= nil then
+					flag2 = false
+					fn26()
 				end
 			end
 		end
@@ -9728,10 +11264,10 @@ do
 			Name = "Auto Invisible On Steal",
 			Default = false,
 			Callback = function(arg)
-				flag5 = arg == true
+				flag4 = arg == true
 
-				if flag5 then
-					fn22()
+				if flag4 then
+					fn30()
 				end
 			end,
 		})
@@ -9740,13 +11276,15 @@ do
 			Name = "Auto Rotation",
 			Default = true,
 			Callback = function(arg)
-				flag8 = arg == true
-				n8 = 0
-				fn17()
+				flag7 = arg == true
+				n13 = 0
+				fn19()
 			end,
 		})
 
-		invisibilitySection:CreateSlider({
+		createSlider = invisibilitySection.CreateSlider
+
+		createSlider = createSlider(invisibilitySection, {
 			Name = "Rotation",
 			Min = 180,
 			Max = 300,
@@ -9756,7 +11294,7 @@ do
 			Callback = function(arg)
 				local clamp = math.clamp
 				local floor = math.floor
-				n3 = clamp(floor((tonumber(arg) or 225) + 0.5), 180, 300)
+				n6 = clamp(floor((tonumber(arg) or 225) + 0.5), 180, 300)
 			end,
 		})
 
@@ -9769,7 +11307,7 @@ do
 			DecimalPlaces = 2,
 			Increment = 0.01,
 			Callback = function(arg)
-				n2 = math.clamp(tonumber(arg) or 0.09, 0, 0.7)
+				n5 = math.clamp(tonumber(arg) or 0.09, 0, 0.7)
 			end,
 		})
 
@@ -9777,7 +11315,7 @@ do
 			Name = "Lagback Detect",
 			Default = true,
 			Callback = function(arg)
-				flag6 = arg == true
+				flag5 = arg == true
 			end,
 		})
 
@@ -9785,78 +11323,84 @@ do
 			Name = "Auto Fix Lagback",
 			Default = false,
 			Callback = function(arg)
-				flag7 = arg == true
+				flag6 = arg == true
 
-				if not flag7 then
-					n4 += 1
-					flag9 = false
+				if not flag6 then
+					n7 += 1
+					flag8 = false
 				end
 			end,
 		})
 
 		tbl.IsActive = function()
-			return flag4 == true
+			return flag3 == true
 		end
 
 		tbl.GetDrop = function()
-			local v52 = v5 or localPlayer.Character
-			local humanoid = v52 and v52:FindFirstChildOfClass("Humanoid")
+			local character_2 = character_ or localPlayer.Character
+			local humanoid = character_2 and character_2:FindFirstChildOfClass("Humanoid")
 
-			if v52 then
-				v52 = v52.PrimaryPart or v52:FindFirstChild("HumanoidRootPart")
+			if character_2 then
+				character_2 = character_2.PrimaryPart or character_2:FindFirstChild("HumanoidRootPart")
 			end
 
-			return (humanoid and humanoid.HipHeight and humanoid.HipHeight > 0 and humanoid.HipHeight or 2) + (v52 and v52.Size and v52.Size.Y or 2) * 0.5 - 1 + n2
+			return (humanoid and humanoid.HipHeight and humanoid.HipHeight > 0 and humanoid.HipHeight or 2) + (character_2 and character_2.Size and character_2.Size.Y or 2) * 0.5 - 1 + n5
 		end
 
 		tbl.SuspendForReset = function(arg)
-			local v52 = v5
-			local v522
+			local character_2 = character_
+			local character_3
 
-			if v5 then
-				v522 = arg
+			if character_ then
+				character_3 = arg
 			else
-				v522 = v52
+				character_3 = character_2
 			end
 
-			if v522 and arg ~= v5 then
+			if character_3 and arg ~= character_ then
 				return false
 			end
-			local flag42 = flag4
-			fn19()
-			return flag42
+			local flag32 = flag3 or humanoidRootPart ~= nil or clone ~= nil
+
+			if flag32 then
+				fn26()
+			end
+
+			return flag32
 		end
 
 		tbl.ResumeIfRequested = function(arg)
-			if arg == localPlayer.Character then
-				fn21(arg, 0.05)
+			if flag2 and arg == localPlayer.Character then
+				fn29(arg, 0.05)
 			end
 		end
 
 		local connection = localPlayer:GetAttributeChangedSignal("Stealing"):Connect(function()
-			fn22()
-			fn17()
+			fn30()
+			fn19()
 		end)
 
-		local connection2 = localPlayer.CharacterRemoving:Connect(function(character_)
-			if character_ == localPlayer.Character or character_ == v5 then
-				fn19()
+		local connection2 = localPlayer.CharacterRemoving:Connect(function(character_2)
+			if character_2 == localPlayer.Character or character_2 == character_ then
+				fn26()
 			end
 		end)
 
-		local connection3 = localPlayer.CharacterAdded:Connect(function(character_)
-			if v5 and v5 ~= character_ then
-				fn19()
+		local connection3 = localPlayer.CharacterAdded:Connect(function(character_2)
+			if character_ and character_ ~= character_2 then
+				fn26()
 			end
 
-			fn21(character_, 0.35)
+			if flag2 then
+				fn29(character_2, 0.35)
+			end
 		end)
 
 		fn(function()
-			flag3 = false
-			flag5 = false
-			flag9 = false
-			fn19()
+			flag2 = false
+			flag4 = false
+			flag8 = false
+			fn26()
 			fn12(connection)
 			fn12(connection2)
 			fn12(connection3)
@@ -9868,15 +11412,15 @@ do
 	end
 
 	do
-		local flag9 = true
-		local flag10 = false
-		local flag11 = true
+		local flag8 = true
+		local flag9 = false
+		local flag10 = true
+		local flag11 = false
 		local flag12 = false
+		local v = nil
+		local v2 = nil
 		local flag13 = false
-		local v6 = nil
-		local result3 = nil
-		local flag14 = false
-		local connections2 = {}
+		local connections = {}
 		local connection = nil
 		local chilliFastResetRuntime = CoreGui:FindFirstChild("__ChilliFastResetRuntime")
 
@@ -9903,16 +11447,115 @@ do
 		cleanup.Parent = chilliFastResetRuntime2
 
 		local function disconnectAll2()
-			for _, v7 in ipairs(connections2) do
-				if v7.Connected then
-					v7:Disconnect()
+			for _, connection2 in ipairs(connections) do
+				if connection2.Connected then
+					connection2:Disconnect()
 				end
 			end
 
-			table.clear(connections2)
+			table.clear(connections)
 		end
 
-		local function fn13()
+		local function fn12()
+			return localPlayer:GetAttribute("ChilliDropBrainrotActive") == true
+		end
+
+		local function fn13(arg, arg2)
+			if not (not flag8 or flag9) then
+				local humanoid = arg and arg:FindFirstChildOfClass("Humanoid")
+
+				if not (not arg or arg ~= localPlayer.Character or not humanoid or not arg2 and humanoid.Health <= 0) then
+					local flag14 = false
+
+					if type(tbl.SuspendForReset) == "function" then
+						local result
+						flag14, result = pcall(tbl.SuspendForReset, arg)
+						flag14 = flag14 and result == true
+					end
+
+					local humanoidRootPart2 = arg:FindFirstChild("HumanoidRootPart")
+
+					if humanoidRootPart2 then
+						flag9 = true
+						local v3 = arg
+
+						task.spawn(function()
+							local cFrame = humanoidRootPart2.CFrame
+							local assemblyLinearVelocity = humanoidRootPart2.AssemblyLinearVelocity
+							local assemblyAngularVelocity = humanoidRootPart2.AssemblyAngularVelocity
+							local health = humanoid.Health
+							local flag15 = true
+
+							pcall(function()
+								flag15 = humanoid:GetStateEnabled(Enum.HumanoidStateType.Dead)
+								humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
+
+								if humanoid.Health <= 0 then
+									humanoid.Health = math.max(humanoid.MaxHealth, 1)
+								end
+							end)
+
+							local connection2 = humanoid.HealthChanged:Connect(function(health2)
+								if flag8 and flag9 and localPlayer.Character == v3 and health2 <= 0 then
+									pcall(function()
+										humanoid.Health = math.max(humanoid.MaxHealth, health, 1)
+									end)
+								end
+							end)
+
+							local cFrame2 = cFrame + Vector3.new(0, 31000, 0)
+
+							while flag8 and localPlayer.Character == v3 do
+								if humanoidRootPart2.Parent then
+									pcall(function()
+										humanoidRootPart2.CFrame = cFrame2
+									end)
+								end
+
+								if humanoid.Parent and humanoid.Health <= 0 then
+									pcall(function()
+										humanoid.Health = math.max(humanoid.MaxHealth, health, 1)
+									end)
+								end
+
+								task.wait()
+							end
+
+							local flag16 = localPlayer.Character ~= v3
+							connection2:Disconnect()
+
+							if not flag16 then
+								if humanoidRootPart2.Parent then
+									pcall(function()
+										humanoidRootPart2.CFrame = cFrame
+										humanoidRootPart2.AssemblyLinearVelocity = assemblyLinearVelocity
+										humanoidRootPart2.AssemblyAngularVelocity = assemblyAngularVelocity
+									end)
+								end
+
+								if humanoid.Parent then
+									pcall(function()
+										humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, flag15)
+
+										if health > 0 and humanoid.Health <= 0 then
+											humanoid.Health = health
+										end
+									end)
+								end
+							end
+
+							flag9 = false
+						end)
+
+						return true
+					end
+
+					if flag14 and type(tbl.ResumeIfRequested) == "function" then
+						tbl.ResumeIfRequested(arg)
+					end
+				end
+			end
+
 			return false
 		end
 
@@ -9921,34 +11564,38 @@ do
 		end
 
 		local function fn15()
-			local flag15 = not flag12
-			if flag15 or flag13 then
+			if not flag8 or not flag11 or flag12 then
 				return
 			end
-			flag13 = true
+			flag12 = true
 
 			task.spawn(function()
-				if flag12 then
+				for idx = 1, 20 do
+					if not (not flag8 or not flag11 or flag9) and not fn13(localPlayer.Character, false) then
+						task.wait(0.05)
+						continue
+					end
+					break
 				end
 
-				flag13 = false
+				flag12 = false
 			end)
 		end
 
 		local function fn16()
-			if flag14 and v6 and result3 and type(hookfunction) == "function" then
+			if flag13 and v and v2 and type(hookfunction) == "function" then
 				pcall(function()
-					hookfunction(v6, result3)
+					hookfunction(v, v2)
 				end)
 			end
 
-			flag14 = false
-			v6 = nil
-			result3 = nil
+			flag13 = false
+			v = nil
+			v2 = nil
 		end
 
 		local function fn17()
-			if flag14 then
+			if flag13 then
 				return true
 			end
 
@@ -9958,28 +11605,28 @@ do
 				end)
 
 				if not (not ok or type(result) ~= "function") then
-					v6 = result
-					local result4 = nil
+					v = result
+					local v3 = nil
 
 					local ok2, result2 = pcall(function()
 						return hookfunction(result, function(...)
-							local v7 = table.pack(result4(...))
+							local v4 = table.pack(v3(...))
 
-							if flag12 then
+							if flag8 and flag11 then
 								task.defer(fn15)
 							end
 
-							return table.unpack(v7, 1, v7.n)
+							return table.unpack(v4, 1, v4.n)
 						end)
 					end)
 
 					if not ok2 or type(result2) ~= "function" then
-						v6 = nil
+						v = nil
 						return false
 					end
-					result4 = result2
-					result3 = result2
-					flag14 = true
+					v3 = result2
+					v2 = result2
+					flag13 = true
 					return true
 				end
 			end
@@ -9988,12 +11635,12 @@ do
 		end
 
 		local function fn18(arg)
-			flag12 = arg == true
-			flag13 = false
+			flag11 = arg == true
+			flag12 = false
 
-			if flag12 then
+			if flag11 then
 				if not fn17() then
-					flag12 = false
+					flag11 = false
 				end
 			else
 				fn16()
@@ -10002,34 +11649,58 @@ do
 
 		local function fn19(arg)
 			disconnectAll2()
-			if not flag11 or not arg then
+			local flag14 = not flag8
+			if flag14 or not flag10 or not arg then
 				return
 			end
 
 			task.spawn(function()
 				local humanoid = arg:FindFirstChildOfClass("Humanoid") or arg:WaitForChild("Humanoid", 5)
-				if not flag11 or not humanoid or arg ~= localPlayer.Character then
+				if not flag8 or not flag10 or not humanoid or arg ~= localPlayer.Character then
 					return
 				end
-				local v7, v8
+				local flag15 = false
+				local flag16 = false
 
 				local function fn20()
+					local flag152 = flag15
+					local flag1522
+
+					if flag15 then
+						flag1522 = flag152
+					else
+						flag1522 = flag16
+					end
+
+					if flag1522 or flag9 or arg ~= localPlayer.Character or fn12() then
+						return
+					end
+					flag16 = true
+					local rescueSerial = tbl2.RescueSerial
+
+					task.defer(function()
+						flag16 = false
+						if not (flag15 or flag9 or arg ~= localPlayer.Character or fn12() or not humanoid.Parent) and not (tbl2.ProtectedHumanoid == humanoid and (humanoid.Health > 0 or tbl2.RescueSerial ~= rescueSerial)) and not (humanoid.Health > 0) then
+							flag15 = fn13(arg, true) == true
+							return
+						end
+					end)
 				end
 
-				connections2[#connections2 + 1] = humanoid.HealthChanged:Connect(function(health)
+				connections[#connections + 1] = humanoid.HealthChanged:Connect(function(health)
 					if health <= 0 then
 						fn20()
 					end
 				end)
 
-				connections2[#connections2 + 1] = humanoid.Died:Connect(fn20)
+				connections[#connections + 1] = humanoid.Died:Connect(fn20)
 			end)
 		end
 
 		local function fn20(arg)
-			flag11 = arg == true
+			flag10 = arg == true
 
-			if flag11 then
+			if flag10 then
 				fn19(localPlayer.Character)
 			else
 				disconnectAll2()
@@ -10037,22 +11708,27 @@ do
 		end
 
 		local function fn21()
-			flag9 = false
-			flag10 = false
-			flag11 = false
-			flag12 = false
-			flag13 = false
-			disconnectAll2()
-			fn16()
-			connection:Disconnect()
-			connection = nil
+			if flag8 then
+				flag8 = false
+				flag9 = false
+				flag10 = false
+				flag11 = false
+				flag12 = false
+				disconnectAll2()
+				fn16()
+
+				if connection then
+					connection:Disconnect()
+					connection = nil
+				end
+			end
 		end
 
-		connection = localPlayer.CharacterAdded:Connect(function(character_)
-			flag10 = false
+		connection = localPlayer.CharacterAdded:Connect(function(character_2)
+			flag9 = false
 
-			if flag11 then
-				fn19(character_)
+			if flag10 then
+				fn19(character_2)
 			end
 		end)
 
@@ -10082,16 +11758,16 @@ do
 	end
 
 	fn3 = function(name)
-		local v6 = fn2()
+		local v = fn2()
 		local tbl4 = {}
 
-		for _, v7 in ipairs({ v6, CoreGui }) do
-			if v7 and not tbl4[v7] then
-				tbl4[v7] = true
-				local v8 = v7:FindFirstChild(name)
+		for _, v2 in ipairs({ v, CoreGui }) do
+			if v2 and not tbl4[v2] then
+				tbl4[v2] = true
+				local v3 = v2:FindFirstChild(name)
 
-				if v8 then
-					local cleanup = v8:FindFirstChild("Cleanup")
+				if v3 then
+					local cleanup = v3:FindFirstChild("Cleanup")
 
 					if cleanup and cleanup:IsA("BindableEvent") then
 						pcall(function()
@@ -10100,7 +11776,7 @@ do
 					end
 
 					pcall(function()
-						v8:Destroy()
+						v3:Destroy()
 					end)
 				end
 			end
@@ -10113,7 +11789,7 @@ do
 		screenGui.IgnoreGuiInset = true
 		screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 		screenGui.DisplayOrder = 48
-		screenGui.Parent = v6
+		screenGui.Parent = v
 		local cleanup = Instance.new("BindableEvent")
 		cleanup.Name = "Cleanup"
 		cleanup.Parent = screenGui
@@ -10121,9 +11797,9 @@ do
 	end
 
 	disconnectAll = function(arg)
-		for _, v6 in ipairs(arg) do
-			if typeof(v6) == "RBXScriptConnection" then
-				v6:Disconnect()
+		for _, v in ipairs(arg) do
+			if typeof(v) == "RBXScriptConnection" then
+				v:Disconnect()
 			end
 		end
 
@@ -10131,14 +11807,14 @@ do
 	end
 
 	fn4 = function()
-		local v6 = Workspace:FindFirstChild(localPlayer.Name)
+		local v = Workspace:FindFirstChild(localPlayer.Name)
 
-		if not (not v6 or not v6:IsA("Model")) then
-			local humanoidRootPart = v6:FindFirstChild("HumanoidRootPart")
-			if humanoidRootPart and humanoidRootPart:IsA("BasePart") and humanoidRootPart.Parent == v6 then
-				return humanoidRootPart
+		if not (not v or not v:IsA("Model")) then
+			local humanoidRootPart2 = v:FindFirstChild("HumanoidRootPart")
+			if humanoidRootPart2 and humanoidRootPart2:IsA("BasePart") and humanoidRootPart2.Parent == v then
+				return humanoidRootPart2
 			end
-			local hitbox = v6:FindFirstChild("__HITBOX") or v6:FindFirstChild("__hitbox") or v6:FindFirstChild("Hitbox") or v6:FindFirstChild("HitBox")
+			local hitbox = v:FindFirstChild("__HITBOX") or v:FindFirstChild("__hitbox") or v:FindFirstChild("Hitbox") or v:FindFirstChild("HitBox")
 			if hitbox and hitbox:IsA("BasePart") then
 				return hitbox
 			end
@@ -10165,9 +11841,9 @@ do
 		return nil
 	end
 
-	local fn13
+	local fn12
 
-	fn13 = function(arg)
+	fn12 = function(arg)
 		local str = fn5(arg)
 
 		if str then
@@ -10178,17 +11854,22 @@ do
 		return str ~= "" and str or "Base"
 	end
 
-	local fn14
-	local n5 = 12
+	fn6 = function(arg)
+		local str = string.lower(fn12(arg))
+		return string.find(str, string.lower(localPlayer.Name), 1, true) ~= nil or string.find(str, string.lower(localPlayer.DisplayName), 1, true) ~= nil
+	end
 
-	fn14 = function(arg)
+	local fn13
+	local n8 = 12
+
+	fn13 = function(arg)
 		if not arg then
 			return nil
 		end
 		local animalPodiums = arg:FindFirstChild("AnimalPodiums")
 		local huge = math.huge
-		local n6 = -math.huge
-		local n7 = -math.huge
+		local n9 = -math.huge
+		local n10 = -math.huge
 		local huge2 = math.huge
 		local huge3 = math.huge
 
@@ -10200,9 +11881,9 @@ do
 				if base and base:IsA("BasePart") then
 					local position = base.Position
 					huge3 = math.min(huge3, position.X)
-					n7 = math.max(n7, position.X)
+					n10 = math.max(n10, position.X)
 					huge = math.min(huge, position.Z)
-					n6 = math.max(n6, position.Z)
+					n9 = math.max(n9, position.Z)
 					huge2 = math.min(huge2, position.Y)
 				end
 			end
@@ -10219,15 +11900,15 @@ do
 				huge2 = stealHitbox.Position.Y - stealHitbox.Size.Y * 0.5
 			end
 		elseif huge3 ~= math.huge then
-			x = (huge3 + n7) * 0.5
-			z = (huge + n6) * 0.5
+			x = (huge3 + n10) * 0.5
+			z = (huge + n9) * 0.5
 		else
 			local mainRoot = arg:FindFirstChild("MainRoot")
-			local isBasePart2 = mainRoot and mainRoot:IsA("BasePart")
+			local isBasePart = mainRoot and mainRoot:IsA("BasePart")
 			z = nil
 			x = nil
 
-			if isBasePart2 then
+			if isBasePart then
 				x = mainRoot.Position.X
 				z = mainRoot.Position.Z
 				huge2 = mainRoot.Position.Y
@@ -10237,8 +11918,10 @@ do
 		if not x or huge2 == math.huge then
 			return nil
 		end
-		return Vector3.new(x, huge2 + n5, z)
+		return Vector3.new(x, huge2 + n8, z)
 	end
+
+	local isBasePart
 
 	isBasePart = function(arg)
 		return arg and arg:IsA("BasePart") and (arg.Name == "PlotSign" or arg.Name == "MainRoot" or arg.Name == "Spawn")
@@ -10247,46 +11930,46 @@ do
 	tbl3 = { YourBaseClear = false, ClearBaseTransparency = 0.8 }
 	local list = {}
 
-	fn6 = function(arg)
+	fn7 = function(arg)
 		list[#list + 1] = arg
 	end
 
-	fn7 = function(arg, arg2)
+	fn8 = function(arg, arg2)
 		if tbl3[arg] ~= arg2 then
 			tbl3[arg] = arg2
 
-			for _, v6 in ipairs(list) do
-				pcall(v6, arg, arg2)
+			for _, v in ipairs(list) do
+				pcall(v, arg, arg2)
 			end
 		end
 	end
 
 	do
-		local v6 = nil
+		local v = nil
 
 		local ok, result = pcall(function()
 			return require(ReplicatedStorage.Datas.Index)
 		end)
 
 		if ok and type(result) == "table" then
-			v6 = result
+			v = result
 		end
 
-		fn8 = function(arg)
+		fn9 = function(arg)
 			local baseColors = {}
-			local v62 = v6 and v6[arg]
+			local v2 = v and v[arg]
 
-			if v62 then
-				if type(v62.BaseColors) == "table" then
-					for _, baseColor in pairs(v62.BaseColors) do
+			if v2 then
+				if type(v2.BaseColors) == "table" then
+					for _, baseColor in pairs(v2.BaseColors) do
 						if typeof(baseColor) == "Color3" then
 							baseColors[#baseColors + 1] = baseColor
 						end
 					end
 				end
 
-				if #baseColors == 0 and typeof(v62.MainColor) == "Color3" then
-					baseColors[#baseColors + 1] = v62.MainColor
+				if #baseColors == 0 and typeof(v2.MainColor) == "Color3" then
+					baseColors[#baseColors + 1] = v2.MainColor
 				end
 			end
 
@@ -10294,18 +11977,18 @@ do
 		end
 	end
 
-	local n6
-	n6 = 5
-	local n7
-	n7 = 12
-	local n8
-	n8 = 4.5
+	local n9
+	n9 = 5
+	local n10
+	n10 = 12
+	local n11
+	n11 = 4.5
 	local torsoList
 	torsoList = { "HumanoidRootPart", "LowerTorso", "UpperTorso", "Torso", "Head" }
 	local font
 	font = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Italic)
-	local n9
-	n9 = 0.25
+	local n12
+	n12 = 0.25
 	local transparency
 	transparency = 0
 	local enabledFlags
@@ -10335,7 +12018,7 @@ do
 
 	local font2
 	font2 = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.ExtraBold, Enum.FontStyle.Normal)
-	local v6
+	local v
 
 	do
 		local colorSequenceNew = ColorSequence.new
@@ -10352,7 +12035,7 @@ do
 			table.move(values, 1, values.n, 3, tbl4)
 		end
 
-		v6 = colorSequenceNew(tbl4)
+		v = colorSequenceNew(tbl4)
 	end
 
 	local colorSequence
@@ -10363,7 +12046,7 @@ do
 		colorSequence = ColorSequence.new({ ColorSequenceKeypoint.new(0, Color3.fromRGB(7, 73, 66)), colorSequenceKeypointNew(1, color3FromRGB(35, 17, 79)) })
 	end
 
-	local v7
+	local v2
 
 	do
 		local colorSequenceNew = ColorSequence.new
@@ -10380,10 +12063,10 @@ do
 			table.move(values, 1, values.n, 3, tbl4)
 		end
 
-		v7 = colorSequenceNew(tbl4)
+		v2 = colorSequenceNew(tbl4)
 	end
 
-	local v8
+	local v3
 
 	do
 		local colorSequenceNew = ColorSequence.new
@@ -10400,7 +12083,7 @@ do
 			table.move(values, 1, values.n, 3, tbl4)
 		end
 
-		v8 = colorSequenceNew(tbl4)
+		v3 = colorSequenceNew(tbl4)
 	end
 
 	local valueMap
@@ -10545,8 +12228,8 @@ do
 			Limit = math.huge,
 			Fill = Color3.fromRGB(220, 12, 28),
 			Outline = Color3.fromRGB(255, 55, 65),
-			Text = v7,
-			Stroke = v8,
+			Text = v2,
+			Stroke = v3,
 		}
 
 		tbl4[1] = tbl5
@@ -10555,9 +12238,9 @@ do
 		tbl4[4] = tbl12
 	end
 
-	local fn15
+	local fn14
 
-	local function fn16(arg)
+	local function fn15(arg)
 		if type(arg) ~= "string" then
 			return nil
 		end
@@ -10574,13 +12257,13 @@ do
 		return num * (valueMap[match2] or 1)
 	end
 
-	fn15 = function(arg)
-		local v9 = fn16(arg)
+	fn14 = function(arg)
+		local v4 = fn15(arg)
 
-		if v9 then
-			for _, v10 in ipairs(tbl4) do
-				if v9 < v10.Limit then
-					return v10
+		if v4 then
+			for _, v5 in ipairs(tbl4) do
+				if v4 < v5.Limit then
+					return v5
 				end
 			end
 		end
@@ -10591,7 +12274,7 @@ do
 	local chilliPlayerESPRuntime
 
 	do
-		local function fn17()
+		local function fn16()
 			if type(gethui) == "function" then
 				local ok, result = pcall(gethui)
 				if ok and typeof(result) == "Instance" then
@@ -10602,13 +12285,13 @@ do
 			return CoreGui
 		end
 
-		local v9 = fn17()
+		local v4 = fn16()
 		local tbl6 = {}
 
-		for _, v10 in ipairs({ v9, CoreGui }) do
-			if v10 and not tbl6[v10] then
-				tbl6[v10] = true
-				local chilliPlayerESPRuntime2 = v10:FindFirstChild("__ChilliPlayerESPRuntime")
+		for _, v5 in ipairs({ v4, CoreGui }) do
+			if v5 and not tbl6[v5] then
+				tbl6[v5] = true
+				local chilliPlayerESPRuntime2 = v5:FindFirstChild("__ChilliPlayerESPRuntime")
 
 				if chilliPlayerESPRuntime2 then
 					local cleanup = chilliPlayerESPRuntime2:FindFirstChild("Cleanup")
@@ -10633,87 +12316,74 @@ do
 		chilliPlayerESPRuntime.IgnoreGuiInset = true
 		chilliPlayerESPRuntime.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 		chilliPlayerESPRuntime.DisplayOrder = 50
-		chilliPlayerESPRuntime.Parent = v9
+		chilliPlayerESPRuntime.Parent = v4
 	end
 
 	local cleanup
 	cleanup = Instance.new("BindableEvent")
 	cleanup.Name = "Cleanup"
 	cleanup.Parent = chilliPlayerESPRuntime
-	local screenGui
-	screenGui = chilliPlayerESPRuntime
-	local flag9
-	flag9 = false
-	local enabledFlags2
-
-	enabledFlags2 = {
-		Name = true,
-		Username = false,
-		Avatar = true,
-		Tool = true,
-		Brainrot = true,
-		["Admin Panel"] = true,
-	}
-
-	local n10
-	n10 = 1
-	local playerMap
-	playerMap = {}
-	local connections2
-	connections2 = {}
-	local userIdMap
-	userIdMap = {}
-	local n11
-	n11 = 0
-	local disconnectAll2
-
-	disconnectAll2 = function(arg)
-		for _, v9 in ipairs(arg) do
-			if v9.Connected then
-				v9:Disconnect()
-			end
-		end
-
-		table.clear(arg)
-	end
-
-	local fn17
-
-	fn17 = function(arg)
-		local nameDisplayHumanoid = arg.NameDisplayHumanoid
-		local nameDisplayDistance = arg.NameDisplayDistance
-
-		if nameDisplayHumanoid and nameDisplayHumanoid.Parent and nameDisplayDistance ~= nil then
-			pcall(function()
-				nameDisplayHumanoid.NameDisplayDistance = nameDisplayDistance
-			end)
-		end
-
-		arg.NameDisplayHumanoid = nil
-		arg.NameDisplayDistance = nil
-	end
-
-	local fn18
-
-	fn18 = function(arg, nameDisplayHumanoid)
-		nameDisplayHumanoid = nameDisplayHumanoid and nameDisplayHumanoid:FindFirstChildOfClass("Humanoid")
-		if not nameDisplayHumanoid then
-			return
-		end
-
-		if arg.NameDisplayHumanoid ~= nameDisplayHumanoid then
-			fn17(arg)
-			arg.NameDisplayHumanoid = nameDisplayHumanoid
-			arg.NameDisplayDistance = nameDisplayHumanoid.NameDisplayDistance
-		end
-
-		nameDisplayHumanoid.NameDisplayDistance = 0
-	end
-
-	local fn19, fn20
+	local flag8, enabledFlags2, n13, playerMap, connections, n14, disconnectAll2, fn16, fn17, fn18
 
 	do
-		local function fn21(arg)
+		local screenGui = chilliPlayerESPRuntime
+		flag8 = false
+
+		enabledFlags2 = {
+			Name = true,
+			Username = false,
+			Avatar = true,
+			Tool = true,
+			Brainrot = true,
+			["Admin Panel"] = true,
+		}
+
+		n13 = 1
+		playerMap = {}
+		connections = {}
+		local userIdMap = {}
+		n14 = 0
+
+		disconnectAll2 = function(arg)
+			for _, v4 in ipairs(arg) do
+				if v4.Connected then
+					v4:Disconnect()
+				end
+			end
+
+			table.clear(arg)
+		end
+
+		fn16 = function(arg)
+			local nameDisplayHumanoid = arg.NameDisplayHumanoid
+			local nameDisplayDistance = arg.NameDisplayDistance
+
+			if nameDisplayHumanoid and nameDisplayHumanoid.Parent and nameDisplayDistance ~= nil then
+				pcall(function()
+					nameDisplayHumanoid.NameDisplayDistance = nameDisplayDistance
+				end)
+			end
+
+			arg.NameDisplayHumanoid = nil
+			arg.NameDisplayDistance = nil
+		end
+
+		fn17 = function(arg, nameDisplayHumanoid)
+			nameDisplayHumanoid = nameDisplayHumanoid and nameDisplayHumanoid:FindFirstChildOfClass("Humanoid")
+			if not nameDisplayHumanoid then
+				return
+			end
+
+			if arg.NameDisplayHumanoid ~= nameDisplayHumanoid then
+				fn16(arg)
+				arg.NameDisplayHumanoid = nameDisplayHumanoid
+				arg.NameDisplayDistance = nameDisplayHumanoid.NameDisplayDistance
+			end
+
+			nameDisplayHumanoid.NameDisplayDistance = 0
+		end
+
+		local function fn19(arg)
 			local str = tostring(arg or "")
 			if str == "" then
 				return ""
@@ -10725,38 +12395,38 @@ do
 			return str
 		end
 
-		local function fn22(arg)
+		local function fn20(arg)
 			if not (not arg or not arg:IsA("Tool")) then
-				local v9 = fn21(arg.TextureId)
+				local v4 = fn19(arg.TextureId)
 
-				if v9 == "" then
-					for _, v10 in ipairs({ "Icon", "Image", "Thumbnail", "TextureId" }) do
-						local attribute = arg:GetAttribute(v10)
+				if v4 == "" then
+					for _, v5 in ipairs({ "Icon", "Image", "Thumbnail", "TextureId" }) do
+						local attribute = arg:GetAttribute(v5)
 						if type(attribute) ~= "string" then
 							continue
 						end
-						v9 = fn21(attribute)
-						if v9 ~= "" then
-							return v9
+						v4 = fn19(attribute)
+						if v4 ~= "" then
+							return v4
 						end
 					end
 
 					for _, descendant in ipairs(arg:GetDescendants()) do
 						if descendant:IsA("Decal") or descendant:IsA("Texture") then
-							v9 = fn21(descendant.Texture)
+							v4 = fn19(descendant.Texture)
 						elseif descendant:IsA("ImageLabel") or descendant:IsA("ImageButton") then
-							v9 = fn21(descendant.Image)
+							v4 = fn19(descendant.Image)
 						end
 
-						if v9 ~= "" then
-							return v9
+						if v4 ~= "" then
+							return v4
 						end
 					end
 
 					return ""
 				end
 
-				return v9
+				return v4
 			end
 
 			return ""
@@ -10766,11 +12436,11 @@ do
 			return arg and arg:FindFirstChildOfClass("Tool") or nil
 		end
 
-		fn19 = function(arg, arg2)
-			for _, v9 in ipairs(torsoList) do
-				local v10 = arg:FindFirstChild(v9)
-				if v10 and v10:IsA("BasePart") then
-					return v10
+		fn18 = function(arg, arg2)
+			for _, v4 in ipairs(torsoList) do
+				local v5 = arg:FindFirstChild(v4)
+				if v5 and v5:IsA("BasePart") then
+					return v5
 				end
 			end
 
@@ -10781,14 +12451,14 @@ do
 			if arg2 == arg then
 				return Vector3.new(0, 3.1, 0)
 			end
-			local n12 = arg.Position.Y - arg2.Position.Y
-			if math.abs(n12) <= n8 then
-				return Vector3.new(0, math.clamp(n12 + 3.1, 3.8, 6), 0)
+			local n15 = arg.Position.Y - arg2.Position.Y
+			if math.abs(n15) <= n11 then
+				return Vector3.new(0, math.clamp(n15 + 3.1, 3.8, 6), 0)
 			end
 			return Vector3.new(0, 4.8, 0)
 		end
 
-		local function fn23(arg, arg2)
+		local function fn21(arg, arg2)
 			for _, descendant in ipairs(arg:GetDescendants()) do
 				if descendant:IsA("Weld") or descendant:IsA("WeldConstraint") then
 					local part0 = descendant.Part0
@@ -10799,19 +12469,19 @@ do
 						part = part0
 					else
 						local part2 = part1 and not part1:IsDescendantOf(arg)
-						local v9 = nil
-						local v10 = nil
+						local v4 = nil
+						local v5 = nil
 
 						if part2 then
 							part = part1
 							part1 = part0
 						else
-							part = v9
-							part1 = v10
+							part = v4
+							part1 = v5
 						end
 					end
 
-					if part and part:IsA("BasePart") and part.Parent == Workspace and part1 and part1:IsA("BasePart") and part1:IsDescendantOf(arg) and (part.Position - arg2.Position).Magnitude <= n6 then
+					if part and part:IsA("BasePart") and part.Parent == Workspace and part1 and part1:IsA("BasePart") and part1:IsDescendantOf(arg) and (part.Position - arg2.Position).Magnitude <= n9 then
 						return part, part1
 					end
 				end
@@ -10820,21 +12490,21 @@ do
 			return nil
 		end
 
-		local function fn24(arg)
+		local function fn22(arg)
 			if type(arg) ~= "string" or not arg:find("/s", 1, true) then
 				return false
 			end
 			local match = arg:match("%$([%d%.]+)")
-			local flag10 = match ~= nil
+			local flag9 = match ~= nil
 
-			if flag10 then
-				flag10 = (tonumber(match) or 0) > 0
+			if flag9 then
+				flag9 = (tonumber(match) or 0) > 0
 			end
 
-			return flag10
+			return flag9
 		end
 
-		local function fn25(arg, arg2)
+		local function fn23(arg, arg2)
 			for k, attribute in pairs(arg:GetAttributes()) do
 				if k ~= "__AssetDescendantCount" and arg2:GetAttribute(k) ~= attribute then
 					return false
@@ -10844,9 +12514,9 @@ do
 			return true
 		end
 
-		local function fn26(arg)
+		local function fn24(arg)
 			local generation = arg:FindFirstChild("Generation", true)
-			if generation and generation:IsA("TextLabel") and fn24(generation.Text) then
+			if generation and generation:IsA("TextLabel") and fn22(generation.Text) then
 				return generation
 			end
 			local plots = Workspace:FindFirstChild("Plots")
@@ -10862,7 +12532,7 @@ do
 							local position = child2:GetPivot().Position
 							positions2[#positions2 + 1] = position
 
-							if fn25(arg, child2) then
+							if fn23(arg, child2) then
 								positions[#positions + 1] = position
 							end
 						end
@@ -10884,7 +12554,7 @@ do
 							local generation3 = animalOverhead and animalOverhead:FindFirstChild("Generation")
 							animalOverhead = animalOverhead and animalOverhead:FindFirstChild("Mutation")
 
-							if displayName and displayName:IsA("TextLabel") and displayName.Text == arg.Name and generation3 and generation3:IsA("TextLabel") and fn24(generation3.Text) then
+							if displayName and displayName:IsA("TextLabel") and displayName.Text == arg.Name and generation3 and generation3:IsA("TextLabel") and fn22(generation3.Text) then
 								local huge2 = math.huge
 
 								for _, position in ipairs(positions) do
@@ -10892,16 +12562,16 @@ do
 								end
 
 								local isTextLabel = text and animalOverhead and animalOverhead:IsA("TextLabel") and animalOverhead.Text ~= text
-								local n12 = 0
+								local n15 = 0
 
 								if isTextLabel then
-									n12 = 1000
+									n15 = 1000
 								end
 
-								local n13 = huge2 + n12
+								local n16 = huge2 + n15
 
-								if n13 < huge then
-									huge = n13
+								if n16 < huge then
+									huge = n16
 									generation2 = generation3
 								end
 							end
@@ -10915,7 +12585,7 @@ do
 			return nil
 		end
 
-		local function fn27(arg)
+		local function fn25(arg)
 			if not arg then
 				return nil
 			end
@@ -10926,7 +12596,7 @@ do
 			return nil
 		end
 
-		local function fn28(arg)
+		local function fn26(arg)
 			if not (arg and arg.Parent and arg.Visible) then
 				return nil
 			end
@@ -10959,32 +12629,32 @@ do
 			return tbl6
 		end
 
-		local function fn29(arg)
+		local function fn27(arg)
 			if arg:GetAttribute("Stealing") == true then
-				local character_ = arg.Character
-				local humanoidRootPart = character_ and character_:FindFirstChild("HumanoidRootPart")
-				if not humanoidRootPart then
+				local character_2 = arg.Character
+				local humanoidRootPart2 = character_2 and character_2:FindFirstChild("HumanoidRootPart")
+				if not humanoidRootPart2 then
 					return nil
 				end
 				local huge = math.huge
 				local child = nil
 
 				for _, child2 in ipairs(Workspace:GetChildren()) do
-					if child2:IsA("Model") and child2 ~= character_ and not Players:GetPlayerFromCharacter(child2) and child2.Name:sub(-6) ~= "_Clone" then
+					if child2:IsA("Model") and child2 ~= character_2 and not Players:GetPlayerFromCharacter(child2) and child2.Name:sub(-6) ~= "_Clone" then
 						local rootPart = child2:FindFirstChild("RootPart") or child2.PrimaryPart or child2:FindFirstChildWhichIsA("BasePart")
 
 						if rootPart and rootPart:IsA("BasePart") then
-							local v9, v10 = fn23(child2, humanoidRootPart)
+							local v4, v5 = fn21(child2, humanoidRootPart2)
 
-							if v9 and v10 then
-								local vector = humanoidRootPart.CFrame:PointToObjectSpace(v9.Position)
-								local magnitude = (v10.Position - humanoidRootPart.Position).Magnitude
+							if v4 and v5 then
+								local vector = humanoidRootPart2.CFrame:PointToObjectSpace(v4.Position)
+								local magnitude = (v5.Position - humanoidRootPart2.Position).Magnitude
 
-								if math.abs(vector.X) <= 4 and vector.Y >= -2 and vector.Y <= 6 and vector.Z >= -6 and vector.Z <= 3 and magnitude <= n7 then
-									local n12 = (v9.Position - humanoidRootPart.Position).Magnitude + magnitude * 0.05
+								if math.abs(vector.X) <= 4 and vector.Y >= -2 and vector.Y <= 6 and vector.Z >= -6 and vector.Z <= 3 and magnitude <= n10 then
+									local n15 = (v4.Position - humanoidRootPart2.Position).Magnitude + magnitude * 0.05
 
-									if n12 < huge then
-										huge = n12
+									if n15 < huge then
+										huge = n15
 										child = child2
 									end
 								end
@@ -10994,8 +12664,8 @@ do
 				end
 
 				if child then
-					local v9 = fn26(child)
-					return child.Name, child, v9 and v9.Text or nil, v9, fn27(child)
+					local v4 = fn24(child)
+					return child.Name, child, v4 and v4.Text or nil, v4, fn25(child)
 				end
 			end
 
@@ -11004,10 +12674,10 @@ do
 
 		local function clampValue()
 			local currentCamera = Workspace.CurrentCamera
-			return math.max(1, math.floor(math.clamp((currentCamera and currentCamera.ViewportSize.Y or 1080) * 0.024, 26, 35) * n10))
+			return math.max(1, math.floor(math.clamp((currentCamera and currentCamera.ViewportSize.Y or 1080) * 0.024, 26, 35) * n13))
 		end
 
-		local function fn30(text, font3, size)
+		local function fn28(text, font3, size)
 			local getTextBoundsParams = Instance.new("GetTextBoundsParams")
 			getTextBoundsParams.Text = text
 			getTextBoundsParams.Font = font3
@@ -11025,7 +12695,7 @@ do
 			return (utf8.len(text) or #text) * size * 0.56
 		end
 
-		local function fn31(uiStroke, color, arg, arg2)
+		local function fn29(uiStroke, color, arg, arg2)
 			uiStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
 			uiStroke.Color = color
 			uiStroke.Enabled = true
@@ -11058,126 +12728,126 @@ do
 			return textLabel
 		end
 
-		fn20 = function(arg, hasTool)
+		local function fn30(arg, hasTool)
 			local numVal = clampValue()
 			local visible = enabledFlags2.Name == true
 			local text = enabledFlags2.Username == true
 			local visible2 = enabledFlags2.Avatar == true
-			local flag10 = enabledFlags2.Tool == true
+			local flag9 = enabledFlags2.Tool == true
 			local visible3 = enabledFlags2.Brainrot == true
 			local visible4 = enabledFlags2["Admin Panel"] == true
 			local visible5 = visible2 and math.floor(numVal * 0.72) or 0
-			local flag102 = flag10 and math.floor(numVal * 0.82) or 0
-			local n12 = math.floor(numVal * 0.7)
-			local n13 = math.max(1, math.floor(numVal * 0.04))
+			local flag92 = flag9 and math.floor(numVal * 0.82) or 0
+			local n15 = math.floor(numVal * 0.7)
+			local n16 = math.max(1, math.floor(numVal * 0.04))
 			local targetPlayer = arg.TargetPlayer
 			text = text and targetPlayer.Name or targetPlayer.DisplayName
 			arg.DisplayName.Text = text
 			arg.NameShadow.Text = text
-			local n14 = math.floor(math.clamp(fn30(arg.DisplayName.Text, font2, n12) + 4, n12, 230))
-			local hasTool2 = flag10 and hasTool
-			local n15 = 0
-			local n16 = 0
+			local n17 = math.floor(math.clamp(fn28(arg.DisplayName.Text, font2, n15) + 4, n15, 230))
+			local hasTool2 = flag9 and hasTool
+			local n18 = 0
+			local n19 = 0
 
 			if visible2 then
-				n15 = 0 + visible5
+				n18 = 0 + visible5
 			end
 
-			local n17 = 0
+			local n20 = 0
 
 			if visible then
-				if not (n15 > 0) then
-					n17 = n15
+				if not (n18 > 0) then
+					n20 = n18
 				else
-					n17 = n15 + n13
+					n20 = n18 + n16
 				end
 
-				n15 = n17 + n14
+				n18 = n20 + n17
 			end
 
-			local n18 = 0
+			local n21 = 0
 
 			if hasTool2 then
-				if not (n15 > 0) then
-					n18 = n15
+				if not (n18 > 0) then
+					n21 = n18
 				else
-					n18 = n15 + n13
+					n21 = n18 + n16
 				end
 
-				n15 = n18 + flag102
+				n18 = n21 + flag92
 			end
 
-			local n19 = math.max(n15, 1)
+			local n22 = math.max(n18, 1)
 			visible3 = visible3 and type(arg.BrainrotName) == "string" and arg.BrainrotName ~= ""
-			local n20 = math.floor(numVal * 0.88)
-			local n21 = -math.max(2, math.floor(numVal * 0.16))
+			local n23 = math.floor(numVal * 0.88)
+			local n24 = -math.max(2, math.floor(numVal * 0.16))
 			local brainrotName = visible3 and arg.BrainrotName or ""
-			local visible6 = visible3 and math.floor(math.clamp(fn30(brainrotName, font2, n20) + 6, n20, 320)) or 0
+			local visible6 = visible3 and math.floor(math.clamp(fn28(brainrotName, font2, n23) + 6, n23, 320)) or 0
 			local visible7 = visible3 and type(arg.BrainrotGeneration) == "string" and arg.BrainrotGeneration ~= ""
 			local brainrotGeneration = visible7 and arg.BrainrotGeneration or ""
-			local n22 = math.max(2, math.floor(numVal * 0.12))
-			local visible8 = visible7 and math.floor(math.clamp(fn30(brainrotGeneration, font2, n20) + 4, n20, 150)) or 0
-			local n23 = visible6 + (visible7 and n22 + visible8 or 0)
-			local visible9 = visible and n17 + n14 * 0.5 or n19 * 0.5
-			local n24 = visible9 - n23 * 0.5
-			local n25 = math.min(0, n24)
-			local n26 = math.max(n19, n24 + n23)
-			local n27 = math.ceil(n26 - n25)
+			local n25 = math.max(2, math.floor(numVal * 0.12))
+			local visible8 = visible7 and math.floor(math.clamp(fn28(brainrotGeneration, font2, n23) + 4, n23, 150)) or 0
+			local n26 = visible6 + (visible7 and n25 + visible8 or 0)
+			local visible9 = visible and n20 + n17 * 0.5 or n22 * 0.5
+			local n27 = visible9 - n26 * 0.5
+			local n28 = math.min(0, n27)
+			local n29 = math.max(n22, n27 + n26)
+			local n30 = math.ceil(n29 - n28)
 			visible4 = visible4 and arg.IsAdmin == true
-			local n28 = math.max(1, math.floor(numVal * 0.6))
-			local visible10 = visible4 and math.floor(math.clamp(fn30("Admin Panel", font, n28) + 3, n28, 150)) or 0
-			local n29 = n28 + -math.max(2, math.floor(numVal * 0.2))
+			local n31 = math.max(1, math.floor(numVal * 0.6))
+			local visible10 = visible4 and math.floor(math.clamp(fn28("Admin Panel", font, n31) + 3, n31, 150)) or 0
+			local n32 = n31 + -math.max(2, math.floor(numVal * 0.2))
 			local brainrotMutation = visible3 and arg.BrainrotMutation or nil
 			local visible11 = brainrotMutation ~= nil
-			local n30 = math.floor(numVal * 0.62)
-			local n31 = -math.max(1, math.floor(numVal * 0.1))
-			local visible12 = visible11 and math.floor(math.clamp(fn30(brainrotMutation.Text:gsub("<[^<>]->", ""), font2, n30) + 6, n30, 260)) or 0
-			local visible13 = visible11 and n30 + n31 or 0
-			local n32 = visible9 - visible12 * 0.5
-			local n33
+			local n33 = math.floor(numVal * 0.62)
+			local n34 = -math.max(1, math.floor(numVal * 0.1))
+			local visible12 = visible11 and math.floor(math.clamp(fn28(brainrotMutation.Text:gsub("<[^<>]->", ""), font2, n33) + 6, n33, 260)) or 0
+			local visible13 = visible11 and n33 + n34 or 0
+			local n35 = visible9 - visible12 * 0.5
+			local n36
 
 			if visible11 then
-				n33 = math.min(n25, n32)
-				n27 = math.ceil(math.max(n26, n32 + visible12) - n33)
+				n36 = math.min(n28, n35)
+				n30 = math.ceil(math.max(n29, n35 + visible12) - n36)
 			else
-				n33 = n25
+				n36 = n28
 			end
 
-			local visible14 = visible3 and n20 + n21 or 0
-			local n34 = n29 + visible13 + visible14 + numVal
-			local n35 = -n33
-			local n36 = n35 + n24
-			local n37 = (n29 + visible13 + visible14 + numVal * 0.5) / n34
-			local visible15 = visible3 and (n29 + visible13 + n20 * 0.5) / n34 or 0
-			local visible16 = visible11 and (n29 + n30 * 0.5) / n34 or 0
-			local visible17 = visible4 and n28 * 0.5 / n34 or 0
-			local n38 = 1 / n27
-			local n39 = 1 / n34
+			local visible14 = visible3 and n23 + n24 or 0
+			local n37 = n32 + visible13 + visible14 + numVal
+			local n38 = -n36
+			local n39 = n38 + n27
+			local n40 = (n32 + visible13 + visible14 + numVal * 0.5) / n37
+			local visible15 = visible3 and (n32 + visible13 + n23 * 0.5) / n37 or 0
+			local visible16 = visible11 and (n32 + n33 * 0.5) / n37 or 0
+			local visible17 = visible4 and n31 * 0.5 / n37 or 0
+			local n41 = 1 / n30
+			local n42 = 1 / n37
 			arg.HasTool = hasTool
-			arg.Billboard.Size = UDim2.fromOffset(n27, n34)
+			arg.Billboard.Size = UDim2.fromOffset(n30, n37)
 			arg.DisplayName.Visible = visible
 			arg.NameShadow.Visible = visible
 			arg.Avatar.Visible = visible2
-			arg.ToolIcon.Visible = flag10 and arg.ToolIcon.Image ~= ""
-			arg.ToolShadow.Visible = flag10 and arg.ToolShadow.Image ~= ""
-			arg.Avatar.Position = UDim2.fromScale((n35 + n16) / n27, n37)
-			arg.Avatar.Size = UDim2.fromScale(visible5 / n27, visible5 / n34)
-			arg.DisplayName.Position = UDim2.fromScale((n35 + n17) / n27, n37)
-			arg.DisplayName.Size = UDim2.fromScale(n14 / n27, n12 / n34)
-			arg.NameShadow.Position = UDim2.fromScale((n35 + n17) / n27 + n38, n37 + n39)
+			arg.ToolIcon.Visible = flag9 and arg.ToolIcon.Image ~= ""
+			arg.ToolShadow.Visible = flag9 and arg.ToolShadow.Image ~= ""
+			arg.Avatar.Position = UDim2.fromScale((n38 + n19) / n30, n40)
+			arg.Avatar.Size = UDim2.fromScale(visible5 / n30, visible5 / n37)
+			arg.DisplayName.Position = UDim2.fromScale((n38 + n20) / n30, n40)
+			arg.DisplayName.Size = UDim2.fromScale(n17 / n30, n15 / n37)
+			arg.NameShadow.Position = UDim2.fromScale((n38 + n20) / n30 + n41, n40 + n42)
 			arg.NameShadow.Size = arg.DisplayName.Size
-			arg.ToolIcon.Position = UDim2.fromScale((n35 + n18) / n27, n37)
-			arg.ToolIcon.Size = UDim2.fromScale(flag102 / n27, flag102 / n34)
-			arg.ToolShadow.Position = UDim2.fromScale((n35 + n18) / n27 + n38, n37 + n39)
+			arg.ToolIcon.Position = UDim2.fromScale((n38 + n21) / n30, n40)
+			arg.ToolIcon.Size = UDim2.fromScale(flag92 / n30, flag92 / n37)
+			arg.ToolShadow.Position = UDim2.fromScale((n38 + n21) / n30 + n41, n40 + n42)
 			arg.ToolShadow.Size = arg.ToolIcon.Size
 			arg.AdminLine.Visible = visible4
 
 			if visible4 then
-				arg.AdminLine.Position = UDim2.fromScale((n35 + visible9) / n27, visible17)
-				arg.AdminLine.Size = UDim2.fromScale(visible10 / n27, n28 / n34)
+				arg.AdminLine.Position = UDim2.fromScale((n38 + visible9) / n30, visible17)
+				arg.AdminLine.Size = UDim2.fromScale(visible10 / n30, n31 / n37)
 				arg.AdminText.Position = UDim2.fromScale(0, 0.5)
 				arg.AdminText.Size = UDim2.fromScale(visible10 / visible10, 1)
-				arg.AdminShadow.Position = UDim2.fromScale(1 / visible10, 0.5 + 1 / n28)
+				arg.AdminShadow.Position = UDim2.fromScale(1 / visible10, 0.5 + 1 / n31)
 				arg.AdminShadow.Size = arg.AdminText.Size
 			end
 
@@ -11211,9 +12881,9 @@ do
 					arg.MutationGradient.Enabled = false
 				end
 
-				arg.MutationText.Position = UDim2.fromScale((n35 + n32) / n27, visible16)
-				arg.MutationText.Size = UDim2.fromScale(visible12 / n27, n30 / n34)
-				arg.MutationShadow.Position = UDim2.fromScale((n35 + n32) / n27 + n38, visible16 + n39)
+				arg.MutationText.Position = UDim2.fromScale((n38 + n35) / n30, visible16)
+				arg.MutationText.Size = UDim2.fromScale(visible12 / n30, n33 / n37)
+				arg.MutationShadow.Position = UDim2.fromScale((n38 + n35) / n30 + n41, visible16 + n42)
 				arg.MutationShadow.Size = arg.MutationText.Size
 			end
 
@@ -11227,23 +12897,23 @@ do
 			arg.GenerationShadow.Visible = visible7
 
 			if visible3 then
-				local n40 = n36 / n27
-				arg.BrainrotText.Position = UDim2.fromScale(n40, visible15)
-				arg.BrainrotText.Size = UDim2.fromScale(visible6 / n27, n20 / n34)
-				arg.BrainrotShadow.Position = UDim2.fromScale(n40 + n38, visible15 + n39)
+				local n43 = n39 / n30
+				arg.BrainrotText.Position = UDim2.fromScale(n43, visible15)
+				arg.BrainrotText.Size = UDim2.fromScale(visible6 / n30, n23 / n37)
+				arg.BrainrotShadow.Position = UDim2.fromScale(n43 + n41, visible15 + n42)
 				arg.BrainrotShadow.Size = arg.BrainrotText.Size
 
 				if visible7 then
-					local n41 = (n36 + visible6 + n22) / n27
-					arg.GenerationText.Position = UDim2.fromScale(n41, visible15)
-					arg.GenerationText.Size = UDim2.fromScale(visible8 / n27, n20 / n34)
-					arg.GenerationShadow.Position = UDim2.fromScale(n41 + n38, visible15 + n39)
+					local n44 = (n39 + visible6 + n25) / n30
+					arg.GenerationText.Position = UDim2.fromScale(n44, visible15)
+					arg.GenerationText.Size = UDim2.fromScale(visible8 / n30, n23 / n37)
+					arg.GenerationShadow.Position = UDim2.fromScale(n44 + n41, visible15 + n42)
 					arg.GenerationShadow.Size = arg.GenerationText.Size
 				end
 			end
 		end
 
-		local function fn32(arg, arg2, arg3)
+		local function fn31(arg, arg2, arg3)
 			local arg32 = arg3 or arg2
 			local playerHighlight = Instance.new("Highlight")
 			playerHighlight.Name = "PlayerHighlight"
@@ -11299,14 +12969,14 @@ do
 			textLabel2.Text = arg.DisplayName
 			textLabel2.TextColor3 = Color3.fromRGB(255, 255, 255)
 			local uiStroke = Instance.new("UIStroke")
-			fn31(uiStroke, Color3.fromRGB(255, 255, 255), 0.044, 1.4)
+			fn29(uiStroke, Color3.fromRGB(255, 255, 255), 0.044, 1.4)
 			uiStroke.Parent = textLabel2
 			local uiGradient = Instance.new("UIGradient")
 			uiGradient.Color = colorSequence
 			uiGradient.Rotation = 90
 			uiGradient.Parent = uiStroke
 			local uiGradient2 = Instance.new("UIGradient")
-			uiGradient2.Color = v6
+			uiGradient2.Color = v
 			uiGradient2.Rotation = 90
 			uiGradient2.Parent = textLabel2
 			local textLabel3 = createTextLabel("BrainrotShadow", content, 3)
@@ -11314,14 +12984,14 @@ do
 			local textLabel4 = createTextLabel("BrainrotText", content, 4)
 			textLabel4.TextColor3 = Color3.fromRGB(255, 255, 255)
 			local uiStroke2 = Instance.new("UIStroke")
-			fn31(uiStroke2, Color3.fromRGB(124, 0, 15), 0.052, 1.7)
+			fn29(uiStroke2, Color3.fromRGB(124, 0, 15), 0.052, 1.7)
 			uiStroke2.Parent = textLabel4
 			local uiGradient3 = Instance.new("UIGradient")
-			uiGradient3.Color = v8
+			uiGradient3.Color = v3
 			uiGradient3.Rotation = 90
 			uiGradient3.Parent = uiStroke2
 			local uiGradient4 = Instance.new("UIGradient")
-			uiGradient4.Color = v7
+			uiGradient4.Color = v2
 			uiGradient4.Rotation = 90
 			uiGradient4.Parent = textLabel4
 			local textLabel5 = createTextLabel("MutationShadow", content, 3)
@@ -11331,7 +13001,7 @@ do
 			textLabel6.TextColor3 = Color3.fromRGB(255, 255, 255)
 			textLabel6.RichText = true
 			local uiStroke3 = Instance.new("UIStroke")
-			fn31(uiStroke3, Color3.fromRGB(0, 0, 0), 0.05, 1.5)
+			fn29(uiStroke3, Color3.fromRGB(0, 0, 0), 0.05, 1.5)
 			uiStroke3.Transparency = 0.15
 			uiStroke3.Parent = textLabel6
 			local uiGradient5 = Instance.new("UIGradient")
@@ -11344,7 +13014,7 @@ do
 			local textLabel8 = createTextLabel("GenerationText", content, 4)
 			textLabel8.TextColor3 = Color3.fromRGB(115, 255, 0)
 			local uiStroke4 = Instance.new("UIStroke")
-			fn31(uiStroke4, Color3.fromRGB(0, 0, 0), 0.05, 1.5)
+			fn29(uiStroke4, Color3.fromRGB(0, 0, 0), 0.05, 1.5)
 			uiStroke4.Transparency = 0.3
 			uiStroke4.Parent = textLabel8
 			local toolShadow = Instance.new("ImageLabel")
@@ -11391,7 +13061,7 @@ do
 			textLabel10.Text = "Admin Panel"
 			textLabel10.TextColor3 = Color3.fromRGB(255, 255, 255)
 			local uiStroke5 = Instance.new("UIStroke")
-			fn31(uiStroke5, Color3.fromRGB(10, 24, 45), 0.02, 1.45)
+			fn29(uiStroke5, Color3.fromRGB(10, 24, 45), 0.02, 1.45)
 			uiStroke5.Transparency = 0.02
 			uiStroke5.Parent = textLabel10
 			local uiGradient6 = Instance.new("UIGradient")
@@ -11442,21 +13112,21 @@ do
 				HasTool = false,
 			}
 
-			fn20(tbl7, false)
+			fn30(tbl7, false)
 			return tbl7
 		end
 
-		local function fn33(arg)
+		local function fn32(arg)
 			local tag = arg.Tag
-			local character_ = arg.Character
+			local character_2 = arg.Character
 
-			if not (not tag or not character_) then
+			if not (not tag or not character_2) then
 				local visualHead = tag.VisualHead
 				local networkAnchor = tag.NetworkAnchor
 
-				if not (not visualHead or not visualHead:IsDescendantOf(character_) or not networkAnchor or not networkAnchor:IsDescendantOf(character_)) then
+				if not (not visualHead or not visualHead:IsDescendantOf(character_2) or not networkAnchor or not networkAnchor:IsDescendantOf(character_2)) then
 					tag.Billboard.Adornee = networkAnchor
-					local visible = networkAnchor ~= visualHead and (networkAnchor.Position - visualHead.Position).Magnitude >= n8
+					local visible = networkAnchor ~= visualHead and (networkAnchor.Position - visualHead.Position).Magnitude >= n11
 					tag.PlayerHighlight.Enabled = not visible
 					tag.NetworkTracker.Adornee = networkAnchor
 					tag.NetworkTracker.Visible = visible
@@ -11467,7 +13137,7 @@ do
 			return false
 		end
 
-		local function fn34(arg)
+		local function fn33(arg)
 			if arg:GetAttribute("AdminCommands") == true then
 				return true
 			end
@@ -11475,41 +13145,41 @@ do
 			return type(attribute) == "string" and string.find(string.lower(attribute), "admin", 1, true) ~= nil
 		end
 
-		local function fn35(arg, arg2)
+		local function fn34(arg, arg2)
 			if not arg.Tag then
 				return
 			end
-			arg.Tag.IsAdmin = fn34(arg2)
-			fn20(arg.Tag, arg.Tag.HasTool == true)
+			arg.Tag.IsAdmin = fn33(arg2)
+			fn30(arg.Tag, arg.Tag.HasTool == true)
 		end
 
-		local function fn36(arg)
+		local function fn35(arg)
 			if not arg.Tag or not arg.Character then
 				return
 			end
-			local v9 = fn22(getTool(arg.Character))
-			local visible = v9 ~= ""
-			arg.Tag.ToolIcon.Image = v9
+			local v4 = fn20(getTool(arg.Character))
+			local visible = v4 ~= ""
+			arg.Tag.ToolIcon.Image = v4
 			arg.Tag.ToolIcon.Visible = visible
-			arg.Tag.ToolShadow.Image = v9
+			arg.Tag.ToolShadow.Image = v4
 			arg.Tag.ToolShadow.Visible = visible
-			fn20(arg.Tag, visible)
+			fn30(arg.Tag, visible)
 		end
 
-		local function fn37(arg)
+		local function fn36(arg)
 			if arg.Tag then
 				arg.Tag.BrainrotName = arg.BrainrotName
 				arg.Tag.BrainrotGeneration = arg.BrainrotGeneration
-				arg.Tag.BrainrotMutation = fn28(arg.BrainrotMutationLabel)
-				fn20(arg.Tag, arg.Tag.HasTool == true)
-				local v9 = fn15(arg.BrainrotGeneration)
+				arg.Tag.BrainrotMutation = fn26(arg.BrainrotMutationLabel)
+				fn30(arg.Tag, arg.Tag.HasTool == true)
+				local v4 = fn14(arg.BrainrotGeneration)
 
 				if arg.Tag.BrainrotGradient then
-					arg.Tag.BrainrotGradient.Color = v9.Text
+					arg.Tag.BrainrotGradient.Color = v4.Text
 				end
 
 				if arg.Tag.BrainrotStrokeGradient then
-					arg.Tag.BrainrotStrokeGradient.Color = v9.Stroke
+					arg.Tag.BrainrotStrokeGradient.Color = v4.Stroke
 				end
 
 				if arg.BrainrotHighlight and (enabledFlags2.Brainrot ~= true or arg.BrainrotHighlight.Adornee ~= arg.BrainrotModel) then
@@ -11529,22 +13199,22 @@ do
 				end
 
 				if arg.BrainrotHighlight then
-					arg.BrainrotHighlight.FillColor = v9.Fill
-					arg.BrainrotHighlight.OutlineColor = v9.Outline
+					arg.BrainrotHighlight.FillColor = v4.Fill
+					arg.BrainrotHighlight.OutlineColor = v4.Outline
 				end
 			end
 		end
 
-		local function fn38(arg)
+		local function fn37(arg)
 			if arg.BrainrotGenerationConnection then
 				arg.BrainrotGenerationConnection:Disconnect()
 				arg.BrainrotGenerationConnection = nil
 			end
 
-			local v9 = ipairs
+			local v4 = ipairs
 			local brainrotMutationConnections = arg.BrainrotMutationConnections or {}
 
-			for _, brainrotMutationConnection in v9(brainrotMutationConnections) do
+			for _, brainrotMutationConnection in v4(brainrotMutationConnections) do
 				brainrotMutationConnection:Disconnect()
 			end
 
@@ -11552,62 +13222,62 @@ do
 			arg.BrainrotMutationLabel = nil
 		end
 
-		local function fn39(arg, brainrotMutationLabel, arg2)
+		local function fn38(arg, brainrotMutationLabel, arg2)
 			if not brainrotMutationLabel then
 				return
 			end
 			arg.BrainrotMutationLabel = brainrotMutationLabel
-			local connections3 = {}
+			local connections2 = {}
 
-			local function fn40()
+			local function fn39()
 				if arg.BrainrotModel == arg2 then
-					fn37(arg)
+					fn36(arg)
 				end
 			end
 
-			connections3[#connections3 + 1] = brainrotMutationLabel:GetPropertyChangedSignal("Text"):Connect(fn40)
-			connections3[#connections3 + 1] = brainrotMutationLabel:GetPropertyChangedSignal("Visible"):Connect(fn40)
-			connections3[#connections3 + 1] = brainrotMutationLabel:GetPropertyChangedSignal("TextColor3"):Connect(fn40)
-			arg.BrainrotMutationConnections = connections3
+			connections2[#connections2 + 1] = brainrotMutationLabel:GetPropertyChangedSignal("Text"):Connect(fn39)
+			connections2[#connections2 + 1] = brainrotMutationLabel:GetPropertyChangedSignal("Visible"):Connect(fn39)
+			connections2[#connections2 + 1] = brainrotMutationLabel:GetPropertyChangedSignal("TextColor3"):Connect(fn39)
+			arg.BrainrotMutationConnections = connections2
 		end
 
-		local function fn40(arg, arg2)
+		local function fn39(arg, arg2)
 			arg.StealingVersion = arg.StealingVersion + 1
 			local stealingVersion = arg.StealingVersion
 
 			if arg2:GetAttribute("Stealing") ~= true then
-				fn38(arg)
+				fn37(arg)
 				arg.BrainrotName = nil
 				arg.BrainrotGeneration = nil
 				arg.BrainrotModel = nil
-				fn37(arg)
+				fn36(arg)
 				return
 			end
 
 			task.spawn(function()
 				for idx = 1, 7 do
-					if not flag9 or arg.StealingVersion ~= stealingVersion or playerMap[arg2] ~= arg then
+					if not flag8 or arg.StealingVersion ~= stealingVersion or playerMap[arg2] ~= arg then
 						return
 					end
-					local v9, v10, v11, v12, v13 = fn29(arg2)
+					local v4, v5, v6, v7, v8 = fn27(arg2)
 
-					if v9 then
-						fn38(arg)
-						arg.BrainrotName = v9
-						arg.BrainrotModel = v10
-						arg.BrainrotGeneration = v11
-						fn39(arg, v13, v10)
+					if v4 then
+						fn37(arg)
+						arg.BrainrotName = v4
+						arg.BrainrotModel = v5
+						arg.BrainrotGeneration = v6
+						fn38(arg, v8, v5)
 
-						if v12 then
-							arg.BrainrotGenerationConnection = v12:GetPropertyChangedSignal("Text"):Connect(function()
-								if arg.BrainrotModel == v10 then
-									arg.BrainrotGeneration = v12.Text
-									fn37(arg)
+						if v7 then
+							arg.BrainrotGenerationConnection = v7:GetPropertyChangedSignal("Text"):Connect(function()
+								if arg.BrainrotModel == v5 then
+									arg.BrainrotGeneration = v7.Text
+									fn36(arg)
 								end
 							end)
 						end
 
-						fn37(arg)
+						fn36(arg)
 						return
 					end
 
@@ -11617,16 +13287,16 @@ do
 				end
 
 				if arg.StealingVersion == stealingVersion then
-					fn38(arg)
+					fn37(arg)
 					arg.BrainrotName = nil
 					arg.BrainrotGeneration = nil
 					arg.BrainrotModel = nil
-					fn37(arg)
+					fn36(arg)
 				end
 			end)
 		end
 
-		local function fn41(arg, arg2, arg3)
+		local function fn40(arg, arg2, arg3)
 			local userIdEntry = userIdMap[arg2.UserId]
 
 			if userIdEntry == nil then
@@ -11640,25 +13310,25 @@ do
 				userIdMap[arg2.UserId] = userIdEntry
 			end
 
-			if flag9 and arg.Version == arg3 and arg.Tag and arg.Tag.Avatar.Parent then
+			if flag8 and arg.Version == arg3 and arg.Tag and arg.Tag.Avatar.Parent then
 				arg.Tag.Avatar.Image = userIdEntry
 			end
 		end
 
-		local flag10 = false
+		local flag9 = false
 
-		local function fn42(arg)
+		local function fn41(arg)
 			if arg:IsA("BasePart") then
 				return arg.Name ~= "HumanoidRootPart"
 			end
 			return arg:IsA("Decal") or arg:IsA("Texture")
 		end
 
-		local function fn43(arg, arg2)
-			if not (flag10 or not arg2.Parent) then
+		local function fn42(arg, arg2)
+			if not (flag9 or not arg2.Parent) then
 				local transparency2 = arg2.Transparency
 
-				if transparency2 <= n9 then
+				if transparency2 <= n12 then
 					arg.RevealOriginals[arg2] = transparency2
 					arg.RevealHidden[arg2] = nil
 					return
@@ -11666,7 +13336,7 @@ do
 
 				if arg.RevealOriginals[arg2] ~= nil then
 					arg.RevealHidden[arg2] = transparency2
-					flag10 = true
+					flag9 = true
 
 					pcall(function()
 						arg2.Transparency = transparency
@@ -11676,83 +13346,83 @@ do
 						end
 					end)
 
-					flag10 = false
+					flag9 = false
 					return
 				end
 			end
 		end
 
-		local function fn44(arg, arg2)
+		local function fn43(arg, arg2)
 			if arg.RevealBound[arg2] then
 				return
 			end
 			arg.RevealBound[arg2] = true
 			local transparency2 = arg2.Transparency
 
-			if transparency2 <= n9 then
+			if transparency2 <= n12 then
 				arg.RevealOriginals[arg2] = transparency2
 			elseif arg2:IsA("BasePart") and enabledFlags[arg2.Name] then
 				arg.RevealOriginals[arg2] = 0
 			elseif arg2:IsA("Decal") and string.lower(arg2.Name) == "face" then
 				arg.RevealOriginals[arg2] = 0
-				local n12 = #arg.RevealConnections + 1
+				local n15 = #arg.RevealConnections + 1
 
-				arg.RevealConnections[n12] = arg2:GetPropertyChangedSignal("Transparency"):Connect(function()
-					if flag9 then
-						fn43(arg, arg2)
+				arg.RevealConnections[n15] = arg2:GetPropertyChangedSignal("Transparency"):Connect(function()
+					if flag8 then
+						fn42(arg, arg2)
 					end
 				end)
 
-				fn43(arg, arg2)
+				fn42(arg, arg2)
 				return
 			end
 
 			arg.RevealConnections[#arg.RevealConnections + 1] = arg2:GetPropertyChangedSignal("Transparency"):Connect(function()
-				if flag9 then
-					fn43(arg, arg2)
+				if flag8 then
+					fn42(arg, arg2)
 				end
 			end)
 
-			fn43(arg, arg2)
+			fn42(arg, arg2)
 		end
 
-		local function fn45(arg, arg2)
+		local function fn44(arg, arg2)
 			for _, descendant in ipairs(arg2:GetDescendants()) do
-				if fn42(descendant) then
-					fn44(arg, descendant)
+				if fn41(descendant) then
+					fn43(arg, descendant)
 				end
 			end
 
 			arg.RevealConnections[#arg.RevealConnections + 1] = arg2.DescendantAdded:Connect(function(descendant)
-				if flag9 and fn42(descendant) then
-					fn44(arg, descendant)
+				if flag8 and fn41(descendant) then
+					fn43(arg, descendant)
 				end
 			end)
 		end
 
-		local function fn46(arg)
+		local function fn45(arg)
 			disconnectAll2(arg.RevealConnections)
-			flag10 = true
+			flag9 = true
 
-			for k, v9 in pairs(arg.RevealHidden) do
+			for k, v4 in pairs(arg.RevealHidden) do
 				if k.Parent then
 					pcall(function()
-						k.Transparency = v9
+						k.Transparency = v4
 					end)
 				end
 			end
 
-			flag10 = false
+			flag9 = false
 			table.clear(arg.RevealHidden)
 			table.clear(arg.RevealOriginals)
 			table.clear(arg.RevealBound)
 		end
 
-		local function fn47(arg)
+		local function fn46(arg)
 			disconnectAll2(arg.CharacterConnections)
-			fn17(arg)
-			fn46(arg)
-			fn38(arg)
+			fn16(arg)
+			fn45(arg)
+			fn37(arg)
 
 			if arg.BrainrotHighlight then
 				arg.BrainrotHighlight:Destroy()
@@ -11779,54 +13449,54 @@ do
 			arg.BindingCharacter = nil
 		end
 
-		local fn48 = nil
+		local fn47 = nil
 
-		fn48 = function(arg, arg2, character_)
-			fn47(arg)
+		fn47 = function(arg, arg2, character_2)
+			fn46(arg)
 			arg.Version = arg.Version + 1
 			local version = arg.Version
-			if not flag9 or not character_ then
+			if not flag8 or not character_2 then
 				return
 			end
-			arg.Character = character_
-			arg.BindingCharacter = character_
-			fn18(arg, character_)
-			fn45(arg, character_)
+			arg.Character = character_2
+			arg.BindingCharacter = character_2
+			fn17(arg, character_2)
+			fn44(arg, character_2)
 
-			local function fn49()
+			local function fn48()
 				task.defer(function()
-					if flag9 and arg.Version == version then
-						fn36(arg)
+					if flag8 and arg.Version == version then
+						fn35(arg)
 					end
 				end)
 			end
 
-			arg.CharacterConnections[#arg.CharacterConnections + 1] = character_.ChildAdded:Connect(function(child)
+			arg.CharacterConnections[#arg.CharacterConnections + 1] = character_2.ChildAdded:Connect(function(child)
 				if child:IsA("Tool") then
-					fn49()
+					fn48()
 				elseif child:IsA("Humanoid") then
-					fn18(arg, character_)
+					fn17(arg, character_2)
 				end
 			end)
 
-			arg.CharacterConnections[#arg.CharacterConnections + 1] = character_.ChildRemoved:Connect(function(child)
+			arg.CharacterConnections[#arg.CharacterConnections + 1] = character_2.ChildRemoved:Connect(function(child)
 				if child:IsA("Tool") then
-					fn49()
+					fn48()
 				end
 			end)
 
-			arg.CharacterConnections[#arg.CharacterConnections + 1] = character_.AncestryChanged:Connect(function()
-				if not (not flag9 or arg.Version ~= version or character_ ~= arg2.Character) then
-					if not character_:IsDescendantOf(Workspace) then
+			arg.CharacterConnections[#arg.CharacterConnections + 1] = character_2.AncestryChanged:Connect(function()
+				if not (not flag8 or arg.Version ~= version or character_2 ~= arg2.Character) then
+					if not character_2:IsDescendantOf(Workspace) then
 						arg.Version = arg.Version + 1
-						fn47(arg)
+						fn46(arg)
 						return
 					end
 
 					if not arg.Tag then
 						task.defer(function()
-							if flag9 and arg.Version == version then
-								fn48(arg, arg2, character_)
+							if flag8 and arg.Version == version then
+								fn47(arg, arg2, character_2)
 							end
 						end)
 					end
@@ -11834,9 +13504,9 @@ do
 			end)
 
 			task.spawn(function()
-				local head = character_:FindFirstChild("Head") or character_:WaitForChild("Head", 5)
+				local head = character_2:FindFirstChild("Head") or character_2:WaitForChild("Head", 5)
 
-				if not flag9 or arg.Version ~= version or character_ ~= arg2.Character or not character_:IsDescendantOf(Workspace) or not head or not head:IsDescendantOf(character_) then
+				if not flag8 or arg.Version ~= version or character_2 ~= arg2.Character or not character_2:IsDescendantOf(Workspace) or not head or not head:IsDescendantOf(character_2) then
 					if arg.Version == version then
 						arg.BindingCharacter = nil
 					end
@@ -11844,47 +13514,47 @@ do
 					return
 				end
 
-				local v9 = fn19(character_, head)
-				arg.Tag = fn32(arg2, head, v9)
-				fn33(arg)
+				local v4 = fn18(character_2, head)
+				arg.Tag = fn31(arg2, head, v4)
+				fn32(arg)
 				arg.BindingCharacter = nil
 
 				arg.CharacterConnections[#arg.CharacterConnections + 1] = head.AncestryChanged:Connect(function()
-					if not (not flag9 or arg.Version ~= version or head:IsDescendantOf(character_)) then
+					if not (not flag8 or arg.Version ~= version or head:IsDescendantOf(character_2)) then
 						arg.Version = arg.Version + 1
-						fn47(arg)
-						local character_2 = arg2.Character
+						fn46(arg)
+						local character_3 = arg2.Character
 
-						if character_2 and character_2:IsDescendantOf(Workspace) then
+						if character_3 and character_3:IsDescendantOf(Workspace) then
 							task.defer(function()
-								if flag9 and playerMap[arg2] == arg then
-									fn48(arg, arg2, character_2)
+								if flag8 and playerMap[arg2] == arg then
+									fn47(arg, arg2, character_3)
 								end
 							end)
 						end
 					end
 				end)
 
-				fn35(arg, arg2)
-				fn36(arg)
-				fn40(arg, arg2)
-				fn41(arg, arg2, version)
+				fn34(arg, arg2)
+				fn35(arg)
+				fn39(arg, arg2)
+				fn40(arg, arg2, version)
 			end)
 		end
 
-		local function fn49(player)
+		local function fn48(player)
 			local playerEntry = playerMap[player]
 			if not playerEntry then
 				return
 			end
 			playerEntry.Version = playerEntry.Version + 1
 			playerEntry.StealingVersion = playerEntry.StealingVersion + 1
-			fn47(playerEntry)
+			fn46(playerEntry)
 			disconnectAll2(playerEntry.PlayerConnections)
 			playerMap[player] = nil
 		end
 
-		local function fn50(player)
+		local function fn49(player)
 			if player == localPlayer or playerMap[player] then
 				return
 			end
@@ -11912,37 +13582,37 @@ do
 
 			playerMap[player] = tbl6
 
-			for _, v9 in ipairs({ "AdminCommands", "Role" }) do
-				tbl6.PlayerConnections[#tbl6.PlayerConnections + 1] = player:GetAttributeChangedSignal(v9):Connect(function()
-					if flag9 and playerMap[player] == tbl6 then
-						fn35(tbl6, player)
+			for _, v4 in ipairs({ "AdminCommands", "Role" }) do
+				tbl6.PlayerConnections[#tbl6.PlayerConnections + 1] = player:GetAttributeChangedSignal(v4):Connect(function()
+					if flag8 and playerMap[player] == tbl6 then
+						fn34(tbl6, player)
 					end
 				end)
 			end
 
-			tbl6.PlayerConnections[#tbl6.PlayerConnections + 1] = player.CharacterAdded:Connect(function(character_)
-				fn48(tbl6, player, character_)
+			tbl6.PlayerConnections[#tbl6.PlayerConnections + 1] = player.CharacterAdded:Connect(function(character_2)
+				fn47(tbl6, player, character_2)
 			end)
 
-			tbl6.PlayerConnections[#tbl6.PlayerConnections + 1] = player.CharacterRemoving:Connect(function(character_)
-				if tbl6.Character == character_ then
+			tbl6.PlayerConnections[#tbl6.PlayerConnections + 1] = player.CharacterRemoving:Connect(function(character_2)
+				if tbl6.Character == character_2 then
 					tbl6.Version = tbl6.Version + 1
-					fn47(tbl6)
+					fn46(tbl6)
 				end
 			end)
 
 			tbl6.PlayerConnections[#tbl6.PlayerConnections + 1] = player:GetPropertyChangedSignal("Character"):Connect(function()
 				task.defer(function()
-					if not (not flag9 or playerMap[player] ~= tbl6) then
-						local character_ = player.Character
+					if not (not flag8 or playerMap[player] ~= tbl6) then
+						local character_2 = player.Character
 
-						if character_ ~= tbl6.Character then
-							fn48(tbl6, player, character_)
+						if character_2 ~= tbl6.Character then
+							fn47(tbl6, player, character_2)
 						elseif tbl6.Tag then
 							local adornee = tbl6.Tag.Billboard.Adornee
 
 							if not adornee or not adornee:IsDescendantOf(Workspace) then
-								fn48(tbl6, player, character_)
+								fn47(tbl6, player, character_2)
 							end
 						end
 					end
@@ -11950,103 +13620,103 @@ do
 			end)
 
 			tbl6.PlayerConnections[#tbl6.PlayerConnections + 1] = player:GetAttributeChangedSignal("Stealing"):Connect(function()
-				fn40(tbl6, player)
+				fn39(tbl6, player)
 			end)
 
-			fn48(tbl6, player, player.Character)
+			fn47(tbl6, player, player.Character)
 		end
 
-		local function fn51()
-			for k, v9 in pairs(playerMap) do
-				local character_ = k.Character
+		local function fn50()
+			for k, v4 in pairs(playerMap) do
+				local character_2 = k.Character
 
-				if character_ and character_:IsDescendantOf(Workspace) then
-					local tag = v9.Tag
+				if character_2 and character_2:IsDescendantOf(Workspace) then
+					local tag = v4.Tag
 					local billboard = tag and tag.Billboard
 					tag = tag and tag.PlayerHighlight
 					local adornee = billboard and billboard.Adornee
-					local parent = billboard and billboard.Parent and adornee and adornee:IsDescendantOf(character_) and tag and tag.Parent and fn33(v9)
+					local parent = billboard and billboard.Parent and adornee and adornee:IsDescendantOf(character_2) and tag and tag.Parent and fn32(v4)
 
-					if (v9.Character ~= character_ or not parent) and v9.BindingCharacter ~= character_ then
-						fn48(v9, k, character_)
+					if (v4.Character ~= character_2 or not parent) and v4.BindingCharacter ~= character_2 then
+						fn47(v4, k, character_2)
 					end
-				elseif v9.Character then
-					v9.Version = v9.Version + 1
-					fn47(v9)
+				elseif v4.Character then
+					v4.Version = v4.Version + 1
+					fn46(v4)
 				end
 			end
 		end
 
-		local function fn52()
-			flag9 = false
-			n11 += 1
-			disconnectAll2(connections2)
+		local function fn51()
+			flag8 = false
+			n14 += 1
+			disconnectAll2(connections)
 			local ks = {}
 
 			for k in pairs(playerMap) do
 				ks[#ks + 1] = k
 			end
 
-			for _, v9 in ipairs(ks) do
-				fn49(v9)
+			for _, v4 in ipairs(ks) do
+				fn48(v4)
+			end
+		end
+
+		local function fn52()
+			for _, v4 in pairs(playerMap) do
+				if v4.Tag and v4.Tag.Billboard.Parent then
+					fn30(v4.Tag, v4.Tag.HasTool == true)
+				end
 			end
 		end
 
 		local function fn53()
-			for _, v9 in pairs(playerMap) do
-				if v9.Tag and v9.Tag.Billboard.Parent then
-					fn20(v9.Tag, v9.Tag.HasTool == true)
+			for _, v4 in pairs(playerMap) do
+				if v4.Tag and v4.Tag.Billboard.Parent then
+					fn35(v4)
+					fn36(v4)
 				end
 			end
 		end
 
 		local function fn54()
-			for _, v9 in pairs(playerMap) do
-				if v9.Tag and v9.Tag.Billboard.Parent then
-					fn36(v9)
-					fn37(v9)
-				end
-			end
-		end
-
-		local function fn55()
-			fn52()
-			flag9 = true
-			local n112 = n11
-			connections2[#connections2 + 1] = Players.PlayerAdded:Connect(fn50)
-			connections2[#connections2 + 1] = Players.PlayerRemoving:Connect(fn49)
+			fn51()
+			flag8 = true
+			local n142 = n14
+			connections[#connections + 1] = Players.PlayerAdded:Connect(fn49)
+			connections[#connections + 1] = Players.PlayerRemoving:Connect(fn48)
 			local currentCamera = Workspace.CurrentCamera
 
 			if currentCamera then
-				connections2[#connections2 + 1] = currentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(fn53)
+				connections[#connections + 1] = currentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(fn52)
 			end
 
 			for _, player in ipairs(Players:GetPlayers()) do
-				fn50(player)
+				fn49(player)
 			end
 
 			task.spawn(function()
-				while flag9 and n11 == n112 do
+				while flag8 and n14 == n142 do
 					task.wait(0.2)
 
-					if flag9 and n11 == n112 then
-						fn51()
+					if flag8 and n14 == n142 then
+						fn50()
 					end
 				end
 			end)
 		end
 
-		cleanup.Event:Connect(fn52)
-		chilliPlayerESPRuntime.Destroying:Connect(fn52)
+		cleanup.Event:Connect(fn51)
+		chilliPlayerESPRuntime.Destroying:Connect(fn51)
 
 		playerEspSection:CreateToggle({
 			Name = "Player ESP",
 			Default = true,
 			Callback = function(arg)
 				if arg then
-					fn55()
+					fn54()
 				else
-					fn52()
+					fn51()
 				end
 			end,
 		})
@@ -12067,17 +13737,17 @@ do
 				}
 
 				if type(arg) == "table" then
-					for k, v9 in pairs(arg) do
-						if type(v9) == "string" and enabledFlags3[v9] ~= nil then
-							enabledFlags3[v9] = true
-						elseif type(k) == "string" and v9 == true and enabledFlags3[k] ~= nil then
+					for k, v4 in pairs(arg) do
+						if type(v4) == "string" and enabledFlags3[v4] ~= nil then
+							enabledFlags3[v4] = true
+						elseif type(k) == "string" and v4 == true and enabledFlags3[k] ~= nil then
 							enabledFlags3[k] = true
 						end
 					end
 				end
 
 				enabledFlags2 = enabledFlags3
-				fn54()
+				fn53()
 			end,
 		})
 
@@ -12090,21 +13760,20 @@ do
 			Increment = 1,
 			Unit = "%",
 			Callback = function(arg)
-				n10 = math.clamp((tonumber(arg) or 100) / 100, 0.5, 2)
-				fn53()
+				n13 = math.clamp((tonumber(arg) or 100) / 100, 0.5, 2)
+				fn52()
 			end,
 		})
 	end
 
-	chilliBaseLockTimerRuntime, v = fn3("__ChilliBaseLockTimerRuntime")
-	flag2 = false
-	n = 1
-	v2 = nil
-	folder = nil
-	childMap = {}
-	connections = {}
-
 	do
+		local chilliBaseLockTimerRuntime, v4 = fn3("__ChilliBaseLockTimerRuntime")
+		local flag9 = false
+		n = 1
+		local v5 = nil
+		local folder = nil
+		local childMap = {}
+		local connections2 = {}
 		local color = Color3.fromRGB(255, 58, 74)
 		local color2 = Color3.fromRGB(154, 255, 62)
 		local colorSequenceNew = ColorSequence.new
@@ -12119,25 +13788,25 @@ do
 			table.move(values, 1, values.n, 3, tbl6)
 		end
 
-		local v9 = colorSequenceNew(tbl6)
+		local v6 = colorSequenceNew(tbl6)
 
 		local function clampValue()
 			local currentCamera = Workspace.CurrentCamera
-			local n12 = math.floor(math.clamp((currentCamera and currentCamera.ViewportSize.Y or 1080) * 0.064, 52, 76))
-			return math.floor(n12 * 2.8), n12
+			local n15 = math.floor(math.clamp((currentCamera and currentCamera.ViewportSize.Y or 1080) * 0.064, 52, 76))
+			return math.floor(n15 * 2.8), n15
 		end
 
-		fn9 = function(arg)
+		local function fn19(arg)
 			if not arg.Tag or not arg.Tag.Gui or not arg.Tag.Gui.Parent then
 				return
 			end
-			local numVal, v10 = clampValue()
-			arg.Tag.Gui.Size = UDim2.fromOffset(math.floor(numVal * n + 0.5), math.floor(v10 * n + 0.5))
+			local numVal, v7 = clampValue()
+			arg.Tag.Gui.Size = UDim2.fromOffset(math.floor(numVal * n + 0.5), math.floor(v7 * n + 0.5))
 		end
 
 		local function createPart(arg)
-			local v10 = fn14(arg)
-			if not v10 then
+			local v7 = fn13(arg)
+			if not v7 then
 				return nil
 			end
 			local part = Instance.new("Part")
@@ -12150,12 +13819,12 @@ do
 			part.CanQuery = false
 			part.Massless = true
 			part.CastShadow = false
-			part.Position = v10
+			part.Position = v7
 			part.Parent = folder
 			return part
 		end
 
-		fn10 = function(arg)
+		local function fn20(arg)
 			local part = createPart(arg)
 			if not part then
 				return nil
@@ -12195,7 +13864,7 @@ do
 			textOutline.Parent = status
 			local sheen = Instance.new("UIGradient")
 			sheen.Name = "Sheen"
-			sheen.Color = v9
+			sheen.Color = v6
 			sheen.Rotation = 90
 			sheen.Parent = status
 			local timer = Instance.new("TextLabel")
@@ -12213,7 +13882,7 @@ do
 			timer.Parent = frame
 			local sheen2 = Instance.new("UIGradient")
 			sheen2.Name = "Sheen"
-			sheen2.Color = v9
+			sheen2.Color = v6
 			sheen2.Rotation = 90
 			sheen2.Parent = timer
 			local textOutline2 = Instance.new("UIStroke")
@@ -12254,34 +13923,34 @@ do
 
 		local function fn22(arg)
 			local str = tostring(arg or "")
-			local n12 = tonumber(str:match("(%d+)%s*[mM]")) or 0
+			local n15 = tonumber(str:match("(%d+)%s*[mM]")) or 0
 			local num = tonumber(str:match("(%d+)%s*[sS]"))
 
-			if num == nil and n12 == 0 then
+			if num == nil and n15 == 0 then
 				num = tonumber(str:match("%d+")) or 0
 			end
 
-			return n12 * 60 + (num or 0)
+			return n15 * 60 + (num or 0)
 		end
 
-		fn11 = function(arg)
-			if arg.Tag then
+		local function fn23(arg)
+			if not (not flag9 or not arg.Tag) then
 				local anchor = arg.Tag.Anchor
 				if not anchor or not anchor.Parent then
 					arg.Tag.Gui.Enabled = false
 					return
 				end
-				local v10 = fn14(arg.Base)
+				local v7 = fn13(arg.Base)
 
-				if v10 and anchor.Position ~= v10 then
-					anchor.Position = v10
+				if v7 and anchor.Position ~= v7 then
+					anchor.Position = v7
 				end
 
 				local locked = nil
 				local open = nil
 				local flag10 = false
-				local n12 = -1
-				local v11 = nil
+				local n15 = -1
+				local v8 = nil
 				local timerLabel = nil
 
 				for _, timerLabel2 in ipairs(arg.TimerLabels) do
@@ -12299,30 +13968,30 @@ do
 
 						if timerLabel2.Visible or locked2 and locked2:IsA("GuiObject") and locked2.Visible then
 							local str = tostring(timerLabel2.Text or "")
-							local v12 = fn22(str)
+							local v9 = fn22(str)
 							flag10 = true
 							local flag11 = true
 
-							if not (n12 < v12) then
+							if not (n15 < v9) then
 								flag10 = flag11
 							else
-								n12 = v12
-								v11 = str
+								n15 = v9
+								v8 = str
 								timerLabel = timerLabel2
 							end
 						end
 					end
 				end
 
-				arg.Tag.Gui.Enabled = not string.find(string.lower(fn13(arg.Base)), "empty base", 1, true)
+				arg.Tag.Gui.Enabled = not string.find(string.lower(fn12(arg.Base)), "empty base", 1, true)
 
 				if arg.Tag.Gui.Enabled then
 					if flag10 then
 						arg.Tag.Status.Position = UDim2.fromScale(0.02, 0)
 						arg.Tag.Status.Size = UDim2.fromScale(0.96, 0.53)
 						arg.Tag.Status.Text = "Locked:"
-						arg.Tag.Timer.Text = v11 or ""
-						arg.Tag.Timer.Visible = v11 ~= nil and v11 ~= ""
+						arg.Tag.Timer.Text = v8 or ""
+						arg.Tag.Timer.Visible = v8 ~= nil and v8 ~= ""
 
 						if arg.Tag.StatusMode ~= "Locked" or arg.Tag.StatusStyleSource ~= locked then
 							arg.Tag.StatusMode = "Locked"
@@ -12352,198 +14021,205 @@ do
 				end
 			end
 		end
+
+		local function fn24(arg)
+			disconnectAll(arg.TimerConnections)
+			table.clear(arg.TimerLabels)
+			if not arg.Base.Parent then
+				return
+			end
+
+			for _, descendant in ipairs(arg.Base:GetDescendants()) do
+				if descendant:IsA("TextLabel") and descendant.Name == "RemainingTime" then
+					arg.TimerLabels[#arg.TimerLabels + 1] = descendant
+
+					arg.TimerConnections[#arg.TimerConnections + 1] = descendant:GetPropertyChangedSignal("Text"):Connect(function()
+						fn23(arg)
+					end)
+
+					arg.TimerConnections[#arg.TimerConnections + 1] = descendant:GetPropertyChangedSignal("Visible"):Connect(function()
+						fn23(arg)
+					end)
+
+					local locked = descendant.Parent and descendant.Parent:FindFirstChild("Locked")
+
+					if locked and locked:IsA("GuiObject") then
+						arg.TimerConnections[#arg.TimerConnections + 1] = locked:GetPropertyChangedSignal("Visible"):Connect(function()
+							fn23(arg)
+						end)
+					end
+				end
+			end
+
+			fn23(arg)
+		end
+
+		local function destroyAll2(child)
+			local childEntry = childMap[child]
+			if not childEntry then
+				return
+			end
+			disconnectAll(childEntry.Connections)
+			disconnectAll(childEntry.TimerConnections)
+			local tag = childEntry.Tag
+
+			if tag and childEntry.Tag.Gui then
+				childEntry.Tag.Gui:Destroy()
+			end
+
+			if childEntry.Tag and childEntry.Tag.Anchor then
+				childEntry.Tag.Anchor:Destroy()
+			end
+
+			childMap[child] = nil
+		end
+
+		local function fn25(child)
+			if not (not flag9 or not child:IsA("Model") or childMap[child]) then
+				local v7 = fn20(child)
+
+				if v7 then
+					local tbl7 = {
+						Base = child,
+						Tag = v7,
+						TimerLabels = {},
+						Connections = {},
+						TimerConnections = {},
+						RefreshPending = false,
+					}
+
+					childMap[child] = tbl7
+					fn19(tbl7)
+
+					local function fn26(descendant)
+						if not (descendant and descendant.Name ~= "RemainingTime" and descendant.Name ~= "Locked" and not isBasePart(descendant)) and not tbl7.RefreshPending then
+							tbl7.RefreshPending = true
+
+							task.defer(function()
+								tbl7.RefreshPending = false
+
+								if flag9 and childMap[child] == tbl7 then
+									fn24(tbl7)
+								end
+							end)
+
+							return
+						end
+					end
+
+					tbl7.Connections[#tbl7.Connections + 1] = child.DescendantAdded:Connect(fn26)
+					tbl7.Connections[#tbl7.Connections + 1] = child.DescendantRemoving:Connect(fn26)
+
+					tbl7.Connections[#tbl7.Connections + 1] = child.Destroying:Connect(function()
+						destroyAll2(child)
+					end)
+
+					local v8 = fn5(child)
+
+					if v8 then
+						tbl7.Connections[#tbl7.Connections + 1] = v8:GetPropertyChangedSignal("Text"):Connect(function()
+							fn23(tbl7)
+						end)
+					end
+
+					fn24(tbl7)
+					return
+				end
+			end
+		end
+
+		fn10 = function()
+			for _, v7 in pairs(childMap) do
+				fn19(v7)
+			end
+		end
+
+		destroyAll = function()
+			flag9 = false
+			disconnectAll(connections2)
+			local ks = {}
+
+			for k in pairs(childMap) do
+				ks[#ks + 1] = k
+			end
+
+			for _, v7 in ipairs(ks) do
+				destroyAll2(v7)
+			end
+
+			if folder then
+				folder:Destroy()
+				folder = nil
+			end
+
+			v5 = nil
+		end
+
+		local function fn26(arg)
+			v5 = arg
+			connections2[#connections2 + 1] = arg.ChildAdded:Connect(fn25)
+			connections2[#connections2 + 1] = arg.ChildRemoved:Connect(destroyAll2)
+
+			connections2[#connections2 + 1] = arg.DescendantAdded:Connect(function(descendant)
+				if isBasePart(descendant) then
+					local parent = descendant.Parent
+
+					if parent and parent.Parent == arg then
+						fn25(parent)
+					end
+				end
+			end)
+
+			for _, child in ipairs(arg:GetChildren()) do
+				fn25(child)
+			end
+		end
+
+		fn11 = function()
+			destroyAll()
+			flag9 = true
+			folder = Instance.new("Folder")
+			folder.Name = generateRandomId()
+			folder.Archivable = false
+			folder.Parent = Workspace
+			local currentCamera = Workspace.CurrentCamera
+
+			if currentCamera then
+				connections2[#connections2 + 1] = currentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(fn10)
+			end
+
+			connections2[#connections2 + 1] = Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(fn10)
+			local plots = Workspace:FindFirstChild("Plots")
+
+			if plots then
+				fn26(plots)
+			else
+				connections2[#connections2 + 1] = Workspace.ChildAdded:Connect(function(child)
+					if flag9 and child.Name == "Plots" then
+						fn26(child)
+					end
+				end)
+			end
+		end
+
+		v4.Event:Connect(destroyAll)
+		chilliBaseLockTimerRuntime.Destroying:Connect(destroyAll)
 	end
 end
 
+local v, chilliBrainrotESPRuntime, ok, flag2, connections, kMap, n2, flag3, flag4, n3
+local enabledFlags, configMap, getRootPart, fn12, fn13, fn14, fn15, fn16, fn17, fn18
+local attachment, parent, parent2, fn19, fn20, destroyAll2, fn21, n4, fn22, fn23
+
 do
-	local function fn12(arg)
-		disconnectAll(arg.TimerConnections)
-		table.clear(arg.TimerLabels)
-		if not arg.Base.Parent then
-			return
-		end
-
-		for _, descendant in ipairs(arg.Base:GetDescendants()) do
-			if descendant:IsA("TextLabel") and descendant.Name == "RemainingTime" then
-				arg.TimerLabels[#arg.TimerLabels + 1] = descendant
-
-				arg.TimerConnections[#arg.TimerConnections + 1] = descendant:GetPropertyChangedSignal("Text"):Connect(function()
-					fn11(arg)
-				end)
-
-				arg.TimerConnections[#arg.TimerConnections + 1] = descendant:GetPropertyChangedSignal("Visible"):Connect(function()
-					fn11(arg)
-				end)
-
-				local locked = descendant.Parent and descendant.Parent:FindFirstChild("Locked")
-
-				if locked and locked:IsA("GuiObject") then
-					arg.TimerConnections[#arg.TimerConnections + 1] = locked:GetPropertyChangedSignal("Visible"):Connect(function()
-						fn11(arg)
-					end)
-				end
-			end
-		end
-
-		fn11(arg)
-	end
-
-	local function destroyAll(child)
-		local childEntry = childMap[child]
-		if not childEntry then
-			return
-		end
-		disconnectAll(childEntry.Connections)
-		disconnectAll(childEntry.TimerConnections)
-		local tag = childEntry.Tag
-
-		if tag and childEntry.Tag.Gui then
-			childEntry.Tag.Gui:Destroy()
-		end
-
-		if childEntry.Tag and childEntry.Tag.Anchor then
-			childEntry.Tag.Anchor:Destroy()
-		end
-
-		childMap[child] = nil
-	end
-
-	local function fn13(child)
-		if not (not child:IsA("Model") or childMap[child]) then
-			local v3 = fn10(child)
-
-			if v3 then
-				local tbl4 = {
-					Base = child,
-					Tag = v3,
-					TimerLabels = {},
-					Connections = {},
-					TimerConnections = {},
-					RefreshPending = false,
-				}
-
-				childMap[child] = tbl4
-				fn9(tbl4)
-
-				local function fn14(descendant)
-					if not (descendant and descendant.Name ~= "RemainingTime" and descendant.Name ~= "Locked" and not isBasePart(descendant)) and not tbl4.RefreshPending then
-						tbl4.RefreshPending = true
-
-						task.defer(function()
-							tbl4.RefreshPending = false
-
-							if childMap[child] == tbl4 then
-								fn12(tbl4)
-							end
-						end)
-
-						return
-					end
-				end
-
-				tbl4.Connections[#tbl4.Connections + 1] = child.DescendantAdded:Connect(fn14)
-				tbl4.Connections[#tbl4.Connections + 1] = child.DescendantRemoving:Connect(fn14)
-
-				tbl4.Connections[#tbl4.Connections + 1] = child.Destroying:Connect(function()
-					destroyAll(child)
-				end)
-
-				local v4 = fn5(child)
-
-				if v4 then
-					tbl4.Connections[#tbl4.Connections + 1] = v4:GetPropertyChangedSignal("Text"):Connect(function()
-						fn11(tbl4)
-					end)
-				end
-
-				fn12(tbl4)
-				return
-			end
-		end
-	end
-
-	local function fn14()
-		for _, v3 in pairs(childMap) do
-			fn9(v3)
-		end
-	end
-
-	local function destroyAll2()
-		flag2 = false
-		disconnectAll(connections)
-		local ks = {}
-
-		for k in pairs(childMap) do
-			ks[#ks + 1] = k
-		end
-
-		for _, v3 in ipairs(ks) do
-			destroyAll(v3)
-		end
-
-		folder:Destroy()
-		folder = nil
-		v2 = nil
-	end
-
-	local function fn15(arg)
-		v2 = arg
-		connections[#connections + 1] = arg.ChildAdded:Connect(fn13)
-		connections[#connections + 1] = arg.ChildRemoved:Connect(destroyAll)
-
-		connections[#connections + 1] = arg.DescendantAdded:Connect(function(descendant)
-			if isBasePart(descendant) then
-				local parent = descendant.Parent
-
-				if parent and parent.Parent == arg then
-					fn13(parent)
-				end
-			end
-		end)
-
-		for _, child in ipairs(arg:GetChildren()) do
-			fn13(child)
-		end
-	end
-
-	local function fn16()
-		destroyAll2()
-		flag2 = true
-		folder = Instance.new("Folder")
-		folder.Name = generateRandomId()
-		folder.Archivable = false
-		folder.Parent = Workspace
-		local currentCamera = Workspace.CurrentCamera
-
-		if currentCamera then
-			connections[#connections + 1] = currentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(fn14)
-		end
-
-		connections[#connections + 1] = Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(fn14)
-		local plots = Workspace:FindFirstChild("Plots")
-
-		if plots then
-			fn15(plots)
-		else
-			connections[#connections + 1] = Workspace.ChildAdded:Connect(function(child)
-				if flag2 and child.Name == "Plots" then
-					fn15(child)
-				end
-			end)
-		end
-	end
-
-	v.Event:Connect(destroyAll2)
-	chilliBaseLockTimerRuntime.Destroying:Connect(destroyAll2)
-
 	local timerEspToggle = baseEspSection:CreateToggle({
 		Name = "Timer ESP",
 		Default = true,
 		Callback = function(arg)
 			if arg then
-				fn16()
+				fn11()
 			else
-				destroyAll2()
+				destroyAll()
 			end
 		end,
 	})
@@ -12561,1383 +14237,1724 @@ do
 		ShowWhen = timerEspToggle,
 		Callback = function(arg)
 			n = math.clamp((tonumber(arg) or 100) / 100, 0.5, 2)
-			fn14()
+			fn10()
 		end,
 	})
-end
 
-local chilliYourBaseESPRuntime, v3
-chilliYourBaseESPRuntime, v3 = fn3("__ChilliYourBaseESPRuntime")
-Color3.fromRGB(255, 255, 255)
-local flag3, flag4, flag5, v4, v5, v6, flag6, tbl4
+	local chilliYourBaseESPRuntime, v2
+	chilliYourBaseESPRuntime, v2 = fn3("__ChilliYourBaseESPRuntime")
+	local fillTransparency
+	fillTransparency = 0.45
+	local color
+	color = Color3.fromRGB(255, 255, 255)
+	local flag5, flag6, flag7, v3, adornee, highlight, attachment2, attachment3, beam, beam2
+	local tbl4, flag8, flag9, connections2, connections3
 
-do
-	local enabledFlags = {
-		AnimalPodiums = true,
-		Unlock = true,
-		PlotSign = true,
-		Purchases = true,
-		Conveyor = true,
-		Walls = true,
-		Wall = true,
-		Floors = true,
-		Floor = true,
-		Roof = true,
-		Decorations = true,
-		Model = true,
-		Laser = true,
-		LaserHitbox = true,
-		InvisibleWalls = true,
-		Spawn = true,
-	}
+	do
+		local enabledFlags2 = {
+			AnimalPodiums = true,
+			Unlock = true,
+			PlotSign = true,
+			Purchases = true,
+			Conveyor = true,
+			Walls = true,
+			Wall = true,
+			Floors = true,
+			Floor = true,
+			Roof = true,
+			Decorations = true,
+			Model = true,
+			Laser = true,
+			LaserHitbox = true,
+			InvisibleWalls = true,
+			Spawn = true,
+		}
 
-	flag3 = false
-	flag4 = false
-	flag5 = false
-	v4 = nil
-	v5 = nil
-	v6 = nil
-	local v7 = nil
-	local v8 = nil
-	local v9 = nil
-	local v10 = nil
-	local v11 = nil
-	local v12 = nil
-	flag6 = false
-	local flag7 = false
-	local tbl5 = {}
-	local n2 = 0
-	local tbl6 = {}
-	local weakCache2 = setmetatable({}, { __mode = "k" })
-	tbl4 = {}
-	local tbl7 = {}
-	local v13 = nil
+		flag5 = false
+		flag6 = false
+		flag7 = false
+		v3 = nil
+		adornee = nil
+		highlight = nil
+		attachment2 = nil
+		attachment3 = nil
+		beam = nil
+		beam2 = nil
+		local parent3 = nil
+		local parent4 = nil
+		local n5 = 0.5
+		tbl4 = { Part = nil, Base = nil, Dirty = true, NextLookup = 0 }
+		flag8 = false
+		flag9 = false
+		local tbl5 = {}
+		local n6 = 0
+		local tbl6 = {}
+		local weakCache2 = setmetatable({}, { __mode = "k" })
+		connections2 = {}
+		connections3 = {}
+		local connection = nil
 
-	local function fn12(arg, arg2)
-		local v14 = weakCache2[arg]
-		if v14 ~= nil then
-			return v14
-		end
-		local flag8 = false
-
-		if not enabledFlags[arg.Name] then
-			if arg.Parent == arg2 then
-				flag8 = true
-			elseif arg:FindFirstChildOfClass("Humanoid") or arg:FindFirstChildOfClass("AnimationController") or arg:GetAttribute("Mutation") ~= nil then
-				flag8 = true
+		local function fn24(arg, arg2)
+			local v4 = weakCache2[arg]
+			if v4 ~= nil then
+				return v4
 			end
-		end
+			local flag10 = false
 
-		if flag8 or #arg:GetChildren() > 0 then
-			weakCache2[arg] = flag8
-		end
-
-		return flag8
-	end
-
-	local function fn13(arg, arg2)
-		if not (not arg:IsA("BasePart") or arg.Transparency >= 1) and arg.Name ~= "PlotSign" then
-			for _, child in ipairs(arg:GetChildren()) do
-				if child:IsA("SurfaceGui") or child:IsA("BillboardGui") or child:IsA("Decal") or child:IsA("Texture") then
-					return false
+			if not enabledFlags2[arg.Name] then
+				if arg.Parent == arg2 then
+					flag10 = true
+				elseif arg:FindFirstChildOfClass("Humanoid") or arg:FindFirstChildOfClass("AnimationController") or arg:GetAttribute("Mutation") ~= nil then
+					flag10 = true
 				end
 			end
 
+			if flag10 or #arg:GetChildren() > 0 then
+				weakCache2[arg] = flag10
+			end
+
+			return flag10
+		end
+
+		local function fn25(arg, arg2)
+			if not (not arg:IsA("BasePart") or arg.Transparency >= 1) and arg.Name ~= "PlotSign" then
+				for _, child in ipairs(arg:GetChildren()) do
+					if child:IsA("SurfaceGui") or child:IsA("BillboardGui") or child:IsA("Decal") or child:IsA("Texture") then
+						return false
+					end
+				end
+
+				while arg and arg ~= arg2 do
+					if arg:IsA("Model") and fn24(arg, arg2) then
+						return false
+					end
+					arg = arg.Parent
+				end
+
+				return arg == arg2
+			end
+
+			return false
+		end
+
+		local function fn26(arg, arg2)
+			if tbl6[arg] ~= nil or not fn25(arg, arg2) or #tbl5 == 0 then
+				return
+			end
+			n6 += 1
+			local v4 = tbl5[(n6 - 1) % #tbl5 + 1]
+			local color2 = arg.Color
+			tbl6[arg] = color2
+			arg.Color = color2:Lerp(v4, 0.78)
+		end
+
+		local function fn27()
+			for k, v4 in pairs(tbl6) do
+				if k.Parent then
+					pcall(function()
+						k.Color = v4
+					end)
+				end
+			end
+
+			table.clear(tbl6)
+			table.clear(weakCache2)
+			table.clear(tbl5)
+			n6 = 0
+			flag9 = false
+		end
+
+		local function fn28(arg)
+			fn27()
+			if not arg or not arg.Parent then
+				return
+			end
+			tbl5 = fn9("Phantom")
+
+			for _, descendant in ipairs(arg:GetDescendants()) do
+				fn26(descendant, arg)
+			end
+
+			flag9 = true
+		end
+
+		local function fn29(arg)
+			for _, descendant in ipairs(arg:GetDescendants()) do
+				local isTextLabel = descendant:IsA("TextLabel")
+
+				if isTextLabel then
+					isTextLabel = string.find(string.lower(tostring(descendant.Text or "")), "collect", 1, true)
+				end
+
+				if isTextLabel then
+					local parent5 = descendant.Parent
+
+					while parent5 and parent5 ~= arg do
+						if parent5:IsA("BasePart") then
+							return parent5
+						end
+						parent5 = parent5.Parent
+					end
+				end
+			end
+
+			local cashPad = arg:FindFirstChild("CashPad") or arg:FindFirstChild("Cash")
+			return cashPad and cashPad:FindFirstChildWhichIsA("BasePart", true) or nil
+		end
+
+		local function fn30(arg, arg2)
 			while arg and arg ~= arg2 do
-				if arg:IsA("Model") and fn12(arg, arg2) then
-					return false
+				local str = string.lower(arg.Name):gsub("[^%w]", "")
+				local pos = str == "cashpad" or str == "cash" or string.find(str, "collect", 1, true)
+
+				if not pos then
+					pos = arg:IsA("TextLabel")
+
+					if pos then
+						pos = string.find(string.lower(tostring(arg.Text or "")), "collect", 1, true)
+					end
+				end
+
+				if pos then
+					return true
 				end
 				arg = arg.Parent
 			end
 
-			return arg == arg2
+			return false
 		end
 
-		return false
-	end
-
-	local function fn14(arg, arg2)
-		if tbl6[arg] ~= nil or not fn13(arg, arg2) or #tbl5 == 0 then
-			return
-		end
-		n2 += 1
-		local v14 = tbl5[(n2 - 1) % #tbl5 + 1]
-		local color = arg.Color
-		tbl6[arg] = color
-		arg.Color = color:Lerp(v14, 0.78)
-	end
-
-	local function fn15()
-		for k, v14 in pairs(tbl6) do
-			if k.Parent then
-				pcall(function()
-					k.Color = v14
-				end)
+		local function destroyAll3()
+			if attachment2 then
+				attachment2:Destroy()
 			end
+
+			if attachment3 then
+				attachment3:Destroy()
+			end
+
+			attachment2 = nil
+			attachment3 = nil
+			beam = nil
+			beam2 = nil
+			parent3 = nil
+			parent4 = nil
 		end
 
-		table.clear(tbl6)
-		table.clear(weakCache2)
-		table.clear(tbl5)
-		n2 = 0
-		flag7 = false
-	end
+		local function fn31(arg)
+			local adornee2 = adornee
+			if not adornee2 then
+				return nil
+			end
+			local part = tbl4.Part
 
-	local function fn16(arg)
-		fn15()
-		if not arg or not arg.Parent then
-			return
-		end
-		tbl5 = fn8("Phantom")
+			if tbl4.Base ~= adornee2 or part and not part.Parent then
+				tbl4.Dirty = true
+			end
 
-		for _, descendant in ipairs(arg:GetDescendants()) do
-			fn14(descendant, arg)
-		end
+			if part and part.Parent and not tbl4.Dirty then
+				return part
+			end
 
-		flag7 = true
-	end
-
-	local function destroyAll()
-		if v7 then
-			v7:Destroy()
-		end
-
-		if v8 then
-			v8:Destroy()
+			if not tbl4.Dirty and arg < tbl4.NextLookup then
+				return nil
+			end
+			local v4 = fn29(adornee2)
+			tbl4.Part = v4
+			tbl4.Base = adornee2
+			tbl4.Dirty = false
+			tbl4.NextLookup = arg + n5
+			return v4
 		end
 
-		v7 = nil
-		v8 = nil
-		v9 = nil
-		v10 = nil
-		v11 = nil
-		v12 = nil
-	end
+		local function fn32(parent5, parent6)
+			destroyAll3()
+			attachment2 = Instance.new("Attachment")
+			attachment2.Name = generateRandomId()
+			attachment2.Archivable = false
+			attachment2.Position = Vector3.zero
+			attachment2.Parent = parent5
+			attachment3 = Instance.new("Attachment")
+			attachment3.Name = generateRandomId()
+			attachment3.Archivable = false
+			attachment3.Position = Vector3.new(0, parent6.Size.Y * 0.5 + 5, 0)
+			attachment3.Parent = parent6
+			beam2 = Instance.new("Beam")
+			beam2.Name = generateRandomId()
+			beam2.Archivable = false
+			beam2.Attachment0 = attachment2
+			beam2.Attachment1 = attachment3
+			beam2.FaceCamera = true
+			beam2.Width0 = 0.38
+			beam2.Width1 = 0.56
+			beam2.Segments = 20
+			beam2.CurveSize0 = 1.8
+			beam2.CurveSize1 = -1.8
+			beam2.LightEmission = 1
+			beam2.Color = ColorSequence.new(Color3.fromRGB(20, 145, 255), Color3.fromRGB(90, 240, 255))
+			beam2.Transparency = NumberSequence.new(0.72)
+			beam = Instance.new("Beam")
+			beam.Name = generateRandomId()
+			beam.Archivable = false
+			beam.Attachment0 = attachment2
+			beam.Attachment1 = attachment3
+			beam.FaceCamera = true
+			beam.Width0 = 0.09
+			beam.Width1 = 0.18
+			beam.Segments = 20
+			beam.CurveSize0 = 1.8
+			beam.CurveSize1 = -1.8
+			beam.LightEmission = 1
+			local beam3 = beam
+			local colorSequenceNew = ColorSequence.new
+			local tbl7 = {}
+			local colorKeypoint = ColorSequenceKeypoint.new(0, Color3.fromRGB(95, 205, 255))
+			local colorKeypoint2 = ColorSequenceKeypoint.new(0.5, Color3.fromRGB(225, 255, 255))
+			local colorSequenceKeypointNew = ColorSequenceKeypoint.new
+			local color3FromRGB = Color3.fromRGB
+			tbl7[1] = colorKeypoint
+			tbl7[2] = colorKeypoint2
 
-	local function fn17()
-		local flag8 = v5 ~= nil and localPlayer:GetAttribute("Stealing") == true
-		local flag42 = flag8 and flag4
-		flag8 = flag8 and flag5
+			do
+				local values = table.pack(colorSequenceKeypointNew(1, color3FromRGB(70, 165, 255)))
+				table.move(values, 1, values.n, 3, tbl7)
+			end
 
-		if flag42 and not flag7 then
-			fn16(v5)
-		elseif not flag42 and flag7 then
-			fn15()
+			beam3.Color = colorSequenceNew(tbl7)
+			beam.Transparency = NumberSequence.new(0.04)
+			weakCache[beam2] = true
+			weakCache[beam] = true
+			local flag10 = rng:NextInteger(0, 1) == 0
+			beam2.Parent = flag10 and attachment2 or attachment3
+			beam.Parent = flag10 and attachment3 or attachment2
+			parent3 = parent5
+			parent4 = parent6
 		end
 
-		if v6 and v6.Parent then
-			v6.Enabled = flag42
-		end
-
-		fn7("UnfadedPlot", (flag42 or flag8) and v5 or nil)
-	end
-
-	local function destroyAll2()
-		if v13 then
-			v13:Disconnect()
-			v13 = nil
-		end
-
-		destroyAll()
-		fn15()
-
-		if v6 then
-			v6:Destroy()
-			v6 = nil
-		end
-
-		v5 = nil
-		fn17()
-	end
-
-	local function fn18()
-		flag3 = false
-		flag6 = false
-		disconnectAll(tbl4)
-		disconnectAll(tbl7)
-		destroyAll2()
-		v4 = nil
-	end
-
-	local function fn19()
-		fn17()
-	end
-
-	v3.Event:Connect(fn18)
-	chilliYourBaseESPRuntime.Destroying:Connect(fn18)
-
-	baseEspSection:CreateToggle({
-		Name = "Your Base ESP (While Stealing)",
-		Default = false,
-		Callback = function(arg)
-			flag4 = arg == true
-			fn19()
-		end,
-	})
-
-	baseEspSection:CreateToggle({
-		Name = "Beam to Your Base (While Stealing)",
-		Default = true,
-		Callback = function(arg)
-			flag5 = arg == true
-			fn19()
-		end,
-	})
-end
-
-baseEspSection:CreateSlider({
-	Name = "Base Transparency",
-	Min = 0,
-	Max = 100,
-	Default = 80,
-	AllowDecimals = false,
-	Increment = 1,
-	Unit = "%",
-	ShowWhen = baseEspSection:CreateToggle({
-		Name = "Clear Base",
-		Default = false,
-		Callback = function(arg)
-			fn7("YourBaseClear", arg == true)
-		end,
-	}),
-	Note = "Adjusts base visibility: 0% keeps the original look and 100% makes it invisible.",
-	Callback = function(arg)
-		fn7("ClearBaseTransparency", math.clamp(tonumber(arg) or 80, 0, 100) / 100)
-	end,
-})
-
-local n2
-n2 = math.clamp(tonumber(tbl3.ClearBaseTransparency) or 0.8, 0, 1)
-local n3
-n3 = 0.0015
-local chilliFadePlotsRuntime, cleanup, flag7, n4, plots, connection, connection2
-
-do
-	local enabledFlags = {
-		AnimalPodiums = true,
-		Unlock = true,
-		PlotSign = true,
-		Purchases = true,
-		Conveyor = true,
-		Walls = true,
-		Wall = true,
-		Floors = true,
-		Floor = true,
-		Roof = true,
-		Decorations = true,
-	}
-
-	local v7 = fn2()
-	local tbl5 = {}
-
-	for _, v8 in ipairs({ v7, CoreGui }) do
-		if v8 and not tbl5[v8] then
-			tbl5[v8] = true
-			local chilliFadePlotsRuntime2 = v8:FindFirstChild("__ChilliFadePlotsRuntime")
-
-			if chilliFadePlotsRuntime2 then
-				local cleanup2 = chilliFadePlotsRuntime2:FindFirstChild("Cleanup")
-
-				if cleanup2 and cleanup2:IsA("BindableEvent") then
-					pcall(function()
-						cleanup2:Fire()
-					end)
+		local function fn33()
+			if not (flag5 and flag7) then
+				if attachment2 then
+					destroyAll3()
 				end
+			else
+				local flag10 = localPlayer:GetAttribute("Stealing") == true and adornee ~= nil and fn4()
+				local flag102 = flag10 and fn31(os.clock())
 
-				pcall(function()
-					chilliFadePlotsRuntime2:Destroy()
-				end)
-			end
-		end
-	end
+				if not (flag10 and flag102) then
+					if attachment2 then
+						destroyAll3()
+					end
+				else
+					local flag11 = parent3 ~= flag10 or parent4 ~= flag102
 
-	chilliFadePlotsRuntime = Instance.new("Folder")
-	chilliFadePlotsRuntime.Name = "__ChilliFadePlotsRuntime"
-	chilliFadePlotsRuntime.Archivable = false
-	chilliFadePlotsRuntime.Parent = v7
-	cleanup = Instance.new("BindableEvent")
-	cleanup.Name = "Cleanup"
-	cleanup.Parent = chilliFadePlotsRuntime
-	flag7 = false
-	n4 = 0
-	plots = nil
-	connection = nil
-	connection2 = nil
-	local rng = Random.new()
-	local tbl6 = {}
-	local n5 = 0
-	local flag8 = false
-	local v8 = nil
-	local kMap = {}
-	local weakCache2 = setmetatable({}, { __mode = "k" })
+					if not flag11 then
+						flag11 = not (attachment2 and attachment2.Parent)
+					end
 
-	local function fn12(arg)
-		while arg do
-			local parent = arg.Parent
-			if parent == plots then
-				return arg
-			end
+					if not flag11 then
+						flag11 = not (attachment3 and attachment3.Parent)
+					end
 
-			if not parent or parent == Workspace then
-				break
-			end
-			arg = parent
-		end
+					if not flag11 then
+						flag11 = not (beam and beam.Parent)
+					end
 
-		return nil
-	end
+					if not flag11 then
+						flag11 = not (beam2 and beam2.Parent)
+					end
 
-	local function fn13(arg, arg2)
-		local v9 = weakCache2[arg]
-		if v9 ~= nil then
-			return v9
-		end
-		local flag9 = false
-
-		if not enabledFlags[arg.Name] then
-			if arg.Parent == arg2 then
-				flag9 = true
-			elseif arg:FindFirstChildOfClass("Humanoid") or arg:FindFirstChildOfClass("AnimationController") then
-				flag9 = true
-			end
-		end
-
-		if flag9 or #arg:GetChildren() > 0 then
-			weakCache2[arg] = flag9
-		end
-
-		return flag9
-	end
-
-	local function fn14(arg, arg2)
-		while arg and arg ~= arg2 do
-			if arg:IsA("Model") and fn13(arg, arg2) then
-				return true
-			end
-			arg = arg.Parent
-		end
-
-		return false
-	end
-
-	local function fn15(arg)
-		if kMap[arg] == nil and arg:IsA("BasePart") and not (arg.Transparency >= 1) then
-			local v9 = fn12(arg)
-
-			if not (not v9 or v9 == v8 or fn14(arg, v9)) then
-				local localTransparencyModifier = arg.LocalTransparencyModifier
-
-				if math.abs(localTransparencyModifier - n2) <= 0.001 then
-					localTransparencyModifier = 0
+					if flag11 then
+						fn32(flag10, flag102)
+					end
 				end
+			end
+		end
 
-				kMap[arg] = localTransparencyModifier
+		local function fn34()
+			local flag52 = flag5 and adornee ~= nil and localPlayer:GetAttribute("Stealing") == true
+			local flag62 = flag52 and flag6
+			flag52 = flag52 and flag7
 
-				pcall(function()
-					arg.LocalTransparencyModifier = math.max(localTransparencyModifier, n2)
-				end)
+			if flag62 and not flag9 then
+				fn28(adornee)
+			elseif not flag62 and flag9 then
+				fn27()
+			end
 
+			if highlight and highlight.Parent then
+				highlight.Enabled = flag62
+			end
+
+			fn8("UnfadedPlot", (flag62 or flag52) and adornee or nil)
+		end
+
+		local function destroyAll4()
+			if connection then
+				connection:Disconnect()
+				connection = nil
+			end
+
+			destroyAll3()
+			fn27()
+
+			if highlight then
+				highlight:Destroy()
+				highlight = nil
+			end
+
+			adornee = nil
+			fn34()
+		end
+
+		local function fn35(adornee2)
+			adornee = adornee2
+			highlight = Instance.new("Highlight")
+			highlight.Name = "YourBaseHighlight"
+			highlight.Adornee = adornee2
+			highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+			highlight.FillTransparency = fillTransparency
+			highlight.OutlineTransparency = 0
+			highlight.Parent = chilliYourBaseESPRuntime
+			local color2 = fn9("Phantom")[1] or color
+			highlight.FillColor = color2
+			highlight.OutlineColor = color2
+
+			connection = adornee2.DescendantAdded:Connect(function(descendant)
+				if flag5 and adornee == adornee2 then
+					if flag9 then
+						fn26(descendant, adornee2)
+					end
+
+					if not (tbl4.Part and tbl4.Part.Parent) and fn30(descendant, adornee2) then
+						tbl4.Dirty = true
+					end
+				end
+			end)
+
+			fn34()
+		end
+
+		local function fn36()
+			if not v3 then
+				return nil
+			end
+
+			for _, child in ipairs(v3:GetChildren()) do
+				if child:IsA("Model") and fn6(child) then
+					return child
+				end
+			end
+
+			return nil
+		end
+
+		local function fn37()
+			flag8 = false
+
+			if flag5 then
+				local v4 = fn36()
+				if v4 == adornee and highlight and highlight.Parent then
+					fn34()
+					return
+				end
+				destroyAll4()
+
+				if v4 then
+					fn35(v4)
+				end
+			end
+		end
+
+		local function fn38()
+			if flag8 then
 				return
 			end
+			flag8 = true
+			task.defer(fn37)
 		end
+
+		local function fn39()
+			disconnectAll(connections3)
+
+			if v3 then
+				for _, child in ipairs(v3:GetChildren()) do
+					local v4 = fn5(child)
+
+					if v4 then
+						connections3[#connections3 + 1] = v4:GetPropertyChangedSignal("Text"):Connect(fn38)
+					end
+				end
+			end
+		end
+
+		local function fn40()
+			if not flag5 then
+				return
+			end
+			fn39()
+			fn38()
+		end
+
+		local function fn41(arg)
+			v3 = arg
+
+			connections2[#connections2 + 1] = arg.ChildAdded:Connect(function()
+				task.defer(fn40)
+			end)
+
+			connections2[#connections2 + 1] = arg.ChildRemoved:Connect(function()
+				task.defer(fn40)
+			end)
+
+			local n7 = #connections2 + 1
+
+			local function fn42(descendant)
+				if descendant:IsA("TextLabel") then
+					task.defer(fn40)
+				end
+			end
+
+			connections2[n7] = arg.DescendantAdded:Connect(fn42)
+			fn39()
+			fn37()
+		end
+
+		local function fn42()
+			flag5 = false
+			flag8 = false
+			disconnectAll(connections2)
+			disconnectAll(connections3)
+			destroyAll4()
+			v3 = nil
+		end
+
+		local function fn43()
+			fn42()
+			flag5 = true
+			connections2[#connections2 + 1] = RunService.RenderStepped:Connect(fn33)
+			connections2[#connections2 + 1] = localPlayer:GetAttributeChangedSignal("Stealing"):Connect(fn34)
+
+			connections2[#connections2 + 1] = localPlayer.CharacterAdded:Connect(function(character_)
+				task.spawn(function()
+					character_:WaitForChild("HumanoidRootPart", 5)
+
+					if flag5 and character_ == localPlayer.Character then
+						destroyAll3()
+						fn34()
+					end
+				end)
+			end)
+
+			local plots = Workspace:FindFirstChild("Plots")
+
+			if plots then
+				fn41(plots)
+			else
+				connections2[#connections2 + 1] = Workspace.ChildAdded:Connect(function(child)
+					if flag5 and child.Name == "Plots" then
+						fn41(child)
+					end
+				end)
+			end
+		end
+
+		local function fn44()
+			local flag62 = flag6
+			local flag622
+
+			if flag6 then
+				flag622 = flag62
+			else
+				flag622 = flag7
+			end
+
+			if flag622 and not flag5 then
+				fn43()
+			elseif not flag622 and flag5 then
+				fn42()
+			elseif flag622 then
+				fn34()
+			end
+		end
+
+		v2.Event:Connect(fn42)
+		chilliYourBaseESPRuntime.Destroying:Connect(fn42)
+
+		baseEspSection:CreateToggle({
+			Name = "Your Base ESP (While Stealing)",
+			Default = false,
+			Callback = function(arg)
+				flag6 = arg == true
+				fn44()
+			end,
+		})
+
+		baseEspSection:CreateToggle({
+			Name = "Beam to Your Base (While Stealing)",
+			Default = true,
+			Callback = function(arg)
+				flag7 = arg == true
+				fn44()
+			end,
+		})
 	end
 
-	local function fn16()
-		for k, v9 in pairs(kMap) do
-			pcall(function()
-				k.LocalTransparencyModifier = v9
+	baseEspSection:CreateSlider({
+		Name = "Base Transparency",
+		Min = 0,
+		Max = 100,
+		Default = 80,
+		AllowDecimals = false,
+		Increment = 1,
+		Unit = "%",
+		ShowWhen = baseEspSection:CreateToggle({
+			Name = "Clear Base",
+			Default = false,
+			Callback = function(arg)
+				fn8("YourBaseClear", arg == true)
+			end,
+		}),
+		Note = "Adjusts base visibility: 0% keeps the original look and 100% makes it invisible.",
+		Callback = function(arg)
+			fn8("ClearBaseTransparency", math.clamp(tonumber(arg) or 80, 0, 100) / 100)
+		end,
+	})
+
+	local n5
+	n5 = math.clamp(tonumber(tbl3.ClearBaseTransparency), 0, 1)
+	local n6
+	n6 = 0.0015
+	local chilliFadePlotsRuntime, cleanup, flag10, n7, plots, connection, connection2
+
+	do
+		local enabledFlags2 = {
+			AnimalPodiums = true,
+			Unlock = true,
+			PlotSign = true,
+			Purchases = true,
+			Conveyor = true,
+			Walls = true,
+			Wall = true,
+			Floors = true,
+			Floor = true,
+			Roof = true,
+			Decorations = true,
+		}
+
+		local v4 = fn2()
+		local tbl5 = {}
+
+		for _, v5 in ipairs({ v4, CoreGui }) do
+			if v5 and not tbl5[v5] then
+				tbl5[v5] = true
+				local chilliFadePlotsRuntime2 = v5:FindFirstChild("__ChilliFadePlotsRuntime")
+
+				if chilliFadePlotsRuntime2 then
+					local cleanup2 = chilliFadePlotsRuntime2:FindFirstChild("Cleanup")
+
+					if cleanup2 and cleanup2:IsA("BindableEvent") then
+						pcall(function()
+							cleanup2:Fire()
+						end)
+					end
+
+					pcall(function()
+						chilliFadePlotsRuntime2:Destroy()
+					end)
+				end
+			end
+		end
+
+		chilliFadePlotsRuntime = Instance.new("Folder")
+		chilliFadePlotsRuntime.Name = "__ChilliFadePlotsRuntime"
+		chilliFadePlotsRuntime.Archivable = false
+		chilliFadePlotsRuntime.Parent = v4
+		cleanup = Instance.new("BindableEvent")
+		cleanup.Name = "Cleanup"
+		cleanup.Parent = chilliFadePlotsRuntime
+		flag10 = false
+		n7 = 0
+		plots = nil
+		connection = nil
+		connection2 = nil
+		local rng2 = Random.new()
+		local tbl6 = {}
+		local n8 = 0
+		local flag11 = false
+		local v5 = nil
+		local kMap2 = {}
+		local weakCache2 = setmetatable({}, { __mode = "k" })
+
+		local function fn24(arg)
+			while arg do
+				local parent3 = arg.Parent
+				if parent3 == plots then
+					return arg
+				end
+
+				if not parent3 or parent3 == Workspace then
+					break
+				end
+				arg = parent3
+			end
+
+			return nil
+		end
+
+		local function fn25(arg, arg2)
+			local v6 = weakCache2[arg]
+			if v6 ~= nil then
+				return v6
+			end
+			local flag12 = false
+
+			if not enabledFlags2[arg.Name] then
+				if arg.Parent == arg2 then
+					flag12 = true
+				elseif arg:FindFirstChildOfClass("Humanoid") or arg:FindFirstChildOfClass("AnimationController") then
+					flag12 = true
+				end
+			end
+
+			if flag12 or #arg:GetChildren() > 0 then
+				weakCache2[arg] = flag12
+			end
+
+			return flag12
+		end
+
+		local function fn26(arg, arg2)
+			while arg and arg ~= arg2 do
+				if arg:IsA("Model") and fn25(arg, arg2) then
+					return true
+				end
+				arg = arg.Parent
+			end
+
+			return false
+		end
+
+		local function fn27(arg)
+			if kMap2[arg] == nil and arg:IsA("BasePart") and not (arg.Transparency >= 1) then
+				local v6 = fn24(arg)
+
+				if not (not v6 or v6 == v5 or fn26(arg, v6)) then
+					local localTransparencyModifier = arg.LocalTransparencyModifier
+
+					if math.abs(localTransparencyModifier - n5) <= 0.001 then
+						localTransparencyModifier = 0
+					end
+
+					kMap2[arg] = localTransparencyModifier
+
+					pcall(function()
+						arg.LocalTransparencyModifier = math.max(localTransparencyModifier, n5)
+					end)
+
+					return
+				end
+			end
+		end
+
+		local function fn28()
+			for k, v6 in pairs(kMap2) do
+				pcall(function()
+					k.LocalTransparencyModifier = v6
+				end)
+			end
+
+			table.clear(kMap2)
+			table.clear(weakCache2)
+			table.clear(tbl6)
+			n8 = 0
+			flag11 = false
+		end
+
+		local function fn29(arg)
+			for k, v6 in pairs(kMap2) do
+				if fn24(k) == arg then
+					pcall(function()
+						k.LocalTransparencyModifier = v6
+					end)
+
+					kMap2[k] = nil
+				end
+			end
+		end
+
+		local function fn30(arg)
+			if not (not arg or not arg.Parent) then
+				for _, descendant in ipairs(arg:GetDescendants()) do
+					fn27(descendant)
+				end
+			end
+		end
+
+		local function fn31(arg)
+			if v5 ~= arg then
+				local v52 = v5
+				v5 = arg
+
+				if flag10 then
+					if arg then
+						fn29(arg)
+					end
+
+					if v52 then
+						fn30(v52)
+					end
+				end
+			end
+		end
+
+		local function clampValue(arg)
+			n5 = math.clamp(tonumber(arg) or 0.8, 0, 1)
+
+			if flag10 then
+				for k, v6 in pairs(kMap2) do
+					if k.Parent then
+						pcall(function()
+							k.LocalTransparencyModifier = math.max(v6, n5)
+						end)
+					else
+						kMap2[k] = nil
+					end
+				end
+			end
+		end
+
+		fn7(function(arg, arg2)
+			if arg == "UnfadedPlot" then
+				local fn312 = fn31
+				arg2 = typeof(arg2) == "Instance" and arg2
+				fn312(arg2 or nil)
+			elseif arg == "ClearBaseTransparency" then
+				clampValue(arg2)
+			end
+		end)
+
+		local function fn32(arg)
+			n8 += 1
+			tbl6[n8] = arg
+			if flag11 then
+				return
+			end
+			flag11 = true
+			local n72 = n7
+
+			task.delay(rng2:NextNumber(0.18, 0.42), function()
+				flag11 = false
+
+				if not (not flag10 or n72 ~= n7) then
+					local tbl62 = tbl6
+					local n82 = n8
+					tbl6 = {}
+					n8 = 0
+
+					for idx = 1, n82 do
+						local v6 = tbl62[idx]
+
+						if v6 and v6.Parent then
+							fn27(v6)
+						end
+					end
+				end
 			end)
 		end
 
-		table.clear(kMap)
-		table.clear(weakCache2)
-		table.clear(tbl6)
-		n5 = 0
-		flag8 = false
-	end
+		local function fn33()
+			n7 += 1
+			local n72 = n7
 
-	local function fn17(arg)
-		for k, v9 in pairs(kMap) do
-			if fn12(k) == arg then
-				pcall(function()
-					k.LocalTransparencyModifier = v9
-				end)
+			task.spawn(function()
+				local children = plots:GetChildren()
+				local n9 = 1
 
-				kMap[k] = nil
-			end
-		end
-	end
+				while flag10 and n72 == n7 and n9 <= #children do
+					local now = os.clock()
 
-	local function fn18(arg)
-		if not (not arg or not arg.Parent) then
-			for _, descendant in ipairs(arg:GetDescendants()) do
-				fn15(descendant)
-			end
-		end
-	end
+					while true do
+						local child = children[n9]
+						n9 += 1
 
-	local function fn19(arg)
-		if v8 ~= arg then
-			local v82 = v8
-			v8 = arg
+						if child then
+							fn27(child)
 
-			if flag7 then
-				if arg then
-					fn17(arg)
-				end
-
-				if v82 then
-					fn18(v82)
-				end
-			end
-		end
-	end
-
-	local function clampValue(arg)
-		n2 = math.clamp(tonumber(arg) or 0.8, 0, 1)
-
-		if flag7 then
-			for k, v9 in pairs(kMap) do
-				if k.Parent then
-					pcall(function()
-						k.LocalTransparencyModifier = math.max(v9, n2)
-					end)
-				else
-					kMap[k] = nil
-				end
-			end
-		end
-	end
-
-	fn6(function(arg, arg2)
-		if arg == "UnfadedPlot" then
-			local fn192 = fn19
-			arg2 = typeof(arg2) == "Instance" and arg2
-			fn192(arg2 or nil)
-		elseif arg == "ClearBaseTransparency" then
-			clampValue(arg2)
-		end
-	end)
-
-	local function fn20(arg)
-		n5 += 1
-		tbl6[n5] = arg
-		if flag8 then
-			return
-		end
-		flag8 = true
-		local n42 = n4
-
-		task.delay(rng:NextNumber(0.18, 0.42), function()
-			flag8 = false
-
-			if not (not flag7 or n42 ~= n4) then
-				local tbl62 = tbl6
-				local n52 = n5
-				tbl6 = {}
-				n5 = 0
-
-				for idx = 1, n52 do
-					local v9 = tbl62[idx]
-
-					if v9 and v9.Parent then
-						fn15(v9)
-					end
-				end
-			end
-		end)
-	end
-
-	local function fn21()
-		n4 += 1
-		local n42 = n4
-
-		task.spawn(function()
-			local children = plots:GetChildren()
-			local n6 = 1
-
-			while flag7 and n42 == n4 and n6 <= #children do
-				local now = os.clock()
-
-				while true do
-					local child = children[n6]
-					n6 += 1
-
-					if child then
-						fn15(child)
-
-						for _, child2 in ipairs(child:GetChildren()) do
-							children[#children + 1] = child2
+							for _, child2 in ipairs(child:GetChildren()) do
+								children[#children + 1] = child2
+							end
 						end
+
+						if not (n9 > #children or os.clock() - now >= n6) then
+							continue
+						end
+						break
 					end
 
-					if not (n6 > #children or os.clock() - now >= n3) then
+					if not (n9 <= #children) then
 						continue
 					end
-					break
+					RunService.Heartbeat:Wait()
 				end
-
-				if not (n6 <= #children) then
-					continue
-				end
-				RunService.Heartbeat:Wait()
-			end
-		end)
-	end
-
-	local function fn22()
-		connection:Disconnect()
-		connection = nil
-
-		connection = plots.DescendantAdded:Connect(function(descendant)
-			if flag7 then
-				fn20(descendant)
-			end
-		end)
-
-		fn21()
-	end
-
-	local function fn23()
-		flag7 = false
-		n4 += 1
-		connection:Disconnect()
-		connection = nil
-		connection2:Disconnect()
-		connection2 = nil
-		fn16()
-	end
-
-	local function fn24()
-		fn23()
-		flag7 = true
-		plots = Workspace:FindFirstChild("Plots")
-		if plots then
-			fn22()
-			return
+			end)
 		end
 
-		connection2 = Workspace.ChildAdded:Connect(function(child)
-			if flag7 and child.Name == "Plots" then
-				plots = child
+		local function fn34()
+			if connection then
+				connection:Disconnect()
+				connection = nil
+			end
+
+			if not plots then
+				return
+			end
+
+			connection = plots.DescendantAdded:Connect(function(descendant)
+				if flag10 then
+					fn32(descendant)
+				end
+			end)
+
+			fn33()
+		end
+
+		local function fn35()
+			flag10 = false
+			n7 += 1
+
+			if connection then
+				connection:Disconnect()
+				connection = nil
+			end
+
+			if connection2 then
 				connection2:Disconnect()
 				connection2 = nil
-				fn22()
+			end
+
+			fn28()
+		end
+
+		local function fn36()
+			fn35()
+			flag10 = true
+			plots = Workspace:FindFirstChild("Plots")
+			if plots then
+				fn34()
+				return
+			end
+
+			connection2 = Workspace.ChildAdded:Connect(function(child)
+				if flag10 and child.Name == "Plots" then
+					plots = child
+
+					if connection2 then
+						connection2:Disconnect()
+						connection2 = nil
+					end
+
+					fn34()
+				end
+			end)
+		end
+
+		local function fn37()
+			local flag12 = tbl3.YourBaseClear == true
+
+			if flag12 and not flag10 then
+				fn36()
+			elseif not flag12 and flag10 then
+				fn35()
+			end
+		end
+
+		fn7(function(arg)
+			if arg == "YourBaseClear" then
+				fn37()
 			end
 		end)
+
+		fn37()
+		cleanup.Event:Connect(fn35)
+		chilliFadePlotsRuntime.Destroying:Connect(fn35)
 	end
 
-	local function fn25()
-		local flag9 = tbl3.YourBaseClear == true
-
-		if flag9 and not flag7 then
-			fn24()
-		elseif not flag9 and flag7 then
-			fn23()
-		end
-	end
-
-	fn6(function(arg)
-		if arg == "YourBaseClear" then
-			fn25()
-		end
-	end)
-
-	fn25()
-	cleanup.Event:Connect(fn23)
-	chilliFadePlotsRuntime.Destroying:Connect(fn23)
-end
-
-local chilliBrainrotESPRuntime, v7
-chilliBrainrotESPRuntime, v7 = fn3("__ChilliBrainrotESPRuntime")
-local font
-font = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.ExtraBold, Enum.FontStyle.Normal)
-local tbl5
-tbl5 = {}
-local tbl6
-tbl6 = { Limit = 1000000, Outline = Color3.fromRGB(255, 232, 152) }
-
-do
-	local colorSequenceNew = ColorSequence.new
-	local tbl7 = {}
-	local colorKeypoint = ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 231, 158))
-	local colorKeypoint2 = ColorSequenceKeypoint.new(0.4, Color3.fromRGB(255, 196, 66))
-	tbl7[1] = colorKeypoint
-	tbl7[2] = colorKeypoint2
+	chilliBrainrotESPRuntime, v = fn3("__ChilliBrainrotESPRuntime")
+	local font
+	font = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.ExtraBold, Enum.FontStyle.Normal)
+	local tbl5
+	tbl5 = {}
+	local tbl6
+	tbl6 = { Limit = 1000000, Outline = Color3.fromRGB(255, 232, 152) }
 
 	do
-		local values = table.pack(ColorSequenceKeypoint.new(1, Color3.fromRGB(214, 142, 12)))
-		table.move(values, 1, values.n, 3, tbl7)
-	end
+		local colorSequenceNew = ColorSequence.new
+		local tbl7 = {}
+		local colorKeypoint = ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 231, 158))
+		local colorKeypoint2 = ColorSequenceKeypoint.new(0.4, Color3.fromRGB(255, 196, 66))
+		tbl7[1] = colorKeypoint
+		tbl7[2] = colorKeypoint2
 
-	tbl6.Text = colorSequenceNew(tbl7)
-end
-
-do
-	local colorSequenceNew = ColorSequence.new
-	local tbl7 = {}
-	local colorKeypoint = ColorSequenceKeypoint.new(0, Color3.fromRGB(122, 76, 0))
-	local colorKeypoint2 = ColorSequenceKeypoint.new(0.55, Color3.fromRGB(62, 38, 0))
-	local colorSequenceKeypointNew = ColorSequenceKeypoint.new
-	local color3FromRGB = Color3.fromRGB
-	tbl7[1] = colorKeypoint
-	tbl7[2] = colorKeypoint2
-
-	do
-		local values = table.pack(colorSequenceKeypointNew(1, color3FromRGB(20, 12, 0)))
-		table.move(values, 1, values.n, 3, tbl7)
-	end
-
-	tbl6.Stroke = colorSequenceNew(tbl7)
-end
-
-local tbl7
-tbl7 = { Limit = 10000000, Outline = Color3.fromRGB(255, 194, 112) }
-
-do
-	local colorSequenceNew = ColorSequence.new
-	local tbl8 = {}
-	local colorKeypoint = ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 198, 132))
-	local colorKeypoint2 = ColorSequenceKeypoint.new(0.4, Color3.fromRGB(255, 146, 40))
-	tbl8[1] = colorKeypoint
-	tbl8[2] = colorKeypoint2
-
-	do
-		local values = table.pack(ColorSequenceKeypoint.new(1, Color3.fromRGB(206, 92, 0)))
-		table.move(values, 1, values.n, 3, tbl8)
-	end
-
-	tbl7.Text = colorSequenceNew(tbl8)
-end
-
-do
-	local colorSequenceNew = ColorSequence.new
-	local tbl8 = {}
-	local colorKeypoint = ColorSequenceKeypoint.new(0, Color3.fromRGB(112, 54, 0))
-	local colorKeypoint2 = ColorSequenceKeypoint.new(0.55, Color3.fromRGB(56, 27, 0))
-	tbl8[1] = colorKeypoint
-	tbl8[2] = colorKeypoint2
-
-	do
-		local values = table.pack(ColorSequenceKeypoint.new(1, Color3.fromRGB(18, 8, 0)))
-		table.move(values, 1, values.n, 3, tbl8)
-	end
-
-	tbl7.Stroke = colorSequenceNew(tbl8)
-end
-
-local tbl8
-tbl8 = { Limit = 100000000, Outline = Color3.fromRGB(255, 160, 132) }
-
-do
-	local colorSequenceNew = ColorSequence.new
-	local tbl9 = {}
-	local colorKeypoint = ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 168, 140))
-	local colorKeypoint2 = ColorSequenceKeypoint.new(0.4, Color3.fromRGB(255, 82, 38))
-	tbl9[1] = colorKeypoint
-	tbl9[2] = colorKeypoint2
-
-	do
-		local values = table.pack(ColorSequenceKeypoint.new(1, Color3.fromRGB(196, 42, 0)))
-		table.move(values, 1, values.n, 3, tbl9)
-	end
-
-	tbl8.Text = colorSequenceNew(tbl9)
-end
-
-do
-	local colorSequenceNew = ColorSequence.new
-	local tbl9 = {}
-	local colorKeypoint = ColorSequenceKeypoint.new(0, Color3.fromRGB(112, 26, 0))
-	local colorKeypoint2 = ColorSequenceKeypoint.new(0.55, Color3.fromRGB(56, 13, 0))
-	tbl9[1] = colorKeypoint
-	tbl9[2] = colorKeypoint2
-
-	do
-		local values = table.pack(ColorSequenceKeypoint.new(1, Color3.fromRGB(18, 4, 0)))
-		table.move(values, 1, values.n, 3, tbl9)
-	end
-
-	tbl8.Stroke = colorSequenceNew(tbl9)
-end
-
-do
-	local tbl9 = { Limit = math.huge, Outline = Color3.fromRGB(255, 128, 138) }
-	local colorSequenceNew = ColorSequence.new
-	local tbl10 = {}
-	local colorKeypoint = ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 105, 105))
-	local colorKeypoint2 = ColorSequenceKeypoint.new(0.4, Color3.fromRGB(255, 28, 40))
-	tbl10[1] = colorKeypoint
-	tbl10[2] = colorKeypoint2
-
-	do
-		local values = table.pack(ColorSequenceKeypoint.new(1, Color3.fromRGB(184, 0, 18)))
-		table.move(values, 1, values.n, 3, tbl10)
-	end
-
-	tbl9.Text = colorSequenceNew(tbl10)
-	local colorSequenceNew2 = ColorSequence.new
-	local tbl11 = {}
-	local colorKeypoint3 = ColorSequenceKeypoint.new(0, Color3.fromRGB(124, 0, 15))
-	local colorKeypoint4 = ColorSequenceKeypoint.new(0.55, Color3.fromRGB(61, 0, 9))
-	tbl11[1] = colorKeypoint3
-	tbl11[2] = colorKeypoint4
-
-	do
-		local values = table.pack(ColorSequenceKeypoint.new(1, Color3.fromRGB(18, 0, 3)))
-		table.move(values, 1, values.n, 3, tbl11)
-	end
-
-	tbl9.Stroke = colorSequenceNew2(tbl11)
-	tbl5[1] = tbl6
-	tbl5[2] = tbl7
-	tbl5[3] = tbl8
-	tbl5[4] = tbl9
-end
-
-local ok
-
-do
-	local ok2, result = pcall(function()
-		return require(ReplicatedStorage.Datas.Animals)
-	end)
-
-	ok = ok2 and type(result) == "table" and result or {}
-end
-
-local ok2
-
-do
-	local ok3, result = pcall(function()
-		return require(ReplicatedStorage.Datas.Rarities)
-	end)
-
-	ok2 = ok3 and type(result) == "table" and result or {}
-end
-
-local ok3
-
-do
-	local ok4, result = pcall(function()
-		return require(ReplicatedStorage.Datas.Mutations)
-	end)
-
-	ok3 = ok4 and type(result) == "table" and result or {}
-end
-
-local ok4
-
-do
-	local ok5, result = pcall(function()
-		return require(ReplicatedStorage.Packages.Gradients)
-	end)
-
-	ok4 = ok5 and type(result) == "table" and result or nil
-end
-
-local matchMap
-matchMap = {}
-local flag8, connections2, kMap, n5, flag9, flag10, n6, enabledFlags, configMap, fn12
-local formatCompact, getRootPart, fn13, fn14, fn15, fn16, fn17, fn18, fn19
-
-do
-	local ok5, result = pcall(function()
-		return require(ReplicatedStorage.Datas.Traits)
-	end)
-
-	local ok6 = ok5 and type(result) == "table" and result or {}
-
-	for k, v8 in pairs(ok6) do
-		if type(v8) == "table" then
-			v8.TraitKey = k
-
-			if v8.Icon then
-				local str = tostring(v8.Icon)
-				matchMap[str] = v8
-				local match = str:match("%d+")
-
-				if match then
-					matchMap[match] = v8
-				end
-			end
-		end
-	end
-
-	flag8 = false
-	connections2 = {}
-	kMap = {}
-	n5 = 1
-	flag9 = false
-	flag10 = false
-	n6 = 1000000
-	enabledFlags = { Name = true, Mutation = true, Value = true, Trails = true, Rarity = false }
-
-	configMap = {
-		["K/s"] = { Min = 0, Max = 1000, Mult = 1000 },
-		["M/s"] = { Min = 0, Max = 1000, Mult = 1000000 },
-		["B/s"] = { Min = 1, Max = 10, Mult = 1e9 },
-	}
-
-	fn12 = function(arg)
-		for _, v8 in ipairs(tbl5) do
-			if arg < v8.Limit then
-				return v8
-			end
+		do
+			local values = table.pack(ColorSequenceKeypoint.new(1, Color3.fromRGB(214, 142, 12)))
+			table.move(values, 1, values.n, 3, tbl7)
 		end
 
-		return tbl5[#tbl5]
+		tbl6.Text = colorSequenceNew(tbl7)
 	end
 
-	local function fn20(arg)
-		local v8 = ok[arg]
-		if type(v8) == "table" and v8.Rarity then
-			return tostring(v8.Rarity)
+	do
+		local colorSequenceNew = ColorSequence.new
+		local tbl7 = {}
+		local colorKeypoint = ColorSequenceKeypoint.new(0, Color3.fromRGB(122, 76, 0))
+		local colorKeypoint2 = ColorSequenceKeypoint.new(0.55, Color3.fromRGB(62, 38, 0))
+		local colorSequenceKeypointNew = ColorSequenceKeypoint.new
+		local color3FromRGB = Color3.fromRGB
+		tbl7[1] = colorKeypoint
+		tbl7[2] = colorKeypoint2
+
+		do
+			local values = table.pack(colorSequenceKeypointNew(1, color3FromRGB(20, 12, 0)))
+			table.move(values, 1, values.n, 3, tbl7)
 		end
-		return nil
+
+		tbl6.Stroke = colorSequenceNew(tbl7)
 	end
 
-	formatCompact = function(arg)
-		if arg >= 1e9 then
-			return string.format("$%.2fB/s", arg / 1e9)
+	local tbl7
+	tbl7 = { Limit = 10000000, Outline = Color3.fromRGB(255, 194, 112) }
+
+	do
+		local colorSequenceNew = ColorSequence.new
+		local tbl8 = {}
+		local colorKeypoint = ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 198, 132))
+		local colorKeypoint2 = ColorSequenceKeypoint.new(0.4, Color3.fromRGB(255, 146, 40))
+		tbl8[1] = colorKeypoint
+		tbl8[2] = colorKeypoint2
+
+		do
+			local values = table.pack(ColorSequenceKeypoint.new(1, Color3.fromRGB(206, 92, 0)))
+			table.move(values, 1, values.n, 3, tbl8)
 		end
 
-		if arg >= 1000000 then
-			return string.format("$%.2fM/s", arg / 1000000)
-		end
-
-		if arg >= 1000 then
-			return string.format("$%.1fK/s", arg / 1000)
-		end
-		return string.format("$%d/s", math.floor(arg))
+		tbl7.Text = colorSequenceNew(tbl8)
 	end
 
-	local function fn21(arg, arg2)
-		local debris = Workspace:FindFirstChild("Debris")
+	do
+		local colorSequenceNew = ColorSequence.new
+		local tbl8 = {}
+		local colorKeypoint = ColorSequenceKeypoint.new(0, Color3.fromRGB(112, 54, 0))
+		local colorKeypoint2 = ColorSequenceKeypoint.new(0.55, Color3.fromRGB(56, 27, 0))
+		tbl8[1] = colorKeypoint
+		tbl8[2] = colorKeypoint2
 
-		if debris then
-			local magnitude = nil
-			local animalOverhead = nil
+		do
+			local values = table.pack(ColorSequenceKeypoint.new(1, Color3.fromRGB(18, 8, 0)))
+			table.move(values, 1, values.n, 3, tbl8)
+		end
 
-			for _, child in ipairs(debris:GetChildren()) do
-				if child.Name == "FastOverheadTemplate" and child:IsA("BasePart") then
-					local animalOverhead2 = child:FindFirstChild("AnimalOverhead")
-					local displayName = animalOverhead2 and animalOverhead2:FindFirstChild("DisplayName")
+		tbl7.Stroke = colorSequenceNew(tbl8)
+	end
 
-					if displayName and displayName:IsA("TextLabel") and displayName.Text == arg.Name then
-						local magnitude2 = (child.Position - arg2.Position).Magnitude
+	local tbl8
+	tbl8 = { Limit = 100000000, Outline = Color3.fromRGB(255, 160, 132) }
 
-						if not magnitude or magnitude2 < magnitude then
-							magnitude = magnitude2
-							animalOverhead = animalOverhead2
-						end
+	do
+		local colorSequenceNew = ColorSequence.new
+		local tbl9 = {}
+		local colorKeypoint = ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 168, 140))
+		local colorKeypoint2 = ColorSequenceKeypoint.new(0.4, Color3.fromRGB(255, 82, 38))
+		tbl9[1] = colorKeypoint
+		tbl9[2] = colorKeypoint2
+
+		do
+			local values = table.pack(ColorSequenceKeypoint.new(1, Color3.fromRGB(196, 42, 0)))
+			table.move(values, 1, values.n, 3, tbl9)
+		end
+
+		tbl8.Text = colorSequenceNew(tbl9)
+	end
+
+	do
+		local colorSequenceNew = ColorSequence.new
+		local tbl9 = {}
+		local colorKeypoint = ColorSequenceKeypoint.new(0, Color3.fromRGB(112, 26, 0))
+		local colorKeypoint2 = ColorSequenceKeypoint.new(0.55, Color3.fromRGB(56, 13, 0))
+		tbl9[1] = colorKeypoint
+		tbl9[2] = colorKeypoint2
+
+		do
+			local values = table.pack(ColorSequenceKeypoint.new(1, Color3.fromRGB(18, 4, 0)))
+			table.move(values, 1, values.n, 3, tbl9)
+		end
+
+		tbl8.Stroke = colorSequenceNew(tbl9)
+	end
+
+	do
+		local tbl9 = { Limit = math.huge, Outline = Color3.fromRGB(255, 128, 138) }
+		local colorSequenceNew = ColorSequence.new
+		local tbl10 = {}
+		local colorKeypoint = ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 105, 105))
+		local colorKeypoint2 = ColorSequenceKeypoint.new(0.4, Color3.fromRGB(255, 28, 40))
+		tbl10[1] = colorKeypoint
+		tbl10[2] = colorKeypoint2
+
+		do
+			local values = table.pack(ColorSequenceKeypoint.new(1, Color3.fromRGB(184, 0, 18)))
+			table.move(values, 1, values.n, 3, tbl10)
+		end
+
+		tbl9.Text = colorSequenceNew(tbl10)
+		local colorSequenceNew2 = ColorSequence.new
+		local tbl11 = {}
+		local colorKeypoint3 = ColorSequenceKeypoint.new(0, Color3.fromRGB(124, 0, 15))
+		local colorKeypoint4 = ColorSequenceKeypoint.new(0.55, Color3.fromRGB(61, 0, 9))
+		tbl11[1] = colorKeypoint3
+		tbl11[2] = colorKeypoint4
+
+		do
+			local values = table.pack(ColorSequenceKeypoint.new(1, Color3.fromRGB(18, 0, 3)))
+			table.move(values, 1, values.n, 3, tbl11)
+		end
+
+		tbl9.Stroke = colorSequenceNew2(tbl11)
+		tbl5[1] = tbl6
+		tbl5[2] = tbl7
+		tbl5[3] = tbl8
+		tbl5[4] = tbl9
+	end
+
+	do
+		local ok2, result = pcall(function()
+			return require(ReplicatedStorage.Datas.Animals)
+		end)
+
+		ok = ok2 and type(result) == "table" and result or {}
+	end
+
+	local ok2
+
+	do
+		local ok3, result = pcall(function()
+			return require(ReplicatedStorage.Datas.Rarities)
+		end)
+
+		ok2 = ok3 and type(result) == "table" and result or {}
+	end
+
+	local ok3, fn24
+
+	do
+		local ok4, result = pcall(function()
+			return require(ReplicatedStorage.Datas.Mutations)
+		end)
+
+		local ok5 = ok4 and type(result) == "table" and result or {}
+
+		local ok6, result2 = pcall(function()
+			return require(ReplicatedStorage.Packages.Gradients)
+		end)
+
+		ok3 = ok6 and type(result2) == "table" and result2 or nil
+		local matchMap = {}
+
+		local ok7, result3 = pcall(function()
+			return require(ReplicatedStorage.Datas.Traits)
+		end)
+
+		local ok8 = ok7 and type(result3) == "table" and result3 or {}
+
+		for k, v4 in pairs(ok8) do
+			if type(v4) == "table" then
+				v4.TraitKey = k
+
+				if v4.Icon then
+					local str = tostring(v4.Icon)
+					matchMap[str] = v4
+					local match = str:match("%d+")
+
+					if match then
+						matchMap[match] = v4
 					end
 				end
 			end
-
-			if animalOverhead and magnitude and magnitude <= 14 then
-				return animalOverhead
-			end
 		end
 
-		return nil
-	end
+		flag2 = false
+		connections = {}
+		kMap = {}
+		n2 = 1
+		flag3 = false
+		flag4 = false
+		n3 = 1000000
+		enabledFlags = { Name = true, Mutation = true, Value = true, Trails = true, Rarity = false }
 
-	local function fn22(arg)
-		if arg.CachedOverhead and arg.CachedOverhead.Parent then
-			return arg.CachedOverhead
-		end
-		local v8 = fn21(arg.Model, arg.Root)
-		arg.CachedOverhead = v8
-		return v8
-	end
-
-	local function fn23(arg, arg2, arg3)
-		local arg32 = arg3 or fn21(arg, arg2)
-		arg32 = arg32 and arg32:FindFirstChild("Mutation")
-		if not (arg32 and arg32:IsA("TextLabel") and arg32.Visible) then
-			return nil
-		end
-		local str = tostring(arg32.Text or "")
-		if str == "" then
-			return nil
-		end
-
-		local tbl9 = {
-			Text = str,
-			RichText = arg32.RichText == true,
-			Color = arg32.TextColor3,
-			Font = arg32.FontFace,
-			StrokeColor = nil,
-			Gradient = nil,
-			SourceGrad = arg32:FindFirstChildOfClass("UIGradient"),
+		configMap = {
+			["K/s"] = { Min = 0, Max = 1000, Mult = 1000 },
+			["M/s"] = { Min = 0, Max = 1000, Mult = 1000000 },
+			["B/s"] = { Min = 1, Max = 10, Mult = 1e9 },
 		}
 
-		local uiStroke = arg32:FindFirstChildOfClass("UIStroke")
+		fn24 = function(arg)
+			for _, v4 in ipairs(tbl5) do
+				if arg < v4.Limit then
+					return v4
+				end
+			end
 
-		if uiStroke then
-			tbl9.StrokeColor = uiStroke.Color
+			return tbl5[#tbl5]
 		end
 
-		if tbl9.SourceGrad then
-			tbl9.Gradient = {
-				Color = tbl9.SourceGrad.Color,
-				Rotation = tbl9.SourceGrad.Rotation,
-				Offset = tbl9.SourceGrad.Offset,
-			}
+		local function fn25(arg)
+			local v4 = ok[arg]
+			if type(v4) == "table" and v4.Rarity then
+				return tostring(v4.Rarity)
+			end
+			return nil
 		end
 
-		return tbl9
-	end
+		local function formatCompact(arg)
+			if arg >= 1e9 then
+				return string.format("$%.2fB/s", arg / 1e9)
+			end
 
-	local function fn24(arg)
-		local n7
+			if arg >= 1000000 then
+				return string.format("$%.2fM/s", arg / 1000000)
+			end
 
-		if not (not arg or arg == "") then
-			local match, match2 = arg:gsub("[%$,/s]", ""):gsub("%s+", ""):match("^([%d%.]+)([KkMmBbTt]?)$")
-			if not match then
+			if arg >= 1000 then
+				return string.format("$%.1fK/s", arg / 1000)
+			end
+			return string.format("$%d/s", math.floor(arg))
+		end
+
+		local function fn26(arg, arg2)
+			local debris = Workspace:FindFirstChild("Debris")
+
+			if debris then
+				local magnitude = nil
+				local animalOverhead = nil
+
+				for _, child in ipairs(debris:GetChildren()) do
+					if child.Name == "FastOverheadTemplate" and child:IsA("BasePart") then
+						local animalOverhead2 = child:FindFirstChild("AnimalOverhead")
+						local displayName = animalOverhead2 and animalOverhead2:FindFirstChild("DisplayName")
+
+						if displayName and displayName:IsA("TextLabel") and displayName.Text == arg.Name then
+							local magnitude2 = (child.Position - arg2.Position).Magnitude
+
+							if not magnitude or magnitude2 < magnitude then
+								magnitude = magnitude2
+								animalOverhead = animalOverhead2
+							end
+						end
+					end
+				end
+
+				if animalOverhead and magnitude and magnitude <= 14 then
+					return animalOverhead
+				end
+			end
+
+			return nil
+		end
+
+		local function fn27(arg)
+			if arg.CachedOverhead and arg.CachedOverhead.Parent then
+				return arg.CachedOverhead
+			end
+			local v4 = fn26(arg.Model, arg.Root)
+			arg.CachedOverhead = v4
+			return v4
+		end
+
+		local function fn28(arg, arg2, arg3)
+			local arg32 = arg3 or fn26(arg, arg2)
+			arg32 = arg32 and arg32:FindFirstChild("Mutation")
+			if not (arg32 and arg32:IsA("TextLabel") and arg32.Visible) then
 				return nil
 			end
-			n7 = tonumber(match) or 0
-			local str = match2:upper()
-
-			if str == "K" then
-				n7 *= 1000
-			elseif str == "M" then
-				n7 *= 1000000
-			elseif str == "B" then
-				n7 *= 1e9
-			elseif str == "T" then
-				n7 *= 1e12
+			local str = tostring(arg32.Text or "")
+			if str == "" then
+				return nil
 			end
+
+			local tbl9 = {
+				Text = str,
+				RichText = arg32.RichText == true,
+				Color = arg32.TextColor3,
+				Font = arg32.FontFace,
+				StrokeColor = nil,
+				Gradient = nil,
+				SourceGrad = arg32:FindFirstChildOfClass("UIGradient"),
+			}
+
+			local uiStroke = arg32:FindFirstChildOfClass("UIStroke")
+
+			if uiStroke then
+				tbl9.StrokeColor = uiStroke.Color
+			end
+
+			if tbl9.SourceGrad then
+				tbl9.Gradient = {
+					Color = tbl9.SourceGrad.Color,
+					Rotation = tbl9.SourceGrad.Rotation,
+					Offset = tbl9.SourceGrad.Offset,
+				}
+			end
+
+			return tbl9
 		end
 
-		return n7
-	end
+		local function fn29(arg)
+			local n8
 
-	local function fn25(arg, arg2, arg3, arg4)
-		local v8 = ok[arg]
-		local n7 = type(v8) == "table" and tonumber(v8.Generation) or 0
-		local n8
+			if not (not arg or arg == "") then
+				local match, match2 = arg:gsub("[%$,/s]", ""):gsub("%s+", ""):match("^([%d%.]+)([KkMmBbTt]?)$")
+				if not match then
+					return nil
+				end
+				n8 = tonumber(match) or 0
+				local str = match2:upper()
 
-		if n7 <= 0 then
-			n8 = fn24(arg4) or 0
-		else
-			local ok7 = arg2 and ok3 and ok3[arg2]
-			local n9 = 1
-
-			if ok7 then
-				n9 = 1 + (tonumber(ok3[arg2].Modifier) or 0)
+				if str == "K" then
+					n8 *= 1000
+				elseif str == "M" then
+					n8 *= 1000000
+				elseif str == "B" then
+					n8 *= 1e9
+				elseif str == "T" then
+					n8 *= 1e12
+				end
 			end
 
-			local ok8 = arg3 and ok6
-			local flag11 = false
+			return n8
+		end
 
-			if ok8 then
-				for _, v9 in ipairs(arg3) do
-					local v10 = ok6[v9] or ok6[v9:gsub("_", " ")]
+		local function fn30(arg, arg2, arg3, arg4)
+			local v4 = ok[arg]
+			local n8 = type(v4) == "table" and tonumber(v4.Generation) or 0
+			local n9
 
-					if v10 then
-						if v9 == "Sleepy" or v10.Name == "Sleepy" then
-							flag11 = true
-						else
-							n9 += tonumber(v10.MultiplierModifier) or 0
+			if n8 <= 0 then
+				n9 = fn29(arg4) or 0
+			else
+				local ok9 = arg2 and ok5 and ok5[arg2]
+				local n10 = 1
+
+				if ok9 then
+					n10 = 1 + (tonumber(ok5[arg2].Modifier) or 0)
+				end
+
+				local ok10 = arg3 and ok8
+				local flag11 = false
+
+				if ok10 then
+					for _, v5 in ipairs(arg3) do
+						local v6 = ok8[v5] or ok8[v5:gsub("_", " ")]
+
+						if v6 then
+							if v5 == "Sleepy" or v6.Name == "Sleepy" then
+								flag11 = true
+							else
+								n10 += tonumber(v6.MultiplierModifier) or 0
+							end
 						end
 					end
 				end
+
+				n9 = math.round(n8 * n10 * (flag11 and 0.5 or 1))
+				local v5 = fn29(arg4)
+				if v5 and v5 > n9 then
+					return v5
+				end
+				n9 = n9 > 0 and n9 or v5 or n8
 			end
 
-			n8 = math.round(n7 * n9 * (flag11 and 0.5 or 1))
-			local v9 = fn24(arg4)
-			if v9 and v9 > n8 then
-				return v9
-			end
-			n8 = n8 > 0 and n8 or v9 or n7
+			return n9
 		end
 
-		return n8
-	end
+		local function fn31(arg, arg2, arg3)
+			local list = {}
+			local list2 = {}
+			local matchMap2 = {}
+			local tbl9 = {}
 
-	local function fn26(arg, arg2, arg3)
-		local list = {}
-		local list2 = {}
-		local matchMap2 = {}
-		local tbl9 = {}
+			local function fn32(arg4, arg5)
+				if arg4 and not tbl9[arg4] then
+					tbl9[arg4] = true
+					table.insert(list2, arg4)
+				end
 
-		local function fn27(arg4, arg5)
-			if arg4 and not tbl9[arg4] then
-				tbl9[arg4] = true
-				table.insert(list2, arg4)
-			end
+				if arg5 and arg5 ~= "" and arg5 ~= "rbxassetid://110835412437000" then
+					local match = tostring(arg5):match("%d+")
+					local match2 = match or tostring(arg5)
 
-			if arg5 and arg5 ~= "" and arg5 ~= "rbxassetid://110835412437000" then
-				local match = tostring(arg5):match("%d+")
-				local match2 = match or tostring(arg5)
+					if not matchMap2[match2] then
+						matchMap2[match2] = true
+						local str = tostring(arg5)
 
-				if not matchMap2[match2] then
-					matchMap2[match2] = true
-					local str = tostring(arg5)
+						if not str:find("://") and match then
+							str = "rbxassetid://" .. match
+						end
 
-					if not str:find("://") and match then
-						str = "rbxassetid://" .. match
+						table.insert(list, str)
 					end
-
-					table.insert(list, str)
 				end
 			end
-		end
 
-		local arg32 = arg3 or fn21(arg, arg2)
-		arg32 = arg32 and arg32:FindFirstChild("Traits")
+			local arg32 = arg3 or fn26(arg, arg2)
+			arg32 = arg32 and arg32:FindFirstChild("Traits")
 
-		if arg32 and arg32.Visible then
-			for _, child in ipairs(arg32:GetChildren()) do
-				if child:IsA("ImageLabel") and child.Visible and child.Image and child.Image ~= "" then
-					local str = tostring(child.Image)
-					local match = str:match("%d+")
-					local matchEntry = matchMap[str] or match and matchMap[match]
+			if arg32 and arg32.Visible then
+				for _, child in ipairs(arg32:GetChildren()) do
+					if child:IsA("ImageLabel") and child.Visible and child.Image and child.Image ~= "" then
+						local str = tostring(child.Image)
+						local match = str:match("%d+")
+						local matchEntry = matchMap[str] or match and matchMap[match]
 
-					if matchEntry then
-						matchEntry = matchEntry.TraitKey or matchEntry.Display or matchEntry.Name
+						if matchEntry then
+							matchEntry = matchEntry.TraitKey or matchEntry.Display or matchEntry.Name
+						end
+
+						fn32(matchEntry, child.Image)
 					end
-
-					fn27(matchEntry, child.Image)
 				end
 			end
-		end
 
-		for _, child in ipairs(arg:GetChildren()) do
-			local match = child.Name:match("^_Trait%.(.+)$")
+			for _, child in ipairs(arg:GetChildren()) do
+				local match = child.Name:match("^_Trait%.(.+)$")
 
-			if match then
-				local v8 = ok6[match] or ok6[match:gsub("_", " ")]
-				fn27(match, v8 and v8.Icon)
-			end
-		end
-
-		local attribute = arg:GetAttribute("Trait") or arg:GetAttribute("Traits")
-
-		if attribute then
-			local str = tostring(attribute)
-			local v8 = ok6[str] or ok6[str:gsub("_", " ")]
-			fn27(str, v8 and v8.Icon)
-		end
-
-		return #list > 0 and list or nil, #list2 > 0 and list2 or nil
-	end
-
-	getRootPart = function(arg)
-		return arg:FindFirstChild("RootPart") or arg.PrimaryPart or arg:FindFirstChildWhichIsA("BasePart")
-	end
-
-	local function fn27(parent, layoutOrder, arg)
-		local frame = Instance.new("Frame")
-		frame.BackgroundTransparency = 1
-		frame.LayoutOrder = layoutOrder
-		frame.Size = UDim2.new(1, 0, 0, arg)
-		frame.Parent = parent
-		local textLabel = Instance.new("TextLabel")
-		textLabel.BackgroundTransparency = 1
-		textLabel.FontFace = font
-		textLabel.Position = UDim2.fromOffset(1, 1)
-		textLabel.Size = UDim2.fromScale(1, 1)
-		textLabel.Text = ""
-		textLabel.TextColor3 = Color3.fromRGB(12, 0, 2)
-		textLabel.TextScaled = true
-		textLabel.TextStrokeTransparency = 1
-		textLabel.TextTransparency = 0.1
-		textLabel.ZIndex = 2
-		textLabel.Parent = frame
-		local textLabel2 = Instance.new("TextLabel")
-		textLabel2.BackgroundTransparency = 1
-		textLabel2.FontFace = font
-		textLabel2.Size = UDim2.fromScale(1, 1)
-		textLabel2.Text = ""
-		textLabel2.TextColor3 = Color3.fromRGB(255, 255, 255)
-		textLabel2.TextScaled = true
-		textLabel2.TextStrokeTransparency = 1
-		textLabel2.ZIndex = 3
-		textLabel2.Parent = frame
-		local uiStroke = Instance.new("UIStroke")
-		uiStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
-		uiStroke.Color = Color3.fromRGB(0, 0, 0)
-		uiStroke.LineJoinMode = Enum.LineJoinMode.Round
-
-		uiStroke.Thickness = pcall(function()
-			uiStroke.BorderOffset = UDim.new(0, 0)
-			uiStroke.BorderStrokePosition = Enum.BorderStrokePosition.Outer
-			uiStroke.StrokeSizingMode = Enum.StrokeSizingMode.ScaledSize
-		end) and 0.05 or 1.6
-
-		uiStroke.Transparency = 0.05
-		uiStroke.Parent = textLabel2
-		local uiGradient = Instance.new("UIGradient")
-		uiGradient.Rotation = 90
-		uiGradient.Enabled = false
-		uiGradient.Parent = uiStroke
-		local uiGradient2 = Instance.new("UIGradient")
-		uiGradient2.Rotation = 90
-		uiGradient2.Enabled = false
-		uiGradient2.Parent = textLabel2
-		return { Holder = frame, Label = textLabel2, Shadow = textLabel, Stroke = uiStroke, StrokeGradient = uiGradient, TextGradient = uiGradient2 }
-	end
-
-	local function fn28(parent, layoutOrder, arg)
-		local traitRow = Instance.new("Frame")
-		traitRow.Name = "TraitRow"
-		traitRow.BackgroundTransparency = 1
-		traitRow.LayoutOrder = layoutOrder
-		traitRow.Size = UDim2.new(1, 0, 0, arg)
-		traitRow.Parent = parent
-		local uiListLayout = Instance.new("UIListLayout")
-		uiListLayout.FillDirection = Enum.FillDirection.Horizontal
-		uiListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-		uiListLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-		uiListLayout.Padding = UDim.new(0, 3)
-		uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-		uiListLayout.Parent = traitRow
-		return { Holder = traitRow, Layout = uiListLayout, Icons = {}, CurrentKey = "" }
-	end
-
-	fn13 = function(adornee, adornee2)
-		local brainrotTag = Instance.new("BillboardGui")
-		brainrotTag.Name = "BrainrotTag"
-		brainrotTag.Adornee = adornee2
-		brainrotTag.AlwaysOnTop = true
-		brainrotTag.ClipsDescendants = false
-		brainrotTag.LightInfluence = 0
-		brainrotTag.MaxDistance = math.huge
-		brainrotTag.Size = UDim2.fromOffset(220, 95)
-		brainrotTag.StudsOffsetWorldSpace = Vector3.new(0, 4.4, 0)
-		brainrotTag.Parent = adornee2
-		local frame = Instance.new("Frame")
-		frame.BackgroundTransparency = 1
-		frame.Size = UDim2.fromScale(1, 1)
-		frame.Parent = brainrotTag
-		local uiListLayout = Instance.new("UIListLayout")
-		uiListLayout.FillDirection = Enum.FillDirection.Vertical
-		uiListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-		uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-		uiListLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
-		uiListLayout.Parent = frame
-		local v8 = fn21(adornee, adornee2)
-		local text = v8 and v8:FindFirstChild("Generation") and v8.Generation.Text
-		local text2 = v8 and v8:FindFirstChild("Mutation") and v8.Mutation.Visible and v8.Mutation.Text
-
-		if not text2 then
-			local attribute = adornee:GetAttribute("Mutation") or adornee:GetAttribute("__mutation")
-
-			if attribute and tostring(attribute) ~= "" then
-				text2 = tostring(attribute)
-			end
-		end
-
-		local v9, v10 = fn26(adornee, adornee2)
-		local v11 = fn25(adornee.Name, text2, v10, text)
-
-		local tbl9 = {
-			Model = adornee,
-			Root = adornee2,
-			Billboard = brainrotTag,
-			Column = frame,
-			RarityRow = fn27(frame, 0, 16),
-			TraitRow = fn28(frame, 1, 18),
-			MutationRow = fn27(frame, 2, 15),
-			NameRow = fn27(frame, 3, 19),
-			ValueRow = fn27(frame, 4, 16),
-			Name = adornee.Name,
-			Generation = v11,
-		}
-
-		tbl9.RarityRow.Label.RichText = true
-		tbl9.MutationRow.Label.RichText = true
-		tbl9.RarityRow.Holder.Visible = false
-		tbl9.TraitRow.Holder.Visible = false
-		local v12 = fn12(tbl9.Generation)
-		tbl9.NameRow.TextGradient.Color = v12.Text
-		tbl9.NameRow.TextGradient.Enabled = true
-		tbl9.NameRow.StrokeGradient.Color = v12.Stroke
-		tbl9.NameRow.StrokeGradient.Enabled = true
-		tbl9.ValueRow.TextGradient.Enabled = false
-		tbl9.ValueRow.StrokeGradient.Enabled = false
-		tbl9.ValueRow.Label.TextColor3 = Color3.fromRGB(115, 255, 0)
-		tbl9.ValueRow.Shadow.TextColor3 = Color3.fromRGB(18, 48, 0)
-		tbl9.ValueRow.Stroke.Transparency = 0.3
-		tbl9.NameRow.Label.Text = tbl9.Name
-		tbl9.NameRow.Shadow.Text = tbl9.Name
-		local formattedText = formatCompact(tbl9.Generation)
-		tbl9.ValueRow.Label.Text = formattedText
-		tbl9.ValueRow.Shadow.Text = formattedText
-		local brainrotHighlight = Instance.new("Highlight")
-		brainrotHighlight.Name = "BrainrotHighlight"
-		brainrotHighlight.Adornee = adornee
-		brainrotHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-		brainrotHighlight.FillColor = v12.Outline
-		brainrotHighlight.FillTransparency = 0.86
-		brainrotHighlight.OutlineColor = v12.Outline
-		brainrotHighlight.OutlineTransparency = 0.3
-		brainrotHighlight.Enabled = false
-		brainrotHighlight.Parent = adornee
-		tbl9.Highlight = brainrotHighlight
-		tbl9.BeamTint = v12.Outline
-		return tbl9
-	end
-
-	fn14 = function(arg)
-		local floor = math.floor
-		local n7 = 95 * n5
-		arg.Billboard.Size = UDim2.fromOffset(math.floor(220 * n5), floor(n7))
-		arg.RarityRow.Holder.Size = UDim2.new(1, 0, 0, math.floor(16 * n5))
-		local n8 = math.floor(18 * n5)
-		arg.TraitRow.Holder.Size = UDim2.new(1, 0, 0, n8)
-
-		for _, icon in ipairs(arg.TraitRow.Icons) do
-			icon.Size = UDim2.fromOffset(n8, n8)
-		end
-
-		arg.MutationRow.Holder.Size = UDim2.new(1, 0, 0, math.floor(15 * n5))
-		arg.NameRow.Holder.Size = UDim2.new(1, 0, 0, math.floor(19 * n5))
-		arg.ValueRow.Holder.Size = UDim2.new(1, 0, 0, math.floor(16 * n5))
-	end
-
-	local function fn29(arg)
-		if arg.RarityGradientCleanup then
-			pcall(arg.RarityGradientCleanup)
-			arg.RarityGradientCleanup = nil
-		end
-
-		arg.ActiveRarityEffect = nil
-		arg.SourceRarityGrad = nil
-		arg.SourceMutationGrad = nil
-	end
-
-	fn15 = function(arg, arg2)
-		pcall(function()
-			if not enabledFlags.Mutation then
-				arg.MutationShown = false
-				arg.MutationRow.Holder.Visible = false
-				return
+				if match then
+					local v4 = ok8[match] or ok8[match:gsub("_", " ")]
+					fn32(match, v4 and v4.Icon)
+				end
 			end
 
-			if arg2 < (arg.MutationCheckedAt or 0) then
-				arg.MutationRow.Holder.Visible = arg.MutationShown == true
-				return
-			end
-			arg.MutationCheckedAt = arg2 + 0.4
-			local v8 = fn23(arg.Model, arg.Root, fn22(arg))
+			local attribute = arg:GetAttribute("Trait") or arg:GetAttribute("Traits")
 
-			if not v8 then
-				arg.MutationShown = false
-				arg.MutationRow.Holder.Visible = false
-				arg.SourceMutationGrad = nil
-				return
+			if attribute then
+				local str = tostring(attribute)
+				local v4 = ok8[str] or ok8[str:gsub("_", " ")]
+				fn32(str, v4 and v4.Icon)
 			end
 
-			arg.MutationShown = true
-			local mutationRow = arg.MutationRow
-			mutationRow.Holder.Visible = true
-			mutationRow.Label.RichText = v8.RichText
-			mutationRow.Label.Text = v8.Text
-
-			if v8.Color then
-				mutationRow.Label.TextColor3 = v8.Color
-			end
-
-			if v8.Font then
-				pcall(function()
-					mutationRow.Label.FontFace = v8.Font
-					mutationRow.Shadow.FontFace = v8.Font
-				end)
-			end
-
-			if v8.StrokeColor then
-				mutationRow.Stroke.Color = v8.StrokeColor
-			end
-
-			if v8.Gradient then
-				pcall(function()
-					mutationRow.TextGradient.Color = v8.Gradient.Color
-					mutationRow.TextGradient.Rotation = v8.Gradient.Rotation
-					mutationRow.TextGradient.Offset = v8.Gradient.Offset
-					mutationRow.TextGradient.Enabled = true
-				end)
-
-				arg.SourceMutationGrad = v8.SourceGrad
-			else
-				mutationRow.TextGradient.Enabled = false
-				arg.SourceMutationGrad = nil
-			end
-
-			mutationRow.Shadow.RichText = false
-			mutationRow.Shadow.Text = v8.Text:gsub("<[^<>]->", "")
-		end)
-	end
-
-	fn16 = function(arg, arg2)
-		if not enabledFlags.Rarity then
-			arg.RarityShown = false
-			arg.RarityRow.Holder.Visible = false
-			fn29(arg)
-			return
+			return #list > 0 and list or nil, #list2 > 0 and list2 or nil
 		end
 
-		if arg2 < (arg.RarityCheckedAt or 0) then
-			arg.RarityRow.Holder.Visible = arg.RarityShown == true
-			return
-		end
-		arg.RarityCheckedAt = arg2 + 0.5
-		local text = fn20(arg.Model.Name)
-		local v8 = fn22(arg)
-		local rarity = v8 and v8:FindFirstChild("Rarity")
-
-		if rarity and rarity:IsA("TextLabel") and rarity.Visible and rarity.Text ~= "" then
-			text = rarity.Text
+		getRootPart = function(arg)
+			return arg:FindFirstChild("RootPart") or arg.PrimaryPart or arg:FindFirstChildWhichIsA("BasePart")
 		end
 
-		if not text or text == "" then
-			arg.RarityShown = false
-			arg.RarityRow.Holder.Visible = false
-			fn29(arg)
-			return
+		local function fn32(parent3, layoutOrder, arg)
+			local frame = Instance.new("Frame")
+			frame.BackgroundTransparency = 1
+			frame.LayoutOrder = layoutOrder
+			frame.Size = UDim2.new(1, 0, 0, arg)
+			frame.Parent = parent3
+			local textLabel = Instance.new("TextLabel")
+			textLabel.BackgroundTransparency = 1
+			textLabel.FontFace = font
+			textLabel.Position = UDim2.fromOffset(1, 1)
+			textLabel.Size = UDim2.fromScale(1, 1)
+			textLabel.Text = ""
+			textLabel.TextColor3 = Color3.fromRGB(12, 0, 2)
+			textLabel.TextScaled = true
+			textLabel.TextStrokeTransparency = 1
+			textLabel.TextTransparency = 0.1
+			textLabel.ZIndex = 2
+			textLabel.Parent = frame
+			local textLabel2 = Instance.new("TextLabel")
+			textLabel2.BackgroundTransparency = 1
+			textLabel2.FontFace = font
+			textLabel2.Size = UDim2.fromScale(1, 1)
+			textLabel2.Text = ""
+			textLabel2.TextColor3 = Color3.fromRGB(255, 255, 255)
+			textLabel2.TextScaled = true
+			textLabel2.TextStrokeTransparency = 1
+			textLabel2.ZIndex = 3
+			textLabel2.Parent = frame
+			local uiStroke = Instance.new("UIStroke")
+			uiStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
+			uiStroke.Color = Color3.fromRGB(0, 0, 0)
+			uiStroke.LineJoinMode = Enum.LineJoinMode.Round
+
+			uiStroke.Thickness = pcall(function()
+				uiStroke.BorderOffset = UDim.new(0, 0)
+				uiStroke.BorderStrokePosition = Enum.BorderStrokePosition.Outer
+				uiStroke.StrokeSizingMode = Enum.StrokeSizingMode.ScaledSize
+			end) and 0.05 or 1.6
+
+			uiStroke.Transparency = 0.05
+			uiStroke.Parent = textLabel2
+			local uiGradient = Instance.new("UIGradient")
+			uiGradient.Rotation = 90
+			uiGradient.Enabled = false
+			uiGradient.Parent = uiStroke
+			local uiGradient2 = Instance.new("UIGradient")
+			uiGradient2.Rotation = 90
+			uiGradient2.Enabled = false
+			uiGradient2.Parent = textLabel2
+			return { Holder = frame, Label = textLabel2, Shadow = textLabel, Stroke = uiStroke, StrokeGradient = uiGradient, TextGradient = uiGradient2 }
 		end
 
-		arg.RarityShown = true
-		local rarityRow = arg.RarityRow
-		rarityRow.Holder.Visible = true
-		rarityRow.Label.Text = text
-		rarityRow.Shadow.Text = text:gsub("<[^<>]->", "")
-		local gradientPreset = ok2[text]
-		gradientPreset = gradientPreset and gradientPreset.GradientPreset
-		local flag11 = false
+		local function fn33(parent3, layoutOrder, arg)
+			local traitRow = Instance.new("Frame")
+			traitRow.Name = "TraitRow"
+			traitRow.BackgroundTransparency = 1
+			traitRow.LayoutOrder = layoutOrder
+			traitRow.Size = UDim2.new(1, 0, 0, arg)
+			traitRow.Parent = parent3
+			local uiListLayout = Instance.new("UIListLayout")
+			uiListLayout.FillDirection = Enum.FillDirection.Horizontal
+			uiListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+			uiListLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+			uiListLayout.Padding = UDim.new(0, 3)
+			uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+			uiListLayout.Parent = traitRow
+			return { Holder = traitRow, Layout = uiListLayout, Icons = {}, CurrentKey = "" }
+		end
 
-		pcall(function()
-			if gradientPreset and ok4 and ok4.apply then
-				if arg.ActiveRarityEffect ~= gradientPreset then
-					if arg.RarityGradientCleanup then
-						pcall(arg.RarityGradientCleanup)
-						arg.RarityGradientCleanup = nil
-					end
+		fn12 = function(adornee2, adornee3)
+			local brainrotTag = Instance.new("BillboardGui")
+			brainrotTag.Name = "BrainrotTag"
+			brainrotTag.Adornee = adornee3
+			brainrotTag.AlwaysOnTop = true
+			brainrotTag.ClipsDescendants = false
+			brainrotTag.LightInfluence = 0
+			brainrotTag.MaxDistance = math.huge
+			brainrotTag.Size = UDim2.fromOffset(220, 95)
+			brainrotTag.StudsOffsetWorldSpace = Vector3.new(0, 4.4, 0)
+			brainrotTag.Parent = adornee3
+			local frame = Instance.new("Frame")
+			frame.BackgroundTransparency = 1
+			frame.Size = UDim2.fromScale(1, 1)
+			frame.Parent = brainrotTag
+			local uiListLayout = Instance.new("UIListLayout")
+			uiListLayout.FillDirection = Enum.FillDirection.Vertical
+			uiListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+			uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+			uiListLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
+			uiListLayout.Parent = frame
+			local v4 = fn26(adornee2, adornee3)
+			local text = v4 and v4:FindFirstChild("Generation") and v4.Generation.Text
+			local text2 = v4 and v4:FindFirstChild("Mutation") and v4.Mutation.Visible and v4.Mutation.Text
 
-					arg.ActiveRarityEffect = gradientPreset
+			if not text2 then
+				local attribute = adornee2:GetAttribute("Mutation") or adornee2:GetAttribute("__mutation")
 
-					local ok7, rarityGradientCleanup = pcall(function()
-						return ok4.apply(rarityRow.Label, gradientPreset)
+				if attribute and tostring(attribute) ~= "" then
+					text2 = tostring(attribute)
+				end
+			end
+
+			local v5, v6 = fn31(adornee2, adornee3)
+			local v7 = fn30(adornee2.Name, text2, v6, text)
+
+			local tbl9 = {
+				Model = adornee2,
+				Root = adornee3,
+				Billboard = brainrotTag,
+				Column = frame,
+				RarityRow = fn32(frame, 0, 16),
+				TraitRow = fn33(frame, 1, 18),
+				MutationRow = fn32(frame, 2, 15),
+				NameRow = fn32(frame, 3, 19),
+				ValueRow = fn32(frame, 4, 16),
+				Name = adornee2.Name,
+				Generation = v7,
+			}
+
+			tbl9.RarityRow.Label.RichText = true
+			tbl9.MutationRow.Label.RichText = true
+			tbl9.RarityRow.Holder.Visible = false
+			tbl9.TraitRow.Holder.Visible = false
+			local v8 = fn24(tbl9.Generation)
+			tbl9.NameRow.TextGradient.Color = v8.Text
+			tbl9.NameRow.TextGradient.Enabled = true
+			tbl9.NameRow.StrokeGradient.Color = v8.Stroke
+			tbl9.NameRow.StrokeGradient.Enabled = true
+			tbl9.ValueRow.TextGradient.Enabled = false
+			tbl9.ValueRow.StrokeGradient.Enabled = false
+			tbl9.ValueRow.Label.TextColor3 = Color3.fromRGB(115, 255, 0)
+			tbl9.ValueRow.Shadow.TextColor3 = Color3.fromRGB(18, 48, 0)
+			tbl9.ValueRow.Stroke.Transparency = 0.3
+			tbl9.NameRow.Label.Text = tbl9.Name
+			tbl9.NameRow.Shadow.Text = tbl9.Name
+			local formattedText = formatCompact(tbl9.Generation)
+			tbl9.ValueRow.Label.Text = formattedText
+			tbl9.ValueRow.Shadow.Text = formattedText
+			local brainrotHighlight = Instance.new("Highlight")
+			brainrotHighlight.Name = "BrainrotHighlight"
+			brainrotHighlight.Adornee = adornee2
+			brainrotHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+			brainrotHighlight.FillColor = v8.Outline
+			brainrotHighlight.FillTransparency = 0.86
+			brainrotHighlight.OutlineColor = v8.Outline
+			brainrotHighlight.OutlineTransparency = 0.3
+			brainrotHighlight.Enabled = false
+			brainrotHighlight.Parent = adornee2
+			tbl9.Highlight = brainrotHighlight
+			tbl9.BeamTint = v8.Outline
+			return tbl9
+		end
+
+		fn13 = function(arg)
+			local floor = math.floor
+			local n8 = 95 * n2
+			arg.Billboard.Size = UDim2.fromOffset(math.floor(220 * n2), floor(n8))
+			arg.RarityRow.Holder.Size = UDim2.new(1, 0, 0, math.floor(16 * n2))
+			local n9 = math.floor(18 * n2)
+			arg.TraitRow.Holder.Size = UDim2.new(1, 0, 0, n9)
+
+			for _, icon in ipairs(arg.TraitRow.Icons) do
+				icon.Size = UDim2.fromOffset(n9, n9)
+			end
+
+			arg.MutationRow.Holder.Size = UDim2.new(1, 0, 0, math.floor(15 * n2))
+			arg.NameRow.Holder.Size = UDim2.new(1, 0, 0, math.floor(19 * n2))
+			arg.ValueRow.Holder.Size = UDim2.new(1, 0, 0, math.floor(16 * n2))
+		end
+
+		local function fn34(arg)
+			if arg.RarityGradientCleanup then
+				pcall(arg.RarityGradientCleanup)
+				arg.RarityGradientCleanup = nil
+			end
+
+			arg.ActiveRarityEffect = nil
+			arg.SourceRarityGrad = nil
+			arg.SourceMutationGrad = nil
+		end
+
+		fn14 = function(arg, arg2)
+			pcall(function()
+				if not enabledFlags.Mutation then
+					arg.MutationShown = false
+					arg.MutationRow.Holder.Visible = false
+					return
+				end
+
+				if arg2 < (arg.MutationCheckedAt or 0) then
+					arg.MutationRow.Holder.Visible = arg.MutationShown == true
+					return
+				end
+				arg.MutationCheckedAt = arg2 + 0.4
+				local v4 = fn28(arg.Model, arg.Root, fn27(arg))
+
+				if not v4 then
+					arg.MutationShown = false
+					arg.MutationRow.Holder.Visible = false
+					arg.SourceMutationGrad = nil
+					return
+				end
+
+				arg.MutationShown = true
+				local mutationRow = arg.MutationRow
+				mutationRow.Holder.Visible = true
+				mutationRow.Label.RichText = v4.RichText
+				mutationRow.Label.Text = v4.Text
+
+				if v4.Color then
+					mutationRow.Label.TextColor3 = v4.Color
+				end
+
+				if v4.Font then
+					pcall(function()
+						mutationRow.Label.FontFace = v4.Font
+						mutationRow.Shadow.FontFace = v4.Font
+					end)
+				end
+
+				if v4.StrokeColor then
+					mutationRow.Stroke.Color = v4.StrokeColor
+				end
+
+				if v4.Gradient then
+					pcall(function()
+						mutationRow.TextGradient.Color = v4.Gradient.Color
+						mutationRow.TextGradient.Rotation = v4.Gradient.Rotation
+						mutationRow.TextGradient.Offset = v4.Gradient.Offset
+						mutationRow.TextGradient.Enabled = true
 					end)
 
-					if ok7 and typeof(rarityGradientCleanup) == "function" then
-						arg.RarityGradientCleanup = rarityGradientCleanup
-					end
+					arg.SourceMutationGrad = v4.SourceGrad
+				else
+					mutationRow.TextGradient.Enabled = false
+					arg.SourceMutationGrad = nil
 				end
 
-				pcall(function()
-					rarityRow.Label.TextColor3 = Color3.fromRGB(255, 255, 255)
-				end)
+				mutationRow.Shadow.RichText = false
+				mutationRow.Shadow.Text = v4.Text:gsub("<[^<>]->", "")
+			end)
+		end
 
-				arg.SourceRarityGrad = nil
-				flag11 = true
+		fn15 = function(arg, arg2)
+			if not enabledFlags.Rarity then
+				arg.RarityShown = false
+				arg.RarityRow.Holder.Visible = false
+				fn34(arg)
+				return
 			end
-		end)
 
-		if not flag11 then
+			if arg2 < (arg.RarityCheckedAt or 0) then
+				arg.RarityRow.Holder.Visible = arg.RarityShown == true
+				return
+			end
+			arg.RarityCheckedAt = arg2 + 0.5
+			local text = fn25(arg.Model.Name)
+			local v4 = fn27(arg)
+			local rarity = v4 and v4:FindFirstChild("Rarity")
+
+			if rarity and rarity:IsA("TextLabel") and rarity.Visible and rarity.Text ~= "" then
+				text = rarity.Text
+			end
+
+			if not text or text == "" then
+				arg.RarityShown = false
+				arg.RarityRow.Holder.Visible = false
+				fn34(arg)
+				return
+			end
+
+			arg.RarityShown = true
+			local rarityRow = arg.RarityRow
+			rarityRow.Holder.Visible = true
+			rarityRow.Label.Text = text
+			rarityRow.Shadow.Text = text:gsub("<[^<>]->", "")
+			local gradientPreset = ok2[text]
+			gradientPreset = gradientPreset and gradientPreset.GradientPreset
+			local flag11 = false
+
+			pcall(function()
+				if gradientPreset and ok3 and ok3.apply then
+					if arg.ActiveRarityEffect ~= gradientPreset then
+						if arg.RarityGradientCleanup then
+							pcall(arg.RarityGradientCleanup)
+							arg.RarityGradientCleanup = nil
+						end
+
+						arg.ActiveRarityEffect = gradientPreset
+
+						local ok9, rarityGradientCleanup = pcall(function()
+							return ok3.apply(rarityRow.Label, gradientPreset)
+						end)
+
+						if ok9 and typeof(rarityGradientCleanup) == "function" then
+							arg.RarityGradientCleanup = rarityGradientCleanup
+						end
+					end
+
+					pcall(function()
+						rarityRow.Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+					end)
+
+					arg.SourceRarityGrad = nil
+					flag11 = true
+				end
+			end)
+
 			pcall(function()
 				if arg.RarityGradientCleanup then
 					pcall(arg.RarityGradientCleanup)
@@ -13982,331 +15999,336 @@ do
 				end
 			end)
 		end
-	end
 
-	fn17 = function(arg, arg2)
-		if not enabledFlags.Trails then
-			arg.TraitRow.Holder.Visible = false
-			return
-		end
-
-		if arg2 < (arg.TraitCheckedAt or 0) then
-			arg.TraitRow.Holder.Visible = arg.TraitIcons ~= nil
-			return
-		end
-		arg.TraitCheckedAt = arg2 + 0.5
-		local v8, v9 = fn26(arg.Model, arg.Root, fn22(arg))
-		arg.ActiveTraitNames = v9
-
-		if not v8 then
-			arg.TraitIcons = nil
-			arg.TraitRow.Holder.Visible = false
-			arg.TraitRow.CurrentKey = ""
-
-			for _, icon in ipairs(arg.TraitRow.Icons) do
-				icon.Visible = false
+		fn16 = function(arg, arg2)
+			if not enabledFlags.Trails then
+				arg.TraitRow.Holder.Visible = false
+				return
 			end
-		else
-			arg.TraitIcons = v8
-			arg.TraitRow.Holder.Visible = true
-			local currentKey = table.concat(v8, "|")
 
-			if arg.TraitRow.CurrentKey ~= currentKey then
-				arg.TraitRow.CurrentKey = currentKey
-				local n7 = math.floor(18 * n5)
+			if arg2 < (arg.TraitCheckedAt or 0) then
+				arg.TraitRow.Holder.Visible = arg.TraitIcons ~= nil
+				return
+			end
+			arg.TraitCheckedAt = arg2 + 0.5
+			local v4, v5 = fn31(arg.Model, arg.Root, fn27(arg))
+			arg.ActiveTraitNames = v5
 
-				for idx = 1, #v8 do
-					local icon = arg.TraitRow.Icons[idx]
+			if not v4 then
+				arg.TraitIcons = nil
+				arg.TraitRow.Holder.Visible = false
+				arg.TraitRow.CurrentKey = ""
 
-					if not icon then
-						icon = Instance.new("ImageLabel")
-						icon.BackgroundTransparency = 1
-						icon.ScaleType = Enum.ScaleType.Fit
-						icon.ImageColor3 = Color3.fromRGB(255, 255, 255)
-						icon.ZIndex = 3
-						icon.Parent = arg.TraitRow.Holder
-						arg.TraitRow.Icons[idx] = icon
+				for _, icon in ipairs(arg.TraitRow.Icons) do
+					icon.Visible = false
+				end
+			else
+				arg.TraitIcons = v4
+				arg.TraitRow.Holder.Visible = true
+				local currentKey = table.concat(v4, "|")
+
+				if arg.TraitRow.CurrentKey ~= currentKey then
+					arg.TraitRow.CurrentKey = currentKey
+					local n8 = math.floor(18 * n2)
+
+					for idx = 1, #v4 do
+						local icon = arg.TraitRow.Icons[idx]
+
+						if not icon then
+							icon = Instance.new("ImageLabel")
+							icon.BackgroundTransparency = 1
+							icon.ScaleType = Enum.ScaleType.Fit
+							icon.ImageColor3 = Color3.fromRGB(255, 255, 255)
+							icon.ZIndex = 3
+							icon.Parent = arg.TraitRow.Holder
+							arg.TraitRow.Icons[idx] = icon
+						end
+
+						icon.Image = v4[idx]
+						icon.Size = UDim2.fromOffset(n8, n8)
+						icon.LayoutOrder = idx
+						icon.Visible = true
 					end
 
-					icon.Image = v8[idx]
-					icon.Size = UDim2.fromOffset(n7, n7)
-					icon.LayoutOrder = idx
-					icon.Visible = true
-				end
-
-				for idx = #v8 + 1, #arg.TraitRow.Icons do
-					arg.TraitRow.Icons[idx].Visible = false
+					for idx = #v4 + 1, #arg.TraitRow.Icons do
+						arg.TraitRow.Icons[idx].Visible = false
+					end
 				end
 			end
 		end
-	end
 
-	fn18 = function(arg, arg2)
-		if not (arg2 < (arg.GenerationCheckedAt or 0)) then
-			arg.GenerationCheckedAt = arg2 + 0.4
-			local mutation = fn22(arg)
-			local text = mutation and mutation:FindFirstChild("Generation") and mutation.Generation.Text
-			mutation = mutation and mutation:FindFirstChild("Mutation")
-			local text2
+		fn17 = function(arg, arg2)
+			if not (arg2 < (arg.GenerationCheckedAt or 0)) then
+				arg.GenerationCheckedAt = arg2 + 0.4
+				local mutation = fn27(arg)
+				local text = mutation and mutation:FindFirstChild("Generation") and mutation.Generation.Text
+				mutation = mutation and mutation:FindFirstChild("Mutation")
+				local text2
 
-			if mutation and mutation.Visible and mutation.Text ~= "" then
-				text2 = mutation.Text
-			else
-				local attribute = arg.Model:GetAttribute("Mutation") or arg.Model:GetAttribute("__mutation")
-				local attribute2 = attribute and tostring(attribute) ~= ""
-				text2 = nil
+				if mutation and mutation.Visible and mutation.Text ~= "" then
+					text2 = mutation.Text
+				else
+					local attribute = arg.Model:GetAttribute("Mutation") or arg.Model:GetAttribute("__mutation")
+					local attribute2 = attribute and tostring(attribute) ~= ""
+					text2 = nil
 
-				if attribute2 then
-					text2 = tostring(attribute)
+					if attribute2 then
+						text2 = tostring(attribute)
+					end
+				end
+
+				local activeTraitNames = arg.ActiveTraitNames
+
+				if not activeTraitNames then
+					local v4
+					v4, activeTraitNames = fn31(arg.Model, arg.Root)
+					arg.ActiveTraitNames = activeTraitNames
+				end
+
+				local v4 = fn30(arg.Name, text2, activeTraitNames, text)
+
+				if v4 ~= arg.Generation and v4 > 0 then
+					arg.Generation = v4
+					local formattedText = formatCompact(v4)
+					arg.ValueRow.Label.Text = formattedText
+					arg.ValueRow.Shadow.Text = formattedText
+					local v5 = fn24(v4)
+					arg.NameRow.TextGradient.Color = v5.Text
+					arg.NameRow.StrokeGradient.Color = v5.Stroke
+					arg.Highlight.FillColor = v5.Outline
+					arg.Highlight.OutlineColor = v5.Outline
+					arg.BeamTint = v5.Outline
 				end
 			end
-
-			local activeTraitNames = arg.ActiveTraitNames
-
-			if not activeTraitNames then
-				local v8
-				v8, activeTraitNames = fn26(arg.Model, arg.Root)
-				arg.ActiveTraitNames = activeTraitNames
-			end
-
-			local v8 = fn25(arg.Name, text2, activeTraitNames, text)
-
-			if v8 ~= arg.Generation and v8 > 0 then
-				arg.Generation = v8
-				local formattedText = formatCompact(v8)
-				arg.ValueRow.Label.Text = formattedText
-				arg.ValueRow.Shadow.Text = formattedText
-				local v9 = fn12(v8)
-				arg.NameRow.TextGradient.Color = v9.Text
-				arg.NameRow.StrokeGradient.Color = v9.Stroke
-				arg.Highlight.FillColor = v9.Outline
-				arg.Highlight.OutlineColor = v9.Outline
-				arg.BeamTint = v9.Outline
-			end
 		end
-	end
 
-	fn19 = function(arg, arg2)
-		if flag10 then
-			return arg2
+		fn18 = function(arg, arg2)
+			if flag4 then
+				return arg2
+			end
+			return (arg.Generation or 0) >= n3
 		end
-		return (arg.Generation or 0) >= n6
-	end
 
-	local attachment = nil
-	local attachment2 = nil
-	local beam = nil
-	local beam2 = nil
-	local parent = nil
-	local parent2 = nil
-
-	local function fn30()
-		pcall(function()
-			if beam then
-				beam:Destroy()
-			end
-		end)
-
-		pcall(function()
-			if beam2 then
-				beam2:Destroy()
-			end
-		end)
-
-		pcall(function()
-			if attachment then
-				attachment:Destroy()
-			end
-		end)
-
-		pcall(function()
-			if attachment2 then
-				attachment2:Destroy()
-			end
-		end)
-
-		beam = nil
-		beam2 = nil
 		attachment = nil
-		attachment2 = nil
+		local attachment4 = nil
+		local beam3 = nil
+		local beam4 = nil
 		parent = nil
 		parent2 = nil
+
+		fn19 = function()
+			pcall(function()
+				if beam3 then
+					beam3:Destroy()
+				end
+			end)
+
+			pcall(function()
+				if beam4 then
+					beam4:Destroy()
+				end
+			end)
+
+			pcall(function()
+				if attachment then
+					attachment:Destroy()
+				end
+			end)
+
+			pcall(function()
+				if attachment4 then
+					attachment4:Destroy()
+				end
+			end)
+
+			beam3 = nil
+			beam4 = nil
+			attachment = nil
+			attachment4 = nil
+			parent = nil
+			parent2 = nil
+		end
+
+		fn20 = function(parent3, parent4)
+			fn19()
+			if not (parent3 and parent4) then
+				return
+			end
+			attachment = Instance.new("Attachment")
+			attachment.Name = "BrainrotBeamStart"
+			attachment.Position = Vector3.new(0, 1, 0)
+			attachment.Parent = parent3
+			attachment4 = Instance.new("Attachment")
+			attachment4.Name = "BrainrotBeamTarget"
+			attachment4.Position = Vector3.new(0, 2.5, 0)
+			attachment4.Parent = parent4
+			local color2 = Color3.fromRGB(255, 25, 140)
+			local color3 = Color3.fromRGB(255, 120, 220)
+			local color4 = Color3.fromRGB(180, 35, 255)
+			beam3 = Instance.new("Beam")
+			beam3.Name = "BrainrotBeamGlow"
+			beam3.Attachment0 = attachment
+			beam3.Attachment1 = attachment4
+			beam3.Color = ColorSequence.new(color2, color4)
+			beam3.CurveSize0 = 1.8
+			beam3.CurveSize1 = -1.8
+			beam3.FaceCamera = true
+			beam3.LightEmission = 0.55
+			beam3.Segments = 20
+			beam3.Transparency = NumberSequence.new(0.65)
+			beam3.Width0 = 0.42
+			beam3.Width1 = 0.6
+			weakCache[beam3] = true
+			beam3.Parent = attachment
+			beam4 = Instance.new("Beam")
+			beam4.Name = "BrainrotBeamCore"
+			beam4.Attachment0 = attachment
+			beam4.Attachment1 = attachment4
+			local beam5 = beam4
+			local colorSequenceNew = ColorSequence.new
+			local tbl9 = {}
+			local colorKeypoint = ColorSequenceKeypoint.new(0, color2)
+			local colorKeypoint2 = ColorSequenceKeypoint.new(0.5, color3)
+			local colorSequenceKeypointNew = ColorSequenceKeypoint.new
+			tbl9[1] = colorKeypoint
+			tbl9[2] = colorKeypoint2
+
+			do
+				local values = table.pack(colorSequenceKeypointNew(1, color4))
+				table.move(values, 1, values.n, 3, tbl9)
+			end
+
+			beam5.Color = colorSequenceNew(tbl9)
+			beam4.CurveSize0 = 1.8
+			beam4.CurveSize1 = -1.8
+			beam4.FaceCamera = true
+			beam4.LightEmission = 0.6
+			beam4.Segments = 20
+			beam4.Transparency = NumberSequence.new(0.04)
+			beam4.Width0 = 0.12
+			beam4.Width1 = 0.22
+			weakCache[beam4] = true
+			beam4.Parent = attachment4
+			parent = parent3
+			parent2 = parent4
+		end
+
+		destroyAll2 = function(arg)
+			fn34(arg)
+
+			local function destroyAll3()
+				arg.Billboard:Destroy()
+			end
+
+			pcall(destroyAll3)
+
+			pcall(function()
+				arg.Highlight:Destroy()
+			end)
+
+			if parent2 == arg.Root then
+				fn19()
+			end
+		end
 	end
 
-	local function fn31(parent3, parent4)
-		fn30()
-		if not (parent3 and parent4) then
-			return
-		end
-		attachment = Instance.new("Attachment")
-		attachment.Name = "BrainrotBeamStart"
-		attachment.Position = Vector3.new(0, 1, 0)
-		attachment.Parent = parent3
-		attachment2 = Instance.new("Attachment")
-		attachment2.Name = "BrainrotBeamTarget"
-		attachment2.Position = Vector3.new(0, 2.5, 0)
-		attachment2.Parent = parent4
-		local color = Color3.fromRGB(255, 25, 140)
-		local color2 = Color3.fromRGB(255, 120, 220)
-		local color3 = Color3.fromRGB(180, 35, 255)
-		beam = Instance.new("Beam")
-		beam.Name = "BrainrotBeamGlow"
-		beam.Attachment0 = attachment
-		beam.Attachment1 = attachment2
-		beam.Color = ColorSequence.new(color, color3)
-		beam.CurveSize0 = 1.8
-		beam.CurveSize1 = -1.8
-		beam.FaceCamera = true
-		beam.LightEmission = 0.55
-		beam.Segments = 20
-		beam.Transparency = NumberSequence.new(0.65)
-		beam.Width0 = 0.42
-		beam.Width1 = 0.6
-		weakCache[beam] = true
-		beam.Parent = attachment
-		beam2 = Instance.new("Beam")
-		beam2.Name = "BrainrotBeamCore"
-		beam2.Attachment0 = attachment
-		beam2.Attachment1 = attachment2
-		local beam3 = beam2
-		local colorSequenceNew = ColorSequence.new
-		local tbl9 = {}
-		local colorKeypoint = ColorSequenceKeypoint.new(0, color)
-		local colorKeypoint2 = ColorSequenceKeypoint.new(0.5, color2)
-		local colorSequenceKeypointNew = ColorSequenceKeypoint.new
-		tbl9[1] = colorKeypoint
-		tbl9[2] = colorKeypoint2
-
-		do
-			local values = table.pack(colorSequenceKeypointNew(1, color3))
-			table.move(values, 1, values.n, 3, tbl9)
-		end
-
-		beam3.Color = colorSequenceNew(tbl9)
-		beam2.CurveSize0 = 1.8
-		beam2.CurveSize1 = -1.8
-		beam2.FaceCamera = true
-		beam2.LightEmission = 0.6
-		beam2.Segments = 20
-		beam2.Transparency = NumberSequence.new(0.04)
-		beam2.Width0 = 0.12
-		beam2.Width1 = 0.22
-		weakCache[beam2] = true
-		beam2.Parent = attachment2
-		parent = parent3
-		parent2 = parent4
-	end
-
-	local function destroyAll(arg)
-		fn29(arg)
-
-		local function destroyAll2()
-			arg.Billboard:Destroy()
-		end
-
-		pcall(destroyAll2)
-
-		pcall(function()
-			arg.Highlight:Destroy()
-		end)
-
-		if parent2 == arg.Root then
-			fn30()
-		end
-	end
-
-	local function fn32()
-		for k, v8 in pairs(kMap) do
-			destroyAll(v8)
+	fn21 = function()
+		for k, v4 in pairs(kMap) do
+			destroyAll2(v4)
 			kMap[k] = nil
 		end
 	end
 
-	local n7 = 14
-	local v8 = nil
-	local weakCache2 = setmetatable({}, { __mode = "k" })
+	n4 = 14
 
-	local function fn33(arg)
-		if v8 and v8.Parent then
-			return arg == v8
-		end
-		local plotSign = arg and arg:FindFirstChild("PlotSign")
+	do
+		local v4 = nil
+		local weakCache2 = setmetatable({}, { __mode = "k" })
 
-		if plotSign then
-			local str = string.lower(localPlayer.Name)
-			local str2 = string.lower(localPlayer.DisplayName)
-
-			for _, descendant in ipairs(plotSign:GetDescendants()) do
-				if descendant:IsA("TextLabel") then
-					local str3 = string.lower(tostring(descendant.Text or ""))
-					if str3 == "your base" or string.find(str3, str, 1, true) or string.find(str3, str2, 1, true) then
-						v8 = arg
-						return true
-					end
-				end
+		fn22 = function(arg)
+			if v4 and v4.Parent then
+				return arg == v4
 			end
-		end
+			local plotSign = arg and arg:FindFirstChild("PlotSign")
 
-		return false
-	end
+			if plotSign then
+				local str = string.lower(localPlayer.Name)
+				local str2 = string.lower(localPlayer.DisplayName)
 
-	local function fn34(arg, arg2)
-		local v9 = weakCache2[arg]
-		if v9 and v9.Parent and tostring(v9.ActionText) == "Steal" then
-			return v9
-		end
-		weakCache2[arg] = nil
-
-		for _, descendant in ipairs(arg2:GetDescendants()) do
-			if descendant:IsA("ProximityPrompt") and tostring(descendant.ActionText) == "Steal" then
-				weakCache2[arg] = descendant
-				return descendant
-			end
-		end
-
-		return nil
-	end
-
-	local function fn35(arg)
-		local tbl9 = {}
-		local animalPodiums = arg and arg:FindFirstChild("AnimalPodiums")
-
-		if animalPodiums then
-			for _, child in ipairs(animalPodiums:GetChildren()) do
-				local base = child:FindFirstChild("Base")
-				base = base and base:FindFirstChild("Spawn")
-
-				if base and base:IsA("BasePart") then
-					local v9 = fn34(child, base:FindFirstChild("PromptAttachment") or base)
-
-					if v9 then
-						local str = tostring(v9.ObjectText or "")
-
-						if str ~= "" then
-							local positions = tbl9[str]
-
-							if not positions then
-								positions = {}
-								tbl9[str] = positions
-							end
-
-							positions[#positions + 1] = base.Position
+				for _, descendant in ipairs(plotSign:GetDescendants()) do
+					if descendant:IsA("TextLabel") then
+						local str3 = string.lower(tostring(descendant.Text or ""))
+						if str3 == "your base" or string.find(str3, str, 1, true) or string.find(str3, str2, 1, true) then
+							v4 = arg
+							return true
 						end
 					end
 				end
 			end
+
+			return false
 		end
 
-		return tbl9
-	end
+		local function fn25(arg, arg2)
+			local v5 = weakCache2[arg]
+			if v5 and v5.Parent and tostring(v5.ActionText) == "Steal" then
+				return v5
+			end
+			weakCache2[arg] = nil
 
-	local function fn36(arg, arg2)
+			for _, descendant in ipairs(arg2:GetDescendants()) do
+				if descendant:IsA("ProximityPrompt") and tostring(descendant.ActionText) == "Steal" then
+					weakCache2[arg] = descendant
+					return descendant
+				end
+			end
+
+			return nil
+		end
+
+		fn23 = function(arg)
+			local tbl9 = {}
+			local animalPodiums = arg and arg:FindFirstChild("AnimalPodiums")
+
+			if animalPodiums then
+				for _, child in ipairs(animalPodiums:GetChildren()) do
+					local base = child:FindFirstChild("Base")
+					base = base and base:FindFirstChild("Spawn")
+
+					if base and base:IsA("BasePart") then
+						local v5 = fn25(child, base:FindFirstChild("PromptAttachment") or base)
+
+						if v5 then
+							local str = tostring(v5.ObjectText or "")
+
+							if str ~= "" then
+								local positions = tbl9[str]
+
+								if not positions then
+									positions = {}
+									tbl9[str] = positions
+								end
+
+								positions[#positions + 1] = base.Position
+							end
+						end
+					end
+				end
+			end
+
+			return tbl9
+		end
+	end
+end
+
+do
+	local function fn24(arg, arg2)
 		if not (arg and arg2) then
 			return false
 		end
 
-		for _, v9 in ipairs(arg2) do
-			if (arg.Position - v9).Magnitude <= n7 then
+		for _, v2 in ipairs(arg2) do
+			if (arg.Position - v2).Magnitude <= n4 then
 				return true
 			end
 		end
@@ -14314,35 +16336,35 @@ do
 		return false
 	end
 
-	local function fn37()
-		local plots2 = Workspace:FindFirstChild("Plots")
-		if not plots2 then
-			fn32()
+	local function fn25()
+		local plots = Workspace:FindFirstChild("Plots")
+		if not plots then
+			fn21()
 			return
 		end
-		local childMap2 = {}
+		local childMap = {}
 
-		for _, child in ipairs(plots2:GetChildren()) do
-			if not fn33(child) then
-				local v9 = fn35(child)
+		for _, child in ipairs(plots:GetChildren()) do
+			if not fn22(child) then
+				local v2 = fn23(child)
 
 				for _, child2 in ipairs(child:GetChildren()) do
 					if child2:IsA("Model") and ok[child2.Name] then
 						local rootPart = getRootPart(child2)
 
-						if fn36(rootPart, v9[child2.Name]) then
-							childMap2[child2] = true
+						if fn24(rootPart, v2[child2.Name]) then
+							childMap[child2] = true
 							local kEntry = kMap[child2]
 
 							if kEntry and kEntry.Root ~= rootPart then
-								destroyAll(kEntry)
+								destroyAll2(kEntry)
 								kEntry = nil
 							end
 
 							if not kEntry then
-								local v10 = fn13(child2, rootPart)
-								kMap[child2] = v10
-								fn14(v10)
+								local v3 = fn12(child2, rootPart)
+								kMap[child2] = v3
+								fn13(v3)
 							end
 						end
 					end
@@ -14350,130 +16372,130 @@ do
 			end
 		end
 
-		for k, v9 in pairs(kMap) do
-			if not childMap2[k] or not k.Parent then
-				destroyAll(v9)
+		for k, v2 in pairs(kMap) do
+			if not childMap[k] or not k.Parent then
+				destroyAll2(v2)
 				kMap[k] = nil
 			end
 		end
 	end
 
-	local function fn38()
-		if not flag8 then
+	local function fn26()
+		if not flag2 then
 			return
 		end
-		flag8 = false
-		disconnectAll(connections2)
-		fn30()
-		fn32()
+		flag2 = false
+		disconnectAll(connections)
+		fn19()
+		fn21()
 	end
 
-	local function fn39()
-		if flag8 then
+	local function fn27()
+		if flag2 then
 			return
 		end
-		flag8 = true
-		fn37()
-		local n8 = 0
+		flag2 = true
+		fn25()
+		local n5 = 0
 
-		connections2[#connections2 + 1] = RunService.RenderStepped:Connect(function()
-			if flag8 then
+		connections[#connections + 1] = RunService.RenderStepped:Connect(function()
+			if flag2 then
 				local now = os.clock()
 
-				if n8 <= now then
-					n8 = now + 1
-					fn37()
+				if n5 <= now then
+					n5 = now + 1
+					fn25()
 				end
 
 				local generation = nil
-				local v9 = nil
+				local v2 = nil
 
-				for _, v10 in pairs(kMap) do
-					if v10.Root.Parent then
-						local flag102 = flag10
+				for _, v3 in pairs(kMap) do
+					if v3.Root.Parent then
+						local flag42 = flag4
 
-						if not flag10 then
-							flag102 = (v10.Generation or 0) >= n6
+						if not flag4 then
+							flag42 = (v3.Generation or 0) >= n3
 						end
 
-						if flag102 and (not generation or v10.Generation > generation) then
-							generation = v10.Generation
-							v9 = v10
-						end
-					end
-				end
-
-				for _, v10 in pairs(kMap) do
-					local v11 = fn19(v10, v10 == v9)
-					v10.Billboard.Enabled = v11
-					v10.Highlight.Enabled = v11
-
-					if v11 then
-						v10.NameRow.Holder.Visible = enabledFlags.Name
-						v10.ValueRow.Holder.Visible = enabledFlags.Value
-						pcall(fn16, v10, now)
-						pcall(fn15, v10, now)
-						pcall(fn17, v10, now)
-						pcall(fn18, v10, now)
-
-						if enabledFlags.Rarity and v10.SourceRarityGrad and v10.SourceRarityGrad.Parent then
-							pcall(function()
-								v10.RarityRow.TextGradient.Offset = v10.SourceRarityGrad.Offset
-								v10.RarityRow.TextGradient.Rotation = v10.SourceRarityGrad.Rotation
-								v10.RarityRow.TextGradient.Color = v10.SourceRarityGrad.Color
-							end)
-						end
-
-						if enabledFlags.Mutation and v10.SourceMutationGrad and v10.SourceMutationGrad.Parent then
-							pcall(function()
-								v10.MutationRow.TextGradient.Offset = v10.SourceMutationGrad.Offset
-								v10.MutationRow.TextGradient.Rotation = v10.SourceMutationGrad.Rotation
-								v10.MutationRow.TextGradient.Color = v10.SourceMutationGrad.Color
-							end)
+						if flag42 and (not generation or v3.Generation > generation) then
+							generation = v3.Generation
+							v2 = v3
 						end
 					end
 				end
 
-				local v10 = fn4()
-				local flag92 = flag9
-				local v102
+				for _, v3 in pairs(kMap) do
+					local v4 = fn18(v3, v3 == v2)
+					v3.Billboard.Enabled = v4
+					v3.Highlight.Enabled = v4
 
-				if flag9 then
-					v102 = v9
+					if v4 then
+						v3.NameRow.Holder.Visible = enabledFlags.Name
+						v3.ValueRow.Holder.Visible = enabledFlags.Value
+						pcall(fn15, v3, now)
+						pcall(fn14, v3, now)
+						pcall(fn16, v3, now)
+						pcall(fn17, v3, now)
+
+						if enabledFlags.Rarity and v3.SourceRarityGrad and v3.SourceRarityGrad.Parent then
+							pcall(function()
+								v3.RarityRow.TextGradient.Offset = v3.SourceRarityGrad.Offset
+								v3.RarityRow.TextGradient.Rotation = v3.SourceRarityGrad.Rotation
+								v3.RarityRow.TextGradient.Color = v3.SourceRarityGrad.Color
+							end)
+						end
+
+						if enabledFlags.Mutation and v3.SourceMutationGrad and v3.SourceMutationGrad.Parent then
+							pcall(function()
+								v3.MutationRow.TextGradient.Offset = v3.SourceMutationGrad.Offset
+								v3.MutationRow.TextGradient.Rotation = v3.SourceMutationGrad.Rotation
+								v3.MutationRow.TextGradient.Color = v3.SourceMutationGrad.Color
+							end)
+						end
+					end
+				end
+
+				local v3 = fn4()
+				local flag32 = flag3
+				local v32
+
+				if flag3 then
+					v32 = v2
 				else
-					v102 = flag92
+					v32 = flag32
 				end
 
-				if not (v102 and v10) then
+				if not (v32 and v3) then
 					if attachment then
-						fn30()
+						fn19()
 					end
 				else
-					local flag11 = parent ~= v10 or parent2 ~= v9.Root
+					local flag5 = parent ~= v3 or parent2 ~= v2.Root
 
-					if not flag11 then
-						flag11 = not (attachment and attachment.Parent)
+					if not flag5 then
+						flag5 = not (attachment and attachment.Parent)
 					end
 
-					if flag11 then
-						fn31(v10, v9.Root, v9.BeamTint)
+					if flag5 then
+						fn20(v3, v2.Root, v2.BeamTint)
 					end
 				end
 			end
 		end)
 	end
 
-	v7.Event:Connect(fn38)
-	chilliBrainrotESPRuntime.Destroying:Connect(fn38)
+	v.Event:Connect(fn26)
+	chilliBrainrotESPRuntime.Destroying:Connect(fn26)
 
 	local brainrotEspToggle = brainrotEspSection:CreateToggle({
 		Name = "Brainrot ESP",
 		Default = true,
 		Callback = function(arg)
 			if arg then
-				fn39()
+				fn27()
 			else
-				fn38()
+				fn26()
 			end
 		end,
 	})
@@ -14489,10 +16511,10 @@ do
 		Quick = false,
 		SubOf = brainrotEspToggle,
 		Callback = function(arg)
-			n5 = math.clamp((tonumber(arg) or 100) / 100, 0.5, 2)
+			n2 = math.clamp((tonumber(arg) or 100) / 100, 0.5, 2)
 
-			for _, v9 in pairs(kMap) do
-				fn14(v9)
+			for _, v2 in pairs(kMap) do
+				fn13(v2)
 			end
 		end,
 	})
@@ -14508,18 +16530,18 @@ do
 			local enabledFlags2 = { Name = false, Mutation = false, Value = false, Trails = false, Rarity = false }
 
 			if type(arg) == "table" then
-				for k, v9 in pairs(arg) do
-					if type(v9) == "string" then
-						if enabledFlags2[v9] ~= nil then
-							enabledFlags2[v9] = true
+				for k, v2 in pairs(arg) do
+					if type(v2) == "string" then
+						if enabledFlags2[v2] ~= nil then
+							enabledFlags2[v2] = true
 							continue
 						end
 
-						if v9 ~= "Type" then
+						if v2 ~= "Type" then
 							continue
 						end
 					else
-						if not (type(k) == "string" and v9 == true) then
+						if not (type(k) == "string" and v2 == true) then
 							continue
 						end
 
@@ -14542,12 +16564,12 @@ do
 	})
 
 	local brainrotEspMinValueSlider = nil
-	local n8 = 1
+	local n5 = 1
 	local str = "M/s"
 
-	local function fn40(arg, arg2)
+	local function fn28(arg, arg2)
 		if arg ~= nil then
-			n8 = math.floor(tonumber(arg) or n8)
+			n5 = math.floor(tonumber(arg) or n5)
 		end
 
 		if arg2 ~= nil then
@@ -14560,10 +16582,10 @@ do
 			end
 		end
 
-		n6 = n8 * (configMap[str] or configMap["M/s"]).Mult
+		n3 = n5 * (configMap[str] or configMap["M/s"]).Mult
 	end
 
-	local function fn41(arg)
+	local function fn29(arg)
 		str = arg
 		local configEntry = configMap[arg] or configMap["M/s"]
 
@@ -14572,15 +16594,15 @@ do
 			local min = brainrotEspMinValueSlider:Get() or configEntry.Min
 			local min2 = configEntry.Min
 			local max = configEntry.Max
-			local n9 = math.clamp(math.floor(min + 0.5), min2, max)
+			local n6 = math.clamp(math.floor(min + 0.5), min2, max)
 
-			if n9 ~= min then
-				brainrotEspMinValueSlider:Set(n9)
+			if n6 ~= min then
+				brainrotEspMinValueSlider:Set(n6)
 			else
-				fn40(n9, arg)
+				fn28(n6, arg)
 			end
 		else
-			fn40(nil, arg)
+			fn28(nil, arg)
 		end
 	end
 
@@ -14599,13 +16621,13 @@ do
 			ColorEnabled = true,
 			Colors = { Number = Color3.fromRGB(255, 255, 255), Suffix = Color3.fromRGB(58, 255, 55) },
 			Callback = function(arg)
-				fn41(arg)
+				fn29(arg)
 			end,
 		},
 		Quick = false,
 		SubOf = brainrotEspToggle,
 		Callback = function(arg)
-			fn40(arg, nil)
+			fn28(arg, nil)
 		end,
 	})
 
@@ -14615,7 +16637,7 @@ do
 		Quick = false,
 		SubOf = brainrotEspToggle,
 		Callback = function(arg)
-			flag10 = arg == true
+			flag4 = arg == true
 		end,
 	})
 
@@ -14626,125 +16648,130 @@ do
 		Quick = false,
 		SubOf = brainrotEspToggle,
 		Callback = function(arg)
-			flag9 = arg == true
+			flag3 = arg == true
 		end,
 	})
 end
 
 local str
 str = "__ChilliBrainrotNotificationRuntime"
-local n7
-n7 = 0.75
-local n8
-n8 = 3
-local chilliBrainrotNotificationRuntim, v8
-chilliBrainrotNotificationRuntim, v8 = fn3("__ChilliBrainrotNotificationRuntime")
-local flag11
-flag11 = false
+local n5
+n5 = 0.75
+local n6
+n6 = 3
+local chilliBrainrotNotificationRuntim, v2
+chilliBrainrotNotificationRuntim, v2 = fn3("__ChilliBrainrotNotificationRuntime")
+local flag5
+flag5 = false
 local str2
 str2 = ""
 local soundId
 soundId = ""
 local str3
 str3 = ""
+local n7
+n7 = 1000000
+local flag6
+flag6 = true
+local n8
+n8 = 0
 local n9
-n9 = 1000000
-local flag12
-flag12 = true
-local n10
-n10 = 0
-local n11
-n11 = 0
-local connection3
-connection3 = nil
+n9 = 0
+local connection
+connection = nil
 local weakCache2
 weakCache2 = setmetatable({}, { __mode = "k" })
-local chilliSpecialNotificationSlots, screenGui, notificationStack, TweenService, font2, tbl9, tbl10, tbl11, tbl12, fn20
-local fn21
+local v3
+v3 = nil
+local chilliSpecialNotificationSlots, screenGui, notificationStack, TweenService, font, tbl4, tbl5, tbl6
+local Gradients = nil
+chilliSpecialNotificationSlots = {}
+screenGui = nil
+notificationStack = nil
+TweenService = game:GetService("TweenService")
+font = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.ExtraBold, Enum.FontStyle.Normal)
+tbl4 = {}
+tbl5 = {}
+tbl6 = {}
+
+pcall(function()
+	local Animals = require(ReplicatedStorage.Datas.Animals)
+
+	if type(Animals) == "table" then
+		tbl4 = Animals
+	end
+end)
+
+pcall(function()
+	local Mutations = require(ReplicatedStorage.Datas.Mutations)
+
+	if type(Mutations) == "table" then
+		tbl5 = Mutations
+	end
+end)
+
+pcall(function()
+	local Traits = require(ReplicatedStorage.Datas.Traits)
+
+	if type(Traits) == "table" then
+		tbl6 = Traits
+	end
+end)
+
+pcall(function()
+	local Gradients2 = require(ReplicatedStorage.Packages.Gradients)
+
+	if type(Gradients2) == "table" then
+		Gradients = Gradients2
+	end
+end)
+
+local tbl7
+tbl7 = {}
 
 do
-	local v9 = nil
-	local Gradients = nil
-	chilliSpecialNotificationSlots = {}
-	screenGui = nil
-	notificationStack = nil
-	TweenService = game:GetService("TweenService")
-	font2 = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.ExtraBold, Enum.FontStyle.Normal)
-	tbl9 = {}
-	tbl10 = {}
-	tbl11 = {}
-
-	pcall(function()
-		local Animals = require(ReplicatedStorage.Datas.Animals)
-
-		if type(Animals) == "table" then
-			tbl9 = Animals
-		end
-	end)
-
-	pcall(function()
-		local Mutations = require(ReplicatedStorage.Datas.Mutations)
-
-		if type(Mutations) == "table" then
-			tbl10 = Mutations
-		end
-	end)
-
-	pcall(function()
-		local Traits = require(ReplicatedStorage.Datas.Traits)
-
-		if type(Traits) == "table" then
-			tbl11 = Traits
-		end
-	end)
-
-	pcall(function()
-		local Gradients2 = require(ReplicatedStorage.Packages.Gradients)
-
-		if type(Gradients2) == "table" then
-			Gradients = Gradients2
-		end
-	end)
-
-	tbl12 = {}
-	local tbl13 = { Preset = "Zebra", Background = Color3.fromRGB(16, 16, 20) }
+	local tbl8 = { Preset = "Zebra", Background = Color3.fromRGB(16, 16, 20) }
 	local colorSequenceNew = ColorSequence.new
-	local tbl14 = {}
+	local tbl9 = {}
 	local colorKeypoint = ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255))
 	local colorKeypoint2 = ColorSequenceKeypoint.new(0.24, Color3.fromRGB(45, 45, 55))
 	local colorKeypoint3 = ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 255, 255))
 	local colorKeypoint4 = ColorSequenceKeypoint.new(0.76, Color3.fromRGB(45, 45, 55))
-	tbl14[1] = colorKeypoint
-	tbl14[2] = colorKeypoint2
-	tbl14[3] = colorKeypoint3
-	tbl14[4] = colorKeypoint4
+	tbl9[1] = colorKeypoint
+	tbl9[2] = colorKeypoint2
+	tbl9[3] = colorKeypoint3
+	tbl9[4] = colorKeypoint4
 
 	do
 		local values = table.pack(ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255)))
-		table.move(values, 1, values.n, 5, tbl14)
+		table.move(values, 1, values.n, 5, tbl9)
 	end
 
-	tbl13.Colors = colorSequenceNew(tbl14)
-	tbl12["Secret Zebra"] = tbl13
+	tbl8.Colors = colorSequenceNew(tbl9)
+	tbl7["Secret Zebra"] = tbl8
+end
 
-	local function fn22()
-		if not v9 then
+local fn24, fn25
+
+do
+	local function fn26()
+		if not v3 then
 			local controllers = ReplicatedStorage:FindFirstChild("Controllers")
 			controllers = controllers and controllers:FindFirstChild("NotificationController")
 			if not (controllers and controllers:IsA("ModuleScript")) then
 				return nil
 			end
-			local ok5, result = pcall(require, controllers)
+			local ok2, result = pcall(require, controllers)
 
-			if ok5 and type(result) == "table" then
-				v9 = result
+			if ok2 and type(result) == "table" then
+				v3 = result
 			end
 		end
 
-		return v9
+		return v3
 	end
 
-	local function fn23(arg)
+	local function fn27(arg)
 		local match = tostring(arg or ""):match("(%d+)")
 		if match and tonumber(match) and tonumber(match) > 0 then
 			return "rbxassetid://" .. match
@@ -14752,61 +16779,61 @@ do
 		return nil
 	end
 
-	local function fn24(arg)
+	local function fn28(arg)
 		if not arg then
 			return nil
 		end
 
 		if arg:IsA("Sound") then
-			return fn23(arg.SoundId)
+			return fn27(arg.SoundId)
 		end
-		local v10
+		local v4
 
 		if arg:IsA("StringValue") then
-			v10 = fn23(arg.Value)
-			if v10 then
-				return v10
+			v4 = fn27(arg.Value)
+			if v4 then
+				return v4
 			end
 		end
 
-		v10 = fn23(arg:GetAttribute("SoundId"))
-		if v10 then
-			return v10
+		v4 = fn27(arg:GetAttribute("SoundId"))
+		if v4 then
+			return v4
 		end
 		local sound = arg:FindFirstChildWhichIsA("Sound", true)
-		return sound and fn23(sound.SoundId) or nil
+		return sound and fn27(sound.SoundId) or nil
 	end
 
-	local function fn25()
-		local v10 = ipairs
-		local tbl15 = {}
+	local function fn29()
+		local v4 = ipairs
+		local tbl8 = {}
 		local SoundService = table.pack(game:GetService("SoundService"))
-		tbl15[1] = ReplicatedStorage
+		tbl8[1] = ReplicatedStorage
 
 		do
 			local values = table.pack(table.unpack(SoundService, 1, SoundService.n))
-			table.move(values, 1, values.n, 2, tbl15)
+			table.move(values, 1, values.n, 2, tbl8)
 		end
 
-		for _, v11 in v10(tbl15) do
-			local crystalSpawn = v11:FindFirstChild("CrystalSpawn", true)
-			local v12 = fn24(crystalSpawn)
-			if v12 then
-				return v12
+		for _, v5 in v4(tbl8) do
+			local crystalSpawn = v5:FindFirstChild("CrystalSpawn", true)
+			local v6 = fn28(crystalSpawn)
+			if v6 then
+				return v6
 			end
 		end
 
 		return ""
 	end
 
-	fn20 = function(arg)
+	fn24 = function(arg)
 		str2 = tostring(arg or "")
 	end
 
-	fn21 = function()
-		local v10 = fn23(str2)
+	fn25 = function()
+		local v4 = fn27(str2)
 
-		if not v10 then
+		if not v4 then
 			soundId = str3
 			uiLibrary.Notify("Sound ID Failed", "Invalid asset ID. Restored the default Crystal sound.", 5)
 			return false
@@ -14814,34 +16841,34 @@ do
 
 		local chilliSoundIdValidation = Instance.new("Sound")
 		chilliSoundIdValidation.Name = "ChilliSoundIdValidation"
-		chilliSoundIdValidation.SoundId = v10
+		chilliSoundIdValidation.SoundId = v4
 		chilliSoundIdValidation.Volume = 0
 		chilliSoundIdValidation.Parent = game:GetService("SoundService")
-		local flag13 = false
+		local flag7 = false
 
-		local flag132 = pcall(function()
+		local isLoaded = pcall(function()
 			game:GetService("ContentProvider"):PreloadAsync({ chilliSoundIdValidation }, function(arg, arg2)
 				if arg2 == Enum.AssetFetchStatus.Success then
-					flag13 = true
+					flag7 = true
 				end
 			end)
-		end) and (flag13 or chilliSoundIdValidation.IsLoaded or chilliSoundIdValidation.TimeLength > 0)
+		end) and (chilliSoundIdValidation.IsLoaded or chilliSoundIdValidation.TimeLength > 0)
 
 		chilliSoundIdValidation:Destroy()
 
-		if not flag132 then
+		if not isLoaded then
 			soundId = str3
 			uiLibrary.Notify("Sound ID Failed", "Audio unavailable. Restored the default Crystal sound.", 5)
 			return false
 		end
 
-		soundId = v10
-		str2 = v10
-		uiLibrary.Notify("Sound ID Applied", v10 .. " is now used for Brainrot notifications.", 5)
+		soundId = v4
+		str2 = v4
+		uiLibrary.Notify("Sound ID Applied", v4 .. " is now used for Brainrot notifications.", 5)
 		return true
 	end
 
-	local function destroyAll()
+	local function destroyAll3()
 		if soundId == "" then
 			return
 		end
@@ -14861,15 +16888,15 @@ do
 		game:GetService("Debris"):AddItem(chilliBrainrotNotificationSound, 15)
 	end
 
-	str3 = fn25()
+	str3 = fn29()
 	soundId = str3
 	str2 = soundId
 
-	local function fn26(parent, arg)
+	local function fn30(parent3, arg)
 		local uiGradient = Instance.new("UIGradient")
 		uiGradient.Color = arg.Colors
 		uiGradient.Rotation = 8
-		uiGradient.Parent = parent
+		uiGradient.Parent = parent3
 		local tween = TweenService:Create(uiGradient, TweenInfo.new(1.8, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1), { Rotation = 368 })
 		tween:Play()
 
@@ -14878,7 +16905,7 @@ do
 		end
 	end
 
-	local function fn27(arg, parent, name, text, position, size, textSize)
+	local function fn31(arg, parent3, name, text, position, size, textSize)
 		local clone = arg:Clone()
 		clone.Name = name
 		clone.Visible = true
@@ -14893,18 +16920,18 @@ do
 		clone.TextSize = textSize
 		clone.TextXAlignment = Enum.TextXAlignment.Left
 		clone.TextYAlignment = Enum.TextYAlignment.Center
-		clone.FontFace = font2
-		clone.Parent = parent
+		clone.FontFace = font
+		clone.Parent = parent3
 		return clone
 	end
 
-	local function fn28(parent, arg, arg2)
+	local function fn32(parent3, arg, arg2)
 		if arg2 and arg2.Parent then
-			local ok5, result = pcall(function()
+			local ok2, result = pcall(function()
 				return arg2:Clone()
 			end)
 
-			if not (not ok5 or not result) then
+			if not (not ok2 or not result) then
 				for _, descendant in ipairs(result:GetDescendants()) do
 					if descendant:IsA("ParticleEmitter") or descendant:IsA("Beam") or descendant:IsA("Trail") or descendant:IsA("Light") or descendant:IsA("Sound") or descendant:IsA("Script") or descendant:IsA("LocalScript") then
 						descendant:Destroy()
@@ -14912,7 +16939,7 @@ do
 				end
 
 				local worldModel = Instance.new("WorldModel")
-				worldModel.Parent = parent
+				worldModel.Parent = parent3
 				result.Parent = worldModel
 
 				pcall(function()
@@ -14921,22 +16948,22 @@ do
 
 				local cframe = CFrame.new()
 
-				local ok6, result2, vector = pcall(function()
+				local ok3, result2, vector = pcall(function()
 					return result:GetBoundingBox()
 				end)
 
-				ok6 = ok6 and result2 and vector
+				ok3 = ok3 and result2 and vector
 				local vector2 = Vector3.new(4, 4, 4)
 
-				if not ok6 then
+				if not ok3 then
 					vector = vector2
 					result2 = cframe
 				end
 
 				local position = result2.Position
-				local n12 = math.max(math.max(vector.X, vector.Y, vector.Z) * 1.35, 3.5)
+				local n10 = math.max(math.max(vector.X, vector.Y, vector.Z) * 1.35, 3.5)
 				arg.FieldOfView = 40
-				arg.CFrame = CFrame.lookAt(position + Vector3.new(n12 * 0.28, n12 * 0.08, -n12), position, Vector3.new(0, 1, 0))
+				arg.CFrame = CFrame.lookAt(position + Vector3.new(n10 * 0.28, n10 * 0.08, -n10), position, Vector3.new(0, 1, 0))
 				local humanoid = arg2:FindFirstChildWhichIsA("Humanoid") or arg2:FindFirstChildWhichIsA("AnimationController")
 				humanoid = humanoid and humanoid:FindFirstChildOfClass("Animator")
 				local humanoid2 = result:FindFirstChildWhichIsA("Humanoid") or result:FindFirstChildWhichIsA("AnimationController")
@@ -14950,11 +16977,11 @@ do
 						local animation = Instance.new("Animation")
 						animation.AnimationId = playingAnimationTracks.Animation.AnimationId
 
-						local ok7, result3 = pcall(function()
+						local ok4, result3 = pcall(function()
 							return animator:LoadAnimation(animation)
 						end)
 
-						if ok7 and result3 then
+						if ok4 and result3 then
 							pcall(function()
 								result3.Looped = true
 								result3:Play(0)
@@ -14972,7 +16999,7 @@ do
 		return false
 	end
 
-	local function fn29(arg)
+	local function fn33(arg)
 		local pos = table.find(chilliSpecialNotificationSlots, arg)
 
 		if pos then
@@ -14987,22 +17014,22 @@ do
 		local CoreGui2 = CoreGui
 
 		if type(gethui) == "function" then
-			local ok5
-			ok5, CoreGui2 = pcall(gethui)
-			ok5 = ok5 and typeof(CoreGui2) == "Instance"
+			local ok2
+			ok2, CoreGui2 = pcall(gethui)
+			ok2 = ok2 and typeof(CoreGui2) == "Instance"
 			local CoreGui3 = CoreGui
 
-			if not ok5 then
+			if not ok2 then
 				CoreGui2 = CoreGui3
 			end
 		end
 
 		local name = str .. "Gui"
-		local v10 = CoreGui2:FindFirstChild(name)
+		local v4 = CoreGui2:FindFirstChild(name)
 
-		if v10 then
+		if v4 then
 			pcall(function()
-				v10:Destroy()
+				v4:Destroy()
 			end)
 		end
 
@@ -15044,8 +17071,8 @@ do
 		return math.clamp((x - 24) / 620, 0.44, 0.72)
 	end
 
-	local function fn30(arg, arg2, arg3)
-		local secretZebra = tbl12[arg3 or "Secret Zebra"] or tbl12["Secret Zebra"]
+	local function fn34(arg, arg2, arg3)
+		local secretZebra = tbl7[arg3 or "Secret Zebra"] or tbl7["Secret Zebra"]
 
 		if not (type(arg) ~= "table" or not arg.Model) then
 			local playerGui = localPlayer:FindFirstChildOfClass("PlayerGui")
@@ -15054,17 +17081,17 @@ do
 			notification = notification and notification:FindFirstChild("Template")
 
 			if not (notification and notification:IsA("TextLabel")) then
-				local v10 = fn22()
+				local v4 = fn26()
 
-				if v10 and type(v10.Notify) == "function" then
+				if v4 and type(v4.Notify) == "function" then
 					local str4 = string.upper(tostring(arg.Name or "Brainrot")) .. " APPEARED!  " .. tostring(arg.ValueText or "")
-					local v11 = pcall
-					local notify = v10.Notify
+					local v5 = pcall
+					local notify = v4.Notify
 					arg2 = arg2 or 6
-					local top = v11(notify, v10, str4, arg2, nil, "Top")
+					local top = v5(notify, v4, str4, arg2, nil, "Top")
 
 					if top then
-						destroyAll()
+						destroyAll3()
 					end
 
 					return top
@@ -15118,21 +17145,21 @@ do
 					uiCorner.CornerRadius = UDim.new(0, 17)
 					uiCorner.Parent = chilliSpecialNotification
 					local uiGradient = Instance.new("UIGradient")
-					local colorSequenceNew2 = ColorSequence.new
-					local tbl15 = {}
-					local colorKeypoint5 = ColorSequenceKeypoint.new(0, secretZebra.Background)
-					local colorKeypoint6 = ColorSequenceKeypoint.new(0.48, secretZebra.Background:Lerp(Color3.new(1, 1, 1), 0.12))
+					local colorSequenceNew = ColorSequence.new
+					local tbl8 = {}
+					local colorKeypoint = ColorSequenceKeypoint.new(0, secretZebra.Background)
+					local colorKeypoint2 = ColorSequenceKeypoint.new(0.48, secretZebra.Background:Lerp(Color3.new(1, 1, 1), 0.12))
 					local colorSequenceKeypointNew = ColorSequenceKeypoint.new
 					local background = secretZebra.Background
-					tbl15[1] = colorKeypoint5
-					tbl15[2] = colorKeypoint6
+					tbl8[1] = colorKeypoint
+					tbl8[2] = colorKeypoint2
 
 					do
 						local values = table.pack(colorSequenceKeypointNew(1, background))
-						table.move(values, 1, values.n, 3, tbl15)
+						table.move(values, 1, values.n, 3, tbl8)
 					end
 
-					uiGradient.Color = colorSequenceNew2(tbl15)
+					uiGradient.Color = colorSequenceNew(tbl8)
 					uiGradient.Rotation = 12
 					uiGradient.Parent = chilliSpecialNotification
 					local uiStroke = Instance.new("UIStroke")
@@ -15180,8 +17207,8 @@ do
 					local camera = Instance.new("Camera")
 					camera.Parent = brainrotPreview
 					brainrotPreview.CurrentCamera = camera
-					fn28(brainrotPreview, camera, arg.Model)
-					local brainrotName = fn27(notification, chilliSpecialNotification, "BrainrotName", tostring(arg.Name or "Brainrot"), UDim2.fromOffset(115, 7), UDim2.new(1, -252, 0, 34), 22)
+					fn32(brainrotPreview, camera, arg.Model)
+					local brainrotName = fn31(notification, chilliSpecialNotification, "BrainrotName", tostring(arg.Name or "Brainrot"), UDim2.fromOffset(115, 7), UDim2.new(1, -252, 0, 34), 22)
 					brainrotName.RichText = false
 					brainrotName.TextColor3 = Color3.new(1, 1, 1)
 					brainrotName.TextTruncate = Enum.TextTruncate.AtEnd
@@ -15189,22 +17216,22 @@ do
 					brainrotName.ZIndex = 183
 					local list = {}
 
-					local function fn31(parent, thickness)
+					local function fn35(parent3, thickness)
 						local specialTextOutline = Instance.new("UIStroke")
 						specialTextOutline.Name = "SpecialTextOutline"
 						specialTextOutline.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
 						specialTextOutline.Color = Color3.fromRGB(0, 0, 0)
 						specialTextOutline.Thickness = thickness
 						specialTextOutline.Transparency = 0.18
-						specialTextOutline.Parent = parent
-						local v10 = fn26(parent, secretZebra)
+						specialTextOutline.Parent = parent3
+						local v4 = fn30(parent3, secretZebra)
 
-						if v10 then
-							list[#list + 1] = v10
+						if v4 then
+							list[#list + 1] = v4
 						end
 					end
 
-					fn31(brainrotName, 1.35)
+					fn35(brainrotName, 1.35)
 					local appearedBadge = Instance.new("Frame")
 					appearedBadge.Name = "AppearedBadge"
 					appearedBadge.AnchorPoint = Vector2.new(1, 0)
@@ -15228,7 +17255,7 @@ do
 					uiStroke4.Thickness = 1.25
 					uiStroke4.Transparency = 0.2
 					uiStroke4.Parent = appearedBadge
-					local appearedText = fn27(notification, appearedBadge, "AppearedText", "APPEARED!", UDim2.fromOffset(6, 0), UDim2.new(1, -12, 1, 0), 12)
+					local appearedText = fn31(notification, appearedBadge, "AppearedText", "APPEARED!", UDim2.fromOffset(6, 0), UDim2.new(1, -12, 1, 0), 12)
 					appearedText.RichText = false
 					appearedText.Font = Enum.Font.Arcade
 					appearedText.TextColor3 = Color3.new(1, 1, 1)
@@ -15254,7 +17281,7 @@ do
 					uiStroke5.Thickness = 1.2
 					uiStroke5.Transparency = 0.35
 					uiStroke5.Parent = generationBadge
-					local brainrotValue = fn27(notification, generationBadge, "BrainrotValue", tostring(arg.ValueText or ""), UDim2.fromOffset(9, 0), UDim2.new(1, -18, 1, 0), 18)
+					local brainrotValue = fn31(notification, generationBadge, "BrainrotValue", tostring(arg.ValueText or ""), UDim2.fromOffset(9, 0), UDim2.new(1, -18, 1, 0), 18)
 					brainrotValue.RichText = false
 					brainrotValue.Font = Enum.Font.RobotoMono
 					brainrotValue.TextColor3 = Color3.fromRGB(86, 255, 105)
@@ -15262,21 +17289,21 @@ do
 					brainrotValue.TextStrokeTransparency = 0.15
 					brainrotValue.ZIndex = 184
 					local uiGradient5 = Instance.new("UIGradient")
-					local colorSequenceNew3 = ColorSequence.new
-					local tbl16 = {}
-					local colorKeypoint7 = ColorSequenceKeypoint.new(0, Color3.fromRGB(42, 220, 76))
-					local colorKeypoint8 = ColorSequenceKeypoint.new(0.5, Color3.fromRGB(208, 255, 132))
+					local colorSequenceNew2 = ColorSequence.new
+					local tbl9 = {}
+					local colorKeypoint3 = ColorSequenceKeypoint.new(0, Color3.fromRGB(42, 220, 76))
+					local colorKeypoint4 = ColorSequenceKeypoint.new(0.5, Color3.fromRGB(208, 255, 132))
 					local colorSequenceKeypointNew2 = ColorSequenceKeypoint.new
 					local color3FromRGB = Color3.fromRGB
-					tbl16[1] = colorKeypoint7
-					tbl16[2] = colorKeypoint8
+					tbl9[1] = colorKeypoint3
+					tbl9[2] = colorKeypoint4
 
 					do
 						local values = table.pack(colorSequenceKeypointNew2(1, color3FromRGB(38, 255, 105)))
-						table.move(values, 1, values.n, 3, tbl16)
+						table.move(values, 1, values.n, 3, tbl9)
 					end
 
-					uiGradient5.Color = colorSequenceNew3(tbl16)
+					uiGradient5.Color = colorSequenceNew2(tbl9)
 					uiGradient5.Rotation = -8
 					uiGradient5.Parent = brainrotValue
 					local tween2 = TweenService:Create(uiGradient5, TweenInfo.new(1.45, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), { Rotation = 18 })
@@ -15287,7 +17314,7 @@ do
 					end
 
 					if arg.MutationVisible then
-						local brainrotMutation = fn27(notification, chilliSpecialNotification, "BrainrotMutation", tostring(arg.MutationText or ""), UDim2.fromOffset(115, 76), UDim2.new(1, -304, 0, 22), 17)
+						local brainrotMutation = fn31(notification, chilliSpecialNotification, "BrainrotMutation", tostring(arg.MutationText or ""), UDim2.fromOffset(115, 76), UDim2.new(1, -304, 0, 22), 17)
 						brainrotMutation.RichText = arg.MutationRichText == true
 						brainrotMutation.TextColor3 = arg.MutationColor or Color3.fromRGB(235, 235, 240)
 						brainrotMutation.TextStrokeColor3 = arg.MutationStrokeColor or Color3.fromRGB(0, 0, 0)
@@ -15330,10 +17357,10 @@ do
 					uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 					uiListLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 					uiListLayout.Parent = frame2
-					local v10 = ipairs
+					local v4 = ipairs
 					local traitImages = arg.TraitImages or {}
 
-					for k, traitImage in v10(traitImages) do
+					for k, traitImage in v4(traitImages) do
 						if not (k > 6) then
 							local traitBadge = Instance.new("Frame")
 							traitBadge.Name = "TraitBadge"
@@ -15389,34 +17416,34 @@ do
 					shine.Parent = shineClip
 					local uiGradient6 = Instance.new("UIGradient")
 					local numberSequenceNew = NumberSequence.new
-					local tbl17 = {}
+					local tbl10 = {}
 					local keypoint = NumberSequenceKeypoint.new(0, 1)
 					local keypoint2 = NumberSequenceKeypoint.new(0.5, 0)
 					local numberSequenceKeypointNew = NumberSequenceKeypoint.new
-					tbl17[1] = keypoint
-					tbl17[2] = keypoint2
+					tbl10[1] = keypoint
+					tbl10[2] = keypoint2
 
 					do
 						local values = table.pack(numberSequenceKeypointNew(1, 1))
-						table.move(values, 1, values.n, 3, tbl17)
+						table.move(values, 1, values.n, 3, tbl10)
 					end
 
-					uiGradient6.Transparency = numberSequenceNew(tbl17)
+					uiGradient6.Transparency = numberSequenceNew(tbl10)
 					uiGradient6.Parent = shine
 					TweenService:Create(uiScale, TweenInfo.new(0.42, Enum.EasingStyle.Back, Enum.EasingDirection.Out), { Scale = numVal }):Play()
 					TweenService:Create(shine, TweenInfo.new(1.25, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), { Position = UDim2.fromScale(1.18, -0.12) }):Play()
-					destroyAll()
-					local n12 = tonumber(arg2) or 6
+					destroyAll3()
+					local n10 = tonumber(arg2) or 6
 
 					pcall(function()
-						game:GetService("Debris"):AddItem(chilliSpecialNotificationSlot, n12 + 1.5)
+						game:GetService("Debris"):AddItem(chilliSpecialNotificationSlot, n10 + 1.5)
 					end)
 
-					local flag13 = false
+					local flag7 = false
 
-					local function destroyAll2()
-						if not flag13 then
-							flag13 = true
+					local function destroyAll4()
+						if not flag7 then
+							flag7 = true
 
 							for idx = #list, 1, -1 do
 								pcall(list[idx])
@@ -15427,7 +17454,7 @@ do
 								tween:Cancel()
 							end)
 
-							fn29(chilliSpecialNotificationSlot)
+							fn33(chilliSpecialNotificationSlot)
 
 							if chilliSpecialNotificationSlot.Parent then
 								pcall(function()
@@ -15437,25 +17464,25 @@ do
 						end
 					end
 
-					task.delay(n12, function()
-						local flag132 = flag13
-						local flag1322
+					task.delay(n10, function()
+						local flag72 = flag7
+						local flag722
 
-						if flag13 then
-							flag1322 = flag132
+						if flag7 then
+							flag722 = flag72
 						else
-							flag1322 = not chilliSpecialNotification.Parent
+							flag722 = not chilliSpecialNotification.Parent
 						end
 
-						if flag1322 then
-							destroyAll2()
+						if flag722 then
+							destroyAll4()
 							return
 						end
 
 						pcall(function()
 							tween:Cancel()
-							local tbl18 = { Scale = numVal * 0.78 }
-							TweenService:Create(uiScale, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.In), tbl18):Play()
+							local tbl11 = { Scale = numVal * 0.78 }
+							TweenService:Create(uiScale, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.In), tbl11):Play()
 
 							for _, descendant in ipairs(chilliSpecialNotification:GetDescendants()) do
 								if descendant:IsA("TextLabel") then
@@ -15474,10 +17501,10 @@ do
 							TweenService:Create(chilliSpecialNotification, TweenInfo.new(0.28), { BackgroundTransparency = 1 }):Play()
 						end)
 
-						task.delay(0.34, destroyAll2)
+						task.delay(0.34, destroyAll4)
 					end)
 
-					task.delay(n12 + 1, destroyAll2)
+					task.delay(n10 + 1, destroyAll4)
 					return true
 				end
 			end
@@ -15486,7 +17513,7 @@ do
 		return false
 	end
 
-	local function formatCompact2(arg)
+	local function formatCompact(arg)
 		local match, match2 = tostring(arg or ""):gsub("[%$,/s]", ""):gsub("%s+", ""):match("^([%d%.]+)([KkMmBbTt]?)$")
 		local num = tonumber(match)
 		if not num then
@@ -15495,7 +17522,7 @@ do
 		return num * (({ K = 1000, M = 1000000, B = 1e9, T = 1e12 })[string.upper(match2)] or 1)
 	end
 
-	local function formatCompact3(arg)
+	local function formatCompact2(arg)
 		if arg >= 1e12 then
 			return string.format("$%.2fT/s", arg / 1e12)
 		end
@@ -15518,8 +17545,8 @@ do
 		return arg:FindFirstChild("RootPart") or arg.PrimaryPart or arg:FindFirstChildWhichIsA("BasePart")
 	end
 
-	local function fn31()
-		local tbl15 = {}
+	local function fn35()
+		local tbl8 = {}
 		local debris = Workspace:FindFirstChild("Debris")
 
 		if debris then
@@ -15531,39 +17558,39 @@ do
 
 					if displayName and displayName:IsA("TextLabel") and generation and generation:IsA("TextLabel") then
 						local str4 = tostring(displayName.Text or "")
-						tbl15[str4] = tbl15[str4] or {}
-						tbl15[str4][#tbl15[str4] + 1] = { Position = child.Position, Value = formatCompact2(generation.Text), Overhead = animalOverhead }
+						tbl8[str4] = tbl8[str4] or {}
+						tbl8[str4][#tbl8[str4] + 1] = { Position = child.Position, Value = formatCompact(generation.Text), Overhead = animalOverhead }
 					end
 				end
 			end
 		end
 
-		return tbl15
+		return tbl8
 	end
 
-	local function fn32(arg, arg2, arg3)
-		local v10, v11, v12 = ipairs(arg3[arg] or {})
-		local n12 = 14
-		local v13 = nil
+	local function fn36(arg, arg2, arg3)
+		local v4, v5, v6 = ipairs(arg3[arg] or {})
+		local n10 = 14
+		local v7 = nil
 
-		for _, v14 in v10, v11, v12 do
-			local magnitude = (v14.Position - arg2).Magnitude
+		for _, v8 in v4, v5, v6 do
+			local magnitude = (v8.Position - arg2).Magnitude
 
-			if magnitude < n12 then
-				n12 = magnitude
-				v13 = v14
+			if magnitude < n10 then
+				n10 = magnitude
+				v7 = v8
 			end
 		end
 
-		return v13
+		return v7
 	end
 
-	local function fn33(arg, arg2)
-		local Animal = tbl9[arg.Name]
-		local n12 = type(Animal) == "table" and tonumber(Animal.Generation) or 0
+	local function fn37(arg, arg2)
+		local Animal = tbl4[arg.Name]
+		local n10 = type(Animal) == "table" and tonumber(Animal.Generation) or 0
 		local arg22
 
-		if n12 <= 0 then
+		if n10 <= 0 then
 			arg2 = arg2 and arg2.Value
 			arg22 = arg2 or 0
 		else
@@ -15574,29 +17601,29 @@ do
 				attribute = mutation.Text
 			end
 
-			attribute = attribute and tbl10[tostring(attribute)]
-			local n13 = 1
+			attribute = attribute and tbl5[tostring(attribute)]
+			local n11 = 1
 
 			if type(attribute) == "table" then
-				n13 = 1 + (tonumber(attribute.Modifier) or 0)
+				n11 = 1 + (tonumber(attribute.Modifier) or 0)
 			end
 
-			local flag13 = false
+			local flag7 = false
 
 			for _, child in ipairs(arg:GetChildren()) do
 				local match = child.Name:match("^_Trait%.(.+)$")
-				local Trait = match and (tbl11[match] or tbl11[match:gsub("_", " ")])
+				local Trait = match and (tbl6[match] or tbl6[match:gsub("_", " ")])
 
 				if type(Trait) == "table" then
 					if match == "Sleepy" or Trait.Name == "Sleepy" then
-						flag13 = true
+						flag7 = true
 					else
-						n13 += tonumber(Trait.MultiplierModifier) or 0
+						n11 += tonumber(Trait.MultiplierModifier) or 0
 					end
 				end
 			end
 
-			arg22 = math.round(n12 * n13 * (flag13 and 0.5 or 1))
+			arg22 = math.round(n10 * n11 * (flag7 and 0.5 or 1))
 			arg2 = arg2 and arg2.Value
 			if arg2 and arg2 > 0 then
 				return arg2
@@ -15606,26 +17633,26 @@ do
 		return arg22
 	end
 
-	local function fn34()
+	local function fn38()
 		local list = {}
-		local plots2 = Workspace:FindFirstChild("Plots")
-		if not plots2 then
+		local plots = Workspace:FindFirstChild("Plots")
+		if not plots then
 			return list, 0
 		end
-		local v10 = fn31()
-		local n12 = 0
+		local v4 = fn35()
+		local n10 = 0
 
-		for _, child in ipairs(plots2:GetChildren()) do
+		for _, child in ipairs(plots:GetChildren()) do
 			for _, child2 in ipairs(child:GetChildren()) do
-				if child2:IsA("Model") and tbl9[child2.Name] then
+				if child2:IsA("Model") and tbl4[child2.Name] then
 					local rootPart = getRootPart2(child2)
 
 					if rootPart then
-						local overhead = fn32(child2.Name, rootPart.Position, v10)
-						local v11 = fn33(child2, overhead)
+						local overhead = fn36(child2.Name, rootPart.Position, v4)
+						local v5 = fn37(child2, overhead)
 
-						if v11 > 0 then
-							local Animal = tbl9[child2.Name]
+						if v5 > 0 then
+							local Animal = tbl4[child2.Name]
 							overhead = overhead and overhead.Overhead
 							local mutation = overhead and overhead:FindFirstChild("Mutation")
 							local visible = mutation and mutation:IsA("TextLabel") and mutation.Visible
@@ -15639,9 +17666,9 @@ do
 							end
 
 							local text = nil
-							local flag13 = false
+							local flag7 = false
 							local textColor3 = nil
-							local flag14 = false
+							local flag8 = false
 							local fontFace = nil
 							local textStrokeColor3 = nil
 							local textStrokeTransparency = nil
@@ -15652,12 +17679,12 @@ do
 							if visible then
 								text = mutation.Text
 								textColor3 = mutation.TextColor3
-								flag14 = mutation.RichText
+								flag8 = mutation.RichText
 								fontFace = mutation.FontFace
 								textStrokeColor3 = mutation.TextStrokeColor3
 								textStrokeTransparency = mutation.TextStrokeTransparency
 								local uiGradient = mutation:FindFirstChildWhichIsA("UIGradient")
-								flag13 = true
+								flag7 = true
 								color = nil
 								rotation = nil
 								transparency = nil
@@ -15685,13 +17712,13 @@ do
 							list[#list + 1] = {
 								Model = child2,
 								Name = child2.Name,
-								Value = v11,
-								ValueText = formatCompact3(v11),
+								Value = v5,
+								ValueText = formatCompact2(v5),
 								Rarity = rarity and tostring(rarity) or "",
-								MutationVisible = flag13,
+								MutationVisible = flag7,
 								MutationText = text and tostring(text) or nil,
 								MutationColor = textColor3,
-								MutationRichText = flag14,
+								MutationRichText = flag8,
 								MutationFontFace = fontFace,
 								MutationStrokeColor = textStrokeColor3,
 								MutationStrokeTransparency = textStrokeTransparency,
@@ -15701,8 +17728,8 @@ do
 								TraitImages = images,
 							}
 
-							if n12 < v11 then
-								n12 = v11
+							if n10 < v5 then
+								n10 = v5
 							end
 						end
 					end
@@ -15710,101 +17737,101 @@ do
 			end
 		end
 
-		return list, n12
+		return list, n10
 	end
 
-	local function fn35(arg, arg2)
-		fn30(arg, 7, arg2 or "Secret Zebra")
+	local function fn39(arg, arg2)
+		fn34(arg, 7, arg2 or "Secret Zebra")
 	end
 
-	local function fn36()
+	local function fn40()
 		table.clear(weakCache2)
-		local v10, v11 = fn34()
+		local v4, v5 = fn38()
 
-		for _, v12 in ipairs(v10) do
-			weakCache2[v12.Model] = { FirstSeen = -math.huge, Value = v12.Value }
+		for _, v6 in ipairs(v4) do
+			weakCache2[v6.Model] = { FirstSeen = -math.huge, Value = v6.Value }
 		end
 
-		n10 = v11
+		n8 = v5
 	end
 
-	local function fn37()
+	local function fn41()
 		local now = os.clock()
-		local v10, v11 = fn34()
+		local v4, v5 = fn38()
 		local list = {}
-		local n12 = 0
+		local n10 = 0
 
-		for _, v12 in ipairs(v10) do
-			local v13 = weakCache2[v12.Model]
-			local isNew = v13 == nil
-			local v132 = v13 and now - v13.FirstSeen <= n8 and v12.Value > v13.Value
-			v12.IsNew = isNew
-			v12.IsLateValue = v132 == true
+		for _, v6 in ipairs(v4) do
+			local v7 = weakCache2[v6.Model]
+			local isNew = v7 == nil
+			local v72 = v7 and now - v7.FirstSeen <= n6 and v6.Value > v7.Value
+			v6.IsNew = isNew
+			v6.IsLateValue = v72 == true
 
 			if isNew then
-				weakCache2[v12.Model] = { FirstSeen = now, Value = v12.Value }
-			elseif v13.Value < v12.Value then
-				v13.Value = v12.Value
+				weakCache2[v6.Model] = { FirstSeen = now, Value = v6.Value }
+			elseif v7.Value < v6.Value then
+				v7.Value = v6.Value
 			end
 
-			if not isNew and not v132 and v12.Value > n12 then
-				n12 = v12.Value
+			if not isNew and not v72 and v6.Value > n10 then
+				n10 = v6.Value
 			end
 		end
 
-		local v12 = nil
+		local v6 = nil
 
-		for _, v13 in ipairs(v10) do
-			if (v13.IsNew or v13.IsLateValue) and v13.Value >= n9 then
-				list[#list + 1] = v13
+		for _, v7 in ipairs(v4) do
+			if (v7.IsNew or v7.IsLateValue) and v7.Value >= n7 then
+				list[#list + 1] = v7
 
-				if v13.Value > n12 and (not v12 or v13.Value > v12.Value) then
-					v12 = v13
+				if v7.Value > n10 and (not v6 or v7.Value > v6.Value) then
+					v6 = v7
 				end
 			end
 		end
 
-		n10 = v11
+		n8 = v5
 
-		if flag12 and v12 then
-			fn35(v12)
-		elseif not flag12 then
+		if flag6 and v6 then
+			fn39(v6)
+		elseif not flag6 then
 			table.sort(list, function(arg, arg2)
 				return arg.Value > arg2.Value
 			end)
 
-			for _, v13 in ipairs(list) do
-				fn35(v13)
+			for _, v7 in ipairs(list) do
+				fn39(v7)
 			end
 		end
 	end
 
-	local function fn38()
-		flag11 = false
+	local function fn42()
+		flag5 = false
 
-		if connection3 then
-			connection3:Disconnect()
-			connection3 = nil
+		if connection then
+			connection:Disconnect()
+			connection = nil
 		end
 	end
 
-	local function fn39()
-		fn38()
-		fn36()
-		flag11 = true
-		n11 = os.clock() + n7
+	local function fn43()
+		fn42()
+		fn40()
+		flag5 = true
+		n9 = os.clock() + n5
 
-		connection3 = RunService.Heartbeat:Connect(function()
-			if not flag11 or os.clock() < n11 then
+		connection = RunService.Heartbeat:Connect(function()
+			if not flag5 or os.clock() < n9 then
 				return
 			end
-			n11 = os.clock() + n7
-			pcall(fn37)
+			n9 = os.clock() + n5
+			pcall(fn41)
 		end)
 	end
 
-	local function destroyAll2()
-		fn38()
+	local function destroyAll4()
+		fn42()
 
 		for idx = #chilliSpecialNotificationSlots, 1, -1 do
 			local chilliSpecialNotificationSlot = chilliSpecialNotificationSlots[idx]
@@ -15824,17 +17851,17 @@ do
 		notificationStack = nil
 	end
 
-	v8.Event:Connect(destroyAll2)
-	chilliBrainrotNotificationRuntim.Destroying:Connect(destroyAll2)
+	v2.Event:Connect(destroyAll4)
+	chilliBrainrotNotificationRuntim.Destroying:Connect(destroyAll4)
 
 	brainrotNotificationsSection:CreateToggle({
 		Name = "Brainrot Notifications",
 		Default = false,
 		Callback = function(arg)
 			if arg then
-				fn39()
+				fn43()
 			else
-				fn38()
+				fn42()
 			end
 		end,
 	})
@@ -15845,7 +17872,7 @@ brainrotNotificationsSection:CreateToggle({
 	Note = "Only notifies when the new Brainrot is worth more than every Brainrot already present.",
 	Default = true,
 	Callback = function(arg)
-		flag12 = arg == true
+		flag6 = arg == true
 	end,
 })
 
@@ -15858,12 +17885,12 @@ do
 	}
 
 	local notificationMinValueSlider = nil
-	local n12 = 1
+	local n10 = 1
 	local str4 = "M/s"
 
-	local function fn22(arg, arg2)
+	local function fn26(arg, arg2)
 		if arg ~= nil then
-			n12 = math.floor(tonumber(arg) or n12)
+			n10 = math.floor(tonumber(arg) or n10)
 		end
 
 		if arg2 ~= nil then
@@ -15876,10 +17903,10 @@ do
 			end
 		end
 
-		n9 = n12 * (configMap2[str4] or configMap2["M/s"]).Mult
+		n7 = n10 * (configMap2[str4] or configMap2["M/s"]).Mult
 	end
 
-	local function fn23(arg)
+	local function fn27(arg)
 		str4 = tostring(arg)
 		local configEntry = configMap2[str4] or configMap2["M/s"]
 
@@ -15888,15 +17915,15 @@ do
 			local min = notificationMinValueSlider:Get() or configEntry.Min
 			local min2 = configEntry.Min
 			local max = configEntry.Max
-			local n13 = math.clamp(math.floor(min + 0.5), min2, max)
+			local n11 = math.clamp(math.floor(min + 0.5), min2, max)
 
-			if n13 ~= min then
-				notificationMinValueSlider:Set(n13)
+			if n11 ~= min then
+				notificationMinValueSlider:Set(n11)
 			else
-				fn22(n13, str4)
+				fn26(n11, str4)
 			end
 		else
-			fn22(nil, str4)
+			fn26(nil, str4)
 		end
 	end
 
@@ -15915,12 +17942,12 @@ do
 			ColorEnabled = true,
 			Colors = { Number = Color3.fromRGB(255, 255, 255), Suffix = Color3.fromRGB(58, 255, 55) },
 			Callback = function(arg)
-				fn23(arg)
+				fn27(arg)
 			end,
 		},
 		Quick = false,
 		Callback = function(arg)
-			fn22(arg, nil)
+			fn26(arg, nil)
 		end,
 	})
 end
@@ -15932,7 +17959,7 @@ brainrotNotificationsSection:CreateInput({
 	Default = "rbxassetid://110902246151945",
 	MaxLength = 40,
 	Callback = function(arg)
-		fn20(arg)
+		fn24(arg)
 	end,
 })
 
@@ -15941,14 +17968,14 @@ brainrotNotificationsSection:CreateButton({
 	ButtonText = "Apply",
 	Callback = function()
 		task.spawn(function()
-			fn21()
+			fn25()
 		end)
 	end,
 })
 
 local performanceSection
 performanceSection = miscTab:CreateSection({ Name = "Performance", Expanded = true })
-local flag13 = false
+local flag7 = false
 
 performanceSection:CreateSlider({
 	Name = "FPS Cap",
@@ -15962,35 +17989,37 @@ performanceSection:CreateSlider({
 	Callback = function(arg)
 		local clamp = math.clamp
 		local floor = math.floor
-		local v9 = clamp(floor(tonumber(arg) or 240), 30, 1000)
-		if type(setfpscap) == "function" and pcall(setfpscap, v9) then
-			flag13 = false
+		local v4 = clamp(floor(tonumber(arg) or 240), 30, 1000)
+		if type(setfpscap) == "function" and pcall(setfpscap, v4) then
+			flag7 = false
 			return
 		end
 
-		if not flag13 then
-			flag13 = true
+		if not flag7 then
+			flag7 = true
 			uiLibrary.Notify("FPS Cap Unavailable", "This environment does not support setfpscap.", 5)
 		end
 	end,
 })
 
+local flag8, n10, thread
+
 do
-	local n12 = 300
-	local flag14 = false
-	local n13 = 0
-	local v9 = nil
-	local tbl13 = {}
-	local tbl14 = {}
+	local n11 = 300
+	flag8 = false
+	n10 = 0
+	thread = nil
+	local connections2 = {}
+	local list = {}
 	local weakCache3 = setmetatable({}, { __mode = "k" })
 	local chilliOptimizerRuntime = CoreGui:FindFirstChild("__ChilliOptimizerRuntime")
 
 	if chilliOptimizerRuntime then
-		local cleanup2 = chilliOptimizerRuntime:FindFirstChild("Cleanup")
+		local cleanup = chilliOptimizerRuntime:FindFirstChild("Cleanup")
 
-		if cleanup2 and cleanup2:IsA("BindableEvent") then
+		if cleanup and cleanup:IsA("BindableEvent") then
 			pcall(function()
-				cleanup2:Fire()
+				cleanup:Fire()
 			end)
 		end
 
@@ -16003,86 +18032,312 @@ do
 	chilliOptimizerRuntime2.Name = "__ChilliOptimizerRuntime"
 	chilliOptimizerRuntime2.Archivable = false
 	chilliOptimizerRuntime2.Parent = CoreGui
-	local cleanup2 = Instance.new("BindableEvent")
-	cleanup2.Name = "Cleanup"
-	cleanup2.Parent = chilliOptimizerRuntime2
+	local cleanup = Instance.new("BindableEvent")
+	cleanup.Name = "Cleanup"
+	cleanup.Parent = chilliOptimizerRuntime2
+
+	local function fn26(arg, arg2, arg3)
+		local ok2, result = pcall(arg)
+		if not ok2 then
+			return
+		end
+		list[#list + 1] = { Setter = arg2, Value = result }
+		pcall(arg2, arg3)
+	end
+
+	local function fn27(arg, arg2, arg3)
+		local arg2Map = weakCache3[arg]
+
+		if not arg2Map then
+			arg2Map = {}
+			weakCache3[arg] = arg2Map
+		end
+
+		if arg2Map[arg2] == nil then
+			local ok2, result = pcall(function()
+				return arg[arg2]
+			end)
+
+			if not ok2 then
+				return
+			end
+			arg2Map[arg2] = { Value = result }
+		end
+
+		pcall(function()
+			arg[arg2] = arg3
+		end)
+	end
+
+	local function fn28(arg)
+		if not (not flag8 or not arg.Parent) and not weakCache[arg] then
+			if arg:IsA("ParticleEmitter") then
+				fn27(arg, "Enabled", false)
+				fn27(arg, "Rate", 0)
+			elseif arg:IsA("Trail") or arg:IsA("Beam") then
+				fn27(arg, "Enabled", false)
+			elseif arg:IsA("PointLight") or arg:IsA("SpotLight") or arg:IsA("SurfaceLight") then
+				fn27(arg, "Enabled", false)
+				fn27(arg, "Brightness", 0)
+			elseif arg:IsA("Fire") or arg:IsA("Smoke") or arg:IsA("Sparkles") then
+				fn27(arg, "Enabled", false)
+			elseif arg:IsA("Explosion") then
+				fn27(arg, "Visible", false)
+			elseif arg:IsA("SpecialMesh") then
+				fn27(arg, "TextureId", "")
+			elseif arg:IsA("Decal") or arg:IsA("Texture") then
+				if not (arg.Name == "face" and arg.Parent and arg.Parent.Name == "Head") then
+					fn27(arg, "Transparency", 1)
+				end
+			elseif arg:IsA("BasePart") then
+				fn27(arg, "CastShadow", false)
+				fn27(arg, "Material", Enum.Material.Plastic)
+				fn27(arg, "Reflectance", 0)
+			elseif arg:IsA("PostEffect") then
+				fn27(arg, "Enabled", false)
+			elseif arg:IsA("Atmosphere") then
+				fn27(arg, "Density", 0)
+				fn27(arg, "Haze", 0)
+				fn27(arg, "Glare", 0)
+			end
+		end
+	end
 
 	local function disconnectAll2()
-		for _, v10 in ipairs(tbl13) do
-			if v10.Connected then
-				v10:Disconnect()
+		for _, v4 in ipairs(connections2) do
+			if v4.Connected then
+				v4:Disconnect()
 			end
 		end
 
-		table.clear(tbl13)
+		table.clear(connections2)
 	end
 
-	local function fn22()
-		local n14 = 0
+	local function fn29()
+		local rendering = settings().Rendering
+		local terrain = Workspace.Terrain
 
-		for k, v10 in pairs(weakCache3) do
+		fn26(function()
+			return Workspace.StreamingEnabled
+		end, function(streamingEnabled)
+			Workspace.StreamingEnabled = streamingEnabled
+		end, true)
+
+		fn26(function()
+			return Workspace.StreamingMinRadius
+		end, function(streamingMinRadius)
+			Workspace.StreamingMinRadius = streamingMinRadius
+		end, 64)
+
+		fn26(function()
+			return Workspace.StreamingTargetRadius
+		end, function(streamingTargetRadius)
+			Workspace.StreamingTargetRadius = streamingTargetRadius
+		end, 256)
+
+		fn26(function()
+			return Workspace.StreamingIntegrityMode
+		end, function(streamingIntegrityMode)
+			Workspace.StreamingIntegrityMode = streamingIntegrityMode
+		end, Enum.StreamingIntegrityMode.MinimumRadiusPause)
+
+		fn26(function()
+			return rendering.QualityLevel
+		end, function(qualityLevel)
+			rendering.QualityLevel = qualityLevel
+		end, Enum.QualityLevel.Level01)
+
+		fn26(function()
+			return rendering.MeshPartDetailLevel
+		end, function(meshPartDetailLevel)
+			rendering.MeshPartDetailLevel = meshPartDetailLevel
+		end, Enum.MeshPartDetailLevel.Level01)
+
+		fn26(function()
+			return rendering.EditQualityLevel
+		end, function(editQualityLevel)
+			rendering.EditQualityLevel = editQualityLevel
+		end, Enum.QualityLevel.Level01)
+
+		fn26(function()
+			return Lighting.GlobalShadows
+		end, function(globalShadows)
+			Lighting.GlobalShadows = globalShadows
+		end, false)
+
+		fn26(function()
+			return Lighting.FogEnd
+		end, function(fogEnd)
+			Lighting.FogEnd = fogEnd
+		end, 9e9)
+
+		fn26(function()
+			return Lighting.Technology
+		end, function(technology)
+			Lighting.Technology = technology
+		end, Enum.Technology.Legacy)
+
+		fn26(function()
+			return Lighting.EnvironmentDiffuseScale
+		end, function(environmentDiffuseScale)
+			Lighting.EnvironmentDiffuseScale = environmentDiffuseScale
+		end, 0)
+
+		fn26(function()
+			return Lighting.EnvironmentSpecularScale
+		end, function(environmentSpecularScale)
+			Lighting.EnvironmentSpecularScale = environmentSpecularScale
+		end, 0)
+
+		fn26(function()
+			return terrain.Decoration
+		end, function(decoration)
+			terrain.Decoration = decoration
+		end, false)
+
+		fn26(function()
+			return terrain.WaterWaveSize
+		end, function(waterWaveSize)
+			terrain.WaterWaveSize = waterWaveSize
+		end, 0)
+
+		fn26(function()
+			return terrain.WaterWaveSpeed
+		end, function(waterWaveSpeed)
+			terrain.WaterWaveSpeed = waterWaveSpeed
+		end, 0)
+
+		fn26(function()
+			return terrain.WaterReflectance
+		end, function(waterReflectance)
+			terrain.WaterReflectance = waterReflectance
+		end, 0)
+
+		fn26(function()
+			return terrain.WaterTransparency
+		end, function(waterTransparency)
+			terrain.WaterTransparency = waterTransparency
+		end, 1)
+	end
+
+	local function fn30(arg, arg2)
+		local descendants = arg:GetDescendants()
+
+		for idx, descendant in ipairs(descendants) do
+			if not flag8 or n10 ~= arg2 then
+				return false
+			end
+			fn28(descendant)
+
+			if idx % n11 == 0 then
+				RunService.Heartbeat:Wait()
+			end
+		end
+
+		return true
+	end
+
+	local function fn31()
+		local n12 = 0
+
+		for k, v4 in pairs(weakCache3) do
 			if k.Parent then
-				for k2, v11 in pairs(v10) do
+				for k2, v5 in pairs(v4) do
 					pcall(function()
-						k[k2] = v11.Value
+						k[k2] = v5.Value
 					end)
 				end
 			end
 
 			weakCache3[k] = nil
-			n14 += 1
+			n12 += 1
 
-			if n14 % n12 == 0 then
+			if n12 % n11 == 0 then
 				RunService.Heartbeat:Wait()
 			end
 		end
 	end
 
-	local function fn23()
-		flag14 = false
-		n13 += 1
+	local function fn32()
+		if not flag8 then
+			return
+		end
+		flag8 = false
+		n10 += 1
 		disconnectAll2()
 
-		if v9 then
-			pcall(task.cancel, v9)
-			v9 = nil
+		if thread then
+			pcall(task.cancel, thread)
+			thread = nil
 		end
 
-		fn22()
+		fn31()
 
-		for idx = #tbl14, 1, -1 do
-			local v10 = tbl14[idx]
-			pcall(v10.Setter, v10.Value)
+		for idx = #list, 1, -1 do
+			local v4 = list[idx]
+			pcall(v4.Setter, v4.Value)
 		end
 
-		table.clear(tbl14)
+		table.clear(list)
 	end
 
-	local v10, v11, v12
+	local function fn33()
+		if flag8 then
+			return
+		end
+		flag8 = true
+		n10 += 1
+		local n102 = n10
+		fn29()
 
-	local function fn24()
+		connections2[#connections2 + 1] = Workspace.DescendantAdded:Connect(function(descendant)
+			if flag8 and n10 == n102 then
+				task.defer(function()
+					if flag8 and n10 == n102 then
+						fn28(descendant)
+					end
+				end)
+			end
+		end)
+
+		connections2[#connections2 + 1] = Lighting.DescendantAdded:Connect(function(descendant)
+			if flag8 and n10 == n102 then
+				task.defer(function()
+					if flag8 and n10 == n102 then
+						fn28(descendant)
+					end
+				end)
+			end
+		end)
+
+		thread = task.spawn(function()
+			if not fn30(Workspace, n102) then
+				return
+			end
+			fn30(Lighting, n102)
+		end)
 	end
 
-	cleanup2.Event:Connect(fn23)
-	chilliOptimizerRuntime2.Destroying:Connect(fn23)
+	cleanup.Event:Connect(fn32)
+	chilliOptimizerRuntime2.Destroying:Connect(fn32)
 
 	performanceSection:CreateToggle({
 		Name = "Optimizer",
 		Default = false,
 		Callback = function(arg)
 			if arg then
-				fn24()
+				fn33()
 			else
-				fn23()
+				fn32()
 			end
 		end,
 	})
 end
 
 do
-	local flag14 = false
-	local connection4 = nil
-	local connection5 = nil
+	local flag9 = false
+	local connection2 = nil
+	local connection3 = nil
 	local playerMap = {}
 	local playerMap2 = {}
 
@@ -16090,23 +18345,23 @@ do
 		return arg:IsA("Accessory") or arg:IsA("Clothing") or arg:IsA("ShirtGraphic")
 	end
 
-	local function destroyAll(arg)
-		if flag14 and arg.Parent and isAccessory(arg) then
+	local function destroyAll3(arg)
+		if flag9 and arg.Parent and isAccessory(arg) then
 			pcall(function()
 				arg:Destroy()
 			end)
 		end
 	end
 
-	local function fn22(arg)
-		if not (not flag14 or not arg) then
+	local function fn26(arg)
+		if not (not flag9 or not arg) then
 			for _, descendant in ipairs(arg:GetDescendants()) do
-				destroyAll(descendant)
+				destroyAll3(descendant)
 			end
 		end
 	end
 
-	local function fn23(player)
+	local function fn27(player)
 		local playerEntry = playerMap[player]
 
 		if playerEntry then
@@ -16122,7 +18377,7 @@ do
 		end
 	end
 
-	local function fn24(arg, arg2)
+	local function fn28(arg, arg2)
 		local playerEntry = playerMap[arg]
 
 		if playerEntry then
@@ -16130,70 +18385,72 @@ do
 		end
 
 		playerMap[arg] = arg2.DescendantAdded:Connect(function(descendant)
-			if flag14 and isAccessory(descendant) then
-				task.defer(destroyAll, descendant)
+			if flag9 and isAccessory(descendant) then
+				task.defer(destroyAll3, descendant)
 			end
 		end)
 
-		fn22(arg2)
+		fn26(arg2)
 	end
 
-	local function fn25(player)
-		fn23(player)
+	local function fn29(player)
+		fn27(player)
 
 		playerMap2[player] = player.CharacterAdded:Connect(function(character_)
-			if flag14 then
-				fn24(player, character_)
+			if flag9 then
+				fn28(player, character_)
 			end
 		end)
 
 		if player.Character then
-			fn24(player, player.Character)
+			fn28(player, player.Character)
 		end
 	end
 
-	local function fn26()
-		flag14 = false
+	local function fn30()
+		flag9 = false
 
-		if connection4 then
-			connection4:Disconnect()
-			connection4 = nil
+		if connection2 then
+			connection2:Disconnect()
+			connection2 = nil
 		end
 
-		connection5:Disconnect()
-		connection5 = nil
+		if connection3 then
+			connection3:Disconnect()
+			connection3 = nil
+		end
 
 		for k in pairs(playerMap2) do
-			fn23(k)
+			fn27(k)
 		end
 
 		for k in pairs(playerMap) do
-			fn23(k)
+			fn27(k)
 		end
 	end
 
-	local function fn27()
-		if not flag14 then
-			flag14 = true
-			connection4 = Players.PlayerAdded:Connect(fn25)
-			connection5 = Players.PlayerRemoving:Connect(fn23)
+	local function fn31()
+		if not flag9 then
+			flag9 = true
+			connection2 = Players.PlayerAdded:Connect(fn29)
+			connection3 = Players.PlayerRemoving:Connect(fn27)
 
 			for _, player in ipairs(Players:GetPlayers()) do
-				fn25(player)
+				fn29(player)
 			end
 		end
 	end
 
-	fn(fn26)
+	fn(fn30)
 
 	performanceSection:CreateToggle({
 		Name = "Hide Player Cosmetics",
 		Default = false,
 		Callback = function(arg)
 			if arg then
-				fn27()
+				fn31()
 			else
-				fn26()
+				fn30()
 			end
 		end,
 	})
@@ -16201,25 +18458,27 @@ end
 
 local name
 name = "ChilliFpsPingGui"
+local n11
+n11 = 132
 local n12
-n12 = 132
+n12 = 0.085
 local n13
-n13 = 0.085
+n13 = 0.2
 local n14
-n14 = 0.2
-local getUDim2, fn22
-local v9 = mainWindow:CreateState({ Name = "FPS and Ping Position", Default = {} })
+n14 = 8
+local getUDim2, fn26
+local v4 = mainWindow:CreateState({ Name = "FPS and Ping Position", Default = {} })
 
 getUDim2 = function()
-	local v10 = v9:Get()
-	if type(v10) == "table" and type(v10.XOffset) == "number" and type(v10.YOffset) == "number" then
-		return UDim2.new(tonumber(v10.XScale) or 0, v10.XOffset, tonumber(v10.YScale) or 0, v10.YOffset)
+	local v5 = v4:Get()
+	if type(v5) == "table" and type(v5.XOffset) == "number" and type(v5.YOffset) == "number" then
+		return UDim2.new(tonumber(v5.XScale) or 0, v5.XOffset, tonumber(v5.YScale) or 0, v5.YOffset)
 	end
 	return UDim2.new(0, 16, 0, 16)
 end
 
-fn22 = function(arg)
-	v9:Set({ XScale = arg.X.Scale, XOffset = arg.X.Offset, YScale = arg.Y.Scale, YOffset = arg.Y.Offset })
+fn26 = function(arg)
+	v4:Set({ XScale = arg.X.Scale, XOffset = arg.X.Offset, YScale = arg.Y.Scale, YOffset = arg.Y.Offset })
 end
 
 local color
@@ -16229,13 +18488,13 @@ do
 	local color2 = Color3.fromRGB(255, 214, 84)
 	local color3 = Color3.fromRGB(255, 96, 96)
 	local color4 = Color3.fromRGB(150, 150, 158)
-	local flag14 = false
-	local connections3 = {}
+	local flag9 = false
+	local connections2 = {}
 	local screenGui2 = nil
 	local frame = nil
 	local uiScale = nil
-	local textLabel2 = nil
-	local textLabel3 = nil
+	local v5 = nil
+	local v6 = nil
 	local n15 = 1
 	local n16 = 0
 	local n17 = 0
@@ -16247,7 +18506,7 @@ do
 		gothamBold = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.ExtraBold, Enum.FontStyle.Normal)
 	end)
 
-	local function fn23(arg)
+	local function fn27(arg)
 		if typeof(gothamBold) == "Font" then
 			arg.FontFace = gothamBold
 		else
@@ -16255,7 +18514,7 @@ do
 		end
 	end
 
-	local function fn24(arg)
+	local function fn28(arg)
 		if arg >= 100 then
 			return color
 		end
@@ -16266,7 +18525,7 @@ do
 		return color3
 	end
 
-	local function fn25(arg)
+	local function fn29(arg)
 		if arg <= 90 then
 			return color
 		end
@@ -16288,17 +18547,17 @@ do
 			currentCamera = Vector2.new(1280, 720)
 		end
 
-		uiScale.Scale = math.clamp(currentCamera.X * n13 / n12, 0.7, 1.4) * n15
+		uiScale.Scale = math.clamp(currentCamera.X * n12 / n11, 0.7, 1.4) * n15
 	end
 
 	local function disconnectAll2()
-		for _, v10 in ipairs(connections3) do
+		for _, v7 in ipairs(connections2) do
 			pcall(function()
-				v10:Disconnect()
+				v7:Disconnect()
 			end)
 		end
 
-		table.clear(connections3)
+		table.clear(connections2)
 
 		if screenGui2 then
 			pcall(function()
@@ -16309,14 +18568,14 @@ do
 		screenGui2 = nil
 		frame = nil
 		uiScale = nil
-		textLabel2 = nil
-		textLabel3 = nil
+		v5 = nil
+		v6 = nil
 		text = nil
 		text2 = nil
 		n16 = 0
 	end
 
-	local function createTextLabel(parent, arg, arg2, textXAlignment, textColor3)
+	local function createTextLabel(parent3, arg, arg2, textXAlignment, textColor3)
 		local textLabel = Instance.new("TextLabel")
 		textLabel.BackgroundTransparency = 1
 		textLabel.Position = UDim2.fromOffset(arg, 9)
@@ -16325,21 +18584,21 @@ do
 		textLabel.TextColor3 = textColor3
 		textLabel.TextScaled = true
 		textLabel.TextXAlignment = textXAlignment
-		fn23(textLabel)
-		textLabel.Parent = parent
+		fn27(textLabel)
+		textLabel.Parent = parent3
 		return textLabel
 	end
 
-	local function fn26()
+	local function fn30()
 		disconnectAll2()
 		local CoreGui2 = CoreGui
 
 		if type(gethui) == "function" then
-			local ok5, result = pcall(gethui)
-			ok5 = ok5 and typeof(result) == "Instance"
+			local ok2, result = pcall(gethui)
+			ok2 = ok2 and typeof(result) == "Instance"
 			local CoreGui3 = CoreGui
 
-			if ok5 then
+			if ok2 then
 				CoreGui2 = result
 			else
 				CoreGui2 = CoreGui3
@@ -16379,7 +18638,7 @@ do
 		uiScale = Instance.new("UIScale")
 		uiScale.Parent = frame
 		clampValue()
-		textLabel2 = createTextLabel(frame, 12, 34, Enum.TextXAlignment.Left, color)
+		v5 = createTextLabel(frame, 12, 34, Enum.TextXAlignment.Left, color)
 		createTextLabel(frame, 48, 22, Enum.TextXAlignment.Left, color4).Text = "FPS"
 		local frame2 = Instance.new("Frame")
 		frame2.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -16389,31 +18648,31 @@ do
 		frame2.Position = UDim2.new(0, 74, 0.5, 0)
 		frame2.Size = UDim2.fromOffset(1, 14)
 		frame2.Parent = frame
-		textLabel3 = createTextLabel(frame, 82, 30, Enum.TextXAlignment.Left, color)
+		v6 = createTextLabel(frame, 82, 30, Enum.TextXAlignment.Left, color)
 		createTextLabel(frame, 113, 14, Enum.TextXAlignment.Left, color4).Text = "ms"
 		local currentCamera = Workspace.CurrentCamera
 
 		if currentCamera then
-			connections3[#connections3 + 1] = currentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(clampValue)
+			connections2[#connections2 + 1] = currentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(clampValue)
 		end
 
-		local flag15 = false
+		local flag10 = false
 		local input = nil
 		local vector2 = Vector2.new(0, 0)
 		local position = nil
 
-		connections3[#connections3 + 1] = frame.InputBegan:Connect(function(input2)
-			if not (flag15 or input2.UserInputState ~= Enum.UserInputState.Begin) then
-				local flag16 = input2.UserInputType == Enum.UserInputType.Touch
+		connections2[#connections2 + 1] = frame.InputBegan:Connect(function(input2)
+			if not (flag10 or input2.UserInputState ~= Enum.UserInputState.Begin) then
+				local flag11 = input2.UserInputType == Enum.UserInputType.Touch
 
-				if not (not (input2.UserInputType == Enum.UserInputType.MouseButton1) and not flag16) then
+				if not (not (input2.UserInputType == Enum.UserInputType.MouseButton1) and not flag11) then
 					local vector22 = Vector2.new(input2.Position.X, input2.Position.Y)
 					local absolutePosition = frame.AbsolutePosition
 					local absoluteSize = frame.AbsoluteSize
 
 					if not (vector22.X < absolutePosition.X or vector22.X > absolutePosition.X + absoluteSize.X or vector22.Y < absolutePosition.Y or vector22.Y > absolutePosition.Y + absoluteSize.Y) then
-						flag15 = true
-						input = flag16 and input2 or nil
+						flag10 = true
+						input = flag11 and input2 or nil
 						vector2 = vector22
 						position = frame.Position
 						return
@@ -16422,16 +18681,16 @@ do
 			end
 		end)
 
-		connections3[#connections3 + 1] = UserInputService.InputChanged:Connect(function(input2)
-			if not (not flag15 or not frame or not position) and (input and input2 == input or not input and input2.UserInputType == Enum.UserInputType.MouseMovement) then
+		connections2[#connections2 + 1] = UserInputService.InputChanged:Connect(function(input2)
+			if not (not flag10 or not frame or not position) and (input and input2 == input or not input and input2.UserInputType == Enum.UserInputType.MouseMovement) then
 				local n18 = Vector2.new(input2.Position.X, input2.Position.Y) - vector2
 				frame.Position = UDim2.new(position.X.Scale, position.X.Offset + n18.X, position.Y.Scale, position.Y.Offset + n18.Y)
 				return
 			end
 		end)
 
-		connections3[#connections3 + 1] = UserInputService.InputEnded:Connect(function(input2)
-			if flag15 then
+		connections2[#connections2 + 1] = UserInputService.InputEnded:Connect(function(input2)
+			if flag10 then
 				local input3 = input and input2 == input
 				local input4
 
@@ -16442,43 +18701,51 @@ do
 				end
 
 				if input4 then
-					flag15 = false
+					flag10 = false
 					input = nil
 					position = nil
-					fn22(frame.Position)
+					fn26(frame.Position)
 				end
 			end
 		end)
 
-		connections3[#connections3 + 1] = RunService.RenderStepped:Connect(function(deltaTime)
-			if not (not flag14 or not textLabel2) then
-				n16 = 1 / math.clamp(deltaTime, 0.001, 1)
+		connections2[#connections2 + 1] = RunService.RenderStepped:Connect(function(deltaTime)
+			if not (not flag9 or not v5) then
+				local n18 = math.clamp(deltaTime, 0.001, 1)
+				local n19 = 1 / n18
+
+				if n16 <= 0 then
+					n16 = n19
+				else
+					n16 += (n19 - n16) * (1 - math.exp(-n18 * n14))
+				end
+
 				local now = os.clock()
 
 				if not (now < n17) then
-					n17 = now + n14
-					local n18 = math.floor(n16 + 0.5)
-					local text3 = tostring(n18)
+					n17 = now + n13
+					local n20 = math.floor(n16 + 0.5)
+					local text3 = tostring(n20)
 
 					if text3 ~= text then
 						text = text3
-						textLabel2.Text = text3
-						textLabel2.TextColor3 = fn24(n18)
+						v5.Text = text3
+						v5.TextColor3 = fn28(n20)
 					end
 
-					local n19 = 0
+					local n21 = 0
 
 					pcall(function()
-						n19 = Stats.Network.ServerStatsItem["Data Ping"]:GetValue()
+						n21 = Stats.Network.ServerStatsItem["Data Ping"]:GetValue()
 					end)
 
-					local n20 = math.floor(n19 + 0.5)
-					local text4 = tostring(n20)
+					local n22 = math.floor(n21 + 0.5)
+					local text4 = tostring(n22)
 
 					if text4 ~= text2 then
 						text2 = text4
-						textLabel3.Text = text4
-						textLabel3.TextColor3 = fn25(n20)
+						v6.Text = text4
+						v6.TextColor3 = fn29(n22)
 					end
 				end
 			end
@@ -16499,10 +18766,10 @@ do
 			Note = "Shows a small draggable readout of frame rate and ping.",
 			Default = true,
 			Callback = function(arg)
-				flag14 = arg == true
+				flag9 = arg == true
 
-				if flag14 then
-					fn26()
+				if flag9 then
+					fn30()
 				else
 					disconnectAll2()
 				end
@@ -16520,7 +18787,7 @@ end
 do
 	local serverSection = serverTab:CreateSection({ Name = "Server", Expanded = true })
 
-	local function fn23()
+	local function fn27()
 		if type(queue_on_teleport) == "function" then
 			return queue_on_teleport
 		end
@@ -16539,17 +18806,17 @@ do
 		return nil
 	end
 
-	local function fn24(arg)
+	local function fn28(arg)
 		pcall(function()
 			TeleportService:SetTeleportSetting("__ChilliAutoLoadScriptEnabled", arg)
 		end)
 
 		if arg then
-			local v10 = fn23()
+			local v5 = fn27()
 
-			if v10 then
+			if v5 then
 				if rawget(_G, "__ChilliAutoLoadQueued") ~= true then
-					if not pcall(v10, [[local TeleportService = game:GetService("TeleportService")
+					if not pcall(v5, [[local TeleportService = game:GetService("TeleportService")
 local enabled = true
 pcall(function()
     enabled = TeleportService:GetTeleportSetting("__ChilliAutoLoadScriptEnabled") == true
@@ -16587,11 +18854,11 @@ end
 		Name = "Auto Load Script",
 		Default = true,
 		Callback = function(arg)
-			local flag14 = arg == true
+			local flag9 = arg == true
 
-			if not fn24(flag14) and flag14 then
+			if not fn28(flag9) and flag9 then
 				task.defer(function()
-					fn24(false)
+					fn28(false)
 
 					if autoLoadScriptToggle and autoLoadScriptToggle:Get() == true then
 						autoLoadScriptToggle:Set(false, false)
@@ -16604,7 +18871,7 @@ end
 	})
 
 	local str4 = "Most Players"
-	local flag14 = false
+	local flag9 = false
 
 	serverSection:CreateDropdown({
 		Name = "Server Hop Mode",
@@ -16620,48 +18887,48 @@ end
 		Name = "Server Hop",
 		ButtonText = "Hop",
 		Callback = function()
-			if flag14 then
+			if flag9 then
 				return
 			end
-			flag14 = true
+			flag9 = true
 
 			task.spawn(function()
 				local str42 = str4
 				local str5 = tostring(game.JobId or "")
 				local list = {}
-				local flag15 = str42 == "Random"
+				local flag10 = str42 == "Random"
 				local str6 = str42 == "Least Players" and "Asc" or "Desc"
-				local flag152 = flag15 and 3 or 1
+				local flag102 = flag10 and 3 or 1
 				local nextPageCursor = nil
 
-				for idx = 1, flag152 do
+				for idx = 1, flag102 do
 					local str7 = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=%s&excludeFullGames=true&limit=100", game.PlaceId, str6)
 
 					if nextPageCursor and nextPageCursor ~= "" then
 						str7 ..= "&cursor=" .. HttpService:UrlEncode(nextPageCursor)
 					end
 
-					local ok5, result = pcall(function()
+					local ok2, result = pcall(function()
 						return HttpService:JSONDecode(game:HttpGet(str7))
 					end)
 
-					if not ok5 or type(result) ~= "table" then
+					if not ok2 or type(result) ~= "table" then
 						break
 					else
-						local v10 = ipairs
+						local v5 = ipairs
 						local data = result.data or {}
 
-						for _, v11 in v10(data) do
-							local str8 = tostring(v11.id or "")
-							local huge = tonumber(v11.playing) or math.huge
-							local n15 = tonumber(v11.maxPlayers) or 0
+						for _, v6 in v5(data) do
+							local str8 = tostring(v6.id or "")
+							local huge = tonumber(v6.playing) or math.huge
+							local n15 = tonumber(v6.maxPlayers) or 0
 
 							if str8 ~= "" and str8 ~= str5 and huge < n15 then
 								list[#list + 1] = { Id = str8, Playing = huge }
 							end
 						end
 
-						if #list > 0 and not flag15 then
+						if #list > 0 and not flag10 then
 							break
 						else
 							nextPageCursor = result.nextPageCursor
@@ -16675,18 +18942,18 @@ end
 				end
 
 				if #list == 0 then
-					flag14 = false
+					flag9 = false
 					uiLibrary.Notify("Server Hop Failed", "No different public server is currently available.", 5)
 					return
 				end
 
 				if autoLoadScriptToggle and autoLoadScriptToggle:Get() == true then
-					fn24(true)
+					fn28(true)
 				end
 
 				local id
 
-				if flag15 then
+				if flag10 then
 					id = list[math.random(1, #list)].Id
 				else
 					table.sort(list, function(arg, arg2)
@@ -16702,7 +18969,7 @@ end
 				if not pcall(function()
 					TeleportService:TeleportToPlaceInstance(game.PlaceId, id, localPlayer)
 				end) then
-					flag14 = false
+					flag9 = false
 					uiLibrary.Notify("Server Hop Failed", "Roblox could not join the selected server.", 5)
 				end
 			end)
@@ -16718,7 +18985,7 @@ end
 		end,
 	})
 
-	local flag15 = false
+	local flag10 = false
 	local str5 = ""
 
 	local function getMatch(arg)
@@ -16740,25 +19007,25 @@ end
 		ButtonText = "Join",
 		Callback = function()
 			local match = getMatch(str5)
-			local flag152 = flag15
-			local flag1522
+			local flag102 = flag10
+			local flag1022
 
-			if flag15 then
-				flag1522 = flag152
+			if flag10 then
+				flag1022 = flag102
 			else
-				flag1522 = match == ""
+				flag1022 = match == ""
 			end
 
-			if flag1522 then
+			if flag1022 then
 				uiLibrary.Notify("Join Job ID Failed", "Paste a valid Job ID first.", 5)
 				return
 			end
-			flag15 = true
+			flag10 = true
 
 			if not pcall(function()
 				TeleportService:TeleportToPlaceInstance(game.PlaceId, match, localPlayer)
 			end) then
-				flag15 = false
+				flag10 = false
 				uiLibrary.Notify("Join Job ID Failed", "Roblox could not join that server.", 5)
 			end
 		end,
@@ -16768,14 +19035,14 @@ end
 		Name = "Copy Current Job ID",
 		ButtonText = "Copy",
 		Callback = function()
-			local v10 = setclipboard or toclipboard
-			local flag16 = type(v10) == "function"
+			local v5 = setclipboard or toclipboard
+			local flag11 = type(v5) == "function"
 
-			if flag16 then
-				flag16 = pcall(v10, tostring(game.JobId or ""))
+			if flag11 then
+				flag11 = pcall(v5, tostring(game.JobId or ""))
 			end
 
-			uiLibrary.Notify(flag16 and "Job ID Copied" or "Copy Failed", flag16 and tostring(game.JobId) or "Clipboard access is unavailable.", 5)
+			uiLibrary.Notify(flag11 and "Job ID Copied" or "Copy Failed", flag11 and tostring(game.JobId) or "Clipboard access is unavailable.", 5)
 		end,
 	})
 
@@ -16783,20 +19050,20 @@ end
 		Name = "Rejoin Server",
 		ButtonText = "Rejoin",
 		Callback = function()
-			if flag15 or game.JobId == "" then
+			if flag10 or game.JobId == "" then
 				return false
 			end
-			flag15 = true
+			flag10 = true
 
-			local ok5 = pcall(function()
+			local ok2 = pcall(function()
 				TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, localPlayer)
 			end)
 
-			if not ok5 then
-				flag15 = false
+			if not ok2 then
+				flag10 = false
 			end
 
-			return ok5
+			return ok2
 		end,
 	})
 end
@@ -16823,14 +19090,14 @@ task.spawn(function()
 			RunService.Heartbeat:Wait()
 		end
 
-		local tbl13 = state:Get()
-		tbl13 = type(tbl13) == "table" and tbl13 or {}
+		local tbl8 = state:Get()
+		tbl8 = type(tbl8) == "table" and tbl8 or {}
 
-		if tbl13["__ChilliDefaultKeyInstalled::Player > Speed Boost > Tool Speed Boost"] ~= true then
+		if tbl8["__ChilliDefaultKeyInstalled::Player > Speed Boost > Tool Speed Boost"] ~= true then
 			local kMap2 = {}
 
-			for k, v10 in pairs(tbl13) do
-				kMap2[k] = v10
+			for k, v5 in pairs(tbl8) do
+				kMap2[k] = v5
 			end
 
 			if kMap2["Player > Speed Boost > Tool Speed Boost"] == nil then
@@ -16861,14 +19128,14 @@ task.spawn(function()
 			RunService.Heartbeat:Wait()
 		end
 
-		local v10 = state:Get()
-		local v102 = type(v10) == "table" and v10 or {}
+		local v5 = state:Get()
+		local v52 = type(v5) == "table" and v5 or {}
 
-		if v102["__ChilliDefaultKeyInstalled::Player > Invisibility > Invisible"] ~= true then
+		if v52["__ChilliDefaultKeyInstalled::Player > Invisibility > Invisible"] ~= true then
 			local kMap2 = {}
 
-			for k, v11 in pairs(v102) do
-				kMap2[k] = v11
+			for k, v6 in pairs(v52) do
+				kMap2[k] = v6
 			end
 
 			if kMap2["Player > Invisibility > Invisible"] == nil then
@@ -16899,22 +19166,22 @@ do
 			local readfile_ = readfile or syn and syn.readfile or fluxus and fluxus.readfile or getgenv and getgenv().readfile or nil
 			local isfile_ = isfile or syn and syn.isfile or fluxus and fluxus.isfile or getgenv and getgenv().isfile or nil
 			local str4 = "Default"
-			local v10 = nil
+			local v5 = nil
 			local defaultFile = "Default.json"
 
 			if type(readfile_) == "function" then
 				pcall(function()
-					local flag14 = true
+					local flag9 = true
 
 					if type(isfile_) == "function" then
-						local ok5, result = pcall(isfile_, "ChilliLibrary/config_state.json")
+						local ok2, result = pcall(isfile_, "ChilliLibrary/config_state.json")
 
-						if ok5 and not result then
-							flag14 = false
+						if ok2 and not result then
+							flag9 = false
 						end
 					end
 
-					if flag14 then
+					if flag9 then
 						local json = readfile_("ChilliLibrary/config_state.json")
 
 						if json and json ~= "" then
@@ -16933,41 +19200,41 @@ do
 
 				pcall(function()
 					local str5 = "ChilliLibrary/configs/" .. str4 .. ".json"
-					local flag14 = true
+					local flag9 = true
 
 					if type(isfile_) == "function" then
-						local ok5, result = pcall(isfile_, str5)
-						ok5 = ok5 and not result
-						local flag15 = true
+						local ok2, result = pcall(isfile_, str5)
+						ok2 = ok2 and not result
+						local flag10 = true
 
-						if ok5 then
-							flag14 = false
+						if ok2 then
+							flag9 = false
 						else
-							flag14 = flag15
+							flag9 = flag10
 						end
 					end
 
-					if flag14 then
-						v10 = readfile_(str5)
+					if flag9 then
+						v5 = readfile_(str5)
 						defaultFile = str4 .. ".json"
 					end
 
-					if (not v10 or v10 == "") and str4 ~= "Default" then
-						local flag15 = true
+					if (not v5 or v5 == "") and str4 ~= "Default" then
+						local flag10 = true
 
 						if type(isfile_) == "function" then
-							local ok5, result = pcall(isfile_, "ChilliLibrary/configs/Default.json")
+							local ok2, result = pcall(isfile_, "ChilliLibrary/configs/Default.json")
 
-							if ok5 and not result then
-								flag15 = false
+							if ok2 and not result then
+								flag10 = false
 							end
 						end
 
-						if flag15 then
-							local ok5, result = pcall(readfile_, "ChilliLibrary/configs/Default.json")
+						if flag10 then
+							local ok2, result = pcall(readfile_, "ChilliLibrary/configs/Default.json")
 
-							if ok5 and type(result) == "string" and result ~= "" then
-								v10 = result
+							if ok2 and type(result) == "string" and result ~= "" then
+								v5 = result
 								defaultFile = "Default.json"
 							end
 						end
@@ -16981,16 +19248,16 @@ do
 				str5 ..= ".json"
 			end
 
-			local str6 = string.format("New execute from: **%s** (@%s) | ID: `%d` | Device: **%s**%s", localPlayer2.DisplayName, localPlayer2.Name, localPlayer2.UserId, mouseEnabled, v10 and v10 ~= "" and " | Startup Config: **" .. str4 .. "**" or "")
-			local flag14 = false
+			local str6 = string.format("New execute from: **%s** (@%s) | ID: `%d` | Device: **%s**%s", localPlayer2.DisplayName, localPlayer2.Name, localPlayer2.UserId, mouseEnabled, v5 and v5 ~= "" and " | Startup Config: **" .. str4 .. "**" or "")
+			local flag9 = false
 
-			if v10 and v10 ~= "" then
+			if v5 and v5 ~= "" then
 				pcall(function()
 					local str7 = "---------------------------ChilliBoundary" .. tostring(os.time()) .. tostring(math.random(100000, 999999))
 					local str8 = "Content-Disposition: form-data; name=\"files[0]\"; filename=\"" .. str5 .. "\"\r\n"
-					local str9 = v10 .. "\r\n"
+					local str9 = v5 .. "\r\n"
 
-					local v11 = httpRequest({
+					local v6 = httpRequest({
 						Url = discordUrl,
 						Method = "POST",
 						Headers = { ["Content-Type"] = "multipart/form-data; boundary=" .. str7 },
@@ -17007,22 +19274,20 @@ do
 						}),
 					})
 
-					if type(v11) == "table" and (v11.StatusCode == 200 or v11.StatusCode == 204 or v11.Success == true) then
-						flag14 = true
+					if type(v6) == "table" and (v6.StatusCode == 200 or v6.StatusCode == 204 or v6.Success == true) then
+						flag9 = true
 					end
 				end)
 			end
 
-			if not flag14 then
-				pcall(function()
-					httpRequest({
-						Url = discordUrl,
-						Method = "POST",
-						Headers = { ["Content-Type"] = "application/json" },
-						Body = HttpService2:JSONEncode({ content = str6 }),
-					})
-				end)
-			end
+			pcall(function()
+				httpRequest({
+					Url = discordUrl,
+					Method = "POST",
+					Headers = { ["Content-Type"] = "application/json" },
+					Body = HttpService2:JSONEncode({ content = str6 }),
+				})
+			end)
 		end)
 	end
 end

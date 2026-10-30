@@ -534,10 +534,13 @@ class Structurer:
                     cur = e if t == loop[0] else t
                     continue
 
-                m = self.common_join(t, e, loop) or m
+                m = self.common_join(t, e, loop, stop) or (m if stop is None or stop == loop[0] else None)
+            if stop is not None and m is not None and m != stop:
+                if m not in self.reach_from(t, loop, stop) or m not in self.reach_from(e, loop, stop):
+                    m = None
             if m is None:
 
-                m = self.common_join(t, e, loop)
+                m = self.common_join(t, e, loop, stop)
             if m is None:
 
                 then = self.region(t, stop, loop)
@@ -641,14 +644,17 @@ class Structurer:
         self.stub_follows.add(f)
         return f
 
-    def reach_from(self, start, loop):
-        """Blocks reachable from `start` without passing the loop header/exit
-        (or leaving the loop body)."""
+    def reach_from(self, start, loop, stop=None):
+        """Blocks reachable from `start` without passing `stop` or the loop
+        header/exit (or leaving the loop body)."""
         seen = set()
         st = [start]
         while st:
             x = st.pop()
             if x in seen:
+                continue
+            if stop is not None and x == stop:
+                seen.add(x)
                 continue
             if loop is not None and (x == loop[0] or x == loop[2] or x not in loop[1]):
                 continue
@@ -656,13 +662,13 @@ class Structurer:
             st += self.blocks[x].succ
         return seen
 
-    def common_join(self, t, e, loop):
+    def common_join(self, t, e, loop, stop=None):
         """The earliest (reverse post-order) block reachable from both branch
-        targets, not yet emitted; None if there is none."""
-        a = self.reach_from(t, loop)
+        targets before `stop`, not yet emitted; None if there is none."""
+        a = self.reach_from(t, loop, stop)
         if not a:
             return None
-        both = [x for x in self.reach_from(e, loop) if x in a and x not in self.emitted]
+        both = [x for x in self.reach_from(e, loop, stop) if x in a and (x == stop or x not in self.emitted)]
         if not both:
             return None
         m = min(both, key=lambda x: self.rpo_index.get(x, 1 << 30))
@@ -794,7 +800,7 @@ class Structurer:
 
 SPLIT_LIMIT = 3500      
 
-def structure(entry, blocks, own=None, rounds=65):
+def structure(entry, blocks, own=None, rounds=128):
     """Structurer.run, with its goto fallbacks resolved by CFG rewrites:
     - a jump out of a loop to somewhere other than the loop's exit (a
       multi-level break/continue, a second exit): every exit edge sets a
@@ -827,21 +833,27 @@ def structure(entry, blocks, own=None, rounds=65):
                 own.add(name)
             entry = unify_exits(entry, blocks, sr, exits[0][1], name)
             continue
-        n = 0
+        seen_targets = []
         for g in sr.gotos:
-            if g[0] == "shared" and g[1] in blocks and copied < SPLIT_LIMIT:
-                k = split_node(blocks, g[1], sr)
-                if not k:
-
-                    hs = [h for h, body in sr.loop_body.items() if g[1] in body]
-                    hs.sort(key=lambda h: len(sr.loop_body[h]))
-                    for h in hs:
-                        k = split_node(blocks, h, sr, [p for p in blocks[h].preds
-                                                       if p not in sr.loop_body[h]])
-                        if k:
-                            break
+            if g[0] == "shared" and g[1] in blocks and g[1] not in seen_targets:
+                seen_targets.append(g[1])
+        n = 0
+        for target in seen_targets:
+            if copied >= SPLIT_LIMIT:
+                break
+            k = split_node(blocks, target, sr)
+            if not k:
+                hs = [h for h, body in sr.loop_body.items() if target in body]
+                hs.sort(key=lambda h: len(sr.loop_body[h]))
+                for h in hs:
+                    k = split_node(blocks, h, sr, [p for p in blocks[h].preds
+                                                   if p not in sr.loop_body[h]])
+                    if k:
+                        break
+            if k:
                 copied += k
-                n += k > 0
+                n += 1
+                break
         if not n:
             break
     if sr.fallbacks:

@@ -6,7 +6,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 GENERATED = re.compile(
-    r"^(?:[A-Za-z_]\d+(?:_\d+)*|arg\d*_*|fn\d*|tbl\d*|str\d*|flag\d*|v|[a-z_][A-Z]|[A-Z]{2})$"
+    r"^(?:[A-Za-z_]\d+(?:_\d+)*|arg\d*_*|[ijk]_+|fn\d*|tbl\d*|str\d*|flag\d*|v|[a-z_][A-Z]|[A-Z]{2})$"
 )
 SINGLE_CHAR = re.compile(r"^[A-Za-z]$")
 KEEP_2UPPER = {"UI", "ID", "OK", "IP", "OS", "WS", "HP", "XP", "AI", "DB", "FN", "FX", "IO"}
@@ -17,7 +17,10 @@ DATATYPES = {"Color3": "color", "Vector3": "vector", "Vector2": "vector2", "UDim
              "CFrame": "cframe", "TweenInfo": "tweenInfo", "ColorSequence": "colorSequence",
              "NumberSequence": "numberSequence", "NumberRange": "numberRange", "Rect": "rect",
              "RaycastParams": "raycastParams", "OverlapParams": "overlapParams", "Ray": "ray",
-             "BrickColor": "brickColor", "Font": "font", "PhysicalProperties": "physicalProperties"}
+             "BrickColor": "brickColor", "Font": "font", "PhysicalProperties": "physicalProperties",
+             "Random": "rng", "DateTime": "dateTime", "NumberSequenceKeypoint": "keypoint",
+             "ColorSequenceKeypoint": "colorKeypoint", "CatalogSearchParams": "searchParams",
+             "Axes": "axes", "Faces": "faces"}
 METHOD_NAMES = {"GetChildren": "children", "GetDescendants": "descendants", "GetPlayers": "players",
                 "Clone": "clone", "Connect": "connection", "Once": "connection", "Create": "tween",
                 "GetPropertyChangedSignal": "signal", "GetMouse": "mouse", "Raycast": "hit",
@@ -25,14 +28,21 @@ METHOD_NAMES = {"GetChildren": "children", "GetDescendants": "descendants", "Get
                 "JSONDecode": "data", "JSONEncode": "json", "match": "match", "gsub": "str", "sub": "str",
                 "lower": "str", "upper": "str", "format": "str", "rep": "str", "find": "pos", "split": "parts",
                 "GetAttribute": "attribute", "IsA": "isA", "Wait": "result", "GenerateGUID": "guid",
-                "GetServerTimeNow": "serverTime"}
-GLOBAL_CALLS = {"tick": "now", "time": "now", "os.clock": "now", "os.time": "now", "type": "kind",
-                "typeof": "kind", "tostring": "str", "tonumber": "num", "setmetatable": "obj",
+                "GetServerTimeNow": "serverTime", "NextInteger": "randInt", "NextNumber": "randNum",
+                "GetPivot": "pivot", "GetBoundingBox": "boundsCFrame", "GetExtentsSize": "extentsSize",
+                "GetNetworkPing": "ping", "WorldToViewportPoint": "screenPos"}
+GLOBAL_CALLS = {"tick": "now", "time": "now", "os.clock": "now", "os.time": "now", "os.date": "dateStr",
+                "type": "kind", "typeof": "kind", "tostring": "str", "tonumber": "num", "setmetatable": "obj",
                 "loadstring": "chunk", "getgenv": "genv", "getfenv": "env", "gethui": "hui",
                 "request": "response", "http_request": "response",
                 "string.format": "str", "string.rep": "str", "string.sub": "str", "table.concat": "str",
-                "math.floor": "n", "math.clamp": "n", "math.min": "n", "math.max": "n", "math.abs": "n",
-                "math.random": "n", "select": "value", "unpack": "value", "table.unpack": "value",
+                "table.create": "list", "table.clone": "clonedTbl",
+                "math.floor": "n", "math.ceil": "n", "math.round": "n", "math.sqrt": "n",
+                "math.clamp": "n", "math.min": "n", "math.max": "n", "math.abs": "n",
+                "math.random": "n", "math.rad": "rad", "math.deg": "deg",
+                "debug.traceback": "traceback", "buffer.create": "buf", "buffer.fromstring": "buf",
+                "buffer.tostring": "str",
+                "select": "value", "unpack": "value", "table.unpack": "value",
                 "coroutine.create": "thread", "task.spawn": "thread", "task.delay": "thread",
                 "Instance.new": "instance", "Drawing.new": "drawing", "newproxy": "proxy",
                 "rawget": "value", "next": "key"}
@@ -66,6 +76,8 @@ def duck_type_members(members):
     if not members:
         return None
     m = set(members)
+    if m & {"CreateWindow", "Finalize"}:
+        return "uiLibrary"
     if m & {"TouchEnabled", "KeyboardEnabled", "MouseEnabled", "GetFocusedTextBox"}:
         return "UserInputService"
     if m & {"Heartbeat", "RenderStepped", "PreSimulation", "PostSimulation"}:
@@ -150,6 +162,10 @@ def string_semantic_name(s):
     if re.match(r"^[A-Za-z0-9_-]{2,36}\.(?:json|txt|cfg|lua|luau)$", s):
         stem = re.sub(r"\.\w+$", "", s)
         return camel(stem + " file")
+    if s.startswith("ABCDEFGHIJKLMNOPQRSTUVWXYZ"):
+        return "charset"
+    if s.lower() == "0123456789abcdef":
+        return "hexChars"
     return None
 
 
@@ -810,10 +826,24 @@ class Namer:
             return "deleteFile"
 
         # 3. RichText / compact number / rate / vararg formatters & math helpers
+        if ("GenerateGUID" in methods or "NextInteger" in methods) and "table.concat" in calls and n_stmts <= 25:
+            return "generateRandomId"
         if "table.concat" in calls and "select" in calls and "tostring" in calls and n_stmts <= 15:
             return "formatArgs"
-        if "Disconnect" in methods and "table.clear" in calls and n_stmts <= 15:
+        if "Disconnect" in methods and ("table.clear" in calls or "getconnections" in calls) and n_stmts <= 18:
             return "disconnectAll"
+        if "TeleportToPlaceInstance" in methods or ("Teleport" in methods and "TeleportService" in (calls | lcalls)):
+            return "teleportServer"
+        if "SetCore" in methods and any("Notification" in s for s in strs) and n_stmts <= 15:
+            return "sendNotification"
+        if "WorldToViewportPoint" in methods and n_stmts <= 18:
+            return "worldToScreen"
+        if "firetouchinterest" in calls and n_stmts <= 15:
+            return "fireTouch"
+        if "fireproximityprompt" in calls and n_stmts <= 15:
+            return "triggerPrompt"
+        if "Kick" in methods and len(body) <= 8:
+            return "kickPlayer"
         if "loadstring" in calls and n_stmts <= 25:
             return "compileChunk"
         if "getfenv" in calls and "setmetatable" in calls and n_stmts <= 25:
@@ -957,8 +987,25 @@ class Namer:
             d = dotted(f)
             if d in ("pcall", "xpcall"):
                 return ["ok", "result"][min(idx, 1)]
+            if d == "loadstring" and idx == 1:
+                return "loadErr"
             if idx > 0:
+                if f.get("type") == "AstExprIndexName":
+                    if f["index"] == "match" or d == "string.match":
+                        return "match"
+                    if f["index"] == "WorldToViewportPoint":
+                        return "onScreen" if idx == 1 else None
+                    if f["index"] == "GetBoundingBox":
+                        return "boundsSize" if idx == 1 else None
+                elif d == "string.match":
+                    return "match"
+                elif d == "string.find":
+                    return "endPos" if idx == 1 else "match"
                 return None
+            if d == "setmetatable" and len(e.get("args") or []) >= 2 and e["args"][1].get("type") == "AstExprTable":
+                for ent in (e["args"][1].get("items") or e["args"][1].get("entries") or ()):
+                    if isinstance(ent.get("key"), dict) and const_str(ent["key"]) == "__mode":
+                        return "weakCache"
             if d == "require" and e["args"]:
                 a = e["args"][0]
                 if a.get("type") == "AstExprIndexName":
@@ -1024,6 +1071,8 @@ class Namer:
             if f.get("type") == "AstExprLocal":
                 src = self.locals.get(f["local"]["location"])
                 src_nm = strip_num_suffix((src.get("new") or src.get("name") or "") if src else "")
+                if src_nm == "chunk":
+                    return "bootstrapFn"
                 if src_nm == "getService" and e.get("args"):
                     arg = const_str(e["args"][0])
                     if arg and re.match(r"^[A-Za-z]\w*$", arg):
@@ -1443,9 +1492,10 @@ class Namer:
                     continue
                 base = "unused"
             if not base or not re.match(r"^[A-Za-z_]\w*$", base) or base in reserved:
-                base = (base or "v") + "_"
-                if not re.match(r"^[A-Za-z_]\w*$", base):
-                    base = "v"
+                alt = {"i": "idx", "j": "idx", "k": "key", "v": "val"}.get(base)
+                base = alt if (alt and alt not in reserved) else ((base or "v") + "_")
+                if not re.match(r"^[A-Za-z_]\w*$", base) or base in reserved:
+                    base = "val" if "val" not in reserved else "item_"
             n = 1
             while True:
                 cand = base if n == 1 else "%s%d" % (base, n)

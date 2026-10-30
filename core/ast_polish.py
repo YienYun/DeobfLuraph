@@ -579,7 +579,96 @@ def _unwrap_top_level_iife(text):
     return _apply_edits(btext, edits).decode("utf-8")
 
 
+def _has_ident_reference(node, ident_name):
+    """Return True if subtree `node` contains any local or global reference to `ident_name`."""
+    stk = [node]
+    while stk:
+        cur = stk.pop()
+        if not isinstance(cur, dict):
+            continue
+        tp = cur.get("type")
+        if tp == "AstExprLocal":
+            loc_node = cur.get("local") or {}
+            if loc_node.get("name") == ident_name:
+                return True
+        elif tp == "AstExprGlobal":
+            if (cur.get("global") or cur.get("name")) == ident_name:
+                return True
+        for k, v in cur.items():
+            if k == "local":
+                continue
+            if isinstance(v, dict):
+                stk.append(v)
+            elif isinstance(v, list):
+                stk.extend(x for x in v if isinstance(x, dict))
+    return False
+
+
+def _sugar_local_functions(text):
+    """Rewrite `local foo = function(...)` -> `local function foo(...)` when `foo`
+    is not referenced inside its own initializer body (100% scope-equivalent)."""
+    btext = text.encode("utf-8")
+    starts = _line_starts(btext)
+    root = _parse_ast(text)
+    edits = []
+
+    def walk_block(blk):
+        for st in blk.get("body", ()):
+            tp = st.get("type")
+            if tp == "AstStatLocal":
+                vars_ = st.get("vars") or ()
+                vals = st.get("values") or ()
+                if len(vars_) == 1 and len(vals) == 1 and vals[0].get("type") == "AstExprFunction":
+                    vnode = vars_[0]
+                    fn = vals[0]
+                    nm = vnode.get("name") or ""
+                    if nm and nm != "_" and not _has_ident_reference(fn.get("body"), nm):
+                        st_s, _ = _loc_bytes(st["location"], starts)
+                        fn_s, _ = _loc_bytes(fn["location"], starts)
+                        prefix = btext[st_s:fn_s]
+                        # Match exact `local <name> = function(` prefix
+                        target_re = rb"^local\s+" + re.escape(nm.encode("utf-8")) + rb"\s*=\s*$"
+                        if re.match(target_re, prefix) and btext[fn_s:fn_s + 8] == b"function":
+                            edits.append((st_s, fn_s + 8, b"local function " + nm.encode("utf-8")))
+                    walk_block(fn["body"])
+                    continue
+            for v in st.values():
+                if isinstance(v, dict):
+                    if v.get("type") == "AstStatBlock":
+                        walk_block(v)
+                    else:
+                        walk_expr(v)
+                elif isinstance(v, list):
+                    for x in v:
+                        if isinstance(x, dict):
+                            if x.get("type") == "AstStatBlock":
+                                walk_block(x)
+                            else:
+                                walk_expr(x)
+
+    def walk_expr(ex):
+        if ex.get("type") == "AstExprFunction":
+            walk_block(ex["body"])
+            return
+        for v in ex.values():
+            if isinstance(v, dict):
+                if v.get("type") == "AstStatBlock":
+                    walk_block(v)
+                elif "type" in v:
+                    walk_expr(v)
+            elif isinstance(v, list):
+                for x in v:
+                    if isinstance(x, dict) and "type" in x:
+                        walk_expr(x)
+
+    walk_block(root)
+    if not edits:
+        return text
+    return _apply_edits(btext, edits).decode("utf-8")
+
+
 def polish_ast(text):
     text = _strip_unused_params_and_dead_locals(text)
     text = _unwrap_top_level_iife(text)
+    text = _sugar_local_functions(text)
     return text

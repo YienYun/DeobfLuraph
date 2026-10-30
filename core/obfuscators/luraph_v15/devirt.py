@@ -1185,6 +1185,15 @@ class ProtoLifter:
         self.reg_prefix = "r"
         self.jstack = None           
         self.proto = proto
+        max_cap_int = max(
+            (v for v in (cap or {}).values() if isinstance(v, int) and not isinstance(v, bool) and 0 < v < 65536),
+            default=0,
+        )
+        max_proto_int = max(
+            (v for v in proto.h.values() if isinstance(v, int) and not isinstance(v, bool) and 0 < v < 65536),
+            default=0,
+        )
+        self.max_reg = max(4096, max_cap_int + 256, max_proto_int + 256)
         for v in proto.h.values():
             if isinstance(v, LTable) and v is not vmobj:
                 self.proto_arrays.add(id(v))
@@ -1934,7 +1943,7 @@ class ProtoLifter:
             k = S.norm_key(key)
             if isinstance(k, (int, float)) and k < 1 and self.stack_base is not None:
                 raise Unsupported("read below the stack VM's frame (register %s)" % k)
-            if isinstance(k, (int, float)) and (k < 0 or (1024 < k < 800000)) and self.stack_base is None:
+            if isinstance(k, (int, float)) and (k < 0 or (self.max_reg < k < 800000)) and self.stack_base is None:
                 raise Unsupported("corrupt/encrypted register index %s" % k)
             if self.jvals.get(k) is FRAME:
                 return obj
@@ -2141,7 +2150,7 @@ class ProtoLifter:
                 return
             if isinstance(key, (int, float)) and key < 1 and self.stack_base is not None:
                 raise Unsupported("store below the stack VM's frame (register %s)" % key)
-            if isinstance(key, (int, float)) and (key < 0 or (1024 < key < 800000)) and self.stack_base is None:
+            if isinstance(key, (int, float)) and (key < 0 or (self.max_reg < key < 800000)) and self.stack_base is None:
                 raise Unsupported("corrupt/encrypted register store %s" % key)
             self.emit(Assign(Reg(S.norm_key(key)), self.value_of(v)))
             return

@@ -1,59 +1,88 @@
 --[[
-	Venyx UI Library (v1.4.5) - Standalone Luau UI Framework
-	Themes: "Twilight", "Aurora", "Ocean", "Midnight", "Sakura", "Onyx", "Black", "Mono"
+    Venyx UI Library v1.4.5 (Standalone Clean Luau Source)
+    Reconstructed & de-minified with full semantic naming for easy reading & remaking.
 
-	Quick Usage:
-		local Venyx = loadstring(readfile("VenyxUI.lua"))()
-		local win = Venyx:Window({
-			Title = "Venyx",
-			Version = "v1.4.5",
-			Game = "My Script",
-			Id = "MyVenyxHub",
-			Key = Enum.KeyCode.RightControl,
-		})
-		win:Home({ Game = "My Script", Key = "Ready", Discord = "https://discord.gg/...", Community = "Discord" })
-		local mainTab = win:Tab("Main", "home")
-		local genSub = mainTab:Sub("General")
-		local sec = genSub:Section("Features", "zap", 1)
-		sec:Toggle("Auto Farm", false, function(state) print("Auto Farm:", state) end, "autoFarm")
-		sec:Slider("WalkSpeed", 16, 200, 16, function(val) print("Speed:", val) end, " st/s", 1, "walkSpeed")
-		sec:Dropdown("Mode", { "Normal", "Fast", "Safe" }, "Normal", function(pick) print("Mode:", pick) end, false, "mode")
-		sec:Input("Target", "Player name...", function(txt) print("Target:", txt) end, "target")
-		sec:Button("Run Action", "Run", function() Venyx:Notify("Executed", "Action finished", "ok") end, "gold")
+    QUICK START / API USAGE:
+    ----------------------------------------------------------------------------
+    local Venyx = loadstring(readfile("VenyxUI.lua"))() -- or require(path.to.VenyxUI)
 
-		local settingsTab = win:Tab("Settings", "settings")
-		win:Settings(settingsTab)
-		win:Quick(settingsTab, {})
-		win:Config(win:Tab("Config", "save"))
+    local Win = Venyx:Window({
+        Title = "My Hub",
+        Sub = "v1.0.0",
+        Id = "MyHubConfig",                 -- Folder/ID used for saving configs
+        Key = Enum.KeyCode.RightControl,    -- Toggle UI keybind
+        Theme = "Twilight",                 -- Twilight | Aurora | Ocean | Midnight | Sakura | Onyx | Black | Mono
+    })
+
+    -- Optional built-in Home tab
+    local Home = Win:Home({
+        Discord = "discord.gg/example",
+        Info = { { "Version", "1.0.0" }, { "Build", "Stable" } },
+    })
+    Home:Stats("Overview", { { "FPS", "60", "zap" }, { "Status", "Online", "check" } })
+    Home:News({ { "NEW", "Update 1.0 — Initial release" } })
+
+    -- Standard Tab & Section
+    local MainTab = Win:Tab("Main", "sparkles")
+    local CombatSec = MainTab:Section("Combat", "target", 1) -- column 1 (left) or 2 (right)
+
+    CombatSec:Toggle("Auto Farm", false, function(enabled)
+        print("Auto Farm:", enabled)
+    end, "Automatically farms nearby targets")
+
+    CombatSec:Slider("WalkSpeed", 16, 150, 32, function(value)
+        print("Speed:", value)
+    end, " stud/s", 1, "Adjust character movement speed")
+
+    CombatSec:Dropdown("Mode", { "Legit", "Blatant", "Safe" }, "Legit", function(selected)
+        print("Selected:", selected)
+    end, false, "Select farming mode")
+
+    CombatSec:Input("Webhook URL", "https://...", function(text)
+        print("Webhook:", text)
+    end, "Optional Discord webhook")
+
+    CombatSec:Key("Dash Key", Enum.KeyCode.Q, function()
+        print("Dash triggered!")
+    end, function(newKey)
+        print("Rebound to:", newKey)
+    end, "Press key to trigger dash")
+
+    CombatSec:Button("Teleport Spawn", "Teleport", function()
+        print("Teleporting...")
+    end, "mint", "Return to spawn zone")
+
+    -- Built-in utility tabs & notifications
+    local SettingsTab = Win:Settings() -- Theme switcher, UI scale & keybind tab
+    Win:Quick(SettingsTab)             -- Floating quick-pin bar controls inside Settings
+    Win:Config()                       -- Config save / load / import / export tab
+    Venyx:Notify("Loaded", "UI initialized successfully", "ok", 4)
 ]]
 
 return (function()
-    local ctx = {}
-    local _VX = {mem = {}}
+    local Venyx, State, HttpService, RunService
+    local newInstance, mountGui, createFrame, createListLayout, TopRightAnchor
+    local serializeValue, configPath, writeJson, readJson, applyConfig, getUserDir, getBaseDir
+    local Runtime = {mem = {}}
 
-    function _VX.setList(tbl, offset, ...)
-        local packed = table.pack(...)
-
-        table.move(packed, 1, packed.n, offset + 1, tbl)
-    end
-    function _VX.unpack(packed)
+    function Runtime.unpack(packed)
         return table.unpack(packed, 1, packed.n)
     end
-    function _VX.decodeBase64(data)
+    function Runtime.decodeBase64(data)
         local b64 = [[ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/]]
         local map = {}
 
-        for i = 1, #b64 do
-            map[b64:sub(i, i)] = i - 1
+        for index = 1, #b64 do
+            map[b64:sub(index, index)] = index - 1
         end
 
         local out, acc, bits = {}, 0, 0
 
-        for i = 1, #data do
-            local v = map[data:sub(i, i)]
+        for index2 = 1, #data do
+            local current = map[data:sub(index2, index2)]
 
-            if v ~= nil then
-                acc = acc * 64 + v
+            if current ~= nil then
+                acc = acc * 64 + current
 
                 bits += 6
 
@@ -70,14 +99,14 @@ return (function()
 
         return table.concat(out)
     end
-    function _VX.ensureFolder(filePath)
+    function Runtime.ensureFolder(filePath)
         if type(makefolder) ~= 'function' then
             return
         end
 
         local cur = ''
 
-        for part in tostring(filePath):gmatch('([^/\\]+)/')do
+        for part in tostring(filePath):gmatch('([^/\\]+)/') do
             cur = cur == '' and part or (cur .. '/' .. part)
 
             pcall(function()
@@ -87,7 +116,7 @@ return (function()
             end)
         end
     end
-    function _VX.readRaw(path)
+    function Runtime.readRaw(path)
         if type(isfile) == 'function' and type(readfile) == 'function' then
             local ok, content = pcall(function()
                 return isfile(path) and readfile(path) or nil
@@ -98,18 +127,18 @@ return (function()
             end
         end
 
-        return _VX.mem[path]
+        return Runtime.mem[path]
     end
-    function _VX.writeRaw(path, content)
-        _VX.mem[path] = content
+    function Runtime.writeRaw(path, content)
+        Runtime.mem[path] = content
 
         if type(writefile) == 'function' then
-            _VX.ensureFolder(path)
+            Runtime.ensureFolder(path)
             pcall(writefile, path, content)
         end
     end
-    function _VX.deleteRaw(path)
-        _VX.mem[path] = nil
+    function Runtime.deleteRaw(path)
+        Runtime.mem[path] = nil
 
         if type(delfile) == 'function' and type(isfile) == 'function' then
             pcall(function()
@@ -119,7 +148,7 @@ return (function()
             end)
         end
     end
-    function _VX.loadAsset(filePath, sources)
+    function Runtime.loadAsset(filePath, sources)
         local getAsset = (type(getcustomasset) == 'function' and getcustomasset) or (type(getsynasset) == 'function' and getsynasset)
 
         if not getAsset or type(writefile) ~= 'function' then
@@ -136,20 +165,20 @@ return (function()
             hasFile = ok and type(data) == 'string' and #data > 16
         end
         if not hasFile and type(sources) == 'table' then
-            for _, srcUrl in ipairs(sources)do
+            for _, srcUrl in ipairs(sources) do
                 if type(srcUrl) == 'string' then
                     local bytes = nil
 
                     if srcUrl:sub(1, 5) == 'data:' then
                         local b64Body = srcUrl:sub(6):gsub('^[^,]*;base64,', '')
-                        local okDec, dec = pcall(_VX.decodeBase64, b64Body)
+                        local okDec, dec = pcall(Runtime.decodeBase64, b64Body)
 
                         if okDec and type(dec) == 'string' and #dec > 16 then
                             bytes = dec
                         end
                     else
                         local okHttp, body = pcall(function()
-                            return ctx.game:HttpGet(srcUrl)
+                            return game:HttpGet(srcUrl)
                         end)
 
                         if okHttp and type(body) == 'string' and #body > 16 then
@@ -157,7 +186,7 @@ return (function()
                         end
                     end
                     if bytes then
-                        _VX.ensureFolder(filePath)
+                        Runtime.ensureFolder(filePath)
 
                         if pcall(writefile, filePath, bytes) then
                             hasFile = true
@@ -176,11 +205,9 @@ return (function()
 
         return (okAsset and type(assetId) == 'string' and assetId ~= '') and assetId or nil
     end
-    function _VX.mountWindow(win, id)
-        local lib = ctx.Venyx
-
-        lib.Id = id
-        lib.W = win
+    function Runtime.mountWindow(win, id)
+        Venyx.Id = id
+        Venyx.W = win
 
         local genv = (type(getgenv) == 'function' and getgenv()) or _G
 
@@ -221,95 +248,93 @@ return (function()
         win.slot = slot
         genv.VenyxWindows[id] = win
 
-        local gui = ctx.newInstance('ScreenGui', {
+        local gui = newInstance('ScreenGui', {
             ResetOnSpawn = false,
             IgnoreGuiInset = true,
-            ZIndexBehavior = ctx.Enum.ZIndexBehavior.Sibling,
+            ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
             DisplayOrder = 100,
         })
 
-        ctx.mountGui(gui)
+        mountGui(gui)
 
-        local notifGui = ctx.newInstance('ScreenGui', {
+        local notifGui = newInstance('ScreenGui', {
             ResetOnSpawn = false,
             IgnoreGuiInset = true,
-            ZIndexBehavior = ctx.Enum.ZIndexBehavior.Sibling,
+            ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
             DisplayOrder = 200,
         })
 
-        ctx.mountGui(notifGui)
+        mountGui(notifGui)
 
-        win.nt = ctx.createFrame({
+        win.nt = createFrame({
             Parent = notifGui,
             AnchorPoint = Vector2.new(1, 1),
-            Position = ctx.udim2(1, -20, 1, -20),
-            Size = ctx.udim2(0, 320, 1, -40),
-            ctx.listLayout(10, nil, ctx.Enum.VerticalAlignment.Bottom),
+            Position = UDim2.new(1, -20, 1, -20),
+            Size = UDim2.new(0, 320, 1, -40),
+            createListLayout(10, nil, Enum.VerticalAlignment.Bottom),
         })
 
         return gui
     end
-    function _VX.readJson(filePath)
-        local raw = _VX.readRaw(filePath)
+    function Runtime.readJson(filePath)
+        local raw = Runtime.readRaw(filePath)
 
         if type(raw) ~= 'string' or raw == '' then
             return nil
         end
 
-        local ok, decoded = pcall(ctx.HttpService.JSONDecode, ctx.HttpService, raw)
+        local ok, decoded = pcall(HttpService.JSONDecode, HttpService, raw)
 
         return ok and type(decoded) == 'table' and decoded or nil
     end
-    function _VX.writeJson(filePath, data)
-        local ok, encoded = pcall(ctx.HttpService.JSONEncode, ctx.HttpService, data)
+    function Runtime.writeJson(filePath, data)
+        local ok, encoded = pcall(HttpService.JSONEncode, HttpService, data)
 
         if ok and type(encoded) == 'string' then
-            _VX.writeRaw(filePath, encoded)
+            Runtime.writeRaw(filePath, encoded)
 
             return true
         end
 
         return false
     end
-    function _VX.saveConfig(_self, cfgName)
-        local lib, state = ctx.Venyx, ctx.State
-        local target = (type(cfgName) == 'string' and cfgName ~= '') and cfgName or state.Active or 'Default'
+    function Runtime.saveConfig(_self, cfgName)
+        local target = (type(cfgName) == 'string' and cfgName ~= '') and cfgName or State.Active or 'Default'
         local payload = {}
 
-        for key, item in next, lib.Keys do
+        for key, item in next, Venyx.Keys do
             if not item.Skip then
-                payload[key] = ctx.serializeValue(item.Value)
+                payload[key] = serializeValue(item.Value)
             end
         end
 
-        return ctx.writeJson(ctx.configPath(target), payload)
+        return writeJson(configPath(target), payload)
     end
-    function _VX.loadConfig(_self, cfgName)
-        local lib, state = ctx.Venyx, ctx.State
-        local target = (type(cfgName) == 'string' and cfgName ~= '') and cfgName or state.Active or 'Default'
-        local data = ctx.readJson(ctx.configPath(target))
+    function Runtime.loadConfig(_self, cfgName)
+        local target = (type(cfgName) == 'string' and cfgName ~= '') and cfgName or State.Active or 'Default'
+        local data = readJson(configPath(target))
 
         if type(data) ~= 'table' then
             return false
         end
 
-        ctx.applyConfig(data)
+        applyConfig(data)
 
-        if state.Active ~= target then
-            state.Active = target
+        if State.Active ~= target then
+            State.Active = target
 
-            lib:Persist()
+            Venyx:Persist()
         end
 
         return true
     end
-    function _VX.listConfigs(_self)
+    function Runtime.listConfigs(_self)
         local names, seen = {}, {}
-        local dir = ctx.userDir()
+        local dir = getUserDir()
 
         pcall(function()
             if type(listfiles) == 'function' then
-                for _, fp in ipairs(listfiles(dir))do
+                for _, fp in ipairs(listfiles(dir)) do
                     local nm = fp:match('([^/\\]+)%.json$')
 
                     if nm and nm:sub(1, 1) ~= '_' and not seen[nm] then
@@ -322,7 +347,7 @@ return (function()
 
         local prefix = dir .. '/'
 
-        for fp in next, _VX.mem do
+        for fp in next, Runtime.mem do
             if fp:sub(1, #prefix) == prefix then
                 local nm = fp:sub(#prefix + 1):match('^([^/\\]+)%.json$')
 
@@ -341,72 +366,71 @@ return (function()
 
         return names
     end
-    function _VX.deleteConfig(_self, cfgName)
+    function Runtime.deleteConfig(_self, cfgName)
         if type(cfgName) ~= 'string' or cfgName == '' or cfgName:lower() == 'default' then
             return false
         end
 
-        local lib, state = ctx.Venyx, ctx.State
-        local srcPath = ctx.configPath(cfgName)
-        local data = ctx.readJson(srcPath)
+        local srcPath = configPath(cfgName)
+        local data = readJson(srcPath)
 
         if data then
-            ctx.writeJson(ctx.userDir() .. '/_trash/' .. cfgName .. '.json', data)
+            writeJson(getUserDir() .. '/_trash/' .. cfgName .. '.json', data)
         end
 
-        _VX.deleteRaw(srcPath)
+        Runtime.deleteRaw(srcPath)
 
-        if state.Active == cfgName then
-            state.Active = 'Default'
+        if State.Active == cfgName then
+            State.Active = 'Default'
 
-            lib:Persist()
-            lib:Load('Default')
+            Venyx:Persist()
+            Venyx:Load('Default')
         end
 
         return true
     end
-    function _VX.restoreConfig(_self, cfgName)
+    function Runtime.restoreConfig(_self, cfgName)
         if type(cfgName) ~= 'string' or cfgName == '' then
             return nil
         end
 
-        local trashPath = ctx.userDir() .. '/_trash/' .. cfgName .. '.json'
-        local data = ctx.readJson(trashPath)
+        local trashPath = getUserDir() .. '/_trash/' .. cfgName .. '.json'
+        local data = readJson(trashPath)
 
         if type(data) ~= 'table' then
             return nil
         end
 
-        local restoredName = ctx.Venyx:Name(cfgName) or cfgName
+        local restoredName = Venyx:Name(cfgName) or cfgName
 
-        ctx.writeJson(ctx.configPath(restoredName), data)
-        _VX.deleteRaw(trashPath)
+        writeJson(configPath(restoredName), data)
+        Runtime.deleteRaw(trashPath)
 
         return restoredName
     end
-    function _VX.exportConfig(_self, cfgName)
-        local target = (type(cfgName) == 'string' and cfgName ~= '') and cfgName or ctx.State.Active or 'Default'
-        local data = ctx.readJson(ctx.configPath(target))
+    function Runtime.exportConfig(_self, cfgName)
+        local target = (type(cfgName) == 'string' and cfgName ~= '') and cfgName or State.Active or 'Default'
+        local data = readJson(configPath(target))
 
         if type(data) ~= 'table' then
-            ctx.Venyx:Save(target)
+            Venyx:Save(target)
 
-            data = ctx.readJson(ctx.configPath(target)) or {}
+            data = readJson(configPath(target)) or {}
         end
 
-        return ctx.HttpService:JSONEncode({
+        return HttpService:JSONEncode({
             name = target,
             data = data,
         })
     end
-    function _VX.importConfig(_self, text)
+    function Runtime.importConfig(_self, text)
         text = tostring(text or ''):match('^%s*(.-)%s*$')
 
         if text == '' then
             return nil, 'Paste exported config text first'
         end
 
-        local ok, parsed = pcall(ctx.HttpService.JSONDecode, ctx.HttpService, text)
+        local ok, parsed = pcall(HttpService.JSONDecode, HttpService, text)
 
         if not ok or type(parsed) ~= 'table' then
             return nil, 'Invalid config format'
@@ -414,174 +438,167 @@ return (function()
 
         local rawName = type(parsed.name) == 'string' and parsed.name or 'Imported'
         local data = type(parsed.data) == 'table' and parsed.data or parsed
-        local safeName, err = ctx.Venyx:Name(rawName)
+        local safeName, err = Venyx:Name(rawName)
 
         if not safeName then
-            safeName = ctx.Venyx:Name('Imported')
+            safeName = Venyx:Name('Imported')
         end
         if not safeName then
             return nil, err or 'Could not name imported config'
         end
 
-        ctx.writeJson(ctx.configPath(safeName), data)
+        writeJson(configPath(safeName), data)
 
         return safeName
     end
-    -- Registers Heartbeat signal callback(s)
-    function _VX.boot(_self)
-        local lib, state = ctx.Venyx, ctx.State
+    function Runtime.boot(_self)
+        Runtime.ensureFolder(getUserDir() .. '/_trash/x')
 
-        _VX.ensureFolder(ctx.userDir() .. '/_trash/x')
-
-        local savedState = ctx.readJson(ctx.userDir() .. '/_state.json')
+        local savedState = readJson(getUserDir() .. '/_state.json')
 
         if type(savedState) == 'table' then
             if type(savedState.AutoLoad) == 'boolean' then
-                state.AutoLoad = savedState.AutoLoad
+                State.AutoLoad = savedState.AutoLoad
             end
             if type(savedState.AutoSave) == 'boolean' then
-                state.AutoSave = savedState.AutoSave
+                State.AutoSave = savedState.AutoSave
             end
             if type(savedState.Active) == 'string' and savedState.Active ~= '' then
-                state.Active = savedState.Active
+                State.Active = savedState.Active
             end
             if type(savedState.Theme) == 'string' and savedState.Theme ~= '' then
-                state.Theme = savedState.Theme
+                State.Theme = savedState.Theme
             end
         end
-        if state.Theme then
-            lib:Theme(state.Theme)
+        if State.Theme then
+            Venyx:Theme(State.Theme)
         end
 
-        ctx.RunService.Heartbeat:Once(function()
-            if not ctx.readJson(ctx.configPath('Default')) then
-                lib:Save('Default')
+        RunService.Heartbeat:Once(function()
+            if not readJson(configPath('Default')) then
+                Venyx:Save('Default')
             end
-            if state.AutoLoad and state.Active then
-                lib:Load(state.Active)
+            if State.AutoLoad and State.Active then
+                Venyx:Load(State.Active)
             end
         end)
     end
 
-    local H = game
-
-    ctx.game = H
-
+    -- ========================================================================
+    -- 1. Roblox Services, Typography & Theme Presets
+    -- ========================================================================
     local function getService(serviceName)
-        local r = ctx.game
-
-        return r:GetService(serviceName)
+        return game:GetService(serviceName)
     end
 
     local UserInputService = getService('UserInputService')
     local TweenService = getService('TweenService')
-    local HttpService = getService('HttpService')
 
-    ctx.HttpService = HttpService
+    HttpService = getService('HttpService')
+    RunService = getService('RunService')
 
-    local RunService = getService('RunService')
-
-    ctx.RunService = RunService
-
-    local localPlayer, w = getService('Players').LocalPlayer, Enum
-
-    ctx.Enum = w
-
+    local localPlayer = getService('Players').LocalPlayer
     local color3FromRGB = Color3.fromRGB
-    local uDim2New = UDim2.new
-
-    ctx.udim2 = uDim2New
-
+    local _ = UDim2.new
     local uDimNew = UDim.new
     local vector2New = Vector2.new
-    local font, font6 = Font.new('rbxasset://fonts/families/Montserrat.json', ctx.Enum.FontWeight.SemiBold), Font.new('rbxasset://fonts/families/Montserrat.json', ctx.Enum.FontWeight.Bold)
-    local font5 = Font.new('rbxasset://fonts/families/Montserrat.json', ctx.Enum.FontWeight.ExtraBold)
-    local font4 = Font.new('rbxasset://fonts/families/RobotoMono.json', ctx.Enum.FontWeight.SemiBold)
-    local font3 = Font.new('rbxassetid://12187365977', ctx.Enum.FontWeight.Bold)
-    local colorSequence = ColorSequence.new(color3FromRGB(26, 255, 0), color3FromRGB(0, 255, 0))
-    local font2, L = Font.new(font3.Family, font3.Weight, ctx.Enum.FontStyle.Italic), {}
+    local FontSemiBold, FontBold = Font.new('rbxasset://fonts/families/Montserrat.json', Enum.FontWeight.SemiBold), Font.new('rbxasset://fonts/families/Montserrat.json', Enum.FontWeight.Bold)
+    local FontExtraBold = Font.new('rbxasset://fonts/families/Montserrat.json', Enum.FontWeight.ExtraBold)
+    local FontMono = Font.new('rbxasset://fonts/families/RobotoMono.json', Enum.FontWeight.SemiBold)
+    local FontDisplay = Font.new('rbxassetid://12187365977', Enum.FontWeight.Bold)
+    local GreenTextSeq = ColorSequence.new(color3FromRGB(26, 255, 0), color3FromRGB(0, 255, 0))
+    local FontItalic, Palette = Font.new(FontDisplay.Family, FontDisplay.Weight, Enum.FontStyle.Italic), {}
 
-    L.bg = color3FromRGB(16, 18, 40)
-    L.tx = color3FromRGB(242, 244, 255)
-    L.a1 = color3FromRGB(122, 162, 255)
-    L.a2 = color3FromRGB(185, 139, 255)
-    L.g1 = color3FromRGB(255, 229, 138)
-    L.g2 = color3FromRGB(255, 155, 88)
-    L.dk = color3FromRGB(42, 18, 0)
-    L.mint = color3FromRGB(110, 255, 182)
-    L.red = color3FromRGB(255, 110, 110)
-    L.sky = color3FromRGB(143, 180, 255)
-    L.pink = color3FromRGB(255, 158, 207)
-    L.vio = color3FromRGB(199, 166, 255)
-    L.gold = color3FromRGB(255, 210, 122)
-    L.wh = color3FromRGB(255, 255, 255)
-    L.val = color3FromRGB(217, 222, 255)
-    L.dc = color3FromRGB(88, 101, 242)
-    L.pn = color3FromRGB(24, 26, 54)
-    L.w1 = color3FromRGB(36, 40, 86)
-    L.w2 = color3FromRGB(14, 15, 34)
-    L.gv = color3FromRGB(184, 255, 156)
-    L.on = color3FromRGB(255, 255, 254)
+    Palette.bg = color3FromRGB(16, 18, 40)
+    Palette.tx = color3FromRGB(242, 244, 255)
+    Palette.a1 = color3FromRGB(122, 162, 255)
+    Palette.a2 = color3FromRGB(185, 139, 255)
+    Palette.g1 = color3FromRGB(255, 229, 138)
+    Palette.g2 = color3FromRGB(255, 155, 88)
+    Palette.dk = color3FromRGB(42, 18, 0)
+    Palette.mint = color3FromRGB(110, 255, 182)
+    Palette.red = color3FromRGB(255, 110, 110)
+    Palette.sky = color3FromRGB(143, 180, 255)
+    Palette.pink = color3FromRGB(255, 158, 207)
+    Palette.vio = color3FromRGB(199, 166, 255)
+    Palette.gold = color3FromRGB(255, 210, 122)
+    Palette.wh = color3FromRGB(255, 255, 255)
+    Palette.val = color3FromRGB(217, 222, 255)
+    Palette.dc = color3FromRGB(88, 101, 242)
+    Palette.pn = color3FromRGB(24, 26, 54)
+    Palette.w1 = color3FromRGB(36, 40, 86)
+    Palette.w2 = color3FromRGB(14, 15, 34)
+    Palette.gv = color3FromRGB(184, 255, 156)
+    Palette.on = color3FromRGB(255, 255, 254)
 
-    local l = {}
-
-    _VX.setList(l, 0, {
-        'Twilight',
-        color3FromRGB(36, 40, 86),
-        color3FromRGB(14, 15, 34),
-        color3FromRGB(122, 162, 255),
-        color3FromRGB(185, 139, 255),
-    }, {
-        'Aurora',
-        color3FromRGB(10, 84, 82),
-        color3FromRGB(4, 26, 38),
-        color3FromRGB(63, 224, 176),
-        color3FromRGB(127, 255, 216),
-    }, {
-        'Ocean',
-        color3FromRGB(8, 70, 128),
-        color3FromRGB(3, 20, 52),
-        color3FromRGB(47, 185, 221),
-        color3FromRGB(127, 220, 255),
-    }, {
-        'Midnight',
-        color3FromRGB(52, 24, 112),
-        color3FromRGB(10, 4, 36),
-        color3FromRGB(118, 100, 226),
-        color3FromRGB(160, 132, 240),
-    }, {
-        'Sakura',
-        color3FromRGB(118, 44, 96),
-        color3FromRGB(36, 12, 40),
-        color3FromRGB(255, 140, 200),
-        color3FromRGB(255, 196, 228),
-    }, {
-        'Onyx',
-        color3FromRGB(58, 46, 22),
-        color3FromRGB(8, 6, 2),
-        color3FromRGB(255, 206, 110),
-        color3FromRGB(255, 150, 80),
-    }, {
-        'Black',
-        color3FromRGB(50, 50, 56),
-        color3FromRGB(16, 16, 19),
-        color3FromRGB(250, 251, 255),
-        color3FromRGB(176, 182, 198),
-        color3FromRGB(14, 14, 18),
-    }, {
-        'Mono',
-        color3FromRGB(92, 94, 104),
-        color3FromRGB(30, 31, 36),
-        color3FromRGB(250, 251, 255),
-        color3FromRGB(196, 200, 214),
-        color3FromRGB(20, 21, 26),
-    })
-
-    local F = {}
-
-    _VX.setList(F, 0, L.gold, L.mint, L.sky, L.pink, L.vio)
-
-    local Q = {
+    local Themes = {
+        {
+            'Twilight',
+            color3FromRGB(36, 40, 86),
+            color3FromRGB(14, 15, 34),
+            color3FromRGB(122, 162, 255),
+            color3FromRGB(185, 139, 255),
+        },
+        {
+            'Aurora',
+            color3FromRGB(10, 84, 82),
+            color3FromRGB(4, 26, 38),
+            color3FromRGB(63, 224, 176),
+            color3FromRGB(127, 255, 216),
+        },
+        {
+            'Ocean',
+            color3FromRGB(8, 70, 128),
+            color3FromRGB(3, 20, 52),
+            color3FromRGB(47, 185, 221),
+            color3FromRGB(127, 220, 255),
+        },
+        {
+            'Midnight',
+            color3FromRGB(52, 24, 112),
+            color3FromRGB(10, 4, 36),
+            color3FromRGB(118, 100, 226),
+            color3FromRGB(160, 132, 240),
+        },
+        {
+            'Sakura',
+            color3FromRGB(118, 44, 96),
+            color3FromRGB(36, 12, 40),
+            color3FromRGB(255, 140, 200),
+            color3FromRGB(255, 196, 228),
+        },
+        {
+            'Onyx',
+            color3FromRGB(58, 46, 22),
+            color3FromRGB(8, 6, 2),
+            color3FromRGB(255, 206, 110),
+            color3FromRGB(255, 150, 80),
+        },
+        {
+            'Black',
+            color3FromRGB(50, 50, 56),
+            color3FromRGB(16, 16, 19),
+            color3FromRGB(250, 251, 255),
+            color3FromRGB(176, 182, 198),
+            color3FromRGB(14, 14, 18),
+        },
+        {
+            'Mono',
+            color3FromRGB(92, 94, 104),
+            color3FromRGB(30, 31, 36),
+            color3FromRGB(250, 251, 255),
+            color3FromRGB(196, 200, 214),
+            color3FromRGB(20, 21, 26),
+        },
+    }
+    local QuickBarColors = {
+        Palette.gold,
+        Palette.mint,
+        Palette.sky,
+        Palette.pink,
+        Palette.vio,
+    }
+    local KeyLabels = {
         LeftShift = 'LShift',
         RightShift = 'RShift',
         LeftControl = 'LCtrl',
@@ -589,33 +606,34 @@ return (function()
         LeftAlt = 'LAlt',
         RightAlt = 'RAlt',
     }
-    local _ = ctx.udim2(1, 0, 1, 0)
-    local Z = ctx.udim2(0.5, 0, 0.5, 0)
-    local T = vector2New(0.5, 0.5)
-    local R = vector2New(1, 0.5)
-    local center = ctx.Enum.TextXAlignment.Center
-    local center3 = ctx.Enum.HorizontalAlignment.Center
-    local horizontal = ctx.Enum.FillDirection.Horizontal
-    local g = ctx.Enum.AutomaticSize.Y
-    local t = ctx.Enum.AutomaticSize.X
-    local atEnd = ctx.Enum.TextTruncate.AtEnd
-    local center2 = ctx.Enum.VerticalAlignment.Center
-    local f = ctx.udim2(1, 0, 0, 0)
-    local b = ctx.udim2(1, 0, 0.5, 0)
-    local z = vector2New(1, 0)
+    local FullSize = UDim2.new(1, 0, 1, 0)
+    local CenterPos = UDim2.new(0.5, 0, 0.5, 0)
+    local CenterAnchor = vector2New(0.5, 0.5)
+    local RightCenterAnchor = vector2New(1, 0.5)
+    local AlignCenterX = Enum.TextXAlignment.Center
+    local AlignRightX = Enum.HorizontalAlignment.Center
+    local FillHorizontal = Enum.FillDirection.Horizontal
+    local AutoSizeY = Enum.AutomaticSize.Y
+    local AutoSizeX = Enum.AutomaticSize.X
+    local TruncateAtEnd = Enum.TextTruncate.AtEnd
+    local AlignCenterY = Enum.VerticalAlignment.Center
+    local FullWidth = UDim2.new(1, 0, 0, 0)
+    local RightMidPos = UDim2.new(1, 0, 0.5, 0)
+    local TopRightVec = vector2New(1, 0)
 
-    ctx.topRight = z
+    TopRightAnchor = TopRightVec
 
-    local quint = ctx.Enum.EasingStyle.Quint
-    local back, N, S = ctx.Enum.EasingStyle.Back, 46, 54
+    local EaseQuint = Enum.EasingStyle.Quint
+    local EaseBack, TopBarHeight, SidebarWidth = Enum.EasingStyle.Back, 46, 54
 
-    local function x(B, O)
-        local udim2 = ctx.udim2
-
-        return udim2(0, B, 0, O)
+    local function fromOffset(width, height)
+        return UDim2.new(0, width, 0, height)
     end
 
-    local B, O = {}, {
+    -- ========================================================================
+    -- 2. Spritesheet Icon Atlas & Custom Asset Loader
+    -- ========================================================================
+    local IconIndex, IconNames = {}, {
         'home',
         'zap',
         'egg',
@@ -663,36 +681,36 @@ return (function()
         'discord',
     }
 
-    for index, value in ipairs(O)do
-        B[value] = index - 1
+    for index, value in ipairs(IconNames) do
+        IconIndex[value] = index - 1
     end
 
-    local O, G = 'tienkhanh1/venyx-assets@main/venyx-icons3.png'
-    local loadAsset = _VX.loadAsset
+    local iconSheetUrl, iconSheetLoaded = 'tienkhanh1/venyx-assets@main/venyx-icons3.png'
+    local loadAsset = Runtime.loadAsset
 
-    local function u()
-        if G == nil then
-            G = loadAsset('Venyx/icons3.png', {
-                'https://raw.githubusercontent.com/' .. O:gsub('@', '/'),
+    local function getIconSheetAsset()
+        if iconSheetLoaded == nil then
+            iconSheetLoaded = loadAsset('Venyx/icons3.png', {
+                'https://raw.githubusercontent.com/' .. iconSheetUrl:gsub('@', '/'),
                 [[https://cdn.jsdelivr.net/gh/tienkhanh1/venyx-assets@main/venyx-icons3.png]],
             }) or false
         end
 
-        local O = G
+        local current = iconSheetLoaded
 
-        return O
+        return current
     end
 
-    local O = {
+    local venyxTable = {
         Opt = {},
         Keys = {},
         Alias = {},
     }
 
-    ctx.Venyx = O
-    ctx.Venyx.th = l[1][1]
+    Venyx = venyxTable
+    Venyx.th = Themes[1][1]
 
-    local O = {
+    local stateTable = {
         AutoLoad = true,
         AutoSave = true,
         Active = 'Default',
@@ -700,101 +718,102 @@ return (function()
         Cfg = 2,
     }
 
-    ctx.State = O
-    ctx.Venyx.State = ctx.State
+    State = stateTable
+    Venyx.State = State
 
-    local O = {}
+    local activeConnections = {}
 
-    local function G(signal, callback)
-        local e = O
+    local function connectSignal(signal, callback)
+        local current = activeConnections
 
-        e[#O + 1] = signal:Connect(callback)
+        current[#activeConnections + 1] = signal:Connect(callback)
     end
-    local function P()
-        local j = {}
+    local function randomGuiName()
+        local list = {}
 
-        for e = 1, 10, 1 do
-            j[e] = string.char(math.random(97, 122))
+        for index = 1, 10, 1 do
+            list[index] = string.char(math.random(97, 122))
         end
 
-        return table.concat(j)
+        return table.concat(list)
     end
 
-    ctx.newInstance = function(parent, e)
-        local s = Instance.new(parent)
+    -- ========================================================================
+    -- 3. UI Element Factories, Layout Modifiers & Motion Helpers
+    -- ========================================================================
+    newInstance = function(parent, param2)
+        local current = Instance.new(parent)
 
-        s.Name = P()
-        parent = e.Parent
-        e.Parent = nil
+        current.Name = randomGuiName()
+        parent = param2.Parent
+        param2.Parent = nil
 
-        for key, value in next, e do
+        for key, value in next, param2 do
             if type(key) == 'number' then
-                value.Parent = s
+                value.Parent = current
             else
-                s[key] = value
+                current[key] = value
             end
         end
 
-        s.Parent = parent
+        current.Parent = parent
 
-        return s
+        return current
     end
 
-    local j = {
+    local baseGuiDefaults = {
         BackgroundTransparency = 1,
         BorderSizePixel = 0,
     }
 
-    j.BackgroundColor3 = L.wh
+    baseGuiDefaults.BackgroundColor3 = Palette.wh
 
-    local function e(s, q, Y)
-        local function X(K)
-            local D1 = {q, j}
+    local function makeElementFactory(className, defaults, scaleText)
+        local function updateView(props)
+            local items = {defaults, baseGuiDefaults}
 
-            for index, value in ipairs(D1)do
-                for key, J1 in next, value do
-                    if K[key] == nil then
-                        K[key] = J1
+            for index, value in ipairs(items) do
+                for key, value2 in next, value do
+                    if props[key] == nil then
+                        props[key] = value2
                     end
                 end
             end
 
-            if Y then
-                if K.TextSize then
-                    K.TextSize = math.floor(K.TextSize * 1.18 + 0.5)
+            if scaleText then
+                if props.TextSize then
+                    props.TextSize = math.floor(props.TextSize * 1.18 + 0.5)
                 end
             end
 
-            local j = K.TextTruncate == atEnd and not K.AutomaticSize and K.TextSize
+            local isMatch = props.TextTruncate == TruncateAtEnd and not props.AutomaticSize and props.TextSize
 
-            if j then
-                K.TextTruncate = nil
+            if isMatch then
+                props.TextTruncate = nil
             end
 
-            D1 = ctx.newInstance
+            local props2 = newInstance(className, props)
 
-            local q = D1(s, K)
-
-            if j then
-                local function s()
-                    if q.AbsoluteSize.X < 2 then
+            if isMatch then
+                local function updateView2()
+                    if props2.AbsoluteSize.X < 2 then
                         return
-                    elseif q:GetAttribute('nofit') then
+                    elseif props2:GetAttribute('nofit') then
                         return
-                    elseif q.TextSize == j then
-                        if q.TextBounds.X <= q.AbsoluteSize.X then
+                    elseif props2.TextSize == isMatch then
+                        if props2.TextBounds.X <= props2.AbsoluteSize.X then
                             return
                         end
                     end
 
-                    q.TextSize = j
+                    props2.TextSize = isMatch
 
-                    local alt = q:GetAttribute('alt')
+                    local alt = props2:GetAttribute('alt')
 
                     if alt then
-                        if q.Text ~= alt then
-                            if q.TextBounds.X > q.AbsoluteSize.X then
-                                q.Text = alt
+                        if props2.Text ~= alt then
+                            if props2.TextBounds.X > props2.AbsoluteSize.X then
+                                props2.Text = alt
 
                                 return
                             end
@@ -802,2690 +821,2551 @@ return (function()
                     end
 
                     while true do
-                        local j, absoluteSize = q.TextBounds.X, q.AbsoluteSize
+                        local current, absoluteSize = props2.TextBounds.X, props2.AbsoluteSize
 
-                        if not (j > absoluteSize.X and q.TextSize > 8) then
+                        if not (current > absoluteSize.X and props2.TextSize > 8) then
                             break
                         end
 
-                        q.TextSize = q.TextSize - 1
+                        props2.TextSize = props2.TextSize - 1
                     end
                 end
 
-                q:GetPropertyChangedSignal('Text'):Connect(s)
-                q:GetPropertyChangedSignal('AbsoluteSize'):Connect(s)
+                props2:GetPropertyChangedSignal('Text'):Connect(updateView2)
+                props2:GetPropertyChangedSignal('AbsoluteSize'):Connect(updateView2)
             end
 
-            return q
+            return props2
         end
 
-        return X
+        return updateView
     end
 
-    local j, frame = {
-        FontFace = font,
-        TextColor3 = L.tx,
+    local baseTextDefaults, rawFrameFactory = {
+        FontFace = FontSemiBold,
+        TextColor3 = Palette.tx,
         TextSize = 13,
-        TextXAlignment = ctx.Enum.TextXAlignment.Left,
-    }, e('Frame', {})
+        TextXAlignment = Enum.TextXAlignment.Left,
+    }, makeElementFactory('Frame', {})
 
-    ctx.createFrame = frame
+    createFrame = rawFrameFactory
 
-    local frame = e('Frame', {BackgroundTransparency = 0})
-    local textButton = e('TextButton', {
+    local createSolidFrame = makeElementFactory('Frame', {BackgroundTransparency = 0})
+    local createButton = makeElementFactory('TextButton', {
         Text = '',
         AutoButtonColor = false,
     }, true)
-    local textLabel = e('TextLabel', j, true)
-    local textBox = e('TextBox', {
+    local createLabel = makeElementFactory('TextLabel', baseTextDefaults, true)
+    local createTextBox = makeElementFactory('TextBox', {
         Text = '',
         PlaceholderColor3 = color3FromRGB(178, 180, 188),
         ClearTextOnFocus = false,
-        FontFace = font,
-        TextColor3 = L.tx,
+        FontFace = FontSemiBold,
+        TextColor3 = Palette.tx,
         TextSize = 13,
-        TextXAlignment = j.TextXAlignment,
+        TextXAlignment = baseTextDefaults.TextXAlignment,
     }, true)
-    local scrollingFrame = e('ScrollingFrame', {
+    local createScrollFrame = makeElementFactory('ScrollingFrame', {
         ScrollBarThickness = 2,
         ScrollBarImageTransparency = 0.6,
-        CanvasSize = ctx.udim2(),
-        AutomaticCanvasSize = g,
-        ScrollingDirection = ctx.Enum.ScrollingDirection.Y,
+        CanvasSize = UDim2.new(),
+        AutomaticCanvasSize = AutoSizeY,
+        ScrollingDirection = Enum.ScrollingDirection.Y,
     })
-    local imageLabel = e('ImageLabel', {})
+    local rawImageLabel = makeElementFactory('ImageLabel', {})
 
-    local function e(K)
-        local D1 = B[K.Image]
+    local function createImage(props)
+        local current = IconIndex[props.Image]
 
-        if D1 then
-            local J1 = u()
+        if current then
+            local current2 = getIconSheetAsset()
 
-            K.Image = J1 or ''
+            props.Image = current2 or ''
 
-            if J1 then
-                K.ImageRectOffset = vector2New(D1 % 8 * 64, D1 // 8 * 64)
-                K.ImageRectSize = vector2New(64, 64)
+            if current2 then
+                props.ImageRectOffset = vector2New(current % 8 * 64, current // 8 * 64)
+                props.ImageRectSize = vector2New(64, 64)
             end
         end
 
-        return imageLabel(K)
+        return rawImageLabel(props)
     end
-    local function u(imageId, D1, J1, U1)
-        return e({
-            AnchorPoint = T,
-            Position = Z,
-            Size = x(D1, D1),
-            Image = imageId,
-            ImageColor3 = J1,
-            ImageTransparency = U1,
+    local function createIcon(iconName, size, color, transparency)
+        return createImage({
+            AnchorPoint = CenterAnchor,
+            Position = CenterPos,
+            Size = fromOffset(size, size),
+            Image = iconName,
+            ImageColor3 = color,
+            ImageTransparency = transparency,
         })
     end
-    local function K(D1)
-        return 'rbxthumb://type=AvatarHeadShot&id=' .. localPlayer.UserId .. '&w=' .. D1 .. '&h=' .. D1
+    local function getAvatarThumb(sizeEnum)
+        return 'rbxthumb://type=AvatarHeadShot&id=' .. localPlayer.UserId .. '&w=' .. sizeEnum .. '&h=' .. sizeEnum
     end
-    local function D1(J1)
-        local newInstance = ctx.newInstance
-
+    local function createCorner(radius)
         return newInstance('UICorner', {
-            CornerRadius = J1 and uDimNew(0, J1) or uDimNew(1, 0),
+            CornerRadius = radius and uDimNew(0, radius) or uDimNew(1, 0),
         })
     end
-    local function J1(transparency, color)
-        local H1, k1, enum = ctx.newInstance, {
+    local function createStroke(transparency, color)
+        local items = {
             Transparency = transparency,
-            Color = color or L.wh,
-        }, ctx.Enum
+            Color = color or Palette.wh,
+        }
 
-        k1.ApplyStrokeMode = enum.ApplyStrokeMode.Border
+        items.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
-        return H1('UIStroke', k1)
+        return newInstance('UIStroke', items)
     end
-    local function U1(a1, H1, rotation)
-        local newInstance = ctx.newInstance
-
+    local function createGradient(startColor, endColor, rotation)
         return newInstance('UIGradient', {
-            Color = ColorSequence.new(a1, H1),
+            Color = ColorSequence.new(startColor, endColor),
             Rotation = rotation or 0,
         })
     end
-    local function a1(H1, ...)
-        local k1, r1 = {}, {...}
+    local function createAlphaGradient(rotation, ...)
+        local list, items = {}, {...}
 
-        for C1, w1 in ipairs(r1)do
-            k1[C1] = NumberSequenceKeypoint.new(w1[1], w1[2])
+        for index, item in ipairs(items) do
+            list[index] = NumberSequenceKeypoint.new(item[1], item[2])
         end
 
-        r1 = ctx.newInstance
-
-        return r1('UIGradient', {
-            Rotation = H1,
-            Transparency = NumberSequence.new(k1),
+        return newInstance('UIGradient', {
+            Rotation = rotation,
+            Transparency = NumberSequence.new(list),
         })
     end
-    local function H1(k1, r1, C1, w1)
-        local newInstance = ctx.newInstance
-
+    local function createPadding(padTop, padRight, padBottom, padLeft)
         return newInstance('UIPadding', {
-            PaddingTop = uDimNew(0, k1),
-            PaddingRight = uDimNew(0, r1 or k1),
-            PaddingBottom = uDimNew(0, C1 or k1),
-            PaddingLeft = uDimNew(0, w1 or r1 or k1),
+            PaddingTop = uDimNew(0, padTop),
+            PaddingRight = uDimNew(0, padRight or padTop),
+            PaddingBottom = uDimNew(0, padBottom or padTop),
+            PaddingLeft = uDimNew(0, padLeft or padRight or padTop),
         })
     end
 
-    ctx.listLayout = function(k1, r1, C1, w1)
-        local newInstance, W1, I1 = ctx.newInstance, {
-            Padding = uDimNew(0, k1 or 0),
-            HorizontalAlignment = r1,
-            VerticalAlignment = C1,
-            FillDirection = w1,
-        }, ctx.Enum
+    createListLayout = function(param1, param2, param3, param4)
+        local items = {
+            Padding = uDimNew(0, param1 or 0),
+            HorizontalAlignment = param2,
+            VerticalAlignment = param3,
+            FillDirection = param4,
+        }
 
-        W1.SortOrder = I1.SortOrder.LayoutOrder
+        items.SortOrder = Enum.SortOrder.LayoutOrder
 
-        return newInstance('UIListLayout', W1)
+        return newInstance('UIListLayout', items)
     end
 
-    local function V(parent, position, C1)
-        local w1 = ctx.createFrame
-
-        return w1({
+    local function createDivider(parent, position, size)
+        return createFrame({
             Parent = parent,
             Position = position,
-            Size = C1,
+            Size = size,
             BackgroundTransparency = 0.9,
         })
     end
-    local function k1(r1, C1, w1, V1, W1, I1)
-        local tweenInfoNew, h1, n1, M1 = TweenInfo.new, w1 or 0.25, V1 or quint
+    local function tween(target, goal, duration, easingStyle, easingDir, repeats)
+        local tweenInfoNew, count, current, current2 = TweenInfo.new, duration or 0.25, easingStyle or EaseQuint
 
-        if W1 then
-            M1 = W1
+        if easingDir then
+            current2 = easingDir
         else
-            w1 = ctx.Enum
-            M1 = w1.EasingDirection.Out
+            current2 = Enum.EasingDirection.Out
         end
 
-        W1 = TweenService:Create(r1, tweenInfoNew(h1, n1, M1, 0, false, I1 or 0), C1)
+        easingDir = TweenService:Create(target, tweenInfoNew(count, current, current2, 0, false, repeats or 0), goal)
 
-        W1:Play()
+        easingDir:Play()
 
-        return W1
+        return easingDir
     end
-    local function r1(C1, w1, bgAlpha)
-        G(C1.MouseEnter, function()
-            k1(C1, {BackgroundTransparency = w1}, 0.15)
+    local function bindHoverAlpha(target, hoverAlpha, restAlpha)
+        connectSignal(target.MouseEnter, function()
+            tween(target, {BackgroundTransparency = hoverAlpha}, 0.15)
         end)
-        G(C1.MouseLeave, function()
-            k1(C1, {
-                BackgroundTransparency = bgAlpha or 1,
+        connectSignal(target.MouseLeave, function()
+            tween(target, {
+                BackgroundTransparency = restAlpha or 1,
             }, 0.25)
         end)
     end
-    local function C1(w1, V1, W1)
-        local function I1()
-            if not (W1()) then
-                V1.Visible = false
+    local function hideOnTweenDone(frame, tweenObj, shouldHide)
+        local function updateView()
+            if not (shouldHide()) then
+                tweenObj.Visible = false
             end
         end
 
-        w1.Completed:Connect(I1)
+        frame.Completed:Connect(updateView)
     end
-    local function w1(callback, ...)
+    local function safeCall(callback, ...)
         if callback then
             pcall(callback, ...)
         end
     end
-    local function V1(W1)
-        local I1, I1, I12 = ctx.Enum, W1.UserInputType == ctx.Enum.UserInputType.MouseButton1
+    local function isPrimaryPointer(input)
+        local isMatch, I12 = input.UserInputType == Enum.UserInputType.MouseButton1
 
-        if I1 then
-            I12 = I1
+        if isMatch then
+            I12 = isMatch
         else
-            local I1
-
-            I1, I12 = ctx.Enum, W1.UserInputType == ctx.Enum.UserInputType.Touch
+            I12 = input.UserInputType == Enum.UserInputType.Touch
         end
 
         return I12
     end
 
-    local W1 = {}
+    local pointerTracker = {}
 
-    W1.p = Vector3.zero
-    W1.t = 0
-    W1.m = 0
+    pointerTracker.p = Vector3.zero
+    pointerTracker.t = 0
+    pointerTracker.m = 0
 
-    G(UserInputService.InputBegan, function(I1)
-        if V1(I1) then
-            W1.p, W1.t = I1.Position, os.clock()
-            W1.m = 0
-            W1.s = false
+    connectSignal(UserInputService.InputBegan, function(input)
+        if isPrimaryPointer(input) then
+            pointerTracker.p, pointerTracker.t = input.Position, os.clock()
+            pointerTracker.m = 0
+            pointerTracker.s = false
         end
     end)
-    G(UserInputService.InputChanged, function(I1)
-        local enum, v1, h1 = ctx.Enum, I1.UserInputType == ctx.Enum.UserInputType.Touch
+    connectSignal(UserInputService.InputChanged, function(input)
+        local isMatch, isMatch2 = input.UserInputType == Enum.UserInputType.Touch
 
-        if v1 then
-            h1 = v1
+        if isMatch then
+            isMatch2 = isMatch
         else
-            local enum
-
-            enum, h1 = ctx.Enum, I1.UserInputType == ctx.Enum.UserInputType.MouseMovement
+            isMatch2 = input.UserInputType == Enum.UserInputType.MouseMovement
         end
-        if h1 then
-            W1.m = math.max(W1.m, (I1.Position - W1.p).Magnitude)
+        if isMatch2 then
+            pointerTracker.m = math.max(pointerTracker.m, (input.Position - pointerTracker.p).Magnitude)
         end
     end)
 
-    local function I1()
-        return W1.m < 14 and os.clock() - W1.t < 0.45 and not W1.s
+    local function isCleanTap()
+        return pointerTracker.m < 14 and os.clock() - pointerTracker.t < 0.45 and not pointerTracker.s
     end
-    local function v1(h1, callback)
-        G(h1.Activated, function(...)
-            if I1() then
+    local function onClick(button, callback)
+        connectSignal(button.Activated, function(...)
+            if isCleanTap() then
                 callback(...)
             end
         end)
     end
-    local function h1(n1)
-        local M1 = tostring(n1)
-        local n1, A1 = M1:match('^(%-?%d+)(.*)$')
+    local function formatNumber(numText)
+        local text = tostring(numText)
+        local current, current2 = text:match('^(%-?%d+)(.*)$')
 
-        if not n1 then
-            return M1
+        if not current then
+            return text
         end
 
-        return n1:reverse():gsub('(%d%d%d)', '%1,'):reverse():gsub('^(%-?),', '%1') .. A1
+        return current:reverse():gsub('(%d%d%d)', '%1,'):reverse():gsub('^(%-?),', '%1') .. current2
     end
-    local function n1(M1, A1, d1, callback)
-        local anchorPoint, F1, Q1 = M1.AnchorPoint, M1.Position, M1.Size
+    local function bindPressScale(button, pressScale, hoverProps, onActivate)
+        local anchorPoint, pos, bounds = button.AnchorPoint, button.Position, button.Size
 
-        if not (M1.Parent:FindFirstChildWhichIsA('UIGridStyleLayout')) then
-            M1.AnchorPoint = T
-
-            local udim2 = ctx.udim2
-
-            M1.Position = F1 + udim2((0.5 - anchorPoint.X) * Q1.X.Scale, (0.5 - anchorPoint.X) * Q1.X.Offset, (0.5 - anchorPoint.Y) * Q1.Y.Scale, (0.5 - anchorPoint.Y) * Q1.Y.Offset)
+        if not (button.Parent:FindFirstChildWhichIsA('UIGridStyleLayout')) then
+            button.AnchorPoint = CenterAnchor
+            button.Position = pos + UDim2.new((0.5 - anchorPoint.X) * bounds.X.Scale, (0.5 - anchorPoint.X) * bounds.X.Offset, (0.5 - anchorPoint.Y) * bounds.Y.Scale, (0.5 - anchorPoint.Y) * bounds.Y.Offset)
         end
 
-        anchorPoint = ctx.newInstance
+        local uiScale = newInstance('UIScale', {Parent = button})
 
-        local F1 = anchorPoint('UIScale', {Parent = M1})
+        hoverProps = hoverProps or button
 
-        d1 = d1 or M1
-
-        G(d1.InputBegan, function(M1)
-            if not (V1(M1)) then
+        connectSignal(hoverProps.InputBegan, function(input)
+            if not (isPrimaryPointer(input)) then
                 return
             end
 
-            k1(F1, {
-                Scale = A1 or 0.96,
+            tween(uiScale, {
+                Scale = pressScale or 0.96,
             }, 0.12)
 
-            if callback then
-                callback(true)
+            if onActivate then
+                onActivate(true)
             end
         end)
-        G(d1.InputEnded, function(M1)
-            if not (V1(M1)) then
+        connectSignal(hoverProps.InputEnded, function(input)
+            if not (isPrimaryPointer(input)) then
                 return
             end
 
-            k1(F1, {Scale = 1}, 0.4, back)
+            tween(uiScale, {Scale = 1}, 0.4, EaseBack)
 
-            if callback then
-                callback(false)
+            if onActivate then
+                onActivate(false)
             end
         end)
     end
-    local function M1(A1, d1)
+    local function createSpring(stiffness, damping)
         return {
-            p = A1,
+            p = stiffness,
             v = vector2New(),
-            t = A1,
-            a = d1,
+            t = stiffness,
+            a = damping,
         }
     end
-    local function A1(d1, L1)
-        if (d1.t - d1.p).Magnitude < 0.03 then
-            if d1.v.Magnitude < 0.03 then
+    local function stepSpring(spring, dt)
+        if (spring.t - spring.p).Magnitude < 0.03 then
+            if spring.v.Magnitude < 0.03 then
                 return
             end
         end
 
-        L1 = math.min(L1, 0.05)
+        dt = math.min(dt, 0.05)
 
-        local ceil = math.ceil(L1 * 240)
-        local F1 = L1 / ceil
+        local ceil = math.ceil(dt * 240)
+        local current = dt / ceil
 
-        for i = 1, ceil, 1 do
-            d1.v = d1.v + ((d1.t - d1.p) * 230 - d1.v * 29) * F1
-            d1.p = d1.p + d1.v * F1
+        for _ = 1, ceil, 1 do
+            spring.v = spring.v + ((spring.t - spring.p) * 230 - spring.v * 29) * current
+            spring.p = spring.p + spring.v * current
         end
 
-        d1.a(d1.p)
+        spring.a(spring.p)
     end
-    local function d1(L1, l1, F1)
-        local Q1, _1, Z1, T1
+    local function bindSpringDrag(handle, targetFrame, getScale)
+        local current, entry, current2, enabled
 
-        local function R1()
-            local userInputType, m1 = Q1.UserInputType, ctx.Enum
+        local function updateView()
+            local userInputType, _unused = current.UserInputType
 
-            return userInputType == m1.UserInputType.Touch
+            return userInputType == Enum.UserInputType.Touch
         end
 
-        G(L1.InputBegan, function(L1)
-            if not Q1 then
-                if V1(L1) then
-                    local p1, m1 = vector2New(L1.Position.X, L1.Position.Y), l1.t
+        connectSignal(handle.InputBegan, function(input)
+            if not current then
+                if isPrimaryPointer(input) then
+                    local vec, current3 = vector2New(input.Position.X, input.Position.Y), targetFrame.t
 
-                    Q1, _1, Z1, T1 = L1, p1, m1, false
+                    current, entry, current2, enabled = input, vec, current3, false
                 end
             end
         end)
-        G(UserInputService.InputChanged, function(L1)
-            if not Q1 then
+        connectSignal(UserInputService.InputChanged, function(input)
+            if not current then
                 return
             end
-            if R1() and L1 ~= Q1 then
+            if updateView() and input ~= current then
                 return
-            elseif not (R1()) then
-                local enum = ctx.Enum
-
-                if L1.UserInputType ~= enum.UserInputType.MouseMovement then
+            elseif not (updateView()) then
+                if input.UserInputType ~= Enum.UserInputType.MouseMovement then
                     return
                 end
             end
 
-            local p1 = vector2New(L1.Position.X, L1.Position.Y) - _1
+            local current3 = vector2New(input.Position.X, input.Position.Y) - entry
 
-            T1 = T1 or p1.Magnitude > 5
+            enabled = enabled or current3.Magnitude > 5
 
-            if T1 then
-                l1.t = F1(Z1 + p1)
+            if enabled then
+                targetFrame.t = getScale(current2 + current3)
             end
         end)
-        G(UserInputService.InputEnded, function(L1)
-            if Q1 then
-                if L1 == Q1 then
-                    Q1 = nil
-                elseif not (R1()) then
-                    local enum = ctx.Enum
-
-                    if L1.UserInputType == enum.UserInputType.MouseButton1 then
-                        Q1 = nil
+        connectSignal(UserInputService.InputEnded, function(input)
+            if current then
+                if input == current then
+                    current = nil
+                elseif not (updateView()) then
+                    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                        current = nil
                     end
                 end
             end
         end)
 
-        local function L1()
-            local T1 = T1
+        local function updateView2()
+            local current3 = enabled
 
-            return T1
+            return current3
         end
 
-        return L1
+        return updateView2
     end
-    local function L1(parent, F1, Q1, position, Z1)
-        local T1, R1, p1, m1, c1 = {
+    local function createCrownIcon(parent, size, color, position, anchorPoint)
+        local props, corner, gradient, props2, _unused = {
             Parent = parent,
-            AnchorPoint = Z1,
+            AnchorPoint = anchorPoint,
             Position = position,
-            Size = x(F1, Q1),
-        }, D1(), U1(L.g1, L.g2, 45), {
+            Size = fromOffset(size, color),
+        }, createCorner(), createGradient(Palette.g1, Palette.g2, 45), {
             AnchorPoint = vector2New(0.5, 1),
-        }, ctx.udim2
+        }, UDim2.new
 
-        m1.Position = c1(0.5, 0, 1, -(Q1 * 0.12 // 1))
-        m1.Size = x(F1 * 0.45 // 1, F1 * 0.45 // 1)
-        m1.BackgroundColor3 = color3FromRGB(255, 246, 214)
+        props2.Position = UDim2.new(0.5, 0, 1, -(color * 0.12 // 1))
+        props2.Size = fromOffset(size * 0.45 // 1, size * 0.45 // 1)
+        props2.BackgroundColor3 = color3FromRGB(255, 246, 214)
+        props2[1] = createCorner()
+        props[1], props[2], props[3] = corner, gradient, createSolidFrame(props2)
 
-        _VX.setList(m1, 0, D1())
-        _VX.setList(T1, 0, R1, p1, frame(m1))
-
-        return frame(T1)
+        return createSolidFrame(props)
     end
 
-    local l1 = {
+    local MarkLogoAsset = {
         'Venyx/mark1.png',
         {
-
+            
 [[data:iVBORw0KGgoAAAANSUhEUgAAAIYAAACACAYAAADOIBGMAAAPWklEQVR4nOydedRd0xnGn8/qH6VKQtIEFVESJTGFGKrRIk1Lo9RUZZWlWLS0S9qaaQ1VStAGCdpGzFMQjURVUkPNpVTFGErNbRUd1Oo/PI+7b9Z1c+6Z9rvvOefe81trr/199557hr3f8+7pfd+9DGpqIlgGNTUR1IJRE8kSwXjvvfdWYLqOaRxq+grW+eZMVzMt2/xsiWAMDAz8i9kzTA/xgCNQ0xewrk9idh/TE5SB/zU/H2g76BPMXmb6CNPNTHvw4P+gpudgXQ9hNpvpc0z/ZxrGun6r+f2H+hj84m/MrnD/bs+0iCfYCjU9BetUdfsYGkIhLmoVChHV+Ty/5e8RTHfxRMegpidgXZ7FbD7TsJaPz28/binBoOTcy+yqto9P4QmvZFoONZWEdbcS0wL+OaXtK2mLR9qP7zRcPS/isz2ZHuXJx6OmUrDOvshsEdN2EV9Pj/pNpGBQgu5idm/EV2sxPcAL7Y2aSsC6+g6z3zANj/j6Ntb1g1G/i5vgOj3mu8t4we+jptSwjo5lNi3mkFM7fTGA+BO/xGy1mENOo8QdjZrSwbqbyizu5X2BdTey05dJU+KnJ3x/FG/gUtSUBg0QmG5EvFCI2LpN0hgrMnuVaVnEs5Bpx9aZs5ruw/r6OBr9ic8kHKpZ7lVYX+90OiBWY/CHb6NDr7UN9Xbn88Y+hppCYNkPQuMFTRIKcW6cUIhYjeEuqGny15GOu5m250X/jZquwTpamdltTOunOPxdptVZR/+IOyhx2d1Nk09DOjR9fqtTaTVdwL24v0c6oRBnJgmFSNQY7uJj0JhbT4tW6ybyBv6LmmCwXoYyu4Np3Qw/G816eSbpoFSGOjyRZs1uQXq2YJqDmmC4gYGmuLMIxdw0QiGyWHCdjWxM5M3/GjXmsFyXR2P0sQGycVbaA1M1JS03pOnTTZCN6ymlu6LGBGdl9VumzyIb97AeUptQZLX5nIXs7MKHqZsVO65BdqEQs7IcnFVjaNld0+SDkZ3zKLGHoiY3LP8LmR2I7GhkOTLLBGQmjeEmRc5EPg7hg30XNblg2R2OfEIhzsg6K51JYwg3uym70BWRj0m8yVtRkxqW+WRmc5EPzVloQuvdLD/K7Ffi5iauQH5m80HXQU0qWFZjmV2J/MzMKhQir8PR+cjPCmgIx6dQEwvLaCQanc3lkZ9fIAe5BIMS+Ciz3yE/eguuQk1H3FzFPGSbwGpnHutqMXLg46LoozXEeD58kr1HP3MJ03rwI+0a11Jk7ny2worV+skY+LEXpdqnDe05WK4nMvsh/Lif5boFcuLr1OzTCV1yDhbEhqj5AJbFV+AvFGI2PPDVGJro0tA1ycIrib8wbeT8Z/sW1yFX/83X4EleZav7uJd6aQxe+E1mF8GfNZkuRs1l8BcKcZGvz7FFfIxzYMPOzgeiL+GzH8lsS9hwLjzxakqauEWynWDD+pT2LEZBlYfltxGzh2HDNSy/r8ETq4g6vkPXVmaij3DzFVfDjhkwwEQwKKEyGklrMJyE5jdORv+gfsVo2PAc6+J2GGAZg+tU2HEchSOrQVDl4DN+AXZNsDCbMDTpYwg3dP0n7FA/Y3yeBaAq4JqQB+A35d3O8lYG2GYaww1dLSa8mmg95UfoXU6DrVBcbmmVb6YxBN+CbeC3uBbFBBeWoWdgOclzbwFs2dAtbppgKhiCD30/s81gxxNM43qlSXHGvHLHWBN2PMTy2RSGhAgAewlskbr9MXoHNSGWQiFy2VzEEUJjaEr3r0wrwZa1+VY8iwrDstEy+iLY8nemEdYa1VxjuA6QySRLGz9B9Unt8JOBs0M0s+YaQ/DNWB0NrWGN/GEXooKwTOR05bUU3oGhaZyUsxIkyDxv9EU0vKWs+Rmqy1TYMzeEUIiQuw+EUJtj+ebthorhohyOhD0hyvgDgjQlTVggMsAZCVue4lvyaVQIlsNzsB+JLGY5jEIgQu9XYrnq2mQdFnRlXB3dTg7WQiGs7GAiCa0xPsnsRdgjX8xRZTcFdIFNNMQOEWFoaKj+hQiqMXjjcoD+FexReKEjUX5OQBihODekUIigGkPwrVF/4AmEYZiLEVY6nGFvqAm5UXkdidISfE80PsCTzEI5MZdZa5yEMMwLLRQiuMYQfHt2R8MHMwRDWFBvoETweWWR9RTCsBOfN3gIq67sosgHuRZhZkLFQSgfUxCGxd0QCtHN7TVDaYzDnDVUKeC9rMLsYIQhVBkuRTcFI8ToRGhIaOHSZ8VRCIeFc1cqutLHaMK36ZfM9oc98rpareh5DW0vhUaMMl+XzShm8Pm+jS7RTY0hzkMY1JTsgeLRmkgIoRChyi6SrmoMwbdKIY63hj2P843yDcngBZ9NUXfXhj3z+WxfRhfptsYQeaP+JbGe89MoBF57R4QRCtH1ADNd1xiChagxvpX3VSsL+GYVIhx8pjuZTYA9hWjCIjSGCGWmN9Et3HUVXlO7S4YQClGIu2ZRgiEn3lCzld9C9wk1WniF2qKQIHaFCIYzXs0dOCyBvNFzc+H8RL6JMPwUBVGUxhASjBBbZA1lZXnHh8iAhsmDYI9cPs39RdJSmGBQayhOVCibxa5NBCHcWs3UInelLGRU0sTt/KeZwhC7L45w1urBCGhzISeiNQcK3DqsyKakqTV+jjB0Y9U11GLZmQMF7ydXqMYQzi4yhBXWoyzcoPFDA83H6GUZUfQWpYVqDMECkNoMsQ6wQcg5DZ5bztYhJummFS0UonDBcGTdiC8tSfub+xBiUx51NkMN4zNRCsFwXuwhjFD2RTj2hj3Ty2KmWHgfo0nAHv62LOzbYAjvdXtm82HPYNchL5yyNCXSGnLjCzGvEcLX9auw57SyCIUojcYQfBOHM3sVtrzGAl8FhvA+pe4tA8Oob7GG64iXgtJoDMGCeQ32HdHhrMgvwQieS3E5raMFTSuTUIhSCYZDgWStVeqesMPyXEJzOIUtlnWidILh3pzDYItJ9F0XX2xn2DLFxUgtFWXUGBIO7V1i6aA0iJW6C/zR7kMfhR3P8lktg+aaUUrBcFj7ilg0AdbNyNEoKaUalbTDt/xx2IVVlnHQsLy+JyFipfNe1kdJKbPGEEfADjUBPib41nMX30OJKbVg8I26CbbR/3w6oZYTZXPKvr99qZsS4bbefAQ2vMkKyTUHwfuQG6SVQdFo3sczKDFlb0qkNf4Eu+0pBrOCM5v58zeTYScUM8ouFKL0guE4Aw1zNwv2QXasjItlZ3ECKkAlBMMZxVptrZWpn0FtsRyzHWGD+kxDUAGqojEkHFpDeRL+DHV+pmnZgWlF+KNguNoPdRGvfyPTeBQAr7st02ym2HgllREMh5WXWZahp9Uw9TAK9z1o7PWmGdQHWDk3Ma2DLuAE4kH+qSD9Cnh/U9zxpR+VtMOHuwH+6xVvsZIGpzmQ13ub2Qrw40peby93vqhAdcfz+yCb9bidIKYzTW75eBGvNzbud1XTGEKhjHwj5wxK05y4gPa+QqEFsiVbk7tAdX9oO+ZkXuslJtMFOp7vODR2apzc9tWxSb+tnGCwYGWyPx3+7JXimDwjmHbOibDjjIrqtxrTDazME+GJgtUxaXFOnvLD276+nfdzY9I5KteUCBelT3MBw+HHqiykVztcYwSzF+CHvOxGR7ka8vxz0HmEpKH5xDy7IvK8mzOTh/zIDod8nue9I+E0lWxKpDU0C2nhnxq3FmMRfe+Qgc7+p3GuDXLCulMdRmSAx+ue70Nnobg0jVCISmqMJk5dfh35eYMFNSTivAoM/zL8AsTP4rn3izuA11FY6eMRz0E8z4UJ55EGlZaIWySU9hqTdnW5khqjhRPgx8qug9aObEF8dw1I01dQZKGkuZkLeI8dTf/4nfomdyN55XjfLCYHlRYMPujT8HeKPsZF8/0A/r0Gsx/Aj1N4b88nHeQCyGjkk7QL4hG8r1ntH/KzTZg9xLRBwu/lmpBpB+1KNyWChSM7C3VEffxUVbgKTqvpb3mvJRV0HM+zEjLtaMRnUESeNJGTZYKwm3xb+RtNvF2O5LiiC3n8RGSk8oIh3Pj/BpSDHVgRNyMjfAYtFKbRVH9EQ4jSOILLbnZcHrfHnhAMkbIjF5rjWAmnICd8Bu0sYLVgJyQUDyMHPSMYImBk3jT8mZXg0wQ13RM03BwLf3ZOM5HViaqPStopUmN4W7W7KDrboLES68M+PkIhekowXEzMzO27AVfx2nNggNsET9GN826Gtz/PcSk86ammRFAdr4rG3ECI3QujeJ1pXWtvMj7HODT2kstio7o778Nk//hea0r0xr3CrJsb9h44EMDFkOfU6GNehp9cbyUUoucEQ7CALkG2Qs3LTF5rLgJAjaFdrr+R4Se78DdmEYR6rilpwkLSGohWJ01jY7SgEdDGAwHCLvLeZb+RNxaXyS6LPSsYwu1fYumw1IqEwsrfZQm8Z5nd+TQJml6fwHt7EB70ZFPSxHl7hfAmPyOQUGwJ//vVEsHNbs0nNz2tMQQLaBgaoxSrQPCKFTZ2wDjON+9zY2baDMdqq1BZum2W14m7pzWGYMFoOGkZenH3AEKh/pA6sUlCIQMlLYhpJ8qke5D1+bXISc8LhmBFKvSiRbyNQ90w0prr0LD5jEPW6tvw+lotncm/t2NK6vhOirPliKPnm5JWWEjaWSnvNpwyi7MwDv4QKVdVNTcziddf1PbbTZndguRJsF352+uRgX4TDM2KKhhLVs8yNUdjBoyj9vJ+5HiUtKYhDTU5xmhZ+7EtQGc7T/EOGqOop5GSvmhKmrhZ0TRuA+0cEEAo1Bm+IOEwrXlM6CQUwoXb1sLbYzHnkQFSpt2S+kowhOtvZNn79RgXwMWaqYh3fzhYTRfTO0hAZoQubFOcmePWFMbUM6l91ZS0wkKSit444bB7WOBbwf7acgtY2OFr9SNkvpfLgZvnlkbUdHrUIqJWbEelCU3ddxqjBfmQxu0Lshj2MT2bdJru1sTZ2LxCIVx4SEUhujviaw2LU43O+lZjCL5dCnHQabEtSDgkXlMjm4vbPlbUoP3ymuHFXEvRAbT9d+v8SKq45f2sMZr9jagVyQMGwoVDavVqf8VdayNroRA85wxmo/DhtRdZlU9J+m1fC4ZwS/TntHx0Ij9LY8qfGb7BBzBTWAJ5hR3OtFaoazVR4H4mNZuT0JgmF4fyXmKH7H3dlDRxuy1rLuAlFmKwzXx5HbXvj2WdbDK+BzWfijE6l/fRcRRTC0ZNJH3flNREUwtGTSTvAwAA///2y1mvAAAABklEQVQDALNzu4AFm6hAAAAAAElFTkSuQmCC]],
         },
     }
 
-    local function F1(Q1, _1, Z1, T1, R1, p1)
-        local m1 = L1(Q1, _1, Z1, T1, R1)
+    local function mountBrandLogo(parent, size, accentColor, position, anchorPoint, zIndex)
+        local icon = createCrownIcon(parent, size, accentColor, position, anchorPoint)
 
         task.spawn(function()
-            local asset = loadAsset(l1[1], l1[2])
+            local asset = loadAsset(MarkLogoAsset[1], MarkLogoAsset[2])
 
             if asset then
-                if not Q1.Parent then
+                if not parent.Parent then
                     return
                 end
             else
                 return
             end
 
-            p1.Parent = Q1
-            p1.Image = asset
+            zIndex.Parent = parent
+            zIndex.Image = asset
 
-            e(p1)
-            m1:Destroy()
+            createImage(zIndex)
+            icon:Destroy()
         end)
     end
-    local function E(callback, l1, Q1)
-        local createFrame = ctx.createFrame
-        local Z1, T1 = createFrame({
-            Parent = callback,
-            AnchorPoint = R,
-            Position = b,
-            Size = x(l1, Q1),
+    local function createToggleSwitch(parent, width, height)
+        local container, props = createFrame({
+            Parent = parent,
+            AnchorPoint = RightCenterAnchor,
+            Position = RightMidPos,
+            Size = fromOffset(width, height),
             BackgroundTransparency = 0.84,
-            D1(),
-        }), ctx.createFrame
-        local _1 = T1({
-            Parent = Z1,
-            Size = _,
-            D1(),
-            U1(L.a1, L.a2),
+            createCorner(),
+        }), createFrame
+        local entry1 = createFrame({
+            Parent = container,
+            Size = FullSize,
+            createCorner(),
+            createGradient(Palette.a1, Palette.a2),
         })
 
-        T1, callback = {
-            Parent = Z1,
+        props = {
+            Parent = container,
             AnchorPoint = vector2New(0, 0.5),
-        }, ctx.udim2
-        T1.Position = callback(0, 3, 0.5, 0)
-        T1.Size = x(Q1 - 6, Q1 - 6)
-        T1.ZIndex = 2
+        }
+        props.Position = UDim2.new(0, 3, 0.5, 0)
+        props.Size = fromOffset(height - 6, height - 6)
+        props.ZIndex = 2
+        props[1], props[2] = createCorner(), createStroke(0.6, color3FromRGB(0, 0, 0))
 
-        _VX.setList(T1, 0, D1(), J1(0.6, color3FromRGB(0, 0, 0)))
+        local props2 = createSolidFrame(props)
 
-        local L1 = frame(T1)
+        local function updateView(param1, param2)
+            local count = param1 and 0 or 1
+            local sizePos = UDim2.new(0, param1 and width - height + 3 or 3, 0.5, 0)
 
-        local function Z1(T1, R1)
-            local p1, m1 = T1 and 0 or 1, ctx.udim2
-            local c1 = m1(0, T1 and l1 - Q1 + 3 or 3, 0.5, 0)
-
-            if R1 then
-                _1.BackgroundTransparency = p1
-                L1.Position = c1
+            if param2 then
+                entry1.BackgroundTransparency = count
+                props2.Position = sizePos
 
                 return
             end
 
-            k1(_1, {BackgroundTransparency = p1}, 0.26)
-            k1(L1, {Position = c1}, 0.26)
+            tween(entry1, {BackgroundTransparency = count}, 0.26)
+            tween(props2, {Position = sizePos}, 0.26)
         end
 
-        return Z1
+        return updateView
     end
-    local function L1(l1, Q1, transparency, Z1, T1)
-        G(l1.Focused, function()
-            k1(Q1, {
-                Transparency = transparency,
-                Color = L.a1,
+    local function bindInputFocus(textBox, stroke, focusAlpha, restAlpha, onFocusLost)
+        connectSignal(textBox.Focused, function()
+            tween(stroke, {
+                Transparency = focusAlpha,
+                Color = Palette.a1,
             }, 0.2)
         end)
-        G(l1.FocusLost, function()
-            k1(Q1, {
-                Transparency = Z1,
-                Color = L.wh,
+        connectSignal(textBox.FocusLost, function()
+            tween(stroke, {
+                Transparency = restAlpha,
+                Color = Palette.wh,
             }, 0.25)
 
-            if T1 then
-                T1()
+            if onFocusLost then
+                onFocusLost()
             end
         end)
     end
-    local function updateBackgroundAlpha(Q1, _1)
-        local Z1 = J1(0.86)
+    local function createSearchBox(parent, options)
+        local stroke = createStroke(0.86)
 
-        Q1.BackgroundTransparency = Q1.BackgroundTransparency or 0.92
-        Q1[1] = D1(9)
-        Q1[2] = Z1
+        parent.BackgroundTransparency = parent.BackgroundTransparency or 0.92
+        parent[1] = createCorner(9)
+        parent[2] = stroke
 
-        local T1, udim2 = {}, ctx.udim2
+        local props = {}
 
-        T1.Position = udim2(0, 10, 0.5, -9)
-        T1.Size = x(18, 18)
-        T1.Image = 'search'
-        T1.ImageTransparency = 0.3
-        Q1[3] = e(T1)
-        Q1.ClipsDescendants = true
-        T1, udim2 = {}, ctx.createFrame
-        T1.Parent = udim2(Q1)
-        T1.Position = x(35, 0)
-        udim2 = ctx.udim2
-        T1.Size = udim2(1, -43, 1, 0)
-        T1.PlaceholderText = _1
-        T1.TextSize = 14
-        T1.ClipsDescendants = true
-        Q1 = textBox(T1)
+        props.Position = UDim2.new(0, 10, 0.5, -9)
+        props.Size = fromOffset(18, 18)
+        props.Image = 'search'
+        props.ImageTransparency = 0.3
+        parent[3] = createImage(props)
+        parent.ClipsDescendants = true
+        props = {}
+        props.Parent = createFrame(parent)
+        props.Position = fromOffset(35, 0)
+        props.Size = UDim2.new(1, -43, 1, 0)
+        props.PlaceholderText = options
+        props.TextSize = 14
+        props.ClipsDescendants = true
+        parent = createTextBox(props)
 
-        L1(Q1, Z1, 0.55, 0.86)
+        bindInputFocus(parent, stroke, 0.55, 0.86)
 
-        return Q1
+        return parent
     end
 
-    local Q1 = {}
+    local StatusColors = {}
 
-    Q1.ok = L.mint
-    Q1.warn = L.gold
-    Q1.err = L.red
+    StatusColors.ok = Palette.mint
+    StatusColors.warn = Palette.gold
+    StatusColors.err = Palette.red
 
-    local _1 = {
+    local StatusIcons = {
         ok = 'ok',
         err = 'x',
         warn = 'warn',
     }
 
-    local function Z1(T1)
-        return Q1[T1] or L.sky, _1[T1] or 'info'
+    local function getStatusStyle(kind)
+        return StatusColors[kind] or Palette.sky, StatusIcons[kind] or 'info'
     end
-    local function Q1(instance)
-        for T1, T1 in ipairs(instance:GetChildren())do
-            if T1:IsA('GuiObject') then
-                T1:Destroy()
+    local function clearGuiObjects(container)
+        for _, child in ipairs(container:GetChildren()) do
+            if child:IsA('GuiObject') then
+                child:Destroy()
             end
         end
     end
-    local function _1(T1)
+    local function createStatController(cardRefs)
         return {
-            Set = function(R1, key, m1)
-                R1 = T1[key]
+            Set = function(param1, key, param3)
+                param1 = cardRefs[key]
 
-                if R1 then
-                    if R1.Text ~= m1 then
-                        R1.Text = m1
+                if param1 then
+                    if param1.Text ~= param3 then
+                        param1.Text = param3
                     end
                 end
             end,
-            Icon = function(R1, key, m1)
-                R1 = T1[key] and T1[key].Parent:FindFirstChildOfClass('ImageLabel')
+            Icon = function(imageLabel, key, param3)
+                imageLabel = cardRefs[key] and cardRefs[key].Parent:FindFirstChildOfClass('ImageLabel')
 
-                if R1 then
-                    if R1.Image ~= m1 then
-                        R1.Image, R1.ImageColor3 = m1, B[m1] and L.a1 or color3FromRGB(255, 255, 255)
+                if imageLabel then
+                    if imageLabel.Image ~= param3 then
+                        imageLabel.Image, imageLabel.ImageColor3 = param3, IconIndex[param3] and Palette.a1 or color3FromRGB(255, 255, 255)
                     end
                 end
             end,
         }
     end
-    local function T1(parent, text, m1, c1, g1)
-        local t1, o1 = {Parent = parent}, ctx.udim2
+    local function createDialogButton(parent, text, isPrimary, accentColor, onPress)
+        local btnProps, corner = {Parent = parent}
 
-        t1.Position = o1(m1 / c1, m1 * 8 / c1, 0, 0)
-        o1 = ctx.udim2
-        t1.Size = o1(1 / c1, 8 / c1 - 8, 1, 0)
-        t1.BackgroundTransparency = g1 and 0 or 0.92
-        o1, parent = D1(13), g1 and U1(L.a1, L.a2, 90)
-        c1, m1 = parent or J1(0.84), g1 and J1(0.55, L.a1:Lerp(L.wh, 0.5))
+        btnProps.Position = UDim2.new(isPrimary / accentColor, isPrimary * 8 / accentColor, 0, 0)
+        btnProps.Size = UDim2.new(1 / accentColor, 8 / accentColor - 8, 1, 0)
+        btnProps.BackgroundTransparency = onPress and 0 or 0.92
+        corner, parent = createCorner(13), onPress and createGradient(Palette.a1, Palette.a2, 90)
+        accentColor, isPrimary = parent or createStroke(0.84), onPress and createStroke(0.55, Palette.a1:Lerp(Palette.wh, 0.5))
 
-        local R1, y1 = m1 or nil, {
-            Size = _,
+        local current, props = isPrimary or nil, {
+            Size = FullSize,
             Text = text,
-            FontFace = font6,
+            FontFace = FontBold,
             TextSize = 16,
         }
 
-        y1.TextColor3, y1.TextXAlignment = g1 and L.on or L.wh, center
+        props.TextColor3, props.TextXAlignment = onPress and Palette.on or Palette.wh, AlignCenterX
+        btnProps[1], btnProps[2], btnProps[3], btnProps[4] = corner, accentColor, current, createLabel(props)
+        onPress = createButton(btnProps)
 
-        _VX.setList(t1, 0, o1, c1, R1, textLabel(y1))
+        bindPressScale(onPress)
 
-        g1 = textButton(t1)
-
-        n1(g1)
-
-        return g1
+        return onPress
     end
 
-    local R1 = {}
+    local Section = {}
 
-    R1.__index = R1
+    Section.__index = Section
 
-    local function p1(m1)
-        if m1.bq then
+    local function layoutSectionColumns(tab)
+        if tab.bq then
             return
-        elseif m1.done == #m1.list then
+        elseif tab.done == #tab.list then
             return
         end
 
-        m1.bq = true
+        tab.bq = true
 
         task.defer(function()
-            m1.bq = false
+            tab.bq = false
 
-            local c1, g1, t1 = {0, 0}, table.clone(m1.list), {}
+            local items, current, list = {0, 0}, table.clone(tab.list), {}
 
-            table.sort(g1, function(o1, y1)
-                return o1.card.AbsoluteSize.Y > y1.card.AbsoluteSize.Y
+            table.sort(current, function(param1, param2)
+                return param1.card.AbsoluteSize.Y > param2.card.AbsoluteSize.Y
             end)
 
-            local o1, y1 = true, true
+            local enabled, enabled2 = true, true
 
-            for f1, b1 in ipairs(g1)do
-                f1 = b1.side or (c1[1] <= c1[2] and 1 or 2)
+            for index, item in ipairs(current) do
+                index = item.side or (items[1] <= items[2] and 1 or 2)
 
-                if o1 then
-                    local g1 = b1.side
+                if enabled then
+                    local side = item.side
 
-                    o1 = if g1 then b1.side == 3 else not g1
+                    enabled = if side then item.side == 3 else not side
                 end
 
-                t1[b1] = f1
+                list[item] = index
 
-                if f1 < 3 then
-                    c1[f1] = c1[f1] + (b1.card.AbsoluteSize.Y + 16)
+                if index < 3 then
+                    items[index] = items[index] + (item.card.AbsoluteSize.Y + 16)
                 end
 
-                y1 = y1 and b1.card.AbsoluteSize.Y > 40
+                enabled2 = enabled2 and item.card.AbsoluteSize.Y > 40
             end
 
-            o1 = o1 and t1[m1.list[1] ] == 2
+            enabled = enabled and list[tab.list[1] ] == 2
 
-            for c1, g1 in next, t1 do
-                g1 = o1 and g1 < 3 and 3 - g1 or g1
+            for key, value in next, list do
+                value = enabled and value < 3 and 3 - value or value
 
-                if c1.card.Parent ~= m1.cols[g1] then
-                    c1.card.Parent = m1.cols[g1]
+                if key.card.Parent ~= tab.cols[value] then
+                    key.card.Parent = tab.cols[value]
                 end
             end
 
-            if y1 then
-                m1.done = #m1.list
+            if enabled2 then
+                tab.done = #tab.list
             end
         end)
     end
 
-    ctx.mountGui = function(m1)
+    mountGui = function(param1)
         if not (pcall(function()
-            m1.Parent = gethui()
+            param1.Parent = gethui()
         end)) then
-            m1.Parent = getService('CoreGui')
+            param1.Parent = getService('CoreGui')
         end
     end
 
-    local m1 = _VX.mountWindow
+    local mountWindow = Runtime.mountWindow
 
-    ctx.Venyx.Window = function(c1, g1)
-        g1 = g1 or {}
+    -- ========================================================================
+    -- 4. Window Component (Tabs, Home, Settings, Quick Bar, Configs, Dialogs)
+    -- ========================================================================
+    Venyx.Window = function(self, options2)
+        options2 = options2 or {}
 
-        local t1 = {Tabs = {}}
-        local o1, y1 = g1.Key
+        local window = {Tabs = {}}
+        local btnProps, props = options2.Key
 
-        if o1 then
-            y1 = o1
+        if btnProps then
+            props = btnProps
         else
-            c1 = ctx.Enum
-            y1 = c1.KeyCode.RightControl
+            props = Enum.KeyCode.RightControl
         end
 
-        t1.Key = y1
-        t1.us = 1
-        t1.open = true
+        window.Key = props
+        window.us = 1
+        window.open = true
 
-        local f1 = m1(t1, tostring(g1.Id or 'Venyx'))
+        local screenGui = mountWindow(window, tostring(options2.Id or 'Venyx'))
 
-        t1.Gui = f1
+        window.Gui = screenGui
 
-        local m1, b1, z1 = 832, 510, ctx.createFrame
+        local count, count2, labelProps = 832, 510
 
-        t1.dim = z1({
-            Parent = f1,
-            Size = _,
+        window.dim = createFrame({
+            Parent = screenGui,
+            Size = FullSize,
             BackgroundColor3 = color3FromRGB(0, 0, 0),
         })
 
         pcall(function()
-            t1.dim.Interactable = false
+            window.dim.Interactable = false
         end)
 
-        t1.dz = 0.6
-        z1 = ctx.createFrame
+        window.dz = 0.6
 
-        local i1 = z1({
-            Parent = f1,
+        local props2 = createFrame({
+            Parent = screenGui,
             Active = true,
             ZIndex = 3,
-            AnchorPoint = T,
-            Position = Z,
-            Size = x(m1, b1),
+            AnchorPoint = CenterAnchor,
+            Position = CenterPos,
+            Size = fromOffset(count, count2),
         })
 
-        t1.Main = i1
-        z1 = ctx.newInstance
+        window.Main = props2
 
-        local uIScale, S1 = z1('UIScale', {Parent = i1}), ctx.newInstance
+        local uIScale, props3 = newInstance('UIScale', {Parent = props2}), newInstance
 
-        o1, y1 = {
-            Parent = i1,
-            Position = x(-3, -3),
-        }, ctx.udim2
-        o1.Size = y1(1, 6, 1, 6)
-        o1.BackgroundTransparency = 1
-        o1.Visible = false
+        btnProps = {
+            Parent = props2,
+            Position = fromOffset(-3, -3),
+        }
+        btnProps.Size = UDim2.new(1, 6, 1, 6)
+        btnProps.BackgroundTransparency = 1
+        btnProps.Visible = false
 
-        local x1, B1 = S1('CanvasGroup', o1), ctx.createFrame
-        local O1, G1 = B1({
-            Parent = i1,
-            Size = _,
-        }), ctx.createFrame
+        local canvas, props4 = newInstance('CanvasGroup', btnProps), createFrame
+        local props5, props6 = createFrame({
+            Parent = props2,
+            Size = FullSize,
+        }), createFrame
 
-        t1.bg = G1({
-            Parent = O1,
-            Size = _,
+        window.bg = createFrame({
+            Parent = props5,
+            Size = FullSize,
             BackgroundTransparency = 0.05,
-            D1(16),
-            U1(L.w1, L.w2, 90),
+            createCorner(16),
+            createGradient(Palette.w1, Palette.w2, 90),
         })
-        y1 = ctx.createFrame
-        t1.tone = y1({
-            Parent = O1,
-            Size = _,
+        window.tone = createFrame({
+            Parent = props5,
+            Size = FullSize,
             BackgroundColor3 = color3FromRGB(0, 0, 0),
-            D1(16),
+            createCorner(16),
         })
-        t1.Tint = function(E1)
-            E1 = ctx.State
+        window.Tint = function(_self)
+            local isMatch = State.Theme == 'Black' and color3FromRGB(0, 0, 0)
 
-            local u1 = E1.Theme == 'Black' and color3FromRGB(0, 0, 0)
-
-            t1.bg:FindFirstChildOfClass('UIGradient').Color = ColorSequence.new(u1 or L.w1, u1 or L.w2)
+            window.bg:FindFirstChildOfClass('UIGradient').Color = ColorSequence.new(isMatch or Palette.w1, isMatch or Palette.w2)
         end
-        t1.Tone = function(E1, E1)
-            t1.tone.BackgroundColor3 = E1 < 0 and L.wh or color3FromRGB(0, 0, 0)
-            t1.tone.BackgroundTransparency = 1 - math.abs(E1) / 100 * (E1 < 0 and 0.22 or 0.65)
+        window.Tone = function(_self, tonePercent)
+            window.tone.BackgroundColor3 = tonePercent < 0 and Palette.wh or color3FromRGB(0, 0, 0)
+            window.tone.BackgroundTransparency = 1 - math.abs(tonePercent) / 100 * (tonePercent < 0 and 0.22 or 0.65)
         end
 
-        t1:Tone(70)
+        window:Tone(70)
 
-        G1, y1 = {Parent = O1}, ctx.udim2
-        G1.Size = y1(1, 0, 0.55, 0)
+        props6 = {Parent = props5}
+        props6.Size = UDim2.new(1, 0, 0.55, 0)
+        props6[1], props6[2] = createCorner(16), createAlphaGradient(90, {0, 0.86}, {1, 1})
 
-        _VX.setList(G1, 0, D1(16), a1(90, {0, 0.86}, {1, 1}))
-        frame(G1)
+        createSolidFrame(props6)
 
-        y1, z1 = {
-            Parent = O1,
-            Position = x(20, 1),
-        }, ctx.udim2
-        y1.Size = z1(1, -40, 0, 1)
+        props = {
+            Parent = props5,
+            Position = fromOffset(20, 1),
+        }
+        props.Size = UDim2.new(1, -40, 0, 1)
+        props[1] = createAlphaGradient(0, {0, 1}, {0.5, 0.3}, {1, 1})
 
-        _VX.setList(y1, 0, a1(0, {0, 1}, {0.5, 0.3}, {1, 1}))
-        frame(y1)
+        createSolidFrame(props)
 
-        B1, G1 = J1(0.7), ctx.createFrame
+        props4, props6 = createStroke(0.7), createFrame
 
-        G1({
-            Parent = O1,
-            Size = _,
+        createFrame({
+            Parent = props5,
+            Size = FullSize,
             ZIndex = 5,
-            D1(16),
-            B1,
+            createCorner(16),
+            props4,
         })
 
-        local function E1()
-            local viewportSize, P1 = workspace.CurrentCamera.ViewportSize, UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled and 0.88 or 1
+        local function updateView()
+            local viewportSize, count3 = workspace.CurrentCamera.ViewportSize, UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled and 0.88 or 1
 
-            return math.clamp(math.min((viewportSize.X - 60) / m1, (viewportSize.Y - 20) / b1), 0.55, 1.3) * t1.us * P1
+            return math.clamp(math.min((viewportSize.X - 60) / count, (viewportSize.Y - 20) / count2), 0.55, 1.3) * window.us * count3
         end
-        local function u1()
-            if t1.open then
-                k1(uIScale, {
-                    Scale = E1(),
+        local function updateView2()
+            if window.open then
+                tween(uIScale, {
+                    Scale = updateView(),
                 }, 0.3)
             end
         end
 
-        G(workspace.CurrentCamera:GetPropertyChangedSignal('ViewportSize'), u1)
+        connectSignal(workspace.CurrentCamera:GetPropertyChangedSignal('ViewportSize'), updateView2)
 
-        t1.SetScale = function(scale, P1)
-            t1.us = P1
+        window.SetScale = function(_self, newScale)
+            window.us = newScale
 
-            u1()
+            updateView2()
         end
-        c1, o1 = {
-            Parent = f1,
-            AnchorPoint = T,
-        }, ctx.udim2
-        c1.Position = o1(0, 44, 0, 100 + t1.slot * 60)
-        c1.Size = x(50, 50)
-        c1.BackgroundTransparency = 0.12
-        c1.BackgroundColor3 = L.bg
-        c1.Visible = false
+        self = {
+            Parent = screenGui,
+            AnchorPoint = CenterAnchor,
+        }
+        self.Position = UDim2.new(0, 44, 0, 100 + window.slot * 60)
+        self.Size = fromOffset(50, 50)
+        self.BackgroundTransparency = 0.12
+        self.BackgroundColor3 = Palette.bg
+        self.Visible = false
+        self[1], self[2] = createCorner(18), createStroke(0.75)
 
-        _VX.setList(c1, 0, D1(18), J1(0.75))
-
-        local u1, newInstance = textButton(c1), ctx.newInstance
-        local j1 = newInstance('UIScale', {
-            Parent = u1,
+        local props7, button = createButton(self), newInstance
+        local uiScale = newInstance('UIScale', {
+            Parent = props7,
             Scale = 0,
         })
 
-        y1, newInstance = {
-            AnchorPoint = T,
-            Position = Z,
-            Size = x(29, 28),
-        }, ctx.Enum
-        y1.ScaleType = newInstance.ScaleType.Fit
-        y1.ImageColor3 = L.tx
+        props = {
+            AnchorPoint = CenterAnchor,
+            Position = CenterPos,
+            Size = fromOffset(29, 28),
+        }
+        props.ScaleType = Enum.ScaleType.Fit
+        props.ImageColor3 = Palette.tx
 
-        F1(u1, 24, 30, Z, T, y1)
+        mountBrandLogo(props7, 24, 30, CenterPos, CenterAnchor, props)
 
-        local e1 = M1(vector2New(), function(s1)
-            local q1 = ctx.udim2
-
-            i1.Position = q1(0.5, s1.X, 0.5, s1.Y)
+        local spring = createSpring(vector2New(), function(param1)
+            props2.Position = UDim2.new(0.5, param1.X, 0.5, param1.Y)
         end)
-        local s1 = M1(vector2New(44, 100 + t1.slot * 60), function(q1)
-            local Y1 = ctx.udim2
-
-            u1.Position = Y1(0, q1.X, 0, q1.Y)
+        local spring2 = createSpring(vector2New(44, 100 + window.slot * 60), function(param1)
+            props7.Position = UDim2.new(0, param1.X, 0, param1.Y)
         end)
-        local q1, Y1, X1 = P(), ctx.RunService, ctx.Enum
+        local current, props8, props9 = randomGuiName(), RunService, Enum
 
-        newInstance, c1 = X1.RenderPriority.Camera.Value, function(P)
-            A1(e1, P)
+        button, self = Enum.RenderPriority.Camera.Value, function(param1)
+            stepSpring(spring, param1)
 
-            if u1.Visible then
-                A1(s1, P)
+            if props7.Visible then
+                stepSpring(spring2, param1)
             end
         end
 
-        Y1:BindToRenderStep(q1, newInstance + 1, c1)
+        RunService:BindToRenderStep(current, button + 1, self)
 
-        o1, z1 = {Parent = O1}, ctx.udim2
-        o1.Size = z1(1, 0, 0, N)
-        o1.ClipsDescendants = true
-        c1, X1, B1 = ctx.createFrame, {}, ctx.udim2
-        X1.Size = B1(1, 0, 1, 16)
-        X1.BackgroundTransparency = 0.95
+        btnProps = {Parent = props5}
+        btnProps.Size = UDim2.new(1, 0, 0, TopBarHeight)
+        btnProps.ClipsDescendants = true
+        props9 = {}
+        props9.Size = UDim2.new(1, 0, 1, 16)
+        props9.BackgroundTransparency = 0.95
+        props9[1] = createCorner(16)
+        btnProps[1] = createFrame(props9)
+        button = createButton(btnProps)
 
-        _VX.setList(X1, 0, D1(16))
-        _VX.setList(o1, 0, c1(X1))
+        createDivider(props5, fromOffset(0, TopBarHeight), UDim2.new(1, 0, 0, 1))
 
-        newInstance = textButton(o1)
+        props8, props4, props9 = UDim2.new(0, SidebarWidth / 2, 0.5, 0), {AnchorPoint = CenterAnchor}, UDim2.new
+        props4.Position = UDim2.new(0, SidebarWidth / 2, 0.5, 0)
+        props4.Size = fromOffset(25, 24)
+        props4.ScaleType = Enum.ScaleType.Fit
+        props4.ImageColor3 = Palette.tx
 
-        V(O1, x(0, N), ctx.udim2(1, 0, 0, 1))
+        mountBrandLogo(button, 21, 26, props8, CenterAnchor, props4)
 
-        o1 = ctx.udim2
-        Y1, B1, X1 = o1(0, S / 2, 0.5, 0), {AnchorPoint = T}, ctx.udim2
-        B1.Position = X1(0, S / 2, 0.5, 0)
-        B1.Size = x(25, 24)
-        y1 = ctx.Enum
-        B1.ScaleType = y1.ScaleType.Fit
-        B1.ImageColor3 = L.tx
+        props8 = {
+            Parent = button,
+            Position = fromOffset(SidebarWidth + 6, 0),
+        }
+        props8.Size = UDim2.new(1, -SidebarWidth - 190, 1, 0)
+        props8.ClipsDescendants = true
+        props8[1] = createListLayout(10, nil, AlignCenterY, FillHorizontal)
+        self = createFrame(props8)
+        props8 = {Parent = self}
+        props8.Size = UDim2.new(0, 0, 1, 0)
+        props8.AutomaticSize = AutoSizeX
+        props8.Text = (options2.Title or 'Venyx'):upper()
+        props3 = nil
+        props3, props8.FontFace = Enum, Font.new('rbxasset://fonts/families/Montserrat.json', Enum.FontWeight.Heavy)
+        props8.TextSize = 22
 
-        F1(newInstance, 21, 26, Y1, T, B1)
+        createLabel(props8)
 
-        X1, Y1, G1 = ctx.createFrame, {
-            Parent = newInstance,
-            Position = x(S + 6, 0),
-        }, ctx.udim2
-        Y1.Size = G1(1, -S - 190, 1, 0)
-        Y1.ClipsDescendants = true
-        B1 = ctx.listLayout
-
-        _VX.setList(Y1, 0, B1(10, nil, center2, horizontal))
-
-        c1 = X1(Y1)
-        Y1, B1 = {Parent = c1}, ctx.udim2
-        Y1.Size = B1(0, 0, 1, 0)
-        Y1.AutomaticSize = t
-        Y1.Text = (g1.Title or 'Venyx'):upper()
-        S1 = nil
-        S1, Y1.FontFace = ctx.Enum, Font.new('rbxasset://fonts/families/Montserrat.json', ctx.Enum.FontWeight.Heavy)
-        Y1.TextSize = 22
-
-        textLabel(Y1)
-
-        y1, z1 = {
-            Parent = c1,
+        props = {
+            Parent = self,
             LayoutOrder = 1,
-        }, ctx.udim2
-        y1.Size = z1(0, 0, 1, 0)
-        y1.AutomaticSize = t
-        y1.Text = '/'
-        y1.TextSize = 13
-        y1.TextTransparency = 0.6
+        }
+        props.Size = UDim2.new(0, 0, 1, 0)
+        props.AutomaticSize = AutoSizeX
+        props.Text = '/'
+        props.TextSize = 13
+        props.TextTransparency = 0.6
 
-        textLabel(y1)
+        createLabel(props)
 
-        o1, z1 = {
-            Parent = c1,
+        btnProps = {
+            Parent = self,
             LayoutOrder = 2,
-        }, ctx.udim2
-        o1.Size = z1(0, 0, 1, 0)
-        o1.AutomaticSize = t
-        o1.Text = g1.Game or ''
-        o1.TextSize = 13
-        o1.TextTransparency = 0.3
-        o1.TextTruncate = atEnd
-        S1 = ctx.newInstance
-
-        _VX.setList(o1, 0, S1('UISizeConstraint', {
+        }
+        btnProps.Size = UDim2.new(0, 0, 1, 0)
+        btnProps.AutomaticSize = AutoSizeX
+        btnProps.Text = options2.Game or ''
+        btnProps.TextSize = 13
+        btnProps.TextTransparency = 0.3
+        btnProps.TextTruncate = TruncateAtEnd
+        btnProps[1] = newInstance('UISizeConstraint', {
             MaxSize = vector2New(170, 99),
-        }))
+        })
 
-        local P = textLabel(o1)
+        local label = createLabel(btnProps)
 
-        if g1.Version then
-            textLabel({
-                Parent = c1,
+        if options2.Version then
+            createLabel({
+                Parent = self,
                 LayoutOrder = 3,
-                Size = x(0, 20),
-                AutomaticSize = t,
-                Text = g1.Version,
-                FontFace = font6,
+                Size = fromOffset(0, 20),
+                AutomaticSize = AutoSizeX,
+                Text = options2.Version,
+                FontFace = FontBold,
                 TextSize = 11,
                 TextTransparency = 0.25,
-                TextXAlignment = center,
+                TextXAlignment = AlignCenterX,
                 BackgroundTransparency = 0.9,
-                D1(),
-                H1(0, 8),
+                createCorner(),
+                createPadding(0, 8),
             })
         end
 
-        local F1 = frame({
-            Size = x(7, 7),
-            BackgroundColor3 = L.sky,
-            D1(),
+        local props10 = createSolidFrame({
+            Size = fromOffset(7, 7),
+            BackgroundColor3 = Palette.sky,
+            createCorner(),
         })
 
-        X1, B1 = {
-            Size = x(0, 22),
-            AutomaticSize = t,
+        props9 = {
+            Size = fromOffset(0, 22),
+            AutomaticSize = AutoSizeX,
             TextSize = 11,
-            FontFace = font6,
-            TextColor3 = L.val,
+            FontFace = FontBold,
+            TextColor3 = Palette.val,
             LayoutOrder = 1,
-            TextTruncate = atEnd,
-        }, ctx.newInstance
-
-        _VX.setList(X1, 0, B1('UISizeConstraint', {
+            TextTruncate = TruncateAtEnd,
+        }
+        props9[1] = newInstance('UISizeConstraint', {
             MaxSize = vector2New(270, 99),
-        }))
+        })
 
-        local K1, Dq = textLabel(X1), ctx.createFrame
+        local label2, btnProps2 = createLabel(props9), createFrame
 
-        S1, G1 = {
-            Parent = c1,
+        props3 = {
+            Parent = self,
             LayoutOrder = 4,
-            Size = x(0, 22),
-            AutomaticSize = t,
+            Size = fromOffset(0, 22),
+            AutomaticSize = AutoSizeX,
             Visible = false,
             BackgroundTransparency = 0.9,
-            BackgroundColor3 = L.sky,
-        }, ctx.listLayout
+            BackgroundColor3 = Palette.sky,
+        }
+        props3[1], props3[2], props3[3], props3[4], props3[5] = createCorner(), createPadding(0, 10), createListLayout(6, nil, AlignCenterY, FillHorizontal), props10, label2
 
-        _VX.setList(S1, 0, D1(), H1(0, 10), G1(6, nil, center2, horizontal), F1, K1)
+        local props11 = createFrame(props3)
 
-        local Jq = Dq(S1)
+        window.Status = function(_self, statusText, statusKind)
+            local accentColor = getStatusStyle(statusKind)
 
-        t1.Status = function(Uq, aq, Hq)
-            Uq = Z1(Hq)
-            Jq.Visible = aq ~= nil and aq ~= ''
+            props11.Visible = statusText ~= nil and statusText ~= ''
 
-            if K1.Text == aq then
-                if F1.BackgroundColor3 == Uq then
+            if label2.Text == statusText then
+                if props10.BackgroundColor3 == accentColor then
                     return
                 end
             end
 
-            K1.Text = aq or ''
-            F1.BackgroundColor3 = Uq
-            Jq.BackgroundColor3 = Uq
+            label2.Text = statusText or ''
+            props10.BackgroundColor3 = accentColor
+            props11.BackgroundColor3 = accentColor
         end
 
-        if not g1.Game then
+        if not options2.Game then
             task.spawn(function()
-                local F1, F1, g1 = ctx.game, pcall(getService('MarketplaceService').GetProductInfo, getService('MarketplaceService'), ctx.game.PlaceId)
+                local current2, current3 = pcall(getService('MarketplaceService').GetProductInfo, getService('MarketplaceService'), game.PlaceId)
 
-                P.Text = F1 and g1 and g1.Name or ''
+                label.Text = current2 and current3 and current3.Name or ''
             end)
         end
 
-        G1, c1 = {
-            Parent = newInstance,
-            AnchorPoint = R,
-        }, ctx.udim2
-        G1.Position = c1(1, -10, 0.5, 0)
-        G1.Size = x(26, 26)
-        G1.BackgroundTransparency = 0.92
+        props6 = {
+            Parent = button,
+            AnchorPoint = RightCenterAnchor,
+        }
+        props6.Position = UDim2.new(1, -10, 0.5, 0)
+        props6.Size = fromOffset(26, 26)
+        props6.BackgroundTransparency = 0.92
+        props6[1], props6[2], props6[3] = createCorner(9), createStroke(0.86), createIcon('minus', 18)
+        self = createButton(props6)
 
-        _VX.setList(G1, 0, D1(9), J1(0.86), u('minus', 18))
+        bindPressScale(self)
 
-        c1 = textButton(G1)
+        props6 = {
+            Parent = button,
+            AnchorPoint = RightCenterAnchor,
+        }
+        props6.Position = UDim2.new(1, -44, 0.5, 0)
+        props6.Size = fromOffset(128, 26)
 
-        n1(c1)
+        local searchBox, button2 = createSearchBox(props6, 'Search'), createFrame
 
-        G1, y1 = {
-            Parent = newInstance,
-            AnchorPoint = R,
-        }, ctx.udim2
-        G1.Position = y1(1, -44, 0.5, 0)
-        G1.Size = x(128, 26)
+        props4 = {
+            Parent = props5,
+            Position = fromOffset(0, TopBarHeight + 1),
+        }
+        props4.Size = UDim2.new(0, SidebarWidth, 1, -TopBarHeight - 1)
+        props4.ClipsDescendants = true
+        props9 = {
+            Position = fromOffset(0, -16),
+        }
+        props9.Size = UDim2.new(1, 16, 1, 16)
+        props9.BackgroundTransparency = 0.95
+        props9[1] = createCorner(16)
+        props4[1] = createFrame(props9)
+        props9, btnProps2 = createFrame(props4), UDim2.new
 
-        local P, F1 = updateBackgroundAlpha(G1, 'Search'), ctx.createFrame
+        createDivider(props9, UDim2.new(1, -1, 0, 0), UDim2.new(0, 1, 1, 0))
 
-        B1, Dq = {
-            Parent = O1,
-            Position = x(0, N + 1),
-        }, ctx.udim2
-        B1.Size = Dq(0, S, 1, -N - 1)
-        B1.ClipsDescendants = true
-        y1, X1, G1 = ctx.createFrame, {
-            Position = x(0, -16),
-        }, ctx.udim2
-        X1.Size = G1(1, 16, 1, 16)
-        X1.BackgroundTransparency = 0.95
+        props6 = {
+            Parent = props9,
+            AnchorPoint = CenterAnchor,
+        }
+        props6.Position = UDim2.new(0.5, 0, 0, 29)
+        props6.Size = fromOffset(38, 38)
+        props6.BackgroundTransparency = 0.82
+        props6[1], props6[2] = createCorner(12), createStroke(0.68)
 
-        _VX.setList(X1, 0, D1(16))
-        _VX.setList(B1, 0, y1(X1))
+        local props12, newInstance2 = createFrame(props6), newInstance
+        local uiScale2 = newInstance('UIScale', {Parent = props12})
 
-        X1, Dq = F1(B1), ctx.udim2
-
-        V(X1, Dq(1, -1, 0, 0), ctx.udim2(0, 1, 1, 0))
-
-        S1, G1, o1 = ctx.createFrame, {
-            Parent = X1,
-            AnchorPoint = T,
-        }, ctx.udim2
-        G1.Position = o1(0.5, 0, 0, 29)
-        G1.Size = x(38, 38)
-        G1.BackgroundTransparency = 0.82
-
-        _VX.setList(G1, 0, D1(12), J1(0.68))
-
-        local g1, newInstance2 = S1(G1), ctx.newInstance
-        local Jq = newInstance2('UIScale', {Parent = g1})
-
-        S1, y1 = {
-            Parent = X1,
+        props3 = {
+            Parent = props9,
             ZIndex = 2,
-            Position = x(0, 8),
-        }, ctx.udim2
-        S1.Size = y1(1, 0, 1, -60)
-        S1.ScrollBarThickness = 0
-        y1 = ctx.listLayout
+            Position = fromOffset(0, 8),
+        }
+        props3.Size = UDim2.new(1, 0, 1, -60)
+        props3.ScrollBarThickness = 0
+        props3[1], props3[2] = createPadding(2, 0), createListLayout(4, AlignRightX)
 
-        _VX.setList(S1, 0, H1(2, 0), y1(4, center3))
+        local scrollFrame = createScrollFrame(props3)
 
-        local Uq = scrollingFrame(S1)
-
-        G1, Y1 = {
-            Parent = X1,
+        props6 = {
+            Parent = props9,
             AnchorPoint = vector2New(0.5, 1),
-        }, ctx.udim2
-        G1.Position = Y1(0.5, 0, 1, -10)
-        G1.Size = x(32, 32)
-        G1.Image = K(48)
-        G1.BackgroundTransparency = 0
-        G1.BackgroundColor3 = L.a2
+        }
+        props6.Position = UDim2.new(0.5, 0, 1, -10)
+        props6.Size = fromOffset(32, 32)
+        props6.Image = getAvatarThumb(48)
+        props6.BackgroundTransparency = 0
+        props6.BackgroundColor3 = Palette.a2
+        props6[1] = createCorner()
 
-        _VX.setList(G1, 0, D1())
-        e(G1)
+        createImage(props6)
 
-        S1, F1 = {
-            Parent = O1,
-            Position = x(S + 18, N + 9),
-        }, ctx.udim2
-        S1.Size = F1(1, -S - 36, 0, 26)
-        S1.FontFace = font6
-        S1.TextSize = 20
+        props3 = {
+            Parent = props5,
+            Position = fromOffset(SidebarWidth + 18, TopBarHeight + 9),
+        }
+        props3.Size = UDim2.new(1, -SidebarWidth - 36, 0, 26)
+        props3.FontFace = FontBold
+        props3.TextSize = 20
 
-        local aq, Hq = textLabel(S1), ctx.createFrame
+        local props13 = createLabel(props3)
 
-        newInstance2, G1 = {
-            Parent = O1,
-            Position = x(S, N + 41),
-        }, ctx.udim2
-        newInstance2.Size = G1(1, -S, 1, -N - 49)
+        newInstance2 = {
+            Parent = props5,
+            Position = fromOffset(SidebarWidth, TopBarHeight + 41),
+        }
+        newInstance2.Size = UDim2.new(1, -SidebarWidth, 1, -TopBarHeight - 49)
         newInstance2.ClipsDescendants = true
 
-        local kq = Hq(newInstance2)
+        local container = createFrame(newInstance2)
 
-        d1(newInstance, e1, function(rq)
-            local Cq, wq = workspace.CurrentCamera.ViewportSize, i1.AbsoluteSize
-            local Vq, Wq = Cq.X / 2 + wq.X / 2 - 90, Cq.Y / 2 + wq.Y / 2 - 60
+        bindSpringDrag(button, spring, function(param1)
+            local current2, bounds = workspace.CurrentCamera.ViewportSize, props2.AbsoluteSize
+            local current3, current4 = current2.X / 2 + bounds.X / 2 - 90, current2.Y / 2 + bounds.Y / 2 - 60
 
-            return vector2New(math.clamp(rq.X, -Vq, Vq), math.clamp(rq.Y, -Wq, Wq))
+            return vector2New(math.clamp(param1.X, -current3, current3), math.clamp(param1.Y, -current4, current4))
         end)
 
-        local rq = d1(u1, s1, function(s1)
-            local Cq = workspace.CurrentCamera.ViewportSize
+        local callbackFn = bindSpringDrag(props7, spring2, function(param1)
+            local current2 = workspace.CurrentCamera.ViewportSize
 
-            return vector2New(math.clamp(s1.X, 30, Cq.X - 30), math.clamp(s1.Y, 30, Cq.Y - 30))
+            return vector2New(math.clamp(param1.X, 30, current2.X - 30), math.clamp(param1.Y, 30, current2.Y - 30))
         end)
 
-        Y1, newInstance = {
-            Parent = O1,
+        props8 = {
+            Parent = props5,
             AnchorPoint = vector2New(1, 1),
-        }, ctx.udim2
-        Y1.Position = newInstance(1, -3, 1, -3)
-        Y1.Size = x(22, 22)
-        Y1.ZIndex = 6
-        X1, newInstance2 = textButton(Y1), {
+        }
+        props8.Position = UDim2.new(1, -3, 1, -3)
+        props8.Size = fromOffset(22, 22)
+        props8.ZIndex = 6
+        props9, newInstance2 = createButton(props8), {
             {14, 11},
             {7, 16},
         }
 
-        for s1, s1 in ipairs(newInstance2)do
-            frame({
-                Parent = X1,
-                AnchorPoint = T,
-                Position = x(s1[2], s1[2]),
-                Size = x(s1[1], 2),
+        for _, item in ipairs(newInstance2) do
+            createSolidFrame({
+                Parent = props9,
+                AnchorPoint = CenterAnchor,
+                Position = fromOffset(item[2], item[2]),
+                Size = fromOffset(item[1], 2),
                 Rotation = -45,
                 BackgroundTransparency = 0.4,
                 ZIndex = 6,
-                D1(),
+                createCorner(),
             })
         end
 
-        G(X1.InputBegan, function(s1)
-            if not (V1(s1)) then
+        connectSignal(props9.InputBegan, function(input)
+            if not (isPrimaryPointer(input)) then
                 return
             end
 
-            local position = s1.Position
-            local Cq = vector2New(i1.Size.X.Offset, i1.Size.Y.Offset)
-            local wq, Vq = uIScale.Scale
-            local Wq, Iq = e1.p - Cq * wq / 2
+            local position = input.Position
+            local vec = vector2New(props2.Size.X.Offset, props2.Size.Y.Offset)
+            local current2, current3 = uIScale.Scale
+            local current4, new = spring.p - vec * current2 / 2
 
-            Iq, i1.AnchorPoint, i1.Position = ctx.udim2, vector2New(), ctx.udim2(0.5, Wq.X, 0.5, Wq.Y)
+            new, props2.AnchorPoint, props2.Position = UDim2.new, vector2New(), UDim2.new(0.5, current4.X, 0.5, current4.Y)
 
-            local function Iq(vq)
-                if vq ~= s1 then
-                    local hq = ctx.Enum
-
-                    if vq.UserInputType ~= hq.UserInputType.MouseMovement then
+            local function updateView3(param1)
+                if param1 ~= input then
+                    if param1.UserInputType ~= Enum.UserInputType.MouseMovement then
                         return
                     end
                 end
 
-                local hq, nq = (vq.Position - position) / wq, workspace.CurrentCamera.ViewportSize / wq
+                local current5, current6 = (param1.Position - position) / current2, workspace.CurrentCamera.ViewportSize / current2
 
-                i1.Size = x(math.clamp(Cq.X + hq.X, m1, math.max(m1, nq.X - 40)), math.clamp(Cq.Y + hq.Y, b1, math.max(b1, nq.Y - 20)))
+                props2.Size = fromOffset(math.clamp(vec.X + current5.X, count, math.max(count, current6.X - 40)), math.clamp(vec.Y + current5.Y, count2, math.max(count2, current6.Y - 20)))
             end
 
-            local m1 = UserInputService.InputChanged:Connect(Iq)
+            local current5 = UserInputService.InputChanged:Connect(updateView3)
 
-            local function b1(K1)
-                local Cq, Iq = K1 == s1
+            local function updateView4(param1)
+                local isMatch, isMatch2 = param1 == input
 
-                if Cq then
-                    Iq = Cq
+                if isMatch then
+                    isMatch2 = isMatch
                 else
-                    local s1
-
-                    s1, Iq = ctx.Enum, K1.UserInputType == ctx.Enum.UserInputType.MouseButton1
+                    isMatch2 = param1.UserInputType == Enum.UserInputType.MouseButton1
                 end
-                if Iq then
-                    m1:Disconnect()
-                    Vq:Disconnect()
+                if isMatch2 then
+                    current5:Disconnect()
+                    current3:Disconnect()
 
-                    Cq = Wq + vector2New(i1.Size.X.Offset, i1.Size.Y.Offset) * wq / 2
-                    i1.AnchorPoint = T
-                    e1.t = Cq
-                    e1.p = Cq
+                    isMatch = current4 + vector2New(props2.Size.X.Offset, props2.Size.Y.Offset) * current2 / 2
+                    props2.AnchorPoint = CenterAnchor
+                    spring.t = isMatch
+                    spring.p = isMatch
 
-                    e1.a(Cq)
+                    spring.a(isMatch)
                 end
             end
 
-            Vq = UserInputService.InputEnded:Connect(b1)
+            current3 = UserInputService.InputEnded:Connect(updateView4)
         end)
 
-        local m1 = 0
+        local count3 = 0
 
-        t1.Show = function(b1, e1)
-            t1.open = e1
+        window.Show = function(self2, visible)
+            window.open = visible
 
-            m1 += 1
+            count3 += 1
 
-            local s1 = m1
+            local current2 = count3
 
-            b1 = E1()
+            self2 = updateView()
 
-            if O1.Parent ~= x1 then
-                local E1
+            if props5.Parent ~= canvas then
+                local new
 
-                E1, O1.Position, O1.Size = ctx.udim2, x(3, 3), ctx.udim2(1, -6, 1, -6)
-                O1.Parent = x1
-                x1.GroupTransparency = e1 and 1 or 0
+                new, props5.Position, props5.Size = UDim2.new, fromOffset(3, 3), UDim2.new(1, -6, 1, 
+-6)
+                props5.Parent = canvas
+                canvas.GroupTransparency = visible and 1 or 0
             end
 
-            uIScale.Scale = b1
-            x1.Visible = true
-            i1.Visible = true
+            uIScale.Scale = self2
+            canvas.Visible = true
+            props2.Visible = true
 
-            local E1, K1 = t1.dim, {}
+            local dim, stateMap = window.dim, {}
 
-            K1.BackgroundTransparency = e1 and 1 - t1.dz or 1
+            stateMap.BackgroundTransparency = visible and 1 - window.dz or 1
 
-            k1(E1, K1, 0.3)
-
-            E1, b1 = ctx.Enum, ctx.Enum
-
-            k1(x1, {
-                GroupTransparency = e1 and 0 or 1,
-            }, e1 and 0.28 or 0.18, ctx.Enum.EasingStyle.Sine, ctx.Enum.EasingDirection.Out)
-            task.delay(e1 and 0.3 or 0.2, function()
-                if m1 ~= s1 then
+            tween(dim, stateMap, 0.3)
+            tween(canvas, {
+                GroupTransparency = visible and 0 or 1,
+            }, visible and 0.28 or 0.18, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+            task.delay(visible and 0.3 or 0.2, function()
+                if count3 ~= current2 then
                     return
                 end
 
-                x1.Visible = false
+                canvas.Visible = false
+                props5.Position = UDim2.new()
+                props5.Size = FullSize
+                props5.Parent = props2
 
-                local m1 = ctx.udim2
-
-                O1.Position = m1()
-                O1.Size = _
-                O1.Parent = i1
-
-                if not e1 then
-                    i1.Visible = false
+                if not visible then
+                    props2.Visible = false
                 end
             end)
 
-            if u1.Visible then
-                j1.Scale = 0.85
+            if props7.Visible then
+                uiScale.Scale = 0.85
 
-                k1(j1, {Scale = 1}, 0.3, back)
+                tween(uiScale, {Scale = 1}, 0.3, EaseBack)
             else
-                u1.Visible = true
-                j1.Scale = 0
+                props7.Visible = true
+                uiScale.Scale = 0
 
-                k1(j1, {Scale = 1}, 0.4, back)
+                tween(uiScale, {Scale = 1}, 0.4, EaseBack)
             end
         end
 
-        v1(c1, function()
-            t1:Show(false)
+        onClick(self, function()
+            window:Show(false)
         end)
-        v1(u1, function()
-            if not (rq()) then
-                t1:Show(not t1.open)
+        onClick(props7, function()
+            if not (callbackFn()) then
+                window:Show(not window.open)
             end
         end)
-        G(UserInputService.InputBegan, function(m1, b1)
-            if not b1 then
-                if m1.KeyCode == t1.Key then
-                    t1:Show(not t1.open)
+        connectSignal(UserInputService.InputBegan, function(input, gameProcessed)
+            if not gameProcessed then
+                if input.KeyCode == window.Key then
+                    window:Show(not window.open)
                 end
             end
         end)
 
-        local m1 = textButton({
-            Parent = O1,
-            Size = _,
+        local button3 = createButton({
+            Parent = props5,
+            Size = FullSize,
             BackgroundColor3 = color3FromRGB(5, 6, 16),
             ZIndex = 20,
             Visible = false,
             ClipsDescendants = true,
-            D1(16),
+            createCorner(16),
         })
 
-        Dq, c1 = {Parent = m1}, ctx.topRight
-        Dq.AnchorPoint = c1
-        o1 = ctx.udim2
-        Dq.Position = o1(1, 420, 0, 6)
-        Hq = ctx.udim2
-        Dq.Size = Hq(0, 390, 1, -12)
-        Dq.BackgroundTransparency = 0.02
-        Dq.BackgroundColor3 = L.pn
+        btnProps2 = {Parent = button3}
+        btnProps2.AnchorPoint = TopRightAnchor
+        btnProps2.Position = UDim2.new(1, 420, 0, 6)
+        btnProps2.Size = UDim2.new(0, 390, 1, -12)
+        btnProps2.BackgroundTransparency = 0.02
+        btnProps2.BackgroundColor3 = Palette.pn
+        btnProps2[1], btnProps2[2] = createCorner(14), createStroke(0.84)
 
-        _VX.setList(Dq, 0, D1(14), J1(0.84))
+        local props14 = createButton(btnProps2)
 
-        local b1 = textButton(Dq)
+        labelProps = {
+            Parent = props14,
+            Position = fromOffset(18, 14),
+        }
+        labelProps.Size = UDim2.new(1, -80, 0, 20)
+        labelProps.FontFace = FontBold
+        labelProps.TextSize = 15
 
-        z1, c1 = {
-            Parent = b1,
-            Position = x(18, 14),
-        }, ctx.udim2
-        z1.Size = c1(1, -80, 0, 20)
-        z1.FontFace = font6
-        z1.TextSize = 15
+        local label3 = createLabel(labelProps)
 
-        local i1 = textLabel(z1)
+        props8 = {
+            Parent = props14,
+            Position = fromOffset(18, 34),
+        }
+        props8.Size = UDim2.new(1, -80, 0, 14)
+        props8.TextSize = 11
+        props8.TextTransparency = 0.32
 
-        Y1, Hq = {
-            Parent = b1,
-            Position = x(18, 34),
-        }, ctx.udim2
-        Y1.Size = Hq(1, -80, 0, 14)
-        Y1.TextSize = 11
-        Y1.TextTransparency = 0.32
+        local label4, btnProps3, new = createLabel(props8), {Parent = props14}, TopRightAnchor
 
-        local z1, x1, E1 = textLabel(Y1), {Parent = b1}, ctx.topRight
+        btnProps3.AnchorPoint = TopRightAnchor
+        btnProps3.Position = UDim2.new(1, -12, 0, 10)
+        btnProps3.Size = fromOffset(40, 40)
+        btnProps3.BackgroundTransparency = 0.92
+        btnProps3[1], btnProps3[2] = createCorner(12), createIcon('x', 22)
+        button2, btnProps2, new = createButton(btnProps3), {
+            Parent = props14,
+            Position = fromOffset(14, 60),
+        }, UDim2.new
+        btnProps2.Size = UDim2.new(1, -28, 0, 40)
+        btnProps2.BackgroundTransparency = 0.93
 
-        x1.AnchorPoint = E1
-        Dq = ctx.udim2
-        x1.Position = Dq(1, -12, 0, 10)
-        x1.Size = x(40, 40)
-        x1.BackgroundTransparency = 0.92
+        local searchBox2 = createSearchBox(btnProps2, 'Filter')
 
-        _VX.setList(x1, 0, D1(12), u('x', 22))
+        props8, props6, btnProps, props, props4 = {
+            Parent = props14,
+            Position = fromOffset(12, 108),
+        }, createPadding(3), newInstance, {}, UDim2.new
+        props.CellSize = UDim2.new(0.5, -5, 0, 44)
+        props.CellPadding = fromOffset(8, 8)
+        props.SortOrder = Enum.SortOrder.LayoutOrder
+        props8[1], props8[2] = props6, newInstance('UIGridLayout', props)
 
-        F1, Dq, E1 = textButton(x1), {
-            Parent = b1,
-            Position = x(14, 60),
-        }, ctx.udim2
-        Dq.Size = E1(1, -28, 0, 40)
-        Dq.BackgroundTransparency = 0.93
+        local props15 = createScrollFrame(props8)
 
-        local u1 = updateBackgroundAlpha(Dq, 'Filter')
-
-        Y1, G1, o1, y1, B1 = {
-            Parent = b1,
-            Position = x(12, 108),
-        }, H1(3), ctx.newInstance, {}, ctx.udim2
-        y1.CellSize = B1(0.5, -5, 0, 44)
-        y1.CellPadding = x(8, 8)
-        c1 = ctx.Enum
-        y1.SortOrder = c1.SortOrder.LayoutOrder
-
-        _VX.setList(Y1, 0, G1, o1('UIGridLayout', y1))
-
-        local j1, e1 = scrollingFrame(Y1), ctx.createFrame
-
-        c1, Hq = {
-            Parent = b1,
+        self = {
+            Parent = props14,
             AnchorPoint = vector2New(0, 1),
-        }, ctx.udim2
-        c1.Position = Hq(0, 14, 1, -14)
-        o1 = ctx.udim2
-        c1.Size = o1(1, -28, 0, 44)
+        }
+        self.Position = UDim2.new(0, 14, 1, -14)
+        self.Size = UDim2.new(1, -28, 0, 44)
 
-        local o1 = e1(c1)
+        local container2 = createFrame(self)
 
-        B1, newInstance, E1 = T1(o1, 'Default', 0, 3), T1(o1, 'Clear', 1, 3), T1(o1, 'Select all', 2, 3, true)
-        -- Registers Activated signal callback(s)
-        t1.Dialog = function(c1, s1)
-            local Y1 = s1 or {}
+        props4, button, new = createDialogButton(container2, 'Default', 0, 3), createDialogButton(container2, 'Clear', 1, 3), createDialogButton(container2, 'Select all', 2, 3, true)
+        window.Dialog = function(_self, dialogOpts)
+            local current2 = dialogOpts or {}
 
-            if t1.dlg then
-                t1.dlg.Close()
+            if window.dlg then
+                window.dlg.Close()
             end
-            if not t1.open then
-                t1:Show(true)
+            if not window.open then
+                window:Show(true)
             end
 
-            local s1, K1 = Z1(Y1.Kind)
-
-            c1 = ctx.newInstance
-
-            local Dq = c1('UIScale', {Scale = 0.9})
-            local c1 = textButton({
-                Parent = O1,
-                Size = _,
+            local accentColor, iconName = getStatusStyle(current2.Kind)
+            local uiScale3 = newInstance('UIScale', {Scale = 0.9})
+            local button4 = createButton({
+                Parent = props5,
+                Size = FullSize,
                 BackgroundColor3 = color3FromRGB(5, 6, 16),
                 ZIndex = 30,
-                D1(16),
+                createCorner(16),
             })
-            local Hq, rq, Cq, wq, Vq = {
-                Parent = c1,
-                AnchorPoint = T,
-                Position = Z,
-                Size = x(400, 0),
-                AutomaticSize = g,
+            local props16, corner, stroke, padding, current3 = {
+                Parent = button4,
+                AnchorPoint = CenterAnchor,
+                Position = CenterPos,
+                Size = fromOffset(400, 0),
+                AutomaticSize = AutoSizeY,
                 BackgroundTransparency = 0.02,
-                BackgroundColor3 = L.pn,
-            }, D1(18), J1(0.8), H1(22), ctx.listLayout
-            local Wq, Iq, vq, hq = Vq(16), ctx.createFrame, {}, ctx.udim2
+                BackgroundColor3 = Palette.pn,
+            }, createCorner(18), createStroke(0.8), createPadding(22), createListLayout
+            local listLayout, props17, props18, _unused = createListLayout(16), createFrame, {}, UDim2.new
 
-            vq.Size = hq(1, 0, 0, 46)
-            Vq = ctx.createFrame
+            props18.Size = UDim2.new(1, 0, 0, 46)
 
-            local hq, nq, Mq = Vq({
-                Size = x(46, 46),
+            local container3, labelProps2, _unused2 = createFrame({
+                Size = fromOffset(46, 46),
                 BackgroundTransparency = 0.8,
-                BackgroundColor3 = s1,
-                D1(14),
-                u(Y1.Icon or K1, 24, s1),
+                BackgroundColor3 = accentColor,
+                createCorner(14),
+                createIcon(current2.Icon or iconName, 24, accentColor),
             }), {
-                Position = x(60, 0),
-            }, ctx.udim2
+                Position = fromOffset(60, 0),
+            }, UDim2.new
 
-            nq.Size = Mq(1, -60, 1, 0)
-            nq.Text = Y1.Title or ''
-            nq.FontFace = font6
-            nq.TextSize = 17
-            nq.TextWrapped = true
+            labelProps2.Size = UDim2.new(1, -60, 1, 0)
+            labelProps2.Text = current2.Title or ''
+            labelProps2.FontFace = FontBold
+            labelProps2.TextSize = 17
+            labelProps2.TextWrapped = true
+            props18[1], props18[2] = container3, createLabel(labelProps2)
+            props16[1], props16[2], props16[3], props16[4], props16[5], props16[6] = corner, stroke, padding, listLayout, uiScale3, createFrame(props18)
 
-            _VX.setList(vq, 0, hq, textLabel(nq))
-            _VX.setList(Hq, 0, rq, Cq, wq, Wq, Dq, Iq(vq))
+            local button5 = createButton(props16)
 
-            local K1 = textButton(Hq)
-
-            if Y1.Text then
-                textLabel({
-                    Parent = K1,
+            if current2.Text then
+                createLabel({
+                    Parent = button5,
                     LayoutOrder = 1,
-                    Size = f,
-                    AutomaticSize = g,
-                    Text = Y1.Text,
+                    Size = FullWidth,
+                    AutomaticSize = AutoSizeY,
+                    Text = current2.Text,
                     TextSize = 13,
                     TextTransparency = 0.25,
                     TextWrapped = true,
                 })
             end
 
-            Wq, Iq, rq = ctx.createFrame, {
-                Parent = K1,
+            props17 = {
+                Parent = button5,
                 LayoutOrder = 2,
-            }, ctx.udim2
-            Iq.Size = rq(1, 0, 0, 42)
+            }
+            props17.Size = UDim2.new(1, 0, 0, 42)
 
-            local Hq, Cq = Wq(Iq), {}
+            local container4, dialog = createFrame(props17), {}
 
-            -- Registers Completed signal callback(s)
-            Cq.Close = function(Wq)
-                if t1.dlg == Cq then
-                    t1.dlg = nil
+            dialog.Close = function(self2)
+                if window.dlg == dialog then
+                    window.dlg = nil
                 end
 
-                k1(Dq, {Scale = 0.92}, 0.18)
+                tween(uiScale3, {Scale = 0.92}, 0.18)
 
-                local vq, nq = k1(c1, {BackgroundTransparency = 1}, 0.2), function()
-                    c1:Destroy()
+                local activeTween, callbackFn2 = tween(button4, {BackgroundTransparency = 1}, 0.2), function(
+                )
+                    button4:Destroy()
                 end
 
-                vq.Completed:Connect(nq)
+                activeTween.Completed:Connect(callbackFn2)
 
-                K1.Visible = false
+                button5.Visible = false
 
-                w1(Wq)
+                safeCall(self2)
             end
-            hq = Y1.Buttons or {
+            container3 = current2.Buttons or {
                 {
                     'OK',
                 },
             }
 
-            for index, Wq in ipairs(hq)do
-                Vq, Iq, wq = Wq[1], index - 1, #hq
-                s1, rq = T1(Hq, Vq, Iq, wq, Wq[3]), function()
-                    if I1() then
-                        Cq.Close(Wq[2])
+            for index, item in ipairs(container3) do
+                current3, props17, padding = item[1], index - 1, #container3
+                accentColor, corner = createDialogButton(container4, current3, props17, padding, item[3]), function(
+                )
+                    if isCleanTap() then
+                        dialog.Close(item[2])
                     end
                 end
 
-                s1.Activated:Connect(rq)
+                accentColor.Activated:Connect(corner)
             end
 
-            local function s1()
-                if Y1.Cancel ~= false then
-                    Cq.Close(Y1.Cancel)
+            local function updateView3()
+                if current2.Cancel ~= false then
+                    dialog.Close(current2.Cancel)
                 end
             end
 
-            c1.Activated:Connect(s1)
+            button4.Activated:Connect(updateView3)
 
-            t1.dlg = Cq
+            window.dlg = dialog
 
-            k1(c1, {BackgroundTransparency = 0.45}, 0.2)
-            k1(Dq, {Scale = 1}, 0.35, back)
+            tween(button4, {BackgroundTransparency = 0.45}, 0.2)
+            tween(uiScale3, {Scale = 1}, 0.35, EaseBack)
 
-            return Cq
+            return dialog
         end
 
-        local function c1(s1, Y1, K1, Dq, Hq, rq)
-            t1:Dialog({
-                Title = s1,
-                Text = Y1,
-                Kind = K1,
+        local function updateView3(param1, param2, param3, param4, param5, param6)
+            window:Dialog({
+                Title = param1,
+                Text = param2,
+                Kind = param3,
                 Buttons = {
                     {
-                        rq or 'Cancel',
+                        param6 or 'Cancel',
                     },
-                    {Dq, Hq, true},
+                    {param4, param5, true},
                 },
             })
         end
-        local function s1()
-            local Y1 = ctx.Venyx
-
-            Y1:Save()
-
-            local Y1, state = ctx.Venyx, ctx.State
-
-            Y1:Notify('Config saved', state.Active, 'ok')
+        local function updateView4()
+            Venyx:Save()
+            Venyx:Notify('Config saved', State.Active, 'ok')
         end
-        local function Y1(K1, Dq)
-            local Hq = ctx.Venyx
-
-            Hq:Notify(Dq, K1 or '', pcall(setclipboard, K1) and 'ok' or 'err')
+        local function updateView5(param1, param2)
+            Venyx:Notify(param2, param1 or '', pcall(setclipboard, param1) and 'ok' or 'err')
         end
 
-        n1(F1)
+        bindPressScale(button2)
 
-        local K1 = {
+        local items2 = {
             bt = {},
             sel = {},
         }
 
-        local function Dq()
-            K1.open = false
+        local function updateView6()
+            items2.open = false
 
-            k1(m1, {BackgroundTransparency = 1}, 0.22)
+            tween(button3, {BackgroundTransparency = 1}, 0.22)
 
-            local Hq, rq = {}, ctx.udim2
+            local props16, current2 = {}
 
-            Hq.Position = rq(1, 540, 0, 6)
-            rq = ctx.Enum
+            props16.Position = UDim2.new(1, 540, 0, 6)
+            current2 = Enum
 
-            C1(k1(b1, Hq, 0.28, quint, rq.EasingDirection.In), m1, function()
-                return K1.open
+            hideOnTweenDone(tween(props14, props16, 0.28, EaseQuint, current2.EasingDirection.In), button3, function(
+            )
+                return items2.open
             end)
         end
-        local function Hq()
-            for rq, Cq in next, K1.bt do
-                local wq = K1.sel[rq] ~= nil
+        local function updateView7()
+            for key, value in next, items2.bt do
+                local isMatch = items2.sel[key] ~= nil
 
-                k1(Cq[1], {
-                    BackgroundTransparency = wq and 0.72 or 0.93,
-                    BackgroundColor3 = wq and L.a1 or L.wh,
+                tween(value[1], {
+                    BackgroundTransparency = isMatch and 0.72 or 0.93,
+                    BackgroundColor3 = isMatch and Palette.a1 or Palette.wh,
                 }, 0.18)
-                k1(Cq[2], {
-                    Transparency = wq and 0.2 or 0.82,
-                    Color = wq and L.a1:Lerp(L.wh, 0.35) or L.wh,
+                tween(value[2], {
+                    Transparency = isMatch and 0.2 or 0.82,
+                    Color = isMatch and Palette.a1:Lerp(Palette.wh, 0.35) or Palette.wh,
                 }, 0.18)
 
-                local rq, Vq = Cq[3], {}
+                local current2, props16 = value[3], {}
 
-                Vq.ImageTransparency = wq and 0 or 1
+                props16.ImageTransparency = isMatch and 0 or 1
 
-                k1(rq, Vq, 0.18)
+                tween(current2, props16, 0.18)
             end
         end
-        local function rq()
-            Hq()
+        local function updateView8()
+            updateView7()
 
-            local Cq = {}
+            local list = {}
 
-            for wq, wq in ipairs(K1.o)do
-                if K1.sel[wq] then
-                    Cq[#Cq + 1] = wq
+            for _, item in ipairs(items2.o) do
+                if items2.sel[item] then
+                    list[#list + 1] = item
                 end
             end
 
-            w1(K1.d, Cq)
+            safeCall(items2.d, list)
         end
 
-        t1.Sync = function(Cq, Cq)
-            if K1.open then
-                if not (K1.ob == Cq) then
+        window.Sync = function(_self, control)
+            if items2.open then
+                if not (items2.ob == control) then
                     return
                 end
             else
                 return
             end
 
-            K1.sel = {}
+            items2.sel = {}
 
-            for wq, wq in ipairs(Cq.Multi and Cq.Value or {
-                Cq.Value,
-            })do
-                K1.sel[wq] = true
+            for _, item in ipairs(control.Multi and control.Value or {
+                control.Value,
+            }) do
+                items2.sel[item] = true
             end
 
-            Hq()
+            updateView7()
         end
-        t1.Pick = function(Cq, wq, Vq, Wq, Iq, vq, hq, nq)
-            K1.ob = nq
-            i1.Text = wq
-            z1.Text = Iq and 'Pick any' or 'Pick one'
-            u1.Text = ''
+        window.Pick = function(
+            self2,
+            title,
+            optionsList,
+            currentVal,
+            isMulti,
+            onPick,
+            defaultVal,
+            control
+        )
+            items2.ob = control
+            label3.Text = title
+            label4.Text = isMulti and 'Pick any' or 'Pick one'
+            searchBox2.Text = ''
 
-            Q1(j1)
+            clearGuiObjects(props15)
 
-            wq = hq or {}
-            K1.bt = {}
-            K1.sel = {}
-            K1.d = vq
-            K1.o = {}
-            K1.def = wq
+            title = defaultVal or {}
+            items2.bt = {}
+            items2.sel = {}
+            items2.d = onPick
+            items2.o = {}
+            items2.def = title
 
-            for z1, z1 in ipairs(Iq and Wq or {Wq})do
-                K1.sel[z1] = true
+            for _, item in ipairs(isMulti and currentVal or {currentVal}) do
+                items2.sel[item] = true
             end
 
-            Wq, nq = type(Vq[1]) == 'table'
-            nq, j1:FindFirstChildOfClass('UIGridLayout').CellSize = ctx.udim2, ctx.udim2(0.5, -5, 0, Wq and 54 or 44)
-            nq = ctx.udim2
-            b1.Size = nq(0, Wq and 500 or 390, 1, -12)
-            wq = ipairs
+            currentVal, control = type(optionsList[1]) == 'table'
+            control, props15:FindFirstChildOfClass('UIGridLayout').CellSize = UDim2.new, UDim2.new(0.5, 
+-5, 0, currentVal and 54 or 44)
+            props14.Size = UDim2.new(0, currentVal and 500 or 390, 1, -12)
 
-            for z1, i1 in wq(Vq)do
-                local wq = Wq and i1.v or i1
+            for index, item2 in ipairs(optionsList) do
+                local current2 = currentVal and item2.v or item2
 
-                K1.o[z1] = wq
-                hq, nq = J1(0.82), ctx.createFrame
-                Cq = nq({
-                    Parent = j1,
-                    LayoutOrder = z1,
+                items2.o[index] = current2
+                defaultVal, control = createStroke(0.82), createFrame
+                self2 = createFrame({
+                    Parent = props15,
+                    LayoutOrder = index,
                 })
-                z1 = textButton({
-                    Parent = Cq,
-                    AnchorPoint = T,
-                    Position = Z,
-                    Size = _,
+                index = createButton({
+                    Parent = self2,
+                    AnchorPoint = CenterAnchor,
+                    Position = CenterPos,
+                    Size = FullSize,
                     BackgroundTransparency = 0.93,
-                    D1(13),
-                    hq,
+                    createCorner(13),
+                    defaultVal,
                 })
 
-                if Wq then
-                    local Vq, Mq, Aq, dq, Lq, lq = ctx.createFrame, {
-                        Parent = z1,
-                        Position = x(5, 5),
-                        Size = x(44, 44),
+                if currentVal then
+                    local container3, props16, props17, stroke, labelProps2, labelProps3 = createFrame, {
+                        Parent = index,
+                        Position = fromOffset(5, 5),
+                        Size = fromOffset(44, 44),
                         BackgroundTransparency = 0.72,
-                        BackgroundColor3 = i1.col or L.a1,
-                    }, D1(12), J1(0.6, i1.col), {
-                        AnchorPoint = T,
-                        Position = Z,
-                    }, ctx.udim2
+                        BackgroundColor3 = item2.col or Palette.a1,
+                    }, createCorner(12), createStroke(0.6, item2.col), {
+                        AnchorPoint = CenterAnchor,
+                        Position = CenterPos,
+                    }, UDim2.new
 
-                    Lq.Size = lq(1, 2, 1, 2)
-                    Lq.Image = i1.img or ''
-                    lq = ctx.Enum
-                    Lq.ScaleType = lq.ScaleType.Fit
+                    labelProps2.Size = UDim2.new(1, 2, 1, 2)
+                    labelProps2.Image = item2.img or ''
+                    labelProps2.ScaleType = Enum.ScaleType.Fit
+                    props16[1], props16[2], props16[3] = props17, stroke, rawImageLabel(labelProps2)
 
-                    _VX.setList(Mq, 0, Aq, dq, imageLabel(Lq))
-                    Vq(Mq)
+                    createFrame(props16)
 
-                    lq, dq = {
-                        Parent = z1,
-                        Position = x(56, 3),
-                    }, ctx.udim2
-                    lq.Size = dq(1, -60, 0, 28)
-                    lq.Text = i1.t or tostring(wq)
-                    lq.FontFace = font5
-                    lq.TextSize = 17
-                    lq.TextTruncate = atEnd
+                    labelProps3 = {
+                        Parent = index,
+                        Position = fromOffset(56, 3),
+                    }
+                    labelProps3.Size = UDim2.new(1, -60, 0, 28)
+                    labelProps3.Text = item2.t or tostring(current2)
+                    labelProps3.FontFace = FontExtraBold
+                    labelProps3.TextSize = 17
+                    labelProps3.TextTruncate = TruncateAtEnd
 
-                    textLabel(lq)
+                    createLabel(labelProps3)
 
-                    Mq, Aq, lq = ctx.createFrame, {
-                        Parent = z1,
-                        Position = x(57, 32),
-                    }, ctx.udim2
-                    Aq.Size = lq(1, -90, 0, 17)
-                    Aq.ClipsDescendants = true
-                    dq = ctx.listLayout
-
-                    _VX.setList(Aq, 0, dq(6, nil, center2, horizontal))
-
-                    Vq = Mq(Aq)
-                    Mq, Lq = {Parent = Vq}, ctx.udim2
-                    Mq.Size = Lq(0, 0, 1, 0)
-                    Mq.AutomaticSize = t
-                    Mq.Text = (i1.sub or ''):upper()
-                    Mq.FontFace = font3
-                    Mq.TextSize = 12.5
-                    Mq.TextColor3 = i1.grad and L.wh or i1.col or L.val
-                    Aq = ctx.newInstance
-
-                    _VX.setList(Mq, 0, Aq('UIStroke', {
+                    props17, labelProps3 = {
+                        Parent = index,
+                        Position = fromOffset(57, 32),
+                    }, UDim2.new
+                    props17.Size = UDim2.new(1, -90, 0, 17)
+                    props17.ClipsDescendants = true
+                    stroke = createListLayout
+                    props17[1] = createListLayout(6, nil, AlignCenterY, FillHorizontal)
+                    container3 = createFrame(props17)
+                    props16, labelProps2 = {Parent = container3}, UDim2.new
+                    props16.Size = UDim2.new(0, 0, 1, 0)
+                    props16.AutomaticSize = AutoSizeX
+                    props16.Text = (item2.sub or ''):upper()
+                    props16.FontFace = FontDisplay
+                    props16.TextSize = 12.5
+                    props16.TextColor3 = item2.grad and Palette.wh or item2.col or Palette.val
+                    props17 = newInstance
+                    props16[1] = newInstance('UIStroke', {
                         Thickness = 1.2,
                         Color = color3FromRGB(0, 0, 0),
-                    }))
+                    })
 
-                    local Aq = textLabel(Mq)
+                    local label5 = createLabel(props16)
 
-                    if i1.grad then
-                        i1.grad:Clone().Parent = Aq
+                    if item2.grad then
+                        item2.grad:Clone().Parent = label5
                     end
-                    if i1.note then
-                        Lq, Mq = {
-                            Parent = Vq,
+                    if item2.note then
+                        labelProps2, props16 = {
+                            Parent = container3,
                             LayoutOrder = 1,
-                        }, ctx.udim2
-                        Lq.Size = Mq(1, -6, 1, 0)
-                        Lq.Text = i1.note
-                        Lq.FontFace = font6
-                        Lq.TextSize = 12.5
-                        Lq.RichText = true
-                        Lq.TextTruncate = atEnd
-                        dq = ctx.newInstance
-
-                        _VX.setList(Lq, 0, dq('UIStroke', {
+                        }, UDim2.new
+                        labelProps2.Size = UDim2.new(1, -6, 1, 0)
+                        labelProps2.Text = item2.note
+                        labelProps2.FontFace = FontBold
+                        labelProps2.TextSize = 12.5
+                        labelProps2.RichText = true
+                        labelProps2.TextTruncate = TruncateAtEnd
+                        stroke = newInstance
+                        labelProps2[1] = newInstance('UIStroke', {
                             Thickness = 1.2,
                             Color = color3FromRGB(0, 0, 0),
-                        }))
+                        })
 
-                        local Vq = textLabel(Lq)
+                        local props18 = createLabel(labelProps2)
 
-                        local function Mq()
-                            local dq = ctx.udim2
-
-                            Vq.Size = dq(1, -Aq.AbsoluteSize.X - 6, 1, 0)
+                        local function updateView9()
+                            props18.Size = UDim2.new(1, -label5.AbsoluteSize.X - 6, 1, 0)
                         end
 
-                        Aq:GetPropertyChangedSignal('AbsoluteSize'):Connect(Mq)
-                        Mq()
+                        label5:GetPropertyChangedSignal('AbsoluteSize'):Connect(updateView9)
+                        updateView9()
                     end
                 else
-                    local Vq, Mq = {
-                        Parent = z1,
-                        Position = x(14, 0),
-                    }, ctx.udim2
+                    local labelProps2, _unused = {
+                        Parent = index,
+                        Position = fromOffset(14, 0),
+                    }, UDim2.new
 
-                    Vq.Size = Mq(1, -40, 1, 0)
-                    Vq.Text = tostring(wq)
-                    Vq.FontFace = font6
-                    Vq.TextSize = 12
-                    Vq.TextWrapped = true
-                    Vq.LineHeight = 0.95
+                    labelProps2.Size = UDim2.new(1, -40, 1, 0)
+                    labelProps2.Text = tostring(current2)
+                    labelProps2.FontFace = FontBold
+                    labelProps2.TextSize = 12
+                    labelProps2.TextWrapped = true
+                    labelProps2.LineHeight = 0.95
 
-                    textLabel(Vq)
+                    createLabel(labelProps2)
                 end
 
-                local Vq, Mq, Aq, dq = K1.bt, {}, {
-                    Parent = z1,
-                    AnchorPoint = Wq and vector2New(1, 1) or R,
+                local current3, list, props16, sizePos = items2.bt, {}, {
+                    Parent = index,
+                    AnchorPoint = currentVal and vector2New(1, 1) or RightCenterAnchor,
                 }
 
-                if Wq then
-                    local Lq = ctx.udim2
+                if currentVal then
+                    local _ = UDim2.new
 
-                    dq = (Lq(1, -9, 1, -8))
+                    sizePos = (UDim2.new(1, -9, 1, -8))
                 else
-                    dq = Wq
+                    sizePos = currentVal
                 end
 
-                local Lq
+                local sizePos2
 
-                if dq then
-                    Lq = dq
+                if sizePos then
+                    sizePos2 = sizePos
                 else
-                    local dq = ctx.udim2
+                    local _ = UDim2.new
 
-                    Lq = (dq(1, -12, 0.5, 0))
+                    sizePos2 = (UDim2.new(1, -12, 0.5, 0))
                 end
 
-                Aq.Position = Lq
-                Aq.Size = x(18, 18)
-                Aq.Image = 'check'
-                Aq.ImageTransparency = 1
+                props16.Position = sizePos2
+                props16.Size = fromOffset(18, 18)
+                props16.Image = 'check'
+                props16.ImageTransparency = 1
+                list[1], list[2], list[3], list[4], list[5] = index, defaultVal, createImage(props16), self2, (tostring(current2) .. ' ' .. (currentVal and (item2.t or '') .. ' ' .. (item2.sub or '') .. ' ' .. (item2.note or '') or '')):lower()
+                current3[current2] = list
 
-                _VX.setList(Mq, 0, z1, hq, e(Aq), Cq, (tostring(wq) .. ' ' .. (Wq and (i1.t or '') .. ' ' .. (i1.sub or '') .. ' ' .. (i1.note or '') or '')):lower())
+                bindPressScale(index, 0.95)
+                onClick(index, function()
+                    if isMulti then
+                        local sel, current4 = items2.sel, items2.sel[current2]
 
-                Vq[wq] = Mq
+                        sel[current2] = if current4 then nil else not current4
 
-                n1(z1, 0.95)
-                v1(z1, function()
-                    if Iq then
-                        local z1, i1 = K1.sel, K1.sel[wq]
-
-                        z1[wq] = if i1 then nil else not i1
-
-                        rq()
+                        updateView8()
                     else
-                        K1.sel = {[wq] = true}
+                        items2.sel = {[current2] = true}
 
-                        Hq()
-                        Dq()
-                        w1(vq, wq)
+                        updateView7()
+                        updateView6()
+                        safeCall(onPick, current2)
                     end
                 end)
             end
 
-            o1.Visible = Iq == true
-            hq = ctx.udim2
-            j1.Size = hq(1, -24, 1, Iq and -176 or -120)
+            container2.Visible = isMulti == true
+            props15.Size = UDim2.new(1, -24, 1, isMulti and -176 or -120)
 
-            Hq()
+            updateView7()
 
-            K1.open = true
-            m1.Visible = true
+            items2.open = true
+            button3.Visible = true
 
-            k1(m1, {BackgroundTransparency = 0.45}, 0.25)
+            tween(button3, {BackgroundTransparency = 0.45}, 0.25)
 
-            nq, Cq = {}, ctx.udim2
-            nq.Position = Cq(1, -6, 0, 6)
+            control = {}
+            control.Position = UDim2.new(1, -6, 0, 6)
 
-            k1(b1, nq, 0.45)
+            tween(props14, control, 0.45)
         end
 
-        G(u1:GetPropertyChangedSignal('Text'), function()
-            local o1 = u1.Text:lower()
+        connectSignal(searchBox2:GetPropertyChangedSignal('Text'), function()
+            local current2 = searchBox2.Text:lower()
 
-            for b1, b1 in next, K1.bt do
-                b1[4].Visible = b1[5]:find(o1, 1, true) ~= nil
+            for _, value in next, items2.bt do
+                value[4].Visible = value[5]:find(current2, 1, true) ~= nil
             end
         end)
-        v1(F1, Dq)
-        v1(m1, Dq)
+        onClick(button2, updateView6)
+        onClick(button3, updateView6)
 
-        local function F1(m1)
-            K1.sel = {}
+        local function updateView9(param1)
+            items2.sel = {}
 
-            for o1, o1 in ipairs(m1)do
-                K1.sel[o1] = true
+            for _, item in ipairs(param1) do
+                items2.sel[item] = true
             end
 
-            rq()
+            updateView8()
         end
 
-        v1(B1, function()
-            F1(K1.def)
+        onClick(props4, function()
+            updateView9(items2.def)
         end)
-        v1(newInstance, function()
-            F1({})
+        onClick(button, function()
+            updateView9({})
         end)
-        v1(E1, function()
-            F1(K1.o)
+        onClick(new, function()
+            updateView9(items2.o)
         end)
 
-        local function F1(m1)
-            return 29 + (m1.i - 1) * 42 - Uq.CanvasPosition.Y
+        local function updateView10(param1)
+            return 29 + (param1.i - 1) * 42 - scrollFrame.CanvasPosition.Y
         end
 
-        G(Uq:GetPropertyChangedSignal('CanvasPosition'), function()
-            if t1.Cur then
-                local m1 = ctx.udim2
-
-                g1.Position = m1(0.5, 0, 0, F1(t1.Cur))
+        connectSignal(scrollFrame:GetPropertyChangedSignal('CanvasPosition'), function()
+            if window.Cur then
+                props12.Position = UDim2.new(0.5, 0, 0, updateView10(window.Cur))
             end
         end)
 
-        local function m1(o1, b1, z1)
-            local i1, B1, E1 = ctx.createFrame, {
-                Parent = b1,
-                LayoutOrder = z1,
-                Size = f,
-                AutomaticSize = g,
-            }, ctx.listLayout
+        local function updateView11(param1, container3, props16)
+            local container4, props17, props18 = nil, {
+                Parent = container3,
+                LayoutOrder = props16,
+                Size = FullWidth,
+                AutomaticSize = AutoSizeY,
+            }
 
-            _VX.setList(B1, 0, E1(16))
-
-            b1, E1 = i1(B1), ctx.createFrame
-            z1, B1 = {
-                Parent = b1,
+            props17[1] = createListLayout(16)
+            container3, props18 = createFrame(props17), createFrame
+            props16 = {
+                Parent = container3,
                 LayoutOrder = 1,
-                Size = f,
-                AutomaticSize = g,
-            }, ctx.listLayout
+                Size = FullWidth,
+                AutomaticSize = AutoSizeY,
+            }
+            props16[1] = createListLayout(16, nil, nil, FillHorizontal)
+            container4 = createFrame(props16)
+            param1.cols = {}
+            param1.list = {}
+            param1.crow = container3
 
-            _VX.setList(z1, 0, B1(16, nil, nil, horizontal))
+            for index = 1, 2, 1 do
+                local cols, props19, _unused, current2 = param1.cols, {
+                    Parent = container4,
+                    LayoutOrder = index,
+                }, UDim2.new
 
-            i1 = E1(z1)
-            o1.cols = {}
-            o1.list = {}
-            o1.crow = b1
-
-            for z1 = 1, 2, 1 do
-                local cols, createFrame, P1, j1, j1 = o1.cols, ctx.createFrame, {
-                    Parent = i1,
-                    LayoutOrder = z1,
-                }, ctx.udim2
-
-                P1.Size, P1.AutomaticSize, j1 = ctx.udim2(0.5, -8, 0, 0), g, ctx.listLayout
-
-                _VX.setList(P1, 0, ctx.listLayout(16))
-
-                cols[z1] = ctx.createFrame(P1)
+                props19.Size, props19.AutomaticSize, current2 = UDim2.new(0.5, -8, 0, 0), AutoSizeY, createListLayout
+                props19[1] = createListLayout(16)
+                cols[index] = createFrame(props19)
             end
 
-            local z1, createFrame, u1, udim2, listLayout = o1.cols, ctx.createFrame, {
-                Parent = b1,
+            local cols, props19 = param1.cols, {
+                Parent = container3,
                 LayoutOrder = 2,
-            }, ctx.udim2
+            }
 
-            u1.Size, u1.AutomaticSize, u1.Visible, listLayout = ctx.udim2(0.5, -8, 0, 0), g, false, ctx.listLayout
-
-            _VX.setList(u1, 0, ctx.listLayout(16))
-
-            z1[3] = ctx.createFrame(u1)
-            B1, i1, E1, z1 = o1.cols, ctx.createFrame, {
-                Parent = b1,
+            props19.Size, props19.AutomaticSize, props19.Visible, listLayout = UDim2.new(0.5, -8, 0, 0), AutoSizeY, false, createListLayout
+            props19[1] = createListLayout(16)
+            cols[3] = createFrame(props19)
+            props17, props18 = param1.cols, {
+                Parent = container3,
                 LayoutOrder = 0,
-                Size = f,
-                AutomaticSize = g,
+                Size = FullWidth,
+                AutomaticSize = AutoSizeY,
                 Visible = false,
-            }, ctx.listLayout
-
-            _VX.setList(E1, 0, ctx.listLayout(16))
-
-            B1[4] = ctx.createFrame(E1)
+            }
+            props18[1] = createListLayout(16)
+            props17[4] = createFrame(props18)
         end
-        local function o1(b1, z1)
-            local i1 = b1.on and b1.on.chip
+        local function updateView12(param1, param2)
+            local chip = param1.on and param1.on.chip
 
-            if i1 then
-                if i1.AbsoluteSize.X == 0 then
+            if chip then
+                if chip.AbsoluteSize.X == 0 then
                     return
                 end
             else
                 return
             end
 
-            local B1 = {
-                Position = x((i1.AbsolutePosition.X - b1.row.AbsolutePosition.X) / uIScale.Scale, 0),
-                Size = x(i1.AbsoluteSize.X / uIScale.Scale, 24),
+            local props16 = {
+                Position = fromOffset((chip.AbsolutePosition.X - param1.row.AbsolutePosition.X) / uIScale.Scale, 0),
+                Size = fromOffset(chip.AbsoluteSize.X / uIScale.Scale, 24),
             }
 
-            if z1 then
-                b1.hl.Position, b1.hl.Size = B1.Position, B1.Size
+            if param2 then
+                param1.hl.Position, param1.hl.Size = props16.Position, props16.Size
             else
-                k1(b1.hl, B1, 0.38)
+                tween(param1.hl, props16, 0.38)
             end
         end
-        local function b1(z1, i1)
-            if z1.on == i1 then
+        local function updateView13(param1, param2)
+            if param1.on == param2 then
                 return
             end
 
-            z1.on = i1
+            param1.on = param2
 
-            for B1, B1 in ipairs(z1.subs)do
-                local E1, u1 = B1.chip, {}
+            for _, item in ipairs(param1.subs) do
+                local chip, stateMap = item.chip, {}
 
-                u1.TextTransparency = B1 == i1 and 0 or 0.5
+                stateMap.TextTransparency = item == param2 and 0 or 0.5
 
-                k1(E1, u1, 0.2)
+                tween(chip, stateMap, 0.2)
             end
 
-            o1(z1)
+            updateView12(param1)
         end
-        -- Runs polling loop until condition succeeds or timeout expires (os.clock)
-        local function z1(i1)
-            if os.clock() < (i1.lock or 0) then
+        local function updateView14(param1)
+            if os.clock() < (param1.lock or 0) then
                 return
             end
 
-            local B1, E1, u1, P1 = uIScale.Scale, i1.sc.AbsolutePosition.Y, i1.sc.AbsoluteCanvasSize.Y - i1.sc.AbsoluteWindowSize.Y, i1.subs[1]
+            local current2, current3, current4, current5 = uIScale.Scale, param1.sc.AbsolutePosition.Y, param1.sc.AbsoluteCanvasSize.Y - param1.sc.AbsoluteWindowSize.Y, param1.subs[1]
 
-            for j1, j1 in ipairs(i1.subs)do
-                P1 = if j1.g.AbsolutePosition.Y - E1 <= 40 * B1 then j1 else P1
+            for _, item in ipairs(param1.subs) do
+                current5 = if item.g.AbsolutePosition.Y - current3 <= 40 * current2 then item else current5
             end
 
-            b1(i1, if u1 > 0 then if i1.sc.CanvasPosition.Y >= u1 - 2 then i1.subs[#i1.subs]else P1 else P1)
+            updateView13(param1, if current4 > 0 then if param1.sc.CanvasPosition.Y >= current4 - 2 then param1.subs[#param1.subs]else current5 else current5)
         end
-        local function i1(B1, E1, u1)
-            local P1 = B1.CanvasPosition.Y + E1.AbsolutePosition.Y - B1.AbsolutePosition.Y - u1 * uIScale.Scale
+        local function updateView15(param1, param2, param3)
+            local current2 = param1.CanvasPosition.Y + param2.AbsolutePosition.Y - param1.AbsolutePosition.Y - param3 * uIScale.Scale
 
-            k1(B1, {
-                CanvasPosition = vector2New(0, math.clamp(P1, 0, math.max(0, B1.AbsoluteCanvasSize.Y - B1.AbsoluteWindowSize.Y))),
+            tween(param1, {
+                CanvasPosition = vector2New(0, math.clamp(current2, 0, math.max(0, param1.AbsoluteCanvasSize.Y - param1.AbsoluteWindowSize.Y))),
             }, 0.45)
         end
-        local function N1(B1, E1)
-            B1.lock = os.clock() + 0.5
+        local function updateView16(param1, param2)
+            param1.lock = os.clock() + 0.5
 
-            i1(B1.sc, E1.g, 4)
-            b1(B1, E1)
+            updateView15(param1.sc, param2.g, 4)
+            updateView13(param1, param2)
         end
 
-        t1.Select = function(B1, E1)
-            local cur = t1.Cur
+        window.Select = function(self2, tab)
+            local cur = window.Cur
 
-            if cur == E1 then
+            if cur == tab then
                 return
             end
 
-            P.Text = ''
-            t1.Cur = E1
+            searchBox.Text = ''
+            window.Cur = tab
 
-            for index, value in ipairs(E1.subs or {})do
-                p1(value)
+            for index, value in ipairs(tab.subs or {}) do
+                layoutSectionColumns(value)
             end
 
-            if E1.list then
-                p1(E1)
+            if tab.list then
+                layoutSectionColumns(tab)
             end
 
-            for index, j1 in ipairs(t1.Tabs)do
-                if j1.bar then
-                    j1.bar.Visible = j1 == E1
+            for index, item in ipairs(window.Tabs) do
+                if item.bar then
+                    item.bar.Visible = item == tab
 
-                    task.defer(o1, j1, true)
+                    task.defer(updateView12, item, true)
                 end
 
-                B1, index = j1.im, {}
-                index.ImageTransparency = j1 == E1 and 0 or 0.45
+                self2, index = item.im, {}
+                index.ImageTransparency = item == tab and 0 or 0.45
 
-                k1(B1, index, 0.3)
+                tween(self2, index, 0.3)
             end
 
-            local P1, j1 = {}, ctx.udim2
+            local props16, isMatch = {}
 
-            P1.Position = j1(0.5, 0, 0, F1(E1))
+            props16.Position = UDim2.new(0.5, 0, 0, updateView10(tab))
 
-            k1(g1, P1, 0.42)
+            tween(props12, props16, 0.42)
 
-            Jq.Scale = 0.86
+            uiScale2.Scale = 0.86
 
-            k1(Jq, {Scale = 1}, 0.5, back)
+            tween(uiScale2, {Scale = 1}, 0.5, EaseBack)
 
-            j1 = cur and (cur.i > E1.i and -1 or 1) or 0
+            isMatch = cur and (cur.i > tab.i and -1 or 1) or 0
 
             if cur then
                 cur.k = cur.k + 1
 
-                local F1 = cur.k
-local g1, P1, Dq =cur.fr, {}, ctx.udim2
+                local current2 = cur.k
+                local current3, props17 = cur.fr, {}
 
-                P1.Position = ctx.udim2(-j1, 0, 0, 0)
+                props17.Position = UDim2.new(-isMatch, 0, 0, 0)
 
-                C1(k1(g1, P1, 0.5), cur.fr, function()
-                    return cur.k ~= F1 or t1.Cur == cur
+                hideOnTweenDone(tween(current3, props17, 0.5), cur.fr, function()
+                    return cur.k ~= current2 or window.Cur == cur
                 end)
             end
 
-            E1.k = E1.k + 1
+            tab.k = tab.k + 1
 
-            if not E1.fr.Visible then
-                B1 = nil
-                B1, E1.fr.Position = ctx.udim2, ctx.udim2(j1, 0, 0, 0)
+            if not tab.fr.Visible then
+                self2 = nil
+                self2, tab.fr.Position = UDim2.new, UDim2.new(isMatch, 0, 0, 0)
             end
 
-            E1.fr.Visible = true
-local
-C1, F1, g1 =E1.fr, {}, ctx.udim2
+            tab.fr.Visible = true
 
-            F1.Position = ctx.udim2()
+            local current2, props17 = tab.fr, {}
 
-            k1(C1, F1, 0.5)
+            props17.Position = UDim2.new()
 
-            aq.Text = E1.Title or E1.Name
-            aq.Position = x(S + 18 + j1 * 24, N + 9)
-            aq.TextTransparency = 0.7
+            tween(current2, props17, 0.5)
 
-            k1(aq, {
-                Position = x(S + 18, N + 9),
+            props13.Text = tab.Title or tab.Name
+            props13.Position = fromOffset(SidebarWidth + 18 + isMatch * 24, TopBarHeight + 9)
+            props13.TextTransparency = 0.7
+
+            tween(props13, {
+                Position = fromOffset(SidebarWidth + 18, TopBarHeight + 9),
                 TextTransparency = 0,
             }, 0.45)
         end
-        t1.nest = {}
-        t1.Grip = function(S, C1, F1)
-            local function g1()
-                return C1.AbsoluteCanvasSize.Y / math.max(C1.AbsoluteWindowSize.Y, 1)
+        window.nest = {}
+        window.Grip = function(self2, section, tab)
+            local function updateView17()
+                return section.AbsoluteCanvasSize.Y / math.max(section.AbsoluteWindowSize.Y, 1)
             end
 
-            local B1, E1 = {Parent = F1}, ctx.topRight
+            local btnProps4, items = {Parent = tab}
 
-            B1.AnchorPoint = E1
-            E1 = ctx.udim2
-            B1.Position = E1(1, 0, 0, 0)
-            F1 = ctx.udim2
-            B1.Size = F1(0, 14, 1, 0)
-            B1.ZIndex = 8
-            B1.Visible = not UserInputService.TouchEnabled
-            S, F1, E1 = textButton(B1), setmetatable, {
+            btnProps4.AnchorPoint = TopRightAnchor
+            btnProps4.Position = UDim2.new(1, 0, 0, 0)
+            btnProps4.Size = UDim2.new(0, 14, 1, 0)
+            btnProps4.ZIndex = 8
+            btnProps4.Visible = not UserInputService.TouchEnabled
+            self2, tab, items = createButton(btnProps4), setmetatable, {
                 __index = function()
-                    return vector2New(0, C1.CanvasPosition.Y / g1())
+                    return vector2New(0, section.CanvasPosition.Y / updateView17())
                 end,
-                __newindex = function(B1, B1, B1)
-                    t1.goal = math.clamp(B1.Y * g1(), 0, math.max(0, C1.AbsoluteCanvasSize.Y - C1.AbsoluteWindowSize.Y))
-                    t1.gf = C1
-                    C1.CanvasPosition = vector2New(0, t1.goal)
+                __newindex = function(_self, _unused, param3)
+                    window.goal = math.clamp(param3.Y * updateView17(), 0, math.max(0, section.AbsoluteCanvasSize.Y - section.AbsoluteWindowSize.Y))
+                    window.gf = section
+                    section.CanvasPosition = vector2New(0, window.goal)
                 end,
             }
 
-            d1(S, F1({}, E1), function(S)
-                return S
+            bindSpringDrag(self2, tab({}, items), function(param1)
+                return param1
             end)
         end
-        t1.Tab = function(callback, C1, d1, F1)
-            local g1 = {
-                Name = C1,
-                W = t1,
+        window.Tab = function(_self, title, icon, isPlainPage)
+            local tab = {
+                Name = title,
+                W = window,
                 Secs = {},
             }
 
-            g1.i = #t1.Tabs + 1
-            g1.k = 0
-            g1.top = g1
-            callback = ctx.createFrame
-            g1.fr = callback({
-                Parent = kq,
-                Size = _,
+            tab.i = #window.Tabs + 1
+            tab.k = 0
+            tab.top = tab
+            tab.fr = createFrame({
+                Parent = container,
+                Size = FullSize,
                 Visible = false,
             })
 
-            if F1 then
-                callback = ctx.createFrame
-                g1.sc = callback({
-                    Parent = g1.fr,
-                    Size = _,
-                    H1(6, 16, 6),
+            if isPlainPage then
+                tab.sc = createFrame({
+                    Parent = tab.fr,
+                    Size = FullSize,
+                    createPadding(6, 16, 6),
                 })
             else
-                local S, B1 = {
-                    Parent = g1.fr,
-                    Size = _,
+                local props16 = {
+                    Parent = tab.fr,
+                    Size = FullSize,
                     ScrollingEnabled = UserInputService.TouchEnabled,
                     ScrollBarThickness = 3,
-                    ScrollBarImageColor3 = L.wh,
+                    ScrollBarImageColor3 = Palette.wh,
                     ScrollBarImageTransparency = 0.7,
-                }, ctx.Enum
+                }
 
-                S.ElasticBehavior = B1.ElasticBehavior.Always
-                B1 = ctx.listLayout
+                props16.ElasticBehavior = Enum.ElasticBehavior.Always
+                props16[1], props16[2] = createPadding(4, 0, 12), createListLayout(12, AlignRightX)
+                tab.sc = createScrollFrame(props16)
 
-                _VX.setList(S, 0, H1(4, 0, 12), B1(12, center3))
+                local props17 = {
+                    Parent = tab.sc,
+                }
 
-                g1.sc = scrollingFrame(S)
+                props17.Size = UDim2.new(1, -36, 0, 0)
+                props17.AutomaticSize = AutoSizeY
+                tab.g = createFrame(props17)
 
-                local createFrame, B1, E1 = ctx.createFrame, {
-                    Parent = g1.sc,
-                }, ctx.udim2
-
-                B1.Size = E1(1, -36, 0, 0)
-                B1.AutomaticSize = g
-                g1.g = createFrame(B1)
-
-                G(g1.sc.InputChanged, function(S)
-                    local B1 = ctx.Enum
-
-                    if S.UserInputType == B1.UserInputType.MouseWheel then
-                        t1:Wheel(S.Position.Z)
+                connectSignal(tab.sc.InputChanged, function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseWheel then
+                        window:Wheel(input.Position.Z)
                     end
                 end)
-                t1:Grip(g1.sc, g1.fr)
-                G(g1.sc.MouseWheelForward, function()
-                    t1:Wheel(1)
+                window:Grip(tab.sc, tab.fr)
+                connectSignal(tab.sc.MouseWheelForward, function()
+                    window:Wheel(1)
                 end)
-                G(g1.sc.MouseWheelBackward, function()
-                    t1:Wheel(-1)
+                connectSignal(tab.sc.MouseWheelBackward, function()
+                    window:Wheel(-1)
                 end)
-                m1(g1, g1.g, 0)
+                updateView11(tab, tab.g, 0)
 
-                g1.subs = {}
+                tab.subs = {}
             end
 
-            F1 = textButton({
-                Parent = Uq,
-                Size = x(38, 38),
-                LayoutOrder = g1.i,
+            local tabBtn = createButton({
+                Parent = scrollFrame,
+                Size = fromOffset(38, 38),
+                LayoutOrder = tab.i,
             })
-            g1.im = e({
-                Parent = F1,
-                AnchorPoint = T,
-                Position = Z,
-                Size = x(24, 24),
-                Image = d1 or 'grid',
+            tab.im = createImage({
+                Parent = tabBtn,
+                AnchorPoint = CenterAnchor,
+                Position = CenterPos,
+                Size = fromOffset(24, 24),
+                Image = icon or 'grid',
                 ImageTransparency = 0.45,
             })
 
-            n1(g1.im, 0.8, F1, function(S)
-                if t1.Cur == g1 then
-                    k1(Jq, {
-                        Scale = S and 0.9 or 1,
-                    }, S and 0.12 or 0.45, S and quint or back)
+            bindPressScale(tab.im, 0.8, tabBtn, function(param1)
+                if window.Cur == tab then
+                    tween(uiScale2, {
+                        Scale = param1 and 0.9 or 1,
+                    }, param1 and 0.12 or 0.45, param1 and EaseQuint or EaseBack)
                 end
             end)
-            v1(F1, function()
-                t1:Select(g1)
+            onClick(tabBtn, function()
+                window:Select(tab)
             end)
 
-            t1.Tabs[g1.i] = g1
-            g1.Section = function(S, S, d1, F1)
-                return R1.new(g1, S, d1, F1)
+            window.Tabs[tab.i] = tab
+            tab.Section = function(_self, title2, icon2, column)
+                return Section.new(tab, title2, icon2, column)
             end
-            g1.Arrange = function(S, d1)
-                for F1, B1 in ipairs(d1)do
-                    for d1, E1 in ipairs(B1)do
-                        for B1, B1 in ipairs(S.Secs)do
-                            if B1.name == E1 then
-                                B1.side, B1.card.LayoutOrder = F1, d1
+            tab.Arrange = function(self2, groups)
+                for index, item in ipairs(groups) do
+                    for index2, item2 in ipairs(item) do
+                        for _, item3 in ipairs(self2.Secs) do
+                            if item3.name == item2 then
+                                item3.side, item3.card.LayoutOrder = index, index2
                             end
                         end
                     end
                 end
 
-                S.done = -1
+                self2.done = -1
 
-p1(S)
+                layoutSectionColumns(self2)
             end
-            g1.Sub = function(callback, d1)
-                local F1 = {}
+            tab.Sub = function(_self, subTitle)
+                local tab2 = {}
 
-                F1.Name = C1 .. ' / ' .. d1
-                F1.W = t1
-                F1.Secs = g1.Secs
-                F1.i = #g1.subs + 1
-                F1.sc = g1.sc
-                F1.top = g1
+                tab2.Name = title .. ' / ' .. subTitle
+                tab2.W = window
+                tab2.Secs = tab.Secs
+                tab2.i = #tab.subs + 1
+                tab2.sc = tab.sc
+                tab2.top = tab
 
-                if #g1.subs == 0 then
-                    g1.g.Visible = #g1.Secs > 0
+                if #tab.subs == 0 then
+                    tab.g.Visible = #tab.Secs > 0
 
-                    local C1, B1, E1 = ctx.createFrame, {Parent = O1}, ctx.topRight
+                    local props16, props17 = nil, {Parent = props5}
 
-                    B1.AnchorPoint = E1
-                    callback = ctx.udim2
-                    B1.Position = callback(1, -18, 0, N + 7)
-                    B1.Size = x(0, 30)
-                    B1.AutomaticSize = t
-                    B1.Visible = t1.Cur == g1
-                    B1.BackgroundTransparency = 0.95
-
-                    _VX.setList(B1, 0, D1(), J1(0.88), H1(3))
-
-                    g1.bar = C1(B1)
-                    E1 = ctx.createFrame
-                    g1.hl = E1({
-                        Parent = g1.bar,
-                        Size = x(0, 24),
+                    props17.AnchorPoint = TopRightAnchor
+                    props17.Position = UDim2.new(1, -18, 0, TopBarHeight + 7)
+                    props17.Size = fromOffset(0, 30)
+                    props17.AutomaticSize = AutoSizeX
+                    props17.Visible = window.Cur == tab
+                    props17.BackgroundTransparency = 0.95
+                    props17[1], props17[2], props17[3] = createCorner(), createStroke(0.88), createPadding(3)
+                    tab.bar = createFrame(props17)
+                    tab.hl = createFrame({
+                        Parent = tab.bar,
+                        Size = fromOffset(0, 24),
                         BackgroundTransparency = 0.84,
-                        D1(),
+                        createCorner(),
                     })
-                    E1, C1, B1 = ctx.createFrame, {
-                        Parent = g1.bar,
-                        Size = x(0, 24),
-                        AutomaticSize = t,
+                    props16 = {
+                        Parent = tab.bar,
+                        Size = fromOffset(0, 24),
+                        AutomaticSize = AutoSizeX,
                         ZIndex = 2,
-                    }, ctx.listLayout
+                    }
+                    props16[1] = createListLayout(4, nil, AlignCenterY, FillHorizontal)
+                    tab.row = createFrame(props16)
 
-                    _VX.setList(C1, 0, B1(4, nil, center2, horizontal))
-
-                    g1.row = E1(C1)
-
-                    G(g1.row:GetPropertyChangedSignal('AbsoluteSize'), function()
-                        o1(g1, true)
+                    connectSignal(tab.row:GetPropertyChangedSignal('AbsoluteSize'), function()
+                        updateView12(tab, true)
                     end)
-                    G(g1.sc:GetPropertyChangedSignal('CanvasPosition'), function()
-                        z1(g1)
+                    connectSignal(tab.sc:GetPropertyChangedSignal('CanvasPosition'), function()
+                        updateView14(tab)
                     end)
                 end
 
-                local C1, o1 = {}, ctx.udim2
+                local btnProps4, labelProps2 = {}
 
-                C1.Size = o1(1, 0, 0, 18)
-                o1, callback = {}, ctx.udim2
-                o1.Size = callback(1, -30, 1, 0)
-                o1.Text = d1:upper()
-                o1.FontFace = font5
-                o1.TextSize = 12
-                o1.TextTransparency = 0.35
+                btnProps4.Size = UDim2.new(1, 0, 0, 18)
+                labelProps2 = {}
+                labelProps2.Size = UDim2.new(1, -30, 1, 0)
+                labelProps2.Text = subTitle:upper()
+                labelProps2.FontFace = FontExtraBold
+                labelProps2.TextSize = 12
+                labelProps2.TextTransparency = 0.35
+                btnProps4[1] = createLabel(labelProps2)
+                labelProps2 = createButton(btnProps4)
+                btnProps4 = {
+                    Parent = labelProps2,
+                    AnchorPoint = CenterAnchor,
+                }
+                btnProps4.Position = UDim2.new(1, -9, 0.5, 0)
+                btnProps4.Size = fromOffset(13, 13)
+                btnProps4.Image = 'down'
+                btnProps4.ImageTransparency = 0.55
 
-                _VX.setList(C1, 0, textLabel(o1))
+                local image = createImage(btnProps4)
 
-                o1 = textButton(C1)
-                C1, callback = {
-                    Parent = o1,
-                    AnchorPoint = T,
-                }, ctx.udim2
-                C1.Position = callback(1, -9, 0.5, 0)
-                C1.Size = x(13, 13)
-                C1.Image = 'down'
-                C1.ImageTransparency = 0.55
+                btnProps4 = {
+                    Parent = tab.sc,
+                    LayoutOrder = tab2.i,
+                }
+                btnProps4.Size = UDim2.new(1, -36, 0, 0)
+                btnProps4.AutomaticSize = AutoSizeY
+                btnProps4[1], btnProps4[2] = createListLayout(12), labelProps2
+                tab2.g = createFrame(btnProps4)
 
-                local z1, B1 = e(C1), ctx.createFrame
+                updateView11(tab2, tab2.g, 1)
+                onClick(labelProps2, function()
+                    tab2.crow.Visible = not tab2.crow.Visible
 
-                C1, callback = {
-                    Parent = g1.sc,
-                    LayoutOrder = F1.i,
-                }, ctx.udim2
-                C1.Size = callback(1, -36, 0, 0)
-                C1.AutomaticSize = g
-                callback = ctx.listLayout
-
-                _VX.setList(C1, 0, callback(12), o1)
-
-                F1.g = B1(C1)
-
-                m1(F1, F1.g, 1)
-                v1(o1, function()
-                    F1.crow.Visible = not F1.crow.Visible
-
-                    k1(z1, {
-                        Rotation = F1.crow.Visible and 0 or -90,
+                    tween(image, {
+                        Rotation = tab2.crow.Visible and 0 or -90,
                     }, 0.25)
                 end)
 
-                F1.chip = textButton({
-                    Parent = g1.row,
-                    LayoutOrder = F1.i,
-                    Size = x(0, 24),
-                    AutomaticSize = t,
-                    Text = d1,
-                    FontFace = font6,
+                tab2.chip = createButton({
+                    Parent = tab.row,
+                    LayoutOrder = tab2.i,
+                    Size = fromOffset(0, 24),
+                    AutomaticSize = AutoSizeX,
+                    Text = subTitle,
+                    FontFace = FontBold,
                     TextSize = 12,
-                    TextColor3 = L.wh,
+                    TextColor3 = Palette.wh,
                     TextTransparency = 0.5,
                     BackgroundTransparency = 1,
-                    D1(),
-                    H1(0, 12),
+                    createCorner(),
+                    createPadding(0, 12),
                 })
 
-                v1(F1.chip, function()
-                    N1(g1, F1)
+                onClick(tab2.chip, function()
+                    updateView16(tab, tab2)
                 end)
 
-                F1.Go = function(S)
-                    if not t1.open then
-                        t1:Show(true)
+                tab2.Go = function(_self)
+                    if not window.open then
+                        window:Show(true)
                     end
 
-                    t1:Select(g1)
-                    task.delay(0.15, N1, g1, F1)
+                    window:Select(tab)
+                    task.delay(0.15, updateView16, tab, tab2)
                 end
-                g1.subs[F1.i] = F1
-                F1.Section = function(S, S, C1, d1)
-                    return R1.new(F1, S, C1, d1)
+                tab.subs[tab2.i] = tab2
+                tab2.Section = function(_self, title2, icon2, column)
+                    return Section.new(tab2, title2, icon2, column)
                 end
-                F1.Arrange = g1.Arrange
+                tab2.Arrange = tab.Arrange
 
-                if F1.i == 1 then
-                    b1(g1, F1)
+                if tab2.i == 1 then
+                    updateView13(tab, tab2)
                 end
 
-                return F1
+                return tab2
             end
 
-            if not t1.Cur then
-                t1:Select(g1)
+            if not window.Cur then
+                window:Select(tab)
             end
 
-            return g1
+            return tab
         end
-        t1.All = {}
-        e1, G1, x1 = ctx.createFrame, {Parent = O1}, ctx.topRight
-        G1.AnchorPoint = x1
-        X1 = ctx.udim2
-        G1.Position = X1(1, -44, 0, N - 4)
-        G1.Size = x(300, 0)
-        G1.AutomaticSize = g
-        G1.Visible = false
-        G1.ZIndex = 15
-        G1.BackgroundTransparency = 0.02
-        G1.BackgroundColor3 = L.pn
-        y1 = ctx.listLayout
+        window.All = {}
+        props6 = {Parent = props5}
+        props6.AnchorPoint = TopRightAnchor
+        props6.Position = UDim2.new(1, -44, 0, TopBarHeight - 4)
+        props6.Size = fromOffset(300, 0)
+        props6.AutomaticSize = AutoSizeY
+        props6.Visible = false
+        props6.ZIndex = 15
+        props6.BackgroundTransparency = 0.02
+        props6.BackgroundColor3 = Palette.pn
+        props6[1], props6[2], props6[3], props6[4] = createCorner(12), createStroke(0.82), createPadding(6), createListLayout(2)
 
-        _VX.setList(G1, 0, D1(12), J1(0.82), H1(6), y1(2))
+        local container3 = createFrame(props6)
 
-        local N = e1(G1)
+        local function updateView17(param1)
+            searchBox.Text = ''
 
-        local function S(C1)
-            P.Text = ''
-
-            t1:Select(C1.tab)
+            window:Select(param1.tab)
             task.delay(0.55, function()
-                i1(C1.tab.sc, C1.r, 40)
+                updateView15(param1.tab.sc, param1.r, 40)
 
-                C1.r.BackgroundTransparency = 0.8
+                param1.r.BackgroundTransparency = 0.8
 
-                k1(C1.r, {BackgroundTransparency = 1}, 1.4)
+                tween(param1.r, {BackgroundTransparency = 1}, 1.4)
             end)
         end
 
-        G(P:GetPropertyChangedSignal('Text'), function()
-            local C1 = P.Text:lower()
+        connectSignal(searchBox:GetPropertyChangedSignal('Text'), function()
+            local current2 = searchBox.Text:lower()
 
-            Q1(N)
+            clearGuiObjects(container3)
 
-            N.Visible = C1 ~= ''
+            container3.Visible = current2 ~= ''
 
-            if C1 == '' then
+            if current2 == '' then
                 return
             end
 
-            local ipairsFn, d1, F1 = ipairs, t1.All, 0
+            local props16, count4 = window.All, 0
 
-            for m1, g1 in ipairsFn(d1)do
-                if F1 < 8 then
-                    if g1.n:find(C1, 1, true) then
-                        m1 = F1 + 1
+            for index, item in ipairs(props16) do
+                if count4 < 8 then
+                    if item.n:find(current2, 1, true) then
+                        index = count4 + 1
 
-                        local P, o1 = {
-                            Parent = N,
-                            LayoutOrder = m1,
-                        }, ctx.udim2
+                        local btnProps4, _unused = {
+                            Parent = container3,
+                            LayoutOrder = index,
+                        }, UDim2.new
 
-                        P.Size = o1(1, 0, 0, 42)
+                        btnProps4.Size = UDim2.new(1, 0, 0, 42)
 
-                        local o1, y1, b1 = D1(9), {
-                            Position = x(10, 4),
-                        }, ctx.udim2
+                        local corner, labelProps2, new2 = createCorner(9), {
+                            Position = fromOffset(10, 4),
+                        }, UDim2.new
 
-                        y1.Size = b1(1, -20, 0, 18)
-                        y1.Text = g1.title
-                        y1.FontFace = font6
-                        y1.TextTruncate = atEnd
+                        labelProps2.Size = UDim2.new(1, -20, 0, 18)
+                        labelProps2.Text = item.title
+                        labelProps2.FontFace = FontBold
+                        labelProps2.TextTruncate = TruncateAtEnd
 
-                        local z1, i1, udim2 = textLabel(y1), {
-                            Position = x(10, 22),
-                        }, ctx.udim2
+                        local label5, labelProps3, udim2 = createLabel(labelProps2), {
+                            Position = fromOffset(10, 22),
+                        }, UDim2.new
 
-                        i1.Size = udim2(1, -20, 0, 15)
-                        i1.Text = g1.path
-                        i1.TextSize = 11
-                        i1.TextTransparency = 0.45
-                        i1.TextTruncate = atEnd
+                        labelProps3.Size = UDim2.new(1, -20, 0, 15)
+                        labelProps3.Text = item.path
+                        labelProps3.TextSize = 11
+                        labelProps3.TextTransparency = 0.45
+                        labelProps3.TextTruncate = TruncateAtEnd
+                        btnProps4[1], btnProps4[2], btnProps4[3] = corner, label5, createLabel(labelProps3)
+                        new2 = createButton(btnProps4)
 
-                        _VX.setList(P, 0, o1, z1, textLabel(i1))
+                        bindHoverAlpha(new2, 0.92)
 
-                        b1 = textButton(P)
-
-                        r1(b1, 0.92)
-
-                        local function P()
-                            if I1() then
-                                S(g1)
+                        local function updateView18()
+                            if isCleanTap() then
+                                updateView17(item)
                             end
                         end
 
-                        b1.Activated:Connect(P)
+                        new2.Activated:Connect(updateView18)
 
-                        F1 = m1
+                        count4 = index
                     end
                 end
             end
 
-            if F1 == 0 then
-                d1, C1 = {Parent = N}, ctx.udim2
-                d1.Size = C1(1, 0, 0, 32)
-                d1.Text = 'No results'
-                d1.TextTransparency = 0.45
-                d1.TextXAlignment = center
+            if count4 == 0 then
+                props16 = {Parent = container3}
+                props16.Size = UDim2.new(1, 0, 0, 32)
+                props16.Text = 'No results'
+                props16.TextTransparency = 0.45
+                props16.TextXAlignment = AlignCenterX
 
-                textLabel(d1)
+                createLabel(props16)
             end
         end)
 
-        t1.Home = function(callback, S)
-            local P = S or {}
+        window.Home = function(self2, homeOpts)
+            local current2 = homeOpts or {}
 
-            callback = t1:Tab(P.Name or 'Home', P.Icon or 'home', true)
-            callback.Title = P.Title or 'Dashboard'
+            self2 = window:Tab(current2.Name or 'Home', current2.Icon or 'home', true)
+            self2.Title = current2.Title or 'Dashboard'
 
-            local createFrame, C1, d1 = ctx.createFrame, {
-                Parent = callback.sc,
-                Position = x(-6, -6),
-            }, ctx.udim2
+            local new2, props16, labelProps2 = nil, {
+                Parent = self2.sc,
+                Position = fromOffset(-6, -6),
+            }
 
-            C1.Size = d1(1, 12, 1, 12)
+            props16.Size = UDim2.new(1, 12, 1, 12)
 
-            local F1 = createFrame(C1)
+            local container4 = createFrame(props16)
 
-            local function m1(g1, o1, y1, b1, z1, i1, N1)
-                local x1, B1, G1 = ctx.createFrame, {Parent = F1}, ctx.udim2
+            local function updateView18(param1, param2, param3, param4, param5, param6, param7)
+                local props17 = {Parent = container4}
 
-                B1.Position = G1(g1, 6, o1, 6)
-                o1 = ctx.udim2
-                B1.Size = o1(y1, -12, b1, -12)
-                B1.BackgroundTransparency = z1 or 0.93
-                B1.BackgroundColor3 = i1 or L.wh
+                props17.Position = UDim2.new(param1, 6, param2, 6)
+                props17.Size = UDim2.new(param3, -12, param4, -12)
+                props17.BackgroundTransparency = param5 or 0.93
+                props17.BackgroundColor3 = param6 or Palette.wh
+                props17[1], props17[2] = createCorner(18), createStroke(param7 or 0.86, param6 and param6:Lerp(Palette.wh, 0.5))
 
-                _VX.setList(B1, 0, D1(18), J1(N1 or 0.86, i1 and i1:Lerp(L.wh, 0.5)))
-
-                return x1(B1)
+                return createFrame(props17)
             end
-            local function g1(o1, y1, b1, z1)
-                e({
-                    Parent = o1,
-                    Position = x(14, 13),
-                    Size = x(14, 14),
-                    Image = b1,
-                    ImageColor3 = z1,
+            local function updateView19(param1, param2, param3, labelProps3)
+                createImage({
+                    Parent = param1,
+                    Position = fromOffset(14, 13),
+                    Size = fromOffset(14, 14),
+                    Image = param3,
+                    ImageColor3 = labelProps3,
                 })
 
-                z1, b1 = {
-                    Parent = o1,
-                    Position = x(34, 12),
-                }, ctx.udim2
-                z1.Size = b1(1, -48, 0, 16)
-                z1.Text = y1:upper()
-                z1.FontFace = font5
-                z1.TextSize = 11.5
-                z1.TextTransparency = 0.15
+                labelProps3 = {
+                    Parent = param1,
+                    Position = fromOffset(34, 12),
+                }
+                labelProps3.Size = UDim2.new(1, -48, 0, 16)
+                labelProps3.Text = param2:upper()
+                labelProps3.FontFace = FontExtraBold
+                labelProps3.TextSize = 11.5
+                labelProps3.TextTransparency = 0.15
 
-                return textLabel(z1)
+                return createLabel(labelProps3)
             end
 
-            createFrame = m1(0, 0, 0.6666666666666666, 0.3, 0.55)
-            U1(color3FromRGB(255, 196, 120), color3FromRGB(150, 110, 255)).Parent = createFrame
-            callback, d1 = {Parent = createFrame}, ctx.udim2
-            callback.Position = d1(0, 16, 0.5, -28)
-            callback.Size = x(56, 56)
-            callback.Image = K(150)
-            callback.BackgroundTransparency = 0
-            callback.BackgroundColor3 = L.a2
+            new2 = updateView18(0, 0, 0.6666666666666666, 0.3, 0.55)
+            createGradient(color3FromRGB(255, 196, 120), color3FromRGB(150, 110, 255)).Parent = new2
+            self2 = {Parent = new2}
+            self2.Position = UDim2.new(0, 16, 0.5, -28)
+            self2.Size = fromOffset(56, 56)
+            self2.Image = getAvatarThumb(150)
+            self2.BackgroundTransparency = 0
+            self2.BackgroundColor3 = Palette.a2
+            self2[1], self2[2] = createCorner(), createStroke(0.4)
 
-            _VX.setList(callback, 0, D1(), J1(0.4))
-            e(callback)
+            createImage(self2)
 
-            C1, callback = {Parent = createFrame}, ctx.udim2
-            C1.Position = callback(0, 86, 0.5, -34)
-            d1 = ctx.udim2
-            C1.Size = d1(1, -100, 0, 14)
-            C1.Text = 'Welcome back'
-            C1.TextSize = 11
-            C1.TextTransparency = 0.25
+            props16 = {Parent = new2}
+            props16.Position = UDim2.new(0, 86, 0.5, -34)
+            props16.Size = UDim2.new(1, -100, 0, 14)
+            props16.Text = 'Welcome back'
+            props16.TextSize = 11
+            props16.TextTransparency = 0.25
 
-            textLabel(C1)
+            createLabel(props16)
 
-            d1, C1 = {Parent = createFrame}, ctx.udim2
-            d1.Position = C1(0, 86, 0.5, -19)
-            callback = ctx.udim2
-            d1.Size = callback(1, -100, 0, 24)
-            d1.Text = localPlayer.DisplayName
-            d1.FontFace = font6
-            d1.TextSize = 21
-            d1.TextTruncate = atEnd
+            labelProps2 = {Parent = new2}
+            labelProps2.Position = UDim2.new(0, 86, 0.5, -19)
+            labelProps2.Size = UDim2.new(1, -100, 0, 24)
+            labelProps2.Text = localPlayer.DisplayName
+            labelProps2.FontFace = FontBold
+            labelProps2.TextSize = 21
+            labelProps2.TextTruncate = TruncateAtEnd
 
-            textLabel(d1)
+            createLabel(labelProps2)
 
-            C1, callback, d1 = ctx.createFrame, {Parent = createFrame}, ctx.udim2
-            callback.Position = d1(0, 86, 0.5, 10)
-            createFrame = ctx.udim2
-            callback.Size = createFrame(1, -100, 0, 20)
-            createFrame = ctx.listLayout
+            self2 = {Parent = new2}
+            self2.Position = UDim2.new(0, 86, 0.5, 10)
+            self2.Size = UDim2.new(1, -100, 0, 20)
+            self2[1] = createListLayout(6, nil, nil, FillHorizontal)
 
-            _VX.setList(callback, 0, createFrame(6, nil, nil, horizontal))
+            local labelProps3, new3, labelProps4 = createFrame(self2), current2.Executor or identifyexecutor and select(2, pcall(identifyexecutor)), ipairs
 
-            local K, o1, y1 = C1(callback), P.Executor or identifyexecutor and select(2, pcall(identifyexecutor)), ipairs
-
-            callback = {
+            self2 = {
                 {
-                    P.Game,
+                    current2.Game,
                 },
                 {
-                    type(o1) == 'string' and o1,
+                    type(new3) == 'string' and new3,
                 },
                 {
-                    P.Key,
-                    L.mint,
+                    current2.Key,
+                    Palette.mint,
                 },
             }
 
-            for b1, z1 in y1(callback)do
-                if z1[1] then
-                    d1, createFrame = {
-                        Parent = K,
-                        LayoutOrder = b1,
-                    }, ctx.udim2
-                    d1.Size = createFrame(0, 0, 1, 0)
-                    d1.AutomaticSize = t
-                    d1.Text = tostring(z1[1])
-                    d1.TextSize = 11
-                    d1.TextColor3 = z1[2] and z1[2]:Lerp(L.wh, 0.6)
-                    d1.BackgroundTransparency = z1[2] and 0.8 or 0.75
-                    d1.BackgroundColor3 = z1[2] or color3FromRGB(0, 0, 0)
-                    d1.TextXAlignment = center
+            for index, item in ipairs(self2) do
+                if item[1] then
+                    labelProps2, new2 = {
+                        Parent = labelProps3,
+                        LayoutOrder = index,
+                    }, UDim2.new
+                    labelProps2.Size = UDim2.new(0, 0, 1, 0)
+                    labelProps2.AutomaticSize = AutoSizeX
+                    labelProps2.Text = tostring(item[1])
+                    labelProps2.TextSize = 11
+                    labelProps2.TextColor3 = item[2] and item[2]:Lerp(Palette.wh, 0.6)
+                    labelProps2.BackgroundTransparency = item[2] and 0.8 or 0.75
+                    labelProps2.BackgroundColor3 = item[2] or color3FromRGB(0, 0, 0)
+                    labelProps2.TextXAlignment = AlignCenterX
+                    labelProps2[1], labelProps2[2] = createCorner(), createPadding(0, 10)
 
-                    _VX.setList(d1, 0, D1(), H1(0, 10))
-                    textLabel(d1)
+                    createLabel(labelProps2)
                 end
             end
 
-            C1 = P.Notice
-            createFrame = m1(0.6666666666666666, 0, 0.3333333333333333, 0.3, 0.78, C1 and L.a1 or L.dc, 0.55)
+            props16 = current2.Notice
+            new2 = updateView18(0.6666666666666666, 0, 0.3333333333333333, 0.3, 0.78, props16 and Palette.a1 or Palette.dc, 0.55)
 
-            frame({
-                Parent = createFrame,
-                Position = x(14, 14),
-                Size = x(36, 36),
-                BackgroundColor3 = C1 and L.a1 or L.dc,
-                D1(11),
-                u(C1 and 'sparkles' or 'discord', 22),
+            createSolidFrame({
+                Parent = new2,
+                Position = fromOffset(14, 14),
+                Size = fromOffset(36, 36),
+                BackgroundColor3 = props16 and Palette.a1 or Palette.dc,
+                createCorner(11),
+                createIcon(props16 and 'sparkles' or 'discord', 22),
             })
 
-            K, y1 = {
-                Parent = createFrame,
-                Position = x(60, 15),
-            }, ctx.udim2
-            K.Size = y1(1, -72, 0, 17)
-            K.Text = C1 and C1[1] or P.Community or 'Community'
-            K.FontFace = font6
-            K.TextSize = 14
-            K.TextTruncate = atEnd
+            labelProps3 = {
+                Parent = new2,
+                Position = fromOffset(60, 15),
+            }
+            labelProps3.Size = UDim2.new(1, -72, 0, 17)
+            labelProps3.Text = props16 and props16[1] or current2.Community or 'Community'
+            labelProps3.FontFace = FontBold
+            labelProps3.TextSize = 14
+            labelProps3.TextTruncate = TruncateAtEnd
 
-            textLabel(K)
+            createLabel(labelProps3)
 
-            if C1 then
-                callback, K = {
-                    Parent = createFrame,
-                    Position = x(14, 58),
-                }, ctx.udim2
-                callback.Size = K(1, -28, 1, -70)
-                callback.Text = C1[2]
-                callback.TextSize = 11
-                callback.TextTransparency = 0.22
-                callback.TextWrapped = true
-                d1 = ctx.Enum
-                callback.TextYAlignment = d1.TextYAlignment.Top
+            if props16 then
+                self2 = {
+                    Parent = new2,
+                    Position = fromOffset(14, 58),
+                }
+                self2.Size = UDim2.new(1, -28, 1, -70)
+                self2.Text = props16[2]
+                self2.TextSize = 11
+                self2.TextTransparency = 0.22
+                self2.TextWrapped = true
+                self2.TextYAlignment = Enum.TextYAlignment.Top
 
-                textLabel(callback)
+                createLabel(self2)
             else
-                y1, o1 = {
-                    Parent = createFrame,
-                    Position = x(60, 33),
-                }, ctx.udim2
-                y1.Size = o1(1, -72, 0, 14)
-                y1.Text = 'Updates, keys, support'
-                y1.TextSize = 11
-                y1.TextTransparency = 0.22
+                labelProps4 = {
+                    Parent = new2,
+                    Position = fromOffset(60, 33),
+                }
+                labelProps4.Size = UDim2.new(1, -72, 0, 14)
+                labelProps4.Text = 'Updates, keys, support'
+                labelProps4.TextSize = 11
+                labelProps4.TextTransparency = 0.22
 
-                textLabel(y1)
+                createLabel(labelProps4)
 
-                local b1, z1 = {
-                    Parent = createFrame,
+                local btnProps4, button4 = {
+                    Parent = new2,
                     AnchorPoint = vector2New(0, 1),
-                }, ctx.udim2
+                }
 
-                b1.Position = z1(0, 14, 1, -12)
-                z1 = ctx.udim2
-                b1.Size = z1(1, -28, 0, 32)
-                b1.BackgroundTransparency = 0
-                b1.BackgroundColor3 = L.dc
-                b1.Text = 'Copy invite'
-                b1.FontFace = font6
-                b1.TextSize = 12
-                b1.TextColor3 = L.wh
+                btnProps4.Position = UDim2.new(0, 14, 1, -12)
+                btnProps4.Size = UDim2.new(1, -28, 0, 32)
+                btnProps4.BackgroundTransparency = 0
+                btnProps4.BackgroundColor3 = Palette.dc
+                btnProps4.Text = 'Copy invite'
+                btnProps4.FontFace = FontBold
+                btnProps4.TextSize = 12
+                btnProps4.TextColor3 = Palette.wh
+                btnProps4[1] = createCorner(10)
+                button4 = createButton(btnProps4)
 
-                _VX.setList(b1, 0, D1(10))
-
-                z1 = textButton(b1)
-
-                n1(z1)
-                v1(z1, function()
-                    Y1(P.Discord, 'Invite copied')
+                bindPressScale(button4)
+                onClick(button4, function()
+                    updateView5(current2.Discord, 'Invite copied')
                 end)
             end
 
-            local b1 = getService('TeleportService')
+            local teleportService = getService('TeleportService')
 
-            callback, K = P.Actions
+            self2, labelProps3 = current2.Actions
 
-            if callback then
-                K = callback
+            if self2 then
+                labelProps3 = self2
             else
-                d1, y1, C1, createFrame, o1 = {}, {
+                labelProps2, labelProps4, props16, new2, new3 = {}, {
                     'Rejoin',
                     'refresh',
                     function()
-                        c1('Rejoin this server?', 'You leave and join this same server again.', 'warn', 'Rejoin', function(
+                        updateView3('Rejoin this server?', 'You leave and join this same server again.', 'warn', 'Rejoin', function(
                         )
-                            local H = ctx.game
-
-                            b1:TeleportToPlaceInstance(H.PlaceId, ctx.game.JobId, localPlayer)
+                            teleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, localPlayer)
                         end)
                     end,
                 }, {
                     'Server hop',
                     'server',
                     function()
-                        c1('Hop to another server?', 'You leave this server and join a different one.', 'warn', 'Hop', function(
+                        updateView3('Hop to another server?', 'You leave this server and join a different one.', 'warn', 'Hop', function(
                         )
-                            if P.Hop then
-                                P.Hop()
+                            if current2.Hop then
+                                current2.Hop()
                             else
-                                local H = ctx.game
-
-                                b1:Teleport(H.PlaceId, localPlayer)
+                                teleportService:Teleport(game.PlaceId, localPlayer)
                             end
                         end)
                     end,
@@ -3493,110 +3373,98 @@ p1(S)
                     'Copy Job ID',
                     'copy',
                     function()
-                        local H = ctx.game
-
-                        Y1(H.JobId, 'Job ID copied')
+                        updateView5(game.JobId, 'Job ID copied')
                     end,
-                }, P.Unload
+                }, current2.Unload
 
-                local H, b1 = o1 and {
+                local items, items3 = new3 and {
                     'Unload hub',
                     'trash',
-                    P.Unload,
+                    current2.Unload,
                 } or {
                     'Save config',
                     'save',
-                    s1,
-                }, P.Switch or P.Discord and {
+                    updateView4,
+                }, current2.Switch or current2.Discord and {
                     'Discord',
                     'discord',
                     function()
-                        Y1(P.Discord, 'Discord invite copied')
+                        updateView5(current2.Discord, 'Discord invite copied')
                     end,
                 }
 
-                _VX.setList(d1, 0, y1, C1, createFrame, H, b1 or {
+                labelProps2[1], labelProps2[2], labelProps2[3], labelProps2[4], labelProps2[5] = labelProps4, props16, new2, items, items3 or {
                     'Hide UI',
                     'eye',
                     function()
-                        t1:Show(false)
+                        window:Show(false)
                     end,
-                })
-
-                K = d1
+                }
+                labelProps3 = labelProps2
             end
 
-            o1, callback, createFrame = ctx.createFrame, {Parent = F1}, ctx.udim2
-            callback.Position = createFrame(0, 6, 0.3, 6)
-            d1 = ctx.udim2
-            callback.Size = d1(1, -12, 0.16, -12)
-            d1 = ctx.listLayout
+            self2 = {Parent = container4}
+            self2.Position = UDim2.new(0, 6, 0.3, 6)
+            self2.Size = UDim2.new(1, -12, 0.16, -12)
+            self2[1] = createListLayout(12, nil, nil, FillHorizontal)
+            labelProps2, labelProps4 = createFrame(self2), ipairs
 
-            _VX.setList(callback, 0, d1(12, nil, nil, horizontal))
+            for index2, item2 in ipairs(labelProps3) do
+                self2, new2, props16, new3 = QuickBarColors[(index2 - 1) % 5 + 1], createFrame, {
+                    Parent = labelProps2,
+                    LayoutOrder = index2,
+                }, UDim2.new
+                props16.Size = UDim2.new(1 / #labelProps3, 12 / #labelProps3 - 12, 1, 0)
 
-            d1, y1 = o1(callback), ipairs
-
-            for H, F1 in y1(K)do
-                callback, createFrame, C1, o1 = F[(H - 1) % 5 + 1], ctx.createFrame, {
-                    Parent = d1,
-                    LayoutOrder = H,
-                }, ctx.udim2
-                C1.Size = o1(1 / #K, 12 / #K - 12, 1, 0)
-
-                local H, K, o1, y1, b1, z1 = {
-                    Parent = createFrame(C1),
-                    AnchorPoint = T,
-                    Position = Z,
-                    Size = _,
+                local props17, corner, stroke, props18, new4 = {
+                    Parent = createFrame(props16),
+                    AnchorPoint = CenterAnchor,
+                    Position = CenterPos,
+                    Size = FullSize,
                     BackgroundTransparency = 0.94,
-                }, D1(14), J1(0.88), ctx.createFrame, {}, ctx.udim2
+                }, createCorner(14), createStroke(0.88), {}, UDim2.new
 
-                b1.Position = z1(0, 10, 0.5, -15)
-                b1.Size = x(30, 30)
-                b1.BackgroundTransparency = 0.82
-                b1.BackgroundColor3 = callback
+                props18.Position = UDim2.new(0, 10, 0.5, -15)
+                props18.Size = fromOffset(30, 30)
+                props18.BackgroundTransparency = 0.82
+                props18.BackgroundColor3 = self2
+                props18[1], props18[2] = createCorner(9), createIcon(item2[2], 16, self2)
 
-                _VX.setList(b1, 0, D1(9), u(F1[2], 16, callback))
+                local container5, labelProps5, udim2 = createFrame(props18), {
+                    Position = fromOffset(48, 0),
+                }, UDim2.new
 
-                local N, i1, udim2 = y1(b1), {
-                    Position = x(48, 0),
-                }, ctx.udim2
+                labelProps5.Size = UDim2.new(1, -54, 1, 0)
+                labelProps5.Text = item2[1]
+                labelProps5.TextSize = 12
+                labelProps5.TextWrapped = true
+                props17[1], props17[2], props17[3], props17[4] = corner, stroke, container5, createLabel(labelProps5)
+                new4 = createButton(props17)
 
-                i1.Size = udim2(1, -54, 1, 0)
-                i1.Text = F1[1]
-                i1.TextSize = 12
-                i1.TextWrapped = true
-
-                _VX.setList(H, 0, K, o1, N, textLabel(i1))
-
-                z1 = textButton(H)
-
-                n1(z1, 0.95)
-                v1(z1, function()
-                    w1(F1[3])
+                bindPressScale(new4, 0.95)
+                onClick(new4, function()
+                    safeCall(item2[3])
                 end)
             end
 
-            local H = m1(0, 0.46, 0.6666666666666666, 0.54)
-            local N = g1(H, 'Session', 'clock', L.gold)
+            local current3 = updateView18(0, 0.46, 0.6666666666666666, 0.54)
+            local current4 = updateView19(current3, 'Session', 'clock', Palette.gold)
 
-            createFrame = m1(0.6666666666666666, 0.46, 0.3333333333333333, 0.54)
+            new2 = updateView18(0.6666666666666666, 0.46, 0.3333333333333333, 0.54)
 
-            g1(createFrame, "What's new", 'sparkles', L.pink)
+            updateView19(new2, "What's new", 'sparkles', Palette.pink)
 
-            d1, C1 = {
-                Parent = createFrame,
-                Position = x(14, 40),
-            }, ctx.udim2
-            d1.Size = C1(1, -24, 1, -50)
-            m1 = ctx.listLayout
+            labelProps2 = {
+                Parent = new2,
+                Position = fromOffset(14, 40),
+            }
+            labelProps2.Size = UDim2.new(1, -24, 1, -50)
+            labelProps2[1], labelProps2[2] = createPadding(1, 4, 4, 1), createListLayout(10)
 
-            _VX.setList(d1, 0, H1(1, 4, 4, 1), m1(10))
+            local scrollFrame2, homeView = createScrollFrame(labelProps2), {}
 
-            local S, K = scrollingFrame(d1), {}
-
-            local function C1(d1)
-                local F1, m1 = math.max(os.time() - d1, 0), {
+            local function updateView20(param1)
+                local num, items = math.max(os.time() - param1, 0), {
                     {
                         86400,
                         'day',
@@ -3611,636 +3479,542 @@ p1(S)
                     },
                 }
 
-                for g1, g1 in ipairs(m1)do
-                    d1 = F1 // g1[1]
+                for _, item in ipairs(items) do
+                    param1 = num // item[1]
 
-                    if d1 >= 1 then
-                        return ('%d %s%s ago'):format(d1, g1[2], d1 > 1 and 's' or '')
+                    if param1 >= 1 then
+                        return ('%d %s%s ago'):format(param1, item[2], param1 > 1 and 's' or '')
                     end
                 end
 
                 return 'just now'
             end
 
-            K.News = function(d1, F1)
-                K.list = F1
+            homeView.News = function(_self, entries)
+                homeView.list = entries
 
-                Q1(S)
+                clearGuiObjects(scrollFrame2)
 
-                d1 = ipairs
+                for index, item in ipairs(entries) do
+                    local current5, props17, container5 = nil, {
+                        Position = fromOffset(44, 0),
+                    }
 
-                for Q1, m1 in d1(F1)do
-                    local d1, F1, g1 = ctx.createFrame, {
-                        Position = x(44, 0),
-                    }, ctx.udim2
-
-                    F1.Size = g1(1, -44, 0, 0)
-                    F1.AutomaticSize = g
-                    g1 = ctx.listLayout
-
-                    _VX.setList(F1, 0, g1(2), textLabel({
-                        Size = f,
-                        AutomaticSize = g,
-                        Text = m1[2],
+                    props17.Size = UDim2.new(1, -44, 0, 0)
+                    props17.AutomaticSize = AutoSizeY
+                    props17[1], props17[2] = createListLayout(2), createLabel({
+                        Size = FullWidth,
+                        AutomaticSize = AutoSizeY,
+                        Text = item[2],
                         TextSize = 12,
                         TextWrapped = true,
-                    }))
+                    })
+                    container5 = createFrame(props17)
 
-                    g1 = d1(F1)
-
-                    if m1[3] or m1[4] then
-                        local o1, y1, b1 = ctx.createFrame, {
-                            Parent = g1,
+                    if item[3] or item[4] then
+                        local labelProps5, props18, container6 = createFrame, {
+                            Parent = container5,
                             LayoutOrder = 1,
-                        }, ctx.udim2
+                        }
 
-                        y1.Size = b1(1, 0, 0, 14)
-                        d1 = ctx.listLayout
+                        props18.Size = UDim2.new(1, 0, 0, 14)
+                        props18[1] = createListLayout(5, nil, AlignCenterY, FillHorizontal)
+                        container6 = createFrame(props18)
 
-                        _VX.setList(y1, 0, d1(5, nil, center2, horizontal))
+                        if item[3] then
+                            labelProps5, props18 = {Parent = container6}, UDim2.new
+                            labelProps5.Size = UDim2.new(0, 0, 1, 0)
+                            labelProps5.AutomaticSize = AutoSizeX
+                            labelProps5.Text = item[3]
+                            labelProps5.FontFace = FontMono
+                            labelProps5.TextSize = 10
+                            labelProps5.TextTransparency = 0.4
 
-                        b1 = o1(y1)
-
-                        if m1[3] then
-                            o1, y1 = {Parent = b1}, ctx.udim2
-                            o1.Size = y1(0, 0, 1, 0)
-                            o1.AutomaticSize = t
-                            o1.Text = m1[3]
-                            o1.FontFace = font4
-                            o1.TextSize = 10
-                            o1.TextTransparency = 0.4
-
-                            textLabel(o1)
+                            createLabel(labelProps5)
                         end
-                        if m1[4] then
-                            local o1, z1, i1 = ctx.createFrame, {
-                                Parent = b1,
+                        if item[4] then
+                            local labelProps6, props19, current6 = nil, {
+                                Parent = container6,
                                 LayoutOrder = 1,
-                            }, ctx.udim2
+                            }
 
-                            z1.Size = i1(0, 0, 1, 0)
-                            z1.AutomaticSize = t
-                            z1.BackgroundTransparency = 0.9
-                            i1 = ctx.listLayout
+                            props19.Size = UDim2.new(0, 0, 1, 0)
+                            props19.AutomaticSize = AutoSizeX
+                            props19.BackgroundTransparency = 0.9
+                            current6 = createListLayout
+                            props19[1], props19[2], props19[3] = createCorner(), createPadding(0, 6), createListLayout(3, nil, AlignCenterY, FillHorizontal)
+                            props17 = createFrame(props19)
 
-                            _VX.setList(z1, 0, D1(), H1(0, 6), i1(3, nil, center2, horizontal))
-
-                            F1 = o1(z1)
-
-                            e({
-                                Parent = F1,
-                                Size = x(10, 10),
+                            createImage({
+                                Parent = props17,
+                                Size = fromOffset(10, 10),
                                 Image = 'clock',
                                 ImageTransparency = 0.3,
                             })
 
-                            o1, y1 = {
-                                Parent = F1,
+                            labelProps6, props18 = {
+                                Parent = props17,
                                 LayoutOrder = 1,
-                            }, ctx.udim2
-                            o1.Size = y1(0, 0, 1, 0)
-                            o1.AutomaticSize = t
-                            o1.Text = C1(m1[4])
-                            o1.FontFace = font4
-                            o1.TextSize = 10
-                            o1.TextTransparency = 0.3
+                            }, UDim2.new
+                            labelProps6.Size = UDim2.new(0, 0, 1, 0)
+                            labelProps6.AutomaticSize = AutoSizeX
+                            labelProps6.Text = updateView20(item[4])
+                            labelProps6.FontFace = FontMono
+                            labelProps6.TextSize = 10
+                            labelProps6.TextTransparency = 0.3
 
-                            textLabel(o1)
+                            createLabel(labelProps6)
                         end
                     end
 
-                    d1 = ctx.createFrame
+                    current5 = createFrame
 
-                    d1({
-                        Parent = S,
-                        LayoutOrder = Q1,
-                        Size = f,
-                        AutomaticSize = g,
-                        g1,
-                        textLabel({
-                            Size = x(0, 18),
-                            AutomaticSize = t,
-                            Text = m1[1],
-                            FontFace = font4,
+                    createFrame({
+                        Parent = scrollFrame2,
+                        LayoutOrder = index,
+                        Size = FullWidth,
+                        AutomaticSize = AutoSizeY,
+                        container5,
+                        createLabel({
+                            Size = fromOffset(0, 18),
+                            AutomaticSize = AutoSizeX,
+                            Text = item[1],
+                            FontFace = FontMono,
                             TextSize = 9,
                             TextColor3 = color3FromRGB(16, 20, 42),
                             BackgroundTransparency = 0,
                             BackgroundColor3 = ({
-                                NEW = L.mint,
-                                FIX = L.sky,
-                                IMP = L.gold,
-                                UPD = L.red,
-                            })[m1[1] ] or L.vio,
-                            TextXAlignment = center,
-                            D1(5),
-                            H1(0, 6),
+                                NEW = Palette.mint,
+                                FIX = Palette.sky,
+                                IMP = Palette.gold,
+                                UPD = Palette.red,
+                            })[item[1] ] or Palette.vio,
+                            TextXAlignment = AlignCenterX,
+                            createCorner(5),
+                            createPadding(0, 6),
                         }),
                     })
                 end
             end
-            K.Stats = function(callback, C1, d1)
-                N.Text = C1:upper()
+            homeView.Stats = function(self3, items, columns)
+                current4.Text = items:upper()
 
-                local createFrame, F1, Q1 = ctx.createFrame, {
-                    Parent = H,
-                    Position = x(12, 38),
-                }, ctx.udim2
+                local container5, props17, current5 = nil, {
+                    Parent = current3,
+                    Position = fromOffset(12, 38),
+                }
 
-                F1.Size = Q1(1, -24, 1, -48)
-                callback, Q1, C1 = ctx.newInstance, {}, ctx.udim2
-                Q1.CellSize = C1(0.3333333333333333, -7, 0.333, -6)
-                Q1.CellPadding = x(10, 8)
-                C1 = ctx.Enum
-                Q1.SortOrder = C1.SortOrder.LayoutOrder
+                props17.Size = UDim2.new(1, -24, 1, -48)
+                current5 = {}
+                current5.CellSize = UDim2.new(0.3333333333333333, -7, 0.333, -6)
+                current5.CellPadding = fromOffset(10, 8)
+                current5.SortOrder = Enum.SortOrder.LayoutOrder
+                props17[1] = newInstance('UIGridLayout', current5)
+                self3, items, current5 = createFrame(props17), {}, ipairs
 
-                _VX.setList(F1, 0, callback('UIGridLayout', Q1))
-
-                callback, C1, Q1 = createFrame(F1), {}, ipairs
-
-                for H, m1 in Q1(d1)do
-                    F1 = ctx.createFrame
-                    createFrame = F1({
-                        Parent = callback,
-                        LayoutOrder = H,
+                for index, item in ipairs(columns) do
+                    props17 = createFrame
+                    container5 = createFrame({
+                        Parent = self3,
+                        LayoutOrder = index,
                         BackgroundTransparency = 0.94,
-                        D1(12),
+                        createCorner(12),
                     })
 
-                    if m1[2] then
-                        local S, d1 = {
-                            Parent = createFrame,
+                    if item[2] then
+                        local props18, current6 = {
+                            Parent = container5,
                             AnchorPoint = vector2New(0, 0.5),
-                        }, ctx.udim2
+                        }
 
-                        S.Position = d1(0, 8, 0.5, 0)
-                        S.Size = x(30, 30)
-                        S.Image = m1[2]
-                        d1 = ctx.Enum
-                        S.ScaleType = d1.ScaleType.Fit
-                        S.ImageColor3 = B[m1[2] ] and L.a1 or nil
+                        props18.Position = UDim2.new(0, 8, 0.5, 0)
+                        props18.Size = fromOffset(30, 30)
+                        props18.Image = item[2]
+                        current6 = Enum
+                        props18.ScaleType = Enum.ScaleType.Fit
+                        props18.ImageColor3 = IconIndex[item[2] ] and Palette.a1 or nil
 
-                        e(S)
+                        createImage(props18)
                     end
 
-                    local S, d1, F1 = m1[2] and 44 or 10, {Parent = createFrame}, ctx.udim2
+                    local count4, labelProps5, new4 = item[2] and 44 or 10, {Parent = container5}
 
-                    d1.Position = F1(0, S, 0.5, -17)
-                    F1 = ctx.udim2
-                    d1.Size = F1(1, -S - 6, 0, 13)
-                    d1.Text = m1[1]:upper()
-                    d1.FontFace = font5
-                    d1.TextSize = 9.5
-                    d1.TextTransparency = 0.38
+                    labelProps5.Position = UDim2.new(0, count4, 0.5, -17)
+                    labelProps5.Size = UDim2.new(1, -count4 - 6, 0, 13)
+                    labelProps5.Text = item[1]:upper()
+                    labelProps5.FontFace = FontExtraBold
+                    labelProps5.TextSize = 9.5
+                    labelProps5.TextTransparency = 0.38
 
-                    textLabel(d1)
+                    createLabel(labelProps5)
 
-                    d1, H, F1 = m1[1], {Parent = createFrame}, ctx.udim2
-                    H.Position = F1(0, S, 0.5, -2)
-                    F1 = ctx.udim2
-                    H.Size = F1(1, -S - 6, 0, 18)
-                    H.Text = '--'
-                    H.FontFace = font4
-                    H.TextSize = 13.5
-                    H.TextTruncate = atEnd
-                    C1[d1] = textLabel(H)
+                    labelProps5, index = item[1], {Parent = container5}
+                    index.Position = UDim2.new(0, count4, 0.5, -2)
+                    new4 = UDim2.new
+                    index.Size = UDim2.new(1, -count4 - 6, 0, 18)
+                    index.Text = '--'
+                    index.FontFace = FontMono
+                    index.TextSize = 13.5
+                    index.TextTruncate = TruncateAtEnd
+                    items[labelProps5] = createLabel(index)
 
-                    if m1[3] then
-                        H, S = {
-                            Parent = createFrame,
+                    if item[3] then
+                        index, count4 = {
+                            Parent = container5,
                             AnchorPoint = vector2New(1, 0),
-                        }, ctx.udim2
-                        H.Position = S(1, -8, 0, 8)
-                        H.Size = x(40, 16)
-                        H.Text = 'OPEN'
-                        H.FontFace = font5
-                        H.TextSize = 9
-                        H.TextColor3 = L.wh
-                        H.BackgroundTransparency = 0.82
-                        H.BackgroundColor3 = L.wh
+                        }, UDim2.new
+                        index.Position = UDim2.new(1, -8, 0, 8)
+                        index.Size = fromOffset(40, 16)
+                        index.Text = 'OPEN'
+                        index.FontFace = FontExtraBold
+                        index.TextSize = 9
+                        index.TextColor3 = Palette.wh
+                        index.BackgroundTransparency = 0.82
+                        index.BackgroundColor3 = Palette.wh
+                        index[1], index[2] = createCorner(), createStroke(0.7)
+                        new4 = createButton(index)
 
-                        _VX.setList(H, 0, D1(), J1(0.7))
-
-                        F1 = textButton(H)
-
-                        n1(F1, 0.92)
-                        v1(F1, function()
-                            w1(m1[3])
+                        bindPressScale(new4, 0.92)
+                        onClick(new4, function()
+                            safeCall(item[3])
                         end)
                     end
                 end
 
-                return _1(C1)
+                return createStatController(items)
             end
 
-            if P.News then
-                K:News(P.News)
+            if current2.News then
+                homeView:News(current2.News)
             end
 
-            return K
+            return homeView
         end
 
-        local function H(options, S, P)
-            return type(options) == 'table' and options or t1:Tab(options or S, P)
+        local function updateView18(options, param2, param3)
+            return type(options) == 'table' and options or window:Tab(options or param2, param3)
         end
 
-        t1.Settings = function(target, callback)
-            target = H(callback, 'Settings', 'settings')
-            callback = target:Section('Interface', 'sliders')
+        window.Settings = function(_self, targetTab)
+            local target = updateView18(targetTab, 'Settings', 'settings')
 
-            callback:Slider('UI scale', 60, 140, 100, function(P)
-                t1:SetScale(P / 100)
+            targetTab = target:Section('Interface', 'sliders')
+
+            targetTab:Slider('UI scale', 60, 140, 100, function(param1)
+                window:SetScale(param1 / 100)
             end, '%', 5)
 
-            local function P(K)
-                t1.Key = K
+            local function updateView19(param1)
+                window.Key = param1
             end
 
-            callback:Key('Show / hide UI', t1.Key, nil, P)
-            callback:Slider('Opacity', 50, 100, 95, function(K)
-                t1.bg.BackgroundTransparency = 1 - K / 100
+            targetTab:Key('Show / hide UI', window.Key, nil, updateView19)
+            targetTab:Slider('Opacity', 50, 100, 95, function(param1)
+                window.bg.BackgroundTransparency = 1 - param1 / 100
             end, '%')
-            callback:Slider('Tone', -100, 100, 70, function(K)
-                t1:Tone(K)
+            targetTab:Slider('Tone', -100, 100, 70, function(param1)
+                window:Tone(param1)
             end, '', 5)
-            callback:Slider('Dim the game', 0, 80, 60, function(K)
-                t1.dz = K / 100
+            targetTab:Slider('Dim the game', 0, 80, 60, function(param1)
+                window.dz = param1 / 100
 
-                if t1.open then
-                    t1.dim.BackgroundTransparency = 1 - t1.dz
+                if window.open then
+                    window.dim.BackgroundTransparency = 1 - window.dz
                 end
             end, '%', 5)
 
-            P, callback = target:Section('Theme', 'palette'), ctx.createFrame
+            updateView19, targetTab = target:Section('Theme', 'palette'), createFrame
 
-            local K, C1, d1, F1, Q1 = {
-                Parent = P.f,
+            local props16, padding, gradient, container4, new2 = {
+                Parent = updateView19.f,
                 LayoutOrder = 2,
                 Name = 'VenyxThemes',
-                Size = f,
-                AutomaticSize = g,
-            }, H1(2, 14, 14), ctx.newInstance, {}, ctx.udim2
+                Size = FullWidth,
+                AutomaticSize = AutoSizeY,
+            }, createPadding(2, 14, 14), newInstance, {}, UDim2.new
 
-            F1.CellSize = Q1(0.25, -8, 0, 62)
-            F1.CellPadding = x(10, 10)
-            Q1 = ctx.Enum
-            F1.SortOrder = Q1.SortOrder.LayoutOrder
+            container4.CellSize = UDim2.new(0.25, -8, 0, 62)
+            container4.CellPadding = fromOffset(10, 10)
+            container4.SortOrder = Enum.SortOrder.LayoutOrder
+            props16[1], props16[2] = padding, newInstance('UIGridLayout', container4)
+            container4 = createFrame(props16)
+            updateView19.n = updateView19.n + 1
+            updateView19 = {}
 
-            _VX.setList(K, 0, C1, d1('UIGridLayout', F1))
-
-            F1 = callback(K)
-            P.n = P.n + 1
-            P, callback = {}, ipairs
-
-            for m1, g1 in callback(l)do
-                local S, o1, y1, b1, z1, i1 = J1(0.86), {
-                    Parent = F1,
-                    LayoutOrder = m1,
+            for index, theme in ipairs(Themes) do
+                local stroke, props17, corner, props18, props19, props20 = createStroke(0.86), {
+                    Parent = container4,
+                    LayoutOrder = index,
                     BackgroundTransparency = 0.95,
-                }, D1(12), ctx.createFrame, {
-                    Position = x(6, 6),
-                }, ctx.udim2
+                }, createCorner(12), createFrame, {
+                    Position = fromOffset(6, 6),
+                }, UDim2.new
 
-                z1.Size = i1(1, -12, 0, 30)
-                z1.BackgroundTransparency = 0
-                K, d1, Q1, i1, m1 = D1(8), U1(g1[2], g1[4], 20), ctx.createFrame, {
+                props19.Size = UDim2.new(1, -12, 0, 30)
+                props19.BackgroundTransparency = 0
+                props16, gradient, new2, props20, index = createCorner(8), createGradient(theme[2], theme[4], 20), createFrame, {
                     AnchorPoint = vector2New(0, 1),
-                }, ctx.udim2
-                i1.Position = m1(0, 6, 1, -5)
-                C1 = ctx.udim2
-                i1.Size = C1(0.45, 0, 0, 6)
-                i1.BackgroundTransparency = 0
-                i1.BackgroundColor3 = g1[5]
+                }, UDim2.new
+                props20.Position = UDim2.new(0, 6, 1, -5)
+                padding = UDim2.new
+                props20.Size = UDim2.new(0.45, 0, 0, 6)
+                props20.BackgroundTransparency = 0
+                props20.BackgroundColor3 = theme[5]
+                props20[1] = createCorner()
+                props19[1], props19[2], props19[3] = props16, gradient, createFrame(props20)
 
-                _VX.setList(i1, 0, D1())
-                _VX.setList(z1, 0, K, d1, Q1(i1))
+                local container5, labelProps2, new3 = createFrame(props19), {
+                    Position = fromOffset(8, 40),
+                }, UDim2.new
 
-                local K, C1, d1 = b1(z1), {
-                    Position = x(8, 40),
-                }, ctx.udim2
+                labelProps2.Size = UDim2.new(1, -26, 0, 16)
+                labelProps2.Text = theme[1]
+                labelProps2.FontFace = FontBold
+                labelProps2.TextSize = 11
+                labelProps2.TextTruncate = TruncateAtEnd
+                props17[1], props17[2], props17[3], props17[4] = corner, stroke, container5, createLabel(labelProps2)
+                labelProps2, new3, container5 = createButton(props17), theme[1], {}
+                props18, index = {
+                    Parent = labelProps2,
+                    AnchorPoint = RightCenterAnchor,
+                }, UDim2.new
+                props18.Position = UDim2.new(1, -8, 0, 48)
+                props18.Size = fromOffset(12, 12)
+                props18.Image = 'check'
+                props18.ImageColor3 = theme[5]
+                props18.ImageTransparency = 1
+                container5[1], container5[2] = stroke, createImage(props18)
+                updateView19[new3] = container5
 
-                C1.Size = d1(1, -26, 0, 16)
-                C1.Text = g1[1]
-                C1.FontFace = font6
-                C1.TextSize = 11
-                C1.TextTruncate = atEnd
-
-                _VX.setList(o1, 0, y1, S, K, textLabel(C1))
-
-                C1, d1, K = textButton(o1), g1[1], {}
-                b1, m1 = {
-                    Parent = C1,
-                    AnchorPoint = R,
-                }, ctx.udim2
-                b1.Position = m1(1, -8, 0, 48)
-                b1.Size = x(12, 12)
-                b1.Image = 'check'
-                b1.ImageColor3 = g1[5]
-                b1.ImageTransparency = 1
-
-                _VX.setList(K, 0, S, e(b1))
-
-                P[d1] = K
-
-                n1(C1, 0.95)
-                v1(C1, function()
-                    local venyx = ctx.Venyx
-
-                    venyx:Theme(g1[1])
+                bindPressScale(labelProps2, 0.95)
+                onClick(labelProps2, function()
+                    Venyx:Theme(theme[1])
                 end)
             end
 
-            t1.marks = P
-            Q1 = target:Section('Defaults', 'refresh')
+            window.marks = updateView19
+            new2 = target:Section('Defaults', 'refresh')
 
-            Q1:Button('Reset to defaults', 'Reset', function()
-                c1('Reset every option?', 
+            new2:Button('Reset to defaults', 'Reset', function()
+                updateView3('Reset every option?', 
 [[All options go back to their built-in values and your active config is saved that way.]], 'warn', 'Reset', function(
                 )
-                    local venyx = ctx.Venyx
-
-                    venyx:Reset()
-
-                    venyx = ctx.Venyx
-
-                    venyx:Notify('Reset', 'Every option is back to its default', 'ok')
+                    Venyx:Reset()
+                    Venyx:Notify('Reset', 'Every option is back to its default', 'ok')
                 end)
             end, 'danger')
-            Q1:Button('Turn off all toggles', 'Turn off', function()
-                local venyx, venyx2 = ctx.Venyx, ctx.Venyx
-
-                venyx:Notify('Toggles off', venyx2:Off() .. ' switched off', 'ok')
+            new2:Button('Turn off all toggles', 'Turn off', function()
+                Venyx:Notify('Toggles off', Venyx:Off() .. ' switched off', 'ok')
             end)
 
             return target
         end
-        t1.Config = function(target, S)
-            target = H(S, 'Config', 'save')
-            S = target:Section('Config', 'folder')
+        window.Config = function(_self, targetTab)
+            local target = updateView18(targetTab, 'Config', 'save')
 
-            local H = S:Stats({
+            targetTab = target:Section('Config', 'folder')
+
+            local current2 = targetTab:Stats({
                 'Active',
                 'Saved configs',
             })
-            local P
+            local control
 
-            local function K()
-                local C1 = ctx.State
+            local function updateView19()
+                current2:Set('Active', State.Active)
+                current2:Set('Saved configs', tostring(#Venyx:Configs()))
 
-                H:Set('Active', C1.Active)
-                H:Set('Saved configs', tostring(#ctx.Venyx:Configs()))
-
-                if P then
-                    P:Set(ctx.State.Active, true)
+                if control then
+                    control:Set(State.Active, true)
                 end
             end
-            local function H(C1, d1, F1, Q1)
-                local m1 = C1:Dropdown(d1, function()
-                    local C1 = ctx.Venyx
-
-                    return C1:Configs()
-                end, nil, function(C1)
-                    if C1 then
-                        if F1 then
-                            F1(C1)
+            local function updateView20(param1, param2, callbackFn2, param4)
+                local current3 = param1:Dropdown(param2, function()
+                    return Venyx:Configs()
+                end, nil, function(param12)
+                    if param12 then
+                        if callbackFn2 then
+                            callbackFn2(param12)
                         end
                     end
-                end, Q1)
+                end, param4)
 
-                m1.Skip = true
+                current3.Skip = true
 
-                return m1
+                return current3
             end
 
-            P = H(S, 'Config', function(C1)
-                local d1 = ctx.State
-
-                if C1 ~= d1.Active then
-                    local d1 = ctx.Venyx
-
-                    d1:Notify('Config picked', C1 .. ' - press Set active to load it', 'info')
+            control = updateView20(targetTab, 'Config', function(param1)
+                if param1 ~= State.Active then
+                    Venyx:Notify('Config picked', param1 .. ' - press Set active to load it', 'info')
                 end
             end)
 
-            S:Button('Set as active config', 'Set active', function()
-                local C1 = P.Value
+            targetTab:Button('Set as active config', 'Set active', function()
+                local current3 = control.Value
 
-                if not C1 then
-                    local venyx = ctx.Venyx
-
-                    return venyx:Notify('Nothing picked', 'Choose a config first', 'warn')
+                if not current3 then
+                    return Venyx:Notify('Nothing picked', 'Choose a config first', 'warn')
                 end
-
-                local venyx = ctx.Venyx
-
-                if venyx:Load(C1) then
-                    K()
-
-                    local venyx = ctx.Venyx
-
-                    venyx:Notify('Active config', C1, 'ok')
+                if Venyx:Load(current3) then
+                    updateView19()
+                    Venyx:Notify('Active config', current3, 'ok')
                 end
             end, 'gold')
-            S:Button('Save changes', 'Save', s1)
+            targetTab:Button('Save changes', 'Save', updateView4)
 
-            local state = ctx.State
+            local state = State
 
-            S:Toggle('Auto load', state.AutoLoad, function(C1)
-                local d1 = ctx.State
+            targetTab:Toggle('Auto load', state.AutoLoad, function(param1)
+                if State.AutoLoad ~= param1 then
+                    local current3, current4 = 'Auto load ' .. (param1 and 'on' or 'off')
 
-                if d1.AutoLoad ~= C1 then
-                    local F1, Q1, m1 = ctx.Venyx, 'Auto load ' .. (C1 and 'on' or 'off')
-
-                    if C1 then
-                        local g1 = ctx.State
-
-                        m1 = g1.Active .. ' loads every time Venyx starts'
+                    if param1 then
+                        current4 = State.Active .. ' loads every time Venyx starts'
                     else
-                        m1 = C1
+                        current4 = param1
                     end
 
-                    F1:Notify(Q1, m1 or 'Venyx starts with its default options', 'info')
+                    Venyx:Notify(current3, current4 or 'Venyx starts with its default options', 'info')
                 end
 
-                d1 = ctx.State
-                d1.AutoLoad = C1
-                C1 = ctx.Venyx
+                State.AutoLoad = param1
 
-                C1:Persist()
+                Venyx:Persist()
             end).Skip = true
-            state = ctx.State
-            S:Toggle('Auto save', state.AutoSave, function(S)
-                local C1 = ctx.State
-
-                if C1.AutoSave == S then
+            state = State
+            targetTab:Toggle('Auto save', state.AutoSave, function(param1)
+                if State.AutoSave == param1 then
                     return
                 end
 
-                C1 = ctx.State
-                C1.AutoSave = S
-                C1 = ctx.Venyx
+                State.AutoSave = param1
 
-                C1:Persist()
+                Venyx:Persist()
 
-                if S then
-                    C1 = ctx.Venyx
-
-                    C1:Save()
+                if param1 then
+                    Venyx:Save()
                 end
 
-                local d1, F1, Q1 = ctx.Venyx, 'Auto save ' .. (S and 'on' or 'off')
+                local current3, current4 = 'Auto save ' .. (param1 and 'on' or 'off')
 
-                if S then
-                    C1 = ctx.State
-                    Q1 = 'Every change is saved to ' .. C1.Active
+                if param1 then
+                    current4 = 'Every change is saved to ' .. State.Active
                 else
-                    Q1 = S
+                    current4 = param1
                 end
 
-                d1:Notify(F1, Q1 or 'Press Save changes to keep your options', 'info')
+                Venyx:Notify(current3, current4 or 'Press Save changes to keep your options', 'info')
             end).Skip = true
             state = target:Section('Profiles', 'copy')
 
-            local S = state:Input('New config name', 'Auto if empty')
+            local control2 = state:Input('New config name', 'Auto if empty')
 
-            S.Skip = true
+            control2.Skip = true
 
             state:Button('Create config', 'Create', function()
-                local C1 = ctx.Venyx
-                local d1, F1 = C1:Name(S.Value)
+                local current3, current4 = Venyx:Name(control2.Value)
 
-                if not d1 then
-                    C1 = ctx.Venyx
-
-                    return C1:Notify('Config not created', F1, 'err')
+                if not current3 then
+                    return Venyx:Notify('Config not created', current4, 'err')
                 end
 
-                F1 = ctx.Venyx
+                Venyx:Save(current3)
 
-                F1:Save(d1)
+                State.Active = current3
 
-                F1 = ctx.State
-                F1.Active = d1
-                C1 = ctx.Venyx
-
-                C1:Persist()
-                S:Set('', true)
-                K()
-
-                F1 = ctx.Venyx
-
-                F1:Notify('Config created', d1 .. ' is now the active config', 'ok')
+                Venyx:Persist()
+                control2:Set('', true)
+                updateView19()
+                Venyx:Notify('Config created', current3 .. ' is now the active config', 'ok')
             end, 'gold')
 
-            local S = H(state, 'Pick to delete', nil, true)
+            local control3 = updateView20(state, 'Pick to delete', nil, true)
 
             state:Button('Delete picked', 'Delete', function()
-                local C1, d1 = {}, false
+                local list, enabled = {}, false
 
-                for F1, F1 in ipairs(S.Value)do
-                    if F1:lower() == 'default' then
-                        d1 = true
+                for _, item in ipairs(control3.Value) do
+                    if item:lower() == 'default' then
+                        enabled = true
                     else
-                        C1[#C1 + 1] = F1
+                        list[#list + 1] = item
                     end
                 end
 
-                if #C1 == 0 then
-                    local F1 = ctx.Venyx
-
-                    return F1:Notify('Nothing to delete', 'Pick configs other than Default', 'warn')
+                if #list == 0 then
+                    return Venyx:Notify('Nothing to delete', 'Pick configs other than Default', 'warn')
                 end
 
-                c1('Delete ' .. #C1 .. ' config(s)?', table.concat(C1, ', ') .. (d1 and '\nDefault is kept.' or ''), 'err', 'Delete', function(
+                updateView3('Delete ' .. #list .. ' config(s)?', table.concat(list, ', ') .. (enabled and '\nDefault is kept.' or ''), 'err', 'Delete', function(
                 )
-                    local d1 = ipairs
+                    for index, item in ipairs(list) do
+                        index = Venyx
 
-                    for F1, Q1 in d1(C1)do
-                        F1 = ctx.Venyx
-
-                        F1:Delete(Q1)
+                        Venyx:Delete(item)
                     end
 
-                    S:Set({}, true)
-                    K()
-
-                    d1 = ctx.Venyx
-
-                    d1:Notify(#C1 .. ' config(s) deleted', table.concat(C1, ', '), 'ok')
+                    control3:Set({}, true)
+                    updateView19()
+                    Venyx:Notify(#list .. ' config(s) deleted', table.concat(list, ', '), 'ok')
                 end)
             end, 'danger')
 
-            local S
+            local current3
 
-            S = state:Dropdown('Restore deleted', function()
-                local C1 = ctx.Venyx
-
-                return C1:Trash()
-            end, nil, function(C1)
-                if not C1 then
+            current3 = state:Dropdown('Restore deleted', function()
+                return Venyx:Trash()
+            end, nil, function(param1)
+                if not param1 then
                     return
                 end
 
-                local d1 = ctx.Venyx
-                local F1 = d1:Restore(C1)
+                local current4 = Venyx:Restore(param1)
 
-                S:Set(nil, true)
-                K()
-
-                d1 = ctx.Venyx
-
-                d1:Notify(F1 and 'Config restored' or 'Restore failed', F1 or C1, F1 and 'ok' or 'err')
+                current3:Set(nil, true)
+                updateView19()
+                Venyx:Notify(current4 and 'Config restored' or 'Restore failed', current4 or param1, current4 and 'ok' or 'err')
             end)
-            S.Skip = true
+            current3.Skip = true
 
-            H(state, 'Export config', function(H)
-                local venyx, S, C1 = ctx.Venyx, pcall(setclipboard, ctx.Venyx:Export(H)), ctx.Venyx
+            updateView20(state, 'Export config', function(param1)
+                local current4 = pcall(setclipboard, Venyx:Export(param1))
 
-                C1:Notify(S and 'Config copied' or 'Copy failed', S and H .. ' is on your clipboard' or 'This executor cannot copy text', S and 'ok' or 'err')
-                t1:Dialog({
-                    Title = S and 'Config copied' or 'Copy failed',
-                    Kind = S and 'ok' or 'err',
-                    Text = S and H .. 
+                Venyx:Notify(current4 and 'Config copied' or 'Copy failed', current4 and param1 .. ' is on your clipboard' or 'This executor cannot copy text', current4 and 'ok' or 'err')
+                window:Dialog({
+                    Title = current4 and 'Config copied' or 'Copy failed',
+                    Kind = current4 and 'ok' or 'err',
+                    Text = current4 and param1 .. 
 [[ is on your clipboard. Paste it to share it, then load it with Import config.]] or 'This executor cannot copy text.',
                 })
             end)
 
-            local H = state:Input('Import text', 'Paste config text')
+            local control4 = state:Input('Import text', 'Paste config text')
 
-            H.Skip = true
+            control4.Skip = true
 
             state:Button('Import config', 'Import', function()
-                local venyx = ctx.Venyx
-                local P, C1 = venyx:Import(H.Value)
+                local current4, current5 = Venyx:Import(control4.Value)
 
-                if not P then
-                    venyx = ctx.Venyx
-
-                    return venyx:Notify('Import failed', C1, 'err')
+                if not current4 then
+                    return Venyx:Notify('Import failed', current5, 'err')
                 end
 
-                H:Set('', true)
-                c1('Config imported', P .. ' was added to your configs. Apply it now?', 'ok', 'Apply now', function(
+                control4:Set('', true)
+                updateView3('Config imported', current4 .. ' was added to your configs. Apply it now?', 'ok', 'Apply now', function(
                 )
-                    local venyx = ctx.Venyx
-
-                    venyx:Load(P)
-                    K()
-
-                    venyx = ctx.Venyx
-
-                    venyx:Notify('Config loaded', P, 'ok')
+                    Venyx:Load(current4)
+                    updateView19()
+                    Venyx:Notify('Config loaded', current4, 'ok')
                 end, 'Later')
-
-                C1 = ctx.Venyx
-
-                C1:Notify('Config imported', P .. ' was added to your configs', 'ok')
+                Venyx:Notify('Config imported', current4 .. ' was added to your configs', 'ok')
             end, 'gold')
-            K()
+            updateView19()
 
             return target
         end
-        t1.Quick = function(target, N, S)
-            local P, K, C1, d1, F1, Q1, m1, g1 = {
+        window.Quick = function(self2, targetTab, defaultPins)
+            local items, items3, control, list, list2, list3, items4, callbackFn2 = {
                 pins = {},
                 keys = {},
                 at = {},
@@ -4252,187 +4026,175 @@ p1(S)
             }, {
                 Value = '',
             }, {}, {}, {}
-            local o1, y1 = 0
+            local count4, items5 = 0
 
-            local function b1(z1)
-                local i1 = y1.tr
+            local function updateView19(param1)
+                local current2 = items5.tr
 
-                y1.o:Set(y1.o.From(math.clamp((z1.Position.X - i1.AbsolutePosition.X) / i1.AbsoluteSize.X, 0, 1)), false, true)
+                items5.o:Set(items5.o.From(math.clamp((param1.Position.X - current2.AbsolutePosition.X) / current2.AbsoluteSize.X, 0, 1)), false, true)
             end
-            local function z1(i1)
-                local venyx = ctx.Venyx
-
-                return venyx.Keys[i1].Name
+            local function updateView20(param1)
+                return Venyx.Keys[param1].Name
             end
-            local function i1(target)
-                local x1, B1, G1 = {}, -#z1(target) - 2, ''
+            local function updateView21(target)
+                local list4, current2, text = {}, -#updateView20(target) - 2, ''
 
-                for E1 in target:sub(1, B1):gmatch('[^/]+')do
-                    E1 = E1:match('^%s*(.-)%s*$')
+                for key in target:sub(1, current2):gmatch('[^/]+') do
+                    key = key:match('^%s*(.-)%s*$')
 
-                    if E1:lower() ~= G1 then
-                        G1, x1[#x1 + 1] = E1:lower(), E1
+                    if key:lower() ~= text then
+                        text, list4[#list4 + 1] = key:lower(), key
                     end
                 end
 
-                return table.concat(x1, '  /  ')
+                return table.concat(list4, '  /  ')
             end
-            local function N1(x1)
-                local B1 = P.keys[x1]
+            local function updateView22(param1)
+                local current2 = items.keys[param1]
 
-                return B1 and (Q[B1] or B1)
+                return current2 and (KeyLabels[current2] or current2)
             end
-            -- Registers InputBegan, InputEnded, Activated signal callback(s)
-            local function x1(B1, G1, E1)
+            local function updateView23(param1, param2, callbackFn3)
                 local uIScale
 
-                if G1 then
-                    local newInstance = ctx.newInstance
-
-                    uIScale = newInstance('UIScale', {Parent = B1})
+                if param2 then
+                    uIScale = newInstance('UIScale', {Parent = param1})
                 else
-                    uIScale = G1
+                    uIScale = param2
                 end
 
-                local backgroundTransparency = B1.BackgroundTransparency
+                local backgroundTransparency = param1.BackgroundTransparency
 
-                local function j1(e1)
-                    if V1(e1) then
-                        k1(uIScale or B1, uIScale and {Scale = G1} or {
+                local function updateView24(param12)
+                    if isPrimaryPointer(param12) then
+                        tween(uIScale or param1, uIScale and {Scale = param2} or {
                             BackgroundTransparency = backgroundTransparency - 0.06,
                         }, 0.12)
                     end
                 end
 
-                B1.InputBegan:Connect(j1)
+                param1.InputBegan:Connect(updateView24)
 
-                local function G1(j1)
-                    if V1(j1) then
-                        k1(uIScale or B1, uIScale and {Scale = 1} or {BackgroundTransparency = backgroundTransparency}, 0.35)
+                local function updateView25(param12)
+                    if isPrimaryPointer(param12) then
+                        tween(uIScale or param1, uIScale and {Scale = 1} or {BackgroundTransparency = backgroundTransparency}, 0.35)
                     end
                 end
 
-                B1.InputEnded:Connect(G1)
+                param1.InputEnded:Connect(updateView25)
 
-                local function G1()
-                    if I1() then
-                        E1()
+                local function updateView26()
+                    if isCleanTap() then
+                        callbackFn3()
                     end
                 end
 
-                B1.Activated:Connect(G1)
+                param1.Activated:Connect(updateView26)
             end
-            local function B1(G1, E1, u1)
-                local descendants = G1:GetDescendants()
+            local function updateView24(param1, param2, param3)
+                local descendants = param1:GetDescendants()
 
-                descendants[#descendants + 1] = G1
+                descendants[#descendants + 1] = param1
 
-                local j1 = ipairs
+                for index, item in ipairs(descendants) do
+                    index = {}
 
-                for e1, s1 in j1(descendants)do
-                    e1 = {}
-
-                    if s1:IsA('GuiObject') then
-                        e1.BackgroundTransparency = s1.BackgroundTransparency
+                    if item:IsA('GuiObject') then
+                        index.BackgroundTransparency = item.BackgroundTransparency
                     end
-                    if s1:IsA('TextLabel') then
-                        e1.TextTransparency = s1.TextTransparency
-                    elseif s1:IsA('TextButton') then
-                        e1.TextTransparency = s1.TextTransparency
-                    elseif s1:IsA('TextBox') then
-                        e1.TextTransparency = s1.TextTransparency
+                    if item:IsA('TextLabel') then
+                        index.TextTransparency = item.TextTransparency
+                    elseif item:IsA('TextButton') then
+                        index.TextTransparency = item.TextTransparency
+                    elseif item:IsA('TextBox') then
+                        index.TextTransparency = item.TextTransparency
                     end
-                    if s1:IsA('ImageLabel') then
-                        e1.ImageTransparency = s1.ImageTransparency
+                    if item:IsA('ImageLabel') then
+                        index.ImageTransparency = item.ImageTransparency
                     end
-                    if s1:IsA('UIStroke') then
-                        e1.Transparency = s1.Transparency
+                    if item:IsA('UIStroke') then
+                        index.Transparency = item.Transparency
                     end
 
-                    local P1 = {}
+                    local list4 = {}
 
-                    for j1 in next, e1 do
-                        P1[j1] = 1
+                    for key in next, index do
+                        list4[key] = 1
                     end
 
-                    if E1 then
-                        for j1 in next, e1 do
-                            s1[j1] = 1
+                    if param2 then
+                        for key in next, index do
+                            item[key] = 1
                         end
 
-                        k1(s1, e1, 0.3, nil, nil, u1)
+                        tween(item, index, 0.3, nil, nil, param3)
                     else
-                        local j1 = ctx.Enum
-
-                        k1(s1, P1, 0.26, quint, j1.EasingDirection.In, u1)
+                        tween(item, list4, 0.26, EaseQuint, Enum.EasingDirection.In, param3)
                     end
                 end
 
-                if not E1 then
-                    G1.Active = false
+                if not param2 then
+                    param1.Active = false
 
-                    k1(G1, {
-                        Position = G1.Position + x(0, 26),
-                    }, 0.3, quint, ctx.Enum.EasingDirection.In, u1)
-                    task.delay(0.32 + u1, G1.Destroy, G1)
+                    tween(param1, {
+                        Position = param1.Position + fromOffset(0, 26),
+                    }, 0.3, EaseQuint, Enum.EasingDirection.In, param3)
+                    task.delay(0.32 + param3, param1.Destroy, param1)
                 end
             end
-            local function G1()
-                for E1, value in ipairs(t1.All)do
-                    local P1 = value.k:sub(1, -#value.title - 2)
+            local function updateView25()
+                for index, value in ipairs(window.All) do
+                    local current2 = value.k:sub(1, -#value.title - 2)
 
-                    Q1[P1], Q1[value.k] = Q1[P1] or E1, Q1[value.k] or E1
+                    list3[current2], list3[value.k] = list3[current2] or index, list3[value.k] or index
                 end
 
-                local E1, venyx = {}, ctx.Venyx
+                local list4 = {}
 
-                for key, j1 in next, venyx.Keys do
-                    if j1.Kind then
-                        E1[#E1 + 1] = key
+                for key, value2 in next, Venyx.Keys do
+                    if value2.Kind then
+                        list4[#list4 + 1] = key
                     end
                 end
 
-                table.sort(E1, function(target, key)
-                    local j1, e1 = (Q1[target:sub(1, -#z1(target) - 2)] or 1000000000) * 10000 + (Q1[target] or 0), (Q1[key:sub(1, 
--#z1(key) - 2)] or 1000000000) * 10000 + (Q1[key] or 0)
+                table.sort(list4, function(target, key)
+                    local current2, current3 = (list3[target:sub(1, -#updateView20(target) - 2)] or 1000000000) * 10000 + (list3[target] or 0), (list3[key:sub(1, 
+-#updateView20(key) - 2)] or 1000000000) * 10000 + (list3[key] or 0)
 
-                    if j1 == e1 then
+                    if current2 == current3 then
                         return target < key
                     end
 
-                    return j1 < e1
+                    return current2 < current3
                 end)
 
-                return E1
+                return list4
             end
-            local function Q1()
-                local E1 = ctx.HttpService
-
-                C1:Set(E1:JSONEncode(P), true)
+            local function updateView26()
+                control:Set(HttpService:JSONEncode(items), true)
             end
-            local function E1()
-                P = {
+            local function updateView27()
+                items = {
                     pins = {},
                     keys = {},
                     at = {},
                     fold = {},
                 }
 
-                local ipairsFn, packedValues = ipairs, table.pack(G1())
+                local packedValues = table.pack(updateView25())
 
-                for j1, j1 in ipairsFn(_VX.unpack(packedValues))do
-                    local ipairsFn, P1 = ipairs, S or {}
+                for _, item in ipairs(Runtime.unpack(packedValues)) do
+                    local current2 = defaultPins or {}
 
-                    for S, S in ipairsFn(P1)do
-                        if j1:sub(-#S) == S then
-                            P.pins[j1] = 1
+                    for _, item2 in ipairs(current2) do
+                        if item:sub(-#item2) == item2 then
+                            items.pins[item] = 1
                         end
                     end
                 end
             end
-            -- Registers InputBegan signal callback(s)
-            local function setFramesAlpha()
-                for index, value in ipairs(F1)do
+            local function updateView28()
+                for index, value in ipairs(list2) do
                     index = table.find(value[1].ls, value[2])
 
                     if index then
@@ -4440,411 +4202,397 @@ p1(S)
                     end
                 end
 
-                table.clear(F1)
+                table.clear(list2)
 
-                for index, value in ipairs(d1)do
-                    B1(value.f, false, (index - 1) * 0.05)
+                for index, value in ipairs(list) do
+                    updateView24(value.f, false, (index - 1) * 0.05)
                 end
 
-                table.clear(d1)
+                table.clear(list)
 
-                if g1 then
-                    g1()
+                if callbackFn2 then
+                    callbackFn2()
                 end
-                if not K.show then
+                if not items3.show then
                     return
                 end
 
-                local viewportSize, P1, j1 = workspace.CurrentCamera.ViewportSize, G1(), 220
-                local e1, s1 = math.clamp(viewportSize.Y / 720, 0.75, 1.2) * K.size, 0
+                local viewportSize, current2, count5 = workspace.CurrentCamera.ViewportSize, updateView25(), 220
+                local current3, count6 = math.clamp(viewportSize.Y / 720, 0.75, 1.2) * items3.size, 0
 
-                for Y1 = 1, 5, 1 do
-                    local X1, Dq = {}, tostring(Y1)
+                for index2 = 1, 5, 1 do
+                    local list4, text = {}, tostring(index2)
 
-                    for Jq, Jq in ipairs(P1)do
-                        if P.pins[Jq] == Y1 then
-                            X1[#X1 + 1] = Jq
+                    for _, item in ipairs(current2) do
+                        if items.pins[item] == index2 then
+                            list4[#list4 + 1] = item
                         end
                     end
 
-                    if #X1 > 0 then
-                        s1 += 1
+                    if #list4 > 0 then
+                        count6 += 1
 
-                        local newInstance = ctx.newInstance
-                        local Jq, Uq = newInstance('UIScale', {Scale = e1}), ctx.listLayout
-                        local aq, Hq = Uq(5), ctx.createFrame
-                        local kq, rq, Cq = Hq({
+                        local image
+                        local uiScale3, labelProps2 = newInstance('UIScale', {Scale = current3}), createListLayout
+                        local listLayout, label5 = createListLayout(5), createFrame
+                        local props16, props17, labelProps3 = createFrame({
                             LayoutOrder = 1,
-                            Size = f,
-                            AutomaticSize = g,
+                            Size = FullWidth,
+                            AutomaticSize = AutoSizeY,
                             ClipsDescendants = true,
-                            H1(0, 7, 7),
-                            aq,
-                        }), {AnchorPoint = T}, ctx.udim2
+                            createPadding(0, 7, 7),
+                            listLayout,
+                        }), {AnchorPoint = CenterAnchor}, UDim2.new
 
-                        rq.Position = Cq(1, -17, 0.5, 0)
-                        rq.Size = x(12, 12)
-                        rq.Image = 'down'
-                        rq.ImageTransparency = 0.4
-                        rq.Rotation = P.fold[Dq] and -90 or 0
+                        props17.Position = UDim2.new(1, -17, 0.5, 0)
+                        props17.Size = fromOffset(12, 12)
+                        props17.Image = 'down'
+                        props17.ImageTransparency = 0.4
+                        props17.Rotation = items.fold[text] and -90 or 0
 
-                        local wq, Vq, Wq = e(rq), {}, ctx.udim2
+                        local image2, btnProps4, new2 = createImage(props17), {}, UDim2.new
 
-                        Vq.Size = Wq(1, 0, 0, 34)
-                        newInstance, Cq, rq = e({
-                            Position = x(12, 10),
-                            Size = x(14, 14),
+                        btnProps4.Size = UDim2.new(1, 0, 0, 34)
+                        image, labelProps3, props17 = createImage({
+                            Position = fromOffset(12, 10),
+                            Size = fromOffset(14, 14),
                             Image = 'zap',
-                            ImageColor3 = F[Y1],
+                            ImageColor3 = QuickBarColors[index2],
                         }), {
-                            Position = x(33, 0),
-                        }, ctx.udim2
-                        Cq.Size = rq(1, -90, 1, 0)
-                        Cq.Text = 'QUICK BAR ' .. Y1
-                        Cq.FontFace = font5
-                        Cq.TextSize = 11
-                        Hq, Uq, Wq = textLabel(Cq), {AnchorPoint = R}, ctx.udim2
-                        Uq.Position = Wq(1, -32, 0.5, 0)
-                        Uq.Size = x(0, 16)
-                        Uq.AutomaticSize = t
-                        Uq.Text = #X1
-                        Uq.FontFace = font6
-                        Uq.TextSize = 9.5
-                        Uq.TextXAlignment = center
-                        Uq.BackgroundTransparency = 0.88
-
-                        _VX.setList(Uq, 0, D1(), H1(0, 6))
-                        _VX.setList(Vq, 0, wq, newInstance, Hq, textLabel(Uq))
-
-                        Cq, Uq, rq, Hq = textButton(Vq), ctx.createFrame, {
-                            Parent = t1.Gui,
+                            Position = fromOffset(33, 0),
+                        }, UDim2.new
+                        labelProps3.Size = UDim2.new(1, -90, 1, 0)
+                        labelProps3.Text = 'QUICK BAR ' .. index2
+                        labelProps3.FontFace = FontExtraBold
+                        labelProps3.TextSize = 11
+                        label5, labelProps2, new2 = createLabel(labelProps3), {AnchorPoint = RightCenterAnchor}, UDim2.new
+                        labelProps2.Position = UDim2.new(1, -32, 0.5, 0)
+                        labelProps2.Size = fromOffset(0, 16)
+                        labelProps2.AutomaticSize = AutoSizeX
+                        labelProps2.Text = #list4
+                        labelProps2.FontFace = FontBold
+                        labelProps2.TextSize = 9.5
+                        labelProps2.TextXAlignment = AlignCenterX
+                        labelProps2.BackgroundTransparency = 0.88
+                        labelProps2[1], labelProps2[2] = createCorner(), createPadding(0, 6)
+                        btnProps4[1], btnProps4[2], btnProps4[3], btnProps4[4] = image2, image, label5, createLabel(labelProps2)
+                        labelProps3, labelProps2, props17, label5 = createButton(btnProps4), createFrame, {
+                            Parent = window.Gui,
                             AnchorPoint = vector2New(0.5, 0),
-                            Size = x(j1, 0),
-                            AutomaticSize = g,
+                            Size = fromOffset(count5, 0),
+                            AutomaticSize = AutoSizeY,
                             BackgroundTransparency = 0.06,
                             Active = true,
                             ZIndex = 2,
-                        }, ctx.listLayout
+                        }, createListLayout
+                        props17[1], props17[2], props17[3], props17[4], props17[5], props17[6], props17[7] = createCorner(16), createGradient(Palette.w1, Palette.w2, 90), createStroke(0.74), uiScale3, createListLayout(), labelProps3, props16
 
-                        _VX.setList(rq, 0, D1(16), U1(L.w1, L.w2, 90), J1(0.74), Jq, Hq(), Cq, kq)
+                        local props18 = createFrame(props17)
+                        local items6, current4 = {
+                            f = props18,
+                            u = uiScale3,
+                            id = text,
+                        }, count6
 
-                        local Y1 = Uq(rq)
-                        local Iq, vq = {
-                            f = Y1,
-                            u = Jq,
-                            id = Dq,
-                        }, s1
+                        items6.place = function(param1, param2)
+                            local vec = items.at[text]
 
-                        Iq.place = function(hq, nq)
-                            local Mq = P.at[Dq]
-
-                            Mq = Mq and vector2New(Mq[1], Mq[2]) or vector2New(hq.X - 18 - j1 * nq / 2 - (vq - 1) * (j1 * nq + 12), math.max(hq.Y * 0.023, 8))
-                            Iq.sp.t = vector2New(math.clamp(Mq.X, 40, hq.X - 40), math.clamp(Mq.Y, 0, hq.Y - 40))
-                            Jq.Scale = nq
+                            vec = vec and vector2New(vec[1], vec[2]) or vector2New(param1.X - 18 - count5 * param2 / 2 - (current4 - 1) * (count5 * param2 + 12), math.max(param1.Y * 0.023, 8))
+                            items6.sp.t = vector2New(math.clamp(vec.X, 40, param1.X - 40), math.clamp(vec.Y, 0, param1.Y - 40))
+                            uiScale3.Scale = param2
                         end
-                        Iq.sp = M1(vector2New(), function(M1)
-                            local Jq = ctx.udim2
-
-                            Y1.Position = Jq(0, M1.X, 0, M1.Y)
+                        items6.sp = createSpring(vector2New(), function(param1)
+                            props18.Position = UDim2.new(0, param1.X, 0, param1.Y)
                         end)
 
-                        Iq.place(viewportSize, e1)
+                        items6.place(viewportSize, current3)
 
-                        Iq.sp.p = Iq.sp.t + vector2New(0, 14)
-                        d1[#d1 + 1] = Iq
+                        items6.sp.p = items6.sp.t + vector2New(0, 14)
+                        list[#list + 1] = items6
 
-                        if P.fold[Dq] then
-                            Hq = ctx.Enum
-                            kq.AutomaticSize = Hq.AutomaticSize.None
-                            kq.Size = f
+                        if items.fold[text] then
+                            label5 = Enum
+                            props16.AutomaticSize = Enum.AutomaticSize.None
+                            props16.Size = FullWidth
                         end
 
-                        Cq.InputBegan:Connect(function(M1)
-                            if V1(M1) then
-                                m1 = m1 or {
-                                    b = Iq,
-                                    i = M1,
-                                    s = vector2New(M1.Position.X, M1.Position.Y),
-                                    p = Iq.sp.t,
+                        labelProps3.InputBegan:Connect(function(input)
+                            if isPrimaryPointer(input) then
+                                items4 = items4 or {
+                                    b = items6,
+                                    i = input,
+                                    s = vector2New(input.Position.X, input.Position.Y),
+                                    p = items6.sp.t,
                                 }
                             end
                         end)
-                        x1(Cq, nil, function()
-                            local M1, u1 = P.fold, P.fold[Dq]
+                        updateView23(labelProps3, nil, function()
+                            local fold, current5 = items.fold, items.fold[text]
 
-                            M1[Dq] = if u1 then nil else not u1
+                            fold[text] = if current5 then nil else not current5
 
-                            local M1, u1, e1, Jq = P.fold[Dq], aq.AbsoluteContentSize.Y / math.max(Y1.AbsoluteSize.X / j1, 0.01) + 7, ctx.Enum
+                            local current6, current7, _unused, props19 = items.fold[text], listLayout.AbsoluteContentSize.Y / math.max(props18.AbsoluteSize.X / count5, 0.01) + 7
 
-                            Jq, kq.AutomaticSize, kq.Size = ctx.udim2, e1.AutomaticSize.None, ctx.udim2(1, 0, 0, M1 and u1 or 0)
+                            props19, props16.AutomaticSize, props16.Size = UDim2.new, Enum.AutomaticSize.None, UDim2.new(1, 0, 0, current6 and current7 or 0)
 
-                            k1(wq, {
-                                Rotation = M1 and -90 or 0,
+                            tween(image2, {
+                                Rotation = current6 and -90 or 0,
                             }, 0.3)
 
-                            Jq, e1 = {}, ctx.udim2
-                            Jq.Size = e1(1, 0, 0, M1 and 0 or u1)
+                            props19 = {}
+                            props19.Size = UDim2.new(1, 0, 0, current6 and 0 or current7)
 
-                            k1(kq, Jq, 0.32).Completed:Connect(function()
-                                if not (P.fold[Dq]) then
-                                    kq.AutomaticSize = g
+                            tween(props16, props19, 0.32).Completed:Connect(function()
+                                if not (items.fold[text]) then
+                                    props16.AutomaticSize = AutoSizeY
                                 end
                             end)
-                            Q1()
+                            updateView26()
                         end)
 
-                        rq = ipairs
+                        props17 = ipairs
 
-                        for M1, u1 in rq(X1)do
-                            Vq = ctx.Venyx
+                        for index, item in ipairs(list4) do
+                            btnProps4 = Venyx
 
-                            local j1 = Vq.Keys[u1]
+                            local control2 = Venyx.Keys[item]
 
-                            Hq = N1(u1)
+                            label5 = updateView22(item)
 
-                            local e1
+                            local callbackFn3
 
-                            Uq, Cq, Wq = j1.Kind, {
-                                Parent = kq,
-                                LayoutOrder = M1,
-                            }, ctx.udim2
-                            Cq.Size = Wq(1, 0, 0, Uq == 'slider' and 46 or 34)
-                            Cq.BackgroundTransparency = 0.93
+                            labelProps2, labelProps3, new2 = control2.Kind, {
+                                Parent = props16,
+                                LayoutOrder = index,
+                            }, UDim2.new
+                            labelProps3.Size = UDim2.new(1, 0, 0, labelProps2 == 'slider' and 46 or 34)
+                            labelProps3.BackgroundTransparency = 0.93
+                            labelProps3[1] = createCorner(11)
+                            image, index = createButton(labelProps3), createFrame
 
-                            _VX.setList(Cq, 0, D1(11))
+                            local container4, new3, props19, current5 = createFrame({
+                                Parent = image,
+                                Size = FullSize,
+                                createCorner(11),
+                                createGradient(Palette.a1, Palette.a2),
+                            }), createFrame, {Parent = image}, TopRightAnchor
 
-                            newInstance, M1 = textButton(Cq), ctx.createFrame
+                            props19.AnchorPoint = TopRightAnchor
+                            props19.Position = UDim2.new(1, -9, 0, 6)
+                            props19.Size = fromOffset(160, 22)
+                            props19.ZIndex = 2
+                            current5, index = createListLayout, Enum
+                            props19[1] = createListLayout(6, Enum.HorizontalAlignment.Right, AlignCenterY, FillHorizontal)
 
-                            local X1, Dq, Jq, aq = M1({
-                                Parent = newInstance,
-                                Size = _,
-                                D1(11),
-                                U1(L.a1, L.a2),
-                            }), ctx.createFrame, {Parent = newInstance}, ctx.topRight
+                            local container5, labelProps4, _unused = createFrame(props19), {
+                                Parent = image,
+                                Position = fromOffset(11, 6),
+                            }, UDim2.new
 
-                            Jq.AnchorPoint = aq
-                            M1 = ctx.udim2
-                            Jq.Position = M1(1, -9, 0, 6)
-                            Jq.Size = x(160, 22)
-                            Jq.ZIndex = 2
-                            aq, M1 = ctx.listLayout, ctx.Enum
+                            labelProps4.Size = UDim2.new(1, -(labelProps2 == 'button' and 96 or labelProps2 == 'input' and 132 or 60) - (label5 and 44 or 0), 0, 22)
+                            labelProps4.Text = updateView20(item)
+                            labelProps4.FontFace = FontBold
+                            labelProps4.TextSize = 12.5
+                            labelProps4.TextTruncate = TruncateAtEnd
+                            labelProps4.ZIndex = 2
 
-                            _VX.setList(Jq, 0, aq(6, M1.HorizontalAlignment.Right, center2, horizontal))
+                            createLabel(labelProps4)
 
-                            local M1, kq, rq = Dq(Jq), {
-                                Parent = newInstance,
-                                Position = x(11, 6),
-                            }, ctx.udim2
-
-                            kq.Size = rq(1, -(Uq == 'button' and 96 or Uq == 'input' and 132 or 60) - (Hq and 44 or 0), 0, 22)
-                            kq.Text = z1(u1)
-                            kq.FontFace = font6
-                            kq.TextSize = 12.5
-                            kq.TextTruncate = atEnd
-                            kq.ZIndex = 2
-
-                            textLabel(kq)
-
-                            if Hq then
-                                textLabel({
-                                    Parent = M1,
-                                    Size = x(0, 18),
-                                    AutomaticSize = t,
-                                    Text = Hq,
-                                    FontFace = font4,
+                            if label5 then
+                                createLabel({
+                                    Parent = container5,
+                                    Size = fromOffset(0, 18),
+                                    AutomaticSize = AutoSizeX,
+                                    Text = label5,
+                                    FontFace = FontMono,
                                     TextSize = 10,
-                                    TextXAlignment = center,
+                                    TextXAlignment = AlignCenterX,
                                     BackgroundTransparency = 0.86,
-                                    D1(6),
-                                    H1(0, 6),
+                                    createCorner(6),
+                                    createPadding(0, 6),
                                 })
                             end
-                            if Uq == 'toggle' then
-                                aq = ctx.createFrame
+                            if labelProps2 == 'toggle' then
+                                current5 = createFrame
 
-                                local u1 = E(aq({
-                                    Parent = M1,
+                                local setSwitch = createToggleSwitch(createFrame({
+                                    Parent = container5,
                                     LayoutOrder = 1,
-                                    Size = x(38, 20),
+                                    Size = fromOffset(38, 20),
                                 }), 38, 20)
 
-                                e1 = function(Jq, aq)
-                                    u1(Jq, aq)
+                                callbackFn3 = function(param1, param2)
+                                    setSwitch(param1, param2)
 
-                                    if aq then
-                                        X1.BackgroundTransparency = Jq and 0.78 or 1
+                                    if param2 then
+                                        container4.BackgroundTransparency = param1 and 0.78 or 1
                                     else
-                                        k1(X1, {
-                                            BackgroundTransparency = Jq and 0.78 or 1,
+                                        tween(container4, {
+                                            BackgroundTransparency = param1 and 0.78 or 1,
                                         }, 0.25)
                                     end
                                 end
 
-                                x1(newInstance, nil, function()
-                                    local venyx = ctx.Venyx
+                                updateView23(image, nil, function()
+                                    Venyx.qb = true
 
-                                    venyx.qb = true
+                                    control2:Set(not control2.Value)
 
-                                    j1:Set(not j1.Value)
-
-                                    venyx = ctx.Venyx
-                                    venyx.qb = nil
+                                    Venyx.qb = nil
                                 end)
                             else
-                                if Uq == 'button' then
-                                    local u1 = textLabel({
-                                        Parent = M1,
+                                if labelProps2 == 'button' then
+                                    local label6 = createLabel({
+                                        Parent = container5,
                                         LayoutOrder = 1,
-                                        Size = x(0, 22),
-                                        AutomaticSize = t,
-                                        Text = j1.Text,
-                                        FontFace = font6,
+                                        Size = fromOffset(0, 22),
+                                        AutomaticSize = AutoSizeX,
+                                        Text = control2.Text,
+                                        FontFace = FontBold,
                                         TextSize = 11,
-                                        TextColor3 = j1.Col:Lerp(L.wh, 0.55),
+                                        TextColor3 = control2.Col:Lerp(Palette.wh, 0.55),
                                         BackgroundTransparency = 0.85,
-                                        BackgroundColor3 = j1.Col,
-                                        D1(8),
-                                        H1(0, 10),
-                                        J1(0.5, j1.Col),
+                                        BackgroundColor3 = control2.Col,
+                                        createCorner(8),
+                                        createPadding(0, 10),
+                                        createStroke(0.5, control2.Col),
                                     })
 
-                                    x1(newInstance, nil, function()
-                                        j1.Fire()
+                                    updateView23(image, nil, function()
+                                        control2.Fire()
 
-                                        u1.BackgroundTransparency = 0.5
+                                        label6.BackgroundTransparency = 0.5
 
-                                        k1(u1, {BackgroundTransparency = 0.85}, 0.5)
+                                        tween(label6, {BackgroundTransparency = 0.85}, 0.5)
                                     end)
                                 else
-                                    if Uq == 'input' then
-                                        local u1 = textBox({
-                                            Parent = M1,
+                                    if labelProps2 == 'input' then
+                                        local inputBox = createTextBox({
+                                            Parent = container5,
                                             LayoutOrder = 1,
-                                            Size = x(116, 24),
+                                            Size = fromOffset(116, 24),
                                             BackgroundTransparency = 0.7,
                                             BackgroundColor3 = color3FromRGB(0, 0, 0),
                                             PlaceholderText = 'Type here',
                                             TextSize = 11.5,
-                                            TextTruncate = atEnd,
+                                            TextTruncate = TruncateAtEnd,
                                             ClipsDescendants = true,
-                                            D1(7),
-                                            H1(0, 7),
-                                            J1(0.8),
+                                            createCorner(7),
+                                            createPadding(0, 7),
+                                            createStroke(0.8),
                                         })
 
-                                        local function X1()
-                                            j1:Set(u1.Text)
+                                        local function updateView29()
+                                            control2:Set(inputBox.Text)
                                         end
 
-                                        u1.FocusLost:Connect(X1)
+                                        inputBox.FocusLost:Connect(updateView29)
 
-                                        e1 = function(X1)
-                                            if not (u1:IsFocused()) then
-                                                u1.Text = tostring(X1 or '')
+                                        callbackFn3 = function(param1)
+                                            if not (inputBox:IsFocused()) then
+                                                inputBox.Text = tostring(param1 or '')
                                             end
                                         end
                                     else
-                                        local u1, X1, Jq, Uq = textLabel({
-                                            Parent = M1,
+                                        local label6, props20, props21 = createLabel({
+                                            Parent = container5,
                                             LayoutOrder = 1,
-                                            Size = x(0, 22),
-                                            AutomaticSize = t,
-                                            FontFace = font4,
+                                            Size = fromOffset(0, 22),
+                                            AutomaticSize = AutoSizeX,
+                                            FontFace = FontMono,
                                             TextSize = 11,
-                                            TextColor3 = L.val,
-                                        }), ctx.createFrame, {Parent = newInstance}, ctx.udim2
+                                            TextColor3 = Palette.val,
+                                        }), {Parent = image}, UDim2.new
 
-                                        Jq.Position = Uq(0, 11, 1, -13)
-                                        kq = ctx.udim2
-                                        Jq.Size = kq(1, -22, 0, 5)
-                                        Jq.BackgroundTransparency = 0.86
-                                        Jq.ZIndex = 2
+                                        props20.Position = UDim2.new(0, 11, 1, -13)
+                                        labelProps4 = UDim2.new
+                                        props20.Size = UDim2.new(1, -22, 0, 5)
+                                        props20.BackgroundTransparency = 0.86
+                                        props20.ZIndex = 2
+                                        props20[1] = createCorner()
 
-                                        _VX.setList(Jq, 0, D1())
+                                        local container6 = createFrame(props20)
 
-                                        local M1 = X1(Jq)
+                                        props21, new3 = {Parent = container6}, UDim2.new
+                                        props21.Size = UDim2.new(0, 0, 1, 0)
+                                        props21[1], props21[2] = createCorner(), createGradient(Palette.a1, Palette.a2)
 
-                                        Uq, Dq = {Parent = M1}, ctx.udim2
-                                        Uq.Size = Dq(0, 0, 1, 0)
+                                        local box, props22, _unused = createSolidFrame(props21), {
+                                            Parent = container6,
+                                            AnchorPoint = CenterAnchor,
+                                        }, UDim2.new
 
-                                        _VX.setList(Uq, 0, D1(), U1(L.a1, L.a2))
+                                        props22.Position = UDim2.new(0, 0, 0.5, 0)
+                                        props22.Size = fromOffset(13, 13)
+                                        props22.ZIndex = 3
+                                        props22[1], props22[2] = createCorner(), createStroke(0.65, color3FromRGB(0, 0, 0))
 
-                                        local X1, Dq, Jq = frame(Uq), {
-                                            Parent = M1,
-                                            AnchorPoint = T,
-                                        }, ctx.udim2
+                                        local box2 = createSolidFrame(props22)
 
-                                        Dq.Position = Jq(0, 0, 0.5, 0)
-                                        Dq.Size = x(13, 13)
-                                        Dq.ZIndex = 3
+                                        callbackFn3 = function(param1, param2)
+                                            local num, props23, props24 = math.clamp(control2.Frac(param1), 0, 1), {}, UDim2.new
 
-                                        _VX.setList(Dq, 0, D1(), J1(0.65, color3FromRGB(0, 0, 0)))
+                                            props23.Size = UDim2.new(num, 0, 1, 0)
 
-                                        local Jq = frame(Dq)
+                                            tween(box, props23, param2 and 0 or 0.1)
 
-                                        e1 = function(Dq, Uq)
-                                            local aq, Hq, kq = math.clamp(j1.Frac(Dq), 0, 1), {}, ctx.udim2
+                                            props24 = {}
+                                            props24.Position = UDim2.new(num, 0, 0.5, 0)
 
-                                            Hq.Size = kq(aq, 0, 1, 0)
+                                            tween(box2, props24, param2 and 0 or 0.1)
 
-                                            k1(X1, Hq, Uq and 0 or 0.1)
-
-                                            kq, Hq = {}, ctx.udim2
-                                            kq.Position = Hq(aq, 0, 0.5, 0)
-
-                                            k1(Jq, kq, Uq and 0 or 0.1)
-
-                                            u1.Text = j1.Txt(Dq)
+                                            label6.Text = control2.Txt(param1)
                                         end
 
-                                        newInstance.InputBegan:Connect(function(input)
-                                            if V1(input) then
-                                                y1 = {
-                                                    o = j1,
-                                                    tr = M1,
+                                        image.InputBegan:Connect(function(input)
+                                            if isPrimaryPointer(input) then
+                                                items5 = {
+                                                    o = control2,
+                                                    tr = container6,
                                                     i = input,
                                                 }
-                                                W1.s = true
+                                                pointerTracker.s = true
 
-                                                b1(input)
+                                                updateView19(input)
                                             end
                                         end)
                                     end
                                 end
                             end
-                            if e1 then
-                                e1(j1.Value, true)
+                            if callbackFn3 then
+                                callbackFn3(control2.Value, true)
 
-                                j1.ls[#j1.ls + 1] = e1
-                                F1[#F1 + 1] = {j1, e1}
+                                control2.ls[#control2.ls + 1] = callbackFn3
+                                list2[#list2 + 1] = {control2, callbackFn3}
                             end
                         end
 
-                        Iq.sp.a(Iq.sp.p)
-                        B1(Y1, true, (s1 - 1) * 0.06)
+                        items6.sp.a(items6.sp.p)
+                        updateView24(props18, true, (count6 - 1) * 0.06)
                     end
                 end
             end
-            local function M1()
-                o1 += 1
+            local function updateView29()
+                count4 += 1
 
-                local F1 = o1
+                local current2 = count4
 
                 task.delay(0.15, function()
-                    if F1 == o1 then
-                        setFramesAlpha()
+                    if current2 == count4 then
+                        updateView28()
                     end
                 end)
             end
 
-            target = ctx.RunService
+            self2 = RunService
 
-            G(target.Heartbeat, function(F1)
-                for o1, o1 in ipairs(d1)do
-                    A1(o1.sp, F1)
+            connectSignal(self2.Heartbeat, function(deltaTime)
+                for _, item in ipairs(list) do
+                    stepSpring(item.sp, deltaTime)
                 end
             end)
-            G(workspace.CurrentCamera:GetPropertyChangedSignal('ViewportSize'), function()
+            connectSignal(workspace.CurrentCamera:GetPropertyChangedSignal('ViewportSize'), function(
+            )
                 local viewportSize = workspace.CurrentCamera.ViewportSize
 
                 if viewportSize.X < 300 then
@@ -4853,31 +4601,25 @@ p1(S)
                     return
                 end
 
-                for F1, F1 in ipairs(d1)do
-                    F1.place(viewportSize, math.clamp(viewportSize.Y / 720, 0.75, 1.2) * K.size)
+                for _, item in ipairs(list) do
+                    item.place(viewportSize, math.clamp(viewportSize.Y / 720, 0.75, 1.2) * items3.size)
                 end
             end)
-            G(UserInputService.InputChanged, function(A1)
-                if y1 then
-                    if A1 == y1.i then
-                        b1(A1)
+            connectSignal(UserInputService.InputChanged, function(input)
+                if items5 then
+                    if input == items5.i then
+                        updateView19(input)
                     else
-                        local F1 = ctx.Enum
-
-                        if y1.i.UserInputType == F1.UserInputType.MouseButton1 then
-                            local F1 = ctx.Enum
-
-                            if A1.UserInputType == F1.UserInputType.MouseMovement then
-                                b1(A1)
+                        if items5.i.UserInputType == Enum.UserInputType.MouseButton1 then
+                            if input.UserInputType == Enum.UserInputType.MouseMovement then
+                                updateView19(input)
                             end
                         end
                     end
                 end
-                if m1 then
-                    if A1 ~= m1.i then
-                        local F1 = ctx.Enum
-
-                        if A1.UserInputType ~= F1.UserInputType.MouseMovement then
+                if items4 then
+                    if input ~= items4.i then
+                        if input.UserInputType ~= Enum.UserInputType.MouseMovement then
                             return
                         end
                     end
@@ -4885,32 +4627,28 @@ p1(S)
                     return
                 end
 
-                local F1, o1 = vector2New(A1.Position.X, A1.Position.Y) - m1.s, m1
+                local current2, current3 = vector2New(input.Position.X, input.Position.Y) - items4.s, items4
 
-                o1.mv = o1.mv or F1.Magnitude > 6
+                current3.mv = current3.mv or current2.Magnitude > 6
 
-                if m1.mv then
-                    o1, A1 = workspace.CurrentCamera.ViewportSize, m1.p + F1
-                    m1.b.sp.t = vector2New(math.clamp(A1.X, 40, o1.X - 40), math.clamp(A1.Y, 0, o1.Y - 40))
+                if items4.mv then
+                    current3, input = workspace.CurrentCamera.ViewportSize, items4.p + current2
+                    items4.b.sp.t = vector2New(math.clamp(input.X, 40, current3.X - 40), math.clamp(input.Y, 0, current3.Y - 40))
                 end
             end)
-            G(UserInputService.InputEnded, function(A1)
-                if y1 then
-                    if A1 == y1.i then
-                        y1 = nil
+            connectSignal(UserInputService.InputEnded, function(input)
+                if items5 then
+                    if input == items5.i then
+                        items5 = nil
                     else
-                        local F1 = ctx.Enum
-
-                        if A1.UserInputType == F1.UserInputType.MouseButton1 then
-                            y1 = nil
+                        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                            items5 = nil
                         end
                     end
                 end
-                if m1 then
-                    if A1 ~= m1.i then
-                        local F1 = ctx.Enum
-
-                        if A1.UserInputType ~= F1.UserInputType.MouseButton1 then
+                if items4 then
+                    if input ~= items4.i then
+                        if input.UserInputType ~= Enum.UserInputType.MouseButton1 then
                             return
                         end
                     end
@@ -4918,684 +4656,638 @@ p1(S)
                     return
                 end
 
-                A1 = m1
-                m1 = nil
+                input = items4
+                items4 = nil
 
-                if A1.mv then
-                    P.at[A1.b.id] = {
-                        A1.b.sp.t.X,
-                        A1.b.sp.t.Y,
+                if input.mv then
+                    items.at[input.b.id] = {
+                        input.b.sp.t.X,
+                        input.b.sp.t.Y,
                     }
 
-                    Q1()
+                    updateView26()
                 end
             end)
 
-            local function A1(F1, m1)
-                if m1 then
-                    if t1.Key then
-                        if m1 == t1.Key.Name then
-                            local o1, y1 = ctx.Venyx, (Q[m1] or m1) .. ' already shows and hides the menu'
+            local function updateView30(param1, param2)
+                if param2 then
+                    if window.Key then
+                        if param2 == window.Key.Name then
+                            local current2 = (KeyLabels[param2] or param2) .. ' already shows and hides the menu'
 
-                            return o1:Notify('Key not set', y1, 'warn')
+                            return Venyx:Notify('Key not set', current2, 'warn')
                         end
                     end
                 end
 
-                local o1, y1 = next, P.keys
+                local keys = items.keys
 
-                for b1, B1 in o1, y1, nil do
-                    if m1 then
-                        if B1 == m1 then
-                            if b1 ~= F1 then
-                                P.keys[b1] = nil
+                for key, value in next, keys, nil do
+                    if param2 then
+                        if value == param2 then
+                            if key ~= param1 then
+                                items.keys[key] = nil
 
-                                local o1 = ctx.Venyx
-
-                                o1:Notify('Key moved', (Q[m1] or m1) .. ' now toggles ' .. z1(F1) .. ' instead of ' .. z1(b1), 'info')
+                                Venyx:Notify('Key moved', (KeyLabels[param2] or param2) .. ' now toggles ' .. updateView20(param1) .. ' instead of ' .. updateView20(key), 'info')
                             end
                         end
                     end
                 end
 
-                P.keys[F1] = m1
+                items.keys[param1] = param2
 
-                Q1()
-                setFramesAlpha()
+                updateView26()
+                updateView28()
             end
 
-            function t1.Pin(F1, m1)
-                F1 = ctx.newInstance
-
-                local o1, y1, b1, B1, u1 = F1('UIScale', {Scale = 0.9}), false
-                local P1 = textButton({
-                    Parent = O1,
-                    Size = _,
+            function window.Pin(self3, flagKey)
+                local uiScale3, enabled, current2, label5, stroke = newInstance('UIScale', {Scale = 0.9}), false
+                local button4 = createButton({
+                    Parent = props5,
+                    Size = FullSize,
                     BackgroundColor3 = color3FromRGB(5, 6, 16),
                     ZIndex = 30,
-                    D1(16),
+                    createCorner(16),
                 })
-                local O1, j1, e1, s1, Y1 = {
-                    Parent = P1,
-                    AnchorPoint = T,
-                    Position = Z,
-                    Size = x(390, 0),
-                    AutomaticSize = g,
+                local btnProps4, btnProps5, stroke2, props16 = {
+                    Parent = button4,
+                    AnchorPoint = CenterAnchor,
+                    Position = CenterPos,
+                    Size = fromOffset(390, 0),
+                    AutomaticSize = AutoSizeY,
                     BackgroundTransparency = 0.02,
-                    BackgroundColor3 = L.pn,
-                }, D1(18), J1(0.8), H1(20), ctx.listLayout
-                local X1, Dq, Jq, Uq = Y1(10), ctx.createFrame, {}, ctx.udim2
+                    BackgroundColor3 = Palette.pn,
+                }, createCorner(18), createStroke(0.8), createPadding(20)
+                local listLayout, props17, new2 = createListLayout(10), {}, UDim2.new
 
-                Jq.Size = Uq(1, 0, 0, 46)
-                Y1 = ctx.createFrame
+                props17.Size = UDim2.new(1, 0, 0, 46)
 
-                local aq, Hq, kq = Y1({
-                    Size = x(46, 46),
+                local container4, labelProps2, props18 = createFrame({
+                    Size = fromOffset(46, 46),
                     BackgroundTransparency = 0.8,
-                    BackgroundColor3 = L.a1,
-                    D1(14),
-                    u('pin', 22, L.a1),
+                    BackgroundColor3 = Palette.a1,
+                    createCorner(14),
+                    createIcon('pin', 22, Palette.a1),
                 }), {
-                    Position = x(60, 3),
-                }, ctx.udim2
+                    Position = fromOffset(60, 3),
+                }, UDim2.new
 
-                Hq.Size = kq(1, -60, 0, 22)
-                Hq.Text = z1(m1)
-                Hq.FontFace = font6
-                Hq.TextSize = 17
-                Hq.TextTruncate = atEnd
-                kq, F1, Uq = textLabel(Hq), {
-                    Position = x(60, 26),
-                }, ctx.udim2
-                F1.Size = Uq(1, -60, 0, 16)
-                F1.Text = i1(m1)
-                F1.TextSize = 11.5
-                F1.TextTransparency = 0.42
-                F1.TextTruncate = atEnd
+                labelProps2.Size = UDim2.new(1, -60, 0, 22)
+                labelProps2.Text = updateView20(flagKey)
+                labelProps2.FontFace = FontBold
+                labelProps2.TextSize = 17
+                labelProps2.TextTruncate = TruncateAtEnd
+                props18, self3, new2 = createLabel(labelProps2), {
+                    Position = fromOffset(60, 26),
+                }, UDim2.new
+                self3.Size = UDim2.new(1, -60, 0, 16)
+                self3.Text = updateView21(flagKey)
+                self3.TextSize = 11.5
+                self3.TextTransparency = 0.42
+                self3.TextTruncate = TruncateAtEnd
+                props17[1], props17[2], props17[3] = container4, props18, createLabel(self3)
+                btnProps4[1], btnProps4[2], btnProps4[3], btnProps4[4], btnProps4[5], btnProps4[6] = btnProps5, stroke2, props16, listLayout, uiScale3, createFrame(props17)
 
-                _VX.setList(Jq, 0, aq, kq, textLabel(F1))
-                _VX.setList(O1, 0, j1, e1, s1, X1, o1, Dq(Jq))
+                local button5 = createButton(btnProps4)
 
-                local rq = textButton(O1)
+                local function updateView31(param1, param2)
+                    local labelProps3 = {
+                        Parent = button5,
+                        LayoutOrder = param1,
+                    }
 
-                local function Cq(wq, Vq)
-                    local Wq, Iq = {
-                        Parent = rq,
-                        LayoutOrder = wq,
-                    }, ctx.udim2
+                    labelProps3.Size = UDim2.new(1, 0, 0, 22)
+                    labelProps3.Text = param2
+                    labelProps3.FontFace = FontExtraBold
+                    labelProps3.TextSize = 10
+                    labelProps3.TextTransparency = 0.45
+                    labelProps3.TextYAlignment = Enum.TextYAlignment.Bottom
 
-                    Wq.Size = Iq(1, 0, 0, 22)
-                    Wq.Text = Vq
-                    Wq.FontFace = font5
-                    Wq.TextSize = 10
-                    Wq.TextTransparency = 0.45
-                    Iq = ctx.Enum
-                    Wq.TextYAlignment = Iq.TextYAlignment.Bottom
-
-                    textLabel(Wq)
+                    createLabel(labelProps3)
                 end
 
-                Cq(1, 'SHOW ON QUICK BAR')
+                updateView31(1, 'SHOW ON QUICK BAR')
 
-                Dq, kq, F1 = ctx.createFrame, {
-                    Parent = rq,
+                props18 = {
+                    Parent = button5,
                     LayoutOrder = 2,
-                }, ctx.udim2
-                kq.Size = F1(1, 0, 0, 40)
-                O1, s1, aq = ctx.newInstance, {}, ctx.udim2
-                s1.CellSize = aq(0.16666666666666666, -7, 1, 0)
-                s1.CellPadding = x(8, 0)
-                e1 = ctx.Enum
-                s1.SortOrder = e1.SortOrder.LayoutOrder
+                }
+                props18.Size = UDim2.new(1, 0, 0, 40)
+                props16 = {}
+                props16.CellSize = UDim2.new(0.16666666666666666, -7, 1, 0)
+                props16.CellPadding = fromOffset(8, 0)
+                props16.SortOrder = Enum.SortOrder.LayoutOrder
+                props18[1] = newInstance('UIGridLayout', props16)
 
-                _VX.setList(kq, 0, O1('UIGridLayout', s1))
+                local container5, list4 = createFrame(props18), {}
 
-                local wq, Vq = Dq(kq), {}
+                local function updateView32(param1)
+                    for key, value in next, list4 do
+                        local isMatch, current3, stateMap = (items.pins[flagKey] or 0) == key, value[1], {}
 
-                local function Dq(Wq)
-                    for Iq, vq in next, Vq do
-                        local hq, nq, Mq = (P.pins[m1] or 0) == Iq, vq[1], {}
+                        stateMap.BackgroundTransparency = isMatch and 0 or 1
 
-                        Mq.BackgroundTransparency = hq and 0 or 1
+                        tween(current3, stateMap, param1 and 0 or 0.2)
+                        tween(value[2], {
+                            Transparency = isMatch and 0.45 or 0.84,
+                            Color = isMatch and Palette.a1 or Palette.wh,
+                        }, param1 and 0 or 0.2)
 
-                        k1(nq, Mq, Wq and 0 or 0.2)
-                        k1(vq[2], {
-                            Transparency = hq and 0.45 or 0.84,
-                            Color = hq and L.a1 or L.wh,
-                        }, Wq and 0 or 0.2)
-
-                        vq[3].TextColor3 = hq and L.on or L.wh
+                        value[3].TextColor3 = isMatch and Palette.on or Palette.wh
                     end
                 end
 
-                for Wq = 0, 5, 1 do
-                    X1, Jq = J1(0.84), textLabel({
-                        Size = _,
-                        Text = Wq == 0 and 'Off' or Wq,
-                        FontFace = font5,
+                for index = 0, 5, 1 do
+                    listLayout, props17 = createStroke(0.84), createLabel({
+                        Size = FullSize,
+                        Text = index == 0 and 'Off' or index,
+                        FontFace = FontExtraBold,
                         TextSize = 13,
-                        TextXAlignment = center,
+                        TextXAlignment = AlignCenterX,
                         ZIndex = 2,
                     })
-                    s1, Hq, kq = textButton({
-                        Parent = wq,
-                        LayoutOrder = Wq,
+                    props16, labelProps2, props18 = createButton({
+                        Parent = container5,
+                        LayoutOrder = index,
                         BackgroundTransparency = 0.93,
-                        D1(12),
-                        X1,
-                        Jq,
-                    }), {}, ctx.createFrame
+                        createCorner(12),
+                        listLayout,
+                        props17,
+                    }), {}, createFrame
+                    labelProps2[1], labelProps2[2], labelProps2[3] = createFrame({
+                        Parent = props16,
+                        Size = FullSize,
+                        createCorner(12),
+                        createGradient(Palette.a1, Palette.a2, 90),
+                    }), listLayout, props17
+                    list4[index] = labelProps2
 
-                    _VX.setList(Hq, 0, kq({
-                        Parent = s1,
-                        Size = _,
-                        D1(12),
-                        U1(L.a1, L.a2, 90),
-                    }), X1, Jq)
+                    updateView23(props16, 0.9, function()
+                        items.pins[flagKey] = index > 0 and index or nil
 
-                    Vq[Wq] = Hq
+                        updateView32()
+                        updateView26()
+                        updateView28()
 
-                    x1(s1, 0.9, function()
-                        P.pins[m1] = Wq > 0 and Wq or nil
-
-                        Dq()
-                        Q1()
-                        setFramesAlpha()
-
-                        if Wq > 0 then
-                            if not K.show then
-                                local Vq = ctx.Venyx
-
-                                Vq:Notify('Quick bars are hidden', 'Turn on Show quick bars to see Quick bar ' .. Wq, 'info')
+                        if index > 0 then
+                            if not items3.show then
+                                Venyx:Notify('Quick bars are hidden', 'Turn on Show quick bars to see Quick bar ' .. index, 'info')
                             end
                         end
                     end)
                 end
 
-                Dq(true)
+                updateView32(true)
 
-                local function Dq()
-                    B1.Text = y1 and 'Press any key  -  Esc cancels' or N1(m1) or 'Not set'
-                    B1.TextTransparency = (y1 or P.keys[m1]) and 0 or 0.45
+                local function updateView33()
+                    label5.Text = enabled and 'Press any key  -  Esc cancels' or updateView22(flagKey) or 'Not set'
+                    label5.TextTransparency = (enabled or items.keys[flagKey]) and 0 or 0.45
 
-                    k1(u1, {
-                        Transparency = y1 and 0.3 or 0.82,
-                        Color = y1 and L.a1 or L.wh,
+                    tween(stroke, {
+                        Transparency = enabled and 0.3 or 0.82,
+                        Color = enabled and Palette.a1 or Palette.wh,
                     }, 0.2)
                 end
 
-                aq, O1 = UserInputService.KeyboardEnabled
+                container4, btnProps4 = UserInputService.KeyboardEnabled
 
-                if aq then
-                    F1 = ctx.Venyx
-                    Hq = F1.Keys[m1].Kind == 'toggle'
+                if container4 then
+                    labelProps2 = Venyx.Keys[flagKey].Kind == 'toggle'
 
-                    if Hq then
-                        O1 = Hq
+                    if labelProps2 then
+                        btnProps4 = labelProps2
                     else
-                        Uq = ctx.Venyx
-                        O1 = Uq.Keys[m1].Kind == 'button'
+                        btnProps4 = Venyx.Keys[flagKey].Kind == 'button'
                     end
                 else
-                    O1 = aq
+                    btnProps4 = container4
                 end
 
-                local aq
+                local current3
 
-                if O1 then
-                    Cq(3, 'KEYBIND')
+                if btnProps4 then
+                    updateView31(3, 'KEYBIND')
 
-                    u1 = J1(0.82)
-                    Uq, s1, Y1 = ctx.createFrame, {
-                        Parent = rq,
+                    stroke = createStroke(0.82)
+                    props16 = {
+                        Parent = button5,
                         LayoutOrder = 4,
-                    }, ctx.udim2
-                    s1.Size = Y1(1, 0, 0, 40)
-                    F1 = Uq(s1)
-                    j1, X1 = {Parent = F1}, ctx.udim2
-                    j1.Size = X1(1, -98, 1, 0)
-                    j1.BackgroundTransparency = 0.92
-
-                    _VX.setList(j1, 0, D1(12), u1)
-
-                    wq = textButton(j1)
-                    B1 = textLabel({
-                        Parent = wq,
-                        Size = _,
-                        FontFace = font4,
+                    }
+                    props16.Size = UDim2.new(1, 0, 0, 40)
+                    self3 = createFrame(props16)
+                    btnProps5 = {Parent = self3}
+                    btnProps5.Size = UDim2.new(1, -98, 1, 0)
+                    btnProps5.BackgroundTransparency = 0.92
+                    btnProps5[1], btnProps5[2] = createCorner(12), stroke
+                    container5 = createButton(btnProps5)
+                    label5 = createLabel({
+                        Parent = container5,
+                        Size = FullSize,
+                        FontFace = FontMono,
                         TextSize = 14,
-                        TextXAlignment = center,
+                        TextXAlignment = AlignCenterX,
                     })
 
-                    x1(wq, 0.96, function()
-                        local B1 = ctx.Venyx
+                    updateView23(container5, 0.96, function()
+                        enabled = true
+                        Venyx.kw = true
 
-                        y1 = true
-                        B1.kw = true
-
-                        Dq()
+                        updateView33()
                     end)
 
-                    Jq, kq = {Parent = F1}, ctx.topRight
-                    Jq.AnchorPoint = kq
-                    e1 = ctx.udim2
-                    Jq.Position = e1(1, 0, 0, 0)
-                    Hq = ctx.udim2
-                    Jq.Size = Hq(0, 88, 1, 0)
-                    Jq.BackgroundTransparency = 0.92
-
-                    _VX.setList(Jq, 0, D1(12), J1(0.84), textLabel({
-                        Size = _,
+                    props17 = {Parent = self3}
+                    props17.AnchorPoint = TopRightAnchor
+                    props17.Position = UDim2.new(1, 0, 0, 0)
+                    props17.Size = UDim2.new(0, 88, 1, 0)
+                    props17.BackgroundTransparency = 0.92
+                    props17[1], props17[2], props17[3] = createCorner(12), createStroke(0.84), createLabel({
+                        Size = FullSize,
                         Text = 'Clear',
-                        FontFace = font6,
+                        FontFace = FontBold,
                         TextSize = 13,
-                        TextXAlignment = center,
-                    }))
-                    x1(textButton(Jq), 0.92, function()
-                        local F1 = ctx.Venyx
+                        TextXAlignment = AlignCenterX,
+                    })
 
-                        y1 = false
-                        F1.kw = nil
+                    updateView23(createButton(props17), 0.92, function()
+                        enabled = false
+                        Venyx.kw = nil
 
-                        A1(m1)
-                        Dq()
+                        updateView30(flagKey)
+                        updateView33()
                     end)
 
-                    b1 = UserInputService.InputBegan:Connect(function(F1)
-                        if y1 then
-                            local B1 = ctx.Enum
-
-                            if F1.UserInputType ~= B1.UserInputType.Keyboard then
+                    current2 = UserInputService.InputBegan:Connect(function(input)
+                        if enabled then
+                            if input.UserInputType ~= Enum.UserInputType.Keyboard then
                                 return
                             end
                         else
                             return
                         end
 
-                        y1 = false
+                        enabled = false
 
                         task.defer(function()
-                            local B1 = ctx.Venyx
-
-                            B1.kw = nil
+                            Venyx.kw = nil
                         end)
 
-                        local B1 = ctx.Enum
-
-                        if F1.KeyCode ~= B1.KeyCode.Escape then
-                            A1(m1, F1.KeyCode.Name)
+                        if input.KeyCode ~= Enum.KeyCode.Escape then
+                            updateView30(flagKey, input.KeyCode.Name)
                         end
 
-                        Dq()
+                        updateView33()
                     end)
 
-                    Dq()
+                    updateView33()
 
-                    aq = b1
+                    current3 = current2
                 else
-                    aq = b1
+                    current3 = current2
                 end
 
-                -- Registers Completed signal callback(s)
                 local function disconnectSignal()
-                    if aq then
-                        aq:Disconnect()
+                    if current3 then
+                        current3:Disconnect()
                     end
-                    if y1 then
-                        local F1 = ctx.Venyx
-
-                        F1.kw = nil
+                    if enabled then
+                        Venyx.kw = nil
                     end
 
-                    k1(o1, {Scale = 0.92}, 0.18)
+                    tween(uiScale3, {Scale = 0.92}, 0.18)
 
-                    local F1, m1 = k1(P1, {BackgroundTransparency = 1}, 0.2), function()
-                        P1:Destroy()
+                    local activeTween, callbackFn3 = tween(button4, {BackgroundTransparency = 1}, 0.2), function(
+                    )
+                        button4:Destroy()
                     end
 
-                    F1.Completed:Connect(m1)
+                    activeTween.Completed:Connect(callbackFn3)
 
-                    rq.Visible = false
+                    button5.Visible = false
                 end
 
-                Y1, O1, kq = ctx.createFrame, {
-                    Parent = rq,
+                btnProps4 = {
+                    Parent = button5,
                     LayoutOrder = 5,
-                }, ctx.udim2
-                O1.Size = kq(1, 0, 0, 52)
-
-                _VX.setList(O1, 0, H1(10, 0, 0))
-
-                Uq, e1 = T1(Y1(O1), 'Done', 0, 1, true), function()
-                    if I1() then
+                }
+                btnProps4.Size = UDim2.new(1, 0, 0, 52)
+                btnProps4[1] = createPadding(10, 0, 0)
+                new2, stroke2 = createDialogButton(createFrame(btnProps4), 'Done', 0, 1, true), function(
+                )
+                    if isCleanTap() then
                         disconnectSignal()
                     end
                 end
 
-                Uq.Activated:Connect(e1)
-                P1.Activated:Connect(disconnectSignal)
-                k1(P1, {BackgroundTransparency = 0.45}, 0.2)
-                k1(o1, {Scale = 1}, 0.35, back)
+                new2.Activated:Connect(stroke2)
+                button4.Activated:Connect(disconnectSignal)
+                tween(button4, {BackgroundTransparency = 0.45}, 0.2)
+                tween(uiScale3, {Scale = 1}, 0.35, EaseBack)
             end
 
-            target = N:Section('Quick bars', 'zap')
+            self2 = targetTab:Section('Quick bars', 'zap')
 
-            target:Toggle('Show quick bars', true, function(I1)
-                K.show = I1
+            self2:Toggle('Show quick bars', true, function(param1)
+                items3.show = param1
 
-                M1()
+                updateView29()
             end)
-            target:Toggle('Keybinds', true, function(I1)
-                K.keys = I1
+            self2:Toggle('Keybinds', true, function(param1)
+                items3.keys = param1
             end)
-            target:Slider('Bar size', 60, 160, 100, function(I1)
-                K.size = I1 / 100
+            self2:Slider('Bar size', 60, 160, 100, function(param1)
+                items3.size = param1 / 100
 
-                for I1, I1 in ipairs(d1)do
-                    I1.u.Scale = math.clamp(workspace.CurrentCamera.ViewportSize.Y / 720, 0.75, 1.2) * K.size
+                for _, item in ipairs(list) do
+                    item.u.Scale = math.clamp(workspace.CurrentCamera.ViewportSize.Y / 720, 0.75, 1.2) * items3.size
                 end
             end, '%', 5)
 
-            C1.Set = function(I1, A1, d1)
-                I1.Value = tostring(A1 or '')
+            control.Set = function(self3, newValue, silent)
+                self3.Value = tostring(newValue or '')
 
-                local F1, F1, F1, T1 = ctx.HttpService, ctx.HttpService, pcall(ctx.HttpService.JSONDecode, ctx.HttpService, I1.Value)
+                local current2, current3 = pcall(HttpService.JSONDecode, HttpService, self3.Value)
 
-                if F1 and type(T1) == 'table' and type(T1.pins) == 'table' then
-                    A1 = {
+                if current2 and type(current3) == 'table' and type(current3.pins) == 'table' then
+                    newValue = {
                         'keys',
                         'at',
                         'fold',
                     }
 
-                    for I1, I1 in ipairs(A1)do
-                        T1[I1] = type(T1[I1]) == 'table' and T1[I1] or {}
+                    for _, item in ipairs(newValue) do
+                        current3[item] = type(current3[item]) == 'table' and current3[item] or {}
                     end
 
-                    P = T1
+                    items = current3
                 else
-                    E1()
+                    updateView27()
                 end
-                if not d1 then
-                    M1()
+                if not silent then
+                    updateView29()
                 end
             end
 
-            target:Reg('Quick bar layout', C1)
+            self2:Reg('Quick bar layout', control)
 
-            local C1 = N:Section('Pins and keybinds', 'pin')
+            local current2 = targetTab:Section('Pins and keybinds', 'pin')
 
-            C1:Text(
+            current2:Text(
 [[Tip: you can also hold any feature, or right-click it on PC, to pin it or set a key.]])
 
-            local I1, A1, d1 = ctx.createFrame, {
-                Parent = C1.f,
-                LayoutOrder = C1.n + 1,
-                Size = f,
-                AutomaticSize = g,
-            }, ctx.listLayout
+            local props16, props17, container4 = nil, {
+                Parent = current2.f,
+                LayoutOrder = current2.n + 1,
+                Size = FullWidth,
+                AutomaticSize = AutoSizeY,
+            }
 
-            _VX.setList(A1, 0, H1(4, 14, 12), d1(8))
+            props17[1], props17[2] = createPadding(4, 14, 12), createListLayout(8)
+            container4 = createFrame(props17)
 
-            d1 = I1(A1)
+            current2:Add(container4, '')
 
-            C1:Add(d1, '')
+            local container5, props18, container6 = nil, {Parent = container4}
 
-            local F1, T1, m1 = ctx.createFrame, {Parent = d1}, ctx.udim2
+            props18.Size = UDim2.new(1, 0, 0, 34)
+            container6 = createFrame(props18)
+            props16 = {Parent = container6}
+            props16.Size = UDim2.new(1, -150, 1, 0)
 
-            T1.Size = m1(1, 0, 0, 34)
-            m1 = F1(T1)
-            I1, T1 = {Parent = m1}, ctx.udim2
-            I1.Size = T1(1, -150, 1, 0)
+            local searchBox3, text, props19, props20 = createSearchBox(props16, 'Find an option'), 'All', createFrame, {Parent = container6}
 
-            local T1, o1, y1, b1, B1 = updateBackgroundAlpha(I1, 'Find an option'), 'All', ctx.createFrame, {Parent = m1}, ctx.topRight
+            props20.AnchorPoint = TopRightAnchor
+            props20.Position = UDim2.new(1, 0, 0, 0)
+            props20.Size = UDim2.new(0, 142, 1, 0)
+            props20.BackgroundTransparency = 0.93
+            props20[1], props20[2], props20[3] = createCorner(10), createStroke(0.86), createPadding(3)
+            container5 = createFrame(props20)
+            props19 = {Parent = container5}
+            props19.Size = UDim2.new(0.5, 0, 1, 0)
+            props19[1], props19[2] = createCorner(8), createGradient(Palette.a1, Palette.a2, 90)
 
-            b1.AnchorPoint = B1
-            F1 = ctx.udim2
-            b1.Position = F1(1, 0, 0, 0)
-            F1 = ctx.udim2
-            b1.Size = F1(0, 142, 1, 0)
-            b1.BackgroundTransparency = 0.93
-
-            _VX.setList(b1, 0, D1(10), J1(0.86), H1(3))
-
-            F1 = y1(b1)
-            y1, I1 = {Parent = F1}, ctx.udim2
-            y1.Size = I1(0.5, 0, 1, 0)
-
-            _VX.setList(y1, 0, D1(8), U1(L.a1, L.a2, 90))
-
-            local I1, l1, B1 = frame(y1), {
-                Parent = d1,
+            local box, props21, _unused = createSolidFrame(props19), {
+                Parent = container4,
                 LayoutOrder = 1,
-            }, ctx.udim2
+            }, UDim2.new
 
-            l1.Size = B1(1, 0, 0, 300)
-            b1 = ctx.listLayout
+            props21.Size = UDim2.new(1, 0, 0, 300)
+            props21[1] = createListLayout(4)
 
-            _VX.setList(l1, 0, b1(4))
+            local scrollFrame2 = createScrollFrame(props21)
 
-            local b1 = scrollingFrame(l1)
+            window.nest[scrollFrame2] = targetTab.top or targetTab
+            props17 = {Parent = scrollFrame2}
+            props17.Size = UDim2.new(1, 0, 0, 60)
+            props17.TextSize = 12
+            props17.TextTransparency = 0.45
+            props17.TextXAlignment = AlignCenterX
 
-            t1.nest[b1] = N.top or N
-            A1, d1 = {Parent = b1}, ctx.udim2
-            A1.Size = d1(1, 0, 0, 60)
-            A1.TextSize = 12
-            A1.TextTransparency = 0.45
-            A1.TextXAlignment = center
+            local label5 = createLabel(props17)
 
-            local N = textLabel(A1)
-
-            g1 = function()
-                for d1, d1 in ipairs(b1:GetChildren())do
-                    if d1:IsA('GuiObject') then
-                        if d1 ~= N then
-                            d1:Destroy()
+            callbackFn2 = function()
+                for _, child in ipairs(scrollFrame2:GetChildren()) do
+                    if child:IsA('GuiObject') then
+                        if child ~= label5 then
+                            child:Destroy()
                         end
                     end
                 end
 
-                local d1, ipairsFn, B1 = T1.Text:lower(), ipairs, table.pack(G1())
-                local O1
-                local G1 = 0
+                local current3, current4 = searchBox3.Text:lower(), table.pack(updateView25())
+                local current5
+                local count5 = 0
 
-                for u1, P1 in ipairsFn(_VX.unpack(B1))do
-                    if o1 == 'All' or P.pins[P1] or P.keys[P1] then
-                        if P1:lower():find(d1, 1, true) then
-                            local d1, l1 = P.pins[P1], N1(P1)
+                for index, item in ipairs(Runtime.unpack(current4)) do
+                    if text == 'All' or items.pins[item] or items.keys[item] then
+                        if item:lower():find(current3, 1, true) then
+                            local new2, current6 = items.pins[item], updateView22(item)
 
-                            u1 = nil
+                            index = nil
 
-                            if i1(P1) ~= O1 then
-                                local N1 = i1(P1)
+                            if updateView21(item) ~= current5 then
+                                local current7 = updateView21(item)
 
-                                u1 = G1 + 1
+                                index = count5 + 1
 
-                                local i1, B1 = {
-                                    Parent = b1,
-                                    LayoutOrder = u1,
-                                }, ctx.udim2
+                                local labelProps2, current8 = {
+                                    Parent = scrollFrame2,
+                                    LayoutOrder = index,
+                                }
 
-                                i1.Size = B1(1, -6, 0, 24)
-                                i1.Text = N1:upper()
-                                i1.FontFace = font5
-                                i1.TextSize = 9.5
-                                i1.TextTransparency = 0.5
-                                B1 = ctx.Enum
-                                i1.TextYAlignment = B1.TextYAlignment.Bottom
+                                labelProps2.Size = UDim2.new(1, -6, 0, 24)
+                                labelProps2.Text = current7:upper()
+                                labelProps2.FontFace = FontExtraBold
+                                labelProps2.TextSize = 9.5
+                                labelProps2.TextTransparency = 0.5
+                                current8 = Enum
+                                labelProps2.TextYAlignment = Enum.TextYAlignment.Bottom
+                                labelProps2[1] = createPadding(0, 0, 3, 6)
 
-                                _VX.setList(i1, 0, H1(0, 0, 3, 6))
-                                textLabel(i1)
+                                createLabel(labelProps2)
 
-                                O1 = N1
+                                current5 = current7
                             else
-                                u1 = G1
+                                index = count5
                             end
 
-                            local i1, N1, B1 = ctx.createFrame, {AnchorPoint = R}, ctx.udim2
+                            local labelProps2, props22, _unused = nil, {AnchorPoint = RightCenterAnchor}, UDim2.new
 
-                            N1.Position = B1(1, -10, 0.5, 0)
-                            N1.Size = x(170, 22)
+                            props22.Position = UDim2.new(1, -10, 0.5, 0)
+                            props22.Size = fromOffset(170, 22)
 
-                            local B1, O1 = ctx.listLayout, ctx.Enum
-                            local j1, e1, s1, Y1, X1, Dq, Jq = B1(6, O1.HorizontalAlignment.Right, center2, horizontal), {
+                            local container7, corner
+                            local listLayout, props23, btnProps4, padding, gradient, labelProps3, new3 = createListLayout(6, Enum.HorizontalAlignment.Right, AlignCenterY, FillHorizontal), {
                                 LayoutOrder = 1,
-                                Size = x(0, 22),
-                                AutomaticSize = t,
-                                BackgroundTransparency = d1 and 0 or 0.9,
-                            }, D1(), H1(0, 9), d1 and U1(L.a1, L.a2, 90) or nil, {}, ctx.udim2
+                                Size = fromOffset(0, 22),
+                                AutomaticSize = AutoSizeX,
+                                BackgroundTransparency = new2 and 0 or 0.9,
+                            }, createCorner(), createPadding(0, 9), new2 and createGradient(Palette.a1, Palette.a2, 90) or nil, {}, UDim2.new
 
-                            Dq.Size = Jq(0, 0, 1, 0)
-                            Dq.AutomaticSize = t
-                            Dq.Text = d1 and 'QUICK BAR ' .. d1 or '+ PIN'
-                            Dq.FontFace = font5
-                            Dq.TextSize = 9.5
-                            Dq.TextTransparency = d1 and 0 or 0.4
-                            Dq.TextColor3 = d1 and L.on or L.wh
+                            labelProps3.Size = UDim2.new(0, 0, 1, 0)
+                            labelProps3.AutomaticSize = AutoSizeX
+                            labelProps3.Text = new2 and 'QUICK BAR ' .. new2 or '+ PIN'
+                            labelProps3.FontFace = FontExtraBold
+                            labelProps3.TextSize = 9.5
+                            labelProps3.TextTransparency = new2 and 0 or 0.4
+                            labelProps3.TextColor3 = new2 and Palette.on or Palette.wh
+                            props23[1], props23[2], props23[3], props23[4] = btnProps4, padding, gradient, createLabel(labelProps3)
+                            props22[1], props22[2] = listLayout, createSolidFrame(props23)
+                            container7 = createFrame(props22)
 
-                            _VX.setList(e1, 0, s1, Y1, X1, textLabel(Dq))
-                            _VX.setList(N1, 0, j1, frame(e1))
-
-                            B1 = i1(N1)
-
-                            if l1 then
-                                textLabel({
-                                    Parent = B1,
-                                    Size = x(0, 22),
-                                    AutomaticSize = t,
-                                    Text = l1,
-                                    FontFace = font4,
+                            if current6 then
+                                createLabel({
+                                    Parent = container7,
+                                    Size = fromOffset(0, 22),
+                                    AutomaticSize = AutoSizeX,
+                                    Text = current6,
+                                    FontFace = FontMono,
                                     TextSize = 10.5,
-                                    TextXAlignment = center,
+                                    TextXAlignment = AlignCenterX,
                                     BackgroundTransparency = 0.88,
-                                    D1(7),
-                                    H1(0, 7),
+                                    createCorner(7),
+                                    createPadding(0, 7),
                                 })
                             end
 
-                            u1 += 1
+                            index += 1
 
-                            s1, e1 = {
-                                Parent = b1,
-                                LayoutOrder = u1,
-                            }, ctx.udim2
-                            s1.Size = e1(1, -6, 0, 38)
-                            s1.BackgroundTransparency = 0.955
-                            O1, N1, i1, d1 = D1(12), J1(0.9), {
-                                Position = x(12, 0),
-                            }, ctx.udim2
-                            i1.Size = d1(1, -190, 1, 0)
-                            i1.RichText = true
-                            e1, j1 = z1(P1), ctx.Venyx
-                            X1, Jq = j1.Keys[P1].Kind ~= 'toggle'
+                            btnProps4 = {
+                                Parent = scrollFrame2,
+                                LayoutOrder = index,
+                            }
+                            btnProps4.Size = UDim2.new(1, -6, 0, 38)
+                            btnProps4.BackgroundTransparency = 0.955
+                            corner, props22, labelProps2, new2 = createCorner(12), createStroke(0.9), {
+                                Position = fromOffset(12, 0),
+                            }, UDim2.new
+                            labelProps2.Size = UDim2.new(1, -190, 1, 0)
+                            labelProps2.RichText = true
+                            props23, listLayout = updateView20(item), Venyx
+                            gradient, new3 = Venyx.Keys[item].Kind ~= 'toggle'
 
-                            if X1 then
-                                l1 = ctx.Venyx
-                                Jq = '  <font transparency="0.6">' .. l1.Keys[P1].Kind .. '</font>'
+                            if gradient then
+                                current6 = Venyx
+                                new3 = '  <font transparency="0.6">' .. Venyx.Keys[item].Kind .. '</font>'
                             else
-                                Jq = X1
+                                new3 = gradient
                             end
 
-                            i1.Text = e1 .. (Jq or '')
-                            i1.FontFace = font6
-                            i1.TextSize = 13
-                            i1.TextTruncate = atEnd
+                            labelProps2.Text = props23 .. (new3 or '')
+                            labelProps2.FontFace = FontBold
+                            labelProps2.TextSize = 13
+                            labelProps2.TextTruncate = TruncateAtEnd
+                            btnProps4[1], btnProps4[2], btnProps4[3], btnProps4[4] = corner, props22, container7, createLabel(labelProps2)
 
-                            _VX.setList(s1, 0, O1, N1, B1, textLabel(i1))
-                            x1(textButton(s1), 0.97, function()
-                                t1:Pin(P1)
+                            updateView23(createButton(btnProps4), 0.97, function()
+                                window:Pin(item)
                             end)
 
-                            G1 = u1
+                            count5 = index
                         end
                     end
                 end
 
-                N.Visible, N.Text = G1 == 0, o1 == 'All' and 'No option matches' or 'Nothing pinned or bound yet'
+                label5.Visible, label5.Text = count5 == 0, text == 'All' and 'No option matches' or 'Nothing pinned or bound yet'
             end
 
-            local N, d1, l1 = {}, ipairs, {
+            local list4, items6 = {}, {
                 'All',
                 'Pinned',
             }
 
-            for b1, i1 in d1(l1)do
-                N[b1] = textLabel({
-                    Size = _,
-                    Text = i1,
-                    FontFace = font6,
+            for index2, item in ipairs(items6) do
+                list4[index2] = createLabel({
+                    Size = FullSize,
+                    Text = item,
+                    FontFace = FontBold,
                     TextSize = 12,
-                    TextXAlignment = center,
-                    TextColor3 = b1 == 1 and L.on or L.wh,
+                    TextXAlignment = AlignCenterX,
+                    TextColor3 = index2 == 1 and Palette.on or Palette.wh,
                 })
-                A1, y1 = {Parent = F1}, ctx.udim2
-                A1.Position = y1((b1 - 1) / 2, 0, 0, 0)
-                m1 = ctx.udim2
-                A1.Size = m1(0.5, 0, 1, 0)
-                A1.ZIndex = 2
+                props17, props19 = {Parent = container5}, UDim2.new
+                props17.Position = UDim2.new((index2 - 1) / 2, 0, 0, 0)
+                container6 = UDim2.new
+                props17.Size = UDim2.new(0.5, 0, 1, 0)
+                props17.ZIndex = 2
+                props17[1] = list4[index2]
 
-                _VX.setList(A1, 0, N[b1])
-                x1(textButton(A1), 0.95, function()
-                    o1 = i1
+                updateView23(createButton(props17), 0.95, function()
+                    text = item
 
-                    for index, d1 in ipairs(N)do
-                        k1(d1, {
-                            TextColor3 = index == b1 and L.on or L.wh,
+                    for index, item2 in ipairs(list4) do
+                        tween(item2, {
+                            TextColor3 = index == index2 and Palette.on or Palette.wh,
                         }, 0.2)
                     end
 
-                    local N, udim2 = {}, ctx.udim2
+                    local props22 = {}
 
-                    N.Position = udim2((b1 - 1) / 2, 0, 0, 0)
+                    props22.Position = UDim2.new((index2 - 1) / 2, 0, 0, 0)
 
-                    k1(I1, N, 0.3, back)
-                    g1()
+                    tween(box, props22, 0.3, EaseBack)
+                    callbackFn2()
                 end)
             end
 
-            local N = 0
+            local count5 = 0
 
-            G(T1:GetPropertyChangedSignal('Text'), function()
-                N += 1
+            connectSignal(searchBox3:GetPropertyChangedSignal('Text'), function()
+                count5 += 1
 
-                local I1 = N
+                local current3 = count5
 
                 task.delay(0.2, function()
-                    if I1 == N then
-                        g1()
+                    if current3 == count5 then
+                        callbackFn2()
                     end
                 end)
             end)
-            C1:Button('Clear all quick bars', 'Clear', function()
-                c1('Clear every quick bar?', 'Features keep their state, they just leave the bars.', 'warn', 'Clear', function(
+            current2:Button('Clear all quick bars', 'Clear', function()
+                updateView3('Clear every quick bar?', 'Features keep their state, they just leave the bars.', 'warn', 'Clear', function(
                 )
-                    P.pins = {}
+                    items.pins = {}
 
-                    Q1()
-                    setFramesAlpha()
+                    updateView26()
+                    updateView28()
                 end)
             end, 'danger')
-            C1:Button('Clear all keybinds', 'Clear', function()
-                c1('Clear every keybind?', 'Keys stop toggling options until you set them again.', 'warn', 'Clear', function(
+            current2:Button('Clear all keybinds', 'Clear', function()
+                updateView3('Clear every keybind?', 'Keys stop toggling options until you set them again.', 'warn', 'Clear', function(
                 )
-                    P.keys = {}
+                    items.keys = {}
 
-                    Q1()
-                    setFramesAlpha()
+                    updateView26()
+                    updateView28()
                 end)
             end, 'danger')
-            G(UserInputService.InputBegan, function(N, S)
-                if S then
+            connectSignal(UserInputService.InputBegan, function(input, gameProcessed)
+                if gameProcessed then
                     return
                 else
-                    local C1 = ctx.Venyx
-
-                    if C1.kw then
+                    if Venyx.kw then
                         return
-                    elseif K.keys then
-                        local enum = ctx.Enum
-
-                        if N.UserInputType ~= enum.UserInputType.Keyboard then
+                    elseif items3.keys then
+                        if input.UserInputType ~= Enum.UserInputType.Keyboard then
                             return
                         end
                     else
@@ -5603,54 +5295,50 @@ p1(S)
                     end
                 end
 
-                local nextFn, C1 = next, P.keys
+                local keys = items.keys
 
-                for P, I1 in nextFn, C1, nil do
-                    S = ctx.Venyx
+                for key, value in next, keys, nil do
+                    gameProcessed = Venyx
 
-                    local K = S.Keys[P]
+                    local control2 = Venyx.Keys[key]
 
-                    if K then
-                        if I1 == N.KeyCode.Name then
-                            if K.Kind == 'button' then
-                                K.Fire()
-
-                                local venyx = ctx.Venyx
-
-                                venyx:Notify(z1(P), 'Pressed', 'ok', 2)
+                    if control2 then
+                        if value == input.KeyCode.Name then
+                            if control2.Kind == 'button' then
+                                control2.Fire()
+                                Venyx:Notify(updateView20(key), 'Pressed', 'ok', 2)
                             else
-                                local venyx = ctx.Venyx
+                                local current3
 
-                                venyx.qb = true
+                                Venyx.qb = true
 
-                                K:Set(not K.Value)
+                                control2:Set(not control2.Value)
 
-                                venyx = ctx.Venyx
-                                venyx.qb = nil
-                                venyx = ctx.Venyx
+                                Venyx.qb = nil
+                                current3 = Venyx
 
-                                venyx:Notify(z1(P), K.Value and 'Turned on' or 'Turned off', K.Value and 'ok' or 'info', 2)
+                                Venyx:Notify(updateView20(key), control2.Value and 'Turned on' or 'Turned off', control2.Value and 'ok' or 'info', 2)
                             end
                         end
                     end
                 end
             end)
-            E1()
-            M1()
+            updateView27()
+            updateView29()
 
-            return target
+            return self2
         end
-        t1.Wheel = function(instance, N)
-            instance = t1.Cur and t1.Cur.sc
+        window.Wheel = function(_self, tab)
+            local instance = window.Cur and window.Cur.sc
 
             if UserInputService.TouchEnabled then
                 return
-            elseif t1.open then
-                if K1.open then
+            elseif window.open then
+                if items2.open then
                     return
-                elseif t1.dlg then
+                elseif window.dlg then
                     return
-                elseif os.clock() - (t1.wt or 0) < 0.015 then
+                elseif os.clock() - (window.wt or 0) < 0.015 then
                     return
                 elseif instance then
                     if not (instance:IsA('ScrollingFrame')) then
@@ -5663,629 +5351,603 @@ p1(S)
                 return
             end
 
-            t1.wt = os.clock()
+            window.wt = os.clock()
 
-            local S = UserInputService:GetMouseLocation() - (t1.Gui.IgnoreGuiInset and vector2New() or vector2New(0, 58))
+            local current2 = UserInputService:GetMouseLocation() - (window.Gui.IgnoreGuiInset and vector2New() or vector2New(0, 58))
 
-            for key, value in next, t1.nest do
-                local C1, I1, M1 = key.AbsolutePosition, key.AbsoluteSize, key.CanvasPosition.Y
+            for key, value in next, window.nest do
+                local absPos, bounds, current3 = key.AbsolutePosition, key.AbsoluteSize, key.CanvasPosition.Y
 
-                instance = if key.Parent then if(t1.Cur.top or t1.Cur) == value then if S.X >= C1.X then if S.Y >= C1.Y then if S.X <= C1.X + I1.X then if S.Y <= C1.Y + I1.Y then if N > 0 and M1 > 1 then key else if N < 0 then if M1 < key.AbsoluteCanvasSize.Y - I1.Y - 1 then key else instance else instance else instance else instance else instance else instance else instance else instance
+                instance = if key.Parent then if(window.Cur.top or window.Cur) == value then if current2.X >= absPos.X then if current2.Y >= absPos.Y then if current2.X <= absPos.X + bounds.X then if current2.Y <= absPos.Y + bounds.Y then if tab > 0 and current3 > 1 then key else if tab < 0 then if current3 < key.AbsoluteCanvasSize.Y - bounds.Y - 1 then key else instance else instance else instance else instance else instance else instance else instance else instance
             end
 
-            local max, goal, K = math.max(0, instance.AbsoluteCanvasSize.Y - instance.AbsoluteWindowSize.Y), t1.goal, instance.CanvasPosition.Y
+            local max, goal, current3 = math.max(0, instance.AbsoluteCanvasSize.Y - instance.AbsoluteWindowSize.Y), window.goal, instance.CanvasPosition.Y
 
-            goal = if goal then if t1.gf ~= instance then K else if math.abs(goal - K) > 300 then K else goal else K
-            t1.goal = math.clamp(goal - N * 120, 0, max)
-            t1.gf = instance
+            goal = if goal then if window.gf ~= instance then current3 else if math.abs(goal - current3) > 300 then current3 else goal else current3
+            window.goal = math.clamp(goal - tab * 120, 0, max)
+            window.gf = instance
 
-            k1(instance, {
-                CanvasPosition = vector2New(0, t1.goal),
+            tween(instance, {
+                CanvasPosition = vector2New(0, window.goal),
             }, 0.4)
         end
 
-        G(UserInputService.InputChanged, function(H)
-            local N, enum = t1.Cur and t1.Cur.sc, ctx.Enum
+        connectSignal(UserInputService.InputChanged, function(input)
+            local current2, enum = window.Cur and window.Cur.sc
 
-            if H.UserInputType ~= enum.UserInputType.MouseWheel then
+            if input.UserInputType ~= Enum.UserInputType.MouseWheel then
                 return
-            elseif N then
+            elseif current2 then
             else
                 return
             end
 
-            local S, absolutePosition, absoluteSize = UserInputService:GetMouseLocation() - (t1.Gui.IgnoreGuiInset and vector2New() or vector2New(0, 58)), N.AbsolutePosition, N.AbsoluteSize
+            local current3, absolutePosition, absoluteSize = UserInputService:GetMouseLocation() - (window.Gui.IgnoreGuiInset and vector2New() or vector2New(0, 58)), current2.AbsolutePosition, current2.AbsoluteSize
 
-            if S.X < absolutePosition.X then
+            if current3.X < absolutePosition.X then
                 return
-            elseif S.Y < absolutePosition.Y then
+            elseif current3.Y < absolutePosition.Y then
                 return
-            elseif S.X > absolutePosition.X + absoluteSize.X then
+            elseif current3.X > absolutePosition.X + absoluteSize.X then
                 return
-            elseif S.Y > absolutePosition.Y + absoluteSize.Y then
+            elseif current3.Y > absolutePosition.Y + absoluteSize.Y then
                 return
             end
 
-            t1:Wheel(H.Position.Z)
+            window:Wheel(input.Position.Z)
         end)
 
-        t1.Destroy = function(H)
-            H = O
+        window.Destroy = function(_self)
+            local current2 = activeConnections
 
-            for index, value in ipairs(H)do
+            for index, value in ipairs(current2) do
                 value:Disconnect()
             end
 
-            O = {}
-local _=
-ctx.RunService, ctx.RunService
+            activeConnections = {}
 
-            pcall(ctx.RunService.UnbindFromRenderStep, ctx.RunService, q1)
-            f1:Destroy()
+            pcall(RunService.UnbindFromRenderStep, RunService, current)
+            screenGui:Destroy()
 
-            H = getgenv and getgenv().VenyxWindows
+            current2 = getgenv and getgenv().VenyxWindows
 
-            if H then
-                if H[t1.Id] == t1 then
-                    H[t1.Id] = nil
+            if current2 then
+                if current2[window.Id] == window then
+                    current2[window.Id] = nil
                 end
             end
         end
-        t1.Notify = function(target, ...)
-            target = ctx.Venyx
-
-            return target:Notify(...)
+        window.Notify = function(_self, ...)
+            return Venyx:Notify(...)
         end
-        S1 = ctx.Venyx
 
-        S1:Boot()
-        t1:Show(true)
+        Venyx:Boot()
+        window:Show(true)
 
-        return t1
+        return window
     end
-    R1.new = function(parent, callback, imageId, key)
-        local P, K, C1 = setmetatable({
-            t = parent,
-            W = parent.W,
+    -- ========================================================================
+    -- 5. Section Component & Interactive Controls
+    -- ========================================================================
+    Section.new = function(tab, title, icon, column)
+        local current, btnProps, props = setmetatable({
+            t = tab,
+            W = tab.W,
             n = 0,
-            name = callback,
-            side = key,
-        }, R1), {}, ctx.udim2
+            name = title,
+            side = column,
+        }, Section), {}, UDim2.new
 
-        K.Size = C1(1, 0, 0, 42)
+        btnProps.Size = UDim2.new(1, 0, 0, 42)
 
-        local I1, M1, udim2 = e({
-            Position = x(14, 14),
-            Size = x(15, 15),
-            Image = imageId or 'grid',
-            ImageColor3 = F[#parent.Secs % 5 + 1],
+        local image, labelProps, udim2 = createImage({
+            Position = fromOffset(14, 14),
+            Size = fromOffset(15, 15),
+            Image = icon or 'grid',
+            ImageColor3 = QuickBarColors[#tab.Secs % 5 + 1],
         }), {
-            Position = x(37, 12),
-        }, ctx.udim2
+            Position = fromOffset(37, 12),
+        }, UDim2.new
 
-        M1.Size = udim2(1, -76, 0, 18)
-        M1.Text = callback:upper()
-        M1.FontFace = font5
-        M1.TextSize = 12
-        M1.TextTransparency = 0.06
-        M1.TextTruncate = atEnd
-
-        _VX.setList(K, 0, I1, textLabel(M1))
-
-        P.hd = textButton(K)
-        C1, I1 = {
-            Parent = P.hd,
-            AnchorPoint = T,
-        }, ctx.udim2
-        C1.Position = I1(1, -22, 0, 21)
-        C1.Size = x(14, 14)
-        C1.Image = 'down'
-        C1.ImageTransparency = 0.5
-        P.ch = e(C1)
-        udim2, C1, callback = ctx.createFrame, {
+        labelProps.Size = UDim2.new(1, -76, 0, 18)
+        labelProps.Text = title:upper()
+        labelProps.FontFace = FontExtraBold
+        labelProps.TextSize = 12
+        labelProps.TextTransparency = 0.06
+        labelProps.TextTruncate = TruncateAtEnd
+        btnProps[1], btnProps[2] = image, createLabel(labelProps)
+        current.hd = createButton(btnProps)
+        props = {
+            Parent = current.hd,
+            AnchorPoint = CenterAnchor,
+        }
+        props.Position = UDim2.new(1, -22, 0, 21)
+        props.Size = fromOffset(14, 14)
+        props.Image = 'down'
+        props.ImageTransparency = 0.5
+        current.ch = createImage(props)
+        props = {
             LayoutOrder = 1,
-            Size = f,
-            AutomaticSize = g,
+            Size = FullWidth,
+            AutomaticSize = AutoSizeY,
             ClipsDescendants = true,
-        }, ctx.listLayout
+        }
+        props[1] = createListLayout()
+        current.f = createFrame(props)
 
-        _VX.setList(C1, 0, callback())
-
-        P.f = udim2(C1)
-
-        if key then
-            if key > 2 then
-                parent.cols[key].Visible = true
+        if column then
+            if column > 2 then
+                tab.cols[column].Visible = true
             end
         end
 
-        K, C1, M1 = ctx.createFrame, {
-            Parent = parent.cols[key or 1],
-            Size = f,
-            AutomaticSize = g,
+        props = {
+            Parent = tab.cols[column or 1],
+            Size = FullWidth,
+            AutomaticSize = AutoSizeY,
             BackgroundTransparency = 0.95,
-            LayoutOrder = #parent.Secs + 1,
-        }, ctx.listLayout
+            LayoutOrder = #tab.Secs + 1,
+        }
+        props[1], props[2], props[3], props[4], props[5] = createCorner(16), createStroke(0.88), createListLayout(), current.hd, current.f
+        current.card = createFrame(props)
 
-        _VX.setList(C1, 0, D1(16), J1(0.88), M1(), P.hd, P.f)
-
-        P.card = K(C1)
-
-        v1(P.hd, function()
-            P:Collapse(P.open ~= false)
+        onClick(current.hd, function()
+            current:Collapse(current.open ~= false)
         end)
 
-        parent.Secs[#parent.Secs + 1] = P
-        parent.list[#parent.list + 1] = P
+        tab.Secs[#tab.Secs + 1] = current
+        tab.list[#tab.list + 1] = current
 
-        G(P.card:GetPropertyChangedSignal('AbsoluteSize'), function()
-            p1(parent)
+        connectSignal(current.card:GetPropertyChangedSignal('AbsoluteSize'), function()
+            layoutSectionColumns(tab)
         end)
-        p1(parent)
+        layoutSectionColumns(tab)
 
-        return P
+        return current
     end
-    -- Registers Completed signal callback(s)
-    R1.Collapse = function(H, rotation)
-        H.open = not rotation
+    Section.Collapse = function(self, collapsed)
+        self.open = not collapsed
 
-        local N = H.f
-        local max = math.max(H.hd.AbsoluteSize.Y / 42, 0.1)
-        local O, udim2 = N:FindFirstChildOfClass('UIListLayout').AbsoluteContentSize.Y / max, ctx.udim2
+        local props = self.f
+        local max = math.max(self.hd.AbsoluteSize.Y / 42, 0.1)
+        local current, udim2 = props:FindFirstChildOfClass('UIListLayout').AbsoluteContentSize.Y / max
 
-        N.Size = udim2(1, 0, 0, N.AbsoluteSize.Y / max)
-        udim2 = ctx.Enum
-        N.AutomaticSize = udim2.AutomaticSize.None
-        max, udim2 = {}, ctx.udim2
-        max.Size = udim2(1, 0, 0, rotation and 0 or O)
-        udim2, O = k1(N, max, 0.35), function()
-            if H.open then
-                N.AutomaticSize = g
+        props.Size = UDim2.new(1, 0, 0, props.AbsoluteSize.Y / max)
+        props.AutomaticSize = Enum.AutomaticSize.None
+        max = {}
+        max.Size = UDim2.new(1, 0, 0, collapsed and 0 or current)
+        udim2, current = tween(props, max, 0.35), function()
+            if self.open then
+                props.AutomaticSize = AutoSizeY
             end
         end
 
-        udim2.Completed:Connect(O)
+        udim2.Completed:Connect(current)
 
-        O, udim2 = H.ch, {}
-        udim2.Rotation = rotation and -90 or 0
+        current, udim2 = self.ch, {}
+        udim2.Rotation = collapsed and -90 or 0
 
-        k1(O, udim2, 0.3)
+        tween(current, udim2, 0.3)
     end
-    R1.Add = function(H, F, rawText, S)
-        if H.n > 0 then
-            V(F, x(14, 0), ctx.udim2(1, -28, 0, 1))
+    Section.Add = function(self, element, searchText, isInteractive)
+        if self.n > 0 then
+            createDivider(element, fromOffset(14, 0), UDim2.new(1, -28, 0, 1))
         end
 
-        H.n = H.n + 1
+        self.n = self.n + 1
 
-        if S then
-            local all = H.W.All
-            local O, P = #all + 1, {
-                r = F,
-                n = rawText:lower(),
-                title = rawText,
-                tab = H.t.top,
-                path = H.t.Name .. ' / ' .. H.name,
+        if isInteractive then
+            local all = self.W.All
+            local current, items = #all + 1, {
+                r = element,
+                n = searchText:lower(),
+                title = searchText,
+                tab = self.t.top,
+                path = self.t.Name .. ' / ' .. self.name,
             }
 
-            P.k, all[O] = H.t.Name .. '/' .. H.name .. '/' .. rawText, P
+            items.k, all[current] = self.t.Name .. '/' .. self.name .. '/' .. searchText, items
         end
     end
-    R1.Row = function(callback, F, callback2, S)
-        local O, P, udim2 = callback2 and 48 or 42, {
-            Parent = callback.f,
-        }, ctx.udim2
+    Section.Row = function(self, label, description, rightWidth)
+        local count, btnProps = description and 48 or 42, {
+            Parent = self.f,
+        }
 
-        P.Size = udim2(1, 0, 0, O)
-        P.LayoutOrder = callback.n + 1
+        btnProps.Size = UDim2.new(1, 0, 0, count)
+        btnProps.LayoutOrder = self.n + 1
+        btnProps[1] = createCorner(14)
 
-        _VX.setList(P, 0, D1(14))
+        local button = createButton(btnProps)
 
-        local C1 = textButton(P)
-
-        callback:Add(C1, F, true)
-        r1(C1, 0.97)
-        G(C1.InputBegan, function(r1)
-            if V1(r1) then
-                k1(C1, {BackgroundTransparency = 0.94}, 0.08)
+        self:Add(button, label, true)
+        bindHoverAlpha(button, 0.97)
+        connectSignal(button.InputBegan, function(input)
+            if isPrimaryPointer(input) then
+                tween(button, {BackgroundTransparency = 0.94}, 0.08)
             end
         end)
-        G(C1.InputEnded, function(r1)
-            if V1(r1) then
-                k1(C1, {BackgroundTransparency = 1}, 0.35)
+        connectSignal(button.InputEnded, function(input)
+            if isPrimaryPointer(input) then
+                tween(button, {BackgroundTransparency = 1}, 0.35)
             end
         end)
 
-        O, P, callback = ctx.createFrame, {
-            Parent = C1,
+        btnProps = {
+            Parent = button,
             AnchorPoint = vector2New(0, 0.5),
-        }, ctx.udim2
-        P.Position = callback(0, 14, 0.5, 0)
-        callback = ctx.udim2
-        P.Size = callback(1, -S - 42, 0, callback2 and 42 or 21)
-        udim2 = ctx.listLayout
-local
-H, r1, I1 =udim2(0, nil, center2), {}, ctx.udim2
+        }
+        btnProps.Position = UDim2.new(0, 14, 0.5, 0)
+        btnProps.Size = UDim2.new(1, -rightWidth - 42, 0, description and 42 or 21)
 
-        r1.Size, r1.Text, r1.TextSize, r1.TextTruncate = ctx.udim2(1, 0, 0, 21), F, 14.5, atEnd
+        local listLayout, labelProps, _unused = createListLayout(0, nil, AlignCenterY), {}, UDim2.new
 
-        _VX.setList(P, 0, H, textLabel(r1))
+        labelProps.Size, labelProps.Text, labelProps.TextSize, labelProps.TextTruncate = UDim2.new(1, 0, 0, 21), label, 14.5, TruncateAtEnd
+        btnProps[1], btnProps[2] = listLayout, createLabel(labelProps)
+        listLayout = createFrame(btnProps)
 
-        H = O(P)
-
-        if callback2 then
-            textLabel({
-                Parent = H,
+        if description then
+            createLabel({
+                Parent = listLayout,
                 LayoutOrder = 1,
-                Size = f,
-                AutomaticSize = g,
-                Text = callback2,
+                Size = FullWidth,
+                AutomaticSize = AutoSizeY,
+                Text = description,
                 TextSize = 12,
                 TextTransparency = 0.3,
                 TextWrapped = true,
             })
         end
 
-        O, r1, callback2 = ctx.createFrame, {
-            Parent = C1,
-            AnchorPoint = R,
-        }, ctx.udim2
-        r1.Position = callback2(1, -14, 0.5, 0)
-        r1.Size = x(S, 36)
+        labelProps = {
+            Parent = button,
+            AnchorPoint = RightCenterAnchor,
+        }
+        labelProps.Position = UDim2.new(1, -14, 0.5, 0)
+        labelProps.Size = fromOffset(rightWidth, 36)
 
-        return C1, O(r1), H
+        return button, createFrame(labelProps), listLayout
     end
-    R1.Reg = function(H, key, N)
-        local value = N.Value
+    Section.Reg = function(self, flagKey, control)
+        local value = control.Value
 
-        N.Key, N.Name, N.Def = H.t.Name .. '/' .. H.name .. '/' .. key, key, type(value) == 'table' and table.clone(value) or value
-        value, H = ctx.Venyx
-        H, value.Opt[key], ctx.Venyx.Keys[N.Key] = ctx.Venyx, N, N
+        control.Key, control.Name, control.Def = self.t.Name .. '/' .. self.name .. '/' .. flagKey, flagKey, type(value) == 'table' and table.clone(value) or value
+        value, self = Venyx
+        Venyx.Opt[flagKey], Venyx.Keys[control.Key] = control, control
 
-        local set = N.Set
+        local set = control.Set
 
-        N.Set = function(F, ...)
-            set(F, ...)
+        control.Set = function(self2, ...)
+            set(self2, ...)
 
-            F = ctx.State
-
-            if F.AutoSave then
-                local venyx = ctx.Venyx
-
-                if not venyx.busy then
-                    if not N.Skip then
-                        local venyx = ctx.Venyx
-
-                        venyx:Dirty()
+            if State.AutoSave then
+                if not Venyx.busy then
+                    if not control.Skip then
+                        Venyx:Dirty()
                     end
                 end
             end
         end
 
-        return N
+        return control
     end
-    R1.Hold = function(H, F, N)
-        local S = 0
+    Section.Hold = function(self, rowButton, control)
+        local count = 0
 
-        G(F.InputEnded, function(O)
-            if V1(O) then
-                S += 1
+        connectSignal(rowButton.InputEnded, function(input)
+            if isPrimaryPointer(input) then
+                count += 1
             end
         end)
-        G(F.InputBegan, function(F)
-            local O = H.W
+        connectSignal(rowButton.InputBegan, function(input)
+            local activeWin = self.W
 
-            if not O.Pin then
+            if not activeWin.Pin then
+                return
+            end
+            if input.UserInputType == Enum.UserInputType.MouseButton2 then
+                local key = control.Key
+
+                return activeWin:Pin(key)
+            end
+            if not (isPrimaryPointer(input)) then
                 return
             end
 
-            local enum = ctx.Enum
+            count += 1
 
-            if F.UserInputType == enum.UserInputType.MouseButton2 then
-                local key = N.Key
-
-                return O:Pin(key)
-            end
-            if not (V1(F)) then
-                return
-            end
-
-            S += 1
-
-            local H = S
-            local enum, P = ctx.Enum, F.UserInputType == ctx.Enum.UserInputType.MouseButton1
+            local current = count
+            local isMatch = input.UserInputType == Enum.UserInputType.MouseButton1
 
             task.delay(0.6, function()
-                local K, r1 = S == H and W1.m < 14 and not W1.s
+                local isMatch2, isMatch3 = count == current and pointerTracker.m < 14 and not pointerTracker.s
 
-                if K then
-                    local H = P and UserInputService:IsMouseButtonPressed(F.UserInputType)
+                if isMatch2 then
+                    local current2 = isMatch and UserInputService:IsMouseButtonPressed(input.UserInputType)
 
-                    if H then
-                        r1 = H
+                    if current2 then
+                        isMatch3 = current2
                     else
-                        local H = not P
+                        local current3 = not isMatch
 
-                        if P then
-                            r1 = H
+                        if isMatch then
+                            isMatch3 = current3
                         else
-                            local enum
-
-                            enum, r1 = ctx.Enum, F.UserInputState ~= ctx.Enum.UserInputState.End
+                            isMatch3 = input.UserInputState ~= Enum.UserInputState.End
                         end
                     end
                 else
-                    r1 = K
+                    isMatch3 = isMatch2
                 end
-                if r1 then
-                    W1.s = true
+                if isMatch3 then
+                    pointerTracker.s = true
 
-                    O:Pin(N.Key)
+                    activeWin:Pin(control.Key)
                 end
             end)
         end)
     end
-    R1.Toggle = function(target, F, N, S, O)
-        local P, K = target:Row(F, O, 48)
-        local O, r1 = E(K, 46, 24), {}
+    Section.Toggle = function(self, label, defaultValue, callback, description)
+        local rowFrame, rightSlot = self:Row(label, description, 48)
+        local setSwitch, control = createToggleSwitch(rightSlot, 46, 24), {}
 
-        r1.Value = not not N
-        r1.ls = {}
-        r1.Tab = target.t.Name
-        r1.Kind = 'toggle'
-        r1.Set = function(E, E, K)
-            E = not not E
-            r1.Value = E
+        control.Value = not not defaultValue
+        control.ls = {}
+        control.Tab = self.t.Name
+        control.Kind = 'toggle'
+        control.Set = function(_self, newValue, silent)
+            newValue = not not newValue
+            control.Value = newValue
 
-            O(E)
+            setSwitch(newValue)
 
-            for C1, C1 in ipairs(r1.ls)do
-                C1(E)
+            for _, item in ipairs(control.ls) do
+                item(newValue)
             end
 
-            if not K then
-                w1(S, E)
+            if not silent then
+                safeCall(callback, newValue)
             end
         end
 
-        v1(P, function()
-            r1:Set(not r1.Value)
+        onClick(rowFrame, function()
+            control:Set(not control.Value)
         end)
-        target:Hold(P, r1)
-        O(r1.Value, true)
+        self:Hold(rowFrame, control)
+        setSwitch(control.Value, true)
 
-        if N then
-            w1(S, true)
+        if defaultValue then
+            safeCall(callback, true)
         end
 
-        return target:Reg(F, r1)
+        return self:Reg(label, control)
     end
 
-    local H = {
+    local UnitMultipliers = {
         K = 1000,
         M = 1000000,
         B = 1000000000,
         T = 1000000000000,
     }
 
-    R1.Slider = function(target, N, S, O, E, P, callback, r1, C1)
-        local I1, M1, A1 = callback == 'log'
+    Section.Slider = function(
+        self,
+        label,
+        minValue,
+        maxValue,
+        defaultValue,
+        callback2,
+        scaleMode,
+        step,
+        description
+    )
+        local isMatch, current, current2 = scaleMode == 'log'
 
-        if I1 then
-            S, O = 0, 1000
-            M1, A1 = S, O
+        if isMatch then
+            minValue, maxValue = 0, 1000
+            current, current2 = minValue, maxValue
         else
-            M1, A1 = S, O
+            current, current2 = minValue, maxValue
         end
 
-        local S = r1 or 1
-        local O, r1, d1 = target:Row(N, C1, 200)
-        local textLabel = d1:FindFirstChildOfClass('TextLabel')
+        local count = step or 1
+        local rowFrame, props, props2 = self:Row(label, description, 200)
+        local textLabel = props2:FindFirstChildOfClass('TextLabel')
 
         textLabel:SetAttribute('nofit', true)
 
         textLabel.TextSize = 17
 
-        local F1 = {w = 0}
+        local items = {w = 0}
 
-        local function Q1()
-            local T1 = ctx.udim2
-
-            d1.Size = T1(0, F1.w, d1.Size.Y.Scale, d1.Size.Y.Offset)
-            T1 = ctx.udim2
-            r1.Size = T1(1, -F1.w - 46, 0, 36)
+        local function updateView()
+            props2.Size = UDim2.new(0, items.w, props2.Size.Y.Scale, props2.Size.Y.Offset)
+            props.Size = UDim2.new(1, -items.w - 46, 0, 36)
         end
 
-        F1[#F1 + 1] = Q1
+        items[#items + 1] = updateView
 
-        local function d1()
-            local T1 = textLabel.AbsoluteSize.Y / 21
+        local function updateView2()
+            local current3 = textLabel.AbsoluteSize.Y / 21
 
-            if T1 <= 0 then
+            if current3 <= 0 then
                 return
             elseif textLabel.TextBounds.X <= 0 then
                 return
             end
 
-            local max = math.max(math.ceil(textLabel.TextBounds.X / T1) + 6, C1 and math.min(150, #C1 * 6.3 + 6) or 0)
+            local max = math.max(math.ceil(textLabel.TextBounds.X / current3) + 6, description and math.min(150, #description * 6.3 + 6) or 0)
 
-            if max <= F1.w then
-                return Q1()
+            if max <= items.w then
+                return updateView()
             end
 
-            F1.w = max
+            items.w = max
 
-            for C1, C1 in ipairs(F1)do
-                C1()
+            for _, item in ipairs(items) do
+                item()
             end
         end
 
-        G(textLabel:GetPropertyChangedSignal('TextBounds'), d1)
-        task.defer(d1)
+        connectSignal(textLabel:GetPropertyChangedSignal('TextBounds'), updateView2)
+        task.defer(updateView2)
 
-        local C1, l1, F1 = ctx.createFrame, {Parent = r1}, ctx.udim2
+        local props3 = {Parent = props}
 
-        l1.Position = F1(0, 8, 0.5, -3)
-        F1 = ctx.udim2
-        l1.Size = F1(1, -70, 0, 6)
-        l1.BackgroundTransparency = 0.88
+        props3.Position = UDim2.new(0, 8, 0.5, -3)
+        props3.Size = UDim2.new(1, -70, 0, 6)
+        props3.BackgroundTransparency = 0.88
+        props3[1] = createCorner()
 
-        _VX.setList(l1, 0, D1())
+        local container = createFrame(props3)
 
-        local Q1 = C1(l1)
+        props3 = {Parent = container}
+        props3.Size = UDim2.new(0, 0, 1, 0)
+        props3[1], props3[2] = createCorner(), createGradient(Palette.a1, Palette.a2)
 
-        l1, d1 = {Parent = Q1}, ctx.udim2
-        l1.Size = d1(0, 0, 1, 0)
+        local box, props4, _unused = createSolidFrame(props3), {
+            Parent = container,
+            AnchorPoint = CenterAnchor,
+        }, UDim2.new
 
-        _VX.setList(l1, 0, D1(), U1(L.a1, L.a2))
+        props4.Position = UDim2.new(0, 0, 0.5, 0)
+        props4.Size = fromOffset(20, 20)
+        props4.ZIndex = 2
+        props4[1], props4[2] = createCorner(), createStroke(0.65, color3FromRGB(0, 0, 0))
 
-        local C1, d1, T1 = frame(l1), {
-            Parent = Q1,
-            AnchorPoint = T,
-        }, ctx.udim2
+        local box2 = createSolidFrame(props4)
+        local uiScale = newInstance('UIScale', {Parent = box2})
 
-        d1.Position = T1(0, 0, 0.5, 0)
-        d1.Size = x(20, 20)
-        d1.ZIndex = 2
+        items = createStroke(0.8)
 
-        _VX.setList(d1, 0, D1(), J1(0.65, color3FromRGB(0, 0, 0)))
-
-        local T1, newInstance = frame(d1), ctx.newInstance
-        local d1 = newInstance('UIScale', {Parent = T1})
-
-        F1 = J1(0.8)
-
-        local m1 = textBox({
-            Parent = r1,
-            AnchorPoint = R,
-            Position = b,
-            Size = x(54, 28),
-            FontFace = font5,
+        local inputBox = createTextBox({
+            Parent = props,
+            AnchorPoint = RightCenterAnchor,
+            Position = RightMidPos,
+            Size = fromOffset(54, 28),
+            FontFace = FontExtraBold,
             TextSize = 13,
-            TextTruncate = atEnd,
-            TextColor3 = L.val,
-            TextXAlignment = center,
+            TextTruncate = TruncateAtEnd,
+            TextColor3 = Palette.val,
+            TextXAlignment = AlignCenterX,
             BackgroundTransparency = 0.72,
             BackgroundColor3 = color3FromRGB(0, 0, 0),
-            D1(8),
-            H1(4, 4),
-            F1,
+            createCorner(8),
+            createPadding(4, 4),
+            items,
         })
 
-        local function c1(g1)
-            if g1 <= 0 then
+        local function updateView3(param1)
+            if param1 <= 0 then
                 return 0
             end
 
-            local t1 = 10 ^ (3 + 9 * g1 / 1000)
+            local current3 = 10 ^ (3 + 9 * param1 / 1000)
 
-            g1 = 10 ^ (math.floor(math.log10(t1)) - 2)
+            param1 = 10 ^ (math.floor(math.log10(current3)) - 2)
 
-            return math.floor(t1 / g1 + 0.5) * g1
+            return math.floor(current3 / param1 + 0.5) * param1
         end
-        local function g1(t1)
-            return I1 and (t1 <= 0 and 0 or math.clamp((math.log10(t1) - 3) / 9 * 1000, 0, 1000)) or t1
+        local function updateView4(param1)
+            return isMatch and (param1 <= 0 and 0 or math.clamp((math.log10(param1) - 3) / 9 * 1000, 0, 1000)) or param1
         end
-        local function t1(o1, y1)
-            local f1, b1 = string.format, o1 >= 100 and '%.0f' or o1 >= 10 and '%.1f'
-            local z1 = f1(b1 or '%.2f', o1)
+        local function updateView5(param1, param2)
+            local format, isMatch2 = string.format, param1 >= 100 and '%.0f' or param1 >= 10 and '%.1f'
+            local current3 = format(isMatch2 or '%.2f', param1)
 
-            return (z1:find('%.') and z1:gsub('0+$', ''):gsub('%.$', '') or z1) .. y1
+            return (current3:find('%.') and current3:gsub('0+$', ''):gsub('%.$', '') or current3) .. param2
         end
-        local function o1(y1, f1)
-            if not I1 then
-                return type(callback) == 'function' and callback(y1) or h1(y1) .. (callback or '')
+        local function updateView6(param1, param2)
+            if not isMatch then
+                return type(scaleMode) == 'function' and scaleMode(param1) or formatNumber(param1) .. (scaleMode or '')
             end
-            if y1 <= 0 then
-                return f1 and '0' or 'Off'
+            if param1 <= 0 then
+                return param2 and '0' or 'Off'
             end
 
-            local K = y1 < 1000000 and 1000 or y1 < 1000000000 and 1000000 or 1000000000
+            local isMatch2 = param1 < 1000000 and 1000 or param1 < 1000000000 and 1000000 or 1000000000
 
-            return t1(y1 / K, (K == 1000 and 'K' or K == 1000000 and 'M' or 'B') .. (f1 and '' or '/s'))
+            return updateView5(param1 / isMatch2, (isMatch2 == 1000 and 'K' or isMatch2 == 1000000 and 'M' or 'B') .. (param2 and '' or '/s'))
         end
 
-        l1, newInstance = {
-            Parent = r1,
-            Position = x(-4, -2),
-        }, ctx.udim2
-        l1.Size = newInstance(1, -60, 1, 4)
-        l1.ZIndex = 3
+        props3 = {
+            Parent = props,
+            Position = fromOffset(-4, -2),
+        }
+        props3.Size = UDim2.new(1, -60, 1, 4)
+        props3.ZIndex = 3
 
-        local K, r1 = textButton(l1), {
+        local button, control = createButton(props3), {
             ls = {},
             Kind = 'slider',
         }
 
-        r1.Set = function(h1, num, p1, t1)
-            if type(num) ~= 'number' then
-                local y1, f1 = tostring(num):upper():match('^([%d%.]+)(%a?)')
-                local b1, z1 = tonumber(y1) or 0, H[f1] or (I1 and 1000000 or 1)
+        control.Set = function(self2, newValue, silent, param4)
+            if type(newValue) ~= 'number' then
+                local current3, current4 = tostring(newValue):upper():match('^([%d%.]+)(%a?)')
+                local num, count2 = tonumber(current3) or 0, UnitMultipliers[current4] or (isMatch and 1000000 or 1)
 
-                num = b1 * z1
+                newValue = num * count2
             end
 
-            num = I1 and c1(g1(num)) or math.clamp(math.floor((num - M1) / S + 0.5) * S + M1, M1, A1)
-            h1 = num ~= r1.Value
-            r1.Value = num
+            newValue = isMatch and updateView3(updateView4(newValue)) or math.clamp(math.floor((newValue - current) / count + 0.5) * count + current, current, current2)
+            self2 = newValue ~= control.Value
+            control.Value = newValue
 
-            local H, S, y1 = (g1(num) - M1) / (A1 - M1), {}, ctx.udim2
+            local current3, props5 = (updateView4(newValue) - current) / (current2 - current), {}
 
-            S.Size = y1(H, 0, 1, 0)
+            props5.Size = UDim2.new(current3, 0, 1, 0)
 
-            k1(C1, S, t1 and 0.08 or 0.3)
+            tween(box, props5, param4 and 0.08 or 0.3)
 
-            S, y1 = {}, ctx.udim2
-            S.Position = y1(H, 0, 0.5, 0)
+            props5 = {}
+            props5.Position = UDim2.new(current3, 0, 0.5, 0)
 
-            k1(T1, S, t1 and 0.08 or 0.3)
+            tween(box2, props5, param4 and 0.08 or 0.3)
 
-            if not (m1:IsFocused()) then
-                m1.Text = o1(num)
+            if not (inputBox:IsFocused()) then
+                inputBox.Text = updateView6(newValue)
             end
 
-            for index, value in ipairs(r1.ls)do
-                value(num)
+            for index, value in ipairs(control.ls) do
+                value(newValue)
             end
 
-            if p1 then
-            elseif h1 then
-                w1(P, num)
+            if silent then
+            elseif self2 then
+                safeCall(callback2, newValue)
             end
         end
 
         local C12
 
-        local function S(P)
-            local C1 = M1 + (A1 - M1) * math.clamp((P - Q1.AbsolutePosition.X) / Q1.AbsoluteSize.X, 0, 1)
+        local function updateView7(param1)
+            local current3 = current + (current2 - current) * math.clamp((param1 - container.AbsolutePosition.X) / container.AbsoluteSize.X, 0, 1)
 
-            r1:Set(I1 and c1(C1) or C1, false, true)
+            control:Set(isMatch and updateView3(current3) or current3, false, true)
         end
-        local function P(C1)
-            C12 = C1
+        local function updateView8(param1)
+            C12 = param1
 
-            if target.t.cols then
+            if self.t.cols then
                 if UserInputService.TouchEnabled then
-                    target.t.sc.ScrollingEnabled = not C1
+                    self.t.sc.ScrollingEnabled = not param1
                 end
             end
 
-            k1(d1, {
-                Scale = C1 and 1.25 or 1,
-            }, 0.22, back)
+            tween(uiScale, {
+                Scale = param1 and 1.25 or 1,
+            }, 0.22, EaseBack)
         end
 
-        G(K.InputBegan, function(K)
-            local C1 = ctx.Venyx
-            local h1 = C1.drag
+        connectSignal(button.InputBegan, function(input)
+            local drag = Venyx.drag
 
-            if V1(K) then
-                if h1 then
-                    if h1 ~= r1 then
-                        if h1.d then
-                            C1 = ctx.Enum
-
-                            if h1.d.UserInputState ~= C1.UserInputState.End then
+            if isPrimaryPointer(input) then
+                if drag then
+                    if drag ~= control then
+                        if drag.d then
+                            if drag.d.UserInputState ~= Enum.UserInputState.End then
                                 return
                             end
                         end
@@ -6295,745 +5957,703 @@ H, r1, I1 =udim2(0, nil, center2), {}, ctx.udim2
                 return
             end
 
-            C1 = ctx.Venyx
-            C1.drag = r1
-            r1.d = K
-            W1.s = true
+            Venyx.drag = control
+            control.d = input
+            pointerTracker.s = true
 
-            P(K)
-            S(K.Position.X)
+            updateView8(input)
+            updateView7(input.Position.X)
         end)
 
-        local function K()
-            local C1, enum = C12.UserInputType, ctx.Enum
+        local function updateView9()
+            local current3, enum = C12.UserInputType
 
-            return C1 == enum.UserInputType.MouseButton1
+            return current3 == Enum.UserInputType.MouseButton1
         end
 
-        G(UserInputService.InputChanged, function(C1)
-            local C13, W1 = C12
+        connectSignal(UserInputService.InputChanged, function(input)
+            local C13, isMatch2 = C12
 
             if C13 then
-                local h1 = C1 == C12
+                local isMatch3 = input == C12
 
-                if h1 then
-                    W1 = h1
+                if isMatch3 then
+                    isMatch2 = isMatch3
                 else
-                    local h1 = K()
+                    local current3 = updateView9()
 
-                    if h1 then
-                        local d1
-
-                        d1, W1 = ctx.Enum, C1.UserInputType == ctx.Enum.UserInputType.MouseMovement
+                    if current3 then
+                        isMatch2 = input.UserInputType == Enum.UserInputType.MouseMovement
                     else
-                        W1 = h1
+                        isMatch2 = current3
                     end
                 end
             else
-                W1 = C13
+                isMatch2 = C13
             end
-            if W1 then
-                S(C1.Position.X)
+            if isMatch2 then
+                updateView7(input.Position.X)
             end
         end)
-        G(UserInputService.InputEnded, function(S)
-            local C1, W12 = C12
+        connectSignal(UserInputService.InputEnded, function(input)
+            local current3, W12 = C12
 
-            if C1 then
-                local W1 = S == C12
+            if current3 then
+                local isMatch2 = input == C12
 
-                if W1 then
-                    W12 = W1
+                if isMatch2 then
+                    W12 = isMatch2
                 else
-                    local H = K()
+                    local current4 = updateView9()
 
-                    if H then
-                        local enum
-
-                        enum, W12 = ctx.Enum, S.UserInputType == ctx.Enum.UserInputType.MouseButton1
+                    if current4 then
+                        W12 = input.UserInputType == Enum.UserInputType.MouseButton1
                     else
-                        W12 = H
+                        W12 = current4
                     end
                 end
             else
-                W12 = C1
+                W12 = current3
             end
             if W12 then
-                S = ctx.Venyx
-                S.drag = nil
+                Venyx.drag = nil
 
-                P(nil)
+                updateView8(nil)
             end
         end)
-        G(m1.Focused, function()
-            m1.Text = I1 and o1(r1.Value, true) or tostring(r1.Value)
+        connectSignal(inputBox.Focused, function()
+            inputBox.Text = isMatch and updateView6(control.Value, true) or tostring(control.Value)
 
-            k1(m1, {BackgroundTransparency = 0.75}, 0.15)
+            tween(inputBox, {BackgroundTransparency = 0.75}, 0.15)
         end)
-        L1(m1, F1, 0.5, 0.8, function()
-            k1(m1, {BackgroundTransparency = 0.9}, 0.2)
+        bindInputFocus(inputBox, items, 0.5, 0.8, function()
+            tween(inputBox, {BackgroundTransparency = 0.9}, 0.2)
 
-            local H = m1.Text:gsub('[%s,/]', ''):gsub('[sS]$', '')
+            local text = inputBox.Text:gsub('[%s,/]', ''):gsub('[sS]$', '')
 
-            H = if I1 then if H:lower() == 'off'then'0'else H else H
+            text = if isMatch then if text:lower() == 'off'then'0'else text else text
 
-            if H:match('^%-?[%d%.]+%a?$') then
-                r1:Set(I1 and H or tonumber(H))
+            if text:match('^%-?[%d%.]+%a?$') then
+                control:Set(isMatch and text or tonumber(text))
             end
 
-            m1.Text = o1(r1.Value)
+            inputBox.Text = updateView6(control.Value)
         end)
 
-        r1.Frac = function(H)
-            return (g1(H) - M1) / (A1 - M1)
+        control.Frac = function(param1)
+            return (updateView4(param1) - current) / (current2 - current)
         end
-        r1.Txt = o1
-        r1.From = function(H)
-            H = M1 + (A1 - M1) * H
+        control.Txt = updateView6
+        control.From = function(param1)
+            param1 = current + (current2 - current) * param1
 
-            return I1 and c1(H) or H
+            return isMatch and updateView3(param1) or param1
         end
 
-        target:Hold(O, r1)
-        r1:Set(E, true)
+        self:Hold(rowFrame, control)
+        control:Set(defaultValue, true)
 
-        return target:Reg(N, r1)
+        return self:Reg(label, control)
     end
-    R1.Dropdown = function(target, F, N, S, O, text, P)
-        local K, r1 = target:Row(F, P, 176)
-        local createFrame, C1, udim2 = ctx.createFrame, {
-            Parent = r1,
+    Section.Dropdown = function(self, label, options, defaultValue, callback, isMulti, description)
+        local rowFrame, rightSlot = self:Row(label, description, 176)
+        local labelProps, props = nil, {
+            Parent = rightSlot,
             AnchorPoint = vector2New(0, 0.5),
-        }, ctx.udim2
-
-        C1.Position = udim2(0, 0, 0.5, 0)
-        udim2 = ctx.udim2
-        C1.Size = udim2(1, 0, 0, 32)
-        C1.BackgroundTransparency = 0.93
-
-        local r1, V1, W1, I1 = D1(10), J1(0.87), {AnchorPoint = R}, ctx.udim2
-
-        W1.Position = I1(1, -8, 0.5, 0)
-        W1.Size = x(13, 13)
-        W1.Image = 'down'
-
-        _VX.setList(C1, 0, r1, V1, e(W1))
-
-        W1 = createFrame(C1)
-        createFrame, r1 = {
-            Parent = W1,
-            Position = x(9, 0),
-        }, ctx.udim2
-        createFrame.Size = r1(1, -34, 1, 0)
-        createFrame.FontFace = font6
-        createFrame.TextSize = 14
-        createFrame.TextTruncate = atEnd
-
-        local r1, C1, udim2 = textLabel(createFrame), {
-            Parent = W1,
-            AnchorPoint = R,
-        }, ctx.udim2
-
-        C1.Position = udim2(1, -26, 0.5, 0)
-        C1.Size = x(0, 18)
-        C1.AutomaticSize = t
-        C1.FontFace = font6
-        C1.TextSize = 11
-        C1.TextColor3 = color3FromRGB(226, 229, 255)
-        C1.BackgroundTransparency = 0.72
-        C1.BackgroundColor3 = L.a1
-        C1.TextXAlignment = center
-
-        _VX.setList(C1, 0, D1(), H1(0, 6))
-
-        local P, V1 = textLabel(C1), {
-            Options = N,
-            Multi = text,
         }
-        local N = target.W
 
-        V1.Set = function(C1, W1, h1)
-            V1.Value = text and (type(W1) == 'table' and W1 or {W1}) or W1
-            W1 = text and type(V1.Options) == 'table' and V1.Options
+        props.Position = UDim2.new(0, 0, 0.5, 0)
+        props.Size = UDim2.new(1, 0, 0, 32)
+        props.BackgroundTransparency = 0.93
 
-            if W1 then
-                local M1 = {}
+        local corner, stroke, props2, new = createCorner(10), createStroke(0.87), {AnchorPoint = RightCenterAnchor}, UDim2.new
 
-                for index, d1 in ipairs(W1)do
-                    M1[type(d1) == 'table' and d1.v or d1] = index
+        props2.Position = UDim2.new(1, -8, 0.5, 0)
+        props2.Size = fromOffset(13, 13)
+        props2.Image = 'down'
+        props[1], props[2], props[3] = corner, stroke, createImage(props2)
+        props2 = createFrame(props)
+        labelProps = {
+            Parent = props2,
+            Position = fromOffset(9, 0),
+        }
+        labelProps.Size = UDim2.new(1, -34, 1, 0)
+        labelProps.FontFace = FontBold
+        labelProps.TextSize = 14
+        labelProps.TextTruncate = TruncateAtEnd
+
+        local props3, labelProps2, udim2 = createLabel(labelProps), {
+            Parent = props2,
+            AnchorPoint = RightCenterAnchor,
+        }, UDim2.new
+
+        labelProps2.Position = UDim2.new(1, -26, 0.5, 0)
+        labelProps2.Size = fromOffset(0, 18)
+        labelProps2.AutomaticSize = AutoSizeX
+        labelProps2.FontFace = FontBold
+        labelProps2.TextSize = 11
+        labelProps2.TextColor3 = color3FromRGB(226, 229, 255)
+        labelProps2.BackgroundTransparency = 0.72
+        labelProps2.BackgroundColor3 = Palette.a1
+        labelProps2.TextXAlignment = AlignCenterX
+        labelProps2[1], labelProps2[2] = createCorner(), createPadding(0, 6)
+
+        local label2, control = createLabel(labelProps2), {
+            Options = options,
+            Multi = isMulti,
+        }
+        local activeWin = self.W
+
+        control.Set = function(_self, newValue, silent)
+            control.Value = isMulti and (type(newValue) == 'table' and newValue or {newValue}) or newValue
+            newValue = isMulti and type(control.Options) == 'table' and control.Options
+
+            if newValue then
+                local list = {}
+
+                for index, item in ipairs(newValue) do
+                    list[type(item) == 'table' and item.v or item] = index
                 end
 
-                V1.Value = table.clone(V1.Value)
+                control.Value = table.clone(control.Value)
 
-                table.sort(V1.Value, function(key, d1)
-                    return (M1[key] or 1000000000) < (M1[d1] or 1000000000)
+                table.sort(control.Value, function(key, param2)
+                    return (list[key] or 1000000000) < (list[param2] or 1000000000)
                 end)
             end
 
-            W1 = text and #V1.Value or 0
+            newValue = isMulti and #control.Value or 0
 
-            r1:SetAttribute('alt', W1 > 1 and V1.Value[1] .. '...' or nil)
+            props3:SetAttribute('alt', newValue > 1 and control.Value[1] .. '...' or nil)
 
-            r1.Text = text and (W1 == 0 and 'None' or tostring(V1.Value[1])) or tostring(V1.Value or 'None')
-            P.Text = '+' .. W1 - 1
-            P.Visible = W1 > 1
-            C1 = ctx.udim2
-            r1.Size = C1(1, W1 > 1 and -70 or -34, 1, 0)
-            r1.TextTransparency = 0.6
+            props3.Text = isMulti and (newValue == 0 and 'None' or tostring(control.Value[1])) or tostring(control.Value or 'None')
+            label2.Text = '+' .. newValue - 1
+            label2.Visible = newValue > 1
+            props3.Size = UDim2.new(1, newValue > 1 and -70 or -34, 1, 0)
+            props3.TextTransparency = 0.6
 
-            k1(r1, {TextTransparency = 0}, 0.3)
-            N:Sync(V1)
+            tween(props3, {TextTransparency = 0}, 0.3)
+            activeWin:Sync(control)
 
-            if not h1 then
-                w1(O, V1.Value)
+            if not silent then
+                safeCall(callback, control.Value)
             end
         end
-        V1.Refresh = function(N, N)
-            V1.Options = N
+        control.Refresh = function(_self, newOptions)
+            control.Options = newOptions
         end
 
-        v1(K, function()
-            local N = type(V1.Options) == 'function' and V1.Options() or V1.Options
+        onClick(rowFrame, function()
+            local isMatch = type(control.Options) == 'function' and control.Options() or control.Options
 
-            target.W:Pick(F, N, V1.Value, text, function(N)
-                V1:Set(N)
-            end, V1.Default, V1)
+            self.W:Pick(label, isMatch, control.Value, isMulti, function(param1)
+                control:Set(param1)
+            end, control.Default, control)
         end)
 
-        V1.Default = text and table.clone(S or {}) or nil
-        I1 = text and (S or {})
+        control.Default = isMulti and table.clone(defaultValue or {}) or nil
+        new = isMulti and (defaultValue or {})
 
-        V1:Set(I1 or S, true)
+        control:Set(new or defaultValue, true)
 
-        return target:Reg(F, V1)
+        return self:Reg(label, control)
     end
-    R1.Input = function(target, F, N, S, O)
-        local E, udim2 = target:Row(F, O, 176)
-        local O, K, udim22 = J1(0.87), {
+    Section.Input = function(self, label, placeholder, callback, description)
+        local rowFrame, udim2 = self:Row(label, description, 176)
+        local stroke, props, udim22 = createStroke(0.87), {
             Parent = udim2,
             AnchorPoint = vector2New(0, 0.5),
-        }, ctx.udim2
+        }, UDim2.new
 
-        K.Position = udim22(0, 0, 0.5, 0)
-        udim2 = ctx.udim2
-        K.Size = udim2(1, 0, 0, 26)
-        K.BackgroundTransparency = 0.8
-        K.BackgroundColor3 = color3FromRGB(0, 0, 0)
-        K.PlaceholderText = N or ''
-        K.TextSize = 13
-        K.TextTruncate = atEnd
-        udim22 = ctx.Enum
-        K.TextXAlignment = udim22.TextXAlignment.Left
-        K.ClipsDescendants = true
+        props.Position = UDim2.new(0, 0, 0.5, 0)
+        props.Size = UDim2.new(1, 0, 0, 26)
+        props.BackgroundTransparency = 0.8
+        props.BackgroundColor3 = color3FromRGB(0, 0, 0)
+        props.PlaceholderText = placeholder or ''
+        props.TextSize = 13
+        props.TextTruncate = TruncateAtEnd
+        props.TextXAlignment = Enum.TextXAlignment.Left
+        props.ClipsDescendants = true
+        props[1], props[2], props[3] = createCorner(10), createPadding(0, 10), stroke
 
-        _VX.setList(K, 0, D1(10), H1(0, 10), O)
-
-        local N, P = textBox(K), {
+        local inputBox, control = createTextBox(props), {
             Value = '',
             ls = {},
             Kind = 'input',
         }
 
-        P.Set = function(X, X, K)
-            P.Value = tostring(X or '')
-            N.Text = P.Value
+        control.Set = function(_self, newValue, silent)
+            control.Value = tostring(newValue or '')
+            inputBox.Text = control.Value
 
-            for index, value in ipairs(P.ls)do
-                value(P.Value)
+            for index, value in ipairs(control.ls) do
+                value(control.Value)
             end
 
-            if not K then
-                w1(S, P.Value)
+            if not silent then
+                safeCall(callback, control.Value)
             end
         end
 
-        target:Hold(E, P)
-        L1(N, O, 0.5, 0.87, function()
-            P:Set(N.Text)
+        self:Hold(rowFrame, control)
+        bindInputFocus(inputBox, stroke, 0.5, 0.87, function()
+            control:Set(inputBox.Text)
         end)
-        v1(E, function()
-            N:CaptureFocus()
+        onClick(rowFrame, function()
+            inputBox:CaptureFocus()
         end)
 
-        return target:Reg(F, P)
+        return self:Reg(label, control)
     end
-    R1.Key = function(target, F, N, S, O, E)
-        local P, X = target:Row(F, E, 60)
-        local E = J1(0.82)
-        local K, newInstance = {
-            Parent = X,
-            AnchorPoint = R,
-            Position = b,
-            Size = x(0, 26),
-            AutomaticSize = t,
-            FontFace = font4,
-            TextXAlignment = center,
+    Section.Key = function(self, label, defaultKey, onPress, onKeyChanged, description)
+        local rowFrame, rightSlot = self:Row(label, description, 60)
+        local stroke = createStroke(0.82)
+        local props = {
+            Parent = rightSlot,
+            AnchorPoint = RightCenterAnchor,
+            Position = RightMidPos,
+            Size = fromOffset(0, 26),
+            AutomaticSize = AutoSizeX,
+            FontFace = FontMono,
+            TextXAlignment = AlignCenterX,
             BackgroundTransparency = 0.92,
-        }, ctx.newInstance
+        }
 
-        _VX.setList(K, 0, D1(9), H1(0, 12), E, newInstance('UISizeConstraint', {
+        props[1], props[2], props[3], props[4] = createCorner(9), createPadding(0, 12), stroke, newInstance('UISizeConstraint', {
             MinSize = vector2New(36, 26),
-        }))
+        })
 
-        local X, r1, C1 = textLabel(K), {}
+        local label2, control, enabled = createLabel(props), {}
 
-        r1.Set = function(key, V1, W1)
-            r1.Value = V1
-            key = V1 and V1.Name or 'None'
-            X.Text = Q[key] or key
+        control.Set = function(self2, newValue, silent)
+            control.Value = newValue
+            self2 = newValue and newValue.Name or 'None'
+            label2.Text = KeyLabels[self2] or self2
 
-            k1(E, {
+            tween(stroke, {
                 Transparency = 0.82,
-                Color = L.wh,
+                Color = Palette.wh,
             }, 0.2)
 
-            if not W1 then
-                w1(O, V1)
+            if not silent then
+                safeCall(onKeyChanged, newValue)
             end
         end
 
-        v1(P, function()
-            local venyx = ctx.Venyx
+        onClick(rowFrame, function()
+            enabled = true
+            Venyx.kw = true
+            label2.Text = '...'
 
-            C1 = true
-            venyx.kw = true
-            X.Text = '...'
-
-            k1(E, {
+            tween(stroke, {
                 Transparency = 0.4,
-                Color = L.a1,
+                Color = Palette.a1,
             }, 0.2)
         end)
-        G(UserInputService.InputBegan, function(Q, O)
-            local C14, P = C1
+        connectSignal(UserInputService.InputBegan, function(input, gameProcessed)
+            local C14, isMatch = enabled
 
             if C14 then
-                local enum
-
-                enum, P = ctx.Enum, Q.UserInputType == ctx.Enum.UserInputType.Keyboard
+                isMatch = input.UserInputType == Enum.UserInputType.Keyboard
             else
-                P = C14
+                isMatch = C14
             end
-            if P then
-                C1 = false
+            if isMatch then
+                enabled = false
 
                 task.defer(function()
-                    local venyx = ctx.Venyx
-
-                    venyx.kw = nil
+                    Venyx.kw = nil
                 end)
-                r1:Set(Q.KeyCode ~= ctx.Enum.KeyCode.Escape and Q.KeyCode or nil)
-            elseif O then
-            elseif r1.Value then
-                if Q.KeyCode == r1.Value then
-                    w1(S)
+                control:Set(input.KeyCode ~= Enum.KeyCode.Escape and input.KeyCode or nil)
+            elseif gameProcessed then
+            elseif control.Value then
+                if input.KeyCode == control.Value then
+                    safeCall(onPress)
                 end
             end
         end)
-        r1:Set(N, true)
+        control:Set(defaultKey, true)
 
-        return target:Reg(F, r1)
+        return self:Reg(label, control)
     end
-    R1.Button = function(target, name, text, N, callback, label)
-        local E, P, X = ({
-            danger = L.red,
-            gold = L.gold,
-            mint = L.mint,
-            pink = L.pink,
-        })[callback] or L.sky, target:Row(name, label, 110)
-        local K = textLabel({
-            Parent = X,
-            AnchorPoint = R,
-            Position = b,
-            Size = x(0, 26),
-            AutomaticSize = t,
-            Text = text or 'Run',
-            FontFace = font6,
+    Section.Button = function(self, label2, buttonText, callback2, variant, description)
+        local sky, rightSlot, current = ({
+            danger = Palette.red,
+            gold = Palette.gold,
+            mint = Palette.mint,
+            pink = Palette.pink,
+        })[variant] or Palette.sky, self:Row(label2, description, 110)
+        local label = createLabel({
+            Parent = current,
+            AnchorPoint = RightCenterAnchor,
+            Position = RightMidPos,
+            Size = fromOffset(0, 26),
+            AutomaticSize = AutoSizeX,
+            Text = buttonText or 'Run',
+            FontFace = FontBold,
             TextSize = 13,
             TextTransparency = 1,
-            H1(0, 14),
+            createPadding(0, 14),
         })
 
-        label, callback = {
-            Parent = K,
-            AnchorPoint = T,
-            Position = Z,
-        }, ctx.udim2
-        label.Size = callback(1, 28, 1, 0)
-        label.Text = K.Text
-        label.FontFace = font6
-        label.TextSize = 13
-        label.TextColor3 = E:Lerp(L.wh, 0.55)
-        label.TextXAlignment = center
-        label.BackgroundTransparency = 0.85
-        label.BackgroundColor3 = E
+        description = {
+            Parent = label,
+            AnchorPoint = CenterAnchor,
+            Position = CenterPos,
+        }
+        description.Size = UDim2.new(1, 28, 1, 0)
+        description.Text = label.Text
+        description.FontFace = FontBold
+        description.TextSize = 13
+        description.TextColor3 = sky:Lerp(Palette.wh, 0.55)
+        description.TextXAlignment = AlignCenterX
+        description.BackgroundTransparency = 0.85
+        description.BackgroundColor3 = sky
+        description[1], description[2] = createCorner(10), createStroke(0.5, sky)
 
-        _VX.setList(label, 0, D1(10), J1(0.5, E))
+        local label3 = createLabel(description)
 
-        local b = textLabel(label)
-
-        n1(b, 0.93, P, function(bgAlpha)
-            k1(b, {
+        bindPressScale(label3, 0.93, rightSlot, function(bgAlpha)
+            tween(label3, {
                 BackgroundTransparency = bgAlpha and 0.7 or 0.85,
             }, 0.2)
         end)
-        v1(P, function()
-            w1(N)
+        onClick(rightSlot, function()
+            safeCall(callback2)
         end)
 
-        label, text = {
+        description = {
             Kind = 'button',
             Skip = true,
-            Text = K.Text,
-            Col = E,
-            Name = name,
-            Key = target.t.Name .. '/' .. target.name .. '/' .. name,
+            Text = label.Text,
+            Col = sky,
+            Name = label2,
+            Key = self.t.Name .. '/' .. self.name .. '/' .. label2,
             Fire = function()
-                w1(N)
+                safeCall(callback2)
             end,
-            Set = function(F, text)
-                K.Text = text
-                b.Text = text
-                F.Text = text
+            Set = function(param1, text)
+                label.Text = text
+                label3.Text = text
+                param1.Text = text
             end,
-        }, ctx.Venyx
-        text.Keys[label.Key] = label
+        }
+        Venyx.Keys[description.Key] = description
 
-        target:Hold(P, label)
+        self:Hold(rightSlot, description)
 
-        return label
+        return description
     end
-    R1.Stats = function(parent, F, callback)
-        local createFrame = ctx.createFrame
+    Section.Stats = function(self, items, columns)
+        local sizePos
         local frame, createFrame2 = createFrame({
-            Parent = parent.f,
-            Size = f,
-            AutomaticSize = g,
-            LayoutOrder = parent.n + 1,
-        }), ctx.createFrame
-        local O, E, newInstance, X, K, frame2 = {
+            Parent = self.f,
+            Size = FullWidth,
+            AutomaticSize = AutoSizeY,
+            LayoutOrder = self.n + 1,
+        }), createFrame
+        local props, padding, isMatch, stateMap, isMatch2, sizePos2 = {
             Parent = frame,
-            Size = f,
-            AutomaticSize = g,
-        }, H1(8, 14, 10), ctx.newInstance, {}, callback == 1
+            Size = FullWidth,
+            AutomaticSize = AutoSizeY,
+        }, createPadding(8, 14, 10), newInstance, {}, columns == 1
 
-        if K then
-            createFrame = ctx.udim2
-            frame2 = (createFrame(1, 0, 0, 40))
+        if isMatch2 then
+            sizePos2 = (UDim2.new(1, 0, 0, 40))
         else
-            frame2 = K
+            sizePos2 = isMatch2
         end
 
-        createFrame = nil
+        sizePos = nil
 
-        if frame2 then
-            createFrame = frame2
+        if sizePos2 then
+            sizePos = sizePos2
         else
-            callback = ctx.udim2
-            createFrame = (callback(0.5, -6, 0, 40))
+            sizePos = (UDim2.new(0.5, -6, 0, 40))
         end
 
-        X.CellSize = createFrame
-        X.CellPadding = x(12, 6)
-        callback = ctx.Enum
-        X.SortOrder = callback.SortOrder.LayoutOrder
+        stateMap.CellSize = sizePos
+        stateMap.CellPadding = fromOffset(12, 6)
+        stateMap.SortOrder = Enum.SortOrder.LayoutOrder
+        props[1], props[2] = padding, isMatch('UIGridLayout', stateMap)
+        padding = createFrame2(props)
 
-        _VX.setList(O, 0, E, newInstance('UIGridLayout', X))
+        self:Add(frame, '')
 
-        E = createFrame2(O)
+        frame = {}
 
-        parent:Add(frame, '')
-
-        frame, callback = {}, ipairs
-
-        for K, C1 in callback(F)do
-            newInstance = type(C1) == 'table' and C1[2]
-            C1 = type(C1) == 'table' and C1[1] or C1
-            parent, createFrame = newInstance and 40 or 10, ctx.createFrame
+        for index, item in ipairs(items) do
+            isMatch = type(item) == 'table' and item[2]
+            item = type(item) == 'table' and item[1] or item
+            self, sizePos = isMatch and 40 or 10, createFrame
             createFrame2 = createFrame({
-                Parent = E,
-                LayoutOrder = K,
+                Parent = padding,
+                LayoutOrder = index,
                 BackgroundTransparency = 0.95,
-                D1(10),
+                createCorner(10),
             })
 
-            if newInstance then
-                K, X = {
+            if isMatch then
+                index, stateMap = {
                     Parent = createFrame2,
-                    Position = x(8, 7),
-                    Size = x(26, 26),
-                    Image = newInstance,
-                }, ctx.Enum
-                K.ScaleType = X.ScaleType.Fit
-                K.ImageColor3 = B[newInstance] and L.a1 or nil
+                    Position = fromOffset(8, 7),
+                    Size = fromOffset(26, 26),
+                    Image = isMatch,
+                }, Enum
+                index.ScaleType = Enum.ScaleType.Fit
+                index.ImageColor3 = IconIndex[isMatch] and Palette.a1 or nil
 
-                e(K)
+                createImage(index)
             end
 
-            O, K = {
+            props = {
                 Parent = createFrame2,
-                Position = x(parent, 4),
-            }, ctx.udim2
-            O.Size = K(1, -parent - 8, 0, 14)
-            O.Text = C1:upper()
-            O.FontFace = font5
-            O.TextSize = 9.5
-            O.TextTransparency = 0.38
+                Position = fromOffset(self, 4),
+            }
+            props.Size = UDim2.new(1, -self - 8, 0, 14)
+            props.Text = item:upper()
+            props.FontFace = FontExtraBold
+            props.TextSize = 9.5
+            props.TextTransparency = 0.38
 
-            textLabel(O)
+            createLabel(props)
 
-            K, frame2 = {
+            index, sizePos2 = {
                 Parent = createFrame2,
-                Position = x(parent, 19),
-            }, ctx.udim2
-            K.Size = frame2(1, -parent - 8, 0, 17)
-            K.Text = '--'
-            K.FontFace = font4
-            K.TextSize = 13
-            K.TextTruncate = atEnd
-            frame[C1] = textLabel(K)
+                Position = fromOffset(self, 19),
+            }, UDim2.new
+            index.Size = UDim2.new(1, -self - 8, 0, 17)
+            index.Text = '--'
+            index.FontFace = FontMono
+            index.TextSize = 13
+            index.TextTruncate = TruncateAtEnd
+            frame[item] = createLabel(index)
         end
 
-        return _1(frame)
+        return createStatController(frame)
     end
-    R1.List = function(parent, F, text, b)
-        local N, createFrame = b and 48 or 64, ctx.createFrame
-        local O, udim2 = {
-            Parent = parent.f,
-            LayoutOrder = parent.n + 1,
-        }, ctx.udim2
+    Section.List = function(self, rows, emptyText, compact)
+        local count = compact and 48 or 64
+        local props = {
+            Parent = self.f,
+            LayoutOrder = self.n + 1,
+        }
 
-        O.Size = udim2(1, 0, 0, F * N + 12)
+        props.Size = UDim2.new(1, 0, 0, rows * count + 12)
 
-        local frame = createFrame(O)
+        local frame = createFrame(props)
 
-        parent:Add(frame, '')
+        self:Add(frame, '')
 
-        O, udim2 = {
+        props = {
             Parent = frame,
-            Position = x(10, 6),
-        }, ctx.udim2
-        O.Size = udim2(1, -20, 1, -12)
-        createFrame = ctx.listLayout
+            Position = fromOffset(10, 6),
+        }
+        props.Size = UDim2.new(1, -20, 1, -12)
+        props[1] = createListLayout(6)
 
-        _VX.setList(O, 0, createFrame(6))
+        local scrollFrame = createScrollFrame(props)
 
-        local S = scrollingFrame(O)
+        self.W.nest[scrollFrame] = self.t.top or self.t
 
-        parent.W.nest[S] = parent.t.top or parent.t
-
-        local H, O, E, id = textLabel({
+        local label, list, window, id = createLabel({
             Parent = frame,
-            Size = _,
-            Text = text or 'Nothing here',
+            Size = FullSize,
+            Text = emptyText or 'Nothing here',
             TextSize = 12,
             TextTransparency = 0.45,
-            TextXAlignment = center,
+            TextXAlignment = AlignCenterX,
         }), {}, {}
 
-        local function updateBackgroundAlpha(K)
-            local r1 = K.it and K.it.id == id
+        local function updateBackgroundAlpha(param1)
+            local isMatch = param1.it and param1.it.id == id
 
-            K.s.Color = r1 and L.a1 or L.wh
-            K.s.Transparency = r1 and 0.3 or 0.9
-            K.r.BackgroundTransparency = r1 and 0.9 or 0.955
+            param1.s.Color = isMatch and Palette.a1 or Palette.wh
+            param1.s.Transparency = isMatch and 0.3 or 0.9
+            param1.r.BackgroundTransparency = isMatch and 0.9 or 0.955
         end
         local function applyTextStyle()
-            local r1 = {}
+            local stateMap = {}
 
-            r1.s = J1(0.9)
+            stateMap.s = createStroke(0.9)
 
-            local C1, udim2 = {Parent = S}, ctx.udim2
+            local btnProps, udim2 = {Parent = scrollFrame}
 
-            C1.Size = udim2(1, -6, 0, N - 6)
-            C1.BackgroundTransparency = 0.955
-
-            _VX.setList(C1, 0, D1(15), r1.s)
-
-            r1.r = textButton(C1)
-            udim2, C1 = b and 30 or 42, ctx.createFrame
-            r1.box = C1({
-                Parent = r1.r,
-                Position = x(8, b and 6 or 8),
-                Size = x(udim2, udim2),
+            btnProps.Size = UDim2.new(1, -6, 0, count - 6)
+            btnProps.BackgroundTransparency = 0.955
+            btnProps[1], btnProps[2] = createCorner(15), stateMap.s
+            stateMap.r = createButton(btnProps)
+            udim2 = compact and 30 or 42
+            stateMap.box = createFrame({
+                Parent = stateMap.r,
+                Position = fromOffset(8, compact and 6 or 8),
+                Size = fromOffset(udim2, udim2),
                 BackgroundTransparency = 0.8,
-                D1(b and 10 or 13),
+                createCorner(compact and 10 or 13),
             })
 
-            local S, W1 = {
-                Parent = r1.box,
-                AnchorPoint = T,
-                Position = Z,
-                Size = x(udim2 - 4, udim2 - 4),
-            }, ctx.Enum
+            local props2, props3 = {
+                Parent = stateMap.box,
+                AnchorPoint = CenterAnchor,
+                Position = CenterPos,
+                Size = fromOffset(udim2 - 4, udim2 - 4),
+            }
 
-            S.ScaleType = W1.ScaleType.Fit
-            r1.im = imageLabel(S)
-            C1, W1, S = ctx.createFrame, {
-                Parent = r1.r,
-                Position = x(udim2 + 18, b and 4 or 5),
-            }, ctx.udim2
-            W1.Size = S(1, -152, 0, 18)
-            S = ctx.listLayout
-
-            _VX.setList(W1, 0, S(8, nil, center2, horizontal))
-
-            S = C1(W1)
-            r1.a = textLabel({
-                Parent = S,
-                Size = x(0, 18),
-                AutomaticSize = t,
-                FontFace = font6,
+            props2.ScaleType = Enum.ScaleType.Fit
+            stateMap.im = rawImageLabel(props2)
+            props3 = {
+                Parent = stateMap.r,
+                Position = fromOffset(udim2 + 18, compact and 4 or 5),
+            }
+            props3.Size = UDim2.new(1, -152, 0, 18)
+            props3[1] = createListLayout(8, nil, AlignCenterY, FillHorizontal)
+            props2 = createFrame(props3)
+            stateMap.a = createLabel({
+                Parent = props2,
+                Size = fromOffset(0, 18),
+                AutomaticSize = AutoSizeX,
+                FontFace = FontBold,
                 TextSize = 13.5,
             })
-            r1.pr = textLabel({
-                Parent = S,
+            stateMap.pr = createLabel({
+                Parent = props2,
                 LayoutOrder = 1,
-                Size = x(0, 18),
-                AutomaticSize = t,
-                FontFace = font4,
+                Size = fromOffset(0, 18),
+                AutomaticSize = AutoSizeX,
+                FontFace = FontMono,
                 TextSize = 12.5,
-                TextColor3 = L.gv,
+                TextColor3 = Palette.gv,
             })
 
-            local I1, h1, M1 = ctx.createFrame, {
-                Parent = r1.r,
-                Position = x(udim2 + 18, b and 23 or 24),
-            }, ctx.udim2
+            local props4 = {
+                Parent = stateMap.r,
+                Position = fromOffset(udim2 + 18, compact and 23 or 24),
+            }
 
-            h1.Size = M1(1, -152, 0, 13)
-            udim2 = ctx.listLayout
-
-            _VX.setList(h1, 0, udim2(8, nil, center2, horizontal))
-
-            W1 = I1(h1)
-            r1.rar = textLabel({
-                Parent = W1,
-                Size = x(0, 13),
-                AutomaticSize = t,
-                FontFace = font5,
+            props4.Size = UDim2.new(1, -152, 0, 13)
+            props4[1] = createListLayout(8, nil, AlignCenterY, FillHorizontal)
+            props3 = createFrame(props4)
+            stateMap.rar = createLabel({
+                Parent = props3,
+                Size = fromOffset(0, 13),
+                AutomaticSize = AutoSizeX,
+                FontFace = FontExtraBold,
                 TextSize = 9.5,
             })
-            r1.l1 = S
-            r1.l2 = W1
-            h1, I1 = {
-                Parent = r1.r,
+            stateMap.l1 = props2
+            stateMap.l2 = props3
+            props4 = {
+                Parent = stateMap.r,
                 AnchorPoint = vector2New(1, 0),
-            }, ctx.udim2
-            h1.Position = I1(1, -10, 0, 5)
-            h1.Size = x(0, 12)
-            h1.AutomaticSize = t
-            h1.FontFace = font5
-            h1.TextSize = 9
-            h1.TextColor3 = L.a1
-            h1.Text = ''
-            r1.bd = textLabel(h1)
-            r1.tg = textLabel({
-                Parent = W1,
+            }
+            props4.Position = UDim2.new(1, -10, 0, 5)
+            props4.Size = fromOffset(0, 12)
+            props4.AutomaticSize = AutoSizeX
+            props4.FontFace = FontExtraBold
+            props4.TextSize = 9
+            props4.TextColor3 = Palette.a1
+            props4.Text = ''
+            stateMap.bd = createLabel(props4)
+            stateMap.tg = createLabel({
+                Parent = props3,
                 LayoutOrder = 1,
-                Size = x(0, 13),
-                AutomaticSize = t,
-                FontFace = font6,
+                Size = fromOffset(0, 13),
+                AutomaticSize = AutoSizeX,
+                FontFace = FontBold,
                 TextSize = 9.5,
                 TextColor3 = color3FromRGB(201, 194, 255),
             })
-            udim2, W1, h1 = ctx.createFrame, {
-                Parent = r1.r,
-                Position = x(60, 39),
-            }, ctx.udim2
-            W1.Size = h1(1, -152, 0, 15)
-            W1.Visible = not b
-            C1 = ctx.listLayout
-
-            _VX.setList(W1, 0, C1(8, nil, center2, horizontal))
-
-            h1 = udim2(W1)
-            r1.v = textLabel({
-                Parent = h1,
-                Size = x(0, 15),
-                AutomaticSize = t,
-                FontFace = font4,
+            props3 = {
+                Parent = stateMap.r,
+                Position = fromOffset(60, 39),
+            }
+            props3.Size = UDim2.new(1, -152, 0, 15)
+            props3.Visible = not compact
+            props3[1] = createListLayout(8, nil, AlignCenterY, FillHorizontal)
+            props4 = createFrame(props3)
+            stateMap.v = createLabel({
+                Parent = props4,
+                Size = fromOffset(0, 15),
+                AutomaticSize = AutoSizeX,
+                FontFace = FontMono,
                 TextSize = 12,
-                TextColor3 = L.gv,
+                TextColor3 = Palette.gv,
             })
-            r1.b = textLabel({
-                Parent = h1,
+            stateMap.b = createLabel({
+                Parent = props4,
                 LayoutOrder = 1,
-                Size = x(0, 15),
-                AutomaticSize = t,
+                Size = fromOffset(0, 15),
+                AutomaticSize = AutoSizeX,
                 TextSize = 11,
                 TextTransparency = 0.3,
             })
-            h1, I1 = {
-                Parent = r1.r,
-                AnchorPoint = R,
-            }, ctx.udim2
-            h1.Position = I1(1, -10, 0.5, 0)
-            h1.Size = x(78, 32)
-            h1.BackgroundTransparency = 0
-
-            _VX.setList(h1, 0, D1(11), U1(L.g1, L.g2), textLabel({
-                Size = _,
-                FontFace = font6,
+            props4 = {
+                Parent = stateMap.r,
+                AnchorPoint = RightCenterAnchor,
+            }
+            props4.Position = UDim2.new(1, -10, 0.5, 0)
+            props4.Size = fromOffset(78, 32)
+            props4.BackgroundTransparency = 0
+            props4[1], props4[2], props4[3] = createCorner(11), createGradient(Palette.g1, Palette.g2), createLabel({
+                Size = FullSize,
+                FontFace = FontBold,
                 TextSize = 12,
-                TextColor3 = L.dk,
-                TextXAlignment = center,
-            }))
+                TextColor3 = Palette.dk,
+                TextXAlignment = AlignCenterX,
+            })
+            stateMap.k = createButton(props4)
+            stateMap.kl = stateMap.k:FindFirstChildOfClass('TextLabel')
 
-            r1.k = textButton(h1)
-            r1.kl = r1.k:FindFirstChildOfClass('TextLabel')
-
-            n1(r1.k)
-            v1(r1.k, function()
-                if r1.it then
-                    if r1.it.act then
-                        w1(r1.it.act, r1.it)
+            bindPressScale(stateMap.k)
+            onClick(stateMap.k, function()
+                if stateMap.it then
+                    if stateMap.it.act then
+                        safeCall(stateMap.it.act, stateMap.it)
                     end
                 end
             end)
-            v1(r1.r, function()
-                if not r1.it then
+            onClick(stateMap.r, function()
+                if not stateMap.it then
                     return
                 end
 
-                id = r1.it.id
+                id = stateMap.it.id
 
-                for key, value in next, O do
+                for key, value in next, list do
                     updateBackgroundAlpha(value)
                 end
 
-                w1(r1.it.pick, r1.it)
+                safeCall(stateMap.it.pick, stateMap.it)
             end)
 
-            return r1
+            return stateMap
         end
 
-        E.Set = function(callback, S, text)
-            H.Visible = #S == 0
+        window.Set = function(_self, newValue, silent)
+            label.Visible = #newValue == 0
 
-            if text then
-                H.Text = text
+            if silent then
+                label.Text = silent
             end
 
-            callback = ctx.udim2
-            frame.Size = callback(1, 0, 0, #S == 0 and 34 or math.min(#S, F) * N + 12)
-            text, callback = {}, ipairs
+            frame.Size = UDim2.new(1, 0, 0, #newValue == 0 and 34 or math.min(#newValue, rows) * count + 12)
+            silent = {}
 
-            for H, F in callback(S)do
-                local b = O[F.id] or applyTextStyle()
+            for index2, item in ipairs(newValue) do
+                local current = list[item.id] or applyTextStyle()
 
-                O[F.id], text[F.id] = b, true
-                b.it = F
-                b.r.LayoutOrder = H
+                list[item.id], silent[item.id] = current, true
+                current.it = item
+                current.r.LayoutOrder = index2
 
-                local N, S = {
-                    a = F.title,
-                    pr = F.price or F.count,
-                    rar = F.rarity,
-                    tg = F.tags,
-                    v = F.value,
-                    b = F.sub,
-                    kl = F.button,
+                local items, items2 = {
+                    a = item.title,
+                    pr = item.price or item.count,
+                    rar = item.rarity,
+                    tg = item.tags,
+                    v = item.value,
+                    b = item.sub,
+                    kl = item.button,
                 }, {
                     'a',
                     'pr',
@@ -7044,173 +6664,176 @@ H, r1, I1 =udim2(0, nil, center2), {}, ctx.udim2
                     'kl',
                 }
 
-                for index, value in ipairs(S)do
-                    H = N[value] or ''
+                for index, value in ipairs(items2) do
+                    index2 = items[value] or ''
 
-                    if b[value].Text ~= H then
-                        b[value].Text = H
+                    if current[value].Text ~= index2 then
+                        current[value].Text = index2
                     end
                 end
 
-                b.k.Visible = F.button ~= nil
-                b.rar.Parent, b.rar.LayoutOrder, b.pr.Parent, b.pr.LayoutOrder = F.top and b.l1 or b.l2, F.top and 2 or 0, F.top and b.l2 or b.l1, F.top and 0 or 1
+                current.k.Visible = item.button ~= nil
+                current.rar.Parent, current.rar.LayoutOrder, current.pr.Parent, current.pr.LayoutOrder = item.top and current.l1 or current.l2, item.top and 2 or 0, item.top and current.l2 or current.l1, item.top and 0 or 1
 
-                if b.bd.Text ~= (F.badge or '') then
-                    b.bd.Text = F.badge or ''
+                if current.bd.Text ~= (item.badge or '') then
+                    current.bd.Text = item.badge or ''
                 end
-                if not F.top then
-                    b.pr.TextColor3, b.pr.TextSize = F.count and color3FromRGB(201, 194, 255) or L.gv, F.count and 13.5 or 12.5
+                if not item.top then
+                    current.pr.TextColor3, current.pr.TextSize = item.count and color3FromRGB(201, 194, 255) or Palette.gv, item.count and 13.5 or 12.5
                 end
-                if F.top and not b.fx then
-                    b.fx = true
-                    S = nil
-                    S, b.pr.FontFace, b.pr.TextSize, b.pr.TextColor3, b.pr.Size, b.l2.Size = ctx.udim2, font2, 15, L.wh, x(0, 17), ctx.udim2(1, 
+                if item.top and not current.fx then
+                    current.fx = true
+                    items2 = nil
+                    items2, current.pr.FontFace, current.pr.TextSize, current.pr.TextColor3, current.pr.Size, current.l2.Size = UDim2.new, FontItalic, 15, Palette.wh, fromOffset(0, 17), UDim2.new(1, 
 -152, 0, 17)
-                    b.rar.FontFace, b.rar.TextSize = font3, 13.5
-                    H = ctx.newInstance
+                    current.rar.FontFace, current.rar.TextSize = FontDisplay, 13.5
+                    index2 = newInstance
 
-                    H('UIGradient', {
-                        Parent = b.pr,
-                        Color = colorSequence,
+                    newInstance('UIGradient', {
+                        Parent = current.pr,
+                        Color = GreenTextSeq,
                         Rotation = 90,
                     })
 
-                    local ipairsFn, S = ipairs, {
-                        b.pr,
-                        b.rar,
+                    local items3 = {
+                        current.pr,
+                        current.rar,
                     }
 
-                    for P, K in ipairsFn(S)do
-                        P = ctx.newInstance
+                    for index, item2 in ipairs(items3) do
+                        index = newInstance
 
-                        P('UIStroke', {
-                            Parent = K,
+                        newInstance('UIStroke', {
+                            Parent = item2,
                             Thickness = 1.6,
                             Color = color3FromRGB(0, 0, 0),
                             Transparency = 0.05,
                         })
                     end
                 end
-                if b.g ~= F.grad then
-                    N = b.rar:FindFirstChildOfClass('UIGradient')
+                if current.g ~= item.grad then
+                    items = current.rar:FindFirstChildOfClass('UIGradient')
 
-                    if N then
-                        N:Destroy()
+                    if items then
+                        items:Destroy()
                     end
 
-                    b.g = F.grad
+                    current.g = item.grad
 
-                    if F.grad then
-                        F.grad:Clone().Parent = b.rar
+                    if item.grad then
+                        item.grad:Clone().Parent = current.rar
                     end
                 end
 
-                b.rar.TextColor3 = F.grad and L.wh or F.color or L.val
-                b.box.BackgroundColor3 = F.color or L.a1
+                current.rar.TextColor3 = item.grad and Palette.wh or item.color or Palette.val
+                current.box.BackgroundColor3 = item.color or Palette.a1
 
-                if b.im.Image ~= (F.image or '') then
-                    b.im.Image = F.image or ''
+                if current.im.Image ~= (item.image or '') then
+                    current.im.Image = item.image or ''
                 end
 
-                updateBackgroundAlpha(b)
+                updateBackgroundAlpha(current)
             end
-            for key, value in next, O do
-                if not (text[key]) then
+            for key, value in next, list do
+                if not (silent[key]) then
                     value.r:Destroy()
 
-                    O[key] = nil
+                    list[key] = nil
                 end
             end
         end
-        E.Select = function(H, H)
-            id = H
+        window.Select = function(_self, tab)
+            id = tab
 
-            for key, value in next, O do
+            for key, value in next, list do
                 updateBackgroundAlpha(value)
             end
         end
 
-        return E
+        return window
     end
 
-    local function H(parent, Q)
-        local uIGradient = parent:FindFirstChildOfClass('UIGradient')
+    -- ========================================================================
+    -- 6. Showcase Cards, Rarity Slots & Mutation Badges
+    -- ========================================================================
+    local function applyClonedGradient(target, gradientTemplate)
+        local uIGradient = target:FindFirstChildOfClass('UIGradient')
 
         if uIGradient then
             uIGradient:Destroy()
         end
-        if Q then
-            Q:Clone().Parent = parent
+        if gradientTemplate then
+            gradientTemplate:Clone().Parent = target
         end
     end
-    local function applyTextStyle(label)
-        label.FontFace, label.TextColor3 = font3, label.TextColor3 or L.wh
-        label.TextTruncate = atEnd
+    local function createStrokedLabel(props)
+        props.FontFace, props.TextColor3 = FontDisplay, props.TextColor3 or Palette.wh
+        props.TextTruncate = TruncateAtEnd
 
-        local M, newInstance = textLabel(label), ctx.newInstance
+        local label = createLabel(props)
 
         newInstance('UIStroke', {
-            Parent = M,
-            Thickness = math.max(1.2, label.TextSize / 8),
+            Parent = label,
+            Thickness = math.max(1.2, props.TextSize / 8),
             Color = color3FromRGB(0, 0, 0),
             Transparency = 0.05,
         })
 
-        return M
+        return label
     end
 
-    local new, Q = ColorSequenceKeypoint.new, {}
+    local colorKeypoint, RarityPalettes = ColorSequenceKeypoint.new, {}
 
-    Q.COMMON = {
+    RarityPalettes.COMMON = {
         color3FromRGB(30, 34, 42),
         color3FromRGB(104, 114, 132),
         color3FromRGB(214, 222, 236),
     }
-    Q.UNCOMMON = {
+    RarityPalettes.UNCOMMON = {
         color3FromRGB(6, 44, 22),
         color3FromRGB(36, 168, 84),
         color3FromRGB(160, 255, 170),
     }
-    Q.RARE = {
+    RarityPalettes.RARE = {
         color3FromRGB(6, 24, 78),
         color3FromRGB(36, 112, 255),
         color3FromRGB(140, 205, 255),
     }
-    Q.EPIC = {
+    RarityPalettes.EPIC = {
         color3FromRGB(34, 8, 74),
         color3FromRGB(146, 56, 255),
         color3FromRGB(220, 170, 255),
     }
-    Q.LEGENDARY = {
+    RarityPalettes.LEGENDARY = {
         color3FromRGB(74, 30, 0),
         color3FromRGB(255, 146, 18),
         color3FromRGB(255, 228, 130),
     }
-    Q.MYTHIC = {
+    RarityPalettes.MYTHIC = {
         color3FromRGB(72, 0, 22),
         color3FromRGB(255, 38, 88),
         color3FromRGB(255, 168, 190),
     }
-    Q.COSMIC = {
+    RarityPalettes.COSMIC = {
         color3FromRGB(22, 0, 40),
         color3FromRGB(128, 0, 154),
         color3FromRGB(236, 150, 255),
         color3FromRGB(92, 0, 190),
     }
-    Q.SECRET = {
+    RarityPalettes.SECRET = {
         color3FromRGB(0, 0, 0),
         color3FromRGB(52, 52, 64),
         color3FromRGB(255, 255, 255),
         stars = true,
     }
-    Q.ETERNAL = {
+    RarityPalettes.ETERNAL = {
         color3FromRGB(4, 20, 56),
         color3FromRGB(30, 196, 220),
         color3FromRGB(255, 160, 255),
         color3FromRGB(196, 80, 255),
         shine = true,
     }
-    Q.DIVINE = {
+    RarityPalettes.DIVINE = {
         color3FromRGB(84, 54, 0),
         color3FromRGB(255, 196, 50),
         color3FromRGB(255, 252, 220),
@@ -7220,141 +6843,135 @@ H, r1, I1 =udim2(0, nil, center2), {}, ctx.udim2
         rays = true,
     }
 
-    local function o(b)
-        local N, S, O = b.color or L.a1, Q[b.rarity]
+    local function getRarityColors(item)
+        local color, current, current2 = item.color or Palette.a1, RarityPalettes[item.rarity]
 
-        if S then
-            O = S
+        if current then
+            current2 = current
         else
-            local Q, b, wh = {}, N:Lerp(color3FromRGB(0, 0, 0), 0.75), L.wh
+            local list, current3, wh = {}, color:Lerp(color3FromRGB(0, 0, 0), 0.75), Palette.wh
 
-            _VX.setList(Q, 0, b, N, N:Lerp(wh, 0.6))
-
-            O = Q
+            list[1], list[2], list[3] = current3, color, color:Lerp(wh, 0.6)
+            current2 = list
         end
 
-        return O
+        return current2
     end
-    local function setFramesAlpha(parent, N, callback, O)
-        N.Parent = parent
-        N.ClipsDescendants = true
-        parent = frame(N)
-        N = {
+    local function createRaritySlot(parent, frameProps, cornerRadius, ringSizes)
+        frameProps.Parent = parent
+        frameProps.ClipsDescendants = true
+        parent = createSolidFrame(frameProps)
+        frameProps = {
             f = parent,
-            g = U1(L.wh, L.wh, 120),
+            g = createGradient(Palette.wh, Palette.wh, 120),
             h = {},
             st = {},
             ss = {},
-            sh = a1(30, {0, 1}, {0.4, 1}, {0.5, 0.55}, {0.6, 1}, {1, 1}),
+            sh = createAlphaGradient(30, {0, 1}, {0.4, 1}, {0.5, 0.55}, {0.6, 1}, {1, 1}),
         }
-        D1(callback).Parent, N.g.Parent = parent, parent
+        createCorner(cornerRadius).Parent, frameProps.g.Parent = parent, parent
 
-        for index, value in ipairs(O)do
-            local X, K = N.h, {
+        for index, value in ipairs(ringSizes) do
+            local current, props = frameProps.h, {
                 Parent = parent,
-                AnchorPoint = T,
-                Position = Z,
-                Size = x(value, value),
+                AnchorPoint = CenterAnchor,
+                Position = CenterPos,
+                Size = fromOffset(value, value),
             }
 
-            K.BackgroundTransparency = 0.96 - index * 0.1
-
-            _VX.setList(K, 0, D1())
-
-            X[index] = frame(K)
+            props.BackgroundTransparency = 0.96 - index * 0.1
+            props[1] = createCorner()
+            current[index] = createSolidFrame(props)
         end
 
-        local ipairsFn, P = ipairs, {
+        local items = {
             {0.13, 0.28, 13},
             {0.87, 0.2, 10},
             {0.84, 0.72, 12},
         }
 
-        for X, K in ipairsFn(P)do
-            local E, ss, r1, C1 = x(K[3] * O[1] / 95, K[3] * O[1] / 95), N.ss, {
+        for index2, item in ipairs(items) do
+            local sizePos, ss, props, _unused = fromOffset(item[3] * ringSizes[1] / 95, item[3] * ringSizes[1] / 95), frameProps.ss, {
                 Parent = parent,
-                AnchorPoint = T,
-            }, ctx.udim2
+                AnchorPoint = CenterAnchor,
+            }, UDim2.new
 
-            r1.Position = C1(K[1], 1.5, K[2], 1.5)
-            r1.Size = E
-            r1.Image = 'sparkles'
-            r1.ImageColor3 = color3FromRGB(90, 50, 0)
-            r1.ZIndex = 2
-            ss[X] = e(r1)
-            r1, ss, callback = N.st, {
+            props.Position = UDim2.new(item[1], 1.5, item[2], 1.5)
+            props.Size = sizePos
+            props.Image = 'sparkles'
+            props.ImageColor3 = color3FromRGB(90, 50, 0)
+            props.ZIndex = 2
+            ss[index2] = createImage(props)
+            props, ss, cornerRadius = frameProps.st, {
                 Parent = parent,
-                AnchorPoint = T,
-            }, ctx.udim2
-            ss.Position = callback(K[1], 0, K[2], 0)
-            ss.Size = E
+                AnchorPoint = CenterAnchor,
+            }, UDim2.new
+            ss.Position = UDim2.new(item[1], 0, item[2], 0)
+            ss.Size = sizePos
             ss.Image = 'sparkles'
             ss.ZIndex = 2
-            r1[X] = e(ss)
+            props[index2] = createImage(ss)
         end
 
-        P = ctx.createFrame
-        N.sf = P({
+        frameProps.sf = createFrame({
             Parent = parent,
-            Size = _,
-            BackgroundColor3 = L.wh,
+            Size = FullSize,
+            BackgroundColor3 = Palette.wh,
             BackgroundTransparency = 0,
             ZIndex = 4,
-            N.sh,
+            frameProps.sh,
         })
 
-        return N
+        return frameProps
     end
-    local function setFramesAlpha2(parent, bgColor)
-        parent.g.Color = ColorSequence.new({
-            new(0, bgColor[2]),
-            new(0.5, bgColor[4] or bgColor[1]:Lerp(bgColor[2], 0.4)),
-            new(1, bgColor[1]),
+    local function applyRaritySlot(slot, palette)
+        slot.g.Color = ColorSequence.new({
+            colorKeypoint(0, palette[2]),
+            colorKeypoint(0.5, palette[4] or palette[1]:Lerp(palette[2], 0.4)),
+            colorKeypoint(1, palette[1]),
         })
 
-        for index, value in ipairs(parent.h)do
-            value.BackgroundColor3 = bgColor[3]
+        for index, value in ipairs(slot.h) do
+            value.BackgroundColor3 = palette[3]
         end
 
-        if bgColor.rays then
-            if not parent.ry then
-                local O, udim2 = {
-                    Parent = parent.f,
-                    AnchorPoint = T,
-                    Position = Z,
-                }, ctx.udim2
+        if palette.rays then
+            if not slot.ry then
+                local labelProps = {
+                    Parent = slot.f,
+                    AnchorPoint = CenterAnchor,
+                    Position = CenterPos,
+                }
 
-                O.Size = udim2(1.5, 0, 1.5, 0)
-                udim2 = ctx.Enum
-                O.SizeConstraint = udim2.SizeConstraint.RelativeXX
-                O.Image = 'rbxassetid://109516122757226'
-                O.ImageColor3 = color3FromRGB(255, 250, 215)
-                O.ImageTransparency = 0.3
-                udim2 = ctx.Enum
-                O.ScaleType = udim2.ScaleType.Fit
-                parent.ry = imageLabel(O)
+                labelProps.Size = UDim2.new(1.5, 0, 1.5, 0)
+                labelProps.SizeConstraint = Enum.SizeConstraint.RelativeXX
+                labelProps.Image = 'rbxassetid://109516122757226'
+                labelProps.ImageColor3 = color3FromRGB(255, 250, 215)
+                labelProps.ImageTransparency = 0.3
+                labelProps.ScaleType = Enum.ScaleType.Fit
+                slot.ry = rawImageLabel(labelProps)
             end
         end
-        if parent.ry then
-            parent.ry.Visible = bgColor.rays == true
+        if slot.ry then
+            slot.ry.Visible = palette.rays == true
         end
 
-        parent.sf.Visible = parent.live and bgColor.shine == true
+        slot.sf.Visible = slot.live and palette.shine == true
 
-        for index, value in ipairs(parent.st)do
-            value.Visible, value.ImageColor3 = bgColor.shine or bgColor.stars or false, bgColor.star or bgColor[3]
+        for index, value in ipairs(slot.st) do
+            value.Visible, value.ImageColor3 = palette.shine or palette.stars or false, palette.star or palette[3]
             value.ImageTransparency = 0.15
-            parent.ss[index].Visible, parent.ss[index].ImageTransparency = value.Visible and bgColor.star ~= nil, 0.55
+            slot.ss[index].Visible, slot.ss[index].ImageTransparency = value.Visible and palette.star ~= nil, 0.55
         end
-        for index, value in ipairs(parent.tw or {})do
+        for index, value in ipairs(slot.tw or {}) do
             value:Cancel()
         end
 
-        parent.tw = {}
+        slot.tw = {}
 
-        if parent.live then
-            if not bgColor.shine then
-                if not bgColor.rays then
+        if slot.live then
+            if not palette.shine then
+                if not palette.rays then
                     return
                 end
             end
@@ -7362,317 +6979,296 @@ H, r1, I1 =udim2(0, nil, center2), {}, ctx.udim2
             return
         end
 
-        local function O(E, P, X, enabled, a1)
-            local tweenInfoNew, C1 = TweenInfo.new
+        local function updateView(param1, param2, param3, enabled, param5)
+            local tweenInfoNew, current = TweenInfo.new
 
             if enabled then
-                local enum = ctx.Enum
-
-                C1 = enum.EasingStyle.Sine
+                current = Enum.EasingStyle.Sine
             else
-                C1 = enabled
+                current = enabled
             end
 
             local C15
 
-            if C1 then
-                C15 = C1
+            if current then
+                C15 = current
             else
-                local W1 = ctx.Enum
-
-                C15 = W1.EasingStyle.Linear
+                C15 = Enum.EasingStyle.Linear
             end
 
-            C1 = ctx.Enum
+            local current2 = TweenService:Create(param1, tweenInfoNew(param2, C15, Enum.EasingDirection.InOut, 
+-1, enabled == true, param5 or 0), param3)
 
-            local W1 = TweenService:Create(E, tweenInfoNew(P, C15, C1.EasingDirection.InOut, -1, enabled == true, a1 or 0), X)
+            current2:Play()
 
-            W1:Play()
-
-            parent.tw[#parent.tw + 1] = W1
+            slot.tw[#slot.tw + 1] = current2
         end
 
-        parent.h[#parent.h].BackgroundTransparency = 0.82
+        slot.h[#slot.h].BackgroundTransparency = 0.82
 
-        O(parent.h[#parent.h], 1.3, {BackgroundTransparency = 0.62}, true)
+        updateView(slot.h[#slot.h], 1.3, {BackgroundTransparency = 0.62}, true)
 
-        if bgColor.rays then
-            parent.ry.Rotation = 0
+        if palette.rays then
+            slot.ry.Rotation = 0
 
-            O(parent.ry, 30, {Rotation = 360})
+            updateView(slot.ry, 30, {Rotation = 360})
         end
-        if bgColor.shine then
-            parent.sh.Offset = vector2New(-1, 0)
+        if palette.shine then
+            slot.sh.Offset = vector2New(-1, 0)
 
-            O(parent.sh, 1.2, {
+            updateView(slot.sh, 1.2, {
                 Offset = vector2New(1, 0),
             }, false, 2.2)
 
-            for index, value in ipairs(parent.st)do
-                value.ImageTransparency, parent.ss[index].ImageTransparency = 0.4, 0.95
+            for index, value in ipairs(slot.st) do
+                value.ImageTransparency, slot.ss[index].ImageTransparency = 0.4, 0.95
 
-                O(value, 0.9 + index * 0.25, {ImageTransparency = 0}, true)
-                O(parent.ss[index], 0.9 + index * 0.25, {ImageTransparency = 0.55}, true)
+                updateView(value, 0.9 + index * 0.25, {ImageTransparency = 0}, true)
+                updateView(slot.ss[index], 0.9 + index * 0.25, {ImageTransparency = 0.55}, true)
             end
         end
     end
-    local function r(parent)
-        parent.FontFace = font2
-
-        local newInstance = ctx.newInstance
+    local function applyGreenGradient(label)
+        label.FontFace = FontItalic
 
         newInstance('UIGradient', {
-            Parent = parent,
-            Color = colorSequence,
+            Parent = label,
+            Color = GreenTextSeq,
             Rotation = 90,
         })
 
-        return parent
+        return label
     end
-    local function A(d, N, S)
+    local function makeTriColorSeq(startCol, midCol, endCol)
         return ColorSequence.new({
-            new(0, d),
-            new(0.5, N),
-            new(1, S),
+            colorKeypoint(0, startCol),
+            colorKeypoint(0.5, midCol),
+            colorKeypoint(1, endCol),
         })
     end
 
-    local d = {}
+    local MutationGradients = {}
 
-    d.GOLDEN = A(color3FromRGB(255, 250, 190), color3FromRGB(255, 204, 40), color3FromRGB(255, 140, 0))
-    d.SILVER = A(color3FromRGB(255, 255, 255), color3FromRGB(196, 214, 246), color3FromRGB(120, 146, 196))
-    d.RAINBOW = ColorSequence.new({
-        new(0, color3FromRGB(255, 70, 70)),
-        new(0.25, color3FromRGB(255, 220, 60)),
-        new(0.5, color3FromRGB(80, 255, 110)),
-        new(0.75, color3FromRGB(80, 170, 255)),
-        new(1, color3FromRGB(220, 90, 255)),
+    MutationGradients.GOLDEN = makeTriColorSeq(color3FromRGB(255, 250, 190), color3FromRGB(255, 204, 40), color3FromRGB(255, 140, 0))
+    MutationGradients.SILVER = makeTriColorSeq(color3FromRGB(255, 255, 255), color3FromRGB(196, 214, 246), color3FromRGB(120, 146, 196))
+    MutationGradients.RAINBOW = ColorSequence.new({
+        colorKeypoint(0, color3FromRGB(255, 70, 70)),
+        colorKeypoint(0.25, color3FromRGB(255, 220, 60)),
+        colorKeypoint(0.5, color3FromRGB(80, 255, 110)),
+        colorKeypoint(0.75, color3FromRGB(80, 170, 255)),
+        colorKeypoint(1, color3FromRGB(220, 90, 255)),
     })
-    d.NITRO = A(color3FromRGB(255, 244, 130), color3FromRGB(255, 150, 30), color3FromRGB(255, 60, 20))
-    d.SCRAMBLED = A(color3FromRGB(240, 205, 255), color3FromRGB(186, 110, 255), color3FromRGB(130, 50, 240))
-    d.FRACTURED = A(color3FromRGB(255, 196, 186), color3FromRGB(255, 84, 84), color3FromRGB(200, 20, 40))
-    d.ENCHANTED = A(color3FromRGB(210, 255, 255), color3FromRGB(80, 225, 255), color3FromRGB(30, 150, 255))
-    d.BLOOM = A(color3FromRGB(255, 228, 244), color3FromRGB(255, 140, 210), color3FromRGB(240, 70, 160))
-    d['SPIRIT BLOOM'] = A(color3FromRGB(230, 255, 210), color3FromRGB(130, 245, 130), color3FromRGB(40, 190, 90))
-    d.PARASITE = A(color3FromRGB(236, 255, 180), color3FromRGB(150, 240, 70), color3FromRGB(70, 180, 30))
+    MutationGradients.NITRO = makeTriColorSeq(color3FromRGB(255, 244, 130), color3FromRGB(255, 150, 30), color3FromRGB(255, 60, 20))
+    MutationGradients.SCRAMBLED = makeTriColorSeq(color3FromRGB(240, 205, 255), color3FromRGB(186, 110, 255), color3FromRGB(130, 50, 240))
+    MutationGradients.FRACTURED = makeTriColorSeq(color3FromRGB(255, 196, 186), color3FromRGB(255, 84, 84), color3FromRGB(200, 20, 40))
+    MutationGradients.ENCHANTED = makeTriColorSeq(color3FromRGB(210, 255, 255), color3FromRGB(80, 225, 255), color3FromRGB(30, 150, 255))
+    MutationGradients.BLOOM = makeTriColorSeq(color3FromRGB(255, 228, 244), color3FromRGB(255, 140, 210), color3FromRGB(240, 70, 160))
+    MutationGradients['SPIRIT BLOOM'] = makeTriColorSeq(color3FromRGB(230, 255, 210), color3FromRGB(130, 245, 130), color3FromRGB(40, 190, 90))
+    MutationGradients.PARASITE = makeTriColorSeq(color3FromRGB(236, 255, 180), color3FromRGB(150, 240, 70), color3FromRGB(70, 180, 30))
 
-    local function N(rotation)
-        local O, newInstance = rotation.c or L.a1, ctx.newInstance
+    local function createMutationGradient(tagData)
+        local current, _unused = tagData.c or Palette.a1
 
         return newInstance('UIGradient', {
-            Color = d[rotation.n:gsub('^%+', '')] or A(O:Lerp(L.wh, 0.6), O, O:Lerp(color3FromRGB(0, 0, 0), 0.25)),
-            Rotation = rotation.n == 'RAINBOW' and 0 or 90,
+            Color = MutationGradients[tagData.n:gsub('^%+', '')] or makeTriColorSeq(current:Lerp(Palette.wh, 0.6), current, current:Lerp(color3FromRGB(0, 0, 0), 0.25)),
+            Rotation = tagData.n == 'RAINBOW' and 0 or 90,
         })
     end
-    local function A(parent, S, O, textSize)
-        for index, child in ipairs(parent:GetChildren())do
+    local function renderMutationTags(container, tags, rowHeight, textSize)
+        for index, child in ipairs(container:GetChildren()) do
             if child:IsA('GuiObject') then
                 child:Destroy()
             end
         end
-        for index, value in ipairs(S or {})do
-            local S = applyTextStyle({
-                Parent = parent,
+        for index, value in ipairs(tags or {}) do
+            local label = createStrokedLabel({
+                Parent = container,
                 LayoutOrder = index,
-                Size = x(0, O),
-                AutomaticSize = t,
+                Size = fromOffset(0, rowHeight),
+                AutomaticSize = AutoSizeX,
                 TextSize = textSize,
                 Text = value.n,
             })
 
-            S:FindFirstChildOfClass('UIStroke').Thickness = textSize / 5
-            N(value).Parent = S
+            label:FindFirstChildOfClass('UIStroke').Thickness = textSize / 5
+            createMutationGradient(value).Parent = label
         end
     end
-    local function d(N, key)
-        local O = B[key]
+    local function setSpriteRect(imageLabel, iconName)
+        local current = IconIndex[iconName]
 
-        N.ImageRectOffset = vector2New(O % 8 * 64, O // 8 * 64)
+        imageLabel.ImageRectOffset = vector2New(current % 8 * 64, current // 8 * 64)
     end
-    local function N(callback, B, O, E, layoutOrder)
-        local createFrame, K, udim2 = ctx.createFrame, {
-            Parent = callback,
+    local function createGridRow(parent, columns, rowHeight, gap, layoutOrder)
+        local props = {
+            Parent = parent,
             LayoutOrder = layoutOrder,
-        }, ctx.udim2
+        }
 
-        K.Size = udim2(1, 0, 0, O)
-        udim2, layoutOrder, callback = ctx.newInstance, {}, ctx.udim2
-        layoutOrder.CellSize = callback(1 / B, -E * (B - 1) / B - 1, 0, O)
-        layoutOrder.CellPadding = x(E, E)
-        O = ctx.Enum
-        layoutOrder.SortOrder = O.SortOrder.LayoutOrder
+        props.Size = UDim2.new(1, 0, 0, rowHeight)
+        layoutOrder = {}
+        layoutOrder.CellSize = UDim2.new(1 / columns, -gap * (columns - 1) / columns - 1, 0, rowHeight)
+        layoutOrder.CellPadding = fromOffset(gap, gap)
+        layoutOrder.SortOrder = Enum.SortOrder.LayoutOrder
+        props[1] = newInstance('UIGridLayout', layoutOrder)
 
-        _VX.setList(K, 0, udim2('UIGridLayout', layoutOrder))
-
-        return createFrame(K)
+        return createFrame(props)
     end
-    local function S(parent, textSize)
-        local createFrame = ctx.createFrame
+    local function createPillBadge(parent, textSize)
         local frame = createFrame({
             Parent = parent,
-            Size = x(0, textSize + 8),
-            AutomaticSize = t,
+            Size = fromOffset(0, textSize + 8),
+            AutomaticSize = AutoSizeX,
             BackgroundTransparency = 0.05,
-            D1(),
-            J1(0.2),
-            H1(0, 9),
+            createCorner(),
+            createStroke(0.2),
+            createPadding(0, 9),
         })
 
-        return frame, applyTextStyle({
+        return frame, createStrokedLabel({
             Parent = frame,
-            Size = x(0, textSize + 8),
-            AutomaticSize = t,
+            Size = fromOffset(0, textSize + 8),
+            AutomaticSize = AutoSizeX,
             TextSize = textSize,
-            TextXAlignment = center,
+            TextXAlignment = AlignCenterX,
         })
     end
-    local function B(instance, label, bgColor, text)
-        instance.BackgroundColor3 = bgColor[1]
-        instance:FindFirstChildOfClass('UIStroke').Color = bgColor[2]
-        label.Text = text.rarity or ''
+    local function applyRarityPill(pillFrame, pillLabel, palette, item)
+        pillFrame.BackgroundColor3 = palette[1]
+        pillFrame:FindFirstChildOfClass('UIStroke').Color = palette[2]
+        pillLabel.Text = item.rarity or ''
 
-        H(label, text.grad)
+        applyClonedGradient(pillLabel, item.grad)
 
-        label.TextColor3 = text.grad and L.wh or text.color or L.tx
+        pillLabel.TextColor3 = item.grad and Palette.wh or item.color or Palette.tx
     end
-    local function O(E, P)
-        local keypoints = E.Keypoints
+    local function sampleColorSeq(colorSeq, alpha)
+        local keypoints = colorSeq.Keypoints
 
-        for E = 2, #keypoints, 1 do
-            if P <= keypoints[E].Time then
-                local value, value2, r1 = keypoints[E - 1].Value, keypoints[E].Value, (P - keypoints[E - 1].Time) / math.max(keypoints[E].Time - keypoints[E - 1].Time, 1E-4)
+        for index = 2, #keypoints, 1 do
+            if alpha <= keypoints[index].Time then
+                local value, value2, current = keypoints[index - 1].Value, keypoints[index].Value, (alpha - keypoints[index - 1].Time) / math.max(keypoints[index].Time - keypoints[index - 1].Time, 1E-4)
 
-                return value:Lerp(value2, r1)
+                return value:Lerp(value2, current)
             end
         end
 
         return keypoints[#keypoints].Value
     end
 
-    local E = {}
+    local ClampedGradientCache = {}
 
-    local function P(X, callback)
-        local a1 = (callback.rarity == 'ETERNAL' or callback.rarity == 'DIVINE') and callback.grad
+    local function applyTopHalfGradient(target, item)
+        local isMatch = (item.rarity == 'ETERNAL' or item.rarity == 'DIVINE') and item.grad
 
-        if a1 then
-            if math.abs(a1.Rotation) == 90 then
-                if not (E[a1]) then
-                    local r1, C1, V1 = a1.Rotation < 0 and 0.53 or 0, a1.Rotation < 0 and 1 or 0.5, {}
+        if isMatch then
+            if math.abs(isMatch.Rotation) == 90 then
+                if not (ClampedGradientCache[isMatch]) then
+                    local isMatch2, isMatch3, list = isMatch.Rotation < 0 and 0.53 or 0, isMatch.Rotation < 0 and 1 or 0.5, {}
 
-                    for W1 = 0, 8, 1 do
-                        V1[#V1 + 1] = new(W1 / 8, O(a1.Color, r1 + (C1 - r1) * W1 / 8))
+                    for index = 0, 8, 1 do
+                        list[#list + 1] = colorKeypoint(index / 8, sampleColorSeq(isMatch.Color, isMatch2 + (isMatch3 - isMatch2) * index / 8))
                     end
 
-                    callback = ctx.newInstance
-                    E[a1] = callback('UIGradient', {
-                        Color = ColorSequence.new(V1),
-                        Rotation = a1.Rotation,
+                    ClampedGradientCache[isMatch] = newInstance('UIGradient', {
+                        Color = ColorSequence.new(list),
+                        Rotation = isMatch.Rotation,
                     })
                 end
 
-                a1 = E[a1]
+                isMatch = ClampedGradientCache[isMatch]
             end
         end
 
-        H(X, a1 or nil)
+        applyClonedGradient(target, isMatch or nil)
     end
 
-    R1.Showcase = function(callback, M, O, E, X)
-        local K, a1, r1 = callback.t.top or callback.t, callback.W, 364
-        local C1, createFrame = J1(0.5), ctx.createFrame
-        local W1 = createFrame({
-            Parent = callback.f,
-            LayoutOrder = callback.n + 1,
-            Size = f,
-            AutomaticSize = g,
+    Section.Showcase = function(self, gridCols, categories, onCategory, onAction)
+        local top, activeWin, count = self.t.top or self.t, self.W, 364
+        local stroke, gradient = createStroke(0.5), createFrame
+        local props = createFrame({
+            Parent = self.f,
+            LayoutOrder = self.n + 1,
+            Size = FullWidth,
+            AutomaticSize = AutoSizeY,
         })
 
-        callback:Add(W1, '')
+        self:Add(props, '')
 
-        local I1, h1, M1 = ctx.createFrame, {
-            Parent = W1,
-            Size = f,
-            AutomaticSize = g,
-        }, ctx.listLayout
+        local props2, props3, props4 = nil, {
+            Parent = props,
+            Size = FullWidth,
+            AutomaticSize = AutoSizeY,
+        }
 
-        _VX.setList(h1, 0, H1(2, 14, 6), M1(8))
+        props3[1], props3[2] = createPadding(2, 14, 6), createListLayout(8)
+        props4, gradient = createFrame(props3), createFrame
+        props2 = {Parent = props4}
+        props2.Size = UDim2.new(1, 0, 0, 30)
 
-        M1, createFrame = I1(h1), ctx.createFrame
-        I1, callback = {Parent = M1}, ctx.udim2
-        I1.Size = callback(1, 0, 0, 30)
-
-        local frame3, d1, L1, listLayout = createFrame(I1), ctx.createFrame, {
-            Parent = M1,
+        local container, props5, props6, listLayout = createFrame(props2), createFrame, {
+            Parent = props4,
             LayoutOrder = 1,
-            Size = f,
-            AutomaticSize = g,
-        }, ctx.listLayout
+            Size = FullWidth,
+            AutomaticSize = AutoSizeY,
+        }, createListLayout
 
-        _VX.setList(L1, 0, listLayout(14, nil, nil, horizontal))
-
-        callback, listLayout, W1, h1 = d1(L1), ctx.createFrame, {}, ctx.createFrame
-        W1.Parent = h1({
-            Parent = callback,
-            Size = x(250, 370),
-            H1(3, 0),
+        props6[1] = createListLayout(14, nil, nil, FillHorizontal)
+        self, listLayout, props, props3 = createFrame(props6), createFrame, {}, createFrame
+        props.Parent = createFrame({
+            Parent = self,
+            Size = fromOffset(250, 370),
+            createPadding(3, 0),
         })
-        W1.Size = _
-        W1.BackgroundTransparency = 0.45
-        L1 = ctx.listLayout
+        props.Size = FullSize
+        props.BackgroundTransparency = 0.45
+        props[1], props[2], props[3], props[4] = createCorner(20), stroke, createPadding(9), createListLayout(6, AlignRightX)
 
-        _VX.setList(W1, 0, D1(20), C1, H1(9), L1(6, center3))
+        local props7, stateMap, entry2, new = createFrame(props), {}, {}, UDim2.new
 
-        local F1, Q1, _1, T1 = listLayout(W1), {}, {}, ctx.udim2
-
-        _1.Size = T1(1, 0, 0, 145)
-        Q1.a = setFramesAlpha(F1, _1, 14, {170, 126, 84})
-        Q1.a.live = true
-        L1, d1 = {
-            Parent = Q1.a.f,
-            AnchorPoint = T,
-        }, ctx.udim2
-        L1.Position = d1(0.5, 0, 0.5, 2)
-        L1.Size = x(138, 138)
-        W1 = ctx.Enum
-        L1.ScaleType = W1.ScaleType.Fit
-        L1.ZIndex = 3
-        Q1.im = imageLabel(L1)
-        h1, M1, T1 = ctx.createFrame, {
-            Parent = Q1.a.f,
-        }, ctx.topRight
-        M1.AnchorPoint = T1
-        _1 = ctx.udim2
-        M1.Position = _1(1, -8, 0, 7)
-        M1.Size = x(0, 0)
-        d1 = ctx.Enum
-        M1.AutomaticSize = d1.AutomaticSize.XY
-        M1.ZIndex = 5
-        T1, d1 = ctx.listLayout, ctx.Enum
-
-        _VX.setList(M1, 0, T1(2, d1.HorizontalAlignment.Right))
-
-        Q1.mu = h1(M1)
-        L1, h1 = {
-            Parent = F1,
+        entry2.Size = UDim2.new(1, 0, 0, 145)
+        stateMap.a = createRaritySlot(props7, entry2, 14, {170, 126, 84})
+        stateMap.a.live = true
+        props6 = {
+            Parent = stateMap.a.f,
+            AnchorPoint = CenterAnchor,
+        }
+        props6.Position = UDim2.new(0.5, 0, 0.5, 2)
+        props6.Size = fromOffset(138, 138)
+        props6.ScaleType = Enum.ScaleType.Fit
+        props6.ZIndex = 3
+        stateMap.im = rawImageLabel(props6)
+        props4 = {
+            Parent = stateMap.a.f,
+        }
+        props4.AnchorPoint = TopRightAnchor
+        props4.Position = UDim2.new(1, -8, 0, 7)
+        props4.Size = fromOffset(0, 0)
+        props4.AutomaticSize = Enum.AutomaticSize.XY
+        props4.ZIndex = 5
+        props4[1] = createListLayout(2, Enum.HorizontalAlignment.Right)
+        stateMap.mu = createFrame(props4)
+        props6 = {
+            Parent = props7,
             LayoutOrder = 1,
-        }, ctx.udim2
-        L1.Size = h1(1, 0, 0, 24)
-        L1.Text = 'Pick an egg'
-        L1.TextSize = 21
-        L1.TextXAlignment = center
-        Q1.ti = applyTextStyle(L1)
-        Q1.rb, Q1.ra = S(F1, 13)
-        Q1.rb.LayoutOrder = 2
-        W1, M1 = {
-            Parent = F1,
+        }
+        props6.Size = UDim2.new(1, 0, 0, 24)
+        props6.Text = 'Pick an egg'
+        props6.TextSize = 21
+        props6.TextXAlignment = AlignCenterX
+        stateMap.ti = createStrokedLabel(props6)
+        stateMap.rb, stateMap.ra = createPillBadge(props7, 13)
+        stateMap.rb.LayoutOrder = 2
+        props = {
+            Parent = props7,
             LayoutOrder = 3,
-        }, ctx.udim2
-        W1.Size = M1(1, 0, 0, 30)
-        W1.TextSize = 26
-        W1.TextXAlignment = center
-        Q1.va = r(applyTextStyle(W1))
+        }
+        props.Size = UDim2.new(1, 0, 0, 30)
+        props.TextSize = 26
+        props.TextXAlignment = AlignCenterX
+        stateMap.va = applyGreenGradient(createStrokedLabel(props))
 
-        local p1, m1, c1, g1 = N(F1, 2, 34, 6, 4), {}, ipairs, {
+        local props8, list, props9, props10 = createGridRow(props7, 2, 34, 6, 4), {}, ipairs, {
             {
                 'gauge',
                 'Size',
@@ -7683,742 +7279,709 @@ H, r1, I1 =udim2(0, nil, center2), {}, ctx.udim2
             },
         }
 
-        for t1, o1 in c1(g1)do
-            createFrame = ctx.createFrame
+        for index, item in ipairs(props10) do
+            gradient = createFrame
             listLayout = createFrame({
-                Parent = p1,
-                LayoutOrder = t1,
+                Parent = props8,
+                LayoutOrder = index,
                 BackgroundTransparency = 0.55,
                 BackgroundColor3 = color3FromRGB(0, 0, 0),
-                D1(10),
+                createCorner(10),
             })
-            h1, M1 = {
+            props3, props4 = {
                 Parent = listLayout,
                 AnchorPoint = vector2New(0, 0.5),
-            }, ctx.udim2
-            h1.Position = M1(0, 8, 0.5, 0)
-            h1.Size = x(15, 15)
-            h1.Image = o1[1]
+            }, UDim2.new
+            props3.Position = UDim2.new(0, 8, 0.5, 0)
+            props3.Size = fromOffset(15, 15)
+            props3.Image = item[1]
 
-            e(h1)
+            createImage(props3)
 
-            d1, T1 = {
+            props5, new = {
                 Parent = listLayout,
-                Position = x(29, 3),
-            }, ctx.udim2
-            d1.Size = T1(1, -34, 0, 16)
-            d1.TextSize = 13
-            m1[t1] = applyTextStyle(d1)
-            _1, L1 = {
+                Position = fromOffset(29, 3),
+            }, UDim2.new
+            props5.Size = UDim2.new(1, -34, 0, 16)
+            props5.TextSize = 13
+            list[index] = createStrokedLabel(props5)
+            entry2, props6 = {
                 Parent = listLayout,
-                Position = x(29, 19),
-            }, ctx.udim2
-            _1.Size = L1(1, -34, 0, 11)
-            _1.Text = o1[2]:upper()
-            _1.FontFace = font5
-            _1.TextSize = 8
-            _1.TextTransparency = 0.45
+                Position = fromOffset(29, 19),
+            }, UDim2.new
+            entry2.Size = UDim2.new(1, -34, 0, 11)
+            entry2.Text = item[2]:upper()
+            entry2.FontFace = FontExtraBold
+            entry2.TextSize = 8
+            entry2.TextTransparency = 0.45
 
-            textLabel(_1)
+            createLabel(entry2)
         end
 
-        p1, I1, _1 = ctx.createFrame, {
-            Parent = F1,
+        props2 = {
+            Parent = props7,
             LayoutOrder = 5,
-        }, ctx.udim2
-        I1.Size = _1(1, 0, 0, 22)
-        I1.BackgroundTransparency = 0.55
-        I1.BackgroundColor3 = color3FromRGB(0, 0, 0)
-        I1.ClipsDescendants = true
-
-        _VX.setList(I1, 0, D1(8))
-
-        g1 = p1(I1)
-        p1, c1 = {
-            Parent = g1,
+        }
+        props2.Size = UDim2.new(1, 0, 0, 22)
+        props2.BackgroundTransparency = 0.55
+        props2.BackgroundColor3 = color3FromRGB(0, 0, 0)
+        props2.ClipsDescendants = true
+        props2[1] = createCorner(8)
+        props10 = createFrame(props2)
+        props8 = {
+            Parent = props10,
             AnchorPoint = vector2New(0, 0.5),
-        }, ctx.udim2
-        p1.Position = c1(0, 8, 0.5, 0)
-        p1.Size = x(14, 14)
-        p1.Image = 'clock'
-        Q1.si = e(p1)
-        I1, T1 = {
-            Parent = g1,
-            Position = x(28, 0),
-        }, ctx.udim2
-        I1.Size = T1(1, -36, 1, 0)
-        I1.TextSize = 11
-        m1[3] = applyTextStyle(I1)
-        h1, _1 = {
-            Parent = g1,
+        }
+        props8.Position = UDim2.new(0, 8, 0.5, 0)
+        props8.Size = fromOffset(14, 14)
+        props8.Image = 'clock'
+        stateMap.si = createImage(props8)
+        props2 = {
+            Parent = props10,
+            Position = fromOffset(28, 0),
+        }
+        props2.Size = UDim2.new(1, -36, 1, 0)
+        props2.TextSize = 11
+        list[3] = createStrokedLabel(props2)
+        props3 = {
+            Parent = props10,
             AnchorPoint = vector2New(0, 1),
-        }, ctx.udim2
-        h1.Position = _1(0, 0, 1, 0)
-        c1 = ctx.udim2
-        h1.Size = c1(0, 0, 0, 3)
-        Q1.bf = frame(h1)
-        L1, g1, p1, _1 = {}, ctx.createFrame, {
-            Parent = F1,
+        }
+        props3.Position = UDim2.new(0, 0, 1, 0)
+        props3.Size = UDim2.new(0, 0, 0, 3)
+        stateMap.bf = createSolidFrame(props3)
+        props6, props8 = {}, {
+            Parent = props7,
             LayoutOrder = 6,
-        }, ctx.udim2
-        p1.Size = _1(1, 0, 0, 34)
-        L1.Parent = g1(p1)
-        L1.Size = _
-        L1.BackgroundTransparency = 0
-        I1, createFrame, W1, T1, _1 = D1(12), U1(L.a1, L.a2, 90), L.a1, L.wh, ctx.listLayout
+        }
+        props8.Size = UDim2.new(1, 0, 0, 34)
+        props6.Parent = createFrame(props8)
+        props6.Size = FullSize
+        props6.BackgroundTransparency = 0
+        props2, gradient, props, new, entry2 = createCorner(12), createGradient(Palette.a1, Palette.a2, 90), Palette.a1, Palette.wh, createListLayout
+        props6[1], props6[2], props6[3], props6[4] = props2, gradient, createStroke(0.55, props:Lerp(new, 0.5)), createListLayout(7, AlignRightX, AlignCenterY, FillHorizontal)
 
-        _VX.setList(L1, 0, I1, createFrame, J1(0.55, W1:Lerp(T1, 0.5)), _1(7, center3, center2, horizontal))
-
-        local I1 = textButton(L1)
-        local L1 = e({
-            Parent = I1,
-            Size = x(17, 17),
+        local button = createButton(props6)
+        local image = createImage({
+            Parent = button,
+            Size = fromOffset(17, 17),
             Image = 'hand',
-            ImageColor3 = L.on,
+            ImageColor3 = Palette.on,
         })
-        local t1 = textLabel({
-            Parent = I1,
+        local label = createLabel({
+            Parent = button,
             LayoutOrder = 1,
-            Size = x(0, 34),
-            AutomaticSize = t,
-            FontFace = font6,
+            Size = fromOffset(0, 34),
+            AutomaticSize = AutoSizeX,
+            FontFace = FontBold,
             TextSize = 15,
-            TextColor3 = L.on,
+            TextColor3 = Palette.on,
         })
 
-        n1(I1)
+        bindPressScale(button)
 
-        local o1
+        local current
 
-        v1(I1, function()
-            if o1 then
-                w1(X, o1)
+        onClick(button, function()
+            if current then
+                safeCall(onAction, current)
             end
         end)
 
-        M1, W1, _1 = ctx.createFrame, {Parent = frame3}, ctx.udim2
-        W1.Size = _1(1, -128, 1, 0)
-        W1.BackgroundTransparency = 0.93
+        props = {Parent = container}
+        props.Size = UDim2.new(1, -128, 1, 0)
+        props.BackgroundTransparency = 0.93
+        props[1], props[2], props[3] = createCorner(), createStroke(0.9), createPadding(3)
+        listLayout, new, props10, gradient = createFrame(props), createFrame, {Parent = container}, TopRightAnchor
+        props10.AnchorPoint = TopRightAnchor
+        props10.Position = UDim2.new(1, 0, 0, 0)
+        props10.Size = fromOffset(120, 30)
+        props10.BackgroundTransparency = 0.8
+        props10.BackgroundColor3 = color3FromRGB(60, 210, 80)
+        props10[1], props10[2], props10[3] = createCorner(), createStroke(0.5, color3FromRGB(96, 238, 92)), createListLayout(0, AlignRightX, AlignCenterY, FillHorizontal)
 
-        _VX.setList(W1, 0, D1(), J1(0.9), H1(3))
-
-        listLayout, T1, g1, createFrame = M1(W1), ctx.createFrame, {Parent = frame3}, ctx.topRight
-        g1.AnchorPoint = createFrame
-        _1 = ctx.udim2
-        g1.Position = _1(1, 0, 0, 0)
-        g1.Size = x(120, 30)
-        g1.BackgroundTransparency = 0.8
-        g1.BackgroundColor3 = color3FromRGB(60, 210, 80)
-        M1 = ctx.listLayout
-
-        _VX.setList(g1, 0, D1(), J1(0.5, color3FromRGB(96, 238, 92)), M1(0, center3, center2, horizontal))
-
-        local X, V1, M1 = r(applyTextStyle({
-            Parent = T1(g1),
-            Size = x(0, 30),
-            AutomaticSize = t,
+        local current2, props11, _unused = applyGreenGradient(createStrokedLabel({
+            Parent = createFrame(props10),
+            Size = fromOffset(0, 30),
+            AutomaticSize = AutoSizeX,
             Text = '--',
             TextSize = 14,
-        })), {Parent = listLayout}, ctx.udim2
+        })), {Parent = listLayout}, UDim2.new
 
-        V1.Size = M1(1 / #O, 0, 1, 0)
+        props11.Size = UDim2.new(1 / #categories, 0, 1, 0)
+        props11[1], props11[2] = createCorner(), createGradient(Palette.a1, Palette.a2)
 
-        _VX.setList(V1, 0, D1(), U1(L.a1, L.a2))
+        local box, list2, count2 = createSolidFrame(props11), {}, 1
+        local gridRow, list3 = createGridRow(listLayout, #categories, 24, 0), {}
 
-        local U1, M1, A1 = frame(V1), {}, 1
-        local T1, g1, y1 = N(listLayout, #O, 24, 0), {}, ipairs
-
-        for f1, b1 in y1(O)do
-            c1, h1 = {
-                Parent = T1,
-                LayoutOrder = f1,
-            }, ctx.listLayout
-
-            _VX.setList(c1, 0, h1(5, center3, center2, horizontal))
-
-            _1 = textButton(c1)
-            g1[f1] = e({
-                Parent = _1,
-                Size = x(14, 14),
-                Image = b1[2],
-                ImageColor3 = f1 == 1 and L.dk or L.tx,
+        for index2, item2 in ipairs(categories) do
+            props9, props3 = {
+                Parent = gridRow,
+                LayoutOrder = index2,
+            }, createListLayout
+            props9[1] = createListLayout(5, AlignRightX, AlignCenterY, FillHorizontal)
+            entry2 = createButton(props9)
+            list3[index2] = createImage({
+                Parent = entry2,
+                Size = fromOffset(14, 14),
+                Image = item2[2],
+                ImageColor3 = index2 == 1 and Palette.dk or Palette.tx,
             })
-            M1[f1] = textLabel({
-                Parent = _1,
+            list2[index2] = createLabel({
+                Parent = entry2,
                 LayoutOrder = 1,
-                Size = x(0, 24),
-                AutomaticSize = t,
-                Text = b1[1]:upper(),
-                FontFace = font5,
+                Size = fromOffset(0, 24),
+                AutomaticSize = AutoSizeX,
+                Text = item2[1]:upper(),
+                FontFace = FontExtraBold,
                 TextSize = 10,
-                TextColor3 = f1 == 1 and L.dk or L.tx,
+                TextColor3 = index2 == 1 and Palette.dk or Palette.tx,
             })
 
-            v1(_1, function()
-                M1[A1].TextColor3, g1[A1].ImageColor3 = L.tx, L.tx
-                A1 = f1
-                M1[f1].TextColor3, g1[f1].ImageColor3, g1[f1].Size = L.dk, L.dk, x(20, 20)
+            onClick(entry2, function()
+                list2[count2].TextColor3, list3[count2].ImageColor3 = Palette.tx, Palette.tx
+                count2 = index2
+                list2[index2].TextColor3, list3[index2].ImageColor3, list3[index2].Size = Palette.dk, Palette.dk, fromOffset(20, 20)
 
-                k1(g1[f1], {
-                    Size = x(14, 14),
-                }, 0.45, back)
+                tween(list3[index2], {
+                    Size = fromOffset(14, 14),
+                }, 0.45, EaseBack)
 
-                local h, udim2 = {}, ctx.udim2
+                local props12 = {}
 
-                h.Position = udim2((f1 - 1) / #O, 0, 0, 0)
+                props12.Position = UDim2.new((index2 - 1) / #categories, 0, 0, 0)
 
-                k1(U1, h, 0.3)
-                w1(E, b1[1])
+                tween(box, props12, 0.3)
+                safeCall(onCategory, item2[1])
             end)
         end
 
-        listLayout, V1, W1 = ctx.createFrame, {
-            Parent = callback,
+        props11 = {
+            Parent = self,
             LayoutOrder = 1,
-        }, ctx.udim2
-        V1.Size = W1(1, -264, 0, 370)
+        }
+        props11.Size = UDim2.new(1, -264, 0, 370)
 
-        local H = listLayout(V1)
-        local h = scrollingFrame({
-            Parent = H,
-            Size = _,
+        local props12 = createFrame(props11)
+        local scrollFrame = createScrollFrame({
+            Parent = props12,
+            Size = FullSize,
             ScrollingEnabled = UserInputService.TouchEnabled,
             ScrollBarThickness = 3,
-            ScrollBarImageColor3 = L.wh,
+            ScrollBarImageColor3 = Palette.wh,
             ScrollBarImageTransparency = 0.6,
         })
 
-        a1.nest[h] = K
+        activeWin.nest[scrollFrame] = top
 
-        a1:Grip(h, H)
+        activeWin:Grip(scrollFrame, props12)
 
-        local k = N(h, M, 178, 8)
+        local props13 = createGridRow(scrollFrame, gridCols, 178, 8)
 
-        d1 = nil
-        d1, k.Position, k.Size = ctx.udim2, x(3, 3), ctx.udim2(1, -16, 0, 0)
-        k.AutomaticSize = g
-        H1(0, 0, 3, 0).Parent = k
-        V1, p1 = {Parent = h}, ctx.udim2
-        V1.Size = p1(1, 0, 0, 40)
-        V1.Text = 'No eggs yet'
-        V1.TextSize = 12
-        V1.TextTransparency = 0.45
-        V1.TextXAlignment = center
+        props5 = nil
+        props5, props13.Position, props13.Size = UDim2.new, fromOffset(3, 3), UDim2.new(1, -16, 0, 0)
+        props13.AutomaticSize = AutoSizeY
+        createPadding(0, 0, 3, 0).Parent = props13
+        props11 = {Parent = scrollFrame}
+        props11.Size = UDim2.new(1, 0, 0, 40)
+        props11.Text = 'No eggs yet'
+        props11.TextSize = 12
+        props11.TextTransparency = 0.45
+        props11.TextXAlignment = AlignCenterX
 
-        local I, M, c, t = textLabel(V1), {}, {}, {}
+        local label2, list4, list5, stateMap2 = createLabel(props11), {}, {}, {}
 
-        local function y(text)
-            local N = o1 ~= text and ((if o1 then not text else not o1) or o1.id ~= text.id or o1.muts ~= text.muts)
+        local function updateView(text)
+            local isMatch = current ~= text and ((if current then not text else not current) or current.id ~= text.id or current.muts ~= text.muts)
 
-            o1 = text
+            current = text
             text = text or {}
 
-            local E = o(text)
+            local palette = getRarityColors(text)
 
-            if N ~= false then
-                setFramesAlpha2(Q1.a, E)
-                B(Q1.rb, Q1.ra, E, text)
-                P(Q1.ti, text)
+            if isMatch ~= false then
+                applyRaritySlot(stateMap.a, palette)
+                applyRarityPill(stateMap.rb, stateMap.ra, palette, text)
+                applyTopHalfGradient(stateMap.ti, text)
 
-                F1.BackgroundColor3, C1.Color = E[1], E[2]
+                props7.BackgroundColor3, stroke.Color = palette[1], palette[2]
             end
-            if Q1.m ~= text.muts then
-                Q1.m = text.muts
+            if stateMap.m ~= text.muts then
+                stateMap.m = text.muts
 
-                A(Q1.mu, text.muts, 20, 13)
+                renderMutationTags(stateMap.mu, text.muts, 20, 13)
             end
 
-            Q1.im.Image, Q1.ti.Text, Q1.va.Text = text.image or '', text.title or 'Pick an egg', text.value or '--'
+            stateMap.im.Image, stateMap.ti.Text, stateMap.va.Text = text.image or '', text.title or 'Pick an egg', text.value or '--'
 
-            local ipairsFn, e = ipairs, {
+            local items2 = {
                 text.size,
                 text.weight,
                 text.status,
             }
 
-            for K, U1 in ipairsFn(e)do
-                m1[K].Text = U1 or '--'
+            for index, item in ipairs(items2) do
+                list[index].Text = item or '--'
             end
 
-            e = text.kind == 'Ready' and {
+            items2 = text.kind == 'Ready' and {
                 'sparkles',
-                L.mint,
+                Palette.mint,
             } or text.kind == 'Growing' and {
                 'clock',
-                L.wh,
+                Palette.wh,
             } or {
                 'egg',
-                E[3],
+                palette[3],
             }
 
-            d(Q1.si, e[1])
+            setSpriteRect(stateMap.si, items2[1])
 
-            Q1.si.ImageColor3, m1[3].TextColor3 = e[2], e[2]
-            e = nil
-            e, Q1.bf.Size, Q1.bf.BackgroundColor3 = ctx.udim2, ctx.udim2(text.kind == 'Growing' and text.pct or 0, 0, 0, 3), E[3]
-            I1.Parent.Visible, t1.Text = text.label ~= nil, text.label or ''
+            stateMap.si.ImageColor3, list[3].TextColor3 = items2[2], items2[2]
+            items2 = nil
+            items2, stateMap.bf.Size, stateMap.bf.BackgroundColor3 = UDim2.new, UDim2.new(text.kind == 'Growing' and text.pct or 0, 0, 0, 3), palette[3]
+            button.Parent.Visible, label.Text = text.label ~= nil, text.label or ''
 
-            d(L1, ({
+            setSpriteRect(image, ({
                 ['Hatch now'] = 'sparkles',
                 ['Go to egg'] = 'pin',
             })[text.label] or 'hand')
         end
         local function updateViewportVisibility()
-            local i, N = h.AbsolutePosition.Y, h.AbsoluteSize.Y
+            local current3, current4 = scrollFrame.AbsolutePosition.Y, scrollFrame.AbsoluteSize.Y
 
-            for key, value in next, M do
-                key = value.c.AbsolutePosition.Y - i
+            for key, value in next, list4 do
+                key = value.c.AbsolutePosition.Y - current3
 
-                local i = key > -value.c.AbsoluteSize.Y - 60 and key < N + 60
+                local isMatch = key > -value.c.AbsoluteSize.Y - 60 and key < current4 + 60
 
-                if value.box.Visible ~= i then
-                    value.box.Visible = i
+                if value.box.Visible ~= isMatch then
+                    value.box.Visible = isMatch
                 end
             end
         end
 
-        G(h:GetPropertyChangedSignal('CanvasPosition'), updateViewportVisibility)
-        G(h:GetPropertyChangedSignal('AbsoluteSize'), updateViewportVisibility)
+        connectSignal(scrollFrame:GetPropertyChangedSignal('CanvasPosition'), updateViewportVisibility)
+        connectSignal(scrollFrame:GetPropertyChangedSignal('AbsoluteSize'), updateViewportVisibility)
 
         local function updateBackgroundAlpha()
-            local i = table.remove(c)
+            local current3 = table.remove(list5)
 
-            if i then
-                i.c.Visible = true
+            if current3 then
+                current3.c.Visible = true
 
-                return i
+                return current3
             end
 
-            local i = {}
+            local stateMap3 = {}
 
-            i.s = J1(0.1)
-            i.c = textButton({
-                Parent = k,
+            stateMap3.s = createStroke(0.1)
+            stateMap3.c = createButton({
+                Parent = props13,
                 BackgroundTransparency = 0.3,
-                D1(18),
-                i.s,
+                createCorner(18),
+                stateMap3.s,
             })
 
-            local createFrame = ctx.createFrame
+            local props14
 
-            i.box = createFrame({
-                Parent = i.c,
-                Size = _,
+            stateMap3.box = createFrame({
+                Parent = stateMap3.c,
+                Size = FullSize,
             })
 
-            local _, N, udim2 = i.box, {
-                Position = x(5, 5),
-            }, ctx.udim2
+            local entry3, props15, udim2 = stateMap3.box, {
+                Position = fromOffset(5, 5),
+            }
 
-            N.Size = udim2(1, -10, 0, 108)
-            i.a = setFramesAlpha(_, N, 14, {118, 86, 56})
-            _, udim2 = {
-                Parent = i.a.f,
-                AnchorPoint = T,
-                Position = Z,
-                Size = x(96, 96),
-            }, ctx.Enum
-            _.ScaleType = udim2.ScaleType.Fit
-            _.ZIndex = 3
-            i.im = imageLabel(_)
-            i.rk = applyTextStyle({
-                Parent = i.a.f,
-                Position = x(7, 5),
-                Size = x(30, 15),
+            props15.Size = UDim2.new(1, -10, 0, 108)
+            stateMap3.a = createRaritySlot(entry3, props15, 14, {118, 86, 56})
+            entry3 = {
+                Parent = stateMap3.a.f,
+                AnchorPoint = CenterAnchor,
+                Position = CenterPos,
+                Size = fromOffset(96, 96),
+            }
+            entry3.ScaleType = Enum.ScaleType.Fit
+            entry3.ZIndex = 3
+            stateMap3.im = rawImageLabel(entry3)
+            stateMap3.rk = createStrokedLabel({
+                Parent = stateMap3.a.f,
+                Position = fromOffset(7, 5),
+                Size = fromOffset(30, 15),
                 TextSize = 12,
                 ZIndex = 5,
             })
-            udim2, _ = {
-                Parent = i.a.f,
+            udim2 = {
+                Parent = stateMap3.a.f,
                 AnchorPoint = vector2New(0, 1),
-            }, ctx.udim2
-            udim2.Position = _(0, 7, 1, -6)
-            udim2.Size = x(64, 15)
+            }
+            udim2.Position = UDim2.new(0, 7, 1, -6)
+            udim2.Size = fromOffset(64, 15)
             udim2.TextSize = 12
             udim2.ZIndex = 5
-            i.tm = applyTextStyle(udim2)
-            N, createFrame = {
-                Parent = i.a.f,
+            stateMap3.tm = createStrokedLabel(udim2)
+            props15 = {
+                Parent = stateMap3.a.f,
                 AnchorPoint = vector2New(1, 1),
-            }, ctx.udim2
-            N.Position = createFrame(1, -7, 1, -6)
-            N.Size = x(48, 15)
-            N.TextSize = 11
-            udim2 = ctx.Enum
-            N.TextXAlignment = udim2.TextXAlignment.Right
-            N.ZIndex = 5
-            i.sz = applyTextStyle(N)
-            createFrame, udim2, N = ctx.createFrame, {
-                Parent = i.a.f,
-            }, ctx.topRight
-            udim2.AnchorPoint = N
-            _ = ctx.udim2
-            udim2.Position = _(1, -5, 0, 4)
-            udim2.Size = x(0, 0)
-            N = ctx.Enum
-            udim2.AutomaticSize = N.AutomaticSize.XY
+            }
+            props15.Position = UDim2.new(1, -7, 1, -6)
+            props15.Size = fromOffset(48, 15)
+            props15.TextSize = 11
+            props15.TextXAlignment = Enum.TextXAlignment.Right
+            props15.ZIndex = 5
+            stateMap3.sz = createStrokedLabel(props15)
+            udim2 = {
+                Parent = stateMap3.a.f,
+            }
+            udim2.AnchorPoint = TopRightAnchor
+            udim2.Position = UDim2.new(1, -5, 0, 4)
+            udim2.Size = fromOffset(0, 0)
+            udim2.AutomaticSize = Enum.AutomaticSize.XY
             udim2.ZIndex = 5
-            _, N = ctx.listLayout, ctx.Enum
+            udim2[1] = createListLayout(1, Enum.HorizontalAlignment.Right)
+            stateMap3.mt = createFrame(udim2)
+            props15 = {
+                Parent = stateMap3.box,
+                Position = fromOffset(8, 117),
+            }
+            props15.Size = UDim2.new(1, -16, 0, 18)
+            props15.TextSize = 14
+            props15.TextXAlignment = AlignCenterX
+            stateMap3.ti = createStrokedLabel(props15)
+            props15 = {
+                Parent = stateMap3.box,
+                Position = fromOffset(8, 137),
+            }
+            props15.Size = UDim2.new(1, -16, 0, 17)
+            props15[1] = createListLayout(0, AlignRightX)
+            entry3 = createFrame(props15)
+            stateMap3.rb, stateMap3.ra = createPillBadge(entry3, 10)
+            stateMap3.rb.BackgroundTransparency, stateMap3.rb:FindFirstChildOfClass('UIStroke').Enabled = 1, false
 
-            _VX.setList(udim2, 0, _(1, N.HorizontalAlignment.Right))
+            stateMap3.rb:FindFirstChildOfClass('UIPadding'):Destroy()
 
-            i.mt = createFrame(udim2)
-            N, _ = {
-                Parent = i.box,
-                Position = x(8, 117),
-            }, ctx.udim2
-            N.Size = _(1, -16, 0, 18)
-            N.TextSize = 14
-            N.TextXAlignment = center
-            i.ti = applyTextStyle(N)
-            udim2, N, createFrame = ctx.createFrame, {
-                Parent = i.box,
-                Position = x(8, 137),
-            }, ctx.udim2
-            N.Size = createFrame(1, -16, 0, 17)
-            _ = ctx.listLayout
-
-            _VX.setList(N, 0, _(0, center3))
-
-            _ = udim2(N)
-            i.rb, i.ra = S(_, 10)
-            i.rb.BackgroundTransparency, i.rb:FindFirstChildOfClass('UIStroke').Enabled = 1, false
-
-            i.rb:FindFirstChildOfClass('UIPadding'):Destroy()
-
-            udim2, createFrame = {
-                Parent = i.box,
-                Position = x(8, 156),
-            }, ctx.udim2
-            udim2.Size = createFrame(1, -16, 0, 17)
+            udim2 = {
+                Parent = stateMap3.box,
+                Position = fromOffset(8, 156),
+            }
+            udim2.Size = UDim2.new(1, -16, 0, 17)
             udim2.TextSize = 14
-            udim2.TextXAlignment = center
-            i.va = r(applyTextStyle(udim2))
-            createFrame, _ = {
-                Parent = i.a.f,
+            udim2.TextXAlignment = AlignCenterX
+            stateMap3.va = applyGreenGradient(createStrokedLabel(udim2))
+            props14 = {
+                Parent = stateMap3.a.f,
                 AnchorPoint = vector2New(0, 1),
-            }, ctx.udim2
-            createFrame.Position = _(0, 0, 1, 0)
-            udim2 = ctx.udim2
-            createFrame.Size = udim2(0, 0, 0, 3)
-            createFrame.ZIndex = 5
-            i.bf = frame(createFrame)
+            }
+            props14.Position = UDim2.new(0, 0, 1, 0)
+            props14.Size = UDim2.new(0, 0, 0, 3)
+            props14.ZIndex = 5
+            stateMap3.bf = createSolidFrame(props14)
 
-            v1(i.c, function()
-                if not i.it then
+            onClick(stateMap3.c, function()
+                if not stateMap3.it then
                     return
                 end
 
-                t.sel = i.it.id
+                stateMap2.sel = stateMap3.it.id
 
-                for k, k in next, M do
-                    k.s.Thickness = k.it.id == t.sel and 2.5 or 1.2
+                for _, value in next, list4 do
+                    value.s.Thickness = value.it.id == stateMap2.sel and 2.5 or 1.2
                 end
 
-                y(i.it)
+                updateView(stateMap3.it)
             end)
 
-            return i
+            return stateMap3
         end
 
-        t.Set = function(k, r, callback, Q)
-            I.Visible, X.Text = #r == 0, Q or '--'
+        stateMap2.Set = function(self2, newValue, silent, param4)
+            label2.Visible, current2.Text = #newValue == 0, param4 or '--'
 
-            for index, _ in ipairs(O)do
-                M1[index].Text = _[1]:upper() .. (callback and callback[_[1] ] and '  ' .. callback[_[1] ] or '')
+            for index, entry4 in ipairs(categories) do
+                list2[index].Text = entry4[1]:upper() .. (silent and silent[entry4[1] ] and '  ' .. silent[entry4[1] ] or '')
             end
 
-            k, callback, Q = {}, ipairs
+            self2, silent, param4 = {}, ipairs
 
-            for I, _ in callback(r)do
-                local F = M[_.id] or updateBackgroundAlpha()
+            for index2, entry5 in ipairs(newValue) do
+                local current3 = list4[entry5.id] or updateBackgroundAlpha()
 
-                M[_.id], k[_.id] = F, true
-                F.it = _
-                F.c.LayoutOrder = I
+                list4[entry5.id], self2[entry5.id] = current3, true
+                current3.it = entry5
+                current3.c.LayoutOrder = index2
 
-                local h = o(_)
+                local palette = getRarityColors(entry5)
 
-                if F.p ~= h then
-                    F.p = h
+                if current3.p ~= palette then
+                    current3.p = palette
 
-                    setFramesAlpha2(F.a, h)
-                    B(F.rb, F.ra, h, _)
-                    P(F.ti, _)
+                    applyRaritySlot(current3.a, palette)
+                    applyRarityPill(current3.rb, current3.ra, palette, entry5)
+                    applyTopHalfGradient(current3.ti, entry5)
 
-                    F.c.BackgroundColor3, F.s.Color = h[1], h[2]
+                    current3.c.BackgroundColor3, current3.s.Color = palette[1], palette[2]
                 end
 
-                F.s.Thickness = _.id == t.sel and 2.5 or 1.2
+                current3.s.Thickness = entry5.id == stateMap2.sel and 2.5 or 1.2
 
-                if F.im.Image ~= _.image then
-                    F.im.Image = _.image or ''
+                if current3.im.Image ~= entry5.image then
+                    current3.im.Image = entry5.image or ''
                 end
 
-                F.rk.Text, F.ti.Text, F.va.Text, F.tm.Text, F.sz.Text = '#' .. (_.rank or I), _.title, _.value, _.time or '', _.size or ''
-                I = ''
+                current3.rk.Text, current3.ti.Text, current3.va.Text, current3.tm.Text, current3.sz.Text = '#' .. (entry5.rank or index2), entry5.title, entry5.value, entry5.time or '', entry5.size or ''
+                index2 = ''
 
-                for index, value in ipairs(_.muts or {})do
-                    I ..= value.n .. ','
+                for index, value in ipairs(entry5.muts or {}) do
+                    index2 ..= value.n .. ','
                 end
 
-                if F.mk ~= I then
-                    F.mk = I
+                if current3.mk ~= index2 then
+                    current3.mk = index2
 
-                    A(F.mt, _.muts, 14, 9)
+                    renderMutationTags(current3.mt, entry5.muts, 14, 9)
                 end
 
-                I = nil
-                I, F.bf.Size, F.bf.BackgroundColor3 = ctx.udim2, ctx.udim2(_.pct or 0, 0, 0, 3), _.ready and L.mint or h[3]
-                Q = if _.id == t.sel then _ else Q
+                index2 = nil
+                index2, current3.bf.Size, current3.bf.BackgroundColor3 = UDim2.new, UDim2.new(entry5.pct or 0, 0, 0, 3), entry5.ready and Palette.mint or palette[3]
+                param4 = if entry5.id == stateMap2.sel then entry5 else param4
             end
-            for key, value in next, M do
-                if not (k[key]) then
+            for key, value in next, list4 do
+                if not (self2[key]) then
                     value.c.Visible = false
                     value.it = nil
                     value.p = nil
                     value.mk = nil
-                    M[key], c[#c + 1] = nil, value
+                    list4[key], list5[#list5 + 1] = nil, value
                 end
             end
 
             task.defer(updateViewportVisibility)
 
-            Q = Q or r[1]
-            t.sel = Q and Q.id
+            param4 = param4 or newValue[1]
+            stateMap2.sel = param4 and param4.id
 
-            y(Q)
+            updateView(param4)
         end
-        t.Card = function(callback, visible)
-            F1.Parent.Visible = visible
-            callback = ctx.udim2
-            H.Size = callback(1, visible and -264 or 0, 0, r1 + 6)
+        stateMap2.Card = function(callback, visible)
+            props7.Parent.Visible = visible
+            props12.Size = UDim2.new(1, visible and -264 or 0, 0, count + 6)
         end
 
-        y(nil)
+        updateView(nil)
 
-        return t
+        return stateMap2
     end
-    R1.Order = function(parent, k, r, I)
-        local h = {}
+    Section.Order = function(self, title, items, callback)
+        local control = {}
 
-        h.Value = table.clone(r)
+        control.Value = table.clone(items)
 
-        local createFrame, A, udim2 = ctx.createFrame, {
-            Parent = parent.f,
-            LayoutOrder = parent.n + 1,
-        }, ctx.udim2
+        local container, props, udim2 = nil, {
+            Parent = self.f,
+            LayoutOrder = self.n + 1,
+        }
 
-        A.Size = udim2(1, 0, 0, #r * 34 + 12)
-        udim2 = createFrame(A)
+        props.Size = UDim2.new(1, 0, 0, #items * 34 + 12)
+        udim2 = createFrame(props)
 
-        parent:Add(udim2, k, true)
+        self:Add(udim2, title, true)
 
-        local F = {}
+        local list = {}
 
-        A = #r
+        props = #items
 
-        for Q = 1, A, 1 do
-            local createFrame3, _, udim2 = ctx.createFrame, {
+        for index = 1, props, 1 do
+            local createFrame3, entry6, udim2 = nil, {
                 Parent = udim2,
-                Position = x(14, 6 + (Q - 1) * 34),
-            }, ctx.udim2
+                Position = fromOffset(14, 6 + (index - 1) * 34),
+            }, UDim2.new
 
-            _.Size = udim2(1, -28, 0, 30)
-            _.BackgroundTransparency = 0.95
+            entry6.Size = UDim2.new(1, -28, 0, 30)
+            entry6.BackgroundTransparency = 0.95
+            entry6[1] = createCorner(9)
+            container = createFrame(entry6)
 
-            _VX.setList(_, 0, D1(9))
-
-            createFrame = createFrame3(_)
-
-            textLabel({
-                Parent = createFrame,
-                Position = x(10, 0),
-                Size = x(20, 30),
-                Text = tostring(Q),
-                FontFace = font4,
+            createLabel({
+                Parent = container,
+                Position = fromOffset(10, 0),
+                Size = fromOffset(20, 30),
+                Text = tostring(index),
+                FontFace = FontMono,
                 TextSize = 12,
                 TextTransparency = 0.45,
             })
 
-            createFrame3, _ = {
-                Parent = createFrame,
-                Position = x(34, 0),
-            }, ctx.udim2
-            createFrame3.Size = _(1, -110, 1, 0)
-            createFrame3.FontFace = font6
+            createFrame3 = {
+                Parent = container,
+                Position = fromOffset(34, 0),
+            }
+            createFrame3.Size = UDim2.new(1, -110, 1, 0)
+            createFrame3.FontFace = FontBold
             createFrame3.TextSize = 13
-            F[Q] = textLabel(createFrame3)
-            _, createFrame3 = ipairs, {
--1,
+            list[index] = createLabel(createFrame3)
+            entry6, createFrame3 = ipairs, {
+                -1,
                 1,
             }
 
-            for n, d in _(createFrame3)do
-                local A, _ = {
-                    Parent = createFrame,
-                    AnchorPoint = R,
-                }, ctx.udim2
+            for index2, item in ipairs(createFrame3) do
+                local btnProps, _ = {
+                    Parent = container,
+                    AnchorPoint = RightCenterAnchor,
+                }, UDim2.new
 
-                A.Position = _(1, n == 1 and -38 or -6, 0.5, 0)
-                A.Size = x(28, 24)
-                A.BackgroundTransparency = 0.9
+                btnProps.Position = UDim2.new(1, index2 == 1 and -38 or -6, 0.5, 0)
+                btnProps.Size = fromOffset(28, 24)
+                btnProps.BackgroundTransparency = 0.9
+                btnProps[1], btnProps[2] = createCorner(7), createIcon('down', 14)
+                index2 = createButton(btnProps)
+                index2:FindFirstChildWhichIsA('ImageLabel').Rotation = item < 0 and 180 or 0
 
-                _VX.setList(A, 0, D1(7), u('down', 14))
+                bindPressScale(index2)
+                onClick(index2, function()
+                    local value, current = control.Value, index + item
 
-                n = textButton(A)
-                n:FindFirstChildWhichIsA('ImageLabel').Rotation = d < 0 and 180 or 0
-
-                n1(n)
-                v1(n, function()
-                    local value, M = h.Value, Q + d
-
-                    if M < 1 then
+                    if current < 1 then
                         return
-                    elseif M > #value then
+                    elseif current > #value then
                         return
                     end
 
-                    value[Q], value[M] = value[M], value[Q]
+                    value[index], value[current] = value[current], value[index]
 
-                    h:Set(value)
+                    control:Set(value)
                 end)
             end
         end
 
-        h.Set = function(n, options, A)
-            local d, Q = {}, {}
+        control.Set = function(self2, newValue, silent)
+            local list2, list3 = {}, {}
 
-            for _, _ in ipairs(type(options) == 'table' and options or {})do
-                if table.find(r, _) then
-                    if not (d[_]) then
-                        d[_] = true
-                        Q[#Q + 1] = _
+            for _, entry7 in ipairs(type(newValue) == 'table' and newValue or {}) do
+                if table.find(items, entry7) then
+                    if not (list2[entry7]) then
+                        list2[entry7] = true
+                        list3[#list3 + 1] = entry7
                     end
                 end
             end
-            for _, value in ipairs(r)do
-                if not (d[value]) then
-                    options = #Q + 1
+            for entry8, value in ipairs(items) do
+                if not (list2[value]) then
+                    newValue = #list3 + 1
 
-                    for d = _ + 1, #r, 1 do
-                        n = table.find(Q, r[d])
+                    for index = entry8 + 1, #items, 1 do
+                        self2 = table.find(list3, items[index])
 
-                        if n then
-                            options = n
+                        if self2 then
+                            newValue = self2
 
                             break
                         end
                     end
 
-                    table.insert(Q, options, value)
+                    table.insert(list3, newValue, value)
                 end
             end
 
-            h.Value = Q
+            control.Value = list3
 
-            for index, value in ipairs(F)do
-                value.Text = Q[index]
+            for index, value in ipairs(list) do
+                value.Text = list3[index]
             end
 
-            if not A then
-                w1(I, Q)
+            if not silent then
+                safeCall(callback, list3)
             end
         end
 
-        h:Set(r, true)
+        control:Set(items, true)
 
-        return parent:Reg(k, h)
+        return self:Reg(title, control)
     end
-    R1.Text = function(parent, text)
-        local r = textLabel({
-            Size = f,
-            AutomaticSize = g,
-            Text = text,
+    Section.Text = function(self, initialText)
+        local label = createLabel({
+            Size = FullWidth,
+            AutomaticSize = AutoSizeY,
+            Text = initialText,
             TextSize = 12,
             TextTransparency = 0.22,
             TextWrapped = true,
         })
 
-        parent.tn = (parent.tn or 0) + 1
+        self.tn = (self.tn or 0) + 1
 
-        local createFrame, h, createFrame4 = ctx.createFrame, {
-            Parent = parent.f,
-            Size = f,
-            AutomaticSize = g,
-            LayoutOrder = -1E3+ parent.tn,
-            Visible = text ~= '',
-        }, ctx.createFrame
+        local props = {
+            Parent = self.f,
+            Size = FullWidth,
+            AutomaticSize = AutoSizeY,
+            LayoutOrder = -1E3 + self.tn,
+            Visible = initialText ~= '',
+        }
 
-        _VX.setList(h, 0, createFrame4({
-            Size = f,
-            AutomaticSize = g,
-            H1(12, 14),
-            r,
-        }))
+        props[1] = createFrame({
+            Size = FullWidth,
+            AutomaticSize = AutoSizeY,
+            createPadding(12, 14),
+            label,
+        })
 
-        local frame = createFrame(h)
+        local frame = createFrame(props)
 
-        if parent.n >= parent.tn then
-            h = ctx.udim2
-
-            V(frame, h(0, 14, 1, -1), ctx.udim2(1, -28, 0, 1))
+        if self.n >= self.tn then
+            createDivider(frame, UDim2.new(0, 14, 1, -1), UDim2.new(1, -28, 0, 1))
         end
 
-        parent.n = parent.n + 1
+        self.n = self.n + 1
 
         return {
-            Set = function(H, visible)
-                r.Text, frame.Visible = visible, visible ~= ''
+            Set = function(_unused, visible)
+                label.Text, frame.Visible = visible, visible ~= ''
             end,
         }
     end
-    ctx.Venyx.Notify = function(callback, callback4, callback3, frame, I)
-        callback = ctx.Venyx
+    -- ========================================================================
+    -- 7. Notifications, Config Persistence & Live Theme Engine
+    -- ========================================================================
+    Venyx.Notify = function(_self, title, subtitle, kind, duration)
+        local callback
+        local props = Venyx.W
 
-        local h = callback.W
-
-        if not h then
+        if not props then
             return
         end
 
-        I = I or 4
+        duration = duration or 4
 
-        local n, M = Z1(frame)
+        local accentColor, iconName = getStatusStyle(kind)
+        local container = createFrame({
+            Parent = props.nt,
+            Size = FullWidth,
+            AutomaticSize = AutoSizeY,
+        })
 
-        callback = ctx.createFrame
+        props = {
+            Position = fromOffset(42, 0),
+        }
+        props.Size = UDim2.new(1, -42, 0, 0)
+        props.AutomaticSize = AutoSizeY
 
-        local A, createFrame = callback({
-            Parent = h.nt,
-            Size = f,
-            AutomaticSize = g,
-        }), ctx.createFrame
+        local listLayout, labelProps, entry9 = createListLayout(2), {}, UDim2.new
 
-        h, callback = {
-            Position = x(42, 0),
-        }, ctx.udim2
-        h.Size = callback(1, -42, 0, 0)
-        h.AutomaticSize = g
-        callback = ctx.listLayout
+        labelProps.Size = UDim2.new(1, 0, 0, 17)
+        labelProps.Text = title or ''
+        labelProps.FontFace = FontBold
+        props[1], props[2] = listLayout, createLabel(labelProps)
+        entry9 = createFrame(props)
 
-        local F, Q, _ = callback(2), {}, ctx.udim2
-
-        Q.Size = _(1, 0, 0, 17)
-        Q.Text = callback4 or ''
-        Q.FontFace = font6
-
-        _VX.setList(h, 0, F, textLabel(Q))
-
-        _ = createFrame(h)
-
-        if callback3 then
-            if callback3 ~= '' then
-                textLabel({
-                    Parent = _,
+        if subtitle then
+            if subtitle ~= '' then
+                createLabel({
+                    Parent = entry9,
                     LayoutOrder = 1,
-                    Size = f,
-                    AutomaticSize = g,
-                    Text = callback3,
+                    Size = FullWidth,
+                    AutomaticSize = AutoSizeY,
+                    Text = subtitle,
                     TextSize = 12,
                     TextTransparency = 0.3,
                     TextWrapped = true,
@@ -8426,101 +7989,88 @@ H, r1, I1 =udim2(0, nil, center2), {}, ctx.udim2
             end
         end
 
-        callback4, frame, callback3 = ctx.createFrame, {
+        kind = {
             AnchorPoint = vector2New(0, 1),
-        }, ctx.udim2
-        frame.Position = callback3(0, 0, 1, 10)
-        createFrame = ctx.udim2
-        frame.Size = createFrame(1, 0, 0, 3)
-        frame.BackgroundTransparency = 0.2
-        frame.BackgroundColor3 = n
-
-        _VX.setList(frame, 0, D1())
-
-        Q, h, callback, F = callback4(frame), ctx.createFrame, {
-            Parent = A,
-            Position = x(360, 0),
-            Size = f,
-            AutomaticSize = g,
+        }
+        kind.Position = UDim2.new(0, 0, 1, 10)
+        kind.Size = UDim2.new(1, 0, 0, 3)
+        kind.BackgroundTransparency = 0.2
+        kind.BackgroundColor3 = accentColor
+        kind[1] = createCorner()
+        labelProps, props, callback, listLayout = createFrame(kind), createFrame, {
+            Parent = container,
+            Position = fromOffset(360, 0),
+            Size = FullWidth,
+            AutomaticSize = AutoSizeY,
             BackgroundTransparency = 0.06,
             BackgroundColor3 = color3FromRGB(20, 22, 46),
-        }, ctx.createFrame
-
-        _VX.setList(callback, 0, D1(16), J1(0.86), H1(14, 14, 18), _, Q, F({
-            Size = x(30, 30),
+        }, createFrame
+        callback[1], callback[2], callback[3], callback[4], callback[5], callback[6] = createCorner(16), createStroke(0.86), createPadding(14, 14, 18), entry9, labelProps, createFrame({
+            Size = fromOffset(30, 30),
             BackgroundTransparency = 0.8,
-            BackgroundColor3 = n,
-            D1(10),
-            u(M, 16, n),
-        }))
+            BackgroundColor3 = accentColor,
+            createCorner(10),
+            createIcon(iconName, 16, accentColor),
+        })
 
-        local k, r, udim2 = h(callback), {}, ctx.udim2
+        local container2, props2, udim2 = createFrame(callback), {}, UDim2.new
 
-        r.Position = udim2()
+        props2.Position = UDim2.new()
 
-        k1(k, r, 0.5)
-        k1(Q, {
-            Size = x(0, 3),
-        }, I, ctx.Enum.EasingStyle.Linear)
-        task.delay(I, function()
-            k1(k, {
-                Position = x(360, 0),
-            }, 0.35, quint, ctx.Enum.EasingDirection.In)
-            task.delay(0.4, A.Destroy, A)
+        tween(container2, props2, 0.5)
+        tween(labelProps, {
+            Size = fromOffset(0, 3),
+        }, duration, Enum.EasingStyle.Linear)
+        task.delay(duration, function()
+            tween(container2, {
+                Position = fromOffset(360, 0),
+            }, 0.35, EaseQuint, Enum.EasingDirection.In)
+            task.delay(0.4, container.Destroy, container)
         end)
     end
-    ctx.baseDir = function()
-        local H = ctx.game
-        local k, gameId = H.GameId ~= 0
+    getBaseDir = function()
+        local current
+        local isMatch, gameId = game.GameId ~= 0
 
-        if k then
-            H = ctx.game
-            gameId = H.GameId
+        if isMatch then
+            gameId = game.GameId
         else
-            gameId = k
+            gameId = isMatch
         end
 
-        H = nil
+        current = nil
 
         if gameId then
-            H = gameId
+            current = gameId
         else
-            k = ctx.game
-            H = k.PlaceId
+            current = game.PlaceId
         end
 
-        gameId = ctx.Venyx
+        local isMatch2, current2 = Venyx.Id ~= 'Venyx'
 
-        local V, W = gameId.Id ~= 'Venyx'
-
-        if V then
-            k = ctx.Venyx
-            W = '/' .. k.Id
+        if isMatch2 then
+            current2 = '/' .. Venyx.Id
         else
-            W = V
+            current2 = isMatch2
         end
 
-        return 'Venyx/' .. H .. (W or '')
+        return 'Venyx/' .. current .. (current2 or '')
     end
-    ctx.userDir = function()
-        local baseDir = ctx.baseDir
-
-        return baseDir() .. '/' .. localPlayer.UserId
+    getUserDir = function()
+        return getBaseDir() .. '/' .. localPlayer.UserId
     end
-    ctx.configPath = function(H)
-        local userDir = ctx.userDir
-
-        return userDir() .. '/' .. H .. '.json'
+    configPath = function(param1)
+        return getUserDir() .. '/' .. param1 .. '.json'
     end
 
-    local readJson = _VX.readJson
+    local readJsonImpl = Runtime.readJson
 
-    ctx.readJson = readJson
+    readJson = readJsonImpl
 
-    local writeJson = _VX.writeJson
+    local writeJsonImpl = Runtime.writeJson
 
-    ctx.writeJson = writeJson
-    ctx.serializeValue = function(target)
+    writeJson = writeJsonImpl
+    serializeValue = function(target)
         if target == nil then
             return {z = 1}
         end
@@ -8532,304 +8082,276 @@ H, r1, I1 =udim2(0, nil, center2), {}, ctx.udim2
         } or target
     end
 
-    local function H(options)
-        if type(options) ~= 'table' then
-            return options
+    local function deserializeValue(raw)
+        if type(raw) ~= 'table' then
+            return raw
         end
-        if options.z then
+        if raw.z then
             return nil
         end
 
-        local r, C = options.c and Color3.fromHex(options.c)
+        local accentColor, current = raw.c and Color3.fromHex(raw.c)
 
-        if r then
-            C = r
+        if accentColor then
+            current = accentColor
         else
-            local r = options.k
+            local current2 = raw.k
 
-            if r then
-                local enum = ctx.Enum
-
-                C = enum.KeyCode[options.k]
+            if current2 then
+                current = Enum.KeyCode[raw.k]
             else
-                C = r
+                current = current2
             end
         end
 
-        return C or options
+        return current or raw
     end
-    local function k(r, C)
-        local httpService, serializeValue, httpService2, serializeValue2 = ctx.HttpService, ctx.serializeValue, ctx.HttpService, ctx.serializeValue
-
-        return httpService:JSONEncode(serializeValue(r)) == httpService2:JSONEncode(serializeValue2(C))
+    local function valuesEqual(valA, valB)
+        return HttpService:JSONEncode(serializeValue(valA)) == HttpService:JSONEncode(serializeValue(valB))
     end
 
-    ctx.applyConfig = function(r)
-        local venyx = ctx.Venyx
+    applyConfig = function(param1)
+        Venyx.busy = true
 
-        venyx.busy = true
-        venyx = next
+        for key, value in next, param1, nil do
+            local control
+            local current, current2 = Venyx.Keys[key]
 
-        for V, W in venyx, r, nil do
-            local venyx = ctx.Venyx
-            local I, v = venyx.Keys[V]
-
-            if I then
-                v = I
+            if current then
+                current2 = current
             else
-                venyx = ctx.Venyx
-                v = venyx.Opt[V]
+                current2 = Venyx.Opt[key]
             end
 
-            venyx = nil
+            control = nil
 
-            if v then
-                venyx = v
+            if current2 then
+                control = current2
             else
-                I = ctx.Venyx
-                venyx = I.Alias[V]
+                current = Venyx
+                control = Venyx.Alias[key]
             end
 
-            W = H(W)
+            value = deserializeValue(value)
 
-            if venyx then
-                if not venyx.Skip then
-                    if not (k(W, venyx.Value)) then
-                        pcall(venyx.Set, venyx, W)
+            if control then
+                if not control.Skip then
+                    if not (valuesEqual(value, control.Value)) then
+                        pcall(control.Set, control, value)
                     end
                 end
             end
         end
 
-        r = ctx.Venyx
-        r.busy = false
+        Venyx.busy = false
     end
-    ctx.Venyx.Persist = function(H)
-        local writeJson, userDir = ctx.writeJson, ctx.userDir
-
-        writeJson(userDir() .. '/_state.json', ctx.State)
+    Venyx.Persist = function(_self)
+        writeJson(getUserDir() .. '/_state.json', State)
     end
-    ctx.Venyx.Dir = ctx.userDir
-    ctx.Venyx.Rd = ctx.readJson
-    ctx.Venyx.Wr = ctx.writeJson
-    ctx.Venyx.Save = _VX.saveConfig
-    ctx.Venyx.Load = _VX.loadConfig
-    ctx.Venyx.Configs = _VX.listConfigs
-    ctx.Venyx.Delete = _VX.deleteConfig
-    ctx.Venyx.Trash = function(H)
-        local H = {}
+    Venyx.Dir = getUserDir
+    Venyx.Rd = readJson
+    Venyx.Wr = writeJson
+    Venyx.Save = Runtime.saveConfig
+    Venyx.Load = Runtime.loadConfig
+    Venyx.Configs = Runtime.listConfigs
+    Venyx.Delete = Runtime.deleteConfig
+    Venyx.Trash = function(_self)
+        local list = {}
 
         pcall(function()
-            local userDir = ctx.userDir
-
-            for index, value in ipairs(listfiles(userDir() .. '/_trash'))do
-                H[#H + 1] = value:match('([^/\\]+)%.json$')
+            for index, value in ipairs(listfiles(getUserDir() .. '/_trash')) do
+                list[#list + 1] = value:match('([^/\\]+)%.json$')
             end
         end)
-        table.sort(H)
+        table.sort(list)
 
-        return H
+        return list
     end
-    ctx.Venyx.Restore = _VX.restoreConfig
-    ctx.Venyx.Name = function(H, rawText)
-        rawText = tostring(rawText or ''):match('^%s*(.-)%s*$')
+    Venyx.Restore = Runtime.restoreConfig
+    Venyx.Name = function(self, rawName)
+        rawName = tostring(rawName or ''):match('^%s*(.-)%s*$')
 
-        if rawText ~= '' then
-            if not (rawText:match('^[%w _%-]+$')) then
+        if rawName ~= '' then
+            if not (rawName:match('^[%w _%-]+$')) then
                 return nil, 'Use letters, numbers, spaces, - or _'
             end
         end
-        if #rawText > 32 then
+        if #rawName > 32 then
             return nil, '32 characters at most'
         end
 
-        H = rawText ~= '' and rawText or 'Config'
-        rawText = if rawText == ''then'Config 1'else rawText
+        self = rawName ~= '' and rawName or 'Config'
+        rawName = if rawName == ''then'Config 1'else rawName
 
-        local C = 2
+        local count = 2
 
         while true do
-            local V, fileExists = isfile
+            local current, fileExists = isfile
 
-            if V then
-                local configPath
+            if current then
+                local current2
 
-                configPath, fileExists = ctx.configPath, isfile(ctx.configPath(rawText))
+                current2, fileExists = configPath, isfile(configPath(rawName))
             else
-                fileExists = V
+                fileExists = current
             end
             if not fileExists then
                 break
             end
 
-            rawText, C = H .. ' ' .. C, C + 1
+            rawName, count = self .. ' ' .. count, count + 1
         end
 
-        return rawText
+        return rawName
     end
-    ctx.Venyx.Export = _VX.exportConfig
-    ctx.Venyx.Import = _VX.importConfig
-    ctx.Venyx.Dirty = function(H)
-        local venyx, venyx3 = ctx.Venyx, ctx.Venyx
+    Venyx.Export = Runtime.exportConfig
+    Venyx.Import = Runtime.importConfig
+    Venyx.Dirty = function(_self)
+        Venyx.tok = (Venyx.tok or 0) + 1
 
-        venyx.tok = (venyx3.tok or 0) + 1
-        venyx3 = ctx.Venyx
-
-        local tok = venyx3.tok
+        local tok = Venyx.tok
 
         task.delay(1, function()
-            local venyx = ctx.Venyx
-
-            if venyx.tok == tok then
-                local venyx = ctx.Venyx
-
-                venyx:Save()
+            if Venyx.tok == tok then
+                Venyx:Save()
             end
         end)
     end
-    ctx.Venyx.Reset = function(target)
-        target = ctx.Venyx
-        target.busy = true
-        target = ctx.Venyx
+    Venyx.Reset = function(_self)
+        Venyx.busy = true
 
-        for key, value in next, target.Keys do
+        for key, value in next, Venyx.Keys do
             if not value.Skip then
-                if not (k(value.Def, value.Value)) then
+                if not (valuesEqual(value.Def, value.Value)) then
                     pcall(value.Set, value, type(value.Def) == 'table' and table.clone(value.Def) or value.Def)
                 end
             end
         end
 
-        target = ctx.Venyx
-        target.busy = false
-        target = ctx.Venyx
+        Venyx.busy = false
 
-        target:Save()
+        Venyx:Save()
     end
-    ctx.Venyx.Off = function(H)
-        local venyx, k = ctx.Venyx, 0
+    Venyx.Off = function(_self)
+        local count = 0
 
-        for key, value in next, venyx.Keys do
+        for key, value in next, Venyx.Keys do
             if value.Kind == 'toggle' then
                 if value.Value then
                     if value.Skip then
                     else
                         value:Set(false)
 
-                        k += 1
+                        count += 1
                     end
                 end
             end
         end
 
-        return k
+        return count
     end
-    ctx.Venyx.Theme = function(H, k)
-        H = nil
+    Venyx.Theme = function(_self, themeName)
+        local current = nil
 
-        for index, value in ipairs(l)do
-            H = if value[1] == k then value else H
+        for index, value in ipairs(Themes) do
+            current = if value[1] == themeName then value else current
         end
 
-        if not H then
+        if not current then
             return
         end
 
-        local venyx = ctx.Venyx
-        local C, venyx4 = venyx.W, ctx.Venyx
+        local current2
+        local window, props = Venyx.W
 
-        if venyx4.th ~= k then
-            venyx = ctx.Venyx
-            venyx.th = k
+        if Venyx.th ~= themeName then
+            Venyx.th = themeName
 
-            local W, I, v = {
-                w1 = H[2],
-                w2 = H[3],
-                a1 = H[4],
-                a2 = H[5],
-                sky = H[4]:Lerp(L.wh, 0.2),
-                g1 = H[5]:Lerp(L.wh, 0.35),
-                g2 = H[4],
-                val = H[5]:Lerp(L.wh, 0.7),
-                pn = H[2]:Lerp(H[3], 0.55),
-                bg = H[2]:Lerp(H[3], 0.75),
-                on = H[6] or color3FromRGB(255, 255, 254),
+            local themeColors, colorMap, items = {
+                w1 = current[2],
+                w2 = current[3],
+                a1 = current[4],
+                a2 = current[5],
+                sky = current[4]:Lerp(Palette.wh, 0.2),
+                g1 = current[5]:Lerp(Palette.wh, 0.35),
+                g2 = current[4],
+                val = current[5]:Lerp(Palette.wh, 0.7),
+                pn = current[2]:Lerp(current[3], 0.55),
+                bg = current[2]:Lerp(current[3], 0.75),
+                on = current[6] or color3FromRGB(255, 255, 254),
             }, {}, {0.35, 0.4, 0.5}
 
-            for index, value in ipairs(v)do
-                I[L.a1:Lerp(L.wh, value):ToHex()] = W.a1:Lerp(L.wh, value)
+            for index, value in ipairs(items) do
+                colorMap[Palette.a1:Lerp(Palette.wh, value):ToHex()] = themeColors.a1:Lerp(Palette.wh, value)
             end
 
-            I[L.sky:Lerp(L.wh, 0.55):ToHex()] = W.sky:Lerp(L.wh, 0.55)
+            colorMap[Palette.sky:Lerp(Palette.wh, 0.55):ToHex()] = themeColors.sky:Lerp(Palette.wh, 0.55)
 
-            for key, value in next, W do
-                I[L[key]:ToHex()] = value
-                L[key] = value
+            for key, value in next, themeColors do
+                colorMap[Palette[key]:ToHex()] = value
+                Palette[key] = value
             end
 
-            I[L.wh:ToHex()], I[L.tx:ToHex()] = nil, nil
+            colorMap[Palette.wh:ToHex()], colorMap[Palette.tx:ToHex()] = nil, nil
 
-            local function w(target)
-                return I[target:ToHex()]
+            local function remapColor(color)
+                return colorMap[color:ToHex()]
             end
 
-            W, v = ipairs, {
-                C and C.Gui,
-                C and C.nt and C.nt.Parent,
+            items = {
+                window and window.Gui,
+                window and window.nt and window.nt.Parent,
             }
 
-            for I, I in W(v)do
-                for index, v in ipairs(I and I:GetDescendants() or {})do
-                    if not (v:FindFirstAncestor('VenyxThemes') or v.Parent == C.bg) then
-                        if v:IsA('GuiObject') then
-                            v.BackgroundColor3 = w(v.BackgroundColor3) or v.BackgroundColor3
+            for _, item in ipairs(items) do
+                for index, descendant in ipairs(item and item:GetDescendants() or {}) do
+                    if not (descendant:FindFirstAncestor('VenyxThemes') or descendant.Parent == window.bg) then
+                        if descendant:IsA('GuiObject') then
+                            descendant.BackgroundColor3 = remapColor(descendant.BackgroundColor3) or descendant.BackgroundColor3
 
-                            if v:IsA('TextLabel') or v:IsA('TextButton') or v:IsA('TextBox') then
-                                v.TextColor3 = w(v.TextColor3) or v.TextColor3
+                            if descendant:IsA('TextLabel') or descendant:IsA('TextButton') or descendant:IsA('TextBox') then
+                                descendant.TextColor3 = remapColor(descendant.TextColor3) or descendant.TextColor3
                             end
-                            if v:IsA('ImageLabel') or v:IsA('ImageButton') then
-                                v.ImageColor3 = w(v.ImageColor3) or v.ImageColor3
+                            if descendant:IsA('ImageLabel') or descendant:IsA('ImageButton') then
+                                descendant.ImageColor3 = remapColor(descendant.ImageColor3) or descendant.ImageColor3
                             end
-                        elseif v:IsA('UIStroke') then
-                            v.Color = w(v.Color) or v.Color
-                        elseif v:IsA('UIGradient') then
+                        elseif descendant:IsA('UIStroke') then
+                            descendant.Color = remapColor(descendant.Color) or descendant.Color
+                        elseif descendant:IsA('UIGradient') then
                             index = {}
 
-                            for index2, keypoint in ipairs(v.Color.Keypoints)do
-                                index[index2] = ColorSequenceKeypoint.new(keypoint.Time, w(keypoint.Value) or keypoint.Value)
+                            for index2, keypoint in ipairs(descendant.Color.Keypoints) do
+                                index[index2] = ColorSequenceKeypoint.new(keypoint.Time, remapColor(keypoint.Value) or keypoint.Value)
                             end
 
-                            v.Color = ColorSequence.new(index)
+                            descendant.Color = ColorSequence.new(index)
                         end
                     end
                 end
             end
         end
 
-        venyx = ctx.State
-        venyx.Theme = k
+        State.Theme = themeName
 
-        if C then
-            C:Tint()
+        if window then
+            window:Tint()
         end
 
-        for key, value in next, C and C.marks or {}, nil do
-            k1(value[1], {
-                Transparency = key == k and 0.3 or 0.86,
-                Color = key == k and H[4] or L.wh,
+        for key, value in next, window and window.marks or {}, nil do
+            tween(value[1], {
+                Transparency = key == themeName and 0.3 or 0.86,
+                Color = key == themeName and current[4] or Palette.wh,
             }, 0.2)
 
-            venyx, venyx4 = value[2], {}
-            venyx4.ImageTransparency = key == k and 0 or 1
+            current2, props = value[2], {}
+            props.ImageTransparency = key == themeName and 0 or 1
 
-            k1(venyx, venyx4, 0.2)
+            tween(current2, props, 0.2)
         end
 
-        venyx = ctx.Venyx
-
-        venyx:Persist()
+        Venyx:Persist()
     end
-    ctx.Venyx.Boot = _VX.boot
+    Venyx.Boot = Runtime.boot
 
-    return ctx.Venyx
+    return Venyx
 end)()

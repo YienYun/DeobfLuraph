@@ -1,5 +1,7 @@
 'use strict';
 
+const zlib = require('zlib');
+
 const LURAPH_HEADER = /This file was protected using Luraph Obfuscator v(\d+)(?:\.(\d+))?/;
 const LURAPH_VM_SHAPE = /\[\d+\]=(bit32|buffer|string|table|math)\.\w+/;
 const VM_CHUNK_START = /[\s\]]*return setmetatable\(\{/;
@@ -234,12 +236,31 @@ const ALIASES = {
   '77fuscator': 'f77',
 };
 
+const ZSTD_B64_ENVELOPE_RE = /DecompressBuffer\s*\(\s*buffer\.fromstring\s*\(\s*base64\.decode\s*['"]([A-Za-z0-9+/=\s]+)['"]\s*\)\s*,\s*Enum\.CompressionAlgorithm\.Zstd\s*\)/;
+
+function unwrapPackedEnvelope(source) {
+  let cur = source;
+  for (let depth = 0; depth < 3; depth++) {
+    const m = ZSTD_B64_ENVELOPE_RE.exec(cur);
+    if (!m || typeof zlib.zstdDecompressSync !== 'function') break;
+    try {
+      const comp = Buffer.from(m[1].replace(/\s+/g, ''), 'base64');
+      const dec = zlib.zstdDecompressSync(comp);
+      cur = dec.toString('latin1');
+    } catch {
+      break;
+    }
+  }
+  return cur;
+}
+
 function detect(source) {
+  const unpacked = unwrapPackedEnvelope(source);
   let best = { plugin: null, confidence: 0 };
   for (const p of PLUGINS) {
     let c = 0;
     try {
-      c = p.detect(source);
+      c = p.detect(unpacked);
     } catch {
       c = 0;
     }
@@ -266,4 +287,4 @@ function byName(name) {
   return p;
 }
 
-module.exports = { detect, byName, restoreHeaderNewline, PLUGINS };
+module.exports = { detect, byName, restoreHeaderNewline, unwrapPackedEnvelope, PLUGINS };

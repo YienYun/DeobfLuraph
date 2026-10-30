@@ -432,7 +432,77 @@ class Evaluator:
         self.strings = self.table()
         bits = self.table()
         maths = self.table()
-        self.env.values.update(string=self.strings, bit32=bits, math=maths)
+        tables = self.table()
+        self.env.values.update(string=self.strings, bit32=bits, math=maths, table=tables)
+
+        def tbl_unpack(t, i=1, j=None):
+            if not isinstance(t, Table):
+                raise Unsupported("Expected table in unpack")
+            start = int(self.number(i))
+            stop = int(t.length()) if j is None else int(self.number(j))
+            if stop < start:
+                return ()
+            if stop - start > 100000:
+                raise Unsupported("Unpack limit exceeded")
+            return tuple(t.get(float(idx)) for idx in range(start, stop + 1))
+
+        def tbl_concat(t, sep=b"", i=1, j=None):
+            if not isinstance(t, Table) or not isinstance(sep, bytes):
+                raise Unsupported("Unsupported table.concat arguments")
+            start = int(self.number(i))
+            stop = int(t.length()) if j is None else int(self.number(j))
+            parts = []
+            total = 0
+            for idx in range(start, stop + 1):
+                item = self.as_string(t.get(float(idx)))
+                total += len(item) + (len(sep) if parts else 0)
+                if total > self.max_string:
+                    raise Unsupported("String allocation limit")
+                parts.append(item)
+            return (self.bounded(sep.join(parts)),)
+
+        def tbl_insert(t, *rest):
+            if not isinstance(t, Table):
+                raise Unsupported("Expected table in table.insert")
+            if len(rest) == 1:
+                pos = int(t.length()) + 1
+                t.put(float(pos), rest[0])
+            elif len(rest) == 2:
+                pos = int(self.number(rest[0]))
+                n = int(t.length())
+                for idx in range(n, pos - 1, -1):
+                    t.put(float(idx + 1), t.get(float(idx)))
+                t.put(float(pos), rest[1])
+            else:
+                raise Unsupported("Unsupported table.insert arity")
+            return ()
+
+        tables.put(b"unpack", builtin("table.unpack", tbl_unpack))
+        tables.put(b"concat", builtin("table.concat", tbl_concat))
+        tables.put(b"insert", builtin("table.insert", tbl_insert))
+        add("unpack", tbl_unpack)
+        add(
+            "tonumber",
+            lambda v, base=None: (
+                (float(v),)
+                if isinstance(v, (int, float)) and base is None
+                else (
+                    (
+                        float(
+                            int(
+                                v.decode("latin1").strip(),
+                                10 if base is None else int(self.number(base)),
+                            )
+                        )
+                        if base is not None
+                        else float(v.decode("latin1").strip())
+                    ),
+                )
+                if isinstance(v, bytes)
+                else (None,)
+            ),
+        )
+        add("tostring", lambda v: (self.as_string(v),))
         add("getfenv", lambda *args: (self.runtime,))
         add(
             "select",

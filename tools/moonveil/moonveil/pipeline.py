@@ -254,8 +254,8 @@ def reconstruct(decoded):
 def process(raw, mode="deobfuscate", seconds=120, max_steps=50000000):
     report = {
         "tool": "moonveil-toolkit",
-        "tool_version": "0.1.0",
-        "profile": "moonveil-2.0.26-table-dispatch-v1",
+        "tool_version": "0.2.0",
+        "profile": "moonveil-2.0-2.1-unified",
         "input_sha256": hashlib.sha256(raw).hexdigest(),
         "input_bytes": len(raw),
         "status": "unsupported",
@@ -264,6 +264,26 @@ def process(raw, mode="deobfuscate", seconds=120, max_steps=50000000):
         "universal_support": False,
         "original_names_recovered": False,
     }
+    # Check Bytecode VM tier (`2.0.x` & `2.1.x` virtualized scripts) first; returns `None` on CFF-only scripts!
+    try:
+        from .vm_lift import lift_moonveil_vm
+        vm_recovered = lift_moonveil_vm(raw)
+        if vm_recovered is not None:
+            report.update(
+                profile="moonveil-bytecode-vm-lifter",
+                status="recovered_unverified",
+                output_bytes=len(vm_recovered),
+            )
+            return {
+                "report": report,
+                "constants": [],
+                "decoded": raw,
+                "graphs": {},
+                "recovered": vm_recovered,
+            }
+    except Unsupported as vm_err:
+        report["vm_lift_error"] = str(vm_err)
+
     d = decode(raw, seconds=seconds, max_steps=max_steps)
     report.update(
         constants_decoded=len(d.constants),

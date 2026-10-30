@@ -53,6 +53,13 @@ test('multi-obfuscator detector classifies MoonSec, MoonVeil, Prometheus, PSU, I
   }
 
   assert.equal(detect.byName('luraph_v14_8').name, 'luraph_v14');
+  const zlib = require('zlib');
+  if (typeof zlib.zstdCompressSync === 'function') {
+    const innerMv = '-- This script was generated using MoonVeil 2.1.1 [https://moonveil.cc]\nreturn(function(...)end)(...)';
+    const b64 = zlib.zstdCompressSync(Buffer.from(innerMv, 'latin1')).toString('base64');
+    const wrapped = `return loadstring(buffer.tostring(game:GetService'EncodingService':DecompressBuffer(buffer.fromstring(base64.decode"${b64}"),Enum.CompressionAlgorithm.Zstd)))(...)`;
+    assert.equal(detect.detect(wrapped).plugin.name, 'moonveil');
+  }
   assert.equal(detect.byName('moonsec_v3').name, 'moonsec');
   assert.equal(detect.byName('ib2').name, 'ironbrew2');
 });

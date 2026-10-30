@@ -239,13 +239,18 @@ async function processFile(absInput, args) {
   const tracePath = args.debug ? path.join(outdir, tracename) : path.join(workdir, tracename);
 
   try {
-    const fixed = detectModule.restoreHeaderNewline(source);
-    let jobSource = source;
+    const unpacked = detectModule.unwrapPackedEnvelope(source);
+    const fixed = detectModule.restoreHeaderNewline(unpacked);
+    let jobSource = fixed;
     let sourcePath = absInput;
 
-    if (fixed !== source) {
+    if (unpacked !== source) {
+      process.stderr.write('[*] unwrapped packed Base64+Zstd envelope\n');
+    }
+    if (fixed !== unpacked) {
       process.stderr.write('[*] header comment ran into the code: split it\n');
-      jobSource = fixed;
+    }
+    if (fixed !== source) {
       sourcePath = path.join(workdir || outdir, path.basename(absInput) + '.src.lua');
       fs.writeFileSync(sourcePath, fixed, 'latin1');
     }

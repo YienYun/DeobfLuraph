@@ -322,9 +322,25 @@ class AnalysisEvaluator(Evaluator):
             if count > self.max_string:
                 raise Unsupported("Fixed string format exceeds limit")
             return endian + str(count) + "s"
-        if text not in simple:
+        if text in simple:
+            return endian + simple[text]
+        import re as _re
+        parts = [endian]
+        pos_f = 0
+        for m in _re.finditer(r"c(\d+)|([Ii][1248]?|[BbdfHhLljJn])", text):
+            if m.start() != pos_f:
+                raise Unsupported("Unsupported binary format " + repr(fmt))
+            pos_f = m.end()
+            if m.group(1):
+                cnt = int(m.group(1))
+                if cnt > self.max_string:
+                    raise Unsupported("Fixed string format exceeds limit")
+                parts.append(str(cnt) + "s")
+            else:
+                parts.append(simple[m.group(2)])
+        if pos_f != len(text) or len(parts) <= 1:
             raise Unsupported("Unsupported binary format " + repr(fmt))
-        return endian + simple[text]
+        return "".join(parts)
 
     def string_unpack(self, fmt, data, position=1):
         format = self._format(fmt)

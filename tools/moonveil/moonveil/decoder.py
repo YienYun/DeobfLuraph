@@ -52,11 +52,18 @@ def decode(raw: bytes, seconds=120, max_steps=50000000) -> Decoded:
         or base["base"]["type"] != "TableConstructorExpression"
     ):
         raise Unsupported("Profile mismatch: expected a table method bootstrap")
-    if (
-        len(call["arguments"]) < 2
-        or call["arguments"][0]["type"] != "TableConstructorExpression"
-        or call["arguments"][1]["type"] != "StringLiteral"
-    ):
+    is_permuted_boot = (
+        len(call["arguments"]) >= 2
+        and call["arguments"][0]["type"] == "TableConstructorExpression"
+        and call["arguments"][1]["type"] == "StringLiteral"
+    )
+    is_direct_named_boot = all(
+        f["type"] == "TableKeyString" for f in base["base"]["fields"]
+    ) and (
+        len(call["arguments"]) == 0
+        or (len(call["arguments"]) == 1 and call["arguments"][0]["type"] == "VarargLiteral")
+    )
+    if not (is_permuted_boot or is_direct_named_boot):
         raise Unsupported("Profile mismatch: expected export names and entry name")
     evaluator = Evaluator(seconds=seconds, max_steps=max_steps)
     context = evaluator.evaluate(base["base"])
@@ -74,25 +81,29 @@ def decode(raw: bytes, seconds=120, max_steps=50000000) -> Decoded:
             k = evaluator.evaluate(field["key"])
         value = context.get(k)
         originals[id(value)] = (copy.deepcopy(field["value"]), value)
-    entry_name = evaluator.evaluate(call["arguments"][1])
-    bootstrap = context.get(base["identifier"]["name"].encode("ascii"))
 
-    def stop_entry(fn, args):
-        entry = context.get(entry_name)
-        if entry is not None and fn is entry and args and args[0] is context:
-            raise BootstrapReady()
+    if is_permuted_boot:
+        entry_name = evaluator.evaluate(call["arguments"][1])
+        bootstrap = context.get(base["identifier"]["name"].encode("ascii"))
 
-    evaluator.call_hook = stop_entry
-    try:
-        evaluator.call(
-            bootstrap, (context,) + evaluator.exprlist(call["arguments"], evaluator.env)
-        )
-    except BootstrapReady:
-        pass
+        def stop_entry(fn, args):
+            entry = context.get(entry_name)
+            if entry is not None and fn is entry and args and args[0] is context:
+                raise BootstrapReady()
+
+        evaluator.call_hook = stop_entry
+        try:
+            evaluator.call(
+                bootstrap, (context,) + evaluator.exprlist(call["arguments"], evaluator.env)
+            )
+        except BootstrapReady:
+            pass
+        else:
+            raise Unsupported("Bootstrap did not reach the expected entry boundary")
+        finally:
+            evaluator.call_hook = None
     else:
-        raise Unsupported("Bootstrap did not reach the expected entry boundary")
-    finally:
-        evaluator.call_hook = None
+        entry_name = base["identifier"]["name"].encode("ascii")
     entry = context.get(entry_name)
     if not isinstance(entry, Closure):
         raise Unsupported("Invalid entry factory")

@@ -264,7 +264,13 @@ def format_stmt(s: dict, level: int = 0) -> str:
 
 
 def format_block(stmts: list[dict], level: int = 0) -> str:
-    return "\n".join(format_stmt(s, level) for s in stmts)
+    lines: list[str] = []
+    for s in stmts:
+        rendered = format_stmt(s, level)
+        if lines and rendered.lstrip().startswith("(") and not lines[-1].rstrip().endswith(";"):
+            lines[-1] = lines[-1] + ";"
+        lines.append(rendered)
+    return "\n".join(lines)
 
 
 # ---------------------------------------------------------------------------
@@ -2060,36 +2066,64 @@ def _fold_short_circuit_booleans(stmts: list[dict], protected: set[str]) -> tupl
 # Pass 5: Reconstruct generic `for k, v in iterator do ... end` loops
 # ---------------------------------------------------------------------------
 
-def _reconstruct_for_in_expr(x):
+def _reconstruct_for_in_expr(x, shims: set[str] | None = None):
     if isinstance(x, list):
-        return [_reconstruct_for_in_expr(i) for i in x]
+        return [_reconstruct_for_in_expr(i, shims) for i in x]
     if not isinstance(x, dict):
         return x
     if x.get("type") == "FunctionDeclaration":
-        return {**x, "body": reconstruct_for_in_loops(x["body"])}
+        return {**x, "body": reconstruct_for_in_loops(x["body"], shims)}
     return {
-        k: (_reconstruct_for_in_expr(v) if k not in ("range", "loc", "body") else v)
+        k: (_reconstruct_for_in_expr(v, shims) if k not in ("range", "loc", "body") else v)
         for k, v in x.items()
     }
 
 
-def reconstruct_for_in_loops(stmts: list[dict]) -> list[dict]:
+def _is_forgprep_shim_fn(fn_node: dict) -> bool:
+    """Detect compiler-injected `function(a, b, c) if type(a) == 'table' then return pairs(a) end return a, b, c end`."""
+    if not isinstance(fn_node, dict) or fn_node.get("type") != "FunctionDeclaration":
+        return False
+    params = fn_node.get("parameters", [])
+    if len(params) != 3 or not all(p.get("type") == "Identifier" for p in params):
+        return False
+    p1, p2, p3 = [p["name"] for p in params]
+    body = fn_node.get("body", [])
+    if len(body) != 2 or body[0].get("type") != "IfStatement" or body[1].get("type") != "ReturnStatement":
+        return False
+    txt = format_block(body, 0)
+    return f'type({p1}) == "table"' in txt and f"pairs({p1})" in txt and f"return {p1}, {p2}, {p3}" in txt
+
+
+def reconstruct_for_in_loops(stmts: list[dict], iter_shims: set[str] | None = None) -> list[dict]:
+    shims = set(iter_shims or {"__mv_iter__"})
+    for s in stmts:
+        if (
+            s["type"] in ("AssignmentStatement", "LocalStatement")
+            and len(s.get("variables", [])) == 1
+            and s["variables"][0].get("type") == "Identifier"
+            and len(s.get("init", [])) == 1
+            and _is_forgprep_shim_fn(s["init"][0])
+        ):
+            shims.add(s["variables"][0]["name"])
+        elif s["type"] == "FunctionDeclaration" and s.get("identifier") and _is_forgprep_shim_fn(s):
+            shims.add(s["identifier"]["name"])
+
     # Recurse bottom-up first (including closures inside expressions like `task.spawn(function() ... end)`!)
     cur = []
     for s in stmts:
-        ns = _reconstruct_for_in_expr(copy.deepcopy(s))
+        ns = _reconstruct_for_in_expr(copy.deepcopy(s), shims)
         if ns["type"] == "IfStatement":
             for c in ns["clauses"]:
-                c["body"] = reconstruct_for_in_loops(c["body"])
+                c["body"] = reconstruct_for_in_loops(c["body"], shims)
         elif ns["type"] in ("WhileStatement", "RepeatStatement", "DoStatement", "ForGenericStatement", "ForNumericStatement", "FunctionDeclaration"):
-            ns["body"] = reconstruct_for_in_loops(ns["body"])
+            ns["body"] = reconstruct_for_in_loops(ns["body"], shims)
         cur.append(ns)
     cur = normalize_cf_stmts(cur, at_fn_end=False, allow_short_tail=True)
 
     out = []
     i = 0
     while i < len(cur):
-        matched = _try_match_for_in(cur, i)
+        matched = _try_match_for_in(cur, i, shims)
         if matched is not None:
             for_stmt, next_i = matched
             out.append(for_stmt)
@@ -2097,10 +2131,33 @@ def reconstruct_for_in_loops(stmts: list[dict]) -> list[dict]:
             continue
         out.append(cur[i])
         i += 1
+
+    # Drop any compiler `FORGPREP` shim declaration that now has 0 remaining uses!
+    custom_shims = shims - {"__mv_iter__"}
+    if custom_shims:
+        cleaned_out = []
+        for idx_o, s_o in enumerate(out):
+            shim_nm = None
+            if (
+                s_o["type"] in ("AssignmentStatement", "LocalStatement")
+                and len(s_o.get("variables", [])) == 1
+                and s_o["variables"][0].get("type") == "Identifier"
+                and s_o["variables"][0]["name"] in custom_shims
+                and len(s_o.get("init", [])) == 1
+                and _is_forgprep_shim_fn(s_o["init"][0])
+            ):
+                shim_nm = s_o["variables"][0]["name"]
+            elif s_o["type"] == "FunctionDeclaration" and s_o.get("identifier") and s_o["identifier"]["name"] in custom_shims:
+                shim_nm = s_o["identifier"]["name"]
+            if shim_nm and _count_ident_uses(out[idx_o + 1 :], shim_nm) == 0:
+                continue
+            cleaned_out.append(s_o)
+        out = cleaned_out
     return out
 
 
-def _try_match_for_in(stmts: list[dict], i: int):
+def _try_match_for_in(stmts: list[dict], i: int, shims: set[str] | None = None):
+    active_shims = shims or {"__mv_iter__"}
     if i + 3 >= len(stmts):
         return None
     s_init = stmts[i]
@@ -2117,7 +2174,7 @@ def _try_match_for_in(stmts: list[dict], i: int):
     internals = {f0, s0, c0}
 
     pos = i + 1
-    # Optional `f_it, s_st, c_init = __mv_iter__(f0, s0, c0)` (web-splitter may give LHS fresh names!)
+    # Optional `f_it, s_st, c_init = __mv_iter__(f0, s0, c0)` (or compiler FORGPREP shim!)
     if pos < len(stmts):
         sm = stmts[pos]
         if (
@@ -2126,7 +2183,8 @@ def _try_match_for_in(stmts: list[dict], i: int):
             and all(v.get("type") == "Identifier" for v in sm["variables"])
             and len(sm.get("init", [])) == 1
             and sm["init"][0]["type"] == "CallExpression"
-            and _is_ident(sm["init"][0]["base"], "__mv_iter__")
+            and sm["init"][0]["base"].get("type") == "Identifier"
+            and sm["init"][0]["base"]["name"] in active_shims
             and len(sm["init"][0]["arguments"]) == 3
             and [a.get("name") for a in sm["init"][0]["arguments"]] == [f0, s0, c0]
         ):
@@ -2141,9 +2199,34 @@ def _try_match_for_in(stmts: list[dict], i: int):
         return None
     loop_vars = copy.deepcopy(s_step1["variables"])
     first_var = loop_vars[0]["name"]
+    step1_raw_first = first_var
 
-    # Optional `v_ct = first_var` (copy-propagation may already have eliminated `s_ctrl1`, leaving `v_ct = first_var`!)
+    # Check 3-copy MoonVeil 2.1.x entry: `r1, r2 = f(s, c); k = r1; v = r2; v_ct = r1`
+    three_copy_mode = False
     if (
+        len(loop_vars) == 2
+        and pos + 4 < len(stmts)
+        and all(
+            stmts[pos + off]["type"] in ("AssignmentStatement", "LocalStatement")
+            and len(stmts[pos + off]["variables"]) == 1
+            and stmts[pos + off]["variables"][0]["type"] == "Identifier"
+            and len(stmts[pos + off].get("init", [])) == 1
+            for off in (1, 2, 3)
+        )
+        and _is_ident(stmts[pos + 1]["init"][0], loop_vars[0]["name"])
+        and _is_ident(stmts[pos + 2]["init"][0], loop_vars[1]["name"])
+        and _is_ident(stmts[pos + 3]["init"][0], loop_vars[0]["name"])
+    ):
+        k_var = stmts[pos + 1]["variables"][0]["name"]
+        v_var = stmts[pos + 2]["variables"][0]["name"]
+        v_ct = stmts[pos + 3]["variables"][0]["name"]
+        internals.update((loop_vars[0]["name"], loop_vars[1]["name"], v_ct))
+        loop_vars = [_ident(k_var), _ident(v_var)]
+        first_var = k_var
+        three_copy_mode = True
+        guard_idx = pos + 4
+    # Optional `v_ct = first_var` (1-copy entry)
+    elif (
         pos + 2 < len(stmts)
         and stmts[pos + 1]["type"] in ("AssignmentStatement", "LocalStatement")
         and len(stmts[pos + 1]["variables"]) == 1
@@ -2159,34 +2242,83 @@ def _try_match_for_in(stmts: list[dict], i: int):
         guard_idx = pos + 1
 
     s_guard = stmts[guard_idx]
+    valid_guard_names = {v_ct, step1_raw_first}
 
-    # `if v_ct ~= nil then while true do ... end end` (or `if not (v_ct == nil) then ...`)
-    if s_guard["type"] != "IfStatement" or len(s_guard["clauses"]) != 1:
+    # Form A: `if v_ct ~= nil then while true do ... break end end`
+    # Form B (guard-unnested at end of void function):
+    #   `if v_ct == nil then return end; while true do ... if v_ct == nil then return/break end end`
+    end_idx = guard_idx + 1
+    allow_void_return_latch = False
+    if (
+        s_guard["type"] == "IfStatement"
+        and len(s_guard["clauses"]) == 1
+        and any(_is_not_nil_check(s_guard["clauses"][0]["condition"], gn) for gn in valid_guard_names)
+        and len(s_guard["clauses"][0]["body"]) == 1
+        and s_guard["clauses"][0]["body"][0]["type"] == "WhileStatement"
+    ):
+        wbody = normalize_cf_stmts(s_guard["clauses"][0]["body"][0]["body"], at_fn_end=False, allow_short_tail=True)
+    elif (
+        guard_idx + 1 == len(stmts) - 1
+        and s_guard["type"] == "IfStatement"
+        and len(s_guard["clauses"]) == 1
+        and any(_is_nil_check(s_guard["clauses"][0]["condition"], gn) for gn in valid_guard_names)
+        and len(s_guard["clauses"][0]["body"]) == 1
+        and s_guard["clauses"][0]["body"][0]["type"] == "ReturnStatement"
+        and not s_guard["clauses"][0]["body"][0].get("arguments")
+        and stmts[guard_idx + 1]["type"] == "WhileStatement"
+    ):
+        wbody = normalize_cf_stmts(stmts[guard_idx + 1]["body"], at_fn_end=False, allow_short_tail=True)
+        end_idx = guard_idx + 2
+        allow_void_return_latch = True
+    else:
         return None
-    gcond = s_guard["clauses"][0]["condition"]
-    if not _is_not_nil_check(gcond, v_ct):
-        return None
-    gbody = s_guard["clauses"][0]["body"]
-    if len(gbody) != 1 or gbody[0]["type"] != "WhileStatement":
-        return None
-    wbody = normalize_cf_stmts(gbody[0]["body"], at_fn_end=False, allow_short_tail=True)
+
     if len(wbody) < 2:
         return None
 
-    # Trailing 2 or 3 statements of `while true do` must be the iterator latch:
-    # Either 3 statements: `v1_latch, v2, ... = f_it(s_st, v_ct); v_ct = v1_latch; if v_ct == nil then break end`
-    # Or 2 statements (after copy-prop): `v_ct, v2, ... = f_it(s_st, v_ct); if v_ct == nil then break end`
+    # Trailing statements of `while true do` must be the iterator latch:
     l_brk = wbody[-1]
     if not (
         l_brk["type"] == "IfStatement"
         and len(l_brk["clauses"]) == 1
-        and _is_nil_check(l_brk["clauses"][0]["condition"], v_ct)
         and len(l_brk["clauses"][0]["body"]) == 1
-        and l_brk["clauses"][0]["body"][0]["type"] == "BreakStatement"
+        and (
+            l_brk["clauses"][0]["body"][0]["type"] == "BreakStatement"
+            or (
+                allow_void_return_latch
+                and l_brk["clauses"][0]["body"][0]["type"] == "ReturnStatement"
+                and not l_brk["clauses"][0]["body"][0].get("arguments")
+            )
+        )
     ):
         return None
 
     if (
+        three_copy_mode
+        and len(wbody) >= 5
+        and _is_iter_step(wbody[-5], f_it, s_st, v_ct)
+        and len(wbody[-5]["variables"]) == 2
+        and all(
+            wbody[off]["type"] == "AssignmentStatement"
+            and len(wbody[off]["variables"]) == 1
+            and len(wbody[off]["init"]) == 1
+            for off in (-4, -3, -2)
+        )
+    ):
+        lr1, lr2 = [v["name"] for v in wbody[-5]["variables"]]
+        if (
+            not _is_ident(wbody[-4]["variables"][0], loop_vars[0]["name"])
+            or not _is_ident(wbody[-4]["init"][0], lr1)
+            or not _is_ident(wbody[-3]["variables"][0], loop_vars[1]["name"])
+            or not _is_ident(wbody[-3]["init"][0], lr2)
+            or not _is_ident(wbody[-2]["variables"][0], v_ct)
+            or not _is_ident(wbody[-2]["init"][0], lr1)
+            or not any(_is_nil_check(l_brk["clauses"][0]["condition"], gn) for gn in (v_ct, lr1))
+        ):
+            return None
+        internals.update((lr1, lr2))
+        real_body = wbody[:-5]
+    elif (
         len(wbody) >= 3
         and wbody[-2]["type"] == "AssignmentStatement"
         and len(wbody[-2]["variables"]) == 1
@@ -2202,12 +2334,14 @@ def _try_match_for_in(stmts: list[dict], i: int):
             len(latch_vars) != len(loop_vars)
             or latch_vars[1:] != [v["name"] for v in loop_vars[1:]]
             or latch_first != wbody[-2]["init"][0]["name"]
+            or not any(_is_nil_check(l_brk["clauses"][0]["condition"], gn) for gn in (v_ct, latch_first))
         ):
             return None
+        internals.add(latch_first)
         real_body = wbody[:-3]
         if latch_first != first_var and _count_ident_uses(real_body, latch_first) > 0:
             return None
-    elif _is_iter_step(wbody[-2], f_it, s_st, v_ct):
+    elif _is_iter_step(wbody[-2], f_it, s_st, v_ct) and _is_nil_check(l_brk["clauses"][0]["condition"], v_ct):
         l_step = wbody[-2]
         latch_vars = [v["name"] for v in l_step["variables"]]
         if len(latch_vars) != len(loop_vars) or latch_vars[0] != v_ct or latch_vars[1:] != [v["name"] for v in loop_vars[1:]]:
@@ -2225,16 +2359,29 @@ def _try_match_for_in(stmts: list[dict], i: int):
     else:
         return None
 
-    check_internals = internals - {first_var}
+    loop_var_names = {v["name"] for v in loop_vars}
+    check_internals = internals - loop_var_names
     for internal in check_internals:
         if _count_ident_uses(real_body, internal) > 0:
             return None
-        live_after, _ = _live_before_overwrite(stmts[guard_idx + 1 :], internal)
+        live_after, _ = _live_before_overwrite(stmts[end_idx:], internal)
         if live_after:
             return None
-    live_first_after, _ = _live_before_overwrite(stmts[guard_idx + 1 :], first_var)
-    if live_first_after:
-        return None
+    for lv_nm in loop_var_names:
+        live_lv_after, _ = _live_before_overwrite(stmts[end_idx:], lv_nm)
+        if live_lv_after:
+            return None
+
+    if (
+        len(iter_exprs) == 1
+        and iter_exprs[0]["type"] == "CallExpression"
+        and _is_ident(iter_exprs[0]["base"], "__mv_iter__")
+    ):
+        iargs = iter_exprs[0]["arguments"]
+        if len(iargs) == 1:
+            iter_exprs = copy.deepcopy(iargs)
+        elif len(iargs) >= 1 and iargs[0].get("type") == "Identifier" and iargs[0]["name"] in ("next", "pairs", "ipairs"):
+            iter_exprs = copy.deepcopy(iargs)
 
     if len(iter_exprs) == 1 and iter_exprs[0]["type"] != "CallExpression":
         iter_exprs = [{"type": "CallExpression", "base": _ident("pairs"), "arguments": iter_exprs}]
@@ -2245,7 +2392,7 @@ def _try_match_for_in(stmts: list[dict], i: int):
         "iterators": iter_exprs,
         "body": real_body,
     }
-    return for_node, guard_idx + 1
+    return for_node, end_idx
 
 
 def _is_iter_step(stmt: dict, f_it: str, s_st: str, v_ct: str) -> bool:
@@ -2564,13 +2711,28 @@ def _place_local_declarations(stmts: list[dict], outer_bound: set[str], is_fn_ro
             continue
         cleaned.append(copy.deepcopy(s))
 
-    # Also any synthetic `__w_*` or `__mv_*` assigned in this block not in `outer_bound`
-    for s in cleaned:
+    # Also any synthetic `__w_*` or `__mv_*` assigned directly in this block (or assigned inside a sub-statement
+    # and ALSO referenced in a subsequent statement of this block!) not in `outer_bound`
+    for idx_c, s in enumerate(cleaned):
         if s["type"] == "AssignmentStatement":
             for v in s["variables"]:
                 if v["type"] == "Identifier" and v["name"] not in outer_bound and v["name"] not in LUA_GLOBALS:
                     if v["name"].startswith(("__w_", "__mv_", "__iter_", "__cell_")):
                         bucket_locals.add(v["name"])
+        else:
+            tail_c = cleaned[idx_c + 1 :]
+            if tail_c:
+                for n_sub in _walk_same_fn(s):
+                    if isinstance(n_sub, dict) and n_sub.get("type") == "AssignmentStatement":
+                        for v in n_sub.get("variables", []):
+                            if (
+                                v.get("type") == "Identifier"
+                                and v["name"] not in outer_bound
+                                and v["name"] not in LUA_GLOBALS
+                                and v["name"].startswith(("__w_", "__mv_", "__iter_", "__cell_"))
+                                and _count_all_ident_occurrences(tail_c).get(v["name"], 0) > 0
+                            ):
+                                bucket_locals.add(v["name"])
 
     declared = set(outer_bound)
     out = []

@@ -149,13 +149,14 @@ async function runIronbrew2(job) {
 async function runMoonveil(job) {
   const out = job.path('.moonveil.lua');
   const mvDir = path.join(TOOLS, 'moonveil');
+  const mvTimeout = Math.max(job.args.timeout || 90, 120);
   const r = spawnSync(
     getPythonBin(),
-    ['-m', 'moonveil', 'deobfuscate', job.sourcePath, '-o', out, '--force', '--seconds', String(job.args.timeout)],
+    ['-m', 'moonveil', 'deobfuscate', job.sourcePath, '-o', out, '--force', '--seconds', String(mvTimeout)],
     {
       cwd: mvDir,
       encoding: 'utf8',
-      timeout: (job.args.timeout + 15) * 1000,
+      timeout: (mvTimeout + 30) * 1000,
       maxBuffer: 64 * 1024 * 1024,
       windowsHide: true,
       env: { ...process.env, PYTHONPATH: mvDir },

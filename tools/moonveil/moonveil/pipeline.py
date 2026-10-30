@@ -217,6 +217,13 @@ def reconstruct(decoded):
         return result
 
     selected = {name: clean(transform(n, name)) for name, n in selected.items()}
+    try:
+        from .beautify import beautify_reconstructed
+        pretty = beautify_reconstructed(selected, entry_node)
+        if pretty is not None and len(pretty) <= 2 * 1024 * 1024:
+            return pretty, graphs, counts
+    except Exception:
+        pass
     taken = {n["name"] for n in walk(decoded.ast) if n.get("type") == "Identifier"}
     ctx = "__moonveil_recovered"
     while ctx in taken:

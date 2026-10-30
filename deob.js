@@ -29,6 +29,11 @@ function parseArgs(argv) {
     executor: 'Wave',
     inputText: null,
     report: null,
+    rename: false,
+    comments: 'light',
+    aiProvider: null,
+    aiModel: null,
+    noDce: false,
     help: false,
   };
 
@@ -60,6 +65,16 @@ function parseArgs(argv) {
     else if (a === '--devirt-rounds') { args.devirtRounds = Number(valueAt(++i, a)); }
     else if (a === '--executor') { args.executor = valueAt(++i, a); }
     else if (a === '--input-text') { args.inputText = valueAt(++i, a); }
+    else if (a === '--rename') { args.rename = true; }
+    else if (a === '--comments') {
+      args.comments = valueAt(++i, a);
+      if (!['none', 'light', 'detailed'].includes(args.comments)) {
+        throw new Error('--comments must be none, light, or detailed');
+      }
+    }
+    else if (a === '--ai-provider') { args.aiProvider = valueAt(++i, a); args.rename = true; }
+    else if (a === '--ai-model') { args.aiModel = valueAt(++i, a); }
+    else if (a === '--no-dce') { args.noDce = true; }
     else if (a === '--cfg-json') {
       // Extra harness CFG as inline JSON or '@file.json'.
       let spec = valueAt(++i, a);
@@ -248,6 +263,25 @@ async function processFile(absInput, args) {
     if (final && result && fs.existsSync(result)) {
       let content = fs.readFileSync(result, 'utf8');
       content = content.replace(/^(\s*--(?:[ \t]*(?:Deobfuscated by|Detected obfuscation|Local names are inferred|source:|NOTE: reconstructed|during the trace)[^\n]*\n?|\s*\n))+/, '');
+      let renameStats = undefined;
+      if (args.rename && job.resultType === 'devirtualized') {
+        process.stderr.write(`[*] running Layer-2 renamer & dead-code cleaner (comments=${args.comments})...\n`);
+        const renamer = require('./renamer');
+        const r2 = renamer.cleanAndRename(content, {
+          fromDeobf: true,
+          comments: args.comments,
+          provider: args.aiProvider,
+          model: args.aiModel,
+          noDce: args.noDce,
+        });
+        content = r2.source;
+        renameStats = r2.stats;
+        if (r2.warnings && r2.warnings.length) job.warnings.push(...r2.warnings);
+        process.stderr.write(
+          `[*]   renamed ${r2.stats.renamed} identifiers, added ${r2.stats.comments} comments, ` +
+          `removed ${r2.stats.dead_lines_removed} dead lines (${(r2.stats.elapsed_ms / 1000).toFixed(1)}s)\n`
+        );
+      }
       const stringsPath = job.path('.strings.txt');
       const stringsFinal = final + '.strings.txt';
       if (args.strings && fs.existsSync(stringsPath)) {
@@ -265,6 +299,7 @@ async function processFile(absInput, args) {
         result_type: job.resultType,
         trace_status: job.traceStatus,
         lift_stats: job.liftStats,
+        ...(renameStats ? { rename_stats: renameStats } : {}),
         warnings: job.warnings,
       };
       if (args.report) writeAtomically(path.resolve(args.report), JSON.stringify(report, null, 2) + '\n');
@@ -283,7 +318,7 @@ async function processFile(absInput, args) {
 async function main() {
   const args = parseArgs(process.argv.slice(2));
 
-  const usage = 'Usage: node deob.js <input.lua | folder> [more_files_or_folders...] [-o <output.lua>] [--plugin <name>] [--no-devirt] [--debug] [--detect] [--report <report.json>]';
+  const usage = 'Usage: node deob.js <input.lua | folder> [more_files_or_folders...] [-o <output.lua>] [--rename] [--comments none|light|detailed] [--plugin <name>] [--no-devirt] [--debug] [--detect] [--report <report.json>]';
   if (args.help) {
     console.log(usage);
     console.log('Use --detect to classify without executing, or --no-devirt for a behaviour trace.');

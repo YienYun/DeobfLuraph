@@ -4,10 +4,12 @@
   "description": "Luraph v15.0 & v15.1 Luau Deobfuscator Engine",
   "main": "deob.js",
   "bin": {
-    "deob": "./deob.js"
+    "deob": "./deob.js",
+    "luau-rename": "./renamer/index.js"
   },
   "scripts": {
     "start": "node deob.js",
+    "rename": "node renamer/index.js",
     "test": "node --test"
   },
   "engines": {

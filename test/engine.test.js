@@ -25,6 +25,8 @@ test('detects Luraph v15, unsupported v14 and generic sources without execution'
   assert.equal(detect.detect('-- This file was protected using Luraph Obfuscator v14.8').plugin.name, 'luraph_v14');
   assert.equal(detect.detect('print("normal Lua")').plugin.name, 'generic');
   assert.equal(detect.detect('luarmor.net; luraph_runtime1()').plugin.name, 'luarmor_client');
+  assert.equal(detect.detect('superflow_bytecode={"\\62\\233"}; return setmetatable({[1]=bit32.bxor},{})').plugin.name, 'luarmor_client');
+  assert.equal(detect.detect('_bsdata0={1,2}; game:HttpGet("https://cdn.luarmor.net/v4_init_ocendmz.lua")').plugin.name, 'luarmor_client');
 
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'deobf-detect-cli-'));
   t.after(() => fs.rmSync(dir, { recursive: true, force: true }));

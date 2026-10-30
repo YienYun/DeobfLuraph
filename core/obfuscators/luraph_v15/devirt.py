@@ -684,9 +684,8 @@ class _PlainPrinter(LA.Printer):
                             break
                         s_tbl, s_off = rep[1][0], rep[1][1]
                         vals = rep[1][2:]
-                        if s_off.get("type") != "AstExprConstantNumber":
-                            break
-                        if int(s_off["value"]) != len(arr_items) + len(extra):
+                        off_iv = int(s_off["value"]) if s_off.get("type") == "AstExprConstantNumber" else self._eval_const_int(s_off)
+                        if off_iv is None or off_iv != len(arr_items) + len(extra):
                             break
                         if st == "AstStatLocal":
                             if not (s_tbl.get("type") == "AstExprLocal" and s_tbl["local"]["location"] == tgt_loc):
@@ -698,7 +697,9 @@ class _PlainPrinter(LA.Printer):
                             break
                         extra.extend({"kind": "item", "value": v} for v in vals)
                         j += 1
-                        if vals and vals[-1]["type"] in ("AstExprCall", "AstExprVarargs"):
+                        last_rep = self.node_reps.get(id(vals[-1])) if vals else None
+                        last_is_const = last_rep is not None and last_rep[0] == "const"
+                        if vals and vals[-1]["type"] in ("AstExprCall", "AstExprVarargs") and not last_is_const:
                             break
                     if extra:
                         merged_tbl = dict(tbl_ast)
@@ -719,10 +720,12 @@ class _PlainPrinter(LA.Printer):
                 vals = rep[1][2:]
                 if not vals:
                     return
-                if s_off.get("type") == "AstExprConstantNumber" and vals[-1]["type"] not in ("AstExprCall", "AstExprVarargs"):
-                    off_v = int(s_off["value"])
+                off_iv = int(s_off["value"]) if s_off.get("type") == "AstExprConstantNumber" else self._eval_const_int(s_off)
+                last_rep = self.node_reps.get(id(vals[-1]))
+                last_is_const = last_rep is not None and last_rep[0] == "const"
+                if off_iv is not None and (vals[-1]["type"] not in ("AstExprCall", "AstExprVarargs") or last_is_const):
                     t_s = self.prefix(s_tbl, depth)
-                    lhs = ", ".join("%s[%d]" % (t_s, off_v + k + 1) for k in range(len(vals)))
+                    lhs = ", ".join("%s[%d]" % (t_s, off_iv + k + 1) for k in range(len(vals)))
                     rhs = ", ".join(self.expr(v, depth) for v in vals)
                     self.emit(depth, lhs + " = " + rhs)
                     return

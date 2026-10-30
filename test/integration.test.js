@@ -145,8 +145,14 @@ test('full Luraph v15.1 StealAnEggg devirtualizes with zero nil bitwise/arithmet
   assert.doesNotMatch(text, /(?<![\w.])nil\s*(?:<=|>=|<|>|\.\.)|(?:<=|>=|<|>|\.\.)\s*nil(?![\w])/);
   assert.match(text, /return Color3\.new\(num, num2, num3\)/);
   assert.match(text, /local function parseColor3\(/);
+  assert.match(text, /local function disconnectAll\(/);
+  assert.match(text, /local function saveSeenChat\(/);
+  assert.match(text, /raycastGround = function\(/);
+  assert.match(text, /runUntilTimeout = function\(/);
   assert.match(text, /local eggPresets = \{/);
   assert.match(text, /if syn then/);
+  assert.doesNotMatch(text, /\biter_[A-Za-z]+_\d+\b/);
+  assert.doesNotMatch(text, /^;?\(function\(\)/m);
 
   // Runtime validation in offline Roblox Luau sandbox:
   // 1) Full script executes cleanly without script errors.
@@ -170,7 +176,6 @@ test('full Luraph v15.1 StealAnEggg devirtualizes with zero nil bitwise/arithmet
     'local fluxus = nil',
     'local _reqCalled = 0',
     'local function request(opts) _reqCalled += 1; return { StatusCode = 200, Body = "{}" } end',
-    lines[0],
     ...lines.slice(mcpIdx),
     'local g = (getgenv and getgenv()) or _G',
     'assert(type(g.StopChilliLink) == "function")',

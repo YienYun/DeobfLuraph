@@ -134,7 +134,7 @@ def map_expr(e, fn):
         return NewTableE([(map_expr(k, fn) if k is not None else None, map_expr(v, fn)) for k, v in e.items],
                          map_tail(e.tail, fn))
     if isinstance(e, GenIterE):
-        return GenIterE([map_expr(a, fn) for a in e.args])
+        return GenIterE([map_expr(a, fn) for a in e.args], e.flat)
     if isinstance(e, TailRef) and isinstance(e.tail, InlineTail):
         return TailRef(InlineTail(map_expr(e.tail.call, fn)))
     return e
@@ -175,8 +175,9 @@ class NewTableE(Expr):
         self.items, self.tail = items, tail
 
 class GenIterE(Expr):
-    def __init__(self, args):
+    def __init__(self, args, flat=False):
         self.args = args
+        self.flat = flat
 
 class FuncE(Expr):
     """A lifted child function: rendered text (list of lines, already indented relative)."""
@@ -226,8 +227,60 @@ def temps_read(e):
     _uses_of(e, None, temps)
     return temps
 
+STATELESS_CALLS = frozenset({
+    "bit32.band", "bit32.bor", "bit32.bxor", "bit32.bnot",
+    "bit32.lshift", "bit32.rshift", "bit32.arshift", "bit32.lrotate", "bit32.rrotate",
+    "bit32.btest", "bit32.extract", "bit32.replace", "bit32.countlz", "bit32.countrz",
+    "math.abs", "math.floor", "math.ceil", "math.min", "math.max", "math.sqrt",
+    "math.sin", "math.cos", "math.tan", "math.atan2", "math.rad", "math.deg",
+    "math.clamp", "math.round", "math.log", "math.log10", "math.exp", "math.sign",
+})
+
+DISCARDABLE_CONSTRUCTORS = frozenset({
+    "Vector3.new", "Vector2.new", "CFrame.new", "CFrame.Angles", "CFrame.fromEulerAnglesXYZ",
+    "CFrame.fromOrientation", "Color3.new", "Color3.fromRGB", "Color3.fromHSV",
+    "UDim2.new", "UDim2.fromScale", "UDim2.fromOffset", "UDim.new",
+    "NumberRange.new", "Rect.new", "Ray.new", "table.pack", "table.create", "select", "tonumber",
+})
+
+DISCARDABLE_CLOCKS = frozenset({
+    "os.clock", "os.time", "tick", "time", "elapsedTime",
+})
+
+def is_stateless_call_shallow(c):
+    if not isinstance(c, CallE) or c.method is not None or not isinstance(c.fn, Global):
+        return False
+    nm = c.fn.name
+    if nm in STATELESS_CALLS and (c.args.items or c.args.tail is not None):
+        return True
+    if nm in ("type", "typeof") and (c.args.items or c.args.tail is not None):
+        return True
+    return False
+
+def is_discardable_call_shallow(c):
+    if is_stateless_call_shallow(c):
+        return True
+    if not isinstance(c, CallE) or c.method is not None or not isinstance(c.fn, Global):
+        return False
+    nm = c.fn.name
+    if nm in DISCARDABLE_CLOCKS and not c.args.items and c.args.tail is None:
+        return True
+    if nm in DISCARDABLE_CONSTRUCTORS:
+        if nm == "select" and not (c.args.items or c.args.tail is not None):
+            return False
+        return True
+    return False
+
 def has_side_effects(e):
-    return any(isinstance(x, CallE) for x in walk(e))
+    return any(isinstance(x, CallE) and not is_stateless_call_shallow(x) for x in walk(e))
+
+def is_discardable_expr(e):
+    for x in walk(e):
+        if isinstance(x, CallE) and not is_discardable_call_shallow(x):
+            return False
+        if isinstance(x, TailRef) and isinstance(x.tail, TempTail):
+            return False
+    return True
 
 def expr_key(e):
     """Structural identity (for comparing expressions)."""
@@ -1503,7 +1556,8 @@ class Renderer:
             ind = getattr(self, "cur_ind", "")
             return "\n".join([e.lines[0]] + [ind + l for l in e.lines[1:]])
         if isinstance(e, GenIterE):
-            return "(function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for a, b, c, d, e, g, h, i, j, k in f, s, var do coroutine.yield(true, {a, b, c, d, e, g, h, i, j, k}) end end); co(); return co end)(%s)" % ", ".join(self.expr(a) for a in e.args)
+            yld = "a, b, c, d, e, g, h, i, j, k" if getattr(e, "flat", False) else "{a, b, c, d, e, g, h, i, j, k}"
+            return "(function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for a, b, c, d, e, g, h, i, j, k in f, s, var do coroutine.yield(true, %s) end end); co(); return co end)(%s)" % (yld, ", ".join(self.expr(a) for a in e.args))
         if isinstance(e, TempVal):
             return "t%s[%d]" % (e.t, e.i)
         if isinstance(e, TailCount):

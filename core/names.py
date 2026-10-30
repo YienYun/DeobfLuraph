@@ -796,14 +796,34 @@ class Namer:
         # 2. Filesystem & JSON config helpers
         if "makefolder" in calls and "writefile" not in calls and n_stmts <= 12:
             return "ensureFolder"
-        if "writefile" in calls and n_stmts <= 15:
+        if "writefile" in calls and n_stmts <= 18:
+            if any("Chat" in s for s in strs):
+                return "saveSeenChat"
             return "saveFile"
-        if "readfile" in calls and ("JSONDecode" in methods or "HttpService.JSONDecode" in calls) and n_stmts <= 20:
-            return "readJsonFile"
+        if "readfile" in calls and n_stmts <= 24:
+            if any("Chat" in s for s in strs):
+                return "loadSeenChat"
+            if "JSONDecode" in methods or "HttpService.JSONDecode" in calls:
+                return "readJsonFile"
+            return "readCachedFile"
         if "delfile" in calls and n_stmts <= 10:
             return "deleteFile"
 
-        # 3. RichText / compact number / rate formatters
+        # 3. RichText / compact number / rate / vararg formatters & math helpers
+        if "table.concat" in calls and "select" in calls and "tostring" in calls and n_stmts <= 15:
+            return "formatArgs"
+        if "Disconnect" in methods and "table.clear" in calls and n_stmts <= 15:
+            return "disconnectAll"
+        if "loadstring" in calls and n_stmts <= 25:
+            return "compileChunk"
+        if "getfenv" in calls and "setmetatable" in calls and n_stmts <= 25:
+            return "createSandboxEnv"
+        if "math.log10" in calls and n_stmts <= 16:
+            return "roundSigFigs"
+        if ("math.clamp" in calls or ("math.max" in calls and "math.min" in calls)) and not methods and n_stmts <= 12:
+            return "clampValue"
+        if ("math.round" in calls or "tonumber" in calls) and not methods and len(rets) >= 1 and n_stmts <= 10:
+            return "roundValue" if "math.round" in calls else "toNumberOrDefault"
         if has_args and any("<font color=" in s for s in strs) and n_stmts <= 15:
             return "colorizeText"
         if has_args and any(s in (" K/s", " M/s", " B/s") for s in strs) and n_stmts <= 20:
@@ -814,7 +834,17 @@ class Namer:
                 and any(s in ("%.2f", "%.1f", "%.0f") for s in strs) and "0+$" in strs and n_stmts <= 12:
             return "formatDecimal"
 
-        # 4. Roblox Instance / Remote / HTTP / State helpers
+        # 4. Roblox Instance / Tween / Remote / HTTP / State helpers
+        if "Cancel" in methods and ("Create" in methods or "tw" in lcalls or "TweenService" in (calls | lcalls)) and n_stmts <= 16:
+            return "playTween"
+        if "Destroy" in methods and not rets and n_stmts <= 15:
+            return "destroyAll"
+        if "Raycast" in methods and n_stmts <= 25:
+            return "raycastGround"
+        if "os.clock" in calls and not rets and has_args and n_stmts <= 18:
+            return "runUntilTimeout"
+        if "table.insert" in calls and not rets and has_args and n_stmts <= 6:
+            return "registerItem"
         if "GetFullName" in (methods | props) and n_stmts <= 12:
             return "getInstancePath"
         if "Archivable" in props and "Clone" in (methods | props) and n_stmts <= 20:
@@ -864,14 +894,35 @@ class Namer:
         first = vals[0] if vals else {}
         fn = dotted(first.get("func", {})) if first.get("type") == "AstExprCall" else None
         base = None
-        if first.get("type") == "AstExprCall" and first.get("args"):
-            a = first["args"][0]
+
+        def _base_from_container(a):
+            if not isinstance(a, dict):
+                return None
             if a.get("type") == "AstExprLocal":
-                base = ("local", a["local"]["location"])
-            elif a.get("type") == "AstExprCall" and a["func"].get("type") == "AstExprIndexName":
-                base = ("name", METHOD_NAMES.get(a["func"]["index"]))
-            elif a.get("type") == "AstExprIndexName":
-                base = ("name", camel(a["index"]))
+                return ("local", a["local"]["location"])
+            if a.get("type") == "AstExprCall":
+                cf = a.get("func", {})
+                if cf.get("type") == "AstExprIndexName":
+                    mn = METHOD_NAMES.get(cf["index"])
+                    if not mn and cf["index"].startswith("Get") and len(cf["index"]) > 3:
+                        mn = camel(cf["index"][3:])
+                    return ("name", mn) if mn else None
+                if cf.get("type") == "AstExprLocal":
+                    f_src = self.locals.get(cf["local"]["location"])
+                    f_nm = strip_num_suffix((f_src.get("new") or f_src.get("name") or "") if f_src else "")
+                    for vp in ("get", "find", "list", "collect", "fetch"):
+                        if f_nm.startswith(vp) and len(f_nm) > len(vp) and f_nm[len(vp)].isupper():
+                            return ("name", camel(f_nm[len(vp):]))
+            if a.get("type") == "AstExprIndexName":
+                return ("name", camel(a["index"]))
+            return None
+
+        if first.get("type") == "AstExprCall" and first.get("args"):
+            base = _base_from_container(first["args"][0])
+        elif first.get("type") == "AstExprGlobal" and first.get("global") == "next" and len(vals) >= 2:
+            base = _base_from_container(vals[1])
+        elif len(vals) == 1:
+            base = _base_from_container(first)
         if first.get("type") == "AstExprCall" and first["func"].get("type") == "AstExprIndexName" \
                 and first["func"]["index"] == "gmatch":
             return (["match"] + ["match%d" % i for i in range(2, n + 1)])[:n]
@@ -934,6 +985,29 @@ class Namer:
                     return camel(arg)
                 if m == "IsA" and arg:
                     return camel("is " + arg)
+                if m == "GetDefaultTab":
+                    return "defaultTab"
+                if m in ("CreateWindow", "Window"):
+                    return "mainWindow"
+                if m in ("CreateTab", "AddTab", "Tab", "CreateSection", "AddSection", "Section",
+                         "CreateToggle", "AddToggle", "CreateDropdown", "AddDropdown",
+                         "CreateSlider", "AddSlider", "CreateInput", "AddInput",
+                         "CreateButton", "AddButton", "CreateParagraph", "AddParagraph",
+                         "CreateColorpicker", "CreateKeybind"):
+                    suffix = re.sub(r"^(Create|Add)", "", m)
+                    lbl = None
+                    if e.get("args") and e["args"][0].get("type") == "AstExprTable":
+                        for ent in (e["args"][0].get("items") or e["args"][0].get("entries") or ()):
+                            if isinstance(ent.get("key"), dict) and const_str(ent["key"]) in ("Name", "Title"):
+                                lbl = const_str(ent.get("value"))
+                                break
+                    elif arg:
+                        lbl = arg
+                    if lbl and re.match(r"^[A-Za-z][A-Za-z0-9 _/-]{1,24}$", lbl):
+                        c_nm = camel(lbl + " " + suffix)
+                        if c_nm and c_nm not in KEYWORDS:
+                            return c_nm
+                    return camel(suffix)
                 if m in METHOD_NAMES:
                     return METHOD_NAMES[m]
                 if m.startswith("Get") and len(m) > 3:
@@ -949,11 +1023,22 @@ class Namer:
                     return "lib"
             if f.get("type") == "AstExprLocal":
                 src = self.locals.get(f["local"]["location"])
-                src_nm = strip_num_suffix((src.get("new") or "") if src else "")
+                src_nm = strip_num_suffix((src.get("new") or src.get("name") or "") if src else "")
                 if src_nm == "getService" and e.get("args"):
                     arg = const_str(e["args"][0])
                     if arg and re.match(r"^[A-Za-z]\w*$", arg):
                         return arg
+                for vp in ("get", "find", "load", "read", "create", "build", "make", "parse", "clone", "resolve", "fetch"):
+                    if src_nm.startswith(vp) and len(src_nm) > len(vp) and src_nm[len(vp)].isupper():
+                        stem = camel(src_nm[len(vp):])
+                        if stem and stem not in KEYWORDS and stem not in WEAK_1CHAR:
+                            return stem
+                if src_nm in ("formatArgs", "formatRate", "formatCompact", "formatDecimal", "colorizeText"):
+                    return "formattedText"
+                if src_nm in ("clampValue", "roundValue", "roundSigFigs", "toNumberOrDefault"):
+                    return "numVal"
+                if src_nm.startswith(("is", "has", "can", "should")) and len(src_nm) > 3 and src_nm[2:3].isupper():
+                    return camel(src_nm)
                 nm = str_arg_name(e)
                 if nm:
                     return nm
@@ -979,7 +1064,19 @@ class Namer:
             return camel(e["index"])
         if t == "AstExprIndexExpr":
             s = const_str(e.get("index"))
-            return camel(s) if s else None
+            if s:
+                return camel(s)
+            obj_nm = self.infer(e.get("expr"), 0, _seen)
+            if obj_nm and obj_nm not in WEAK_1CHAR:
+                if obj_nm.endswith("Map") and len(obj_nm) > 3:
+                    stem = obj_nm[:-3]
+                    return "entry" if stem in ("id", "uid", "key", "value", "label") else camel(stem + " entry")
+                sg = singular(obj_nm)
+                if sg and sg not in KEYWORDS and sg not in WEAK_1CHAR and sg != obj_nm:
+                    return sg
+                if obj_nm in ("hdr", "headers"):
+                    return "headerEntry"
+            return None
         if t == "AstExprFunction":
             return self.function_name(e) or "fn"
         if t == "AstExprTable":
@@ -1049,6 +1146,24 @@ class Namer:
             return "hudElements"
         if {"On", "Toggle"} <= members:
             return "toggleState"
+        if {"live", "off"} <= members and (members & {"active", "ready", "wait"}):
+            return "statusStyles"
+        if {"Toggle", "Slider", "Dropdown"} <= members:
+            return "widgetSpecs"
+        if {"left", "center", "right"} <= members and len(members) <= 5:
+            return "alignments"
+        if {"links", "rig", "body"} <= members:
+            return "rigState"
+        if {"Icon", "Name", "Chip"} <= members:
+            return "cardWidgets"
+        if {"pn", "hd", "body"} <= members:
+            return "sectionView"
+        if {"sty", "root", "el"} <= members:
+            return "richView"
+        if ({"ok", "err"} <= members or {"ok", "data"} <= members) and len(members) <= 5:
+            return "response"
+        if "hdr" in members and len(members) <= 4:
+            return "groupState"
 
         # 2. Named item / egg / entity record (`{..., Name = "Halloween egg", Uid = "carry"}`)
         if "Name" in kv and "Parent" not in members and "Size" not in members and "Position" not in members:
@@ -1101,6 +1216,9 @@ class Namer:
             if all(v.get("type") == "AstExprConstantString" for v in vals):
                 dom = _dominant_string_noun(list(kv) + [const_str(v) for v in vals], "Map")
                 return dom or "labelMap"
+            if all(v.get("type") == "AstExprTable" for v in vals):
+                dom = _dominant_string_noun(list(kv), "Configs")
+                return dom or "configMap"
             if {"Default", "Labels"} <= set(kv):
                 return "priorityConfig"
 

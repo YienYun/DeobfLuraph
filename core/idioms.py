@@ -747,3 +747,773 @@ def drop_blank_branches(stmts):
             drop_blank_branches(st.body)
     return stmts
 
+
+def _counts_no_forprep(stmts, reads=None, writes=None, text=None):
+    """Like name_counts, but does not double-count ForPrepS.exprs (which shares
+    the exact same list object as SLoop.forinfo[1])."""
+    if reads is None:
+        reads, writes, text = {}, {}, []
+    for st in stmts:
+        if isinstance(st, CG.ForPrepS):
+            continue
+        if isinstance(st, CG.AssignS):
+            for t in st.targets:
+                if isinstance(t, CG.LocalName):
+                    writes[t.name] = writes.get(t.name, 0) + 1
+        for e in _stmt_exprs(st):
+            for x in CG.walk(e):
+                if isinstance(x, CG.LocalName):
+                    reads[x.name] = reads.get(x.name, 0) + 1
+                elif isinstance(x, CG.FuncE):
+                    text.append("\n".join(x.lines))
+        for sub in _sub_blocks(st):
+            _counts_no_forprep(sub, reads, writes, text)
+    return reads, writes, text
+
+
+def _expr_reads_set(e):
+    out = set()
+    if e is None:
+        return out
+    for x in CG.walk(e):
+        if isinstance(x, CG.LocalName):
+            out.add(x.name)
+    return out
+
+
+def _multi_reads_set(m):
+    out = set()
+    if m is None:
+        return out
+    for x in m.items:
+        out |= _expr_reads_set(x)
+    if m.tail is not None:
+        out |= _expr_reads_set(CG.TailRef(m.tail))
+    return out
+
+
+def _multi_has_side_effects(m):
+    if m is None:
+        return False
+    if any(CG.has_side_effects(x) for x in m.items):
+        return True
+    if m.tail is not None and CG.has_side_effects(CG.TailRef(m.tail)):
+        return True
+    return False
+
+
+def _stmt_raw_reads_of(st, name):
+    if isinstance(st, CG.ForPrepS):
+        return 0
+    return sum(1 for e in _stmt_exprs(st) for x in CG.walk(e) if isinstance(x, CG.LocalName) and x.name == name)
+
+
+def _callee_name(fn):
+    if isinstance(fn, CG.Global):
+        return fn.name
+    if isinstance(fn, CG.Index) and isinstance(fn.obj, CG.Global) and isinstance(fn.key, Const):
+        kv = fn.key.v
+        if isinstance(kv, bytes):
+            kv = kv.decode("latin-1", "replace")
+        if isinstance(kv, str):
+            return "%s.%s" % (fn.obj.name, kv)
+    return None
+
+
+def _is_n_key(k):
+    return isinstance(k, Const) and k.v in (b"n", "n")
+
+
+def _is_pack_assign(st):
+    if not (isinstance(st, CG.AssignS) and not getattr(st, "is_local", False)
+            and len(st.targets) == 1 and isinstance(st.targets[0], CG.LocalName)
+            and len(st.values.items) == 1 and st.values.tail is None):
+        return None
+    v = st.values.items[0]
+    if isinstance(v, CG.CallE) and v.method is None and _callee_name(v.fn) == "table.pack":
+        return st.targets[0].name, v.args
+    return None
+
+
+def _is_full_unpack(e, pname):
+    if not (isinstance(e, CG.CallE) and e.method is None
+            and _callee_name(e.fn) in ("table.unpack", "unpack")
+            and e.args.tail is None and len(e.args.items) == 3):
+        return False
+    a0, a1, a2 = e.args.items
+    return (isinstance(a0, CG.LocalName) and a0.name == pname
+            and isinstance(a1, Const) and a1.v == 1
+            and isinstance(a2, CG.Index) and isinstance(a2.obj, CG.LocalName) and a2.obj.name == pname
+            and _is_n_key(a2.key))
+
+
+def _subst_unpack_in_stmt(st, pname, repl_items, repl_tail):
+    """Replace ONE `table.unpack(pname, 1, pname.n)` expansion inside `st` with
+    `(repl_items, repl_tail)` when safe (no impure prefix before an impure replacement).
+    Returns True if replaced."""
+    rep_impure = any(CG.has_side_effects(x) for x in repl_items) or (
+        repl_tail is not None and CG.has_side_effects(CG.TailRef(repl_tail))
+    )
+    done = [False]
+
+    def fix_multi(m):
+        if m is None or done[0]:
+            return m
+        new_items = [fix_expr(x) for x in m.items]
+        if done[0]:
+            return CG.Multi(new_items, m.tail)
+        if isinstance(m.tail, CG.InlineTail):
+            tc = m.tail.call
+            if _is_full_unpack(tc, pname):
+                if not (rep_impure and any(CG.has_side_effects(x) for x in new_items)):
+                    done[0] = True
+                    return CG.Multi(new_items + list(repl_items), repl_tail)
+            else:
+                ntc = fix_expr(tc)
+                if done[0]:
+                    return CG.Multi(new_items, CG.InlineTail(ntc))
+        return CG.Multi(new_items, m.tail)
+
+    def fix_expr(e):
+        if e is None or done[0]:
+            return e
+        if isinstance(e, CG.CallE):
+            nfn = fix_expr(e.fn)
+            if done[0]:
+                return CG.CallE(nfn, e.args, e.method)
+            if rep_impure and CG.has_side_effects(nfn):
+                return e
+            nargs = fix_multi(e.args)
+            if done[0]:
+                return CG.CallE(nfn, nargs, e.method)
+            return e
+        if isinstance(e, CG.NewTableE):
+            if isinstance(e.tail, CG.InlineTail) and _is_full_unpack(e.tail.call, pname):
+                if not (rep_impure and any(CG.has_side_effects(v) or (k is not None and CG.has_side_effects(k)) for k, v in e.items)):
+                    done[0] = True
+                    return CG.NewTableE(list(e.items) + [(None, x) for x in repl_items], repl_tail)
+        return CG.map_expr(e, lambda sub: None if sub is e else fix_expr(sub))
+
+    if isinstance(st, CG.AssignS):
+        if rep_impure and any(not isinstance(t, CG.LocalName) and CG.has_side_effects(t) for t in st.targets):
+            return False
+        nv = fix_multi(st.values)
+        if done[0]:
+            st.values = nv
+            return True
+    elif isinstance(st, CG.CallS):
+        nc = fix_expr(st.call)
+        if done[0]:
+            st.call = nc
+            return True
+    elif isinstance(st, CG.SetListS):
+        if not (rep_impure and CG.has_side_effects(st.tbl)):
+            nv = fix_multi(st.values)
+            if done[0]:
+                st.values = nv
+                return True
+    elif isinstance(st, ST.SIf):
+        nc = fix_expr(st.cond)
+        if done[0]:
+            st.cond = nc
+            return True
+    elif isinstance(st, ST.SReturn) and st.values is not None:
+        nv = fix_multi(st.values)
+        if done[0]:
+            st.values = nv
+            return True
+    elif isinstance(st, ST.SLoop) and st.kind == "forin" and st.forinfo:
+        exprs = st.forinfo[1]
+        if len(exprs) == 1 and isinstance(exprs[0], CG.TailRef) and isinstance(exprs[0].tail, CG.InlineTail) \
+                and _is_full_unpack(exprs[0].tail.call, pname):
+            exprs[:] = list(repl_items) + ([CG.TailRef(repl_tail)] if repl_tail is not None else [])
+            return True
+        if len(exprs) == 1 and _is_full_unpack(exprs[0], pname):
+            exprs[:] = list(repl_items) + ([CG.TailRef(repl_tail)] if repl_tail is not None else [])
+            return True
+        for idx, ex in enumerate(exprs):
+            if rep_impure and any(CG.has_side_effects(prev) for prev in exprs[:idx]):
+                break
+            nex = fix_expr(ex)
+            if done[0]:
+                exprs[idx] = nex
+                return True
+    return False
+
+
+def _is_state_independent_multi(m):
+    if m.tail is not None:
+        return False
+    for x in m.items:
+        if isinstance(x, Const):
+            continue
+        if isinstance(x, CG.NewTableE) and not x.items and x.tail is None:
+            continue
+        if isinstance(x, Global) and x.name in ("ipairs", "pairs", "next", "select", "tostring", "tonumber"):
+            continue
+        return False
+    return True
+
+
+def _can_step_over(mid_st, pname, moving_reads, moving_impure):
+    if isinstance(mid_st, CG.ForPrepS):
+        return True
+    if isinstance(mid_st, CG.CommentS) and not mid_st.text:
+        return True
+    if isinstance(mid_st, CG.AssignS) and all(isinstance(t, CG.LocalName) for t in mid_st.targets):
+        written = {t.name for t in mid_st.targets}
+        if pname in written or (written & moving_reads):
+            return False
+        if _stmt_raw_reads_of(mid_st, pname) > 0:
+            return False
+        if _multi_has_side_effects(mid_st.values):
+            return False
+        if moving_impure and not _is_state_independent_multi(mid_st.values):
+            return False
+        return True
+    return False
+
+
+def fold_pack_idioms(body, own=None):
+    """Collapse Luraph / Luau `table.pack` + `table.move` + `table.unpack` idioms:
+      1. Prepended pack (`p = table.pack(...); p.n = ...; table.move(p, 1, p.n, K+1, p); p[1..K] = ...; f(table.unpack(p, 1, p.n))`)
+         -> `f(x1, ..., xK, ...)`
+      2. Forwarding pack (`p = table.pack(X); ... table.unpack(p, 1, p.n)`)
+         -> `X`
+      3. Single-value pack (`p = table.pack(single_expr)` where `p` is only indexed at `p[1]` / `p.n`)
+         -> `p = single_expr`
+      4. Fresh array table + SetListS (`t = {}; SetListS(t, 1, X)`)
+         -> `t = { X }`
+    """
+    import re
+    for _ in range(4):
+        nreads, writes, text = _counts_no_forprep(body)
+        alltext = "\n".join(text)
+        text_tokens = set(re.findall(r"(?<![\w.])[A-Za-z_]\w*", alltext)) if alltext else set()
+        changed = [False]
+
+        def walk_block(stmts):
+            for st in stmts:
+                for sub in _sub_blocks(st):
+                    walk_block(sub)
+            # Unbundle multi-target `a, b = ipairs, table.pack(...)` when safe so
+            # both `fold_pack_idioms` and `fold_single_use` can inline each part cleanly.
+            unbundled = ST.SBlock()
+            did_unbundle = False
+            for st in stmts:
+                if isinstance(st, CG.AssignS) \
+                        and len(st.targets) > 1 and st.values.tail is None \
+                        and len(st.targets) >= len(st.values.items) >= 1 \
+                        and all(isinstance(t, CG.LocalName) for t in st.targets) \
+                        and len({t.name for t in st.targets}) == len(st.targets):
+                    has_pack = any(
+                        isinstance(v, CG.CallE) and v.method is None
+                        and _callee_name(v.fn) == "table.pack"
+                        for v in st.values.items
+                    )
+                    if has_pack:
+                        is_loc = bool(getattr(st, "is_local", False))
+                        order_ok = True
+                        written_so_far = set()
+                        for t, v in zip(st.targets, st.values.items):
+                            if _expr_reads_set(v) & written_so_far:
+                                order_ok = False
+                                break
+                            written_so_far.add(t.name)
+                        if order_ok:
+                            for t, v in zip(st.targets, st.values.items):
+                                unbundled.append(CG.AssignS([t], CG.Multi([v]), is_local=is_loc))
+                            extra_tgts = st.targets[len(st.values.items):]
+                            if extra_tgts:
+                                if is_loc:
+                                    unbundled.append(CG.AssignS(list(extra_tgts), CG.Multi([]), is_local=True))
+                                else:
+                                    for t in extra_tgts:
+                                        unbundled.append(CG.AssignS([t], CG.Multi([Const(None)]), is_local=False))
+                            did_unbundle = True
+                            continue
+                unbundled.append(st)
+            if did_unbundle:
+                stmts[:] = unbundled
+                nonlocal nreads, writes
+                nreads, writes, _ = _counts_no_forprep(body)
+                changed[0] = True
+
+            i = 0
+            while i < len(stmts):
+                st = stmts[i]
+                # Pattern 4: t = { arr_items... }; SetListS(t, len+1, vals)
+                if isinstance(st, CG.AssignS) and len(st.targets) == 1 and isinstance(st.targets[0], CG.LocalName) \
+                        and len(st.values.items) == 1 and st.values.tail is None \
+                        and isinstance(st.values.items[0], CG.NewTableE) and st.values.items[0].tail is None \
+                        and all(k is None for k, _ in st.values.items[0].items):
+                    tname = st.targets[0].name
+                    tbl_e = st.values.items[0]
+                    if i + 1 < len(stmts) and isinstance(stmts[i + 1], CG.SetListS):
+                        sl = stmts[i + 1]
+                        if isinstance(sl.tbl, CG.LocalName) and sl.tbl.name == tname \
+                                and sl.start == len(tbl_e.items) + 1 \
+                                and tname not in _multi_reads_set(sl.values):
+                            st.values = CG.Multi([
+                                CG.NewTableE(list(tbl_e.items) + [(None, x) for x in sl.values.items], sl.values.tail)
+                            ])
+                            del stmts[i + 1]
+                            changed[0] = True
+                            continue
+
+                pa = _is_pack_assign(st)
+                if pa is None:
+                    i += 1
+                    continue
+                pname, pack_m = pa
+                if (own is not None and pname not in own) or pname in text_tokens or writes.get(pname, 0) != 1:
+                    i += 1
+                    continue
+
+                # Pattern 1: Vararg / multi prepend pack
+                if i + 3 < len(stmts):
+                    s1, s2 = stmts[i + 1], stmts[i + 2]
+                    if isinstance(s1, CG.AssignS) and len(s1.targets) == 1 \
+                            and isinstance(s1.targets[0], CG.Index) \
+                            and isinstance(s1.targets[0].obj, CG.LocalName) and s1.targets[0].obj.name == pname \
+                            and _is_n_key(s1.targets[0].key) \
+                            and s1.values.tail is None and len(s1.values.items) == 1 \
+                            and not CG.has_side_effects(s1.values.items[0]) \
+                            and isinstance(s2, CG.CallS) and isinstance(s2.call, CG.CallE) \
+                            and s2.call.method is None and _callee_name(s2.call.fn) == "table.move" \
+                            and s2.call.args.tail is None \
+                            and len(s2.call.args.items) == 5:
+                        m0, m1, m2, m3, m4 = s2.call.args.items
+                        if isinstance(m0, CG.LocalName) and m0.name == pname \
+                                and isinstance(m1, Const) and m1.v == 1 \
+                                and isinstance(m2, CG.Index) and isinstance(m2.obj, CG.LocalName) \
+                                and m2.obj.name == pname and _is_n_key(m2.key) \
+                                and isinstance(m3, Const) and isinstance(m3.v, int) and not isinstance(m3.v, bool) \
+                                and m3.v >= 2 and isinstance(m4, CG.LocalName) and m4.name == pname:
+                            k_cnt = m3.v - 1
+                            if i + 3 + k_cnt < len(stmts):
+                                slot_vals = {}
+                                ok_slots = True
+                                for off in range(k_cnt):
+                                    sk = stmts[i + 3 + off]
+                                    if not (isinstance(sk, CG.AssignS) and len(sk.targets) == 1
+                                            and isinstance(sk.targets[0], CG.Index)
+                                            and isinstance(sk.targets[0].obj, CG.LocalName)
+                                            and sk.targets[0].obj.name == pname
+                                            and isinstance(sk.targets[0].key, Const)
+                                            and isinstance(sk.targets[0].key.v, int)
+                                            and not isinstance(sk.targets[0].key.v, bool)
+                                            and 1 <= sk.targets[0].key.v <= k_cnt
+                                            and sk.values.tail is None and len(sk.values.items) == 1
+                                            and pname not in _expr_reads_set(sk.values.items[0])):
+                                        ok_slots = False
+                                        break
+                                    slot_vals[sk.targets[0].key.v] = sk.values.items[0]
+                                if ok_slots and len(slot_vals) == k_cnt:
+                                    prep_list = [slot_vals[idx_k] for idx_k in range(1, k_cnt + 1)]
+                                    seq_reads = sum(_stmt_raw_reads_of(stmts[p_i], pname) for p_i in range(i + 1, i + 3 + k_cnt))
+                                    if nreads.get(pname, 0) == seq_reads + 2:
+                                        mov_reads = _multi_reads_set(pack_m)
+                                        for pv in prep_list:
+                                            mov_reads |= _expr_reads_set(pv)
+                                        mov_impure = _multi_has_side_effects(pack_m) or any(CG.has_side_effects(pv) for pv in prep_list)
+                                        j = i + 3 + k_cnt
+                                        while j < len(stmts) and _stmt_raw_reads_of(stmts[j], pname) == 0:
+                                            if not _can_step_over(stmts[j], pname, mov_reads, mov_impure):
+                                                break
+                                            j += 1
+                                        if j < len(stmts) and _stmt_raw_reads_of(stmts[j], pname) == 2:
+                                            if _subst_unpack_in_stmt(stmts[j], pname, prep_list + list(pack_m.items), pack_m.tail):
+                                                del stmts[i : i + 3 + k_cnt]
+                                                nreads, writes, _ = _counts_no_forprep(body)
+                                                changed[0] = True
+                                                continue
+
+                # Pattern 2: Forwarding pack -> single table.unpack(p, 1, p.n)
+                if nreads.get(pname, 0) == 2:
+                    mov_reads = _multi_reads_set(pack_m)
+                    mov_impure = _multi_has_side_effects(pack_m)
+                    j = i + 1
+                    while j < len(stmts) and _stmt_raw_reads_of(stmts[j], pname) == 0:
+                        if not _can_step_over(stmts[j], pname, mov_reads, mov_impure):
+                            break
+                        j += 1
+                    if j < len(stmts) and _stmt_raw_reads_of(stmts[j], pname) == 2:
+                        if _subst_unpack_in_stmt(stmts[j], pname, list(pack_m.items), pack_m.tail):
+                            del stmts[i]
+                            nreads, writes, _ = _counts_no_forprep(body)
+                            changed[0] = True
+                            continue
+
+                i += 1
+
+        walk_block(body)
+
+        # Pattern 3: Single-value pack `p = table.pack(expr1)` where `p` is ONLY indexed as `p[1]` or `p.n`
+        nreads, writes, text = _counts_no_forprep(body)
+        alltext = "\n".join(text)
+        text_tokens = set(re.findall(r"(?<![\w.])[A-Za-z_]\w*", alltext)) if alltext else set()
+        single_cands = {}
+
+        def find_single_packs(stmts):
+            for st in stmts:
+                pa = _is_pack_assign(st)
+                if pa is not None:
+                    pname, pack_m = pa
+                    if (own is None or pname in own) and pname not in text_tokens and writes.get(pname, 0) == 1 \
+                            and pack_m.tail is None and len(pack_m.items) == 1:
+                        ex1 = pack_m.items[0]
+                        from luasym import Vararg
+                        if not isinstance(ex1, (CG.CallE, Vararg)) or CG.is_stateless_call_shallow(ex1):
+                            single_cands[pname] = (st, ex1)
+                for sub in _sub_blocks(st):
+                    find_single_packs(sub)
+
+        find_single_packs(body)
+        if single_cands:
+            bad = set()
+
+            def check_uses_expr(e, parent_ok=False):
+                if e is None:
+                    return
+                if isinstance(e, CG.Index) and isinstance(e.obj, CG.LocalName) and e.obj.name in single_cands:
+                    if isinstance(e.key, Const) and e.key.v in (1, b"n"):
+                        return
+                    bad.add(e.obj.name)
+                    check_uses_expr(e.key)
+                    return
+                if isinstance(e, CG.LocalName) and e.name in single_cands and not parent_ok:
+                    bad.add(e.name)
+                    return
+                for ch in CG.children(e):
+                    check_uses_expr(ch)
+
+            def check_uses_block(stmts):
+                for st in stmts:
+                    if isinstance(st, CG.ForPrepS):
+                        continue
+                    if isinstance(st, CG.AssignS):
+                        for t in st.targets:
+                            if not isinstance(t, CG.LocalName):
+                                # Assigning to p[1] or p.n disqualifies p!
+                                for x in CG.walk(t):
+                                    if isinstance(x, CG.LocalName) and x.name in single_cands:
+                                        bad.add(x.name)
+                        for v in st.values.items:
+                            check_uses_expr(v)
+                        if st.values.tail is not None:
+                            check_uses_expr(CG.TailRef(st.values.tail))
+                    else:
+                        for e in _stmt_exprs(st):
+                            check_uses_expr(e)
+                    for sub in _sub_blocks(st):
+                        check_uses_block(sub)
+
+            check_uses_block(body)
+            good = {nm: pair for nm, pair in single_cands.items() if nm not in bad}
+            if good:
+                for nm, (def_st, ex1) in good.items():
+                    def_st.values = CG.Multi([ex1])
+
+                def rw_idx(x):
+                    if isinstance(x, CG.Index) and isinstance(x.obj, CG.LocalName) and x.obj.name in good \
+                            and isinstance(x.key, Const):
+                        if x.key.v == 1:
+                            return CG.LocalName(x.obj.name)
+                        if x.key.v == b"n":
+                            return Const(1)
+                    return None
+
+                _map_body(body, rw_idx)
+                changed[0] = True
+
+        if not changed[0]:
+            break
+    return body
+
+
+def eliminate_dead_code(body, own):
+    """Iterative mark-sweep dead-code & dead-store eliminator over `own` locals:
+      - Drops standalone discardable expression statements (`bit32.bor(...)`, `type(0)`).
+      - Collapses `if pure_cond then X else X end` when both branches render identically.
+      - Eliminates dead locals and self-referential dead state chains (`n3 = bit32.band(n3, n4) - ...`,
+        64-bit MBA `table.pack(bit32.*)` chains, dead `os.clock()` reads).
+      - Eliminates straight-line overwritten dead stores (`x = const1; ...; x = const2`).
+    """
+    import re
+    if not own:
+        own = set()
+    tok_re = re.compile(r"(?<![\w.])[A-Za-z_]\w*")
+
+    def multi_discardable(m):
+        return (m is not None and m.tail is None and len(m.items) == 1
+                and CG.is_discardable_expr(m.items[0]))
+
+    for _ in range(8):
+        changed = False
+
+        # 1. Drop standalone discardable CallS & collapse identical-branch SIf
+        def clean_stmts(stmts):
+            nonlocal changed
+            out = ST.SBlock()
+            for st in stmts:
+                if isinstance(st, CG.CallS) and CG.is_discardable_expr(st.call):
+                    changed = True
+                    continue
+                if isinstance(st, ST.SIf):
+                    st.then = clean_stmts(st.then)
+                    st.els = clean_stmts(st.els)
+                    if not st.then and not st.els and CG.is_discardable_expr(st.cond):
+                        changed = True
+                        continue
+                    if st.then and st.els and CG.is_discardable_expr(st.cond):
+                        r_tmp = CG.Renderer()
+                        if r_tmp.block(st.then, "") == r_tmp.block(st.els, ""):
+                            out.extend(st.then)
+                            changed = True
+                            continue
+                elif isinstance(st, ST.SLoop):
+                    st.body = clean_stmts(st.body)
+                out.append(st)
+            return out
+
+        body = clean_stmts(body)
+
+        # 2. Transitive mark-sweep liveness over `own`
+        if own:
+            live = set()
+            deps = {}  # local_name -> set of local_names it depends on when live
+
+            def expr_info(e):
+                names = set()
+                ftoks = set()
+                if e is None:
+                    return names, ftoks
+                for x in CG.walk(e):
+                    if isinstance(x, CG.LocalName):
+                        names.add(x.name)
+                    elif isinstance(x, CG.FuncE):
+                        ftoks.update(tok_re.findall("\n".join(x.lines)))
+                return names, ftoks
+
+            def multi_info(m):
+                names = set()
+                ftoks = set()
+                if m is None:
+                    return names, ftoks
+                for x in m.items:
+                    n1, f1 = expr_info(x)
+                    names |= n1
+                    ftoks |= f1
+                if m.tail is not None:
+                    n1, f1 = expr_info(CG.TailRef(m.tail))
+                    names |= n1
+                    ftoks |= f1
+                return names, ftoks
+
+            def mark_root_expr(e):
+                n1, f1 = expr_info(e)
+                live.update(n1 & own)
+                live.update(f1 & own)
+
+            def mark_root_multi(m):
+                n1, f1 = multi_info(m)
+                live.update(n1 & own)
+                live.update(f1 & own)
+
+            def scan_liveness(stmts):
+                for st in stmts:
+                    if isinstance(st, CG.ForPrepS):
+                        continue
+                    if isinstance(st, CG.AssignS):
+                        if len(st.targets) == 1 and isinstance(st.targets[0], CG.LocalName) \
+                                and st.targets[0].name in own:
+                            tnm = st.targets[0].name
+                            n1, f1 = multi_info(st.values)
+                            if multi_discardable(st.values):
+                                deps.setdefault(tnm, set()).update((n1 | f1) & own)
+                            else:
+                                # Impure RHS (e.g. call): RHS executes even if target is dead
+                                live.update((n1 | f1) & own)
+                        else:
+                            for t in st.targets:
+                                if not isinstance(t, CG.LocalName):
+                                    mark_root_expr(t)
+                                elif t.name not in own:
+                                    # Upvalue assignment — value is externally observable!
+                                    pass
+                            mark_root_multi(st.values)
+                    elif isinstance(st, (CG.CallS, CG.TempDef)):
+                        mark_root_expr(st.call)
+                    elif isinstance(st, CG.SetListS):
+                        mark_root_expr(st.tbl)
+                        mark_root_multi(st.values)
+                    elif isinstance(st, ST.SIf):
+                        mark_root_expr(st.cond)
+                        scan_liveness(st.then)
+                        scan_liveness(st.els)
+                    elif isinstance(st, ST.SLoop):
+                        if st.cond is not None:
+                            mark_root_expr(st.cond)
+                        if st.forinfo:
+                            for ex in st.forinfo[1]:
+                                mark_root_expr(ex)
+                        scan_liveness(st.body)
+                    elif isinstance(st, ST.SReturn):
+                        mark_root_multi(st.values)
+
+            scan_liveness(body)
+            work = list(live)
+            while work:
+                cur = work.pop()
+                for dep in deps.get(cur, ()):
+                    if dep not in live:
+                        live.add(dep)
+                        work.append(dep)
+
+            def sweep_dead(stmts):
+                nonlocal changed
+                out = ST.SBlock()
+                for st in stmts:
+                    if isinstance(st, CG.AssignS) and len(st.targets) == 1 \
+                            and isinstance(st.targets[0], CG.LocalName) \
+                            and st.targets[0].name in own and st.targets[0].name not in live:
+                        vals = st.values
+                        if multi_discardable(vals):
+                            changed = True
+                            continue
+                        if vals.tail is None and len(vals.items) == 1 and isinstance(vals.items[0], CG.CallE):
+                            out.append(CG.CallS(vals.items[0]))
+                            changed = True
+                            continue
+                        if vals.tail is not None and not vals.items and isinstance(vals.tail, CG.InlineTail):
+                            out.append(CG.CallS(vals.tail.call))
+                            changed = True
+                            continue
+                    elif isinstance(st, ST.SIf):
+                        st.then = sweep_dead(st.then)
+                        st.els = sweep_dead(st.els)
+                    elif isinstance(st, ST.SLoop):
+                        st.body = sweep_dead(st.body)
+                    out.append(st)
+                return out
+
+            body = sweep_dead(body)
+
+        # 3. Straight-line overwritten dead-store elimination for uncaptured `own` locals
+        if own:
+            _, _, ftexts = _counts_no_forprep(body)
+            cap_toks = set(tok_re.findall("\n".join(ftexts))) if ftexts else set()
+
+            def kill_overwritten(stmts):
+                nonlocal changed
+                for st in stmts:
+                    for sub in _sub_blocks(st):
+                        kill_overwritten(sub)
+                drop_idxs = set()
+                for idx, st in enumerate(stmts):
+                    if not (isinstance(st, CG.AssignS) and len(st.targets) == 1
+                            and isinstance(st.targets[0], CG.LocalName)):
+                        continue
+                    nm = st.targets[0].name
+                    if nm not in own or nm in cap_toks or not multi_discardable(st.values):
+                        continue
+                    for k in range(idx + 1, len(stmts)):
+                        sk = stmts[k]
+                        if isinstance(sk, (CG.ForPrepS, CG.CommentS)):
+                            if isinstance(sk, CG.ForPrepS) and any(nm in _expr_reads_set(e) for e in sk.exprs):
+                                break
+                            continue
+                        if not isinstance(sk, (CG.AssignS, CG.CallS, CG.SetListS)):
+                            break
+                        if _stmt_raw_reads_of(sk, nm) > 0:
+                            break
+                        if isinstance(sk, CG.AssignS) and any(isinstance(t, CG.LocalName) and t.name == nm for t in sk.targets):
+                            drop_idxs.add(idx)
+                            break
+                if drop_idxs:
+                    stmts[:] = [s for idx, s in enumerate(stmts) if idx not in drop_idxs]
+                    changed = True
+
+            kill_overwritten(body)
+
+        body = drop_blank_branches(body)
+        if not changed:
+            break
+    return body
+
+
+def _simplify_bool_ifexp(e):
+    """Simplify boolean-context IfExp (`if (if c then P else not c) then` -> `if not c or P then`)."""
+    from luasym import IfExp
+    if isinstance(e, IfExp) and not CG.has_side_effects(e.c):
+        ck = key(e.c)
+        # if c then P else not c  ==>  not c or P
+        if ck is not None and isinstance(e.b, Un) and e.b.op == "Not" and key(e.b.a) == ck:
+            return Bin("Or", ST.negate(e.c), _simplify_bool_ifexp(e.a))
+        # if c then P else false/nil  ==>  c and P
+        if isinstance(e.b, Const) and (e.b.v is False or e.b.v is None):
+            return Bin("And", e.c, _simplify_bool_ifexp(e.a))
+        # if c then true else P  ==>  c or P  (in boolean condition context)
+        if isinstance(e.a, Const) and e.a.v is True:
+            return Bin("Or", e.c, _simplify_bool_ifexp(e.b))
+    return e
+
+
+def flatten_nested_ifs(body, own=None):
+    """Polish structured control flow:
+      - Simplify boolean `IfExp` conditions (`if if x then x.k ~= v else not x then`).
+      - Merge `if A then if B then BODY end end` (both without `else`) into `if A and B then BODY end`.
+      - Fold single-use local alias right before a `for` loop (`local t2 = t1; for k, v in next, t2, nil do`).
+    """
+    import re
+    nreads, writes, text = _counts_no_forprep(body)
+    alltext = "\n".join(text)
+    text_tokens = set(re.findall(r"(?<![\w.])[A-Za-z_]\w*", alltext)) if alltext else set()
+
+    def walk_block(stmts):
+        i = 0
+        while i < len(stmts):
+            st = stmts[i]
+            # Fold `a = b; [ForPrepS]; for ... in ... a ...` when `a` is an uncaptured single-use alias
+            if isinstance(st, CG.AssignS) and not getattr(st, "is_local", False) \
+                    and len(st.targets) == 1 and isinstance(st.targets[0], CG.LocalName) \
+                    and len(st.values.items) == 1 and st.values.tail is None \
+                    and isinstance(st.values.items[0], CG.LocalName):
+                anm = st.targets[0].name
+                bnm = st.values.items[0].name
+                if (own is None or anm in own) and anm not in text_tokens \
+                        and writes.get(anm, 0) == 1 and nreads.get(anm, 0) >= 1:
+                    j = i + 1
+                    while j < len(stmts) and isinstance(stmts[j], CG.ForPrepS):
+                        j += 1
+                    if j < len(stmts) and isinstance(stmts[j], ST.SLoop) and stmts[j].kind in ("for", "forin") \
+                            and stmts[j].forinfo:
+                        hdr_reads = sum(1 for ex in stmts[j].forinfo[1] for x in CG.walk(ex)
+                                        if isinstance(x, CG.LocalName) and x.name == anm)
+                        if hdr_reads > 0 and hdr_reads == nreads.get(anm, 0):
+                            stmts[j].forinfo[1][:] = [
+                                CG.map_expr(ex, lambda x, a=anm, b=bnm: CG.LocalName(b) if isinstance(x, CG.LocalName) and x.name == a else None)
+                                for ex in stmts[j].forinfo[1]
+                            ]
+                            del stmts[i]
+                            continue
+
+            if isinstance(st, ST.SIf):
+                st.cond = _simplify_bool_ifexp(st.cond)
+                walk_block(st.then)
+                walk_block(st.els)
+                while not st.els and len(st.then) == 1 and isinstance(st.then[0], ST.SIf) and not st.then[0].els:
+                    inner = st.then[0]
+                    st.cond = Bin("And", st.cond, inner.cond)
+                    st.then = inner.then
+            elif isinstance(st, ST.SLoop):
+                if st.cond is not None:
+                    st.cond = _simplify_bool_ifexp(st.cond)
+                walk_block(st.body)
+            i += 1
+
+    walk_block(body)
+    return body
+
+

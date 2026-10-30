@@ -309,11 +309,9 @@ def rename(entry, blocks, prefix, captured):
             if isinstance(st, CG.AssignS) and len(st.targets) == 1 and isinstance(st.targets[0], Reg)                     and dead(b.id, i, st.targets[0].n):
                 vals = st.values
 
-                pure_pack = len(vals.items) == 1 and isinstance(vals.items[0], CG.CallE) and \
-                    isinstance(vals.items[0].fn, Global) and vals.items[0].fn.name == "table.pack"
-                if vals.tail is None and len(vals.items) == 1 and (pure_pack or (
-                        not CG.has_side_effects(vals.items[0])
-                        and not any(isinstance(x, ClosureExpr) for x in CG.walk(vals.items[0])))):
+                if vals.tail is None and len(vals.items) == 1 and (
+                        CG.is_discardable_expr(vals.items[0])
+                        and not any(isinstance(x, ClosureExpr) for x in CG.walk(vals.items[0]))):
                     keep.append(None)
                     continue
                 if vals.tail is not None and not vals.items and isinstance(vals.tail, CG.InlineTail):

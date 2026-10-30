@@ -228,8 +228,9 @@ local function startMainHub()
     local enabled2 = false
     local function helperFn()
         enabled2 = not enabled2
-        frame2.Visible = enabled2
-        button.Text = enabled2 and "\226\150\178" or "\226\150\188"
+        local val = enabled2
+        frame2.Visible = val
+        button.Text = val and "\226\150\178" or "\226\150\188"
     end
     button.MouseButton1Click:Connect(helperFn)
     local button2 = Instance.new("TextButton")

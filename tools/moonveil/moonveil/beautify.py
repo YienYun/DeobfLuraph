@@ -9,6 +9,7 @@ idiomatic, human-readable Lua/Luau while preserving runtime behavior.
 from __future__ import annotations
 import copy
 import re
+from typing import Any
 from .front import parse, quote, lua_bytes, walk
 
 KEYWORDS = {
@@ -1746,7 +1747,14 @@ def _fold_block_pass(
                         continue
 
                     # Multi-use copy/constant propagation (`x = literal` or `x = another_single_def_var` or `x = Global.Member.Chain`)
-                    is_immutable_global_chain = _is_pure_expr(rhs) and not _expr_has_table_read(rhs) and rhs["type"] in ("Identifier", "MemberExpression")
+                    is_immutable_global_chain = (
+                        _is_pure_expr(rhs)
+                        and not _expr_has_table_read(rhs)
+                        and (
+                            (rhs["type"] == "Identifier" and rhs["name"] in LUA_GLOBALS and deep_writes.get(rhs["name"], 0) == 0)
+                            or (rhs["type"] == "MemberExpression" and all(r_nm in LUA_GLOBALS or deep_writes.get(r_nm, 0) == 0 for r_nm in _reads_of(rhs)))
+                        )
+                    )
                     is_copy_of_ssa = rhs["type"] == "Identifier" and deep_writes.get(rhs["name"], 99) <= 1 and rhs["name"] not in non_split_vars
                     if uses >= 1 and (_is_literal(rhs) or is_immutable_global_chain or is_copy_of_ssa):
                         cur[idx + 1 :] = _subst_ident_in_block(tail, vname, rhs)
@@ -2158,7 +2166,7 @@ def reconstruct_for_in_loops(stmts: list[dict], iter_shims: set[str] | None = No
 
 def _try_match_for_in(stmts: list[dict], i: int, shims: set[str] | None = None):
     active_shims = shims or {"__mv_iter__"}
-    if i + 3 >= len(stmts):
+    if i + 2 >= len(stmts):
         return None
     s_init = stmts[i]
     if (
@@ -2408,6 +2416,246 @@ def _is_iter_step(stmt: dict, f_it: str, s_st: str, v_ct: str) -> bool:
         and _is_ident(stmt["init"][0]["arguments"][0], s_st)
         and _is_ident(stmt["init"][0]["arguments"][1], v_ct)
     )
+
+
+def _match_le_pair(cond: dict) -> tuple[dict, dict] | None:
+    if not isinstance(cond, dict) or cond.get("type") != "BinaryExpression":
+        return None
+    if cond["operator"] == "<=":
+        return cond["left"], cond["right"]
+    if cond["operator"] == ">=":
+        return cond["right"], cond["left"]
+    return None
+
+
+def _is_step_gt_zero(cond: dict) -> str | None:
+    if not isinstance(cond, dict) or cond.get("type") != "BinaryExpression":
+        return None
+    if (
+        cond["operator"] == ">"
+        and cond["left"].get("type") == "Identifier"
+        and cond["right"].get("type") == "NumericLiteral"
+        and cond["right"].get("value") == 0
+    ):
+        return cond["left"]["name"]
+    if (
+        cond["operator"] == "<"
+        and cond["right"].get("type") == "Identifier"
+        and cond["left"].get("type") == "NumericLiteral"
+        and cond["left"].get("value") == 0
+    ):
+        return cond["right"]["name"]
+    return None
+
+
+def _canon_loop_arm(body_stmts: list[dict], shared_keep: set[str]) -> str:
+    """Alpha-normalize arm-private SSA temporaries (`__mv_*` / `__w_*`) on both LHS and RHS so `+step`/`-step` arms match."""
+    arm_map: dict[str, str] = {}
+    for n in walk(body_stmts):
+        if isinstance(n, dict) and n.get("type") in ("AssignmentStatement", "LocalStatement"):
+            for lv in n.get("variables", []):
+                if lv.get("type") == "Identifier":
+                    nm = lv["name"]
+                    if nm.startswith(("__mv_", "__w_")) and nm not in shared_keep and nm not in arm_map:
+                        arm_map[nm] = f"__arm_loc_{len(arm_map)}"
+    if not arm_map:
+        return format_block(body_stmts, 0)
+
+    def _ren(obj: Any) -> Any:
+        if isinstance(obj, list):
+            return [_ren(x) for x in obj]
+        if isinstance(obj, dict):
+            if obj.get("type") == "Identifier" and obj["name"] in arm_map:
+                return _ident(arm_map[obj["name"]])
+            return {
+                k: (v if k in ("identifier", "key") and obj.get("type") in ("MemberExpression", "TableKeyString") else _ren(v))
+                for k, v in obj.items()
+            }
+        return obj
+
+    return format_block(_ren(body_stmts), 0)
+
+
+def _reconstruct_for_numeric_expr(x: Any) -> Any:
+    if isinstance(x, list):
+        return [_reconstruct_for_numeric_expr(i) for i in x]
+    if not isinstance(x, dict):
+        return x
+    if x.get("type") == "FunctionDeclaration":
+        nx = {k: (_reconstruct_for_numeric_expr(v) if k not in ("range", "loc", "body") else v) for k, v in x.items()}
+        nx["body"] = reconstruct_for_numeric_loops(x["body"])
+        return nx
+    return {k: (_reconstruct_for_numeric_expr(v) if k not in ("range", "loc") else v) for k, v in x.items()}
+
+
+def reconstruct_for_numeric_loops(stmts: list[dict]) -> list[dict]:
+    """Fold MoonVeil 2.1.x lowered `FORNPREP` + `FORNLOOP` blocks back into `ForNumericStatement`."""
+    cur = []
+    for s in stmts:
+        ns = _reconstruct_for_numeric_expr(copy.deepcopy(s))
+        if ns["type"] == "IfStatement":
+            for c in ns["clauses"]:
+                c["body"] = reconstruct_for_numeric_loops(c["body"])
+        elif ns["type"] in ("WhileStatement", "RepeatStatement", "DoStatement", "ForGenericStatement", "ForNumericStatement", "FunctionDeclaration"):
+            ns["body"] = reconstruct_for_numeric_loops(ns["body"])
+        cur.append(ns)
+    cur = normalize_cf_stmts(cur, at_fn_end=False, allow_short_tail=True)
+
+    out: list[dict] = []
+    for idx_cur, s_if in enumerate(cur):
+        if s_if["type"] != "IfStatement" or len(s_if["clauses"]) != 2:
+            out.append(s_if)
+            continue
+        c0, c1 = s_if["clauses"][0], s_if["clauses"][1]
+        step_v = _is_step_gt_zero(c0.get("condition"))
+        if not step_v or c1.get("type") != "ElseifClause" or len(c0["body"]) != 1 or len(c1["body"]) != 1:
+            out.append(s_if)
+            continue
+        in0 = c0["body"][0]
+        w1 = c1["body"][0]
+        if (
+            in0["type"] != "IfStatement"
+            or len(in0["clauses"]) != 1
+            or len(in0["clauses"][0]["body"]) != 1
+            or in0["clauses"][0]["body"][0]["type"] != "WhileStatement"
+            or w1["type"] != "WhileStatement"
+        ):
+            out.append(s_if)
+            continue
+        w0 = in0["clauses"][0]["body"][0]
+        if w0["condition"].get("value") is not True or w1["condition"].get("value") is not True:
+            out.append(s_if)
+            continue
+        p0 = _match_le_pair(in0["clauses"][0]["condition"])
+        p1 = _match_le_pair(c1["condition"])
+        if not p0 or not p1 or p0[0].get("type") != "Identifier" or p1[1].get("type") != "Identifier":
+            out.append(s_if)
+            continue
+        idx_v = p0[0]["name"]
+        limit_e = p0[1]
+        if p1[1]["name"] != idx_v or format_expr(p1[0], 0) != format_expr(limit_e, 0):
+            out.append(s_if)
+            continue
+        wb0, wb1 = w0["body"], w1["body"]
+        if len(wb0) < 2 or len(wb1) != len(wb0):
+            out.append(s_if)
+            continue
+        st_inc = wb0[-2]
+        st_brk = wb0[-1]
+        if not (
+            st_inc["type"] == "AssignmentStatement"
+            and len(st_inc["variables"]) == 1
+            and _is_ident(st_inc["variables"][0], idx_v)
+            and len(st_inc.get("init", [])) == 1
+            and st_inc["init"][0]["type"] == "BinaryExpression"
+            and st_inc["init"][0]["operator"] == "+"
+            and _is_ident(st_inc["init"][0]["left"], idx_v)
+            and _is_ident(st_inc["init"][0]["right"], step_v)
+            and st_brk["type"] == "IfStatement"
+            and _is_step_gt_zero(st_brk["clauses"][0].get("condition")) == step_v
+        ):
+            out.append(s_if)
+            continue
+        real_body = wb0[:-2]
+        # Variables written in BOTH arms (like an outer accumulator `hash = ...`) must stay identical;
+        # arm-private SSA temporaries (`local byte = string.byte(...)`) get different `__mv_` IDs per arm!
+        w_arm0 = {
+            lv["name"]
+            for n0 in walk(wb0[:-2])
+            if isinstance(n0, dict) and n0.get("type") in ("AssignmentStatement", "LocalStatement")
+            for lv in n0.get("variables", [])
+            if lv.get("type") == "Identifier"
+        }
+        w_arm1 = {
+            lv["name"]
+            for n1 in walk(wb1[:-2])
+            if isinstance(n1, dict) and n1.get("type") in ("AssignmentStatement", "LocalStatement")
+            for lv in n1.get("variables", [])
+            if lv.get("type") == "Identifier"
+        }
+        shared_vars = (w_arm0 & w_arm1) | {idx_v, step_v} | _reads_of(limit_e)
+        if _canon_loop_arm(wb1[:-2], shared_vars) != _canon_loop_arm(real_body, shared_vars):
+            out.append(s_if)
+            continue
+        if _count_ident_uses(real_body, step_v) > 0:
+            out.append(s_if)
+            continue
+        mutated_in_body = {
+            lv["name"]
+            for n_b in walk(real_body)
+            if isinstance(n_b, dict) and n_b.get("type") in ("AssignmentStatement", "LocalStatement")
+            for lv in n_b.get("variables", [])
+            if lv.get("type") == "Identifier"
+        }
+        if idx_v in mutated_in_body:
+            out.append(s_if)
+            continue
+
+        # Locate preceding `idx_v = start_e` and `step_v = step_raw_e` in `out`!
+        idx_pos = None
+        step_pos = None
+        scan_ok = True
+        for kb in range(len(out) - 1, max(-1, len(out) - 8), -1):
+            skb = out[kb]
+            if (
+                skb["type"] in ("AssignmentStatement", "LocalStatement")
+                and len(skb["variables"]) == 1
+                and skb["variables"][0]["type"] == "Identifier"
+                and len(skb.get("init", [])) == 1
+                and _is_pure_expr(skb["init"][0])
+            ):
+                vn_k = skb["variables"][0]["name"]
+                if vn_k == step_v and step_pos is None:
+                    step_pos = kb
+                elif vn_k == idx_v and idx_pos is None:
+                    idx_pos = kb
+                if idx_pos is not None and step_pos is not None:
+                    break
+            else:
+                scan_ok = False
+                break
+        if not scan_ok or idx_pos is None or step_pos is None:
+            out.append(s_if)
+            continue
+
+        lo_p = min(idx_pos, step_pos)
+        inter_ok = True
+        for km in range(lo_p, len(out)):
+            if km in (idx_pos, step_pos):
+                continue
+            if _count_ident_uses(out[km], idx_v) > 0 or _count_ident_uses(out[km], step_v) > 0:
+                inter_ok = False
+                break
+        if not inter_ok:
+            out.append(s_if)
+            continue
+
+        live_idx, _ = _live_before_overwrite(cur[idx_cur + 1 :], idx_v)
+        live_step, _ = _live_before_overwrite(cur[idx_cur + 1 :], step_v)
+        if live_idx or live_step:
+            out.append(s_if)
+            continue
+
+        start_e = copy.deepcopy(out[idx_pos]["init"][0])
+        step_raw_e = out[step_pos]["init"][0]
+        if _is_ident(step_raw_e, idx_v) and idx_pos < step_pos:
+            step_e = copy.deepcopy(start_e)
+        else:
+            step_e = copy.deepcopy(step_raw_e)
+
+        for del_p in sorted((idx_pos, step_pos), reverse=True):
+            out.pop(del_p)
+
+        is_step_one = step_e.get("type") == "NumericLiteral" and step_e.get("value") == 1
+        out.append({
+            "type": "ForNumericStatement",
+            "variable": _ident(idx_v),
+            "start": start_e,
+            "end": copy.deepcopy(limit_e),
+            "step": None if is_step_one else step_e,
+            "body": real_body,
+        })
+    return out
 
 
 def _is_nil_check(cond: dict, var: str) -> bool:

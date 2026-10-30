@@ -284,7 +284,16 @@ def process(raw, mode="deobfuscate", seconds=120, max_steps=50000000):
     except Unsupported as vm_err:
         report["vm_lift_error"] = str(vm_err)
 
-    d = decode(raw, seconds=seconds, max_steps=max_steps)
+    try:
+        d = decode(raw, seconds=seconds, max_steps=max_steps)
+    except Unsupported as dec20_err:
+        try:
+            import moonveil21.core.decoder as dec21
+            from moonveil21.extractor import AnalysisEvaluator
+            dec21.Evaluator = AnalysisEvaluator
+            d = dec21.decode(raw, seconds=seconds, max_steps=max_steps)
+        except Exception:
+            raise dec20_err
     report.update(
         constants_decoded=len(d.constants),
         pure_interpreter_steps=d.evaluator.steps,

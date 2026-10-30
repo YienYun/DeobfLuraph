@@ -448,60 +448,56 @@ local val50
 val49, val46, val50 = helperFn(val47, val46, val48)
 local val51, val52 = val49(val46, val50)
 local val53 = val51
-local val54 = val52
-local val55 = val51
-if val51 ~= nil then
+if val53 ~= nil then
     while true do
-        tbl = stateMap[val53]
+        tbl = stateMap[val51]
         if tbl == true then
-            tbl = val54
+            tbl = val52
             tbl(true)
         end
-        local val56, val57 = val49(val46, val55)
-        val53 = val56
-        val54 = val57
-        val55 = val56
-        if val56 == nil then
+        val51, val52 = val49(val46, val53)
+        val53 = val51
+        if val53 == nil then
             break
         end
     end
 end
 if UserInputService.TouchEnabled then
     val46 = "ScreenGui"
-    val55 = {}
-    val53 = "AuroraToggle"
-    val55.Name = val53
-    val53 = false
-    val55.ResetOnSpawn = val53
+    val53 = {}
+    val51 = "AuroraToggle"
+    val53.Name = val51
+    val51 = false
+    val53.ResetOnSpawn = val51
     tbl = Enum
-    val54 = tbl.ZIndexBehavior
-    val53 = val54.Sibling
-    val55.ZIndexBehavior = val53
-    val55.Parent = val35
-    local val56 = helperFn9(val46, val55)
+    val52 = tbl.ZIndexBehavior
+    val51 = val52.Sibling
+    val53.ZIndexBehavior = val51
+    val53.Parent = val35
+    local val54 = helperFn9(val46, val53)
     val46 = helperFn9
-    val55 = "TextButton"
-    val54 = {}
+    val53 = "TextButton"
+    val52 = {}
     tbl = UDim2.new
     tbl = tbl(0, 42, 0, 42)
-    val54.Size = tbl
+    val52.Size = tbl
     tbl = UDim2.new
     tbl = tbl(0, 10, 0.5, -21)
-    val54.Position = tbl
-    val54.BackgroundColor3 = val22
+    val52.Position = tbl
+    val52.BackgroundColor3 = val22
     tbl = 0
-    val54.BorderSizePixel = tbl
+    val52.BorderSizePixel = tbl
     tbl = false
-    val54.AutoButtonColor = tbl
+    val52.AutoButtonColor = tbl
     tbl = "AA"
-    val54.Text = tbl
-    val54.TextColor3 = val24
-    val54.Font = Enum.Font.Code
+    val52.Text = tbl
+    val52.TextColor3 = val24
+    val52.Font = Enum.Font.Code
     tbl = 13
-    val54.TextSize = tbl
-    val54.Parent = val56
-    val53 = val54
-    val54 = {}
+    val52.TextSize = tbl
+    val52.Parent = val54
+    val51 = val52
+    val52 = {}
     tbl = helperFn9
     local stateMap25 = {}
     stateMap25.CornerRadius = UDim.new(1, 0)
@@ -509,77 +505,81 @@ if UserInputService.TouchEnabled then
     local stateMap26 = {}
     stateMap26.Color = val23
     stateMap26.Thickness = 1
-    local val57 = helperFn9("UIStroke", stateMap26)
-    val54[1] = tbl
-    val54[2] = val57
-    val46 = val46(val55, val53, val54)
-    val55 = nil
+    local val55 = helperFn9("UIStroke", stateMap26)
+    val52[1] = tbl
+    val52[2] = val55
+    val46 = val46(val53, val51, val52)
     val53 = nil
-    val54 = nil
+    val51 = nil
+    val52 = nil
     tbl = nil
     val46.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            val55 = true
+            val53 = true
             tbl = false
-            val53 = input.Position
-            val54 = val46.Position
+            val51 = input.Position
+            val52 = val46.Position
         end
     end)
     UserInputService.InputChanged:Connect(function(input)
-        if val55 and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-            local val58 = input.Position - val53
-            if val58.Magnitude > 5 then
+        if val53 and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local val56 = input.Position - val51
+            if val56.Magnitude > 5 then
                 tbl = true
             end
-            val46.Position = UDim2.new(val54.X.Scale, val54.X.Offset + val58.X, val54.Y.Scale, val54.Y.Offset + val58.Y)
+            val46.Position = UDim2.new(val52.X.Scale, val52.X.Offset + val56.X, val52.Y.Scale, val52.Y.Offset + val56.Y)
         end
     end)
     UserInputService.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            val55 = false
+            val53 = false
         end
     end)
-    local val58 = val36
+    local val56 = val36
     val46.MouseButton1Click:Connect(function()
         if not tbl then
-            val58.Enabled = not val58.Enabled
+            val56.Enabled = not val56.Enabled
         end
     end)
 end
-local val56 = nil
+local val54 = nil
 val46 = nil
-val55 = nil
-val53 = val41.InputBegan
-local val57 = val39
+val53 = nil
+val51 = val41.InputBegan
+local val55 = val39
 tbl = function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        val56 = true
+        val54 = true
         val46 = input.Position
-        val55 = val57.Position
+        val53 = val55.Position
     end
 end
-val53:Connect(tbl)
-val53 = UserInputService.InputEnded
+val52 = val51
+val52:Connect(tbl)
+val51 = UserInputService.InputEnded
 tbl = function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        val56 = false
+        val54 = false
     end
 end
-val53:Connect(tbl)
-val53 = UserInputService.InputChanged
-local val58 = val39
+val52 = val51
+val52:Connect(tbl)
+val51 = UserInputService.InputChanged
+local val56 = val39
 tbl = function(input)
-    if val56 and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-        local val59 = input.Position - val46
-        val58.Position = UDim2.new(val55.X.Scale, val55.X.Offset + val59.X, val55.Y.Scale, val55.Y.Offset + val59.Y)
+    if val54 and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        local val57 = input.Position - val46
+        val56.Position = UDim2.new(val53.X.Scale, val53.X.Offset + val57.X, val53.Y.Scale, val53.Y.Offset + val57.Y)
     end
 end
-val53:Connect(tbl)
-val53 = UserInputService.InputBegan
-local val59 = val36
+val52 = val51
+val52:Connect(tbl)
+val51 = UserInputService.InputBegan
+local val57 = val36
 tbl = function(arg1, arg2)
     if not arg2 and arg1.KeyCode == Enum.KeyCode.RightControl then
-        val59.Enabled = not val59.Enabled
+        val57.Enabled = not val57.Enabled
     end
 end
-val53:Connect(tbl)
+val52 = val51
+val52:Connect(tbl)

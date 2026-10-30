@@ -47,6 +47,7 @@ from .beautify import (
     format_expr,
     normalize_cf_deep,
     reconstruct_for_in_loops,
+    reconstruct_for_numeric_loops,
     unbox_cells,
     isolate_cell_creations,
 )
@@ -1862,6 +1863,14 @@ def _extract_21x_vm_bundle(raw: bytes) -> dict | None:
     body_raw = u2[ret_idx + 7 : m_end.start()]
 
     probe = f"""
+local regbank_set = {{}}
+local tbl_proxy = setmetatable({{
+    create = function(n)
+        local t = table.create(n)
+        regbank_set[t] = true
+        return t
+    end,
+}}, {{ __index = table }})
 local pure_env
 local ENV_TAG = setmetatable({{ __mv_env = true }}, {{
     __index = function(_, k)
@@ -1870,7 +1879,7 @@ local ENV_TAG = setmetatable({{ __mv_env = true }}, {{
 }})
 pure_env = {{
     string = string,
-    table = table,
+    table = tbl_proxy,
     bit32 = bit32,
     math = math,
     select = select,
@@ -1894,7 +1903,8 @@ pure_env = {{
     getfenv = function() return ENV_TAG end,
     setfenv = function() end,
 }}
-setfenv(1, setmetatable({{ getfenv = function() return ENV_TAG end, setfenv = function() end }}, {{ __index = _G }}))
+local fenv_tbl = setmetatable({{ __mv_env = true, table = tbl_proxy, getfenv = function() return ENV_TAG end, setfenv = function() end }}, {{ __index = _G }})
+setfenv(1, fenv_tbl)
 
 local raw_arr = {body_raw}
 local names = {names_lit}
@@ -1905,8 +1915,10 @@ local nd_wid = nil
 local pc_wid = nil
 local active_stack = {{}}
 local nd_handlers = nil
+local root_nd_args = nil
 local root_frame = nil
 local root_va = nil
+local nd_arg_roles = {{}}
 
 local function unbox3(c)
     if type(c) ~= "table" then return c end
@@ -1942,10 +1954,9 @@ for k, orig in pairs(raw_arr) do
                         if fcnt >= 20 then
                             nd_wid = wid
                             nd_handlers = cand
-                            return function(m_up, s_frame, w_va, t_reg)
-                                if not root_frame then
-                                    root_frame = s_frame
-                                    root_va = w_va
+                            return function(...)
+                                if not root_nd_args then
+                                    root_nd_args = table.pack(...)
                                 end
                                 error("__MV21_CAPTURED__")
                             end
@@ -1961,7 +1972,25 @@ for k, orig in pairs(raw_arr) do
 end
 
 pcall(function() raw_arr:{boot_nm}(names, "{entry_nm}") end)
-if not root_frame or not nd_handlers then
+if not root_nd_args or not nd_handlers then
+    print("ERR:NO_CAPTURE")
+    return
+end
+for ai = 1, root_nd_args.n do
+    local av = root_nd_args[ai]
+    if type(av) == "table" and not regbank_set[av] then
+        local kc, has_h = 0, false
+        for fk, fv in pairs(av) do
+            kc = kc + 1
+            if fv == nd_handlers or fv == ENV_TAG then has_h = true end
+        end
+        if has_h or (kc >= 5 and #av == 0) then
+            root_frame = av
+            break
+        end
+    end
+end
+if not root_frame then
     print("ERR:NO_CAPTURE")
     return
 end
@@ -1975,6 +2004,7 @@ end
 
 local builtin_roles = {{
     [ENV_TAG] = "env",
+    [fenv_tbl] = "env",
     [string.byte] = "string.byte",
     [string.char] = "string.char",
     [string.sub] = "string.sub",
@@ -1982,6 +2012,7 @@ local builtin_roles = {{
     [string.len] = "string.len",
     [table.move] = "table.move",
     [table.create] = "table.create",
+    [tbl_proxy.create] = "table.create",
     [table.pack] = "table.pack",
     [table.unpack or unpack] = "unpack_slice",
     [unpack or table.unpack] = "unpack_slice",
@@ -2022,11 +2053,49 @@ local function role_of_val(fv)
         if ok_u and u1 == 20 and u2 == 30 then return "unpack_slice" end
     end
     if type(fv) == "table" then
-        if rawget(fv, "__mv_env") then return "env" end
+        local ok_e, is_e = pcall(function() return fv.__mv_env end)
+        if ok_e and is_e then return "env" end
         if rawget(fv, "__mode") then return "weak_mt" end
         return "table"
     end
     return type(fv)
+end
+
+for ai = 1, root_nd_args.n do
+    local av = root_nd_args[ai]
+    if rawequal(av, root_frame) then
+        nd_arg_roles[tostring(ai)] = "frame"
+    elseif type(av) == "function" then
+        nd_arg_roles[tostring(ai)] = "fn:" .. role_of_val(av)
+    elseif type(av) == "table" then
+        local matched_fk = nil
+        for fk, fv in pairs(root_frame) do
+            if rawequal(fv, av) then
+                matched_fk = fk
+                break
+            end
+        end
+        if matched_fk ~= nil then
+            nd_arg_roles[tostring(ai)] = "frame_field:" .. tostring(matched_fk)
+        elseif regbank_set[av] then
+            nd_arg_roles[tostring(ai)] = "regs"
+        else
+            local kc, has_t, has_n = 0, false, false
+            for _, fv in pairs(av) do
+                kc = kc + 1
+                if type(fv) == "table" then has_t = true end
+                if type(fv) == "number" then has_n = true end
+            end
+            if kc == 2 and has_t and has_n then
+                nd_arg_roles[tostring(ai)] = "vararg"
+                root_va = av
+            else
+                nd_arg_roles[tostring(ai)] = "upvals"
+            end
+        end
+    else
+        nd_arg_roles[tostring(ai)] = "upvals"
+    end
 end
 
 local function json_str(s)
@@ -2134,7 +2203,7 @@ local root_proto_clean = {{}}
 for fk, fv in pairs(root_frame) do
     if fv == nd_handlers then
         frame_roles[tostring(fk)] = "handlers"
-    elseif type(fv) ~= "table" or rawget(fv, "__mv_env") or rawget(fv, "__mode") then
+    elseif type(fv) ~= "table" or role_of_val(fv) ~= "table" then
         frame_roles[tostring(fk)] = role_of_val(fv)
     else
         root_proto_clean[fk] = fv
@@ -2151,6 +2220,7 @@ end
 print("MV21_JSON_START")
 print("{{"
     .. '"nd_export":' .. json_str(tostring(id_to_name[nd_wid] or "")) .. ","
+    .. '"nd_arg_roles":' .. ser_val(nd_arg_roles, 1) .. ","
     .. '"ctx_roles":' .. ser_val(ctx_roles, 1) .. ","
     .. '"frame_roles":' .. ser_val(frame_roles, 1) .. ","
     .. '"va_keys":' .. ser_val(va_keys, 1) .. ","
@@ -2223,13 +2293,13 @@ def _extract_21x_env_decrypted_proto(raw: bytes, code_key: str, frame_roles: dic
         "Destroy=function()local ctx=MV_CTX local orig_ld=nil for k,orig in pairs(ctx)do if type(orig)=='function'then "
         "ctx[k]=function(...)local s,up=... local pk=table.pack(orig(...))local r1=pk[1] "
         "if pk.n==1 and type(r1)=='function'and type(up)=='table'and #up==1 then "
-        "return function(m,sf,wv,tr)if type(sf)=='table'and type(sf["
+        "return function(...)local ap=table.pack(...)for ai=1,ap.n do local sf=ap[ai]if type(sf)=='table'and type(sf["
         + str(code_key)
         + "])=='table'and(#sf["
         + str(code_key)
         + "]>60 or #(sf[4]or{})>0)then local cl={}for fk,fv in pairs(sf)do "
-        "if type(fv)~='function'and not rawget(type(fv)=='table'and fv or{},'__mv_env')and not rawget(type(fv)=='table'and fv or{},'__mode')then "
-        "cl[fk]=fv end end print('MV21_INNER_START')print(ser(cl,0))print('MV21_INNER_END')error('__MV21_INNER__')end return r1(m,sf,wv,tr)end end "
+        "if type(fv)=='table'then local oke,ise=pcall(function()return fv.__mv_env end)if not(oke and ise)and not rawget(fv,'__mode')then "
+        "cl[fk]=fv end elseif type(fv)~='function'then cl[fk]=fv end end print('MV21_INNER_START')print(ser(cl,0))print('MV21_INNER_END')error('__MV21_INNER__')end end return r1(...)end end "
         "return table.unpack(pk,1,pk.n)end end end end}end return{Size={X=0,Y=0,Z=0},CFrame={X=0,Y=0,Z=0}}end};"
         "local env=setmetatable({__mv_env=true,Instance=Inst,Vector3=Vec3,CFrame=CF,RaycastParams=RayParams,workspace=ws,game=gm},{__index=_G});"
         "setfenv(1,setmetatable({getfenv=function()return env end},{__index=env}))"
@@ -2291,13 +2361,19 @@ def lift_moonveil_21x_vm(raw: bytes) -> bytes:
             if f":{nd_export}(" in src_txt:
                 closure_ctor_exports.add(enm)
 
-    # Identify `upvals_key` (`l[K] = param_2` inside `closure_ctor`) and `params_key`!
+    # Identify `upvals_key` (`l[K] = up_param` inside `closure_ctor`) irrespective of parameter order!
     upvals_key: int | None = None
     for c_nm in closure_ctor_exports:
         cfn = clean(dec.exports[c_nm])
         inner_c = cfn["body"][0]["arguments"][0]
         if len(inner_c["parameters"]) >= 2:
-            up_p_nm = inner_c["parameters"][1]["name"]
+            c_pnames = [p["name"] for p in inner_c["parameters"]]
+            indexed_pnames = {
+                n["base"]["name"]
+                for n in walk(inner_c)
+                if isinstance(n, dict) and n.get("type") == "IndexExpression" and n["base"].get("type") == "Identifier"
+            }
+            non_indexed_pnames = {pn for pn in c_pnames if pn not in indexed_pnames}
             for n in walk(inner_c):
                 if isinstance(n, dict) and n.get("type") == "AssignmentStatement":
                     for lv, lr in zip(n["variables"], n["init"]):
@@ -2305,7 +2381,7 @@ def lift_moonveil_21x_vm(raw: bytes) -> bytes:
                             lv.get("type") == "IndexExpression"
                             and lv["index"].get("type") == "NumericLiteral"
                             and lr.get("type") == "Identifier"
-                            and lr["name"] == up_p_nm
+                            and lr["name"] in non_indexed_pnames
                         ):
                             upvals_key = int(lv["index"]["value"])
                 # Also spot `g:<md_export>(...)` inside `closure_ctor`!
@@ -2391,6 +2467,34 @@ def lift_moonveil_21x_vm(raw: bytes) -> bytes:
     nd_params = [p["name"] for p in nd_inner["parameters"]]
     nd_gr = build_graph(nd_inner)
 
+    # Detect the 3-slot upvalue cell permutation `(cell_tbl_slot, cell_key_slot)` (`3! = 6` variants)!
+    cell_tbl_slot, cell_key_slot = 1, 3
+    for n_c in walk(nd_inner):
+        if not isinstance(n_c, dict):
+            continue
+        if (
+            n_c.get("type") == "MemberExpression"
+            and n_c["identifier"]["name"] == "value"
+            and n_c["base"].get("type") == "IndexExpression"
+            and n_c["base"]["base"].get("type") == "Identifier"
+            and n_c["base"]["base"]["name"] == nd_up_param
+        ):
+            cell_tbl_slot, cell_key_slot = 2, 3
+            break
+        if (
+            n_c.get("type") == "IndexExpression"
+            and n_c["base"].get("type") == "IndexExpression"
+            and n_c["base"]["index"].get("type") == "NumericLiteral"
+            and n_c["index"].get("type") == "IndexExpression"
+            and n_c["index"]["index"].get("type") == "NumericLiteral"
+            and n_c["base"]["base"].get("type") == "IndexExpression"
+            and n_c["base"]["base"]["base"].get("type") == "Identifier"
+            and n_c["base"]["base"]["base"]["name"] == nd_up_param
+        ):
+            cell_tbl_slot = int(n_c["base"]["index"]["value"])
+            cell_key_slot = int(n_c["index"]["index"]["value"])
+            break
+
     # Find `nd` dispatch_state (the loop header node inside `nd_gr` that indexes `code[pc]`)!
     preds_nd: dict[int, int] = {nid: 0 for nid in nd_gr["nodes"]}
     for nid, nd_node in nd_gr["nodes"].items():
@@ -2457,6 +2561,7 @@ def lift_moonveil_21x_vm(raw: bytes) -> bytes:
         deferred_closures: list[tuple[int, Any]] = []
         lifted_children = [lift_proto(ch) for ch in child_protos]
         mc_uid = [0]
+        consumed_vt = [False]
 
         def emit_multi_call(ca: dict, count: int, stmts_out: list[dict]) -> tuple[Sym, ...]:
             mc_uid[0] += 1
@@ -2511,8 +2616,8 @@ def lift_moonveil_21x_vm(raw: bytes) -> bytes:
                     val_obj = _BuiltinTag(role_str)
             else:
                 val_obj = _BuiltinTag(role_str)
-            cell = _ConcreteTable({3: "__V21__", "__V21__": val_obj})
-            cell.put(1, cell)
+            cell = _ConcreteTable({cell_key_slot: "__V21__", "__V21__": val_obj, "value": val_obj})
+            cell.put(cell_tbl_slot, cell)
             return cell
 
         def eval_expr_sym(node: dict, env: dict[str, Any], stmts: list[dict], multi: bool = False) -> Any:
@@ -2560,15 +2665,19 @@ def lift_moonveil_21x_vm(raw: bytes) -> bytes:
                         return Sym(_ident(rn(base.last_dst)))
                     return None
                 if isinstance(base, OuterUpvalCell):
-                    if k in (1, 2):
+                    if k == "value":
+                        return Sym(_ident(f"__up_{base.up_idx}"))
+                    if k == cell_tbl_slot:
                         return base
-                    if k == 3:
+                    if k == cell_key_slot:
                         return "__VAL__"
                     return Sym(_ident(f"__up_{base.up_idx}"))
                 if isinstance(base, OpenUpvalCell):
-                    if k in (1, 2):
+                    if k == "value":
+                        return Sym(_ident(rn(base.reg_idx)))
+                    if k == cell_tbl_slot:
                         return W_bank
-                    if k == 3:
+                    if k == cell_key_slot:
                         return base.reg_idx
                     return Sym(_ident(rn(base.reg_idx)))
                 if isinstance(base, EnvSentinel):
@@ -2853,6 +2962,7 @@ def lift_moonveil_21x_vm(raw: bytes) -> bytes:
                         b_lim = int(b_idx) if b_idx is not None else len(src_tbl.fields)
                         return tuple(src_tbl.get(k) for k in range(a_idx, b_lim + 1))
                     if isinstance(b_idx, VarTop):
+                        consumed_vt[0] = True
                         out = [Sym(_ident(rn(k))) for k in range(a_idx, b_idx.base_reg + 1)]
                         out.append(Sym(b_idx.tail_ast))
                         return tuple(out)
@@ -2862,6 +2972,8 @@ def lift_moonveil_21x_vm(raw: bytes) -> bytes:
                     return tuple(Sym(_ident(rn(k))) for k in range(a_idx, b_int + 1))
                 if r == "table.move":
                     src_m, a_m, b_m, dst_start, dst_m = args[0], int(args[1]), args[2], int(args[3]), args[4]
+                    if isinstance(src_m, _RegBank) and isinstance(b_m, VarTop):
+                        consumed_vt[0] = True
                     if isinstance(src_m, RetPack) and isinstance(dst_m, _RegBank):
                         src_m.last_dst = dst_start
                         if isinstance(b_m, (RetCount, VarTop)):
@@ -2913,7 +3025,8 @@ def lift_moonveil_21x_vm(raw: bytes) -> bytes:
                         return (dst_m,)
                     return (dst_m,)
                 if r == "closure_ctor":
-                    ch_marker, cap_tbl = args[0], args[1]
+                    ch_marker = next((a for a in args if isinstance(a, _ChildProtoRef)), args[0])
+                    cap_tbl = next((a for a in args if isinstance(a, _ConcreteTable)), args[1] if len(args) > 1 else None)
                     if isinstance(ch_marker, _ChildProtoRef):
                         def_id = len(deferred_closures)
                         deferred_closures.append((ch_marker.idx, cap_tbl))
@@ -2958,16 +3071,22 @@ def lift_moonveil_21x_vm(raw: bytes) -> bytes:
                             b_obj = eval_expr_sym(lhs["base"], env, stmts)
                             k_obj = lhs["identifier"]["name"] if lhs["type"] == "MemberExpression" else eval_expr_sym(lhs["index"], env, stmts)
                             if isinstance(b_obj, _RegBank):
-                                b_obj.write(int(k_obj), rhs_val, stmts)
+                                r_written = int(k_obj)
+                                b_obj.write(r_written, rhs_val, stmts)
+                                if isinstance(rhs_val, Sym):
+                                    reg_sym = Sym(_ident(rn(r_written)))
+                                    for ek, ev in list(env.items()):
+                                        if ev is rhs_val:
+                                            env[ek] = reg_sym
                             elif isinstance(b_obj, _CodeTable21):
                                 b_obj.put(k_obj, rhs_val)
                             elif isinstance(b_obj, _ConcreteTable):
                                 if (
                                     isinstance(rhs_val, _ConcreteTable)
-                                    and 3 in rhs_val.fields
-                                    and (isinstance(rhs_val.get(1), _RegBank) or isinstance(rhs_val.get(2), _RegBank))
+                                    and isinstance(rhs_val.get(cell_tbl_slot), _RegBank)
+                                    and isinstance(rhs_val.get(cell_key_slot), (int, float))
                                 ):
-                                    b_obj.put(k_obj, OpenUpvalCell(int(rhs_val.get(3))))
+                                    b_obj.put(k_obj, OpenUpvalCell(int(rhs_val.get(cell_key_slot))))
                                 else:
                                     b_obj.put(k_obj, rhs_val)
                             elif isinstance(b_obj, OuterUpvalCell):
@@ -3093,20 +3212,32 @@ def lift_moonveil_21x_vm(raw: bytes) -> bytes:
 
             return step_h(h_gr["start"], h_env, stmts)
 
-        # Initialize `nd` prelude up to `nd_dispatch`!
-        nd_up_cell = _ConcreteTable({3: "__V21__", "__V21__": handlers_tbl})
-        nd_up_cell.put(1, nd_up_cell)
-        nd_base_env: dict[str, Any] = {
-            nd_ctx_param: _BuiltinTag("ctx"),
-            nd_up_param: _ConcreteTable({1: nd_up_cell}),
-            nd_params[0]: _ConcreteTable(),
-            nd_params[1]: frame_tbl,
-            nd_params[2]: _ConcreteTable({
+        # Initialize `nd` prelude up to `nd_dispatch` using detected `nd_arg_roles`!
+        nd_arg_roles: dict[str, str] = bundle.get("nd_arg_roles") or {"1": "upvals", "2": "frame", "3": "vararg", "4": "regs"}
+        role_val_map: dict[str, Any] = {
+            "upvals": _ConcreteTable(),
+            "frame": frame_tbl,
+            "vararg": _ConcreteTable({
                 vararg_tbl_key: VarargTable(),
                 vararg_cnt_key: VarargCount(),
             }),
-            nd_params[3]: W_bank,
+            "regs": W_bank,
         }
+        nd_up_cell = _ConcreteTable({cell_key_slot: "__V21__", "__V21__": handlers_tbl, "value": handlers_tbl})
+        nd_up_cell.put(cell_tbl_slot, nd_up_cell)
+        nd_base_env: dict[str, Any] = {
+            nd_ctx_param: _BuiltinTag("ctx"),
+            nd_up_param: _ConcreteTable({1: nd_up_cell}),
+        }
+        for p_idx0, p_nm in enumerate(nd_params):
+            r_nm = nd_arg_roles.get(str(p_idx0 + 1), "upvals")
+            if r_nm.startswith("frame_field:"):
+                ff_k = r_nm.split(":", 1)[1]
+                nd_base_env[p_nm] = frame_tbl.get(int(ff_k) if ff_k.isdigit() else ff_k)
+            elif r_nm.startswith("fn:"):
+                nd_base_env[p_nm] = _BuiltinTag(r_nm.split(":", 1)[1])
+            else:
+                nd_base_env[p_nm] = role_val_map.get(r_nm, _ConcreteTable())
         init_stmts: list[dict] = []
         exec_stmt_list(nd_gr["prefix"], nd_base_env, init_stmts)
         cur_nd = nd_gr["start"]
@@ -3176,6 +3307,7 @@ def lift_moonveil_21x_vm(raw: bytes) -> bytes:
                     cur = tm["yes"]["goto"] if (cv is not None and cv is not False) else tm["no"]["goto"]
 
         def step_pc(pc_val: int, v_in: VarTop | None) -> dict:
+            consumed_vt[0] = False
             env = {
                 ek: (_ConcreteTable() if isinstance(ev, _ConcreteTable) and not ev.fields else ev)
                 for ek, ev in nd_base_env.items()
@@ -3189,7 +3321,10 @@ def lift_moonveil_21x_vm(raw: bytes) -> bytes:
                     exec_stmt_list([st], env, stmts)
                 except _HandlerCallSignal as sig:
                     h_tree = run_handler(sig.op, sig.args, stmts)
-                    return finish_nd_from_rets(h_tree, idx_s, st["variables"], env)
+                    res_out = finish_nd_from_rets(h_tree, idx_s, st["variables"], env)
+                    if v_in is not None and consumed_vt[0] and res_out.get("var_top") is v_in:
+                        res_out["var_top"] = None
+                    return res_out
             raise Unsupported(f"MoonVeil 2.1.x driver did not invoke handler at pc={pc_val}")
 
         # Explore reachable PCs in FIFO order so basic-block `DECRYPT_BLOCK` / `DECRYPT_STR` headers
@@ -3315,8 +3450,12 @@ def lift_moonveil_21x_vm(raw: bytes) -> bytes:
                             u_name = f"__up_{int(u_slot)}"
                             if isinstance(cell_obj, OpenUpvalCell):
                                 r_nm = rn(cell_obj.reg_idx)
-                            elif isinstance(cell_obj, _ConcreteTable) and (isinstance(cell_obj.get(1), _RegBank) or isinstance(cell_obj.get(2), _RegBank)):
-                                r_nm = rn(int(cell_obj.get(3)))
+                            elif (
+                                isinstance(cell_obj, _ConcreteTable)
+                                and isinstance(cell_obj.get(cell_tbl_slot), _RegBank)
+                                and isinstance(cell_obj.get(cell_key_slot), (int, float))
+                            ):
+                                r_nm = rn(int(cell_obj.get(cell_key_slot)))
                             elif isinstance(cell_obj, OuterUpvalCell):
                                 up_map[u_name] = f"__up_{cell_obj.up_idx}"
                                 continue
@@ -3458,9 +3597,13 @@ def lift_moonveil_21x_vm(raw: bytes) -> bytes:
     stmts = _fold_mv21_crypto_intrinsics(stmts, dec, raw)
     stmts = _optimize_all_functions(stmts, fresh_fn)
     stmts = reconstruct_for_in_loops(stmts)
+    stmts = reconstruct_for_numeric_loops(stmts)
     stmts = unbox_cells(stmts, fresh_fn)
     stmts = _optimize_all_functions(stmts, fresh_fn)
     stmts = normalize_cf_deep(stmts, at_fn_end=True, allow_short_tail=True)
+    stmts = _optimize_all_functions(stmts, fresh_fn)
+    stmts = reconstruct_for_in_loops(stmts)
+    stmts = reconstruct_for_numeric_loops(stmts)
     stmts = _optimize_all_functions(stmts, fresh_fn)
     stmts = _place_local_declarations(stmts, set(), is_fn_root=True)
     stmts = _inject_residual_shims(stmts)
@@ -3643,8 +3786,9 @@ def _fold_mv21_crypto_intrinsics(stmts: list[dict], dec: Any, raw: bytes = b"") 
                 "local zf=d.Z<0 and(pt.CFrame.Z+pt.Size.Z*0.5)or(pt.CFrame.Z-pt.Size.Z*0.5)local t=(zf-o.Z)/d.Z "
                 "if t>=0 and t<=1 and t<bt then bt=t bp={Position={X=o.X+d.X*t,Y=o.Y+d.Y*t,Z=zf}}end end return bp end,"
                 "Destroy=function()run_batch()end}end return{Size={X=0,Y=0,Z=0},CFrame={X=0,Y=0,Z=0}}end};"
-                "local env=setmetatable({__mv_env=true,Instance=Inst,Vector3=Vec3,CFrame=CF,RaycastParams=RayParams,workspace=ws,game=gm},{__index=_G});"
-                "setfenv(1,setmetatable({getfenv=function()return env end},{__index=env}))"
+                "local tbl_p=setmetatable({create=function(n)if MV_CTX and MV_CTX.v then run_batch()end return table.create(n)end},{__index=table});"
+                "local env=setmetatable({__mv_env=true,table=tbl_p,Instance=Inst,Vector3=Vec3,CFrame=CF,RaycastParams=RayParams,workspace=ws,game=gm},{__index=_G});"
+                "setfenv(1,setmetatable({table=tbl_p,getfenv=function()return env end},{__index=env}))"
             )
             script = one_line + "\nreturn(function(t)MV_CTX=t return t end)(" + u2[ret_idx + 7 :]
             with tempfile.NamedTemporaryFile("w", suffix=".luau", delete=False, encoding="latin1") as tf:

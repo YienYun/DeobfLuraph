@@ -265,8 +265,9 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     end
     if input.KeyCode == Enum.KeyCode.N then
         active2 = not active2
-        helperFn2(active2)
-        print(active2 and "\226\156\133 Noclip ativado" or "\226\155\148 Noclip desativado")
+        local val9 = active2
+        helperFn2(val9)
+        print(val9 and "\226\156\133 Noclip ativado" or "\226\155\148 Noclip desativado")
     end
 end)
 localPlayer2.CharacterAdded:Connect(function(arg1)

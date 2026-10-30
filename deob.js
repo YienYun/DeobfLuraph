@@ -268,7 +268,7 @@ async function processFile(absInput, args) {
 
     if (final && result && fs.existsSync(result)) {
       let content = fs.readFileSync(result, 'utf8');
-      content = content.replace(/^(\s*--(?:[ \t]*(?:Deobfuscated by|Detected obfuscation|Local names are inferred|source:|NOTE: reconstructed|during the trace)[^\n]*\n?|\s*\n))+/, '');
+      content = content.replace(/^(\s*--(?:[ \t]*(?:Deobfuscated by|Detected obfuscation|Local names are inferred|source:|NOTE: reconstructed|during the trace|Input SHA-256:|MoonVeil [\d.]+ profile:|Constants decoded;|Names\/comments lost|This is not a claim)[^\n]*\n?|\s*\n))+/, '');
       let renameStats = undefined;
       if (args.rename && job.resultType === 'devirtualized') {
         process.stderr.write(`[*] running Layer-2 renamer & dead-code cleaner (comments=${args.comments})...\n`);

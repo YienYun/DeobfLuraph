@@ -828,11 +828,36 @@ def _lua_debug_info(fn, what):
             raise ValueError("unsupported debug.info option")
     return Multi(out) if len(out) != 1 else out[0]
 
+def _lua_table_unpack(t, i=1, j=None):
+    if not isinstance(t, dict):
+        raise ValueError("not a table")
+    i = int(i)
+    if j is None:
+        n_v = t.get(b"n")
+        if isinstance(n_v, int):
+            j = n_v
+        else:
+            j = 0
+            while (j + 1) in t:
+                j += 1
+    else:
+        j = int(j)
+    if j < i:
+        return Multi([])
+    if j - i > 256:
+        raise ValueError("unpack range too large")
+    out = []
+    for k in range(i, j + 1):
+        out.append(t.get(k))
+    return Multi(out)
+
 FACT_CONCRETE = dict(CONCRETE)
 FACT_CONCRETE.update({
     "type": _lua_type,
     "typeof": _lua_typeof,
     "debug.info": _lua_debug_info,
+    "table.unpack": _lua_table_unpack,
+    "unpack": _lua_table_unpack,
     "UDim.new": _udim_new,
     "UDim2.new": _udim2_new,
     "UDim2.fromScale": _udim2_fromScale,

@@ -3126,7 +3126,7 @@ def eval_fact(e, facts):
         of, kf = eval_fact(e.obj, facts), eval_fact(e.key, facts)
         if of and kf and kf[0] == "c":
             k = kf[1].decode("latin-1") if isinstance(kf[1], bytes) else kf[1]
-            if of[0] == "g" and isinstance(k, str) and (of[1] + "." + k) in S.FACT_CONCRETE:
+            if of[0] == "g" and isinstance(k, str) and ((of[1] + "." + k) in S.FACT_CONCRETE or (of[1] == "table" and k == "move")):
                 return ("g", of[1] + "." + k)
             if of[0] == "c" and isinstance(of[1], bytes) and isinstance(k, str) and ("string." + k) in S.FACT_CONCRETE:
                 return ("g", "string." + k)
@@ -3766,7 +3766,7 @@ def apply_stmt_facts(st, facts, lf, pos=None):
                         tc.arg_facts = {k: v for k, v in tc.arg_facts.items() if tc.arg_facts.get(k) == af_map.get(k)}
         fn_f = eval_fact(st.fn, facts)
         is_pure_g = ("tmp", st.t) in facts
-        if fn_f and fn_f[0] == "g" and (fn_f[1] in S.FACT_CONCRETE or fn_f[1] in ("Path2D.SetControlPoints", "Random.NextNumber", "Random.NextInteger")):
+        if fn_f and fn_f[0] == "g" and (fn_f[1] in S.FACT_CONCRETE or fn_f[1] in ("Path2D.SetControlPoints", "Random.NextNumber", "Random.NextInteger", "table.move")):
             is_pure_g = True
             arg_vals = []
             ok = True
@@ -3795,6 +3795,26 @@ def apply_stmt_facts(st, facts, lf, pos=None):
             if ok:
                 if fn_f[1] == "Path2D.SetControlPoints" and len(arg_vals) >= 2 and isinstance(arg_vals[0], dict) and isinstance(arg_vals[1], dict):
                     _replace_dict_fact(facts, arg_vals[0], b"_pts", dict(arg_vals[1]))
+                elif fn_f[1] == "table.move" and len(arg_vals) >= 4 and isinstance(arg_vals[0], dict):
+                    try:
+                        a1_d = arg_vals[0]
+                        f_i, e_i, t_i = int(arg_vals[1]), int(arg_vals[2]), int(arg_vals[3])
+                        a2_d = arg_vals[4] if len(arg_vals) >= 5 else a1_d
+                        if isinstance(a2_d, dict) and e_i - f_i <= 256:
+                            new_a2 = dict(a2_d)
+                            if e_i >= f_i:
+                                moved = [a1_d.get(k) for k in range(f_i, e_i + 1)]
+                                for off_i, mv in enumerate(moved):
+                                    if mv is None:
+                                        new_a2.pop(t_i + off_i, None)
+                                    else:
+                                        new_a2[t_i + off_i] = mv
+                            for rk, rv in list(facts.items()):
+                                if rv and rv[0] in ("c", "tbl") and rv[1] is a2_d:
+                                    facts[rk] = (rv[0], new_a2)
+                            facts[("tmp", st.t)] = ("m", [new_a2])
+                    except Exception:
+                        pass
                 elif fn_f[1] == "Random.NextNumber" and len(arg_vals) >= 1 and isinstance(arg_vals[0], dict) and b"_st" in arg_vals[0]:
                     try:
                         nst, val = S._random_next_number(*arg_vals)
@@ -3816,6 +3836,10 @@ def apply_stmt_facts(st, facts, lf, pos=None):
                         facts[("tmp", st.t)] = ("m", items)
                     except Exception:
                         pass
+            elif fn_f[1] == "table.move" and st.args.items:
+                dst_arg = st.args.items[4] if len(st.args.items) >= 5 else st.args.items[0]
+                if isinstance(dst_arg, Reg) and (facts.get(dst_arg.n) or (None,))[0] == "tbl":
+                    facts[dst_arg.n] = ("t",)
         if any(isinstance(x, FrameArg) for x in st.args.items):
             writes = frame_call(st, facts, lf)
             prev = getattr(st, "frame_eval", None)

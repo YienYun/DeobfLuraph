@@ -34,7 +34,12 @@ function hasLuaparse() {
   return probe.status === 0;
 }
 const luaparse = hasLuaparse();
-const SKIP = luaparse ? false : 'luaparse is not installed (run npm install)';
+const luaparseSkip = luaparse ? false : 'luaparse is not installed (run npm install)';
+// The corpus is local-only (see samples/README.md): the files are not checked
+// in, so these tests skip on a fresh clone instead of failing on missing input.
+const absent = [...SOURCE_PRESETS, ...VM_PRESETS, ...MACHINE_PRESETS]
+  .find((name) => !fs.existsSync(path.join(IN, name)));
+const SKIP = luaparseSkip || (absent ? `samples/input/LuaObfuscator/${absent} is not present (corpus is local-only)` : false);
 
 function deobf(sample) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'lo-cli-'));

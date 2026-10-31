@@ -36,7 +36,12 @@ test('luarmor: the detector routes the whole v4 chain to the luarmor track', () 
   }
 });
 
-test('luarmor: a client stub is parsed, not faked', () => {
+// The corpus is local-only (samples/README.md); skip rather than fail on a
+// fresh clone that has no captured sessions to analyse.
+const missingSample = [STUB, INIT].find((f) => !fs.existsSync(f));
+const SKIP = missingSample ? `sample not present: ${path.relative(ROOT, missingSample)}` : false;
+
+test('luarmor: a client stub is parsed, not faked', { skip: SKIP }, () => {
   const meta = analyze(STUB);
   assert.equal(meta.kind, 'client_stub');
   assert.equal(meta.luraph_payload, false);
@@ -51,7 +56,7 @@ test('luarmor: a client stub is parsed, not faked', () => {
   assert.ok(meta.notes.some((n) => n.includes('not in this file')));
 });
 
-test('luarmor: the sephal init is recognised as liftable code', () => {
+test('luarmor: the sephal init is recognised as liftable code', { skip: SKIP }, () => {
   const meta = analyze(INIT);
   assert.equal(meta.kind, 'sephal_init');
   assert.equal(meta.luraph_payload, true);

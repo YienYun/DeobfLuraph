@@ -19,3 +19,10 @@ coverage/
 samples/output/**/*.protos.json
 samples/output/**/*.devirt.luau
 samples/output/**/*.deobf.luau
+
+# Working corpus: layout is tracked, files are not (samples/README.md)
+samples/input/**
+!samples/input/.gitkeep
+!samples/input/*/.gitkeep
+samples/output/**
+!samples/output/.gitkeep

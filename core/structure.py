@@ -120,6 +120,67 @@ def prune_constant_guards(entry, blocks):
         GUARD_DROPS.append(n)
     return n
 
+def drop_unreachable(entry, blocks):
+    """Remove blocks no path from the entry reaches (a decoy handler whose
+    predecessor was cut). They are not emitted, so they must not be counted
+    as unlifted either."""
+    live, stack = set(), [entry]
+    while stack:
+        bid = stack.pop()
+        if bid in live or bid not in blocks:
+            continue
+        live.add(bid)
+        stack.extend(blocks[bid].succ)
+    dead = [bid for bid in blocks if bid not in live]
+    for bid in dead:
+        del blocks[bid]
+    for b in blocks.values():
+        b.preds = [p for p in b.preds if p in blocks]
+    return len(dead)
+
+def prune_after_trap(entry, blocks):
+    """Drop the code behind a tamper trap.
+
+    Luraph's anti-tamper handlers end in a call of a constant (`(29)(nil)`):
+    calling a number always raises, so nothing after it can run. The states
+    that are only reachable through such a call are decoy code -- its pc/mode
+    cannot be resolved (the trap never writes them) -- and lifting it is
+    pointless. Cut the trap's successors, then remove every block that is no
+    longer reachable from the entry. Returns the number of blocks dropped."""
+    def callee_of(st):
+        call = getattr(st, "call", None)
+        return getattr(call, "fn", None) if call is not None else getattr(st, "fn", None)
+
+    def trapped(b):
+        if b.kind == "crash":
+            return True
+        for st in b.stmts:
+            fn = callee_of(st)
+            if isinstance(fn, Const) and not callable(fn.v):
+                return True
+        return False
+
+    live = set()
+    stack = [entry]
+    while stack:
+        bid = stack.pop()
+        if bid in live or bid not in blocks:
+            continue
+        live.add(bid)
+        b = blocks[bid]
+        if trapped(b):
+            # the trap call itself stays (it is what the obfuscated code does);
+            # only what it can never reach is cut away
+            b.kind, b.cond, b.succ = "end", None, []
+            continue
+        stack.extend(b.succ)
+    dead = [bid for bid in blocks if bid not in live]
+    for bid in dead:
+        del blocks[bid]
+    for b in blocks.values():
+        b.preds = [p for p in b.preds if p in blocks]
+    return len(dead)
+
 def fill(b, node, key, new_block, head_of, nodes, D, link):
     if getattr(node, "error", None):
         b.stmts += node.stmts
@@ -305,7 +366,7 @@ def thread_empty(entry, blocks):
     while changed:
         changed = False
         for b in list(blocks.values()):
-            if b.id not in blocks or b.kind != "goto":
+            if b.id not in blocks or b.kind != "goto" or not b.succ:
                 continue
             s = blocks[b.succ[0]]
             if s.id == b.id or len(s.preds) != 1 or s.id == entry:
@@ -561,7 +622,6 @@ class Structurer:
                     return out
                 continue
             if self.blocks[cur].kind in ("for", "forin"):
-
                 out.append(SError("for loop without back edge"))
                 return out
             self.emitted.add(cur)
@@ -579,6 +639,8 @@ class Structurer:
             if b.kind == "end":
                 return out
             if b.kind == "goto":
+                if not b.succ:      # dead end cut by the trap/reachability passes
+                    return out
                 cur = b.succ[0]
                 continue
 

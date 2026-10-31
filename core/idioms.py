@@ -574,6 +574,42 @@ def conditions(stmts):
             conditions(b)
     return stmts
 
+def _only_markers(block):
+    """True when a branch holds nothing but this tool's own stubs/comments."""
+    for st in block:
+        if isinstance(st, (ST.SError, ST.SBreak, ST.SContinue, ST.SGotoState)):
+            continue
+        if isinstance(st, CG.CommentS):
+            continue
+        return False
+    return True
+
+def fold_constant_conds(stmts):
+    """Drop a branch that can never run and holds only our own stub.
+
+    A condition can end up as a literal when the value it tests was modelled
+    as nil/true/false. The arm that cannot run is normally only an
+    `error("devirt: ...")` marker left for an instruction that was not
+    lifted -- removing it keeps the output free of stubs. Anything else is
+    left alone: the code in that arm is real script code that a fold would
+    silently delete."""
+    out = []
+    for st in stmts:
+        if isinstance(st, ST.SIf):
+            st.then = fold_constant_conds(st.then)
+            st.els = fold_constant_conds(st.els)
+            c = st.cond
+            if isinstance(c, (CG.Const, Const)):
+                live, dead = (st.then, st.els) if c.v not in (None, False) else (st.els, st.then)
+                if _only_markers(dead):
+                    out.extend(live)
+                    continue
+        else:
+            for b in _sub_blocks(st):
+                b[:] = fold_constant_conds(b)
+        out.append(st)
+    return out
+
 def _has_continue(stmts):
     """A `continue` of the enclosing loop (not of loops nested in stmts)."""
     for st in stmts:

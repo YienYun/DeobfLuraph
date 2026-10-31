@@ -429,12 +429,13 @@ def recognize(entry, blocks, D):
     _split_prep_headers(blocks, D)
     _unify_loop_headers(entry, blocks, D)
     found = {"for": 0, "forin": 0}
+    idom = _dom_map(entry, blocks)
     for h in list(blocks.values()):
         if h.id not in blocks:
             continue
-        if try_numeric(h, blocks, D):
+        if try_numeric(h, blocks, D, idom):
             found["for"] += 1
-        elif try_generic(h, blocks, D):
+        elif try_generic(h, blocks, D, idom):
             found["forin"] += 1
 
     read_map = _pseudo_reads_by_block(blocks, D)
@@ -480,8 +481,10 @@ def _moves_to_latches(h, pb, pre, blocks):
         lb.succ = [nb.id if x == h.id else x for x in lb.succ]
     _recompute(blocks)
 
-def try_numeric(h, blocks, D):
+def try_numeric(h, blocks, D, idom=None):
     if h.kind != "cond" or not h.stmts:
+        return False
+    if not _is_loop_header(h, blocks, idom):
         return False
 
     pre = h.stmts[:-1]
@@ -639,8 +642,31 @@ def strip_plus0(e):
         return e.a
     return e
 
-def try_generic(h, blocks, D):
+def _dom_map(entry, blocks):
+    """Immediate dominators of the current CFG (recomputed from succ edges)."""
+    import structure
+    succ = {bid: [x for x in b.succ if x in blocks] for bid, b in blocks.items()}
+    preds = {bid: [] for bid in blocks}
+    for bid, xs in succ.items():
+        for x in xs:
+            preds[x].append(bid)
+    idom, _ = structure.dominators(entry, lambda bid: succ[bid], lambda bid: preds[bid])
+    return idom
+
+def _is_loop_header(h, blocks, idom):
+    """A loop header dominates the block that jumps back to it. Without that
+    the "header" is only re-entered from an enclosing loop, and the structurer
+    would have to give up on it ("for loop without back edge")."""
+    if idom is None or h.id not in idom:
+        return True
+    import structure
+    return any(structure.dominates(idom, h.id, b.id)
+               for b in blocks.values() if h.id in b.succ)
+
+def try_generic(h, blocks, D, idom=None):
     if h.kind != "cond" or not h.stmts or not isinstance(h.stmts[-1], D.CallStmt):
+        return False
+    if not _is_loop_header(h, blocks, idom):
         return False
     call = h.stmts[-1]
 

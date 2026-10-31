@@ -22,6 +22,8 @@ def lower(entry_key, order, D, link, prefix, upnames, closure):
     entry, blocks = ST.build_cfg(entry_key, order, D, link)
     if os.environ.get("DEVIRT_NO_GUARD_PRUNE") is None:
         ST.prune_constant_guards(entry, blocks)
+    ST.prune_after_trap(entry, blocks)
+    ST.drop_unreachable(entry, blocks)
     if not os.environ.get("DEVIRT_NO_MERGE"):
         entry, _ = ST.merge_equivalent(entry, blocks, D)
     entry = ST.thread_empty(entry, blocks)
@@ -73,6 +75,7 @@ def lower(entry_key, order, D, link, prefix, upnames, closure):
     nerr = sum(1 for b in blocks.values() if b.kind == "error")
     entry, body, sr = ST.structure(entry, blocks, own)
     body = ST.cleanup(body)
+    body = IDI.fold_constant_conds(body)
     body = IDI.drop_blank_branches(body)
     body = IDI.fold_pack_idioms(body, own)
     body = IDI.eliminate_dead_code(body, own)
@@ -91,11 +94,56 @@ def lower(entry_key, order, D, link, prefix, upnames, closure):
         body = IDI.fold_single_use(body)
     body = IDI.eliminate_dead_code(body, own)
     body = IDI.flatten_nested_ifs(body, own)
+    body = _name_stray_regs(body, own)
     body = VR.declare(body, (), own)
     body = VR.limit_locals(body)
     params = VR.extract_params(body)
     rend = CG.Renderer(names)
-    return rend.block(body, ""), params, nerr, sr.fallbacks
+    text = rend.block(body, "")
+    # report the stubs that actually reach the output: a block the structuring
+    # pass never emits (behind a return/break) is dead code, not a lost one
+    if nerr:
+        nerr = text.count('error("devirt:')
+    return text, params, nerr, sr.fallbacks
+
+
+def _name_stray_regs(node, own):
+    """Give a name to every register that the def/use analysis never saw.
+
+    A few handlers build expressions (a shared runtime call's arguments, a
+    loop header's expressions) outside the statement list the analysis walks,
+    so their registers keep the raw `r<N>` name and would render as reads of
+    an undefined global. Those slots are never written in this function, so a
+    local (nil) is exactly what they hold."""
+    import codegen as CG
+    from luasym import Reg
+
+    def fix(x):
+        if isinstance(x, Reg):
+            nm = "r%s" % x.n
+            own.add(nm)
+            return CG.LocalName(nm)
+        if isinstance(x, list):
+            for i, v in enumerate(x):
+                x[i] = fix(v)
+            return x
+        if isinstance(x, tuple):
+            return tuple(fix(v) for v in x)
+        if isinstance(x, dict):
+            for k, v in list(x.items()):
+                x[k] = fix(v)
+            return x
+        if isinstance(x, (str, bytes, int, float, bool, set, frozenset, type)) or x is None:
+            return x
+        d = getattr(x, "__dict__", None)
+        if d is not None:
+            for k, v in list(d.items()):
+                if k.startswith("_"):
+                    continue
+                d[k] = fix(v)
+        return x
+
+    return fix(node)
 
 def polish(text):
     """Whole-program text passes: localfuncs, AST dead-param/dead-local/IIFE

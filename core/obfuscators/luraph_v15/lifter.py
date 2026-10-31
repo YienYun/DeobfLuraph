@@ -560,7 +560,7 @@ class ProtoLifter:
         if not (isinstance(a, Const) and isinstance(a.v, int) and not isinstance(a.v, bool)):
             return None
         self.reg_arrays.add(a.v)
-        return Reg(REG_ARRAY + a.v), b
+        return Reg("%s%d" % (REG_ARRAY, a.v)), b
 
     def library_name(self, t):
         if not hasattr(self, "_lib_names"):

@@ -177,7 +177,6 @@ async function run(job) {
         const chunkPaths = Object.entries(rawChunks).map(([k, src]) =>
           job.write(job.path(`.chunk_${k}.luau`), src, 'latin1')
         );
-
         // Use a fresh stats file even in --debug mode. Old intermediate
         // outputs must never be mistaken for a result from the current run.
         const statsDir = fs.mkdtempSync(path.join(require('os').tmpdir(), 'deobf-stats-'));

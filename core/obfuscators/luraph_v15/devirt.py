@@ -700,7 +700,7 @@ class FunctionLifter:
                 for vr, iv in sorted(vreg_init_map.items())
                 if vr in used_vr
             ]
-        arr_inits = [Assign(Reg(REG_ARRAY + b), S.NewTable()) for b in sorted(lf.reg_arrays)]
+        arr_inits = [Assign(Reg("%s%d" % (REG_ARRAY, b)), S.NewTable()) for b in sorted(lf.reg_arrays)]
         if vreg_inits or arr_inits:
             k0 = s0.key(vm.kstack_link)
             for k, node in order:

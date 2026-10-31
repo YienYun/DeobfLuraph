@@ -683,7 +683,11 @@ class Stepper:
                 self.last_written_val[k] = dict.get(acc, k)
         self.read_first |= acc.read_first
         self.written |= acc.written
-        for k in (self.read_first & self.written & self.sp_cands) - self.carry - self.not_carried - self.fixed_decls:
+        # `- vreg_of`: a local already lifted to a virtual register must not
+        # be picked again, or every restart would mint a new register and ask
+        # for another restart forever (order stayed empty, block unlifted)
+        for k in (self.read_first & self.written & self.sp_cands) - self.carry - self.not_carried \
+                - self.fixed_decls - set(self.vreg_of):
             v = dict.get(acc, k)
             lw = self.last_written_val.get(k, v)
             if k in self.lf.special or not (isinstance(lw, int) and not isinstance(lw, bool)):

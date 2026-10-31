@@ -281,7 +281,10 @@ def rename(entry, blocks, prefix, captured):
             if isinstance(x, Reg):
                 w = use_web.get(("u", bid, i, x.n), "missing")
                 if w == "missing":
-                    return None
+                    # a read the def/use analysis did not see (a register that
+                    # only reaches the code through a call argument): give it a
+                    # real local instead of leaking the raw name as a global
+                    return CG.LocalName(name_of(("miss", x.n), x.n))
                 nm = name_of(w, x.n)
                 return Const(None) if nm is None else CG.LocalName(nm)
             if isinstance(x, ClosureExpr):

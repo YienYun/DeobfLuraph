@@ -20,9 +20,8 @@ samples/output/**/*.protos.json
 samples/output/**/*.devirt.luau
 samples/output/**/*.deobf.luau
 
-# Working corpus: layout is tracked, files are not (samples/README.md)
+# Source material stays local (big, and re-uploaded often); results are tracked,
+# because a deobfuscation nobody can open is not a result.
 samples/input/**
 !samples/input/.gitkeep
 !samples/input/*/.gitkeep
-samples/output/**
-!samples/output/.gitkeep

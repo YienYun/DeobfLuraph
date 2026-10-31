@@ -119,12 +119,29 @@ function cleanAndRename(source, opts = {}) {
     warnings.push(...g.warnings);
   }
 
+  // If StyLua is unavailable, run Darklua readable generator before BetterDecompiler
+  // so BetterDecompiler's contextual comments are preserved on formatted output.
+  let formatterUsed = 'none';
+  if (!opts.noFormat && !garbage.resolveStyluaBin()) {
+    const preFmt = garbage.formatLuauCode(working, opts);
+    working = preFmt.source;
+    formatterUsed = preFmt.formatter;
+  }
+
   // Stage 3: Scope-verified Luau renaming + contextual doc-comments
   const bd = runBetterDecompiler(working, opts);
   warnings.push(...bd.warnings);
 
-  // Stage 4: Final official Luau AST syntax verification gate
-  let finalSource = bd.source;
+  // Stage 4: Official StyLua formatting (preserves comments & normalizes style)
+  let candidateSource = bd.source;
+  if (!opts.noFormat && garbage.resolveStyluaBin()) {
+    const postFmt = garbage.formatLuauCode(candidateSource, opts);
+    candidateSource = postFmt.source;
+    formatterUsed = postFmt.formatter;
+  }
+
+  // Stage 5: Final official Luau AST syntax verification gate
+  let finalSource = candidateSource;
   let astCheck = garbage.checkLuauAst(finalSource);
   if (!astCheck.ok) {
     warnings.push(`Renamed output failed luau-ast (${astCheck.error}); falling back to pre-rename cleaned code.`);
@@ -147,6 +164,7 @@ function cleanAndRename(source, opts = {}) {
       model: bd.model || undefined,
       renamed: bd.renamed,
       comments: bd.comments,
+      formatter: formatterUsed,
       dead_lines_removed: dceStats.deadLinesRemoved,
       darklua_applied: dceStats.darkluaApplied,
       deobf_ast_polished: dceStats.deobfPolished,

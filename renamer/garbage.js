@@ -37,6 +37,76 @@ function luauAstBin() {
   return path.join(ROOT, 'bin', 'luau-ast' + ext);
 }
 
+const STYLUA_PLATFORMS = {
+  'linux-x64': { pkg: '@johnnymorganz/stylua-bin-linux-x64', bin: 'stylua' },
+  'linux-arm64': { pkg: '@johnnymorganz/stylua-bin-linux-arm64', bin: 'stylua' },
+  'darwin-x64': { pkg: '@johnnymorganz/stylua-bin-darwin-x64', bin: 'stylua' },
+  'darwin-arm64': { pkg: '@johnnymorganz/stylua-bin-darwin-arm64', bin: 'stylua' },
+  'win32-x64': { pkg: '@johnnymorganz/stylua-bin-win32-x64', bin: 'stylua.exe' },
+};
+
+function resolveStyluaBin() {
+  if (process.env.STYLUA_BIN && fs.existsSync(process.env.STYLUA_BIN)) {
+    return process.env.STYLUA_BIN;
+  }
+  const ext = process.platform === 'win32' ? '.exe' : '';
+  const localBin = path.join(ROOT, 'bin', 'stylua' + ext);
+  if (fs.existsSync(localBin)) return localBin;
+  const plat = STYLUA_PLATFORMS[`${process.platform}-${process.arch}`];
+  if (plat) {
+    try {
+      const pkgDir = path.dirname(require.resolve(`${plat.pkg}/package.json`));
+      const bin = path.join(pkgDir, plat.bin);
+      if (fs.existsSync(bin)) return bin;
+    } catch {}
+  }
+  return null;
+}
+
+/**
+ * Format Luau/Lua code with official StyLua (`JohnnyMorganz/StyLua`), falling back
+ * to Darklua's `readable` AST pretty-printer when StyLua is unavailable.
+ */
+function formatLuauCode(source, opts = {}) {
+  if (opts.noFormat || source.length > (opts.maxFormatBytes || 512 * 1024)) {
+    return { source, formatter: 'none', applied: false };
+  }
+  const stylua = resolveStyluaBin();
+  if (stylua) {
+    const r = spawnSync(
+      stylua,
+      [
+        '--syntax', 'All',
+        '--indent-type', 'Spaces',
+        '--indent-width', '2',
+        '--column-width', String(opts.columnWidth || 100),
+        '-',
+      ],
+      {
+        input: source,
+        encoding: 'utf8',
+        maxBuffer: 64 * 1024 * 1024,
+        timeout: 30000,
+        windowsHide: true,
+      }
+    );
+    if (!r.error && r.status === 0 && r.stdout && checkLuauAst(r.stdout).ok) {
+      return { source: r.stdout, formatter: 'stylua', applied: r.stdout !== source };
+    }
+  }
+  try {
+    const darklua = loadDarklua();
+    const out = darklua.process_code(source, {
+      generator: { name: 'readable', column_span: opts.columnWidth || 100 },
+      rules: [],
+    });
+    if (out && checkLuauAst(out).ok) {
+      return { source: out, formatter: 'darklua', applied: out !== source };
+    }
+  } catch {}
+  return { source, formatter: 'none', applied: false };
+}
+
 function countNonEmptyLines(text) {
   let count = 0;
   const lines = text.split('\n');
@@ -169,6 +239,8 @@ module.exports = {
   DEFAULT_DARKLUA_RULES,
   checkLuauAst,
   countNonEmptyLines,
+  resolveStyluaBin,
+  formatLuauCode,
   runDeobfAstPolish,
   runDarkluaClean,
   cleanGarbage,

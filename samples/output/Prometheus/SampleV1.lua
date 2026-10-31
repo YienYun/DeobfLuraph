@@ -1,17 +1,20 @@
+-- Roblox service references
 local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 local runService = game:GetService("RunService")
 local userInputService = game:GetService("UserInputService")
 local httpService = game:GetService("HttpService")
 local localPlayer = players.LocalPlayer
-local v1 = "nebula_sentinel_v2.json"
-local v2 = 8472910452
+local fileName = "nebula_sentinel_v2.json"
+local expectedPlaceId = 8472910452
 
-if game.PlaceId ~= 0 and game.PlaceId ~= v2 then
-  warn(string.format("[Nebula] Unsupported PlaceId: %d (expected %d)", game.PlaceId, v2))
+if game.PlaceId ~= 0 and game.PlaceId ~= expectedPlaceId then
+  warn(
+    string.format("[Nebula] Unsupported PlaceId: %d (expected %d)", game.PlaceId, expectedPlaceId)
+  )
 end
 
-local function f1(p1, p2)
+local function computeHash(p1, p2)
   local v3 = p2 or 2166136261
   local v4 = #p1
 
@@ -23,7 +26,7 @@ local function f1(p1, p2)
   return v3, string.format("%08X", v3), v4
 end
 
-local function f2(p3, p4, p5)
+local function clampValue(p3, p4, p5)
   if p3 < p4 then
     return p4, "clamped_low"
   elseif p3 > p5 then
@@ -33,7 +36,7 @@ local function f2(p3, p4, p5)
   return p3, "exact"
 end
 
-local function f3(...)
+local function packArgs(...)
   local v6 = select("#", ...)
   local v7 = { n = v6 }
 
@@ -44,7 +47,7 @@ local function f3(...)
   return v7, v6
 end
 
-local function f4(p6)
+local function createConfigStore(p6)
   local v8 = {}
   local v9 = 0
   local v10 = {}
@@ -53,8 +56,8 @@ local function f4(p6)
     if type(value) == "table" then
       local v11 = {}
 
-      for key2, value2 in pairs(value) do
-        v11[key2] = value2
+      for key, value in pairs(value) do
+        v11[key] = value
       end
 
       v8[key] = v11
@@ -63,90 +66,97 @@ local function f4(p6)
     end
   end
 
-  local function f5(p7)
+  local function saveFileData(p7)
     if not writefile then
       warn("[Nebula] Executor missing writefile; skipped save (" .. tostring(p7) .. ")")
       return false
     end
 
-    local v12, v13 = pcall(function() return httpService:JSONEncode(v8) end)
+    local ok, result = pcall(function()
+      return httpService:JSONEncode(v8)
+    end)
 
-    if not v12 then
-      warn("[Nebula] Encode failed: " .. tostring(v13))
+    if not ok then
+      warn("[Nebula] Encode failed: " .. tostring(result))
       return false
     end
 
-    local v14, v15 = pcall(writefile, v1, v13)
+    local ok, result4 = pcall(writefile, fileName, result)
 
-    if v14 then
-      local v16, tag, bytes = f1(v13, v9 + 17)
+    if ok then
+      local hash, tag, bytes = computeHash(result, v9 + 17)
       local v17 = #v10 + 1
       v10[v17] = { tag = tag, bytes = bytes, reason = p7 or "manual" }
       v9 = 0
       return true
     end
 
-    warn("[Nebula] Save failed: " .. tostring(v15))
+    warn("[Nebula] Save failed: " .. tostring(result4))
     return false
   end
 
   return {
     load = function()
-      if not (isfile and readfile and isfile(v1)) then
+      if not (isfile and readfile and isfile(fileName)) then
         return false, "no_file"
       end
 
-      local v18, v19 = pcall(function() return httpService:JSONDecode(readfile(v1)) end)
+      local ok, result = pcall(function()
+        return httpService:JSONDecode(readfile(fileName))
+      end)
 
-      if not v18 or type(v19) ~= "table" then
+      if not ok or type(result) ~= "table" then
         return false, "corrupt_json"
       end
 
-      for key3, value3 in pairs(v19) do
-        if v8[key3] ~= nil and type(v8[key3]) == type(value3) then
-          v8[key3] = value3
+      for key, value in pairs(result) do
+        if v8[key] ~= nil and type(v8[key]) == type(value) then
+          v8[key] = value
         end
       end
 
       return true, "loaded"
     end,
-    save = f5,
-    set = function(p8, p9, p10)
-      if v8[p8] == p9 then
-        return false, v8[p8]
+    save = saveFileData,
+    set = function(key, p9, p10)
+      if v8[key] == p9 then
+        return false, v8[key]
       end
 
-      v8[p8] = p9
+      v8[key] = p9
       v9 = v9 + 1
 
       if p10 then
-        f5("set:" .. tostring(p8))
+        saveFileData("set:" .. tostring(key))
       end
 
       return true, p9
     end,
-    get = function(p11) return v8[p11], v9 end,
+    get = function(key)
+      return v8[key], v9
+    end,
     raw = v8,
     history = v10,
   }
 end
 
-local v20 = {}
-v20.__index = v20
+local Scheduler = {}
+Scheduler.__index = Scheduler
 
-function v20.new(p12, p13)
-  local v21 = setmetatable({}, v20)
-  v21.label = p12 or "MainScheduler"
-  v21.maxBudgetMs = p13 or 8.5
-  v21.jobs = {}
-  v21.totalTicks = 0
-  v21.running = false
-  v21.connection = nil
+function Scheduler.new(label, maxBudgetMs)
+  local schedulerObj = setmetatable({}, Scheduler)
+  schedulerObj.label = label or "MainScheduler"
+  schedulerObj.maxBudgetMs = maxBudgetMs or 8.5
+  schedulerObj.jobs = {}
+  schedulerObj.totalTicks = 0
+  schedulerObj.running = false
+  schedulerObj.connection = nil
 
-  return v21
+  return schedulerObj
 end
 
-function v20.register(p14, name, p15, fn)
+function Scheduler.register(p14, name, p15, fn)
+  -- This Source Was Generated by discord.gg/c3xVMnUUBv
   local v22 = {
     name = name,
     interval = math.max(p15 or 0.1, 0.01),
@@ -162,7 +172,7 @@ function v20.register(p14, name, p15, fn)
   return v22
 end
 
-function v20:pruneInactive()
+function Scheduler:pruneInactive()
   local count = 0
 
   for k = #self.jobs, 1, -1 do
@@ -175,43 +185,48 @@ function v20:pruneInactive()
   return count
 end
 
-function v20.step(p16, p17)
-  -- This Source Was Generated by discord.gg/c3xVMnUUBv
-  p16.totalTicks = p16.totalTicks + 1
+function Scheduler.step(target, p17)
+  target.totalTicks = target.totalTicks + 1
   local count2 = 0
 
-  for index, value4 in ipairs(p16.jobs) do
-    if value4.active then
-      value4.elapsed = value4.elapsed + p17
+  for index, job in ipairs(target.jobs) do
+    if job.active then
+      job.elapsed = job.elapsed + p17
 
-      if value4.elapsed >= value4.interval then
-        value4.elapsed = 0
-        value4.runs = value4.runs + 1
+      if job.elapsed >= job.interval then
+        job.elapsed = 0
+        job.runs = job.runs + 1
 
-        local v24, v25 = pcall(value4.fn, value4.runs, p17, p16.totalTicks)
+        local ok, result = pcall(job.fn, job.runs, p17, target.totalTicks)
         count2 = count2 + 1
 
-        if not v24 then
-          warn(string.format(
-            "[Nebula:%s] Job '%s' error: %s", p16.label, value4.name, tostring(v25)
-          ))
+        if not ok then
+          warn(
+            string.format(
+              "[Nebula:%s] Job '%s' error: %s",
+              target.label,
+              job.name,
+              tostring(result)
+            )
+          )
 
-          value4.active = false
-        elseif v25 == false then
-          value4.active = false
+          job.active = false
+        elseif result == false then
+          job.active = false
         end
       end
     end
   end
 
-  if p16.totalTicks % 30 == 0 then
-    p16:pruneInactive()
+  if target.totalTicks % 30 == 0 then
+    target:pruneInactive()
   end
 
   return count2
 end
 
-function v20:start()
+-- Registers Heartbeat signal callback(s)
+function Scheduler:start()
   if self.running then
     return
   end
@@ -227,7 +242,7 @@ function v20:start()
   end)
 end
 
-function v20.stop(p18)
+function Scheduler.stop(p18)
   p18.running = false
 
   if p18.connection then
@@ -254,37 +269,37 @@ local v26 = {
 
 local v27 = {}
 
-local function f6(p19, p20, p21)
-  local v28 = v26[p19]
+local function applyOverrides(key, p20, options)
+  local v28 = v26[key]
 
-  if not v28 or type(p21) ~= "table" then
+  if not v28 or type(options) ~= "table" then
     return 0
   end
 
   local count3 = 0
 
-  for key4, value5 in pairs(p21) do
-    local skipLocked = v28.skipLocked and type(value5) == "table" and value5.Locked == true
+  for key, option in pairs(options) do
+    local skipLocked = v28.skipLocked and type(option) == "table" and option.Locked == true
 
-    if type(value5) == "table" and not skipLocked then
-      for key5, value6 in pairs(v28.overrides) do
+    if type(option) == "table" and not skipLocked then
+      for key2, override in pairs(v28.overrides) do
         if p20 then
-          if value5[key5] ~= nil then
-            v27[key4] = v27[key4] or {}
+          if option[key2] ~= nil then
+            v27[key] = v27[key] or {}
 
-            if v27[key4][key5] == nil then
-              local v29 = v27[key4]
-              v29[key5] = value5[key5]
+            if v27[key][key2] == nil then
+              local v29 = v27[key]
+              v29[key2] = option[key2]
             end
 
-            value5[key5] = value6
+            option[key2] = override
             count3 = count3 + 1
           end
         else
-          local v30 = v27[key4] and v27[key4][key5]
+          local v30 = v27[key] and v27[key][key2]
 
           if v30 ~= nil then
-            value5[key5] = v30
+            option[key2] = v30
             count3 = count3 + 1
           end
         end
@@ -295,16 +310,16 @@ local function f6(p19, p20, p21)
   return count3
 end
 
-local function f7(p22, p23)
-  if not p22 or p22 == localPlayer then
+local function validateTarget(player, p23)
+  if not player or player == localPlayer then
     return false, "self_or_nil"
   end
 
-  if not p23 and localPlayer.Team and p22.Team == localPlayer.Team then
+  if not p23 and localPlayer.Team and player.Team == localPlayer.Team then
     return false, "teammate"
   end
 
-  local character = p22.Character
+  local character = player.Character
 
   if not character then
     return false, "no_char"
@@ -313,14 +328,16 @@ local function f7(p22, p23)
   local humanoid = character:FindFirstChildOfClass("Humanoid")
   local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
 
-  if not (humanoid and humanoidRootPart and character:FindFirstChild("Head") and humanoid.Health > 0) then
+  if
+    not (humanoid and humanoidRootPart and character:FindFirstChild("Head") and humanoid.Health > 0)
+  then
     return false, "dead_or_incomplete"
   end
 
   return true, humanoidRootPart
 end
 
-local function f8(p24, p25)
+local function findNearestPlayer(p24, p25)
   local character2 = localPlayer and localPlayer.Character
   local humanoidRootPart2 = character2 and character2:FindFirstChild("HumanoidRootPart")
 
@@ -331,15 +348,15 @@ local function f8(p24, p25)
   local v31 = nil
   local v32 = p24 or 250
 
-  for index2, value7 in ipairs(players:GetPlayers()) do
-    local v33, v34 = f7(value7, p25)
+  for index, player in ipairs(players:GetPlayers()) do
+    local v33, v34 = validateTarget(player, p25)
 
     if v33 then
       local magnitude = (v34.Position - humanoidRootPart2.Position).Magnitude
 
       if magnitude < v32 then
         v32 = magnitude
-        v31 = value7
+        v31 = player
       end
     end
   end
@@ -347,60 +364,60 @@ local function f8(p24, p25)
   return v31, v32
 end
 
-local function f9(p26, p27, fn2, ...)
-  local v35, v36 = f3(...)
+local function retryWithBackoff(p26, p27, callback, ...)
+  local v35, v36 = packArgs(...)
   local count4 = 0
-  local v37 = 0.05
-  local v38
+  local waitSeconds = 0.05
+  local result
 
   repeat
     count4 = count4 + 1
 
-    local v39, v40 = pcall(function()
+    local ok, result5 = pcall(function()
       if v36 == 0 then
-        return fn2()
+        return callback()
       elseif v36 == 1 then
-        return fn2(v35[1])
+        return callback(v35[1])
       elseif v36 == 2 then
-        return fn2(v35[1], v35[2])
+        return callback(v35[1], v35[2])
       end
 
-      return fn2(unpack(v35, 1, v36))
+      return callback(unpack(v35, 1, v36))
     end)
 
-    if v39 then
-      return true, v40, count4
+    if ok then
+      return true, result5, count4
     end
 
-    v38 = v40
-    v37 = f2(v37 * 1.5, 0.05, 0.5)
+    result = result5
+    waitSeconds = clampValue(waitSeconds * 1.5, 0.05, 0.5)
 
     if task and task.wait then
-      task.wait(v37)
+      task.wait(waitSeconds)
     end
   until count4 >= p27
 
-  warn(string.format("[Nebula] '%s' failed after %d attempts: %s", p26, count4, tostring(v38)))
-  return false, v38, count4
+  warn(string.format("[Nebula] '%s' failed after %d attempts: %s", p26, count4, tostring(result)))
+  return false, result, count4
 end
 
-local function f10(p28, p29, p30)
+local function createInstance(p28, p29, p30)
   local instance = Instance.new(p28)
 
-  for key6, value8 in pairs(p29 or {}) do
-    instance[key6] = value8
+  for key, value in pairs(p29 or {}) do
+    instance[key] = value
   end
 
   if p30 then
-    for key7, value9 in next, p30 do
-      value9.Parent = instance
+    for key, value in next, p30 do
+      value.Parent = instance
     end
   end
 
   return instance
 end
 
-local v41 = f4({
+local configStore = createConfigStore({
   rifleBypass = false,
   meleeBypass = false,
   autoOrbit = false,
@@ -408,14 +425,14 @@ local v41 = f4({
   allowTeam = false,
 })
 
-v41.load()
+configStore.load()
 
-local v42 = v20.new("NebulaCore", 6)
+local nebulaCore = Scheduler.new("NebulaCore", 6)
 local v43 = 0
 local v44 = nil
 
-v42:register("TargetOrbit", 0.016, function(p31, p32)
-  if not v41.get("autoOrbit") then
+nebulaCore:register("TargetOrbit", 0.016, function(p31, p32)
+  if not configStore.get("autoOrbit") then
     v44 = nil
     return true
   end
@@ -427,13 +444,16 @@ v42:register("TargetOrbit", 0.016, function(p31, p32)
     return true
   end
 
-  local v45, v46 = f7(v44, v41.get("allowTeam"))
+  local v45, v46 = validateTarget(v44, configStore.get("allowTeam"))
   local v47 = v45
   local v48 = v46
 
   if not v47 then
-    v44 = f8(f2(v41.get("scanRadius"), 25, 500), v41.get("allowTeam"))
-    local v49, v50 = f7(v44, v41.get("allowTeam"))
+    v44 = findNearestPlayer(
+      clampValue(configStore.get("scanRadius"), 25, 500),
+      configStore.get("allowTeam")
+    )
+    local v49, v50 = validateTarget(v44, configStore.get("allowTeam"))
     v48 = v50
     v47 = v49
   end
@@ -441,7 +461,8 @@ v42:register("TargetOrbit", 0.016, function(p31, p32)
   if v47 and v48 then
     v43 = (v43 + p32 * 4.5) % (math.pi * 2)
 
-    humanoidRootPart3.CFrame = CFrame.new(v48.Position) * CFrame.Angles(0, v43, 0)
+    humanoidRootPart3.CFrame = CFrame.new(v48.Position)
+      * CFrame.Angles(0, v43, 0)
       * CFrame.new(0, 2.5, 6)
 
     humanoidRootPart3.AssemblyLinearVelocity = Vector3.zero
@@ -454,36 +475,37 @@ v42:register("TargetOrbit", 0.016, function(p31, p32)
   return true
 end)
 
-local v51 = gethui and gethui() or localPlayer:WaitForChild("PlayerGui")
-local nebulaSentinelUI = v51:FindFirstChild("NebulaSentinelUI")
+-- Bootstrap executor global environment and UI container
+local hiddenGui = gethui and gethui() or localPlayer:WaitForChild("PlayerGui")
+local nebulaSentinelUI = hiddenGui:FindFirstChild("NebulaSentinelUI")
 
 if nebulaSentinelUI then
   nebulaSentinelUI:Destroy()
 end
 
-local v52 = f10("ScreenGui", {
+local nebulaSentinelUI = createInstance("ScreenGui", {
   Name = "NebulaSentinelUI",
   ResetOnSpawn = false,
   ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
-  Parent = v51,
+  Parent = hiddenGui,
 })
 
-local v53 = "Frame"
+local frameClass = "Frame"
 
 local v54 = {
   Size = UDim2.new(0, 240, 0, 280),
   Position = UDim2.new(0, 48, 0, 140),
   BackgroundColor3 = Color3.fromRGB(20, 22, 28),
   BorderSizePixel = 0,
-  Parent = v52,
+  Parent = nebulaSentinelUI,
 }
 
-local v55 = f10(v53, v54, {
-  f10("UICorner", { CornerRadius = UDim.new(0, 12) }),
-  f10("UIStroke", { Color = Color3.fromRGB(62, 68, 82), Thickness = 1 }),
+local frame = createInstance(frameClass, v54, {
+  createInstance("UICorner", { CornerRadius = UDim.new(0, 12) }),
+  createInstance("UIStroke", { Color = Color3.fromRGB(62, 68, 82), Thickness = 1 }),
 })
 
-local v56 = f10("TextLabel", {
+local textLabel = createInstance("TextLabel", {
   Size = UDim2.new(1, -20, 0, 32),
   Position = UDim2.new(0, 10, 0, 0),
   BackgroundTransparency = 1,
@@ -492,21 +514,24 @@ local v56 = f10("TextLabel", {
   Font = Enum.Font.Code,
   TextSize = 13,
   TextXAlignment = Enum.TextXAlignment.Left,
-  Parent = v55,
+  Parent = frame,
 })
 
-local parent = f10("Frame", {
+local parent = createInstance("Frame", {
   Size = UDim2.new(1, -16, 1, -44),
   Position = UDim2.new(0, 8, 0, 36),
   BackgroundTransparency = 1,
-  Parent = v55,
+  Parent = frame,
 }, {
-  f10("UIListLayout", { Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder }),
+  createInstance(
+    "UIListLayout",
+    { Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder }
+  ),
 })
 
 local items = {}
 
-local v57, v58 = f9("LoadItemRegistry", 2, function()
+local v57, v58 = retryWithBackoff("LoadItemRegistry", 2, function()
   local weaponRegistry = replicatedStorage:FindFirstChild("Modules")
     and replicatedStorage.Modules:FindFirstChild("WeaponRegistry")
 
@@ -517,25 +542,38 @@ if v57 and type(v58) == "table" then
   items = v58.Items or v58
 end
 
-for index3, value10 in ipairs({
-  { "Rifle Fast-Fire", "rifleBypass", function(p33) f6("Rifle", p33, items) end },
-  { "Melee Cooldown", "meleeBypass", function(p34) f6("Melee", p34, items) end },
+for index, value in ipairs({
   {
-    "Auto Orbit Nearest", "autoOrbit",
+    "Rifle Fast-Fire",
+    "rifleBypass",
+    function(p33)
+      applyOverrides("Rifle", p33, items)
+    end,
+  },
+  {
+    "Melee Cooldown",
+    "meleeBypass",
+    function(p34)
+      applyOverrides("Melee", p34, items)
+    end,
+  },
+  {
+    "Auto Orbit Nearest",
+    "autoOrbit",
     function(p35)
       if p35 then
-        v42:start()
+        nebulaCore:start()
       end
     end,
   },
   { "Include Teammates", "allowTeam", function(p36) end },
 }) do
-  local v59 = value10[1]
-  local v60 = value10[2]
-  local v61 = value10[3]
-  local v62 = v41.get(v60) == true
+  local v59 = value[1]
+  local v60 = value[2]
+  local v61 = value[3]
+  local v62 = configStore.get(v60) == true
 
-  local v63 = f10("TextButton", {
+  local textButton = createInstance("TextButton", {
     Size = UDim2.new(1, 0, 0, 32),
     BackgroundColor3 = v62 and Color3.fromRGB(42, 62, 54) or Color3.fromRGB(30, 33, 42),
     BorderSizePixel = 0,
@@ -544,18 +582,18 @@ for index3, value10 in ipairs({
     TextColor3 = v62 and Color3.fromRGB(160, 240, 190) or Color3.fromRGB(175, 180, 192),
     Font = Enum.Font.Code,
     TextSize = 12,
-    LayoutOrder = index3,
+    LayoutOrder = index,
     Parent = parent,
-  }, { f10("UICorner", { CornerRadius = UDim.new(0, 8) }) })
+  }, { createInstance("UICorner", { CornerRadius = UDim.new(0, 8) }) })
 
-  v63.MouseButton1Click:Connect(function()
+  textButton.MouseButton1Click:Connect(function()
     v62 = not v62
 
-    v63.BackgroundColor3 = v62 and Color3.fromRGB(42, 62, 54) or Color3.fromRGB(30, 33, 42)
-    v63.TextColor3 = v62 and Color3.fromRGB(160, 240, 190) or Color3.fromRGB(175, 180, 192)
-    v63.Text = v59 .. (v62 and " [ON]" or " [OFF]")
+    textButton.BackgroundColor3 = v62 and Color3.fromRGB(42, 62, 54) or Color3.fromRGB(30, 33, 42)
+    textButton.TextColor3 = v62 and Color3.fromRGB(160, 240, 190) or Color3.fromRGB(175, 180, 192)
+    textButton.Text = v59 .. (v62 and " [ON]" or " [OFF]")
 
-    v41.set(v60, v62, true)
+    configStore.set(v60, v62, true)
     v61(v62)
   end)
 
@@ -568,42 +606,52 @@ local v64 = false
 local position = nil
 local position2 = nil
 
-v56.InputBegan:Connect(function(input)
-  if input.UserInputType == Enum.UserInputType.MouseButton1
-    or input.UserInputType == Enum.UserInputType.Touch then
+textLabel.InputBegan:Connect(function(input)
+  if
+    input.UserInputType == Enum.UserInputType.MouseButton1
+    or input.UserInputType == Enum.UserInputType.Touch
+  then
     v64 = true
     position = input.Position
-    position2 = v55.Position
+    position2 = frame.Position
   end
 end)
 
 userInputService.InputEnded:Connect(function(input2)
-  if input2.UserInputType == Enum.UserInputType.MouseButton1
-    or input2.UserInputType == Enum.UserInputType.Touch then
+  if
+    input2.UserInputType == Enum.UserInputType.MouseButton1
+    or input2.UserInputType == Enum.UserInputType.Touch
+  then
     v64 = false
   end
 end)
 
 userInputService.InputChanged:Connect(function(input3)
-  if v64
-    and (input3.UserInputType == Enum.UserInputType.MouseMovement
-      or input3.UserInputType == Enum.UserInputType.Touch) then
+  if
+    v64
+    and (
+      input3.UserInputType == Enum.UserInputType.MouseMovement
+      or input3.UserInputType == Enum.UserInputType.Touch
+    )
+  then
     local v65 = input3.Position - position
 
-    v55.Position = UDim2.new(
-      position2.X.Scale, position2.X.Offset + v65.X, position2.Y.Scale,
+    frame.Position = UDim2.new(
+      position2.X.Scale,
+      position2.X.Offset + v65.X,
+      position2.Y.Scale,
       position2.Y.Offset + v65.Y
     )
   end
 end)
 
-userInputService.InputBegan:Connect(function(input4, p37)
-  if not p37 and input4.KeyCode == Enum.KeyCode.RightShift then
-    v52.Enabled = not v52.Enabled
+userInputService.InputBegan:Connect(function(input4, gameProcessedEvent)
+  if not gameProcessedEvent and input4.KeyCode == Enum.KeyCode.RightShift then
+    nebulaSentinelUI.Enabled = not nebulaSentinelUI.Enabled
   end
 end)
 
-v42:start()
-local v66, v67, v68 = f1("NebulaSentinelReady", 42)
-print(string.format("[Nebula] Loaded OK | sig=%s (%d, len=%d)", v67, v66, v68))
+nebulaCore:start()
+local hash, v67, v68 = computeHash("NebulaSentinelReady", 42)
+print(string.format("[Nebula] Loaded OK | sig=%s (%d, len=%d)", v67, hash, v68))
 print("Deobf By Zed")

@@ -63,6 +63,24 @@ func (f *File) inferFuncBodyNamed(s, e int, nameOf func(int) string) string {
 		return "copyToClipboard"
 	case info.methods["GetChildren"] && info.fields["Magnitude"] && info.firstChildArg != "":
 		return "findNearest" + pascal(info.firstChildArg)
+	case info.methods["GetPlayers"] && info.fields["Magnitude"]:
+		return "findNearestPlayer"
+	case (info.fields["HumanoidRootPart"] || info.childArgs["HumanoidRootPart"]) && info.fields["Health"] && !info.hasLoop:
+		return "validateTarget"
+	case info.dotted["Instance.new"] && len(info.uiClasses) == 0:
+		return "createInstance"
+	case info.dotted["string.byte"] && info.hasLoop && !info.methods["gsub"]:
+		return "computeHash"
+	case info.globals["select"] && info.hasLoop && len(info.methods) == 0 && len(info.dotted) == 0:
+		return "packArgs"
+	case info.hasRepeat && info.hasPcall && info.dotted["task.wait"]:
+		return "retryWithBackoff"
+	case info.returnedKeys["load"] && info.returnedKeys["save"] && info.returnedKeys["get"] && info.returnedKeys["set"]:
+		return "createConfigStore"
+	case info.fields["overrides"] && info.hasLoop && info.globals["pairs"]:
+		return "applyOverrides"
+	case info.hasMinMaxClamp && !info.hasLoop && len(info.methods) == 0 && len(info.globals) == 0 && len(info.dotted) == 0:
+		return "clampValue"
 	case info.methods["PivotTo"] && len(info.methods) <= 3:
 		return "pivotCharacterTo"
 	case info.methods["MoveTo"] && len(info.methods) <= 3:
@@ -100,22 +118,26 @@ func (f *File) inferFuncBodyNamed(s, e int, nameOf func(int) string) string {
 }
 
 type spanSummary struct {
-	methods       map[string]bool
-	methodOrder   []string
-	globals       map[string]bool
-	dotted        map[string]bool
-	fields        map[string]bool
-	services      []string
-	uiClasses     []string
-	events        []string
-	remoteName    string
-	firstChildArg string
-	waitTarget    string
-	wrappedFn     string
-	wrapperPrefix string
-	uiWidgetName  string
-	hasLoop       bool
-	hasPcall      bool
+	methods        map[string]bool
+	methodOrder    []string
+	globals        map[string]bool
+	dotted         map[string]bool
+	fields         map[string]bool
+	childArgs      map[string]bool
+	returnedKeys   map[string]bool
+	services       []string
+	uiClasses      []string
+	events         []string
+	remoteName     string
+	firstChildArg  string
+	waitTarget     string
+	wrappedFn      string
+	wrapperPrefix  string
+	uiWidgetName   string
+	hasLoop        bool
+	hasRepeat      bool
+	hasPcall       bool
+	hasMinMaxClamp bool
 }
 
 func (f *File) scanSpan(s, e int) spanSummary {
@@ -124,10 +146,12 @@ func (f *File) scanSpan(s, e int) spanSummary {
 
 func (f *File) scanSpanNamed(s, e int, resolveName func(int) string) spanSummary {
 	out := spanSummary{
-		methods: map[string]bool{},
-		globals: map[string]bool{},
-		dotted:  map[string]bool{},
-		fields:  map[string]bool{},
+		methods:      map[string]bool{},
+		globals:      map[string]bool{},
+		dotted:       map[string]bool{},
+		fields:       map[string]bool{},
+		childArgs:    map[string]bool{},
+		returnedKeys: map[string]bool{},
 	}
 	seenSvc := map[string]bool{}
 	seenUI := map[string]bool{}
@@ -164,6 +188,43 @@ func (f *File) scanSpanNamed(s, e int, resolveName func(int) string) spanSummary
 				} else if tk.Text == "for" || tk.Text == "while" {
 					out.hasLoop = true
 				}
+			case "repeat":
+				if fnDepth == 0 {
+					out.hasLoop = true
+					out.hasRepeat = true
+				}
+			case "elseif":
+				if fnDepth == 0 {
+					// Check `< ... elseif ... >` clamp pattern
+					hasLt, hasGt := false, false
+					for m := s; m < e; m++ {
+						if f.Toks[m].Kind == Op && f.Toks[m].Text == "<" {
+							hasLt = true
+						} else if f.Toks[m].Kind == Op && f.Toks[m].Text == ">" {
+							hasGt = true
+						}
+					}
+					if hasLt && hasGt {
+						out.hasMinMaxClamp = true
+					}
+				}
+			case "return":
+				if fnDepth == 0 && i+1 < e && f.Toks[i+1].Kind == Op && f.Toks[i+1].Text == "{" {
+					endTbl := f.matchingClose(i+1, e)
+					if endTbl > i+1 {
+						tblDepth := 0
+						for m := i + 2; m < endTbl; m++ {
+							mt := f.Toks[m]
+							if mt.Kind == Op && (mt.Text == "{" || mt.Text == "(" || mt.Text == "[") {
+								tblDepth++
+							} else if mt.Kind == Op && (mt.Text == "}" || mt.Text == ")" || mt.Text == "]") {
+								tblDepth--
+							} else if tblDepth == 0 && mt.Kind == Name && m+1 < endTbl && f.Toks[m+1].Text == "=" {
+								out.returnedKeys[mt.Text] = true
+							}
+						}
+					}
+				}
 			case "end":
 				if fnDepth > 0 {
 					fnDepth--
@@ -187,8 +248,11 @@ func (f *File) scanSpanNamed(s, e int, resolveName func(int) string) spanSummary
 				seenSvc[arg] = true
 				out.services = append(out.services, arg)
 			}
-			if childFinders[m] && arg != "" && out.firstChildArg == "" {
-				out.firstChildArg = arg
+			if childFinders[m] && arg != "" {
+				out.childArgs[arg] = true
+				if out.firstChildArg == "" {
+					out.firstChildArg = arg
+				}
 			}
 			if (m == "FireServer" || m == "InvokeServer") && out.remoteName == "" && i >= 1 && f.Toks[i-1].Kind == Name {
 				out.remoteName = resolveName(i - 1)

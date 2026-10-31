@@ -178,6 +178,16 @@ def polish(text):
         import names
         try:
             text = names.rename_text(text)
+            # A second pass sees the field names the first one invented, so a
+            # local that only copies one can take that name (`local state =
+            # context.state` instead of `local value5 = ...`). It settles here:
+            # a third pass is byte-identical, so stop as soon as one changes
+            # nothing.
+            for _ in range(2):
+                again = names.rename_text(text)
+                if again == text:
+                    break
+                text = again
         except Exception as ex:  
             print("[!] naming pass failed: %s" % ex, file=sys.stderr)
     try:

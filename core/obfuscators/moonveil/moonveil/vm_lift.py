@@ -1859,11 +1859,12 @@ def _extract_21x_vm_bundle(raw: bytes) -> dict | None:
         return None
     u2 = raw.decode("latin1")
     ret_idx = u2.find("return(")
-    m_end = re.search(r"\):([A-Za-z_]\w*)\((\{[^\}]+\}),\"([A-Za-z_]\w*)\",\.\.\.\)\s*$", u2)
+    tail_off = max(0, len(u2) - 65536)
+    m_end = re.search(r"\):([A-Za-z_]\w*)\((\{[^\}]+\}),\"([A-Za-z_]\w*)\",\.\.\.\)\s*$", u2[tail_off:])
     if ret_idx < 0 or not m_end:
         return None
     boot_nm, names_lit, entry_nm = m_end.group(1), m_end.group(2), m_end.group(3)
-    body_raw = u2[ret_idx + 7 : m_end.start()]
+    body_raw = u2[ret_idx + 7 : tail_off + m_end.start()]
 
     probe = f"""
 local regbank_set = {{}}
@@ -3836,7 +3837,7 @@ def _fold_mv21_crypto_intrinsics(stmts: list[dict], dec: Any, raw: bytes = b"") 
 def lift_moonveil_vm(raw: bytes) -> bytes | None:
     """Auto-detect MoonVeil 2.0.x vs 2.1.x Bytecode VM and lift to clean Lua."""
     head = raw[:200].decode("latin1", errors="ignore")
-    tail = raw[-1200:].decode("latin1", errors="ignore")
+    tail = raw[-32768:].decode("latin1", errors="ignore")
     if "MoonVeil 2.1." in head or re.search(r"\):[A-Za-z_]\w*\(\{[^\}]+\},\"[A-Za-z_]\w*\",\.\.\.\)\s*$", tail):
         return lift_moonveil_21x_vm(raw)
     return lift_moonveil_20x_vm(raw)

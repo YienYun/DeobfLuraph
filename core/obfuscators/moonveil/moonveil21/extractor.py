@@ -25,9 +25,11 @@ REVIEWED = {
 
 
 def parser_source(raw):
-    if b"MoonVeil 2.1.0" not in raw[:256]:
+    if b"MoonVeil 2.1." not in raw[:256] and not re.search(
+        rb"\):[A-Za-z_]\w*\(\{[^\}]+\},\"[A-Za-z_]\w*\",\.\.\.\)\s*$", raw[-32768:]
+    ):
         raise Unsupported(
-            "This profile expects the supplied MoonVeil 2.1.0 wrapper family"
+            "This profile expects the MoonVeil 2.1.x wrapper family"
         )
     text = normalize(raw).decode("latin1")
     token = re.compile(

@@ -98,10 +98,10 @@ class Broke(Exception):
 
 
 class Evaluator:
-    def __init__(self, max_steps=50000000, seconds=120):
+    def __init__(self, max_steps=250000000, seconds=180):
         self.steps, self.max_steps = 0, max_steps
         self.deadline = time.monotonic() + seconds
-        self.depth, self.max_string, self.allocations = 0, 2 * 1024 * 1024, 0
+        self.depth, self.max_string, self.allocations = 0, 16 * 1024 * 1024, 0
         self.call_hook = None
         self.env = Env()
         self.runtime = RuntimeEnvironment()
@@ -116,7 +116,7 @@ class Evaluator:
 
     def table(self):
         self.allocations += 1
-        if self.allocations > 100000:
+        if self.allocations > 2000000:
             raise Unsupported("Decoder table allocation budget exceeded")
         return Table()
 

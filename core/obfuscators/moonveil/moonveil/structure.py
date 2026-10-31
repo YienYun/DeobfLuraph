@@ -95,6 +95,21 @@ class Structurer:
             n: [t for t in targets if (n, t) not in self.backs] or [EXIT]
             for n, targets in self.succ.items()
         }
+        has_back = {n for (n, _) in self.backs}
+        only_returns = {n: ("return" in self.nodes[n]["term"]) for n in all_nodes}
+        for _ in range(len(all_nodes) + 2):
+            changed = False
+            for n in all_nodes:
+                if (
+                    not only_returns[n]
+                    and n not in has_back
+                    and self.succ[n]
+                    and all(only_returns.get(t, False) for t in self.succ[n])
+                ):
+                    only_returns[n] = True
+                    changed = True
+            if not changed:
+                break
         pd = postdom(all_nodes, cut)
         self.exits = {}
         for head, members in self.loops.items():
@@ -102,7 +117,8 @@ class Structurer:
             if not exits:
                 self.exits[head] = EXIT
                 continue
-            common = set.intersection(*(pd[t] for t in exits)) - members
+            use_exits = {t for t in exits if not only_returns.get(t, False)} or exits
+            common = set.intersection(*(pd[t] for t in use_exits)) - members
             if not common:
                 raise Unsupported("Loop has no representable continuation")
             self.exits[head] = max(common, key=lambda n: len(pd[n]))

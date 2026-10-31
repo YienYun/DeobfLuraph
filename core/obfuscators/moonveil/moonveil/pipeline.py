@@ -220,7 +220,7 @@ def reconstruct(decoded):
     try:
         from .beautify import beautify_reconstructed
         pretty = beautify_reconstructed(selected, entry_node)
-        if pretty is not None and len(pretty) <= 2 * 1024 * 1024:
+        if pretty is not None and len(pretty) <= 32 * 1024 * 1024:
             return pretty, graphs, counts
     except Exception:
         pass
@@ -244,14 +244,14 @@ def reconstruct(decoded):
         lines.append("")
     entry_node["inParens"] = True
     lines.append("return " + expr(entry_node) + "(" + ctx + ", ...)")
-    source = ("\n".join(lines) + "\n").encode("ascii")
-    if len(source) > 2 * 1024 * 1024:
+    source = ("\n".join(lines) + "\n").encode("utf-8")
+    if len(source) > 32 * 1024 * 1024:
         raise Unsupported("Recovered source exceeds size limit")
     parse(source)
     return source, graphs, counts
 
 
-def process(raw, mode="deobfuscate", seconds=120, max_steps=50000000):
+def process(raw, mode="deobfuscate", seconds=180, max_steps=250000000):
     report = {
         "tool": "moonveil-toolkit",
         "tool_version": "0.2.0",

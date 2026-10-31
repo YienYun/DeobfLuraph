@@ -9,6 +9,7 @@ idiomatic, human-readable Lua/Luau while preserving runtime behavior.
 from __future__ import annotations
 import copy
 import re
+from pathlib import Path
 from typing import Any
 from .front import parse, quote, lua_bytes, walk
 
@@ -1000,6 +1001,34 @@ def _count_ident_uses(nodes, target: str) -> int:
     return c
 
 
+def _count_ident_uses_map(nodes) -> dict[str, int]:
+    out: dict[str, int] = {}
+
+    def rec(n):
+        if isinstance(n, dict):
+            t = n.get("type")
+            if t == "Identifier":
+                nm = n.get("name")
+                if nm is not None:
+                    out[nm] = out.get(nm, 0) + 1
+                return
+            if t == "MemberExpression":
+                rec(n["base"])
+                return
+            if t == "TableKeyString":
+                rec(n["value"])
+                return
+            for k, v in n.items():
+                if k not in ("range", "loc"):
+                    rec(v)
+        elif isinstance(n, list):
+            for item in n:
+                rec(item)
+
+    rec(nodes)
+    return out
+
+
 def _subst_ident_in_expr(node, target: str, replacement: dict):
     if isinstance(node, list):
         return [_subst_ident_in_expr(v, target, replacement) for v in node]
@@ -1010,7 +1039,9 @@ def _subst_ident_in_expr(node, target: str, replacement: dict):
         return copy.deepcopy(replacement)
     if t == "FunctionDeclaration":
         if any(p.get("type") == "Identifier" and p["name"] == target for p in node.get("parameters", [])):
-            return copy.deepcopy(node)
+            return node
+        if _count_ident_uses(node["body"], target) == 0:
+            return node
         return {
             **node,
             "body": _subst_ident_in_block(node["body"], target, replacement),
@@ -1139,18 +1170,64 @@ def _expr_has_table_read(x: dict) -> bool:
 
 
 def _find_captured_vars(fn_body: list[dict]) -> set[str]:
-    """Variables referenced inside nested FunctionDeclarations."""
-    captured = set()
-    for s in fn_body:
-        for n in walk(s):
-            if isinstance(n, dict) and n.get("type") == "FunctionDeclaration":
-                own = {p["name"] for p in n.get("parameters", []) if p["type"] == "Identifier"}
-                for sub in walk(n["body"]):
-                    if isinstance(sub, dict) and sub.get("type") == "LocalStatement":
-                        own.update(v["name"] for v in sub["variables"])
-                for sub in walk(n["body"]):
-                    if isinstance(sub, dict) and sub.get("type") == "Identifier" and sub["name"] not in own and sub["name"] not in LUA_GLOBALS:
-                        captured.add(sub["name"])
+    """Variables referenced as free variables inside nested FunctionDeclarations (O(N) bottom-up)."""
+    captured: set[str] = set()
+
+    def fn_free_vars(fn_node: dict) -> set[str]:
+        own = {p["name"] for p in fn_node.get("parameters", []) if p.get("type") == "Identifier"}
+        used: set[str] = set()
+
+        def scan(x):
+            if isinstance(x, list):
+                for item in x:
+                    scan(item)
+                return
+            if not isinstance(x, dict):
+                return
+            t = x.get("type")
+            if t == "FunctionDeclaration":
+                used.update(fn_free_vars(x))
+                return
+            if t == "LocalStatement":
+                own.update(v["name"] for v in x.get("variables", []) if v.get("type") == "Identifier")
+            elif t == "ForGenericStatement":
+                own.update(v["name"] for v in x.get("variables", []) if v.get("type") == "Identifier")
+            elif t == "ForNumericStatement":
+                if x.get("variable", {}).get("type") == "Identifier":
+                    own.add(x["variable"]["name"])
+            if t == "Identifier":
+                nm = x.get("name")
+                if nm and nm not in LUA_GLOBALS:
+                    used.add(nm)
+                return
+            if t == "MemberExpression":
+                scan(x["base"])
+                return
+            if t == "TableKeyString":
+                scan(x["value"])
+                return
+            for k, v in x.items():
+                if k not in ("range", "loc"):
+                    scan(v)
+
+        scan(fn_node.get("body", []))
+        free = used - own
+        captured.update(free)
+        return free
+
+    def walk_top(x):
+        if isinstance(x, list):
+            for item in x:
+                walk_top(item)
+        elif isinstance(x, dict):
+            if x.get("type") == "FunctionDeclaration":
+                fn_free_vars(x)
+                return
+            for k, v in x.items():
+                if k not in ("range", "loc"):
+                    walk_top(v)
+
+    walk_top(fn_body)
     return captured
 
 
@@ -1191,6 +1268,8 @@ def _fold_method_calls(node):
     if isinstance(node, list):
         return [_fold_method_calls(v) for v in node]
     if not isinstance(node, dict):
+        return node
+    if node.get("type") == "FunctionDeclaration":
         return node
     out = {k: _fold_method_calls(v) for k, v in node.items()}
 
@@ -1621,10 +1700,33 @@ def _fold_block_pass(
     fn_occ: dict[str, int],
     fresh_fn,
 ) -> list[dict]:
-    cur = copy.deepcopy(stmts)
+    cur = list(stmts)
     for _ in range(8):
         changed = False
         new_cur = []
+        stmt_uses = [_count_ident_uses_map(st) for st in cur]
+        suffix_uses: dict[str, int] = {}
+        for m in stmt_uses[1:]:
+            for k_nm, cnt in m.items():
+                suffix_uses[k_nm] = suffix_uses.get(k_nm, 0) + cnt
+
+        def update_tail_stmt(j: int, new_st: dict):
+            old_m = stmt_uses[j]
+            for k_nm, cnt in old_m.items():
+                suffix_uses[k_nm] = suffix_uses.get(k_nm, 0) - cnt
+            cur[j] = new_st
+            new_m = _count_ident_uses_map(new_st)
+            stmt_uses[j] = new_m
+            for k_nm, cnt in new_m.items():
+                suffix_uses[k_nm] = suffix_uses.get(k_nm, 0) + cnt
+
+        def step_idx(cur_i: int) -> int:
+            nxt_i = cur_i + 1
+            if nxt_i < len(stmt_uses):
+                for k_nm, cnt in stmt_uses[nxt_i].items():
+                    suffix_uses[k_nm] = suffix_uses.get(k_nm, 0) - cnt
+            return nxt_i
+
         idx = 0
         while idx < len(cur):
             s = cur[idx]
@@ -1648,16 +1750,16 @@ def _fold_block_pass(
                     and total_writes.get(src_nm, 99) == 1
                     and fn_occ.get(src_nm, 0) == 2
                     and any(v["name"] == src_nm for v in s["variables"])
-                    and _count_ident_uses(cur[idx + 1 :], src_nm) == 1
+                    and suffix_uses.get(src_nm, 0) == 1
                 ):
                     ns = copy.deepcopy(s)
                     ns["variables"] = [copy.deepcopy(dst_id) if v["name"] == src_nm else v for v in ns["variables"]]
                     if cur[idx + 1]["type"] == "LocalStatement":
                         ns["type"] = "LocalStatement"
-                    cur[idx + 1] = ns
+                    update_tail_stmt(idx + 1, ns)
                     fn_occ[src_nm] = 0
                     changed = True
-                    idx += 1
+                    idx = step_idx(idx)
                     continue
 
             if (
@@ -1669,11 +1771,10 @@ def _fold_block_pass(
             ):
                 vname = s["variables"][0]["name"]
                 rhs = s["init"][0]
-                tail = cur[idx + 1 :]
-                uses = _count_ident_uses(tail, vname)
+                uses = suffix_uses.get(vname, 0)
                 # AIRTIGHT INVARIANT: `all_in_slice` is True iff 100% of occurrences of `vname` in the ENTIRE function
                 # are `s.variables[0]` (1) + `tail` (`uses`)!
-                all_in_slice = (_count_ident_uses(rhs, vname) == 0) and (fn_occ.get(vname, -1) == 1 + uses)
+                all_in_slice = (stmt_uses[idx].get(vname, 0) == 1) and (fn_occ.get(vname, -1) == 1 + uses)
 
                 # Dead initial write overwrite: `local v = pure_init; ... (0 uses of v) ...; v = real_rhs` in same block!
                 if (
@@ -1692,14 +1793,14 @@ def _fold_block_pass(
                         ):
                             next_wr = k2
                             break
-                        if _count_ident_uses(sk2, vname) > 0:
+                        if stmt_uses[k2].get(vname, 0) > 0:
                             break
                     if next_wr is not None:
                         # Drop `local v = dead_init` and promote `v = real_rhs` to `local v = real_rhs`!
-                        cur[next_wr] = {**cur[next_wr], "type": "LocalStatement"}
+                        update_tail_stmt(next_wr, {**cur[next_wr], "type": "LocalStatement"})
                         fn_occ[vname] = fn_occ.get(vname, 1) - 1
                         changed = True
-                        idx += 1
+                        idx = step_idx(idx)
                         continue
 
                 # 0b. Adjacent alias merge: `[local] v1 = <ANY rhs>; [local] v2 = v1` where `all_in_slice` & `uses == 1`!
@@ -1708,19 +1809,19 @@ def _fold_block_pass(
                     and vname not in non_split_vars
                     and total_writes.get(vname, 99) == 1
                     and uses == 1
-                    and tail
-                    and tail[0]["type"] in ("AssignmentStatement", "LocalStatement")
-                    and len(tail[0]["variables"]) == 1
-                    and len(tail[0]["init"]) == 1
-                    and tail[0]["variables"][0]["type"] == "Identifier"
-                    and _is_ident(tail[0]["init"][0], vname)
+                    and idx + 1 < len(cur)
+                    and cur[idx + 1]["type"] in ("AssignmentStatement", "LocalStatement")
+                    and len(cur[idx + 1]["variables"]) == 1
+                    and len(cur[idx + 1]["init"]) == 1
+                    and cur[idx + 1]["variables"][0]["type"] == "Identifier"
+                    and _is_ident(cur[idx + 1]["init"][0], vname)
                 ):
-                    merged = copy.deepcopy(tail[0])
+                    merged = copy.deepcopy(cur[idx + 1])
                     merged["init"] = [copy.deepcopy(rhs)]
-                    cur[idx + 1] = merged
+                    update_tail_stmt(idx + 1, merged)
                     fn_occ[vname] = 0
                     changed = True
-                    idx += 1
+                    idx = step_idx(idx)
                     continue
 
                 # 0c. Immutable alias of parameter / loop-var (`local __cell = param` where `all_in_slice` & neither is ever mutated!):
@@ -1730,12 +1831,50 @@ def _fold_block_pass(
                     and deep_writes.get(vname, 99) == 1
                     and deep_writes.get(rhs["name"], 0) == 0
                 ):
-                    cur[idx + 1 :] = _subst_ident_in_block(tail, vname, rhs)
+                    for j in range(idx + 1, len(cur)):
+                        if stmt_uses[j].get(vname, 0) > 0:
+                            update_tail_stmt(j, _subst_ident_in_block([cur[j]], vname, rhs)[0])
                     fn_occ[rhs["name"]] = fn_occ.get(rhs["name"], 0) + uses - 1
                     fn_occ[vname] = 0
                     changed = True
-                    idx += 1
+                    idx = step_idx(idx)
                     continue
+
+                # Straight-line literal copy propagation (`idx = 1; ...; step = idx` -> `step = 1` before any loop/write to `idx`)
+                if _is_literal(rhs) and vname not in non_split_vars:
+                    for k_fw in range(idx + 1, len(cur)):
+                        st_fw = cur[k_fw]
+                        if (
+                            st_fw["type"] in ("AssignmentStatement", "LocalStatement")
+                            and len(st_fw["variables"]) == 1
+                            and len(st_fw.get("init", [])) == 1
+                            and st_fw["variables"][0]["type"] == "Identifier"
+                            and st_fw["variables"][0]["name"] != vname
+                            and _is_ident(st_fw["init"][0], vname)
+                        ):
+                            update_tail_stmt(k_fw, {**st_fw, "init": [copy.deepcopy(rhs)]})
+                            fn_occ[vname] = fn_occ.get(vname, 1) - 1
+                            uses = suffix_uses.get(vname, 0)
+                            all_in_slice = (stmt_uses[idx].get(vname, 0) == 1) and (fn_occ.get(vname, -1) == 1 + uses)
+                            changed = True
+                            continue
+                        # Stop scanning forward if `st_fw` can write `vname` or contains a loop/closure referencing `vname`
+                        if st_fw["type"] not in ("AssignmentStatement", "LocalStatement", "CallStatement"):
+                            break
+                        if any(
+                            isinstance(n_w, dict)
+                            and n_w.get("type") in ("AssignmentStatement", "LocalStatement")
+                            and any(vw.get("type") == "Identifier" and vw.get("name") == vname for vw in n_w.get("variables", []))
+                            for n_w in walk(st_fw)
+                        ):
+                            break
+                        if any(
+                            isinstance(n_fn, dict)
+                            and n_fn.get("type") == "FunctionDeclaration"
+                            and _count_ident_uses(n_fn, vname) > 0
+                            for n_fn in walk(st_fw)
+                        ):
+                            break
 
                 is_single_def = all_in_slice and (total_writes.get(vname, 99) == 1)
                 if is_single_def and vname not in non_split_vars:
@@ -1743,7 +1882,7 @@ def _fold_block_pass(
                     if uses == 0 and _is_pure_expr(rhs):
                         fn_occ[vname] = 0
                         changed = True
-                        idx += 1
+                        idx = step_idx(idx)
                         continue
 
                     # Multi-use copy/constant propagation (`x = literal` or `x = another_single_def_var` or `x = Global.Member.Chain`)
@@ -1757,23 +1896,25 @@ def _fold_block_pass(
                     )
                     is_copy_of_ssa = rhs["type"] == "Identifier" and deep_writes.get(rhs["name"], 99) <= 1 and rhs["name"] not in non_split_vars
                     if uses >= 1 and (_is_literal(rhs) or is_immutable_global_chain or is_copy_of_ssa):
-                        cur[idx + 1 :] = _subst_ident_in_block(tail, vname, rhs)
+                        for j in range(idx + 1, len(cur)):
+                            if stmt_uses[j].get(vname, 0) > 0:
+                                update_tail_stmt(j, _subst_ident_in_block([cur[j]], vname, rhs)[0])
                         fn_occ[vname] = 0
                         for rv in _reads_of(rhs):
                             fn_occ[rv] = fn_occ.get(rv, 0) + uses - 1
                         changed = True
-                        idx += 1
+                        idx = step_idx(idx)
                         continue
 
                     # Single-use propagation (ONLY when `is_single_def`!)
                     if is_single_def and uses == 1:
                         rhs_vars = _reads_of(rhs) | {vname}
                         has_tbl = _expr_has_table_read(rhs)
-                        target_k = next((k for k, st in enumerate(tail) if _count_ident_uses(st, vname) > 0), None)
-                        if target_k is not None:
+                        target_j = next((j for j in range(idx + 1, len(cur)) if stmt_uses[j].get(vname, 0) > 0), None)
+                        if target_j is not None:
                             if _is_pure_expr(rhs):
                                 safe = True
-                                for mid in tail[:target_k]:
+                                for mid in cur[idx + 1 : target_j]:
                                     if has_tbl:
                                         if _stmt_has_side_effect_or_writes(mid, rhs_vars):
                                             safe = False
@@ -1789,39 +1930,75 @@ def _fold_block_pass(
                                         if written & rhs_vars:
                                             safe = False
                                             break
-                                target_stmt = tail[target_k]
-                                if safe and target_stmt["type"] in ("WhileStatement", "RepeatStatement", "ForGenericStatement", "ForNumericStatement"):
-                                    header_uses = 0
-                                    if target_stmt["type"] == "WhileStatement":
-                                        header_uses = _count_ident_uses(target_stmt["condition"], vname)
-                                    elif target_stmt["type"] == "ForGenericStatement":
-                                        header_uses = _count_ident_uses(target_stmt["iterators"], vname)
-                                    elif target_stmt["type"] == "ForNumericStatement":
-                                        header_uses = (
-                                            _count_ident_uses(target_stmt["start"], vname)
-                                            + _count_ident_uses(target_stmt["end"], vname)
-                                            + (_count_ident_uses(target_stmt["step"], vname) if target_stmt.get("step") else 0)
-                                        )
-                                    if header_uses != 1:
+                                target_stmt = cur[target_j]
+                                if safe and not _is_literal(rhs):
+                                    # Never inline a non-literal expression into a nested closure!
+                                    if any(
+                                        isinstance(n, dict)
+                                        and n.get("type") == "FunctionDeclaration"
+                                        and _count_ident_uses(n, vname) > 0
+                                        for n in walk(target_stmt)
+                                    ):
                                         safe = False
+                                if safe and target_stmt["type"] not in ("AssignmentStatement", "LocalStatement", "CallStatement", "ReturnStatement"):
+                                    # Compound statement (`IfStatement`, `DoStatement`, loops):
+                                    # Never inline if `target_stmt` writes any variable read by `rhs`, or if `has_tbl` and `target_stmt` has table/call side effects!
+                                    written_in_target = {
+                                        v.get("name")
+                                        for n in walk(target_stmt)
+                                        if isinstance(n, dict) and n.get("type") in ("AssignmentStatement", "LocalStatement", "ForGenericStatement", "ForNumericStatement")
+                                        for v in (n.get("variables") or ([n["variable"]] if "variable" in n else []))
+                                        if isinstance(v, dict) and v.get("type") == "Identifier"
+                                    }
+                                    if written_in_target & rhs_vars:
+                                        safe = False
+                                    elif has_tbl and _stmt_has_side_effect_or_writes(target_stmt, rhs_vars):
+                                        if not (
+                                            target_stmt["type"] == "IfStatement"
+                                            and target_stmt["clauses"]
+                                            and target_stmt["clauses"][0].get("condition") is not None
+                                            and _count_ident_uses(target_stmt["clauses"][0]["condition"], vname) == 1
+                                        ):
+                                            safe = False
+                                    if safe and target_stmt["type"] == "IfStatement" and not _is_literal(rhs):
+                                        if not (
+                                            target_stmt["clauses"]
+                                            and target_stmt["clauses"][0].get("condition") is not None
+                                            and _count_ident_uses(target_stmt["clauses"][0]["condition"], vname) == 1
+                                        ):
+                                            safe = False
+                                    elif safe and target_stmt["type"] in ("WhileStatement", "RepeatStatement", "ForGenericStatement", "ForNumericStatement"):
+                                        header_uses = 0
+                                        if target_stmt["type"] == "WhileStatement" and _is_literal(rhs):
+                                            header_uses = _count_ident_uses(target_stmt["condition"], vname)
+                                        elif target_stmt["type"] == "ForGenericStatement":
+                                            header_uses = _count_ident_uses(target_stmt["iterators"], vname)
+                                        elif target_stmt["type"] == "ForNumericStatement":
+                                            header_uses = (
+                                                _count_ident_uses(target_stmt["start"], vname)
+                                                + _count_ident_uses(target_stmt["end"], vname)
+                                                + (_count_ident_uses(target_stmt["step"], vname) if target_stmt.get("step") else 0)
+                                            )
+                                        if header_uses != 1:
+                                            safe = False
                                 if safe:
-                                    cur[idx + 1 + target_k] = _subst_ident_in_block([target_stmt], vname, rhs)[0]
+                                    update_tail_stmt(target_j, _subst_ident_in_block([target_stmt], vname, rhs)[0])
                                     changed = True
-                                    idx += 1
+                                    idx = step_idx(idx)
                                     continue
 
                             # Single-use call (`__mv_pack__(...)`, `UDim2.new(...)`, `Color3.fromRGB(...)`, `os.time()`, `:GetService(...)`, etc.):
-                            # Allow skipping PURE intervening statements `tail[:target_k]`!
+                            # Allow skipping PURE intervening statements `cur[idx + 1 : target_j]`!
                             elif rhs["type"] == "CallExpression":
-                                mids_pure = all(not _stmt_has_side_effect_or_writes(mid, rhs_vars) for mid in tail[:target_k])
-                                if mids_pure and _can_inline_call_into_next(rhs, vname, tail[target_k]):
-                                    cur[idx + 1 + target_k] = _subst_ident_in_block([tail[target_k]], vname, rhs)[0]
+                                mids_pure = all(not _stmt_has_side_effect_or_writes(mid, rhs_vars) for mid in cur[idx + 1 : target_j])
+                                if mids_pure and _can_inline_call_into_next(rhs, vname, cur[target_j]):
+                                    update_tail_stmt(target_j, _subst_ident_in_block([cur[target_j]], vname, rhs)[0])
                                     changed = True
-                                    idx += 1
+                                    idx = step_idx(idx)
                                     continue
 
             new_cur.append(s)
-            idx += 1
+            idx = step_idx(idx)
         cur = [_fold_method_calls(s) for s in new_cur]
 
         # 3. Array constructor folding: `tbl = {}; tbl[1] = e1; tbl[2] = e2; ...`
@@ -2119,11 +2296,10 @@ def reconstruct_for_in_loops(stmts: list[dict], iter_shims: set[str] | None = No
     # Recurse bottom-up first (including closures inside expressions like `task.spawn(function() ... end)`!)
     cur = []
     for s in stmts:
-        ns = _reconstruct_for_in_expr(copy.deepcopy(s), shims)
+        ns = _reconstruct_for_in_expr(dict(s), shims)
         if ns["type"] == "IfStatement":
-            for c in ns["clauses"]:
-                c["body"] = reconstruct_for_in_loops(c["body"], shims)
-        elif ns["type"] in ("WhileStatement", "RepeatStatement", "DoStatement", "ForGenericStatement", "ForNumericStatement", "FunctionDeclaration"):
+            ns["clauses"] = [{**c, "body": reconstruct_for_in_loops(c["body"], shims)} for c in ns["clauses"]]
+        elif ns["type"] in ("WhileStatement", "RepeatStatement", "DoStatement", "ForGenericStatement", "ForNumericStatement"):
             ns["body"] = reconstruct_for_in_loops(ns["body"], shims)
         cur.append(ns)
     cur = normalize_cf_stmts(cur, at_fn_end=False, allow_short_tail=True)
@@ -2133,8 +2309,11 @@ def reconstruct_for_in_loops(stmts: list[dict], iter_shims: set[str] | None = No
     while i < len(cur):
         matched = _try_match_for_in(cur, i, shims)
         if matched is not None:
-            for_stmt, next_i = matched
-            out.append(for_stmt)
+            for_stmts, next_i = matched
+            if isinstance(for_stmts, list):
+                out.extend(for_stmts)
+            else:
+                out.append(for_stmts)
             i = next_i
             continue
         out.append(cur[i])
@@ -2253,10 +2432,10 @@ def _try_match_for_in(stmts: list[dict], i: int, shims: set[str] | None = None):
     valid_guard_names = {v_ct, step1_raw_first}
 
     # Form A: `if v_ct ~= nil then while true do ... break end end`
-    # Form B (guard-unnested at end of void function):
-    #   `if v_ct == nil then return end; while true do ... if v_ct == nil then return/break end end`
+    # Form B (guard-unnested at end of function):
+    #   `if v_ct == nil then <ret_tail> end; while true do ... if v_ct == nil then <same_ret_tail>/break end end`
     end_idx = guard_idx + 1
-    allow_void_return_latch = False
+    tail_return_stmts: list[dict] | None = None
     if (
         s_guard["type"] == "IfStatement"
         and len(s_guard["clauses"]) == 1
@@ -2270,32 +2449,46 @@ def _try_match_for_in(stmts: list[dict], i: int, shims: set[str] | None = None):
         and s_guard["type"] == "IfStatement"
         and len(s_guard["clauses"]) == 1
         and any(_is_nil_check(s_guard["clauses"][0]["condition"], gn) for gn in valid_guard_names)
-        and len(s_guard["clauses"][0]["body"]) == 1
-        and s_guard["clauses"][0]["body"][0]["type"] == "ReturnStatement"
-        and not s_guard["clauses"][0]["body"][0].get("arguments")
+        and s_guard["clauses"][0]["body"]
+        and s_guard["clauses"][0]["body"][-1]["type"] == "ReturnStatement"
         and stmts[guard_idx + 1]["type"] == "WhileStatement"
     ):
         wbody = normalize_cf_stmts(stmts[guard_idx + 1]["body"], at_fn_end=False, allow_short_tail=True)
         end_idx = guard_idx + 2
-        allow_void_return_latch = True
+        tail_return_stmts = copy.deepcopy(s_guard["clauses"][0]["body"])
     else:
         return None
 
     if len(wbody) < 2:
         return None
 
+    def _alpha_eq_ret_tail(b1: list[dict], b2: list[dict]) -> bool:
+        def canon(bl: list[dict]) -> str:
+            mp: dict[str, str] = {}
+            for n in walk(bl):
+                if isinstance(n, dict) and n.get("type") in ("AssignmentStatement", "LocalStatement"):
+                    for v in n.get("variables", []):
+                        if v.get("type") == "Identifier" and v["name"].startswith("__w_") and v["name"] not in mp:
+                            mp[v["name"]] = f"__ret_tmp_{len(mp)}"
+            b_sub = copy.deepcopy(bl)
+            for old_nm, new_nm in mp.items():
+                b_sub = _subst_ident_in_block(b_sub, old_nm, _ident(new_nm))
+            return format_block(b_sub, 0)
+
+        return canon(b1) == canon(b2)
+
     # Trailing statements of `while true do` must be the iterator latch:
     l_brk = wbody[-1]
     if not (
         l_brk["type"] == "IfStatement"
         and len(l_brk["clauses"]) == 1
-        and len(l_brk["clauses"][0]["body"]) == 1
         and (
-            l_brk["clauses"][0]["body"][0]["type"] == "BreakStatement"
+            (len(l_brk["clauses"][0]["body"]) == 1 and l_brk["clauses"][0]["body"][0]["type"] == "BreakStatement")
             or (
-                allow_void_return_latch
-                and l_brk["clauses"][0]["body"][0]["type"] == "ReturnStatement"
-                and not l_brk["clauses"][0]["body"][0].get("arguments")
+                tail_return_stmts is not None
+                and l_brk["clauses"][0]["body"]
+                and l_brk["clauses"][0]["body"][-1]["type"] == "ReturnStatement"
+                and _alpha_eq_ret_tail(tail_return_stmts, l_brk["clauses"][0]["body"])
             )
         )
     ):
@@ -2400,7 +2593,243 @@ def _try_match_for_in(stmts: list[dict], i: int, shims: set[str] | None = None):
         "iterators": iter_exprs,
         "body": real_body,
     }
+    if tail_return_stmts is not None:
+        if len(tail_return_stmts) == 1 and not tail_return_stmts[0].get("arguments"):
+            return for_node, end_idx
+        return [for_node, *tail_return_stmts], end_idx
     return for_node, end_idx
+
+
+def _const_num_val(node) -> float | None:
+    if not isinstance(node, dict):
+        return None
+    if node.get("type") == "NumericLiteral" and isinstance(node.get("value"), (int, float)):
+        return float(node["value"])
+    if node.get("type") == "UnaryExpression" and node.get("operator") == "-":
+        sub = _const_num_val(node.get("argument"))
+        return -sub if sub is not None else None
+    return None
+
+
+def reconstruct_cff_for_numeric_loops(stmts: list[dict]) -> list[dict]:
+    """Reconstruct MoonVeil lowered numeric `for idx = start, limit[, step] do ... end` loops."""
+    cur = []
+    for s in stmts:
+        ns = _reconstruct_for_num_expr(dict(s))
+        if ns["type"] == "IfStatement":
+            ns["clauses"] = [{**c, "body": reconstruct_cff_for_numeric_loops(c["body"])} for c in ns["clauses"]]
+        elif ns["type"] in ("WhileStatement", "RepeatStatement", "DoStatement", "ForGenericStatement", "ForNumericStatement"):
+            ns["body"] = reconstruct_cff_for_numeric_loops(ns["body"])
+        cur.append(ns)
+
+    out = []
+    i = 0
+    while i < len(cur):
+        matched = _try_match_for_numeric(cur, i)
+        if matched is not None:
+            emitted, next_i = matched
+            out.extend(emitted)
+            i = next_i
+            continue
+        out.append(cur[i])
+        i += 1
+    return out
+
+
+def _reconstruct_for_num_expr(node):
+    if isinstance(node, list):
+        return [_reconstruct_for_num_expr(x) for x in node]
+    if not isinstance(node, dict):
+        return node
+    if node.get("type") == "FunctionDeclaration":
+        return {**node, "body": reconstruct_cff_for_numeric_loops(node["body"])}
+    return {
+        k: (_reconstruct_for_num_expr(v) if k not in ("range", "loc", "body") else v)
+        for k, v in node.items()
+    }
+
+
+def _extract_numeric_while_latch(wstmt: dict, idx_var: str):
+    if (
+        wstmt["type"] != "WhileStatement"
+        or wstmt["condition"].get("type") != "BooleanLiteral"
+        or wstmt["condition"].get("value") is not True
+    ):
+        return None
+    wb = wstmt["body"]
+    if len(wb) < 2:
+        return None
+    s_inc, s_brk = wb[-2], wb[-1]
+    if not (
+        s_inc["type"] == "AssignmentStatement"
+        and len(s_inc["variables"]) == 1
+        and _is_ident(s_inc["variables"][0], idx_var)
+        and len(s_inc["init"]) == 1
+        and s_inc["init"][0]["type"] == "BinaryExpression"
+        and s_inc["init"][0]["operator"] in ("+", "-")
+        and _is_ident(s_inc["init"][0]["left"], idx_var)
+    ):
+        return None
+    step_val = _const_num_val(s_inc["init"][0]["right"])
+    if step_val is None or step_val == 0:
+        return None
+    if s_inc["init"][0]["operator"] == "-":
+        step_val = -step_val
+    if not (
+        s_brk["type"] == "IfStatement"
+        and len(s_brk["clauses"]) == 1
+        and len(s_brk["clauses"][0]["body"]) == 1
+        and s_brk["clauses"][0]["body"][0]["type"] == "BreakStatement"
+        and s_brk["clauses"][0].get("condition", {}).get("type") == "BinaryExpression"
+    ):
+        return None
+    bcond = s_brk["clauses"][0]["condition"]
+    bop = bcond["operator"]
+    if step_val > 0 and bop == ">" and _is_ident(bcond["left"], idx_var):
+        lim_expr = bcond["right"]
+    elif step_val > 0 and bop == "<" and _is_ident(bcond["right"], idx_var):
+        lim_expr = bcond["left"]
+    elif step_val < 0 and bop == "<" and _is_ident(bcond["left"], idx_var):
+        lim_expr = bcond["right"]
+    elif step_val < 0 and bop == ">" and _is_ident(bcond["right"], idx_var):
+        lim_expr = bcond["left"]
+    else:
+        return None
+    real_body = wb[:-2]
+    # Ensure `idx_var` is not mutated elsewhere in `real_body`
+    for sub in walk(real_body):
+        if isinstance(sub, dict) and sub.get("type") in ("AssignmentStatement", "LocalStatement"):
+            if any(v.get("type") == "Identifier" and v.get("name") == idx_var for v in sub.get("variables", [])):
+                return None
+    return real_body, lim_expr, step_val
+
+
+def _make_step_ast(step_val: float) -> dict | None:
+    if step_val == 1.0:
+        return None
+    if step_val < 0:
+        av = -step_val
+        iv = int(av) if av == int(av) else av
+        return {
+            "type": "UnaryExpression",
+            "operator": "-",
+            "argument": {"type": "NumericLiteral", "value": iv, "raw": str(iv)},
+            "prefix": True,
+        }
+    iv = int(step_val) if step_val == int(step_val) else step_val
+    return {"type": "NumericLiteral", "value": iv, "raw": str(iv)}
+
+
+def _try_match_for_numeric(stmts: list[dict], i: int):
+    s0 = stmts[i]
+    if not (
+        s0["type"] in ("AssignmentStatement", "LocalStatement")
+        and len(s0["variables"]) == 1
+        and s0["variables"][0]["type"] == "Identifier"
+        and len(s0.get("init", [])) == 1
+        and _is_pure_expr(s0["init"][0])
+    ):
+        return None
+    idx_var = s0["variables"][0]["name"]
+    start_expr = copy.deepcopy(s0["init"][0])
+    start_num = _const_num_val(start_expr)
+
+    # Allow up to 3 intervening statements `mids` that do not reference `idx_var`
+    mids = []
+    pos = i + 1
+    while pos < len(stmts) and len(mids) < 3:
+        cand = stmts[pos]
+        if cand["type"] in ("WhileStatement", "IfStatement"):
+            break
+        if _count_ident_uses(cand, idx_var) > 0:
+            break
+        if cand["type"] in ("AssignmentStatement", "LocalStatement"):
+            mids.append(cand)
+            pos += 1
+        else:
+            break
+    if pos >= len(stmts):
+        return None
+
+    # Form 1: Constant-limit `while true do ... idx = idx + step; if idx > CONST then break end end`
+    if stmts[pos]["type"] == "WhileStatement" and start_num is not None:
+        latched = _extract_numeric_while_latch(stmts[pos], idx_var)
+        if latched is not None:
+            real_body, lim_expr, step_val = latched
+            lim_num = _const_num_val(lim_expr)
+            if lim_num is not None and ((step_val > 0 and start_num <= lim_num) or (step_val < 0 and start_num >= lim_num)):
+                live_after, _ = _live_before_overwrite(stmts[pos + 1 :], idx_var)
+                if not live_after:
+                    fn_stmt = {
+                        "type": "ForNumericStatement",
+                        "variable": _ident(idx_var),
+                        "start": start_expr,
+                        "end": copy.deepcopy(lim_expr),
+                        "step": _make_step_ast(step_val),
+                        "body": real_body,
+                    }
+                    return [*copy.deepcopy(mids), fn_stmt], pos + 1
+
+    # Form 2: Dynamic-limit NaN-guarded `if lim == lim then if idx <= lim then while true do ... end end end`
+    # Note `lim = <lim_expr>` may be the last statement in `mids`!
+    lim_var = None
+    lim_init_expr = None
+    pre_mids = list(mids)
+    if (
+        pre_mids
+        and pre_mids[-1]["type"] in ("AssignmentStatement", "LocalStatement")
+        and len(pre_mids[-1]["variables"]) == 1
+        and pre_mids[-1]["variables"][0]["type"] == "Identifier"
+        and len(pre_mids[-1].get("init", [])) == 1
+    ):
+        lim_var = pre_mids[-1]["variables"][0]["name"]
+        lim_init_expr = pre_mids[-1]["init"][0]
+
+    s_outer = stmts[pos]
+    if (
+        lim_var is not None
+        and s_outer["type"] == "IfStatement"
+        and len(s_outer["clauses"]) == 1
+        and s_outer["clauses"][0].get("condition", {}).get("type") == "BinaryExpression"
+        and s_outer["clauses"][0]["condition"]["operator"] == "=="
+        and _is_ident(s_outer["clauses"][0]["condition"]["left"], lim_var)
+        and _is_ident(s_outer["clauses"][0]["condition"]["right"], lim_var)
+        and len(s_outer["clauses"][0]["body"]) == 1
+        and s_outer["clauses"][0]["body"][0]["type"] == "IfStatement"
+    ):
+        s_inner = s_outer["clauses"][0]["body"][0]
+        if (
+            len(s_inner["clauses"]) == 1
+            and len(s_inner["clauses"][0]["body"]) == 1
+            and s_inner["clauses"][0]["body"][0]["type"] == "WhileStatement"
+        ):
+            icond = s_inner["clauses"][0].get("condition", {})
+            latched = _extract_numeric_while_latch(s_inner["clauses"][0]["body"][0], idx_var)
+            if (
+                latched is not None
+                and icond.get("type") == "BinaryExpression"
+                and _is_ident(latched[1], lim_var)
+            ):
+                real_body, _, step_val = latched
+                guard_ok = (
+                    (step_val > 0 and icond["operator"] == "<=" and _is_ident(icond["left"], idx_var) and _is_ident(icond["right"], lim_var))
+                    or (step_val < 0 and icond["operator"] == ">=" and _is_ident(icond["left"], idx_var) and _is_ident(icond["right"], lim_var))
+                )
+                if guard_ok and _count_ident_uses(real_body, lim_var) == 0:
+                    live_idx, _ = _live_before_overwrite(stmts[pos + 1 :], idx_var)
+                    live_lim, _ = _live_before_overwrite(stmts[pos + 1 :], lim_var)
+                    if not live_idx and not live_lim:
+                        fn_stmt = {
+                            "type": "ForNumericStatement",
+                            "variable": _ident(idx_var),
+                            "start": start_expr,
+                            "end": copy.deepcopy(lim_init_expr),
+                            "step": _make_step_ast(step_val),
+                            "body": real_body,
+                        }
+                        return [*copy.deepcopy(pre_mids[:-1]), fn_stmt], pos + 1
+
+    return None
 
 
 def _is_iter_step(stmt: dict, f_it: str, s_st: str, v_ct: str) -> bool:
@@ -2492,11 +2921,10 @@ def reconstruct_for_numeric_loops(stmts: list[dict]) -> list[dict]:
     """Fold MoonVeil 2.1.x lowered `FORNPREP` + `FORNLOOP` blocks back into `ForNumericStatement`."""
     cur = []
     for s in stmts:
-        ns = _reconstruct_for_numeric_expr(copy.deepcopy(s))
+        ns = _reconstruct_for_numeric_expr(dict(s))
         if ns["type"] == "IfStatement":
-            for c in ns["clauses"]:
-                c["body"] = reconstruct_for_numeric_loops(c["body"])
-        elif ns["type"] in ("WhileStatement", "RepeatStatement", "DoStatement", "ForGenericStatement", "ForNumericStatement", "FunctionDeclaration"):
+            ns["clauses"] = [{**c, "body": reconstruct_for_numeric_loops(c["body"])} for c in ns["clauses"]]
+        elif ns["type"] in ("WhileStatement", "RepeatStatement", "DoStatement", "ForGenericStatement", "ForNumericStatement"):
             ns["body"] = reconstruct_for_numeric_loops(ns["body"])
         cur.append(ns)
     cur = normalize_cf_stmts(cur, at_fn_end=False, allow_short_tail=True)
@@ -2704,11 +3132,18 @@ def _is_cell_ctor(node) -> bool:
 def isolate_cell_creations(stmts: list[dict], fresh_fn) -> list[dict]:
     """Turn every `X = {value = rhs}` into a block-scoped `local __cell_N = {value = rhs}`
     and substitute `X -> __cell_N` until the next direct `Identifier` overwrite of `X`.
-    This cleanly separates pre-cell scratch reuse of register `X`, per-iteration loop
-    cell re-boxing (`t = {value = t}`, `H = {value = H}`), and post-loop register reuse!
     """
-    # Recurse into child blocks/functions first
     cur = [_isolate_cells_stmt(s, fresh_fn) for s in stmts]
+    stmt_uses = [_count_ident_uses_map(s) for s in cur]
+    stmt_direct_writes: list[set[str]] = []
+    for s in cur:
+        wr: set[str] = set()
+        for sub in _walk_same_fn(s):
+            if isinstance(sub, dict) and sub.get("type") in ("AssignmentStatement", "LocalStatement"):
+                for v in sub.get("variables", []):
+                    if v.get("type") == "Identifier":
+                        wr.add(v["name"])
+        stmt_direct_writes.append(wr)
 
     i = 0
     while i < len(cur):
@@ -2721,46 +3156,43 @@ def isolate_cell_creations(stmts: list[dict], fresh_fn) -> list[dict]:
             and _is_cell_ctor(s["init"][0])
         ):
             orig = s["variables"][0]["name"]
-            # Find where `orig` is next directly assigned as a plain Identifier on LHS in the same function
             end_k = len(cur)
             for k in range(i + 1, len(cur)):
-                directly_overwritten = any(
-                    isinstance(sub, dict)
-                    and sub.get("type") in ("AssignmentStatement", "LocalStatement")
-                    and any(v.get("type") == "Identifier" and v.get("name") == orig for v in sub.get("variables", []))
-                    for sub in _walk_same_fn(cur[k])
-                )
-                if directly_overwritten:
+                if orig in stmt_direct_writes[k]:
                     end_k = k
                     break
 
             cell_nm = f"__cell_{fresh_fn()}_{orig}"
+            cell_id = _ident(cell_nm)
             cell_tbl = copy.deepcopy(s["init"][0])
             cell_tbl["_cell"] = True
             cur[i] = {
                 "type": "LocalStatement",
-                "variables": [_ident(cell_nm)],
+                "variables": [cell_id],
                 "init": [cell_tbl],
             }
-            if i + 1 < end_k:
-                cur[i + 1 : end_k] = _subst_ident_in_block(cur[i + 1 : end_k], orig, _ident(cell_nm))
-            # Also if `end_k < len(cur)` and `cur[end_k]` is an AssignmentStatement whose RHS reads `orig.value` before overwriting `orig`:
-            if end_k < len(cur) and cur[end_k]["type"] == "AssignmentStatement":
+            stmt_uses[i] = _count_ident_uses_map(cur[i])
+            stmt_direct_writes[i] = {cell_nm}
+            for j in range(i + 1, end_k):
+                if stmt_uses[j].get(orig, 0) > 0:
+                    cur[j] = _subst_ident_in_block([cur[j]], orig, cell_id)[0]
+                    stmt_uses[j] = _count_ident_uses_map(cur[j])
+            if end_k < len(cur) and cur[end_k]["type"] == "AssignmentStatement" and stmt_uses[end_k].get(orig, 0) > 0:
                 cur[end_k] = {
                     **cur[end_k],
-                    "init": [_subst_ident_in_expr(e, orig, _ident(cell_nm)) for e in cur[end_k]["init"]],
+                    "init": [_subst_ident_in_expr(e, orig, cell_id) for e in cur[end_k]["init"]],
                 }
+                stmt_uses[end_k] = _count_ident_uses_map(cur[end_k])
         i += 1
     return cur
 
 
 def _isolate_cells_stmt(s: dict, fresh_fn) -> dict:
-    ns = copy.deepcopy(s)
+    ns = dict(s)
     t = ns["type"]
     if t == "IfStatement":
-        for c in ns["clauses"]:
-            c["body"] = isolate_cell_creations(c["body"], fresh_fn)
-    elif t in ("WhileStatement", "RepeatStatement", "DoStatement", "ForGenericStatement", "ForNumericStatement", "FunctionDeclaration"):
+        ns["clauses"] = [{**c, "body": isolate_cell_creations(c["body"], fresh_fn)} for c in ns["clauses"]]
+    elif t in ("WhileStatement", "RepeatStatement", "DoStatement", "ForGenericStatement", "ForNumericStatement"):
         ns["body"] = isolate_cell_creations(ns["body"], fresh_fn)
     return _isolate_cells_in_exprs(ns, fresh_fn)
 
@@ -2779,15 +3211,84 @@ def _isolate_cells_in_exprs(node, fresh_fn):
 
 
 def unbox_cells(stmts: list[dict], fresh_fn) -> list[dict]:
-    """Safely unbox compiler-synthesized `{value = expr}` cells into plain Lua locals."""
-    cell_vars = set()
+    """Safely unbox compiler-synthesized `{value = expr}` cells into plain Lua locals in O(N)."""
+    cell_vars: set[str] = set()
     for n in walk(stmts):
         if isinstance(n, dict) and n.get("type") in ("AssignmentStatement", "LocalStatement"):
             for v, r in zip(n.get("variables", []), n.get("init", [])):
                 if v.get("type") == "Identifier" and _is_cell_ctor(r):
                     cell_vars.add(v["name"])
 
-    safe_cells = {cv for cv in cell_vars if _is_provably_unboxable_cell(stmts, cv)}
+    if not cell_vars:
+        return stmts
+
+    unsafe_cells: set[str] = set()
+
+    def scan_unsafe(node, allowed_ident: str | None = None):
+        if isinstance(node, list):
+            for item in node:
+                scan_unsafe(item, None)
+            return
+        if not isinstance(node, dict):
+            return
+        t = node.get("type")
+        if t == "Identifier":
+            nm = node.get("name")
+            if nm in cell_vars and nm != allowed_ident:
+                unsafe_cells.add(nm)
+            return
+        if t == "MemberExpression":
+            if (
+                node["indexer"] == "."
+                and node["identifier"]["name"] == "value"
+                and node["base"].get("type") == "Identifier"
+                and node["base"]["name"] in cell_vars
+            ):
+                return
+            scan_unsafe(node["base"], None)
+            return
+        if t in ("LocalStatement", "AssignmentStatement"):
+            if not node.get("init"):
+                return
+            if len(node["variables"]) != len(node["init"]):
+                for v in node["variables"]:
+                    scan_unsafe(v, None)
+                for r in node["init"]:
+                    scan_unsafe(r, None)
+                return
+            for v, r in zip(node["variables"], node["init"]):
+                if v.get("type") == "Identifier" and v["name"] in cell_vars:
+                    cv = v["name"]
+                    if not _is_cell_ctor(r):
+                        unsafe_cells.add(cv)
+                        scan_unsafe(r, None)
+                    else:
+                        inner = r["fields"][0]["value"]
+                        scan_unsafe(inner, cv)
+                else:
+                    scan_unsafe(v, None)
+                    scan_unsafe(r, None)
+            return
+        if t == "FunctionDeclaration":
+            scan_unsafe(node.get("body", []), None)
+            return
+        if t == "ForGenericStatement":
+            scan_unsafe(node["iterators"], None)
+            scan_unsafe(node["body"], None)
+            return
+        if t == "ForNumericStatement":
+            scan_unsafe(node["start"], None)
+            scan_unsafe(node["end"], None)
+            if node.get("step"):
+                scan_unsafe(node["step"], None)
+            scan_unsafe(node["body"], None)
+            return
+        for k, v in node.items():
+            if k not in ("range", "loc"):
+                scan_unsafe(v, None)
+
+    scan_unsafe(stmts, None)
+    safe_cells = cell_vars - unsafe_cells
     if not safe_cells:
         return stmts
     return _strip_cell_boxes_block(stmts, safe_cells)
@@ -3695,7 +4196,9 @@ def beautify_reconstructed(selected: dict, entry_node: dict) -> bytes | None:
     stmts = _optimize_all_functions(stmts, fresh_fn)
     stmts = unwrap_top_level_iife(stmts, fresh_fn)
     stmts = normalize_cf_deep(stmts, at_fn_end=True, allow_short_tail=True)
+    stmts = reconstruct_for_in_loops(stmts)
     stmts = _optimize_all_functions(stmts, fresh_fn)
+    stmts = reconstruct_cff_for_numeric_loops(stmts)
 
     # 7. Place `local` declarations at first assignment & convert `local f = function` -> `local function f`
     stmts = _place_local_declarations(stmts, set(), is_fn_root=True)
@@ -3707,9 +4210,25 @@ def beautify_reconstructed(selected: dict, entry_node: dict) -> bytes | None:
     stmts = assign_readable_names(stmts)
 
     text = format_block(stmts, 0).strip() + "\n"
-    raw_bytes = text.encode("ascii")
-    # Strict fail-closed parse verification with luaparse!
-    parse(raw_bytes)
+    raw_bytes = text.encode("utf-8")
+    # Fast syntax check with native luau-ast when present, else luaparse!
+    luau_ast_bin = Path(__file__).resolve().parents[4] / "bin" / "luau-ast"
+    if luau_ast_bin.is_file():
+        import os as _os, subprocess as _sp, tempfile as _tf
+        with _tf.NamedTemporaryFile("wb", suffix=".luau", delete=False) as tf:
+            tf.write(raw_bytes)
+            tf_path = tf.name
+        try:
+            proc = _sp.run([str(luau_ast_bin), tf_path], stdout=_sp.DEVNULL, stderr=_sp.PIPE, timeout=15)
+            if proc.returncode != 0:
+                parse(raw_bytes)
+        finally:
+            try:
+                _os.unlink(tf_path)
+            except OSError:
+                pass
+    else:
+        parse(raw_bytes)
     return raw_bytes
 
 

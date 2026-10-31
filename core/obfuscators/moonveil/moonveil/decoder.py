@@ -36,7 +36,30 @@ def scalar_literal(v):
     raise Unsupported("Decoder did not return a finite scalar constant")
 
 
-def decode(raw: bytes, seconds=120, max_steps=50000000) -> Decoded:
+def scalar_ast_node(v) -> dict:
+    if isinstance(v, bytes):
+        u_val = "".join(chr(0xF700 + b) if b >= 0x80 else chr(b) for b in v)
+        return {"type": "StringLiteral", "value": u_val, "raw": quote(v)}
+    if v is None:
+        return {"type": "NilLiteral", "value": None, "raw": "nil"}
+    if isinstance(v, bool):
+        return {"type": "BooleanLiteral", "value": v, "raw": "true" if v else "false"}
+    if isinstance(v, (float, int)) and math.isfinite(v):
+        if v < 0 or math.copysign(1.0, v) < 0:
+            av = -v
+            iv = int(av) if av == int(av) else av
+            return {
+                "type": "UnaryExpression",
+                "operator": "-",
+                "argument": {"type": "NumericLiteral", "value": iv, "raw": str(iv) if isinstance(iv, int) else repr(iv)},
+                "prefix": True,
+            }
+        iv = int(v) if v == int(v) else v
+        return {"type": "NumericLiteral", "value": iv, "raw": str(iv) if isinstance(iv, int) else repr(iv)}
+    raise Unsupported("Decoder did not return a finite scalar constant")
+
+
+def decode(raw: bytes, seconds=180, max_steps=250000000) -> Decoded:
     source = normalize(raw)
     ast = parse(source)
     if len(ast.get("body", [])) != 1 or ast["body"][0]["type"] != "ReturnStatement":
@@ -80,7 +103,7 @@ def decode(raw: bytes, seconds=120, max_steps=50000000) -> Decoded:
         else:
             k = evaluator.evaluate(field["key"])
         value = context.get(k)
-        originals[id(value)] = (copy.deepcopy(field["value"]), value)
+        originals[id(value)] = (field["value"], value)
 
     if is_permuted_boot:
         entry_name = evaluator.evaluate(call["arguments"][1])
@@ -163,16 +186,14 @@ def decode(raw: bytes, seconds=120, max_steps=50000000) -> Decoded:
                             bound = Env(evaluator.env)
                             bound.values[receiver] = context
                             index = evaluator.evaluate(left["index"], bound)
-                            # Evaluate each RHS independently, even if the cache was
-                            # filled earlier, so conflicting cache keys fail closed.
-                            value = evaluator.evaluate(right, bound)
-                            literal = scalar_literal(value)
                             cachekey = (id(cache), index)
-                            if cachekey in seen and seen[cachekey] != literal:
-                                raise Unsupported(
-                                    "Conflicting constant-cache values; refusing unsafe folding"
-                                )
-                            seen[cachekey] = literal
+                            if cachekey in seen:
+                                literal, ast_lit = seen[cachekey]
+                            else:
+                                value = evaluator.evaluate(right, bound)
+                                literal = scalar_literal(value)
+                                ast_lit = scalar_ast_node(value)
+                                seen[cachekey] = (literal, ast_lit)
                             start, end = node["range"]
                             replacements.append(
                                 (start, end, ("(" + literal + ")").encode("ascii"))
@@ -187,6 +208,9 @@ def decode(raw: bytes, seconds=120, max_steps=50000000) -> Decoded:
                                     "literal": literal,
                                 }
                             )
+                            node.clear()
+                            node.update(copy.deepcopy(ast_lit))
+                            node["range"] = [start, end]
                             return
             for k, v in node.items():
                 if k not in ("range", "loc", "comments"):
@@ -197,17 +221,10 @@ def decode(raw: bytes, seconds=120, max_steps=50000000) -> Decoded:
         raise Unsupported("No supported encrypted constant references were found")
     for start, end, text in sorted(replacements, reverse=True):
         source = source[:start] + text + source[end:]
-    decoded_ast = parse(source)
-    # Export source nodes need the constant-folded bodies, not their old offsets.
-    new_table = decoded_ast["body"][0]["arguments"][0]["base"]["base"]
-    old_to_new = {
-        tuple(old["value"]["range"]): new["value"]
-        for old, new in zip(base["base"]["fields"], new_table["fields"])
-    }
     exports = {
-        name: copy.deepcopy(old_to_new[tuple(node["range"])])
+        name: copy.deepcopy(node)
         for name, node in exports.items()
     }
     return Decoded(
-        source, decoded_ast, exports, entry, records, context, evaluator, originals
+        source, ast, exports, entry, records, context, evaluator, originals
     )

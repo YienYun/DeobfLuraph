@@ -98,10 +98,10 @@ class Broke(Exception):
 
 
 class Evaluator:
-    def __init__(self, max_steps=50000000, seconds=120):
+    def __init__(self, max_steps=250000000, seconds=180):
         self.steps, self.max_steps = 0, max_steps
         self.deadline = time.monotonic() + seconds
-        self.depth, self.max_string, self.allocations = 0, 2 * 1024 * 1024, 0
+        self.depth, self.max_string, self.allocations = 0, 16 * 1024 * 1024, 0
         self.call_hook = None
         self.env = Env()
         self.runtime = RuntimeEnvironment()
@@ -116,7 +116,7 @@ class Evaluator:
 
     def table(self):
         self.allocations += 1
-        if self.allocations > 100000:
+        if self.allocations > 2000000:
             raise Unsupported("Decoder table allocation budget exceeded")
         return Table()
 
@@ -638,6 +638,40 @@ class Evaluator:
         self.strings.put(b"rep", builtin("string.rep", repeat))
         self.strings.put(b"len", builtin("string.len", lambda s: (float(len(s)),)))
         self.strings.put(b"lower", builtin("string.lower", lambda s: (s.lower(),)))
+
+        import struct as _struct, re as _re
+
+        def _luau_fmt_to_py(fmt_b: bytes) -> str:
+            fmt = fmt_b.decode("latin1")
+            end = "<"
+            if fmt and fmt[0] in "<>=":
+                end = fmt[0]
+                fmt = fmt[1:]
+            out = [end]
+            for m in _re.finditer(r"([iI])(\d+)?|([bBhHlLjJfdT])", fmt):
+                if m.group(1):
+                    sz = int(m.group(2) or 4)
+                    mp = {1: "b", 2: "h", 4: "i", 8: "q"}[sz]
+                    out.append(mp.upper() if m.group(1) == "I" else mp)
+                else:
+                    c = m.group(3)
+                    out.append({"j": "q", "J": "Q", "T": "Q"}.get(c, c))
+            return "".join(out)
+
+        def str_unpack(fmt, s, pos=1):
+            pfmt = _luau_fmt_to_py(fmt)
+            off = int(pos) - 1
+            vals = _struct.unpack_from(pfmt, s, off)
+            nxt = off + _struct.calcsize(pfmt) + 1
+            return tuple(float(v) if isinstance(v, int) else v for v in vals) + (float(nxt),)
+
+        def str_pack(fmt, *vals):
+            pfmt = _luau_fmt_to_py(fmt)
+            cvals = [int(self.number(v)) if c in "bBhHiIlLqQ" else float(self.number(v)) for c, v in zip(pfmt[1:], vals)]
+            return (_struct.pack(pfmt, *cvals),)
+
+        self.strings.put(b"unpack", builtin("string.unpack", str_unpack))
+        self.strings.put(b"pack", builtin("string.pack", str_pack))
 
         def find(s, pattern, init=1, plain=False):
             if plain is not True:

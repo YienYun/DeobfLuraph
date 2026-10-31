@@ -13,14 +13,14 @@ class Unsupported(Exception):
     """Fail closed on an unsupported or ambiguous input."""
 
 
-MAX_INPUT = 2 * 1024 * 1024
+MAX_INPUT = 32 * 1024 * 1024
 LONG = re.compile(rb"\[(=*)\[")
 
 
 def normalize(source: bytes) -> bytes:
     """Normalize Luau binary literals without touching strings/comments/hex numbers."""
     if len(source) > MAX_INPUT:
-        raise Unsupported("Input exceeds the 2 MiB limit")
+        raise Unsupported("Input exceeds the 32 MiB limit")
     if source.startswith(b"\xef\xbb\xbf"):
         source = source[3:]
     out = bytearray()
@@ -72,14 +72,14 @@ def normalize(source: bytes) -> bytes:
     return bytes(out)
 
 
-def parse(source: bytes, timeout: int = 20) -> dict:
+def parse(source: bytes, timeout: int = 60) -> dict:
     node = shutil.which(os.environ.get("MOONVEIL_NODE", "node"))
     if not node:
         raise Unsupported("Node.js 18+ is required; install Node or set MOONVEIL_NODE")
     bridge = Path(__file__).with_name("vendor") / "parse.cjs"
     try:
         p = subprocess.run(
-            [node, "--max-old-space-size=192", str(bridge)],
+            [node, "--max-old-space-size=1024", str(bridge)],
             input=source,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -92,7 +92,7 @@ def parse(source: bytes, timeout: int = 20) -> dict:
         raise Unsupported(
             "Lua parse failed: " + p.stderr.decode("utf-8", "replace")[:2000]
         )
-    if len(p.stdout) > 96 * 1024 * 1024:
+    if len(p.stdout) > 512 * 1024 * 1024:
         raise Unsupported("AST exceeds resource limit")
     try:
         return json.loads(p.stdout)

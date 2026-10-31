@@ -159,7 +159,13 @@ def polish(text):
     import codegen
     import localfuncs
     import ast_polish
-    text = text.replace(codegen.LONG_NL, "\n")     
+    text = text.replace(codegen.LONG_NL, "\n")
+    if os.environ.get("POLISH_DUMP"):
+        # debugging aid: keep the text exactly as the lifter produced it, so the
+        # polish passes can be replayed on it without a two-minute re-lift
+        with open(os.environ["POLISH_DUMP"], "w", encoding="utf-8", newline="\n") as fh:
+            fh.write(text)
+    
     try:
         text = localfuncs.rewrite(text)
     except Exception as ex:  

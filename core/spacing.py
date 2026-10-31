@@ -2,6 +2,13 @@ from localfuncs import _ast, _walk
 
 EXITS = ("AstStatReturn", "AstStatBreak", "AstStatContinue")
 
+# How tall a statement must be before a blank line separates it from its
+# neighbours. At 2 (the old rule) every three-line `if ... end` inside deeply
+# nested code got padded on both sides -- 18% of a 49k-line file was blank. Six
+# keeps the separation where it carries meaning: functions, long branches, real
+# sections.
+SECTION_LINES = 6
+
 def _lines(st):
     a, b = st["location"].split(" - ")
     return int(a.split(",")[0]), int(b.split(",")[0])
@@ -22,7 +29,7 @@ def _kind(st, top):
         return "small"
     if not top and _is_guard(st):
         return "guard"
-    return "big"
+    return "big" if l2 - l1 >= SECTION_LINES else "small"
 
 def blank_lines_after(root):
     """0-based line numbers after which a blank line goes."""

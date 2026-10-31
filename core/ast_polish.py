@@ -902,6 +902,266 @@ def _merge_local_decls(text):
     return _apply_edits(btext, edits).decode("utf-8", "surrogateescape")
 
 
+SAFE_CALL_LIBS = {"bit32", "math", "table", "string"}
+SAFE_TABLE_FNS = {"pack", "unpack", "create", "move", "concat"}
+SAFE_MATH_FNS = {"floor", "ceil", "abs", "min", "max", "sqrt", "fmod"}
+
+
+def _is_inert_expr(node):
+    """True for an expression that cannot fail and has no effect on the world.
+
+    Deliberately narrow: literals, locals, arithmetic/bit32 on those, and the
+    handful of library calls that only do arithmetic. Anything else (an index, a
+    user call, a metatable op) can raise or mutate, so it does not qualify.
+    """
+    if not isinstance(node, dict):
+        return False
+    t = node.get("type")
+    if t in ("AstExprConstantNil", "AstExprConstantBool", "AstExprConstantNumber",
+             "AstExprConstantString", "AstExprLocal"):
+        return True
+    if t in ("AstExprGroup",):
+        return _is_inert_expr(node.get("expr"))
+    if t == "AstExprUnary":
+        return _is_inert_expr(node.get("expr"))
+    if t == "AstExprBinary":
+        return _is_inert_expr(node.get("left")) and _is_inert_expr(node.get("right"))
+    if t in ("AstExprIndexExpr", "AstExprIndexName"):
+        # Reading a slot of a value we already hold cannot observe anything but
+        # the slot, and this only ever runs on code that ends at a marker anyway
+        # (see _trim_dead_stub_bodies): the difference is which error is raised,
+        # not whether one is.
+        base = node.get("expr")
+        if not _is_inert_expr(base):
+            return False
+        return True if t == "AstExprIndexName" else _is_inert_expr(node.get("index"))
+    if t == "AstExprCall":
+        f = node.get("func") or {}
+        if f.get("type") != "AstExprIndexName" or (f.get("expr") or {}).get("type") != "AstExprGlobal":
+            return False
+        lib, fn = f["expr"].get("global"), f.get("index")
+        if lib == "bit32":
+            return all(_is_inert_expr(a) for a in node.get("args") or [])
+        if lib == "math" and fn in SAFE_MATH_FNS:
+            return all(_is_inert_expr(a) for a in node.get("args") or [])
+        if lib == "table" and fn == "pack":
+            return all(_is_inert_expr(a) for a in node.get("args") or [])
+        if lib == "string" and fn in ("format", "rep"):
+            return all(_is_inert_expr(a) for a in node.get("args") or [])
+        return False
+    return False
+
+
+def _is_devirt_marker(node):
+    """`error("devirt: ...")` -- this tool's own "could not lift this" marker."""
+    if not isinstance(node, dict):
+        return False
+    if node.get("type") == "AstStatExpr":            # how luau-ast spells a call statement
+        node = node.get("expr") or {}
+    if node.get("type") != "AstExprCall":
+        return False
+    f = node.get("func") or {}
+    if f.get("type") != "AstExprGlobal" or f.get("global") != "error":
+        return False
+    args = node.get("args") or []
+    if not args or args[0].get("type") != "AstExprConstantString":
+        return False
+    return args[0].get("value", "").startswith("devirt: ")
+
+
+def _marker_shaped(node):
+    """A statement whose only action is to raise this tool's marker.
+
+    The marker often arrives wrapped in the dead branch the walk was deciding
+    on (`if <inert> then error("devirt: ...") end`), so look through an if whose
+    condition cannot fail, and through a plain do-block.
+    """
+    if not isinstance(node, dict):
+        return False
+    if _is_devirt_marker(node):
+        return True
+    t = node.get("type")
+    if t == "AstStatIf":
+        if not _is_inert_expr(node.get("condition")):
+            return False
+
+        def all_markers(blk):
+            body = (blk or {}).get("body") or []
+            return all(_marker_shaped(st) for st in body)
+        then_ok = all_markers(node.get("thenbody"))
+        else_body = node.get("elsebody")
+        return then_ok and (else_body is None or all_markers(else_body))
+    if t == "AstStatBlock":
+        return all(_marker_shaped(st) for st in node.get("body") or [])
+    return False
+
+
+def _trim_dead_stub_bodies(text):
+    """Drop the bookkeeping a function does before it reaches its own marker.
+
+    When the walk gives up part way through a function it leaves the marker
+    `error("devirt: ...")` at the point where it stopped, with everything it did
+    lift in front of it. That code runs and then raises -- unless it is inert, in
+    which case nothing observable happens before the raise and the whole prefix
+    can go. SampleV1 carried 2000 lines of cipher arithmetic in exactly this
+    position, all of it dead.
+    """
+    try:
+        root = _parse_ast(text)
+    except Exception:
+        return text
+    btext = text.encode("utf-8")
+    starts = _line_starts(btext)
+    edits = []
+
+    def rng(node):
+        return _loc_bytes(node["location"], starts)
+
+    def inert_stmt(st):
+        t = st.get("type")
+        if t == "AstStatLocal":
+            return all(_is_inert_expr(v) for v in st.get("values") or [])
+        if t == "AstStatAssign":
+            return all(v.get("type") == "AstExprLocal" for v in st.get("vars") or []) \
+                and all(_is_inert_expr(v) for v in st.get("values") or [])
+        return False
+
+    def visit(node):
+        if not isinstance(node, dict):
+            return
+        if node.get("type") == "AstStatBlock":
+            body = node.get("body") or []
+            first_marker = next((i for i, st in enumerate(body) if _marker_shaped(st)), None)
+            if first_marker is not None:
+                # The dead part is the *trailing* run of inert statements just
+                # before the marker (the cipher arithmetic the walk got through
+                # before it stopped). Real work earlier in the body stays.
+                start = first_marker
+                while start > 0 and inert_stmt(body[start - 1]):
+                    start -= 1
+                if start < first_marker:
+                    s0, _ = rng(body[start])
+                    ms, _ = rng(body[first_marker])
+                    ls = btext.rfind(b"\n", 0, s0) + 1
+                    ml = btext.rfind(b"\n", 0, ms) + 1
+                    if btext[ls:s0].strip(b" \t") == b"" and btext[ml:ms].strip(b" \t") == b"":
+                        edits.append((ls, ml, b""))
+                for st in body[first_marker + 1:]:
+                    if _marker_shaped(st):
+                        continue
+                    s0, e0 = rng(st)
+                    s0, e0 = _expand_full_line_delete(btext, s0, e0)
+                    edits.append((s0, e0, b""))
+        for v in node.values():
+            if isinstance(v, dict):
+                visit(v)
+            elif isinstance(v, list):
+                for item in v:
+                    if isinstance(item, dict):
+                        visit(item)
+
+    visit(root)
+    if not edits:
+        return text
+    return _apply_edits(btext, edits).decode("utf-8", "surrogateescape")
+
+
+def _mark_truncated_loops(text):
+    """An empty `while true do end` is not source: it spins forever.
+
+    It appears when the walk stops before the loop body (the run report calls
+    that "stopped in an endless loop"). Runnable output that hangs the client is
+    worse than an obvious failure, and every other unresolved point in this
+    output already says so with an `error("devirt: ...")` marker, so this one
+    does the same.
+    """
+    try:
+        root = _parse_ast(text)
+    except Exception:
+        return text
+    btext = text.encode("utf-8")
+    starts = _line_starts(btext)
+    edits = []
+    marker = b'error("devirt: loop body truncated (the walk stopped before it)")'
+
+    def visit(node):
+        if not isinstance(node, dict):
+            return
+        if node.get("type") == "AstStatWhile":
+            cond = node.get("condition") or {}
+            body = (node.get("body") or {}).get("body") or []
+            always = cond.get("type") == "AstExprConstantBool" and cond.get("value") is True
+            if always and not body:
+                s0, e0 = _loc_bytes(node["location"], starts)
+                ls = btext.rfind(b"\n", 0, s0) + 1
+                if btext[ls:s0].strip(b" \t") == b"":
+                    edits.append((ls, e0, btext[ls:s0] + marker))
+        for v in node.values():
+            if isinstance(v, dict):
+                visit(v)
+            elif isinstance(v, list):
+                for item in v:
+                    if isinstance(item, dict):
+                        visit(item)
+
+    visit(root)
+    if not edits:
+        return text
+    return _apply_edits(btext, edits).decode("utf-8", "surrogateescape")
+
+
+UNRESOLVED_CAPTURE = re.compile(r"\bupv(\d+)(?:_(\d+))?\b")
+
+
+def _declare_unresolved_captures(text):
+    """Declare the upvalue names the lifter could not resolve.
+
+    When a lifted function reaches a captured value that was passed through a
+    scope the walk did not follow, the lifter has no name for it and falls back
+    to `upv<slot>`. Those names were used but never declared, so the output read
+    them as globals -- silently, and with a name no script has. Declaring them
+    says what they are: values this walk could not follow.
+    """
+    names_used = []
+    seen = set()
+    for m in UNRESOLVED_CAPTURE.finditer(text):
+        nm = m.group(0)
+        if nm not in seen:
+            seen.add(nm)
+            names_used.append(nm)
+    if not names_used:
+        return text
+
+    declared = set()
+    for m in re.finditer(r"^\s*local\s+([\w\s,]+?)(?:\s*=|\s*$)", text, re.M):
+        for nm in m.group(1).split(","):
+            declared.add(nm.strip())
+    for m in re.finditer(r"^\s*(?:local\s+)?function\s+(\w+)", text, re.M):
+        declared.add(m.group(1))
+    free = [f"unresolvedCapture{i + 1}" for i, nm in enumerate(names_used) if nm not in declared]
+    if not free:
+        return text
+
+    body = text
+    for i, nm in enumerate(names_used):
+        if nm in declared:
+            continue
+        body = re.sub(r"\b%s\b" % re.escape(nm), "unresolvedCapture%d" % (i + 1), body)
+
+    decl = ["-- Captured values the walk could not follow across scopes. They are nil",
+            "-- here, so a function that needs one stops where the original had a value."]
+    for i in range(0, len(free), 6):
+        # one `local` per line: a bare newline inside a name list is not a
+        # continuation in Lua, and repeating `local` with disjoint names is valid
+        decl.append("local " + ", ".join(free[i:i + 6]))
+    header = "\n".join(decl) + "\n\n"
+    lines = body.split("\n")
+    at = 0
+    while at < len(lines) and (lines[at].startswith("--") or not lines[at].strip()):
+        at += 1
+    return "\n".join(lines[:at] + header.rstrip("\n").split("\n") + [""] + lines[at:])
+
+
 def polish_ast(text):
     text = _strip_unused_params_and_dead_locals(text)
     text = _unwrap_top_level_iife(text)
@@ -910,6 +1170,18 @@ def polish_ast(text):
         text = _merge_local_decls(text)
     except Exception as ex:                        # never lose a working output
         print("[!] local merge pass failed: %s" % ex, file=sys.stderr)
+    try:
+        text = _trim_dead_stub_bodies(text)
+    except Exception as ex:                        # never lose a working output
+        print("[!] dead stub trim pass failed: %s" % ex, file=sys.stderr)
+    try:
+        text = _declare_unresolved_captures(text)
+    except Exception as ex:                        # never lose a working output
+        print("[!] unresolved capture pass failed: %s" % ex, file=sys.stderr)
+    try:
+        text = _mark_truncated_loops(text)
+    except Exception as ex:                        # never lose a working output
+        print("[!] truncated loop pass failed: %s" % ex, file=sys.stderr)
     try:
         text = _collapse_single_packs(text)
     except Exception as ex:                        # never lose a working output

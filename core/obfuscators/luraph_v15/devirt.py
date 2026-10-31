@@ -772,6 +772,26 @@ class FunctionLifter:
                             uses.setdefault(e.idx, set()).update(regs)
         return uses
 
+    @staticmethod
+    def _parent_up(parent_names, idx):
+        """The name the parent gave upvalue `idx`.
+
+        A parent stores its table under ("up", (slot, reg)) when the upvalue is a
+        register frame it captured, and under ("up", slot) otherwise. Looking up
+        only the plain slot missed every frame capture, so the miss invented a
+        name (`upv3`) that nothing declares. Widen the lookup before falling back;
+        the remaining misses are captures that skip a scope, which
+        `ast_polish._declare_unresolved_captures` reports at the output level.
+        """
+        nm = parent_names.get(("up", idx))
+        if nm is not None:
+            return nm
+        for k, v in parent_names.items():
+            if isinstance(k, tuple) and len(k) == 2 and k[0] == "up" \
+                    and isinstance(k[1], tuple) and k[1] and k[1][0] == idx:
+                return v
+        return None
+
     def closure(self, vm, vmobj, c, parent_names, depth, parent_lf=None):
         import codegen as CG
         proto = c.proto
@@ -799,7 +819,8 @@ class FunctionLifter:
             elif isinstance(e, FrameProxy):
 
                 for r in fmap.get(i, ()):
-                    upnames[(i, r)] = parent_names.get(("up", (e.idx, r)), "upv%d_%d" % (e.idx, r))
+                    got = parent_names.get(("up", (e.idx, r)))
+                    upnames[(i, r)] = got if got is not None else "upv%d_%d" % (e.idx, r)
             elif isinstance(e, LTable):
                 vals = list(e.h.values())
                 ints = [v for v in vals if isinstance(v, int)]
@@ -808,13 +829,15 @@ class FunctionLifter:
                 else:
 
                     ups = [v for v in vals if isinstance(v, UpContainer)]
-                    upnames[i] = parent_names.get(("up", ups[0].idx), "upv%d" % ups[0].idx) if ups else "nil"
+                    got = self._parent_up(parent_names, ups[0].idx) if ups else None
+                    upnames[i] = got if got is not None else ("upv%d" % ups[0].idx if ups else "nil")
             elif isinstance(e, Reg):
                 upnames[i] = capnames.get(e.n, "nil")
             elif isinstance(e, MaybeBox):
                 upnames[i] = capnames.get(e.reg, "nil")
             elif isinstance(e, (BoxProxy, Upval)):
-                upnames[i] = parent_names.get(("up", e.idx), "upv%d" % e.idx)
+                got = self._parent_up(parent_names, e.idx)
+                upnames[i] = got if got is not None else "upv%d" % e.idx
             else:
                 upnames[i] = "nil"
         params = ["..."]

@@ -6,7 +6,12 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 GENERATED = re.compile(
-    r"^(?:[A-Za-z_]\d+(?:_\d+)*|arg\d*_*|[ijk]_+|fn\d*|tbl\d*|str\d*|flag\d*|v|[a-z_][A-Z]|[A-Z]{2})$"
+    r"^(?:[A-Za-z_]\d+(?:_\d+)*|arg\d*_*|[ijk]_+|fn\d*|tbl\d*|str\d*|flag\d*|v|[a-z_][A-Z]|[A-Z]{2}"
+    # names that are never the script author's: the fallbacks this tool uses when
+    # an upvalue was never resolved (`upv3`), and the two-letter noise names that
+    # come from the obfuscated wrapper's own locals (`Ag`, `Lg`) and leak into the
+    # lifted code through the capture table.
+    r"|upv\d+(?:_\d+)?|[A-Z][a-z])$"
 )
 SINGLE_CHAR = re.compile(r"^[A-Za-z]$")
 KEEP_2UPPER = {"UI", "ID", "OK", "IP", "OS", "WS", "HP", "XP", "AI", "DB", "FN", "FX", "IO"}

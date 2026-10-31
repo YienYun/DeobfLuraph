@@ -1,0 +1,102 @@
+{
+  "file": "/home/user/DeobfLuraph/samples/input/Luarmor/SampleV1.lua",
+  "bytes": 799589,
+  "lines": 4,
+  "luarmor": true,
+  "confidence": 0.9,
+  "signatures": [
+    "bsdata0_table",
+    "superflow_blob"
+  ],
+  "has_bsdata0": true,
+  "has_blob": true,
+  "luraph_payload": true,
+  "module_id": null,
+  "cache_key": null,
+  "init_url": null,
+  "bsdata0": {
+    "ints": [
+      {
+        "index": 2,
+        "value": 7057464
+      },
+      {
+        "index": 3,
+        "value": 22378048
+      },
+      {
+        "index": 4,
+        "value": 3979533667
+      },
+      {
+        "index": 6,
+        "value": 25190820
+      },
+      {
+        "index": 7,
+        "value": 2429721439
+      },
+      {
+        "index": 10,
+        "value": 8438972
+      },
+      {
+        "index": 12,
+        "value": 4382352
+      }
+    ],
+    "hash_fields": [
+      {
+        "index": 9,
+        "hex_length": 430,
+        "bytes": 215,
+        "digest": "91193e5408bf7ad37f8c5e797fddeec4c68971af4b8a746f57c68dc0fce33dccb63c544a557980e45049e79d63bb9525198c03e527d8b768617600a4cb3f181a5eab7a58f61ed7284f95be8565399bb064a09504d7402b3348bf6c23c398d3882b0afa8eb98a9e702e5cb20dd90d469c7eba90372f402dab04ee848797ba12c95e713b0951b751d1b1677283e3a96a49da51b4c3aa0d89f6216ab8063e7e6c6d8587953936ba23e449e8bc9c0023ab895ba93afcca8c0232bbcce675abb7b5a0786f3a861878ef3913427c436bb8ec43fc091780e8d2ba"
+      },
+      {
+        "index": 11,
+        "hex_length": 140,
+        "bytes": 70,
+        "digest": "4ce3b17950fe5e4fc5aee8bebbf73bc5958c3a88d3598886671116ff416643298b6dd790caa04dc81d431bfb42e28b8c18949b7f8f13fa1f5002c4a5219cc221b0b0d47b5eb5"
+      }
+    ],
+    "hex_fields": [],
+    "byte_blobs": [
+      {
+        "index": 5,
+        "bytes": 26,
+        "hex": "04e9ffe41c98859d974e4de6e4b4072422a3c127b06be9a61072"
+      },
+      {
+        "index": 8,
+        "bytes": 25,
+        "hex": "0ee631d763620c9b2f33ddedfac756236e85a45abb381d7e18"
+      }
+    ],
+    "client_tag": null,
+    "build_stamp": {
+      "index": 1,
+      "value": 1793260940,
+      "iso": "2026-10-29T08:02:20Z"
+    },
+    "other_strings": []
+  },
+  "iocs": {},
+  "notes": [
+    "superflow blob (10710 bytes of table literal) sits in front of the Luraph v15 chunk; the chunk is what gets devirtualized"
+  ],
+  "kind": "sephal_init",
+  "label": "Luarmor v4 sephal init (Luraph v15 chunk + superflow blob)",
+  "superflow": {
+    "has_blob": true,
+    "blob_bytes": 10710,
+    "chunk_at": 11581,
+    "has_vm_chunk": true
+  },
+  "result_type": "luarmor-blocked",
+  "blocked": {
+    "states": [
+      "the loader checks did not pass"
+    ],
+    "payload_decrypted": false
+  }
+}

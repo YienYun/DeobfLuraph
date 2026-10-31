@@ -26,5 +26,7 @@
     "blob_bytes": 12298,
     "chunk_at": 12516,
     "has_vm_chunk": true
-  }
+  },
+  "result_type": "devirtualized",
+  "blocked": null
 }

@@ -298,7 +298,22 @@ async function processFile(absInput, args) {
       job.warnings.push(`Luarmor v4 ${meta.kind}: ${meta.label}`);
       if (meta.luraph_payload) {
         result = await driver.run(job);
-        if (result && fs.existsSync(result)) luarmor.prependHeader(result, meta);
+        const stats = job.liftStats || {};
+        const states = luarmor.blockedStates(stats);
+        if (states.length) {
+          // The chain ran but Luarmor refused the offline environment, so the
+          // session payload was never decrypted. Hand back what was lifted (the
+          // bootstrap), never the 800 KB input again, and say why in the header.
+          job.warnings.push(`Luarmor blocked the offline run (${states.join(', ')}): `
+            + 'the session payload was not decrypted.');
+          job.resultType = 'luarmor-blocked';
+          if (result && fs.existsSync(result)) luarmor.prependHeader(result, meta, stats);
+        } else if (result && fs.existsSync(result)) {
+          luarmor.prependHeader(result, meta, stats);
+        }
+        meta.result_type = job.resultType || 'devirtualized';
+        meta.blocked = states.length ? { states, payload_decrypted: false } : null;
+        luarmor.writeReport(final, meta);
       } else {
         const stubPath = job.path('.luarmor-stub.lua');
         fs.mkdirSync(path.dirname(stubPath), { recursive: true });

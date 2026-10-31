@@ -41,7 +41,10 @@ function announce(meta) {
   const bs = meta.bsdata0 || {};
   if (bs.client_tag) lines.push(`[*]   client tag   : ${bs.client_tag.value}`);
   if (bs.build_stamp) lines.push(`[*]   build stamp  : ${bs.build_stamp.value} (${bs.build_stamp.iso})`);
-  for (const h of bs.hash_fields || []) lines.push(`[*]   sha256 #${h.index}  : ${h.sha256}`);
+  for (const h of bs.hash_fields || []) {
+    const kind = h.sha256 ? 'sha256' : `hex(${h.bytes}B)`;
+    lines.push(`[*]   ${kind.padEnd(10)} #${h.index}: ${h.digest.slice(0, 48)}${h.hex_length > 48 ? '...' : ''}`);
+  }
   if (meta.superflow) {
     lines.push(`[*]   superflow    : ${meta.superflow.blob_bytes} B blob + Luraph chunk`);
   }
@@ -56,7 +59,22 @@ function announce(meta) {
   process.stderr.write(lines.join('\n') + '\n');
 }
 
-function headerLines(meta) {
+/**
+ * States Luarmor kicked with while we ran the chain offline. `State294` is the
+ * bootstrap refusing an environment it cannot verify; the payload behind the
+ * check never gets decrypted in that case.
+ */
+function blockedStates(stats) {
+  const states = ((stats && stats.luarmor_states) || []).filter((s) => /^State\d+$/.test(s));
+  if (states.length) return states;
+  // A Luarmor chain that lifts to one or two functions never got past the
+  // bootstrap's checks: the payload is still encrypted, whatever the state code
+  // (the trace truncates the kick line inside its retry loop).
+  if (stats && typeof stats.functions === 'number' && stats.functions <= 2) return ['the loader checks did not pass'];
+  return [];
+}
+
+function headerLines(meta, stats) {
   const out = [`-- Luarmor v4: ${meta.label}`];
   if (meta.module_id) out.push(`-- module id : ${meta.module_id}`);
   if (meta.cache_key) out.push(`-- cache key : ${meta.cache_key}`);
@@ -67,29 +85,36 @@ function headerLines(meta) {
   const iocs = meta.iocs || {};
   if (iocs.loader_id) out.push(`-- loader id : ${iocs.loader_id.join(', ')}`);
   if (iocs.get_key_link) out.push(`-- key link  : ads.luarmor.net/get_key?for=${iocs.get_key_link[0]}`);
-  out.push('-- The licence check itself is not bypassed: only the code in this file was lifted.');
+  const states = blockedStates(stats);
+  if (states.length) {
+    out.push(`-- Luarmor blocked the offline run (${states.join(', ')}): the session payload was never`);
+    out.push('-- decrypted, so only the loader in this file was recovered. Capture the loader\'s');
+    out.push('-- loadstring/HttpGet output from a real executor to get the payload itself.');
+  } else {
+    out.push('-- The licence check itself is not bypassed: only the code in this file was lifted.');
+  }
   return out.join('\n');
 }
 
 /** Comment block documenting what was done, put on top of a lifted chunk. */
-function prependHeader(resultPath, meta) {
+function prependHeader(resultPath, meta, stats) {
   let text = fs.readFileSync(resultPath, 'latin1');
   if (text.startsWith('-- Luarmor v4:')) return;
-  fs.writeFileSync(resultPath, headerLines(meta) + '\n\n' + text, 'latin1');
+  fs.writeFileSync(resultPath, headerLines(meta, stats) + '\n\n' + text, 'latin1');
 }
 
 /**
  * A client stub carries no code: keep the stub byte-for-byte and put the
  * analysis on top, so the result is honest and still a valid Lua file.
  */
-function annotateStub(source, meta) {
+function annotateStub(source, meta, stats) {
   const notes = [
     '--',
-    '-- This file is a loader stub, not the protected script. It downloads its',
-    '-- init and asks Luarmor for the script at runtime, behind a key; the script',
-    '-- text is not present here, so there is nothing to devirtualize.',
+    '-- This file is a loader stub, not the protected script. It fetches its init',
+    '-- and asks the Luarmor server for the script at runtime; the script text is',
+    '-- not present in these bytes, so there is nothing here to devirtualize.',
   ];
-  return headerLines(meta) + '\n' + notes.join('\n') + '\n\n' + source;
+  return headerLines(meta, stats) + '\n' + notes.join('\n') + '\n\n' + source;
 }
 
 function reportPath(finalPath) {
@@ -103,4 +128,4 @@ function writeReport(finalPath, meta) {
   return p;
 }
 
-module.exports = { analyze, announce, prependHeader, annotateStub, writeReport, reportPath };
+module.exports = { analyze, announce, prependHeader, annotateStub, writeReport, reportPath, blockedStates };

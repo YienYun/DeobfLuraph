@@ -47,7 +47,15 @@
         "value": 39456749
       }
     ],
-    "hash_fields": [],
+    "hash_fields": [
+      {
+        "index": 6,
+        "hex_length": 402,
+        "bytes": 201,
+        "digest": "a6b87036a963119ac67d168a731431cce5b2a029c025a646f87d3d6cafd7531133c2d0b96f05c737f94552c13970e01d6377d1226fc7346a740bfcc6abdad347eaf2dba33ad62d091e8be9326a6bc9cf168a4710afe4c44138a3120eafb391812965a5e7ad9090cf043ec1dfa8d249ede68fcff9759b7e3f977164381462b248c613aee4c005577a9c5f4e0360677952e8036a28bc598bff212742bf10fa8b16571aacb4978526bce3ae2a3bfb046a78edbd707bbe2a7c90e5cde8abc4ad25e8b7f3ea70a7eece3ab5"
+      }
+    ],
+    "hex_fields": [],
     "byte_blobs": [
       {
         "index": 8,
@@ -71,13 +79,7 @@
       "value": 1769015477,
       "iso": "2026-01-21T17:11:17Z"
     },
-    "other_strings": [
-      {
-        "index": 6,
-        "value": "a6b87036a963119ac67d168a731431cce5b2a029c025a646f87d3d6cafd7531133c2d0b96f05c737f94552c13970e01d6377d1226fc7346a740bfcc6",
-        "length": 402
-      }
-    ]
+    "other_strings": []
   },
   "iocs": {
     "api_endpoint": [

@@ -219,7 +219,14 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None):
     job.write(dpath, prefix + devirt.finish_text(text) + "\n")
     # The caller can distinguish a real lift from an empty/stale file and
     # surface incomplete analysis rather than presenting it as a clean success.
-    return dict(last_full_stats, converged=converged, pending_constant_requests=pending_constants)
+    out_stats = dict(last_full_stats, converged=converged, pending_constant_requests=pending_constants)
+    # Luarmor's bootstrap kicks with `... StateNNN` when a check fails; the
+    # session payload behind that check is never decrypted, so callers have to
+    # know rather than ship a stub as if it were the script.
+    states = getattr(job, "luarmor_states", None)
+    if states:
+        out_stats["luarmor_states"] = states
+    return out_stats
 
 def run(job):
     """The whole Luraph pipeline; returns the result file's path."""
@@ -370,6 +377,12 @@ def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths)
     harness (started now, so the script runs while round 1 walks); a fresh
     run per round if it fails or behaves differently."""
     args = job.args
+    # Luarmor's bootstrap kicks with `... StateNNN` when one of its checks
+    # fails; the session payload behind that check is never decrypted, so the
+    # stats have to say so instead of letting a stub pass for a lift.
+    states = sorted(set(re.findall(r"State\d{2,4}", run_text or "")))
+    if states:
+        job.luarmor_states = states
     bridge = runner.bridge
     server = [None]
     synced = [False]    

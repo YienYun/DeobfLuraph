@@ -1,4 +1,5 @@
 import json
+import sys
 import os
 import re
 import tempfile
@@ -667,8 +668,129 @@ def _sugar_local_functions(text):
     return _apply_edits(btext, edits).decode("utf-8")
 
 
+def _collapse_single_packs(text):
+    """`local p = table.pack(x)` + reads of `p[1]`/`p.n` -> `local p = x`.
+
+    Luraph's uint32 helpers wrap every intermediate in a one-slot pack
+    (`local n = table.pack(bit32.band(a, 65535))`), which hides the arithmetic
+    behind table machinery. A one-slot pack of a value that is not a
+    multi-value call is just that value, so the local can hold it directly.
+    Scoped by the parser's own local identity, so a same-named local in
+    another function is never touched."""
+    root = _parse_ast(text)
+    btext = text.encode("utf-8", "surrogateescape")
+    starts = _line_starts(btext)
+
+    def rng(node):
+        return _loc_bytes(node["location"], starts)
+
+    SINGLE = {"bit32", "math", "string"}
+
+    def single_value(e):
+        """Does this expression always produce exactly one value?"""
+        if not isinstance(e, dict):
+            return False
+        t = e.get("type")
+        if t in ("AstExprVarargs", "AstExprFunction"):
+            return False
+        if t != "AstExprCall":
+            return True
+        fn = e.get("func") or {}
+        if fn.get("type") != "AstExprIndexName" or fn.get("op") != ".":
+            return False
+        base = fn.get("expr") or {}
+        if base.get("type") != "AstExprGlobal" or base.get("global") not in SINGLE:
+            return False
+        return all(single_value(a) for a in (e.get("args") or ()))
+
+    decls = {}
+    uses = {}
+    bad = set()
+
+    def scan(n, parent=None, key=None):
+        if not isinstance(n, dict):
+            return
+        t = n.get("type")
+        if t == "AstStatLocal" and len(n.get("vars") or ()) == 1 and len(n.get("values") or ()) == 1:
+            v = n["values"][0]
+            loc = n["vars"][0]["location"]
+            if (v.get("type") == "AstExprCall" and not v.get("self")
+                    and v.get("func", {}).get("type") == "AstExprIndexName"
+                    and v["func"].get("expr", {}).get("type") == "AstExprGlobal"
+                    and v["func"]["expr"].get("global") == "table"
+                    and v["func"].get("index") == "pack"
+                    and len(v.get("args") or ()) == 1):
+                arg = v["args"][0]
+                if single_value(arg):
+                    decls[loc] = (v, arg)
+        if t == "AstExprLocal":
+            loc = (n.get("local") or {}).get("location")
+            ok = False
+            if isinstance(parent, dict):
+                pt = parent.get("type")
+                if pt == "AstExprIndexExpr" and parent.get("expr") is n \
+                        and (parent.get("index") or {}).get("type") == "AstExprConstantNumber" \
+                        and parent["index"].get("value") == 1:
+                    ok = True
+                    uses.setdefault(loc, []).append(("index1", parent, n))
+                elif pt == "AstExprIndexName" and parent.get("expr") is n \
+                        and parent.get("index") == "n" and parent.get("op") == ".":
+                    ok = True
+                    uses.setdefault(loc, []).append(("n", parent, n))
+            if not ok:
+                bad.add(loc)
+        if t in ("AstStatAssign", "AstStatCompoundAssign"):
+            tgts = n.get("vars") or ([n.get("var")] if n.get("var") else [])
+            for v in tgts:
+                # anything the statement assigns into may be mutated, so every
+                # local on the left-hand side is off limits
+                stack = [v]
+                while stack:
+                    cur = stack.pop()
+                    if isinstance(cur, dict):
+                        if cur.get("type") == "AstExprLocal":
+                            bad.add((cur.get("local") or {}).get("location"))
+                        stack.extend(x for x in cur.values() if isinstance(x, (dict, list)))
+                    elif isinstance(cur, list):
+                        stack.extend(cur)
+        for k, v in n.items():
+            if isinstance(v, dict):
+                scan(v, n, k)
+            elif isinstance(v, list):
+                for x in v:
+                    scan(x, n, k)
+        if key is not None and isinstance(n, dict):
+            pass
+
+    scan(root)
+    edits = []
+    for loc, (call, arg) in decls.items():
+        if loc in bad or loc not in uses:
+            continue
+        s0, e0 = rng(arg)
+        cs, ce = rng(call)
+        # Strip only the `table.pack(` prefix and the closing paren: the
+        # argument may itself contain rewrites, and an edit that spans it
+        # would swallow them.
+        edits.append((cs, s0, b""))
+        edits.append((e0, ce, b""))
+        for kind, node, self_node in uses[loc]:
+            us, ue = rng(node)
+            if kind == "n":
+                edits.append((us, ue, b"1"))
+            else:
+                ns, ne = rng(self_node)
+                edits.append((us, ue, btext[ns:ne]))
+    if not edits:
+        return text
+    return _apply_edits(btext, edits).decode("utf-8", "surrogateescape")
+
 def polish_ast(text):
     text = _strip_unused_params_and_dead_locals(text)
     text = _unwrap_top_level_iife(text)
     text = _sugar_local_functions(text)
+    try:
+        text = _collapse_single_packs(text)
+    except Exception as ex:                        # never lose a working output
+        print("[!] single-slot pack pass failed: %s" % ex, file=sys.stderr)
     return text

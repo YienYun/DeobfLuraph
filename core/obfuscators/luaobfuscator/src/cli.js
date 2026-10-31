@@ -15,6 +15,7 @@ Options:
   --keep-banner       Keep LuaObfuscator banner comments
   --keep-decoder      Keep detected decoder prelude/function
   --summary           Print per-file transform stats
+  --json-report <p>   Write the per-file transform stats as JSON
   --help              Show this help text
 `);
 }
@@ -27,7 +28,8 @@ function parseArgs(argv) {
     cleanup: true,
     keepBanner: false,
     keepDecoder: false,
-    summary: false
+    summary: false,
+    jsonReport: null
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -47,6 +49,9 @@ function parseArgs(argv) {
       args.keepDecoder = true;
     } else if (arg === "--summary") {
       args.summary = true;
+    } else if (arg === "--json-report") {
+      args.jsonReport = argv[++i];
+      if (!args.jsonReport) throw new Error("--json-report requires a path");
     } else if (!args.input) {
       args.input = arg;
     } else {
@@ -112,6 +117,16 @@ async function main() {
       removeBanner: !args.keepBanner,
       removeDecoder: !args.keepDecoder
     });
+
+    // The caller decides what to do with a partial decode (a VM payload that
+    // was preserved as IR instead of lifted), so the mode travels with it.
+    if (args.jsonReport) {
+      fs.writeFileSync(args.jsonReport, JSON.stringify({
+        file: path.basename(file),
+        outputMode: result.stats.vmOutputMode,
+        stats: result.stats
+      }, null, 2) + "\n", "utf8");
+    }
 
     if (args.stdout) {
       process.stdout.write(result.code);

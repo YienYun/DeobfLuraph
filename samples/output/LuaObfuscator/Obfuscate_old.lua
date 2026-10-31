@@ -1,5 +1,3266 @@
+-- LuaObfuscator: decoded VM payload only (2302 instructions preserved as IR).
+-- No source lift: this build's interpreter opcodes are randomised, so the
+-- listing below is the recovered bytecode plus a best-effort preview.
 -- This file was deobfuscated by VX [ https://discord.gg/qa2fwcB7K ]
 
+-- 697 VM instructions remain unclassified; preserving the complete decoded IR
+
+-- best-effort source preview (incomplete; full decoded VM IR follows):
+-- | local v0 = game:GetService("Players")
+-- | local v1 = game:GetService("ReplicatedStorage")
+-- | local v2 = game:GetService("RunService")
+-- | local v3 = game:GetService("UserInputService")
+-- | local v4 = game:GetService("HttpService")
+-- | -- vm 0026  opcode=106  A=8  B=40  C=0  mode=3  flags=4
+-- | -- vm 0027  opcode=19  A=0  B=40  C=_  mode=2  flags=0
+-- | -- vm 0030  opcode=15  A=8  B=40  C=7  mode=3  flags=0
+-- | -- vm 0031  opcode=19  A=0  B=40  C=_  mode=2  flags=0
+-- | local v12 = v12()
+-- | local v9 = string.format("[Nebula] Unsupported PlaceId: %d (expected %d)", game.PlaceId, v12)
+-- | ("warn")(v9)
+-- | -- vm 0041  opcode=23  A=8  B=0  C=_  mode=1  flags=0
+-- | -- vm 0042  opcode=23  A=9  B=1  C=_  mode=1  flags=0
+-- | -- vm 0043  opcode=23  A=10  B=2  C=_  mode=1  flags=0
+-- | v12 = v12()
+-- | v12["__index"] = v12
+-- | v12["new"] = function(arg1, arg2, ...)
+-- |   local v3 = v3()
+-- |   -- vm 0004  opcode=126  A=4  B=34  C=0  mode=3  flags=4
+-- |   -- vm 0005  opcode=19  A=0  B=34  C=_  mode=2  flags=0
+-- |   -- vm 0006  opcode=126  A=2  B=25  C=0  mode=3  flags=4
+-- |   -- vm 0007  opcode=19  A=0  B=25  C=_  mode=2  flags=0
+-- |   -- vm 0009  opcode=126  A=5  B=12  C=1  mode=3  flags=4
+-- |   -- vm 0010  opcode=19  A=0  B=12  C=_  mode=2  flags=0
+-- |   -- vm 0012  opcode=19  A=0  B=25  C=_  mode=2  flags=0
+-- |   -- vm 0013  opcode=126  A=5  B=8  C=0  mode=3  flags=4
+-- |   -- vm 0014  opcode=19  A=0  B=8  C=_  mode=2  flags=0
+-- |   local v7 = v7()
+-- |   local v8 = v8()
+-- |   local v6 = setmetatable(v7, v8)
+-- |   v3 = v3(0, 0, v6)
+-- |   -- vm 0020  opcode=39  A=6  B=22  C=0  mode=3  flags=0
+-- |   -- vm 0021  opcode=19  A=0  B=22  C=_  mode=2  flags=0
+-- |   v3["label"] = "MainScheduler"
+-- |   -- vm 0025  opcode=19  A=0  B=8  C=_  mode=2  flags=0
+-- |   -- vm 0026  opcode=126  A=2  B=33  C=3  mode=3  flags=4
+-- |   -- vm 0027  opcode=19  A=0  B=33  C=_  mode=2  flags=0
+-- |   -- vm 0029  opcode=126  A=5  B=28  C=0  mode=3  flags=4
+-- |   -- vm 0030  opcode=19  A=0  B=28  C=_  mode=2  flags=0
+-- |   v3["connection"] = nil
+-- |   v3 = v3()
+-- |   -- vm 0033  opcode=19  A=0  B=28  C=_  mode=2  flags=0
+-- |   -- vm 0035  opcode=126  A=4  B=3  C=1  mode=3  flags=4
+-- |   -- vm 0036  opcode=19  A=0  B=3  C=_  mode=2  flags=0
+-- |   -- vm 0037  opcode=126  A=2  B=41  C=2  mode=3  flags=4
+-- |   -- vm 0038  opcode=19  A=0  B=41  C=_  mode=2  flags=0
+-- |   v3["totalTicks"] = 0
+-- |   v3["running"] = false
+-- |   -- vm 0042  opcode=126  A=2  B=2  C=1  mode=3  flags=4
+-- |   -- vm 0043  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+-- |   -- vm 0044  opcode=39  A=5  B=46  C=1  mode=3  flags=0
+-- |   -- vm 0045  opcode=19  A=0  B=46  C=_  mode=2  flags=0
+-- |   v3["maxBudgetMs"] = 8.5
+-- |   local v5 = (8.5)()
+-- |   v3["jobs"] = v5
+-- |   -- vm 0051  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+-- |   -- vm 0052  opcode=19  A=0  B=3  C=_  mode=2  flags=0
+-- |   -- vm 0053  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+-- |   local v0 = arg1(arg2)
+-- | end
+-- | -- vm 0053  opcode=23  A=13  B=5  C=_  mode=1  flags=0
+-- | v12["register"] = function(arg1, arg2, ...)
+-- |   local v3 = v3()
+-- |   -- vm 0004  opcode=126  A=4  B=34  C=0  mode=3  flags=4
+-- |   -- vm 0005  opcode=19  A=0  B=34  C=_  mode=2  flags=0
+-- |   -- vm 0006  opcode=126  A=2  B=25  C=0  mode=3  flags=4
+-- |   -- vm 0007  opcode=19  A=0  B=25  C=_  mode=2  flags=0
+-- |   -- vm 0009  opcode=126  A=5  B=12  C=1  mode=3  flags=4
+-- |   -- vm 0010  opcode=19  A=0  B=12  C=_  mode=2  flags=0
+-- |   -- vm 0012  opcode=19  A=0  B=25  C=_  mode=2  flags=0
+-- |   -- vm 0013  opcode=126  A=5  B=8  C=0  mode=3  flags=4
+-- |   -- vm 0014  opcode=19  A=0  B=8  C=_  mode=2  flags=0
+-- |   local v7 = v7()
+-- |   local v8 = v8()
+-- |   local v6 = setmetatable(v7, v8)
+-- |   v3 = v3(0, 0, v6)
+-- |   -- vm 0020  opcode=39  A=6  B=22  C=0  mode=3  flags=0
+-- |   -- vm 0021  opcode=19  A=0  B=22  C=_  mode=2  flags=0
+-- |   v3["label"] = "MainScheduler"
+-- |   -- vm 0025  opcode=19  A=0  B=8  C=_  mode=2  flags=0
+-- |   -- vm 0026  opcode=126  A=2  B=33  C=3  mode=3  flags=4
+-- |   -- vm 0027  opcode=19  A=0  B=33  C=_  mode=2  flags=0
+-- |   -- vm 0029  opcode=126  A=5  B=28  C=0  mode=3  flags=4
+-- |   -- vm 0030  opcode=19  A=0  B=28  C=_  mode=2  flags=0
+-- |   v3["connection"] = nil
+-- |   v3 = v3()
+-- |   -- vm 0033  opcode=19  A=0  B=28  C=_  mode=2  flags=0
+-- |   -- vm 0035  opcode=126  A=4  B=3  C=1  mode=3  flags=4
+-- |   -- vm 0036  opcode=19  A=0  B=3  C=_  mode=2  flags=0
+-- |   -- vm 0037  opcode=126  A=2  B=41  C=2  mode=3  flags=4
+-- |   -- vm 0038  opcode=19  A=0  B=41  C=_  mode=2  flags=0
+-- |   v3["totalTicks"] = 0
+-- |   v3["running"] = false
+-- |   -- vm 0042  opcode=126  A=2  B=2  C=1  mode=3  flags=4
+-- |   -- vm 0043  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+-- |   -- vm 0044  opcode=39  A=5  B=46  C=1  mode=3  flags=0
+-- |   -- vm 0045  opcode=19  A=0  B=46  C=_  mode=2  flags=0
+-- |   v3["maxBudgetMs"] = 8.5
+-- |   local v5 = (8.5)()
+-- |   v3["jobs"] = v5
+-- |   -- vm 0051  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+-- |   -- vm 0052  opcode=19  A=0  B=3  C=_  mode=2  flags=0
+-- |   -- vm 0053  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+-- |   local v0 = arg1(arg2)
+-- | end
+-- | -- vm 0055  opcode=23  A=13  B=6  C=_  mode=1  flags=0
+-- | v12["pruneInactive"] = function(arg1, arg2, ...)
+-- |   local v3 = v3()
+-- |   -- vm 0004  opcode=126  A=4  B=34  C=0  mode=3  flags=4
+-- |   -- vm 0005  opcode=19  A=0  B=34  C=_  mode=2  flags=0
+-- |   -- vm 0006  opcode=126  A=2  B=25  C=0  mode=3  flags=4
+-- |   -- vm 0007  opcode=19  A=0  B=25  C=_  mode=2  flags=0
+-- |   -- vm 0009  opcode=126  A=5  B=12  C=1  mode=3  flags=4
+-- |   -- vm 0010  opcode=19  A=0  B=12  C=_  mode=2  flags=0
+-- |   -- vm 0012  opcode=19  A=0  B=25  C=_  mode=2  flags=0
+-- |   -- vm 0013  opcode=126  A=5  B=8  C=0  mode=3  flags=4
+-- |   -- vm 0014  opcode=19  A=0  B=8  C=_  mode=2  flags=0
+-- |   local v7 = v7()
+-- |   local v8 = v8()
+-- |   local v6 = setmetatable(v7, v8)
+-- |   v3 = v3(0, 0, v6)
+-- |   -- vm 0020  opcode=39  A=6  B=22  C=0  mode=3  flags=0
+-- |   -- vm 0021  opcode=19  A=0  B=22  C=_  mode=2  flags=0
+-- |   v3["label"] = "MainScheduler"
+-- |   -- vm 0025  opcode=19  A=0  B=8  C=_  mode=2  flags=0
+-- |   -- vm 0026  opcode=126  A=2  B=33  C=3  mode=3  flags=4
+-- |   -- vm 0027  opcode=19  A=0  B=33  C=_  mode=2  flags=0
+-- |   -- vm 0029  opcode=126  A=5  B=28  C=0  mode=3  flags=4
+-- |   -- vm 0030  opcode=19  A=0  B=28  C=_  mode=2  flags=0
+-- |   v3["connection"] = nil
+-- |   v3 = v3()
+-- |   -- vm 0033  opcode=19  A=0  B=28  C=_  mode=2  flags=0
+-- |   -- vm 0035  opcode=126  A=4  B=3  C=1  mode=3  flags=4
+-- |   -- vm 0036  opcode=19  A=0  B=3  C=_  mode=2  flags=0
+-- |   -- vm 0037  opcode=126  A=2  B=41  C=2  mode=3  flags=4
+-- |   -- vm 0038  opcode=19  A=0  B=41  C=_  mode=2  flags=0
+-- |   v3["totalTicks"] = 0
+-- |   v3["running"] = false
+-- |   -- vm 0042  opcode=126  A=2  B=2  C=1  mode=3  flags=4
+-- |   -- vm 0043  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+-- |   -- vm 0044  opcode=39  A=5  B=46  C=1  mode=3  flags=0
+-- |   -- vm 0045  opcode=19  A=0  B=46  C=_  mode=2  flags=0
+-- |   v3["maxBudgetMs"] = 8.5
+-- |   local v5 = (8.5)()
+-- |   v3["jobs"] = v5
+-- |   -- vm 0051  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+-- |   -- vm 0052  opcode=19  A=0  B=3  C=_  mode=2  flags=0
+-- |   -- vm 0053  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+-- |   local v0 = arg1(arg2)
+-- | end
+-- | -- vm 0057  opcode=23  A=13  B=7  C=_  mode=1  flags=0
+-- | v12["step"] = function(arg1, arg2, ...)
+-- |   local v3 = v3()
+-- |   -- vm 0004  opcode=126  A=4  B=34  C=0  mode=3  flags=4
+-- |   -- vm 0005  opcode=19  A=0  B=34  C=_  mode=2  flags=0
+-- |   -- vm 0006  opcode=126  A=2  B=25  C=0  mode=3  flags=4
+-- |   -- vm 0007  opcode=19  A=0  B=25  C=_  mode=2  flags=0
+-- |   -- vm 0009  opcode=126  A=5  B=12  C=1  mode=3  flags=4
+-- |   -- vm 0010  opcode=19  A=0  B=12  C=_  mode=2  flags=0
+-- |   -- vm 0012  opcode=19  A=0  B=25  C=_  mode=2  flags=0
+-- |   -- vm 0013  opcode=126  A=5  B=8  C=0  mode=3  flags=4
+-- |   -- vm 0014  opcode=19  A=0  B=8  C=_  mode=2  flags=0
+-- |   local v7 = v7()
+-- |   local v8 = v8()
+-- |   local v6 = setmetatable(v7, v8)
+-- |   v3 = v3(0, 0, v6)
+-- |   -- vm 0020  opcode=39  A=6  B=22  C=0  mode=3  flags=0
+-- |   -- vm 0021  opcode=19  A=0  B=22  C=_  mode=2  flags=0
+-- |   v3["label"] = "MainScheduler"
+-- |   -- vm 0025  opcode=19  A=0  B=8  C=_  mode=2  flags=0
+-- |   -- vm 0026  opcode=126  A=2  B=33  C=3  mode=3  flags=4
+-- |   -- vm 0027  opcode=19  A=0  B=33  C=_  mode=2  flags=0
+-- |   -- vm 0029  opcode=126  A=5  B=28  C=0  mode=3  flags=4
+-- |   -- vm 0030  opcode=19  A=0  B=28  C=_  mode=2  flags=0
+-- |   v3["connection"] = nil
+-- |   v3 = v3()
+-- |   -- vm 0033  opcode=19  A=0  B=28  C=_  mode=2  flags=0
+-- |   -- vm 0035  opcode=126  A=4  B=3  C=1  mode=3  flags=4
+-- |   -- vm 0036  opcode=19  A=0  B=3  C=_  mode=2  flags=0
+-- |   -- vm 0037  opcode=126  A=2  B=41  C=2  mode=3  flags=4
+-- |   -- vm 0038  opcode=19  A=0  B=41  C=_  mode=2  flags=0
+-- |   v3["totalTicks"] = 0
+-- |   v3["running"] = false
+-- |   -- vm 0042  opcode=126  A=2  B=2  C=1  mode=3  flags=4
+-- |   -- vm 0043  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+-- |   -- vm 0044  opcode=39  A=5  B=46  C=1  mode=3  flags=0
+-- |   -- vm 0045  opcode=19  A=0  B=46  C=_  mode=2  flags=0
+-- |   v3["maxBudgetMs"] = 8.5
+-- |   local v5 = (8.5)()
+-- |   v3["jobs"] = v5
+-- |   -- vm 0051  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+-- |   -- vm 0052  opcode=19  A=0  B=3  C=_  mode=2  flags=0
+-- |   -- vm 0053  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+-- |   local v0 = arg1(arg2)
+-- | end
+-- | v12["start"] = function(arg1, ...)
+-- |   -- vm 0002  opcode=22  A=1  B=4  C=0  mode=3  flags=0
+-- |   -- vm 0003  opcode=19  A=0  B=4  C=_  mode=2  flags=0
+-- |   local v0 = arg1(arg1.running)
+-- |   v0["running"] = true
+-- |   local v1 = arg1.running()
+-- |   v1 = v1.Heartbeat:Connect(function(arg1, ...)
+-- |   -- vm 0002  opcode=126  A=1  B=1  C=0  mode=3  flags=4
+-- |   -- vm 0003  opcode=19  A=0  B=1  C=_  mode=2  flags=0
+-- |   local v2 = v2()
+-- |   -- vm 0006  opcode=131  A=2  B=8  C=1  mode=3  flags=0
+-- |   -- vm 0007  opcode=19  A=0  B=8  C=_  mode=2  flags=0
+-- |   local v0 = arg1(0)
+-- |   v2 = v2.running()
+-- |   local v4 = v4()
+-- |   v2.step(v3, v4)
+-- |   -- vm 0013  opcode=19  A=0  B=14  C=_  mode=2  flags=0
+-- |   -- vm 0014  opcode=19  A=0  B=1  C=_  mode=2  flags=0
+-- |   v0 = v0(0)
+-- | end)
+-- |   v0["connection"] = v1
+-- |   v0 = v0(v1)
+-- | end
+-- | -- vm 0062  opcode=23  A=13  B=9  C=_  mode=1  flags=0
+-- | v12["stop"] = function(arg1, ...)
+-- |   -- vm 0002  opcode=22  A=1  B=4  C=0  mode=3  flags=0
+-- |   -- vm 0003  opcode=19  A=0  B=4  C=_  mode=2  flags=0
+-- |   local v0 = arg1(arg1.running)
+-- |   v0["running"] = true
+-- |   local v1 = arg1.running()
+-- |   v1 = v1.Heartbeat:Connect(function(arg1, ...)
+-- |   -- vm 0002  opcode=126  A=1  B=1  C=0  mode=3  flags=4
+-- |   -- vm 0003  opcode=19  A=0  B=1  C=_  mode=2  flags=0
+-- |   local v2 = v2()
+-- |   -- vm 0006  opcode=131  A=2  B=8  C=1  mode=3  flags=0
+-- |   -- vm 0007  opcode=19  A=0  B=8  C=_  mode=2  flags=0
+-- |   local v0 = arg1(0)
+-- |   v2 = v2.running()
+-- |   local v4 = v4()
+-- |   v2.step(v3, v4)
+-- |   -- vm 0013  opcode=19  A=0  B=14  C=_  mode=2  flags=0
+-- |   -- vm 0014  opcode=19  A=0  B=1  C=_  mode=2  flags=0
+-- |   v0 = v0(0)
+-- | end)
+-- |   v0["connection"] = v1
+-- |   v0 = v0(v1)
+-- | end
+-- | local v13 = (function(arg1, ...)
+-- |   -- vm 0002  opcode=22  A=1  B=4  C=0  mode=3  flags=0
+-- |   -- vm 0003  opcode=19  A=0  B=4  C=_  mode=2  flags=0
+-- |   local v0 = arg1(arg1.running)
+-- |   v0["running"] = true
+-- |   local v1 = arg1.running()
+-- |   v1 = v1.Heartbeat:Connect(function(arg1, ...)
+-- |   -- vm 0002  opcode=126  A=1  B=1  C=0  mode=3  flags=4
+-- |   -- vm 0003  opcode=19  A=0  B=1  C=_  mode=2  flags=0
+-- |   local v2 = v2()
+-- |   -- vm 0006  opcode=131  A=2  B=8  C=1  mode=3  flags=0
+-- |   -- vm 0007  opcode=19  A=0  B=8  C=_  mode=2  flags=0
+-- |   local v0 = arg1(0)
+-- |   v2 = v2.running()
+-- |   local v4 = v4()
+-- |   v2.step(v3, v4)
+-- |   -- vm 0013  opcode=19  A=0  B=14  C=_  mode=2  flags=0
+-- |   -- vm 0014  opcode=19  A=0  B=1  C=_  mode=2  flags=0
+-- |   v0 = v0(0)
+-- | end)
+-- |   v0["connection"] = v1
+-- |   v0 = v0(v1)
+-- | end)()
+-- | local v14 = v14()
+-- | v14["skipLocked"] = true
+-- | -- vm 0067  opcode=3  A=15  B=0  C=4  mode=0  flags=0
+-- | v15["Spread"] = 0
+-- | v15["RecoilPitch"] = 0.02
+-- | v15["FireCooldown"] = 0.045
+-- | v15["Range"] = 450
+-- | v14["overrides"] = v15
+-- | v13["Rifle"] = v14
+-- | v14 = v14()
+-- | v14["skipLocked"] = false
+-- | -- vm 0076  opcode=3  A=15  B=0  C=3  mode=0  flags=0
+-- | v15["SwingCooldown"] = 0.08
+-- | v15["HitboxScale"] = 1.35
+-- | v15["Recovery"] = 0.05
+-- | v14["overrides"] = v15
+-- | v13["Melee"] = v14
+-- | v14 = v14()
+-- | -- vm 0095  opcode=23  A=19  B=14  C=_  mode=1  flags=0
+-- | local v20 = v20()
+-- | -- vm 0097  opcode=3  A=21  B=0  C=5  mode=0  flags=0
+-- | v21["rifleBypass"] = false
+-- | v21["meleeBypass"] = false
+-- | v21["autoOrbit"] = false
+-- | v21["scanRadius"] = 180
+-- | v21["allowTeam"] = false
+-- | v20 = v20(v21)
+-- | v20.load()
+-- | local v21 = v12.new("NebulaCore", 6)
+-- | local v23 = (6)()
+-- | v21.register(v25, "TargetOrbit", 0.016, function(arg1, arg2, ...)
+-- |   local v3 = v3(v4, v5, v6, v7)
+-- |   -- vm 0003  opcode=75  A=0  B=26  C=2  mode=3  flags=1
+-- |   -- vm 0004  opcode=19  A=0  B=26  C=_  mode=2  flags=0
+-- |   local v8 = v8()
+-- |   v8 = v8.get("autoOrbit")
+-- |   v3 = v3(v4, v5, v6, v7, v8)
+-- |   -- vm 0010  opcode=131  A=3  B=25  C=1  mode=3  flags=0
+-- |   -- vm 0011  opcode=19  A=0  B=25  C=_  mode=2  flags=0
+-- |   local v9 = ("autoOrbit")()
+-- |   -- vm 0014  opcode=75  A=0  B=13  C=8  mode=3  flags=1
+-- |   -- vm 0015  opcode=19  A=0  B=13  C=_  mode=2  flags=0
+-- |   -- vm 0017  opcode=126  A=9  B=16  C=0  mode=3  flags=4
+-- |   -- vm 0018  opcode=19  A=0  B=16  C=_  mode=2  flags=0
+-- |   local v10 = v10()
+-- |   v10 = v10()
+-- |   v10 = v10()
+-- |   v10 = v10()
+-- |   -- vm 0023  opcode=19  A=0  B=16  C=_  mode=2  flags=0
+-- |   -- vm 0024  opcode=19  A=0  B=25  C=_  mode=2  flags=0
+-- |   -- vm 0025  opcode=19  A=0  B=13  C=_  mode=2  flags=0
+-- |   -- vm 0027  opcode=126  A=2  B=122  C=3  mode=3  flags=4
+-- |   -- vm 0028  opcode=19  A=0  B=122  C=_  mode=2  flags=0
+-- |   -- vm 0029  opcode=131  A=6  B=73  C=1  mode=3  flags=0
+-- |   -- vm 0030  opcode=19  A=0  B=73  C=_  mode=2  flags=0
+-- |   v9 = (0)()
+-- |   -- vm 0033  opcode=126  A=8  B=60  C=0  mode=3  flags=4
+-- |   -- vm 0034  opcode=19  A=0  B=60  C=_  mode=2  flags=0
+-- |   -- vm 0036  opcode=126  A=10  B=55  C=0  mode=3  flags=4
+-- |   -- vm 0037  opcode=19  A=0  B=55  C=_  mode=2  flags=0
+-- |   local v11 = v11()
+-- |   local v12 = v12()
+-- |   v12 = v12.get("scanRadius")
+-- |   v11 = v11(v12, 25, 500)
+-- |   v9 = v9(0, v11)
+-- |   v11 = v11()
+-- |   v12 = v12()
+-- |   local v13 = (25)()
+-- |   v13 = v13.get("allowTeam")
+-- |   v11 = v11(v12, v13)
+-- |   v11 = v11()
+-- |   -- vm 0056  opcode=126  A=10  B=35  C=1  mode=3  flags=4
+-- |   -- vm 0057  opcode=19  A=0  B=35  C=_  mode=2  flags=0
+-- |   -- vm 0059  opcode=19  A=0  B=60  C=_  mode=2  flags=0
+-- |   -- vm 0060  opcode=19  A=0  B=35  C=_  mode=2  flags=0
+-- |   -- vm 0061  opcode=75  A=1  B=32  C=8  mode=3  flags=1
+-- |   -- vm 0062  opcode=19  A=0  B=32  C=_  mode=2  flags=0
+-- |   v10 = (1)()
+-- |   v11 = v11()
+-- |   v12 = v12()
+-- |   v12 = v12.get("allowTeam")
+-- |   -- vm 0069  opcode=129  A=10  B=0  C=11  mode=0  flags=0
+-- |   local v7 = v7(1, v9, v10, v11)
+-- |   local v6 = v6(v7, 1, v9, v10)
+-- |   -- vm 0072  opcode=19  A=0  B=73  C=_  mode=2  flags=0
+-- |   -- vm 0073  opcode=19  A=0  B=32  C=_  mode=2  flags=0
+-- |   -- vm 0074  opcode=22  A=6  B=121  C=0  mode=3  flags=0
+-- |   -- vm 0075  opcode=19  A=0  B=121  C=_  mode=2  flags=0
+-- |   -- vm 0076  opcode=22  A=7  B=121  C=0  mode=3  flags=0
+-- |   -- vm 0077  opcode=19  A=0  B=121  C=_  mode=2  flags=0
+-- |   v9 = v9()
+-- |   -- vm 0080  opcode=126  A=8  B=79  C=0  mode=3  flags=4
+-- |   -- vm 0081  opcode=19  A=0  B=79  C=_  mode=2  flags=0
+-- |   -- vm 0083  opcode=126  A=9  B=112  C=0  mode=3  flags=4
+-- |   -- vm 0084  opcode=19  A=0  B=112  C=_  mode=2  flags=0
+-- |   v10 = v10()
+-- |   -- vm 0086  opcode=102  A=11  B=1  C=4.5  mode=0  flags=4
+-- |   -- vm 0087  opcode=34  A=10  B=10  C=11  mode=0  flags=0
+-- |   -- vm 0090  opcode=102  A=11  B=11  C=2  mode=0  flags=4
+-- |   -- vm 0091  opcode=73  A=10  B=10  C=11  mode=0  flags=0
+-- |   v10 = v10()
+-- |   v10 = CFrame.new(v7.Position)
+-- |   v13 = ("allowTeam")()
+-- |   v11 = CFrame.Angles(0, v13, 0)
+-- |   -- vm 0103  opcode=42  A=10  B=10  C=11  mode=0  flags=0
+-- |   v11 = CFrame.new(0, 2.5, 6)
+-- |   -- vm 0110  opcode=42  A=10  B=10  C=11  mode=0  flags=0
+-- |   v5["CFrame"] = v10
+-- |   -- vm 0113  opcode=126  A=9  B=82  C=1  mode=3  flags=4
+-- |   -- vm 0114  opcode=19  A=0  B=82  C=_  mode=2  flags=0
+-- |   v5["AssemblyLinearVelocity"] = Vector3.zero
+-- |   -- vm 0118  opcode=19  A=0  B=121  C=_  mode=2  flags=0
+-- |   -- vm 0119  opcode=19  A=0  B=82  C=_  mode=2  flags=0
+-- |   -- vm 0120  opcode=19  A=0  B=121  C=_  mode=2  flags=0
+-- |   -- vm 0121  opcode=19  A=0  B=79  C=_  mode=2  flags=0
+-- |   -- vm 0123  opcode=126  A=2  B=136  C=4  mode=3  flags=4
+-- |   -- vm 0124  opcode=19  A=0  B=136  C=_  mode=2  flags=0
+-- |   -- vm 0125  opcode=35  A=8  B=0  C=600  mode=0  flags=4
+-- |   -- vm 0126  opcode=126  A=8  B=134  C=0  mode=3  flags=4
+-- |   -- vm 0127  opcode=19  A=0  B=134  C=_  mode=2  flags=0
+-- |   v11 = v11(0, 2.5)
+-- |   v9 = string.format("[Nebula] Orbit heartbeat #%d active", v11)
+-- |   print(v9)
+-- |   v8 = print()
+-- |   v8 = v8()
+-- |   -- vm 0137  opcode=126  A=2  B=152  C=2  mode=3  flags=4
+-- |   -- vm 0138  opcode=19  A=0  B=152  C=_  mode=2  flags=0
+-- |   -- vm 0139  opcode=131  A=5  B=142  C=1  mode=3  flags=0
+-- |   -- vm 0140  opcode=19  A=0  B=142  C=_  mode=2  flags=0
+-- |   v8 = v8()
+-- |   v8 = v8()
+-- |   v8 = v8()
+-- |   v9 = v9()
+-- |   v10 = ("[Nebula] Orbit heartbeat #%d active")()
+-- | ... preview truncated ...
+
+-- decoded VM bytecode:
+-- proto 0: params=0, constants=149, instructions=512, children=26
+-- constants:
+--   [1] "game"
+--   [2] "GetService"
+--   [3] "Players"
+--   [4] "ReplicatedStorage"
+--   [5] "RunService"
+--   [6] "UserInputService"
+--   [7] "HttpService"
+--   [8] "LocalPlayer"
+--   [9] "nebula_sentinel_v2.json"
+--   [10] 8472910452
+--   [11] "PlaceId"
+--   [12] 0
+--   [13] "warn"
+--   [14] "string"
+--   [15] "format"
+--   [16] "[Nebula] Unsupported PlaceId: %d (expected %d)"
+--   [17] "__index"
+--   [18] "new"
+--   [19] "register"
+--   [20] "pruneInactive"
+--   [21] "step"
+--   [22] "start"
+--   [23] "stop"
+--   [24] "Rifle"
+--   [25] "skipLocked"
+--   [26] true
+--   [27] "overrides"
+--   [28] "Spread"
+--   [29] "RecoilPitch"
+--   [30] 0.02
+--   [31] "FireCooldown"
+--   [32] 0.045
+--   [33] "Range"
+--   [34] 450
+--   [35] "Melee"
+--   [36] false
+--   [37] "SwingCooldown"
+--   [38] 0.08
+--   [39] "HitboxScale"
+--   [40] 1.35
+--   [41] "Recovery"
+--   [42] 0.05
+--   [43] "rifleBypass"
+--   [44] "meleeBypass"
+--   [45] "autoOrbit"
+--   [46] "scanRadius"
+--   [47] 180
+--   [48] "allowTeam"
+--   [49] "load"
+--   [50] "NebulaCore"
+--   [51] 6
+--   [52] "TargetOrbit"
+--   [53] 0.016
+--   [54] "gethui"
+--   [55] "WaitForChild"
+--   [56] "PlayerGui"
+--   [57] "FindFirstChild"
+--   [58] "NebulaSentinelUI"
+--   [59] "Destroy"
+--   [60] "ScreenGui"
+--   [61] "Name"
+--   [62] "ResetOnSpawn"
+--   [63] "ZIndexBehavior"
+--   [64] "Enum"
+--   [65] "Sibling"
+--   [66] "Parent"
+--   [67] "Frame"
+--   [68] "Size"
+--   [69] "UDim2"
+--   [70] 240
+--   [71] 280
+--   [72] "Position"
+--   [73] 48
+--   [74] 140
+--   [75] "BackgroundColor3"
+--   [76] "Color3"
+--   [77] "fromRGB"
+--   [78] 20
+--   [79] 22
+--   [80] 28
+--   [81] "BorderSizePixel"
+--   [82] "UICorner"
+--   [83] "CornerRadius"
+--   [84] "UDim"
+--   [85] 12
+--   [86] "UIStroke"
+--   [87] "Color"
+--   [88] 62
+--   [89] 68
+--   [90] 82
+--   [91] "Thickness"
+--   [92] 1
+--   [93] "TextLabel"
+--   [94] -20
+--   [95] 32
+--   [96] 10
+--   [97] "BackgroundTransparency"
+--   [98] "Text"
+--   [99] "Nebula Sentinel v2.4"
+--   [100] "TextColor3"
+--   [101] 235
+--   [102] 238
+--   [103] 245
+--   [104] "Font"
+--   [105] "Code"
+--   [106] "TextSize"
+--   [107] 13
+--   [108] "TextXAlignment"
+--   [109] "Left"
+--   [110] -16
+--   [111] -44
+--   [112] 8
+--   [113] 36
+--   [114] "UIListLayout"
+--   [115] "Padding"
+--   [116] "SortOrder"
+--   [117] "LayoutOrder"
+--   [118] "LoadItemRegistry"
+--   [119] 2
+--   [120] "type"
+--   [121] "table"
+--   [122] "Items"
+--   [123] "Rifle Fast-Fire"
+--   [124] "Melee Cooldown"
+--   [125] "Auto Orbit Nearest"
+--   [126] "Include Teammates"
+--   [127] "ipairs"
+--   [128] 3
+--   [129] "get"
+--   [130] "TextButton"
+--   [131] 42
+--   [132] 54
+--   [133] 30
+--   [134] 33
+--   [135] "AutoButtonColor"
+--   [136] " [ON]"
+--   [137] " [OFF]"
+--   [138] 160
+--   [139] 190
+--   [140] 175
+--   [141] 192
+--   [142] "MouseButton1Click"
+--   [143] "Connect"
+--   [144] "InputBegan"
+--   [145] "InputEnded"
+--   [146] "InputChanged"
+--   [147] "NebulaSentinelReady"
+--   [148] "print"
+--   [149] "[Nebula] Loaded OK | sig=%s (%d, len=%d)"
+-- instructions:
+--   0001  opcode=108  A=0  B="game"  C=_  mode=1  flags=2
+--   0002  opcode=43  A=0  B=0  C="GetService"  mode=0  flags=4
+--   0003  opcode=41  A=2  B="Players"  C=_  mode=1  flags=2
+--   0004  opcode=81  A=0  B=2  C=2  mode=0  flags=0
+--   0005  opcode=108  A=1  B="game"  C=_  mode=1  flags=2
+--   0006  opcode=43  A=1  B=1  C="GetService"  mode=0  flags=4
+--   0007  opcode=41  A=3  B="ReplicatedStorage"  C=_  mode=1  flags=2
+--   0008  opcode=81  A=1  B=3  C=2  mode=0  flags=0
+--   0009  opcode=108  A=2  B="game"  C=_  mode=1  flags=2
+--   0010  opcode=43  A=2  B=2  C="GetService"  mode=0  flags=4
+--   0011  opcode=41  A=4  B="RunService"  C=_  mode=1  flags=2
+--   0012  opcode=81  A=2  B=4  C=2  mode=0  flags=0
+--   0013  opcode=108  A=3  B="game"  C=_  mode=1  flags=2
+--   0014  opcode=43  A=3  B=3  C="GetService"  mode=0  flags=4
+--   0015  opcode=41  A=5  B="UserInputService"  C=_  mode=1  flags=2
+--   0016  opcode=81  A=3  B=5  C=2  mode=0  flags=0
+--   0017  opcode=108  A=4  B="game"  C=_  mode=1  flags=2
+--   0018  opcode=43  A=4  B=4  C="GetService"  mode=0  flags=4
+--   0019  opcode=41  A=6  B="HttpService"  C=_  mode=1  flags=2
+--   0020  opcode=81  A=4  B=6  C=2  mode=0  flags=0
+--   0021  opcode=119  A=5  B=0  C="LocalPlayer"  mode=0  flags=4
+--   0022  opcode=41  A=6  B="nebula_sentinel_v2.json"  C=_  mode=1  flags=2
+--   0023  opcode=41  A=7  B=8472910452  C=_  mode=1  flags=2
+--   0024  opcode=108  A=8  B="game"  C=_  mode=1  flags=2
+--   0025  opcode=119  A=8  B=8  C="PlaceId"  mode=0  flags=4
+--   0026  opcode=106  A=8  B=40  C=0  mode=3  flags=4
+--   0027  opcode=19  A=0  B=40  C=_  mode=2  flags=0
+--   0028  opcode=108  A=8  B="game"  C=_  mode=1  flags=2
+--   0029  opcode=119  A=8  B=8  C="PlaceId"  mode=0  flags=4
+--   0030  opcode=15  A=8  B=40  C=7  mode=3  flags=0
+--   0031  opcode=19  A=0  B=40  C=_  mode=2  flags=0
+--   0032  opcode=108  A=8  B="warn"  C=_  mode=1  flags=2
+--   0033  opcode=108  A=9  B="string"  C=_  mode=1  flags=2
+--   0034  opcode=119  A=9  B=9  C="format"  mode=0  flags=4
+--   0035  opcode=41  A=10  B="[Nebula] Unsupported PlaceId: %d (expected %d)"  C=_  mode=1  flags=2
+--   0036  opcode=108  A=11  B="game"  C=_  mode=1  flags=2
+--   0037  opcode=119  A=11  B=11  C="PlaceId"  mode=0  flags=4
+--   0038  opcode=46  A=12  B=7  C=0  mode=0  flags=0
+--   0039  opcode=132  A=9  B=12  C=0  mode=0  flags=0
+--   0040  opcode=62  A=8  B=0  C=1  mode=0  flags=0
+--   0041  opcode=23  A=8  B=0  C=_  mode=1  flags=0
+--   0042  opcode=23  A=9  B=1  C=_  mode=1  flags=0
+--   0043  opcode=23  A=10  B=2  C=_  mode=1  flags=0
+--   0044  opcode=124  A=11  B=3  C=3  mode=3  flags=0
+--   0045  opcode=66  A=0  B=6  C=0  mode=0  flags=0
+--   0046  opcode=66  A=0  B=4  C=0  mode=0  flags=0
+--   0047  opcode=66  A=0  B=8  C=0  mode=0  flags=0
+--   0048  opcode=3  A=12  B=0  C=0  mode=0  flags=0
+--   0049  opcode=123  A=12  B="__index"  C=12  mode=0  flags=2
+--   0050  opcode=124  A=13  B=4  C=1  mode=3  flags=0
+--   0051  opcode=66  A=0  B=12  C=0  mode=0  flags=0
+--   0052  opcode=123  A=12  B="new"  C=13  mode=0  flags=2
+--   0053  opcode=23  A=13  B=5  C=_  mode=1  flags=0
+--   0054  opcode=123  A=12  B="register"  C=13  mode=0  flags=2
+--   0055  opcode=23  A=13  B=6  C=_  mode=1  flags=0
+--   0056  opcode=123  A=12  B="pruneInactive"  C=13  mode=0  flags=2
+--   0057  opcode=23  A=13  B=7  C=_  mode=1  flags=0
+--   0058  opcode=123  A=12  B="step"  C=13  mode=0  flags=2
+--   0059  opcode=124  A=13  B=8  C=1  mode=3  flags=0
+--   0060  opcode=66  A=0  B=2  C=0  mode=0  flags=0
+--   0061  opcode=123  A=12  B="start"  C=13  mode=0  flags=2
+--   0062  opcode=23  A=13  B=9  C=_  mode=1  flags=0
+--   0063  opcode=123  A=12  B="stop"  C=13  mode=0  flags=2
+--   0064  opcode=3  A=13  B=0  C=2  mode=0  flags=0
+--   0065  opcode=3  A=14  B=0  C=2  mode=0  flags=0
+--   0066  opcode=136  A=14  B="skipLocked"  C=true  mode=0  flags=6
+--   0067  opcode=3  A=15  B=0  C=4  mode=0  flags=0
+--   0068  opcode=136  A=15  B="Spread"  C=0  mode=0  flags=6
+--   0069  opcode=136  A=15  B="RecoilPitch"  C=0.02  mode=0  flags=6
+--   0070  opcode=136  A=15  B="FireCooldown"  C=0.045  mode=0  flags=6
+--   0071  opcode=136  A=15  B="Range"  C=450  mode=0  flags=6
+--   0072  opcode=123  A=14  B="overrides"  C=15  mode=0  flags=2
+--   0073  opcode=123  A=13  B="Rifle"  C=14  mode=0  flags=2
+--   0074  opcode=3  A=14  B=0  C=2  mode=0  flags=0
+--   0075  opcode=136  A=14  B="skipLocked"  C=false  mode=0  flags=6
+--   0076  opcode=3  A=15  B=0  C=3  mode=0  flags=0
+--   0077  opcode=136  A=15  B="SwingCooldown"  C=0.08  mode=0  flags=6
+--   0078  opcode=136  A=15  B="HitboxScale"  C=1.35  mode=0  flags=6
+--   0079  opcode=136  A=15  B="Recovery"  C=0.05  mode=0  flags=6
+--   0080  opcode=123  A=14  B="overrides"  C=15  mode=0  flags=2
+--   0081  opcode=123  A=13  B="Melee"  C=14  mode=0  flags=2
+--   0082  opcode=3  A=14  B=0  C=0  mode=0  flags=0
+--   0083  opcode=124  A=15  B=10  C=2  mode=3  flags=0
+--   0084  opcode=66  A=0  B=14  C=0  mode=0  flags=0
+--   0085  opcode=66  A=0  B=13  C=0  mode=0  flags=0
+--   0086  opcode=124  A=16  B=11  C=1  mode=3  flags=0
+--   0087  opcode=66  A=0  B=5  C=0  mode=0  flags=0
+--   0088  opcode=124  A=17  B=12  C=3  mode=3  flags=0
+--   0089  opcode=66  A=0  B=0  C=0  mode=0  flags=0
+--   0090  opcode=66  A=0  B=16  C=0  mode=0  flags=0
+--   0091  opcode=66  A=0  B=5  C=0  mode=0  flags=0
+--   0092  opcode=124  A=18  B=13  C=2  mode=3  flags=0
+--   0093  opcode=66  A=0  B=10  C=0  mode=0  flags=0
+--   0094  opcode=66  A=0  B=9  C=0  mode=0  flags=0
+--   0095  opcode=23  A=19  B=14  C=_  mode=1  flags=0
+--   0096  opcode=46  A=20  B=11  C=0  mode=0  flags=0
+--   0097  opcode=3  A=21  B=0  C=5  mode=0  flags=0
+--   0098  opcode=136  A=21  B="rifleBypass"  C=false  mode=0  flags=6
+--   0099  opcode=136  A=21  B="meleeBypass"  C=false  mode=0  flags=6
+--   0100  opcode=136  A=21  B="autoOrbit"  C=false  mode=0  flags=6
+--   0101  opcode=136  A=21  B="scanRadius"  C=180  mode=0  flags=6
+--   0102  opcode=136  A=21  B="allowTeam"  C=false  mode=0  flags=6
+--   0103  opcode=2  A=20  B=2  C=2  mode=0  flags=0
+--   0104  opcode=119  A=21  B=20  C="load"  mode=0  flags=4
+--   0105  opcode=45  A=21  B=1  C=1  mode=0  flags=0
+--   0106  opcode=119  A=21  B=12  C="new"  mode=0  flags=4
+--   0107  opcode=41  A=22  B="NebulaCore"  C=_  mode=1  flags=2
+--   0108  opcode=41  A=23  B=6  C=_  mode=1  flags=2
+--   0109  opcode=81  A=21  B=23  C=2  mode=0  flags=0
+--   0110  opcode=41  A=22  B=0  C=_  mode=1  flags=2
+--   0111  opcode=105  A=23  B=23  C=0  mode=0  flags=0
+--   0112  opcode=43  A=24  B=21  C="register"  mode=0  flags=4
+--   0113  opcode=41  A=26  B="TargetOrbit"  C=_  mode=1  flags=2
+--   0114  opcode=41  A=27  B=0.016  C=_  mode=1  flags=2
+--   0115  opcode=124  A=28  B=15  C=7  mode=3  flags=0
+--   0116  opcode=66  A=0  B=20  C=0  mode=0  flags=0
+--   0117  opcode=66  A=0  B=23  C=0  mode=0  flags=0
+--   0118  opcode=66  A=0  B=9  C=0  mode=0  flags=0
+--   0119  opcode=66  A=0  B=17  C=0  mode=0  flags=0
+--   0120  opcode=66  A=0  B=16  C=0  mode=0  flags=0
+--   0121  opcode=66  A=0  B=22  C=0  mode=0  flags=0
+--   0122  opcode=66  A=0  B=5  C=0  mode=0  flags=0
+--   0123  opcode=69  A=24  B=28  C=1  mode=0  flags=0
+--   0124  opcode=108  A=24  B="gethui"  C=_  mode=1  flags=2
+--   0125  opcode=22  A=24  B=130  C=0  mode=3  flags=0
+--   0126  opcode=19  A=0  B=130  C=_  mode=2  flags=0
+--   0127  opcode=108  A=24  B="gethui"  C=_  mode=1  flags=2
+--   0128  opcode=127  A=24  B=1  C=2  mode=0  flags=0
+--   0129  opcode=131  A=24  B=133  C=1  mode=3  flags=0
+--   0130  opcode=19  A=0  B=133  C=_  mode=2  flags=0
+--   0131  opcode=43  A=24  B=5  C="WaitForChild"  mode=0  flags=4
+--   0132  opcode=41  A=26  B="PlayerGui"  C=_  mode=1  flags=2
+--   0133  opcode=81  A=24  B=26  C=2  mode=0  flags=0
+--   0134  opcode=43  A=25  B=24  C="FindFirstChild"  mode=0  flags=4
+--   0135  opcode=41  A=27  B="NebulaSentinelUI"  C=_  mode=1  flags=2
+--   0136  opcode=81  A=25  B=27  C=2  mode=0  flags=0
+--   0137  opcode=22  A=25  B=140  C=0  mode=3  flags=0
+--   0138  opcode=19  A=0  B=140  C=_  mode=2  flags=0
+--   0139  opcode=43  A=26  B=25  C="Destroy"  mode=0  flags=4
+--   0140  opcode=57  A=26  B=2  C=1  mode=0  flags=0
+--   0141  opcode=46  A=26  B=19  C=0  mode=0  flags=0
+--   0142  opcode=41  A=27  B="ScreenGui"  C=_  mode=1  flags=2
+--   0143  opcode=3  A=28  B=0  C=4  mode=0  flags=0
+--   0144  opcode=136  A=28  B="Name"  C="NebulaSentinelUI"  mode=0  flags=6
+--   0145  opcode=136  A=28  B="ResetOnSpawn"  C=false  mode=0  flags=6
+--   0146  opcode=108  A=29  B="Enum"  C=_  mode=1  flags=2
+--   0147  opcode=119  A=29  B=29  C="ZIndexBehavior"  mode=0  flags=4
+--   0148  opcode=119  A=29  B=29  C="Sibling"  mode=0  flags=4
+--   0149  opcode=123  A=28  B="ZIndexBehavior"  C=29  mode=0  flags=2
+--   0150  opcode=123  A=28  B="Parent"  C=24  mode=0  flags=2
+--   0151  opcode=81  A=26  B=28  C=2  mode=0  flags=0
+--   0152  opcode=46  A=27  B=19  C=0  mode=0  flags=0
+--   0153  opcode=41  A=28  B="Frame"  C=_  mode=1  flags=2
+--   0154  opcode=3  A=29  B=0  C=5  mode=0  flags=0
+--   0155  opcode=108  A=30  B="UDim2"  C=_  mode=1  flags=2
+--   0156  opcode=119  A=30  B=30  C="new"  mode=0  flags=4
+--   0157  opcode=41  A=31  B=0  C=_  mode=1  flags=2
+--   0158  opcode=41  A=32  B=240  C=_  mode=1  flags=2
+--   0159  opcode=41  A=33  B=0  C=_  mode=1  flags=2
+--   0160  opcode=41  A=34  B=280  C=_  mode=1  flags=2
+--   0161  opcode=81  A=30  B=34  C=2  mode=0  flags=0
+--   0162  opcode=123  A=29  B="Size"  C=30  mode=0  flags=2
+--   0163  opcode=108  A=30  B="UDim2"  C=_  mode=1  flags=2
+--   0164  opcode=119  A=30  B=30  C="new"  mode=0  flags=4
+--   0165  opcode=41  A=31  B=0  C=_  mode=1  flags=2
+--   0166  opcode=41  A=32  B=48  C=_  mode=1  flags=2
+--   0167  opcode=41  A=33  B=0  C=_  mode=1  flags=2
+--   0168  opcode=41  A=34  B=140  C=_  mode=1  flags=2
+--   0169  opcode=81  A=30  B=34  C=2  mode=0  flags=0
+--   0170  opcode=123  A=29  B="Position"  C=30  mode=0  flags=2
+--   0171  opcode=108  A=30  B="Color3"  C=_  mode=1  flags=2
+--   0172  opcode=119  A=30  B=30  C="fromRGB"  mode=0  flags=4
+--   0173  opcode=41  A=31  B=20  C=_  mode=1  flags=2
+--   0174  opcode=41  A=32  B=22  C=_  mode=1  flags=2
+--   0175  opcode=41  A=33  B=28  C=_  mode=1  flags=2
+--   0176  opcode=81  A=30  B=33  C=2  mode=0  flags=0
+--   0177  opcode=123  A=29  B="BackgroundColor3"  C=30  mode=0  flags=2
+--   0178  opcode=136  A=29  B="BorderSizePixel"  C=0  mode=0  flags=6
+--   0179  opcode=123  A=29  B="Parent"  C=26  mode=0  flags=2
+--   0180  opcode=3  A=30  B=1  C=0  mode=0  flags=0
+--   0181  opcode=46  A=31  B=19  C=0  mode=0  flags=0
+--   0182  opcode=41  A=32  B="UICorner"  C=_  mode=1  flags=2
+--   0183  opcode=3  A=33  B=0  C=1  mode=0  flags=0
+--   0184  opcode=108  A=34  B="UDim"  C=_  mode=1  flags=2
+--   0185  opcode=119  A=34  B=34  C="new"  mode=0  flags=4
+--   0186  opcode=41  A=35  B=0  C=_  mode=1  flags=2
+--   0187  opcode=41  A=36  B=12  C=_  mode=1  flags=2
+--   0188  opcode=81  A=34  B=36  C=2  mode=0  flags=0
+--   0189  opcode=123  A=33  B="CornerRadius"  C=34  mode=0  flags=2
+--   0190  opcode=81  A=31  B=33  C=2  mode=0  flags=0
+--   0191  opcode=46  A=32  B=19  C=0  mode=0  flags=0
+--   0192  opcode=41  A=33  B="UIStroke"  C=_  mode=1  flags=2
+--   0193  opcode=3  A=34  B=0  C=2  mode=0  flags=0
+--   0194  opcode=108  A=35  B="Color3"  C=_  mode=1  flags=2
+--   0195  opcode=119  A=35  B=35  C="fromRGB"  mode=0  flags=4
+--   0196  opcode=41  A=36  B=62  C=_  mode=1  flags=2
+--   0197  opcode=41  A=37  B=68  C=_  mode=1  flags=2
+--   0198  opcode=41  A=38  B=82  C=_  mode=1  flags=2
+--   0199  opcode=81  A=35  B=38  C=2  mode=0  flags=0
+--   0200  opcode=123  A=34  B="Color"  C=35  mode=0  flags=2
+--   0201  opcode=136  A=34  B="Thickness"  C=1  mode=0  flags=6
+--   0202  opcode=132  A=32  B=34  C=0  mode=0  flags=0
+--   0203  opcode=116  A=30  B=0  C=1  mode=0  flags=0
+--   0204  opcode=81  A=27  B=30  C=2  mode=0  flags=0
+--   0205  opcode=46  A=28  B=19  C=0  mode=0  flags=0
+--   0206  opcode=41  A=29  B="TextLabel"  C=_  mode=1  flags=2
+--   0207  opcode=3  A=30  B=0  C=9  mode=0  flags=0
+--   0208  opcode=108  A=31  B="UDim2"  C=_  mode=1  flags=2
+--   0209  opcode=119  A=31  B=31  C="new"  mode=0  flags=4
+--   0210  opcode=41  A=32  B=1  C=_  mode=1  flags=2
+--   0211  opcode=41  A=33  B=-20  C=_  mode=1  flags=2
+--   0212  opcode=41  A=34  B=0  C=_  mode=1  flags=2
+--   0213  opcode=41  A=35  B=32  C=_  mode=1  flags=2
+--   0214  opcode=81  A=31  B=35  C=2  mode=0  flags=0
+--   0215  opcode=123  A=30  B="Size"  C=31  mode=0  flags=2
+--   0216  opcode=108  A=31  B="UDim2"  C=_  mode=1  flags=2
+--   0217  opcode=119  A=31  B=31  C="new"  mode=0  flags=4
+--   0218  opcode=41  A=32  B=0  C=_  mode=1  flags=2
+--   0219  opcode=41  A=33  B=10  C=_  mode=1  flags=2
+--   0220  opcode=41  A=34  B=0  C=_  mode=1  flags=2
+--   0221  opcode=41  A=35  B=0  C=_  mode=1  flags=2
+--   0222  opcode=81  A=31  B=35  C=2  mode=0  flags=0
+--   0223  opcode=123  A=30  B="Position"  C=31  mode=0  flags=2
+--   0224  opcode=136  A=30  B="BackgroundTransparency"  C=1  mode=0  flags=6
+--   0225  opcode=136  A=30  B="Text"  C="Nebula Sentinel v2.4"  mode=0  flags=6
+--   0226  opcode=108  A=31  B="Color3"  C=_  mode=1  flags=2
+--   0227  opcode=119  A=31  B=31  C="fromRGB"  mode=0  flags=4
+--   0228  opcode=41  A=32  B=235  C=_  mode=1  flags=2
+--   0229  opcode=41  A=33  B=238  C=_  mode=1  flags=2
+--   0230  opcode=41  A=34  B=245  C=_  mode=1  flags=2
+--   0231  opcode=81  A=31  B=34  C=2  mode=0  flags=0
+--   0232  opcode=123  A=30  B="TextColor3"  C=31  mode=0  flags=2
+--   0233  opcode=108  A=31  B="Enum"  C=_  mode=1  flags=2
+--   0234  opcode=119  A=31  B=31  C="Font"  mode=0  flags=4
+--   0235  opcode=119  A=31  B=31  C="Code"  mode=0  flags=4
+--   0236  opcode=123  A=30  B="Font"  C=31  mode=0  flags=2
+--   0237  opcode=136  A=30  B="TextSize"  C=13  mode=0  flags=6
+--   0238  opcode=108  A=31  B="Enum"  C=_  mode=1  flags=2
+--   0239  opcode=119  A=31  B=31  C="TextXAlignment"  mode=0  flags=4
+--   0240  opcode=119  A=31  B=31  C="Left"  mode=0  flags=4
+--   0241  opcode=123  A=30  B="TextXAlignment"  C=31  mode=0  flags=2
+--   0242  opcode=123  A=30  B="Parent"  C=27  mode=0  flags=2
+--   0243  opcode=81  A=28  B=30  C=2  mode=0  flags=0
+--   0244  opcode=46  A=29  B=19  C=0  mode=0  flags=0
+--   0245  opcode=41  A=30  B="Frame"  C=_  mode=1  flags=2
+--   0246  opcode=3  A=31  B=0  C=4  mode=0  flags=0
+--   0247  opcode=108  A=32  B="UDim2"  C=_  mode=1  flags=2
+--   0248  opcode=119  A=32  B=32  C="new"  mode=0  flags=4
+--   0249  opcode=41  A=33  B=1  C=_  mode=1  flags=2
+--   0250  opcode=41  A=34  B=-16  C=_  mode=1  flags=2
+--   0251  opcode=41  A=35  B=1  C=_  mode=1  flags=2
+--   0252  opcode=41  A=36  B=-44  C=_  mode=1  flags=2
+--   0253  opcode=81  A=32  B=36  C=2  mode=0  flags=0
+--   0254  opcode=123  A=31  B="Size"  C=32  mode=0  flags=2
+--   0255  opcode=108  A=32  B="UDim2"  C=_  mode=1  flags=2
+--   0256  opcode=119  A=32  B=32  C="new"  mode=0  flags=4
+--   0257  opcode=41  A=33  B=0  C=_  mode=1  flags=2
+--   0258  opcode=41  A=34  B=8  C=_  mode=1  flags=2
+--   0259  opcode=41  A=35  B=0  C=_  mode=1  flags=2
+--   0260  opcode=41  A=36  B=36  C=_  mode=1  flags=2
+--   0261  opcode=81  A=32  B=36  C=2  mode=0  flags=0
+--   0262  opcode=123  A=31  B="Position"  C=32  mode=0  flags=2
+--   0263  opcode=136  A=31  B="BackgroundTransparency"  C=1  mode=0  flags=6
+--   0264  opcode=123  A=31  B="Parent"  C=27  mode=0  flags=2
+--   0265  opcode=3  A=32  B=0  C=0  mode=0  flags=0
+--   0266  opcode=46  A=33  B=19  C=0  mode=0  flags=0
+--   0267  opcode=41  A=34  B="UIListLayout"  C=_  mode=1  flags=2
+--   0268  opcode=3  A=35  B=0  C=2  mode=0  flags=0
+--   0269  opcode=108  A=36  B="UDim"  C=_  mode=1  flags=2
+--   0270  opcode=119  A=36  B=36  C="new"  mode=0  flags=4
+--   0271  opcode=41  A=37  B=0  C=_  mode=1  flags=2
+--   0272  opcode=41  A=38  B=6  C=_  mode=1  flags=2
+--   0273  opcode=81  A=36  B=38  C=2  mode=0  flags=0
+--   0274  opcode=123  A=35  B="Padding"  C=36  mode=0  flags=2
+--   0275  opcode=108  A=36  B="Enum"  C=_  mode=1  flags=2
+--   0276  opcode=119  A=36  B=36  C="SortOrder"  mode=0  flags=4
+--   0277  opcode=119  A=36  B=36  C="LayoutOrder"  mode=0  flags=4
+--   0278  opcode=123  A=35  B="SortOrder"  C=36  mode=0  flags=2
+--   0279  opcode=132  A=33  B=35  C=0  mode=0  flags=0
+--   0280  opcode=116  A=32  B=0  C=1  mode=0  flags=0
+--   0281  opcode=81  A=29  B=32  C=2  mode=0  flags=0
+--   0282  opcode=3  A=30  B=0  C=0  mode=0  flags=0
+--   0283  opcode=46  A=31  B=18  C=0  mode=0  flags=0
+--   0284  opcode=41  A=32  B="LoadItemRegistry"  C=_  mode=1  flags=2
+--   0285  opcode=41  A=33  B=2  C=_  mode=1  flags=2
+--   0286  opcode=124  A=34  B=16  C=1  mode=3  flags=0
+--   0287  opcode=66  A=0  B=1  C=0  mode=0  flags=0
+--   0288  opcode=92  A=31  B=34  C=32  mode=0  flags=0
+--   0289  opcode=22  A=31  B=299  C=0  mode=3  flags=0
+--   0290  opcode=19  A=0  B=299  C=_  mode=2  flags=0
+--   0291  opcode=108  A=33  B="type"  C=_  mode=1  flags=2
+--   0292  opcode=46  A=34  B=32  C=0  mode=0  flags=0
+--   0293  opcode=2  A=33  B=2  C=2  mode=0  flags=0
+--   0294  opcode=126  A=33  B=299  C="table"  mode=3  flags=4
+--   0295  opcode=19  A=0  B=299  C=_  mode=2  flags=0
+--   0296  opcode=119  A=33  B=32  C="Items"  mode=0  flags=4
+--   0297  opcode=39  A=30  B=299  C=33  mode=3  flags=0
+--   0298  opcode=19  A=0  B=299  C=_  mode=2  flags=0
+--   0299  opcode=46  A=30  B=32  C=0  mode=0  flags=0
+--   0300  opcode=3  A=33  B=4  C=0  mode=0  flags=0
+--   0301  opcode=3  A=34  B=3  C=0  mode=0  flags=0
+--   0302  opcode=41  A=35  B="Rifle Fast-Fire"  C=_  mode=1  flags=2
+--   0303  opcode=41  A=36  B="rifleBypass"  C=_  mode=1  flags=2
+--   0304  opcode=124  A=37  B=17  C=2  mode=3  flags=0
+--   0305  opcode=66  A=0  B=15  C=0  mode=0  flags=0
+--   0306  opcode=66  A=0  B=30  C=0  mode=0  flags=0
+--   0307  opcode=27  A=34  B=3  C=1  mode=0  flags=0
+--   0308  opcode=3  A=35  B=3  C=0  mode=0  flags=0
+--   0309  opcode=41  A=36  B="Melee Cooldown"  C=_  mode=1  flags=2
+--   0310  opcode=41  A=37  B="meleeBypass"  C=_  mode=1  flags=2
+--   0311  opcode=124  A=38  B=18  C=2  mode=3  flags=0
+--   0312  opcode=66  A=0  B=15  C=0  mode=0  flags=0
+--   0313  opcode=66  A=0  B=30  C=0  mode=0  flags=0
+--   0314  opcode=27  A=35  B=3  C=1  mode=0  flags=0
+--   0315  opcode=3  A=36  B=3  C=0  mode=0  flags=0
+--   0316  opcode=41  A=37  B="Auto Orbit Nearest"  C=_  mode=1  flags=2
+--   0317  opcode=41  A=38  B="autoOrbit"  C=_  mode=1  flags=2
+--   0318  opcode=124  A=39  B=19  C=1  mode=3  flags=0
+--   0319  opcode=66  A=0  B=21  C=0  mode=0  flags=0
+--   0320  opcode=27  A=36  B=3  C=1  mode=0  flags=0
+--   0321  opcode=3  A=37  B=3  C=0  mode=0  flags=0
+--   0322  opcode=41  A=38  B="Include Teammates"  C=_  mode=1  flags=2
+--   0323  opcode=41  A=39  B="allowTeam"  C=_  mode=1  flags=2
+--   0324  opcode=23  A=40  B=20  C=_  mode=1  flags=0
+--   0325  opcode=27  A=37  B=3  C=1  mode=0  flags=0
+--   0326  opcode=27  A=33  B=4  C=1  mode=0  flags=0
+--   0327  opcode=108  A=34  B="ipairs"  C=_  mode=1  flags=2
+--   0328  opcode=46  A=35  B=33  C=0  mode=0  flags=0
+--   0329  opcode=51  A=34  B=2  C=36  mode=0  flags=0
+--   0330  opcode=19  A=0  B=432  C=_  mode=2  flags=0
+--   0331  opcode=119  A=39  B=38  C=1  mode=0  flags=4
+--   0332  opcode=119  A=40  B=38  C=2  mode=0  flags=4
+--   0333  opcode=119  A=41  B=38  C=3  mode=0  flags=4
+--   0334  opcode=119  A=42  B=20  C="get"  mode=0  flags=4
+--   0335  opcode=46  A=43  B=40  C=0  mode=0  flags=0
+--   0336  opcode=2  A=42  B=2  C=2  mode=0  flags=0
+--   0337  opcode=106  A=42  B=339  C=true  mode=3  flags=4
+--   0338  opcode=19  A=0  B=339  C=_  mode=2  flags=0
+--   0339  opcode=1  A=42  B=0  C=0  mode=0  flags=0
+--   0340  opcode=83  A=42  B=1  C=0  mode=0  flags=0
+--   0341  opcode=46  A=43  B=19  C=0  mode=0  flags=0
+--   0342  opcode=41  A=44  B="TextButton"  C=_  mode=1  flags=2
+--   0343  opcode=3  A=45  B=0  C=10  mode=0  flags=0
+--   0344  opcode=108  A=46  B="UDim2"  C=_  mode=1  flags=2
+--   0345  opcode=119  A=46  B=46  C="new"  mode=0  flags=4
+--   0346  opcode=41  A=47  B=1  C=_  mode=1  flags=2
+--   0347  opcode=41  A=48  B=0  C=_  mode=1  flags=2
+--   0348  opcode=41  A=49  B=0  C=_  mode=1  flags=2
+--   0349  opcode=41  A=50  B=32  C=_  mode=1  flags=2
+--   0350  opcode=81  A=46  B=50  C=2  mode=0  flags=0
+--   0351  opcode=123  A=45  B="Size"  C=46  mode=0  flags=2
+--   0352  opcode=22  A=42  B=361  C=0  mode=3  flags=0
+--   0353  opcode=19  A=0  B=361  C=_  mode=2  flags=0
+--   0354  opcode=108  A=46  B="Color3"  C=_  mode=1  flags=2
+--   0355  opcode=119  A=46  B=46  C="fromRGB"  mode=0  flags=4
+--   0356  opcode=41  A=47  B=42  C=_  mode=1  flags=2
+--   0357  opcode=41  A=48  B=62  C=_  mode=1  flags=2
+--   0358  opcode=41  A=49  B=54  C=_  mode=1  flags=2
+--   0359  opcode=81  A=46  B=49  C=2  mode=0  flags=0
+--   0360  opcode=131  A=46  B=367  C=1  mode=3  flags=0
+--   0361  opcode=19  A=0  B=367  C=_  mode=2  flags=0
+--   0362  opcode=108  A=46  B="Color3"  C=_  mode=1  flags=2
+--   0363  opcode=119  A=46  B=46  C="fromRGB"  mode=0  flags=4
+--   0364  opcode=41  A=47  B=30  C=_  mode=1  flags=2
+--   0365  opcode=41  A=48  B=33  C=_  mode=1  flags=2
+--   0366  opcode=41  A=49  B=42  C=_  mode=1  flags=2
+--   0367  opcode=81  A=46  B=49  C=2  mode=0  flags=0
+--   0368  opcode=123  A=45  B="BackgroundColor3"  C=46  mode=0  flags=2
+--   0369  opcode=136  A=45  B="BorderSizePixel"  C=0  mode=0  flags=6
+--   0370  opcode=136  A=45  B="AutoButtonColor"  C=false  mode=0  flags=6
+--   0371  opcode=46  A=46  B=39  C=0  mode=0  flags=0
+--   0372  opcode=22  A=42  B=376  C=0  mode=3  flags=0
+--   0373  opcode=19  A=0  B=376  C=_  mode=2  flags=0
+--   0374  opcode=41  A=47  B=" [ON]"  C=_  mode=1  flags=2
+--   0375  opcode=131  A=47  B=377  C=1  mode=3  flags=0
+--   0376  opcode=19  A=0  B=377  C=_  mode=2  flags=0
+--   0377  opcode=41  A=47  B=" [OFF]"  C=_  mode=1  flags=2
+--   0378  opcode=24  A=46  B=46  C=47  mode=0  flags=0
+--   0379  opcode=123  A=45  B="Text"  C=46  mode=0  flags=2
+--   0380  opcode=22  A=42  B=389  C=0  mode=3  flags=0
+--   0381  opcode=19  A=0  B=389  C=_  mode=2  flags=0
+--   0382  opcode=108  A=46  B="Color3"  C=_  mode=1  flags=2
+--   0383  opcode=119  A=46  B=46  C="fromRGB"  mode=0  flags=4
+--   0384  opcode=41  A=47  B=160  C=_  mode=1  flags=2
+--   0385  opcode=41  A=48  B=240  C=_  mode=1  flags=2
+--   0386  opcode=41  A=49  B=190  C=_  mode=1  flags=2
+--   0387  opcode=81  A=46  B=49  C=2  mode=0  flags=0
+--   0388  opcode=131  A=46  B=395  C=1  mode=3  flags=0
+--   0389  opcode=19  A=0  B=395  C=_  mode=2  flags=0
+--   0390  opcode=108  A=46  B="Color3"  C=_  mode=1  flags=2
+--   0391  opcode=119  A=46  B=46  C="fromRGB"  mode=0  flags=4
+--   0392  opcode=41  A=47  B=175  C=_  mode=1  flags=2
+--   0393  opcode=41  A=48  B=180  C=_  mode=1  flags=2
+--   0394  opcode=41  A=49  B=192  C=_  mode=1  flags=2
+--   0395  opcode=81  A=46  B=49  C=2  mode=0  flags=0
+--   0396  opcode=123  A=45  B="TextColor3"  C=46  mode=0  flags=2
+--   0397  opcode=108  A=46  B="Enum"  C=_  mode=1  flags=2
+--   0398  opcode=119  A=46  B=46  C="Font"  mode=0  flags=4
+--   0399  opcode=119  A=46  B=46  C="Code"  mode=0  flags=4
+--   0400  opcode=123  A=45  B="Font"  C=46  mode=0  flags=2
+--   0401  opcode=136  A=45  B="TextSize"  C=12  mode=0  flags=6
+--   0402  opcode=123  A=45  B="LayoutOrder"  C=37  mode=0  flags=2
+--   0403  opcode=123  A=45  B="Parent"  C=29  mode=0  flags=2
+--   0404  opcode=3  A=46  B=0  C=0  mode=0  flags=0
+--   0405  opcode=46  A=47  B=19  C=0  mode=0  flags=0
+--   0406  opcode=41  A=48  B="UICorner"  C=_  mode=1  flags=2
+--   0407  opcode=3  A=49  B=0  C=1  mode=0  flags=0
+--   0408  opcode=108  A=50  B="UDim"  C=_  mode=1  flags=2
+--   0409  opcode=119  A=50  B=50  C="new"  mode=0  flags=4
+--   0410  opcode=41  A=51  B=0  C=_  mode=1  flags=2
+--   0411  opcode=41  A=52  B=8  C=_  mode=1  flags=2
+--   0412  opcode=81  A=50  B=52  C=2  mode=0  flags=0
+--   0413  opcode=123  A=49  B="CornerRadius"  C=50  mode=0  flags=2
+--   0414  opcode=132  A=47  B=49  C=0  mode=0  flags=0
+--   0415  opcode=116  A=46  B=0  C=1  mode=0  flags=0
+--   0416  opcode=81  A=43  B=46  C=2  mode=0  flags=0
+--   0417  opcode=119  A=44  B=43  C="MouseButton1Click"  mode=0  flags=4
+--   0418  opcode=43  A=44  B=44  C="Connect"  mode=0  flags=4
+--   0419  opcode=124  A=46  B=21  C=6  mode=3  flags=0
+--   0420  opcode=66  A=0  B=20  C=0  mode=0  flags=0
+--   0421  opcode=66  A=0  B=40  C=0  mode=0  flags=0
+--   0422  opcode=66  A=0  B=42  C=0  mode=0  flags=0
+--   0423  opcode=66  A=0  B=41  C=0  mode=0  flags=0
+--   0424  opcode=66  A=0  B=43  C=0  mode=0  flags=0
+--   0425  opcode=66  A=0  B=39  C=0  mode=0  flags=0
+--   0426  opcode=69  A=44  B=46  C=1  mode=0  flags=0
+--   0427  opcode=22  A=42  B=431  C=0  mode=3  flags=0
+--   0428  opcode=19  A=0  B=431  C=_  mode=2  flags=0
+--   0429  opcode=46  A=44  B=41  C=0  mode=0  flags=0
+--   0430  opcode=83  A=45  B=1  C=0  mode=0  flags=0
+--   0431  opcode=57  A=44  B=2  C=1  mode=0  flags=0
+--   0432  opcode=79  A=39  B=0  C=0  mode=0  flags=0
+--   0433  opcode=133  A=34  B=330  C=2  mode=3  flags=0
+--   0434  opcode=19  A=0  B=330  C=_  mode=2  flags=0
+--   0435  opcode=41  A=34  B=0  C=_  mode=1  flags=2
+--   0436  opcode=105  A=35  B=37  C=0  mode=0  flags=0
+--   0437  opcode=126  A=34  B=456  C=1  mode=3  flags=4
+--   0438  opcode=19  A=0  B=456  C=_  mode=2  flags=0
+--   0439  opcode=41  A=38  B=0  C=_  mode=1  flags=2
+--   0440  opcode=126  A=38  B=451  C=0  mode=3  flags=4
+--   0441  opcode=19  A=0  B=451  C=_  mode=2  flags=0
+--   0442  opcode=105  A=37  B=37  C=0  mode=0  flags=0
+--   0443  opcode=119  A=39  B=28  C="InputBegan"  mode=0  flags=4
+--   0444  opcode=43  A=39  B=39  C="Connect"  mode=0  flags=4
+--   0445  opcode=124  A=41  B=22  C=4  mode=3  flags=0
+--   0446  opcode=66  A=0  B=35  C=0  mode=0  flags=0
+--   0447  opcode=66  A=0  B=36  C=0  mode=0  flags=0
+--   0448  opcode=66  A=0  B=37  C=0  mode=0  flags=0
+--   0449  opcode=66  A=0  B=27  C=0  mode=0  flags=0
+--   0450  opcode=69  A=39  B=41  C=1  mode=0  flags=0
+--   0451  opcode=41  A=38  B=1  C=_  mode=1  flags=2
+--   0452  opcode=126  A=38  B=439  C=1  mode=3  flags=4
+--   0453  opcode=19  A=0  B=439  C=_  mode=2  flags=0
+--   0454  opcode=41  A=34  B=2  C=_  mode=1  flags=2
+--   0455  opcode=19  A=0  B=456  C=_  mode=2  flags=0
+--   0456  opcode=19  A=0  B=439  C=_  mode=2  flags=0
+--   0457  opcode=126  A=34  B=472  C=2  mode=3  flags=4
+--   0458  opcode=19  A=0  B=472  C=_  mode=2  flags=0
+--   0459  opcode=119  A=38  B=3  C="InputEnded"  mode=0  flags=4
+--   0460  opcode=43  A=38  B=38  C="Connect"  mode=0  flags=4
+--   0461  opcode=124  A=40  B=23  C=1  mode=3  flags=0
+--   0462  opcode=66  A=0  B=35  C=0  mode=0  flags=0
+--   0463  opcode=69  A=38  B=40  C=1  mode=0  flags=0
+--   0464  opcode=119  A=38  B=3  C="InputChanged"  mode=0  flags=4
+--   0465  opcode=43  A=38  B=38  C="Connect"  mode=0  flags=4
+--   0466  opcode=124  A=40  B=24  C=4  mode=3  flags=0
+--   0467  opcode=66  A=0  B=35  C=0  mode=0  flags=0
+--   0468  opcode=66  A=0  B=36  C=0  mode=0  flags=0
+--   0469  opcode=66  A=0  B=27  C=0  mode=0  flags=0
+--   0470  opcode=66  A=0  B=37  C=0  mode=0  flags=0
+--   0471  opcode=69  A=38  B=40  C=1  mode=0  flags=0
+--   0472  opcode=41  A=34  B=3  C=_  mode=1  flags=2
+--   0473  opcode=126  A=34  B=480  C=3  mode=3  flags=4
+--   0474  opcode=19  A=0  B=480  C=_  mode=2  flags=0
+--   0475  opcode=119  A=38  B=3  C="InputBegan"  mode=0  flags=4
+--   0476  opcode=43  A=38  B=38  C="Connect"  mode=0  flags=4
+--   0477  opcode=124  A=40  B=25  C=1  mode=3  flags=0
+--   0478  opcode=66  A=0  B=26  C=0  mode=0  flags=0
+--   0479  opcode=69  A=38  B=40  C=1  mode=0  flags=0
+--   0480  opcode=19  A=0  B=494  C=_  mode=2  flags=0
+--   0481  opcode=126  A=34  B=436  C=0  mode=3  flags=4
+--   0482  opcode=19  A=0  B=436  C=_  mode=2  flags=0
+--   0483  opcode=41  A=38  B=0  C=_  mode=1  flags=2
+--   0484  opcode=126  A=38  B=488  C=0  mode=3  flags=4
+--   0485  opcode=19  A=0  B=488  C=_  mode=2  flags=0
+--   0486  opcode=83  A=35  B=0  C=0  mode=0  flags=0
+--   0487  opcode=105  A=36  B=36  C=0  mode=0  flags=0
+--   0488  opcode=41  A=38  B=1  C=_  mode=1  flags=2
+--   0489  opcode=126  A=38  B=483  C=1  mode=3  flags=4
+--   0490  opcode=19  A=0  B=483  C=_  mode=2  flags=0
+--   0491  opcode=41  A=34  B=1  C=_  mode=1  flags=2
+--   0492  opcode=19  A=0  B=436  C=_  mode=2  flags=0
+--   0493  opcode=19  A=0  B=483  C=_  mode=2  flags=0
+--   0494  opcode=19  A=0  B=436  C=_  mode=2  flags=0
+--   0495  opcode=79  A=34  B=0  C=0  mode=0  flags=0
+--   0496  opcode=43  A=34  B=21  C="start"  mode=0  flags=4
+--   0497  opcode=57  A=34  B=2  C=1  mode=0  flags=0
+--   0498  opcode=46  A=34  B=8  C=0  mode=0  flags=0
+--   0499  opcode=41  A=35  B="NebulaSentinelReady"  C=_  mode=1  flags=2
+--   0500  opcode=41  A=36  B=42  C=_  mode=1  flags=2
+--   0501  opcode=92  A=34  B=36  C=36  mode=0  flags=0
+--   0502  opcode=108  A=37  B="print"  C=_  mode=1  flags=2
+--   0503  opcode=108  A=38  B="string"  C=_  mode=1  flags=2
+--   0504  opcode=119  A=38  B=38  C="format"  mode=0  flags=4
+--   0505  opcode=41  A=39  B="[Nebula] Loaded OK | sig=%s (%d, len=%d)"  C=_  mode=1  flags=2
+--   0506  opcode=46  A=40  B=35  C=0  mode=0  flags=0
+--   0507  opcode=46  A=41  B=34  C=0  mode=0  flags=0
+--   0508  opcode=46  A=42  B=36  C=0  mode=0  flags=0
+--   0509  opcode=132  A=38  B=42  C=0  mode=0  flags=0
+--   0510  opcode=62  A=37  B=0  C=1  mode=0  flags=0
+--   0511  opcode=79  A=0  B=0  C=0  mode=0  flags=0
+--   0512  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.0: params=2, constants=11, instructions=48, children=0
+-- constants:
+--   [1] 0
+--   [2] 2
+--   [3] 1
+--   [4] "string"
+--   [5] "byte"
+--   [6] 16777619
+--   [7] 7
+--   [8] 4294967296
+--   [9] "format"
+--   [10] "%08X"
+--   [11] 2166136261
+-- instructions:
+--   0001  opcode=41  A=2  B=0  C=_  mode=1  flags=2
+--   0002  opcode=105  A=3  B=5  C=0  mode=0  flags=0
+--   0003  opcode=126  A=2  B=8  C=2  mode=3  flags=4
+--   0004  opcode=19  A=0  B=8  C=_  mode=2  flags=0
+--   0005  opcode=46  A=6  B=3  C=0  mode=0  flags=0
+--   0006  opcode=46  A=7  B=5  C=0  mode=0  flags=0
+--   0007  opcode=46  A=8  B=4  C=0  mode=0  flags=0
+--   0008  opcode=70  A=6  B=2  C=0  mode=0  flags=0
+--   0009  opcode=75  A=1  B=39  C=2  mode=3  flags=1
+--   0010  opcode=19  A=0  B=39  C=_  mode=2  flags=0
+--   0011  opcode=41  A=6  B=1  C=_  mode=1  flags=2
+--   0012  opcode=46  A=7  B=4  C=0  mode=0  flags=0
+--   0013  opcode=41  A=8  B=1  C=_  mode=1  flags=2
+--   0014  opcode=56  A=6  B=32  C=_  mode=2  flags=0
+--   0015  opcode=41  A=10  B=0  C=_  mode=1  flags=2
+--   0016  opcode=105  A=11  B=11  C=0  mode=0  flags=0
+--   0017  opcode=126  A=10  B=16  C=0  mode=3  flags=4
+--   0018  opcode=19  A=0  B=16  C=_  mode=2  flags=0
+--   0019  opcode=108  A=12  B="string"  C=_  mode=1  flags=2
+--   0020  opcode=119  A=12  B=12  C="byte"  mode=0  flags=4
+--   0021  opcode=46  A=13  B=0  C=0  mode=0  flags=0
+--   0022  opcode=46  A=14  B=9  C=0  mode=0  flags=0
+--   0023  opcode=81  A=12  B=14  C=2  mode=0  flags=0
+--   0024  opcode=46  A=11  B=12  C=0  mode=0  flags=0
+--   0025  opcode=102  A=12  B=3  C=16777619  mode=0  flags=4
+--   0026  opcode=26  A=13  B=9  C=7  mode=0  flags=4
+--   0027  opcode=42  A=13  B=11  C=13  mode=0  flags=0
+--   0028  opcode=34  A=12  B=12  C=13  mode=0  flags=0
+--   0029  opcode=35  A=3  B=12  C=4294967296  mode=0  flags=4
+--   0030  opcode=19  A=0  B=31  C=_  mode=2  flags=0
+--   0031  opcode=19  A=0  B=16  C=_  mode=2  flags=0
+--   0032  opcode=113  A=6  B=14  C=_  mode=2  flags=0
+--   0033  opcode=108  A=6  B="string"  C=_  mode=1  flags=2
+--   0034  opcode=119  A=6  B=6  C="format"  mode=0  flags=4
+--   0035  opcode=41  A=7  B="%08X"  C=_  mode=1  flags=2
+--   0036  opcode=46  A=8  B=3  C=0  mode=0  flags=0
+--   0037  opcode=81  A=6  B=8  C=2  mode=0  flags=0
+--   0038  opcode=46  A=5  B=6  C=0  mode=0  flags=0
+--   0039  opcode=41  A=2  B=2  C=_  mode=1  flags=2
+--   0040  opcode=126  A=2  B=2  C=0  mode=3  flags=4
+--   0041  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0042  opcode=39  A=3  B=44  C=1  mode=3  flags=0
+--   0043  opcode=19  A=0  B=44  C=_  mode=2  flags=0
+--   0044  opcode=41  A=3  B=2166136261  C=_  mode=1  flags=2
+--   0045  opcode=16  A=4  B=0  C=0  mode=0  flags=0
+--   0046  opcode=41  A=2  B=1  C=_  mode=1  flags=2
+--   0047  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0048  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.1: params=3, constants=4, instructions=19, children=0
+-- constants:
+--   [1] 0
+--   [2] "clamped_low"
+--   [3] "clamped_high"
+--   [4] "exact"
+-- instructions:
+--   0001  opcode=41  A=3  B=0  C=_  mode=1  flags=2
+--   0002  opcode=126  A=3  B=1  C=0  mode=3  flags=4
+--   0003  opcode=19  A=0  B=1  C=_  mode=2  flags=0
+--   0004  opcode=64  A=0  B=9  C=1  mode=3  flags=0
+--   0005  opcode=19  A=0  B=9  C=_  mode=2  flags=0
+--   0006  opcode=46  A=4  B=1  C=0  mode=0  flags=0
+--   0007  opcode=41  A=5  B="clamped_low"  C=_  mode=1  flags=2
+--   0008  opcode=111  A=4  B=3  C=0  mode=0  flags=0
+--   0009  opcode=19  A=0  B=14  C=_  mode=2  flags=0
+--   0010  opcode=64  A=2  B=14  C=0  mode=3  flags=0
+--   0011  opcode=19  A=0  B=14  C=_  mode=2  flags=0
+--   0012  opcode=46  A=4  B=2  C=0  mode=0  flags=0
+--   0013  opcode=41  A=5  B="clamped_high"  C=_  mode=1  flags=2
+--   0014  opcode=111  A=4  B=3  C=0  mode=0  flags=0
+--   0015  opcode=46  A=4  B=0  C=0  mode=0  flags=0
+--   0016  opcode=41  A=5  B="exact"  C=_  mode=1  flags=2
+--   0017  opcode=111  A=4  B=3  C=0  mode=0  flags=0
+--   0018  opcode=19  A=0  B=1  C=_  mode=2  flags=0
+--   0019  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.2: params=0, constants=5, instructions=49, children=0
+-- constants:
+--   [1] 0
+--   [2] 1
+--   [3] "select"
+--   [4] "#"
+--   [5] "n"
+-- instructions:
+--   0001  opcode=41  A=1  B=0  C=_  mode=1  flags=2
+--   0002  opcode=105  A=2  B=4  C=0  mode=0  flags=0
+--   0003  opcode=75  A=0  B=7  C=1  mode=3  flags=1
+--   0004  opcode=19  A=0  B=7  C=_  mode=2  flags=0
+--   0005  opcode=41  A=2  B=0  C=_  mode=1  flags=2
+--   0006  opcode=105  A=3  B=3  C=0  mode=0  flags=0
+--   0007  opcode=41  A=1  B=1  C=_  mode=1  flags=2
+--   0008  opcode=126  A=1  B=2  C=1  mode=3  flags=4
+--   0009  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0010  opcode=105  A=4  B=4  C=0  mode=0  flags=0
+--   0011  opcode=41  A=5  B=0  C=_  mode=1  flags=2
+--   0012  opcode=126  A=5  B=11  C=0  mode=3  flags=4
+--   0013  opcode=19  A=0  B=11  C=_  mode=2  flags=0
+--   0014  opcode=126  A=2  B=32  C=1  mode=3  flags=4
+--   0015  opcode=19  A=0  B=32  C=_  mode=2  flags=0
+--   0016  opcode=41  A=6  B=0  C=_  mode=1  flags=2
+--   0017  opcode=126  A=6  B=16  C=0  mode=3  flags=4
+--   0018  opcode=19  A=0  B=16  C=_  mode=2  flags=0
+--   0019  opcode=41  A=7  B=1  C=_  mode=1  flags=2
+--   0020  opcode=46  A=8  B=3  C=0  mode=0  flags=0
+--   0021  opcode=41  A=9  B=1  C=_  mode=1  flags=2
+--   0022  opcode=56  A=7  B=28  C=_  mode=2  flags=0
+--   0023  opcode=108  A=11  B="select"  C=_  mode=1  flags=2
+--   0024  opcode=46  A=12  B=10  C=0  mode=0  flags=0
+--   0025  opcode=125  A=13  B=0  C=0  mode=0  flags=0
+--   0026  opcode=80  A=11  B=0  C=2  mode=0  flags=0
+--   0027  opcode=135  A=4  B=10  C=11  mode=0  flags=0
+--   0028  opcode=113  A=7  B=22  C=_  mode=2  flags=0
+--   0029  opcode=46  A=7  B=4  C=0  mode=0  flags=0
+--   0030  opcode=46  A=8  B=3  C=0  mode=0  flags=0
+--   0031  opcode=111  A=7  B=3  C=0  mode=0  flags=0
+--   0032  opcode=19  A=0  B=16  C=_  mode=2  flags=0
+--   0033  opcode=126  A=2  B=10  C=0  mode=3  flags=4
+--   0034  opcode=19  A=0  B=10  C=_  mode=2  flags=0
+--   0035  opcode=108  A=6  B="select"  C=_  mode=1  flags=2
+--   0036  opcode=41  A=7  B="#"  C=_  mode=1  flags=2
+--   0037  opcode=125  A=8  B=0  C=0  mode=0  flags=0
+--   0038  opcode=80  A=6  B=0  C=2  mode=0  flags=0
+--   0039  opcode=46  A=3  B=6  C=0  mode=0  flags=0
+--   0040  opcode=3  A=6  B=0  C=1  mode=0  flags=0
 -- This Source Was Generated by discord.gg/c3xVMnUUBv
-print("luaobfuscator OBFUSCATEold deobfed")
+--   0041  opcode=123  A=6  B="n"  C=3  mode=0  flags=2
+--   0042  opcode=46  A=4  B=6  C=0  mode=0  flags=0
+--   0043  opcode=41  A=2  B=1  C=_  mode=1  flags=2
+--   0044  opcode=19  A=0  B=10  C=_  mode=2  flags=0
+--   0045  opcode=19  A=0  B=11  C=_  mode=2  flags=0
+--   0046  opcode=19  A=0  B=10  C=_  mode=2  flags=0
+--   0047  opcode=19  A=0  B=48  C=_  mode=2  flags=0
+--   0048  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0049  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.3: params=1, constants=13, instructions=115, children=4
+-- constants:
+--   [1] 0
+--   [2] 3
+--   [3] "load"
+--   [4] "save"
+--   [5] "set"
+--   [6] "get"
+--   [7] "raw"
+--   [8] "history"
+--   [9] 1
+--   [10] "pairs"
+--   [11] "type"
+--   [12] "table"
+--   [13] 2
+-- instructions:
+--   0001  opcode=41  A=1  B=0  C=_  mode=1  flags=2
+--   0002  opcode=105  A=2  B=8  C=0  mode=0  flags=0
+--   0003  opcode=126  A=1  B=12  C=3  mode=3  flags=4
+--   0004  opcode=19  A=0  B=12  C=_  mode=2  flags=0
+--   0005  opcode=3  A=9  B=0  C=6  mode=0  flags=0
+--   0006  opcode=123  A=9  B="load"  C=5  mode=0  flags=2
+--   0007  opcode=123  A=9  B="save"  C=6  mode=0  flags=2
+--   0008  opcode=123  A=9  B="set"  C=7  mode=0  flags=2
+--   0009  opcode=123  A=9  B="get"  C=8  mode=0  flags=2
+--   0010  opcode=123  A=9  B="raw"  C=2  mode=0  flags=2
+--   0011  opcode=123  A=9  B="history"  C=4  mode=0  flags=2
+--   0012  opcode=65  A=9  B=2  C=0  mode=0  flags=0
+--   0013  opcode=126  A=1  B=63  C=0  mode=3  flags=4
+--   0014  opcode=19  A=0  B=63  C=_  mode=2  flags=0
+--   0015  opcode=41  A=9  B=0  C=_  mode=1  flags=2
+--   0016  opcode=126  A=9  B=21  C=0  mode=3  flags=4
+--   0017  opcode=19  A=0  B=21  C=_  mode=2  flags=0
+--   0018  opcode=3  A=10  B=0  C=0  mode=0  flags=0
+--   0019  opcode=46  A=2  B=10  C=0  mode=0  flags=0
+--   0020  opcode=41  A=3  B=0  C=_  mode=1  flags=2
+--   0021  opcode=41  A=9  B=1  C=_  mode=1  flags=2
+--   0022  opcode=126  A=9  B=58  C=1  mode=3  flags=4
+--   0023  opcode=19  A=0  B=58  C=_  mode=2  flags=0
+--   0024  opcode=3  A=10  B=0  C=0  mode=0  flags=0
+--   0025  opcode=46  A=4  B=10  C=0  mode=0  flags=0
+--   0026  opcode=108  A=10  B="pairs"  C=_  mode=1  flags=2
+--   0027  opcode=46  A=11  B=0  C=0  mode=0  flags=0
+--   0028  opcode=51  A=10  B=2  C=12  mode=0  flags=0
+--   0029  opcode=19  A=0  B=55  C=_  mode=2  flags=0
+--   0030  opcode=108  A=15  B="type"  C=_  mode=1  flags=2
+--   0031  opcode=46  A=16  B=14  C=0  mode=0  flags=0
+--   0032  opcode=2  A=15  B=2  C=2  mode=0  flags=0
+--   0033  opcode=126  A=15  B=54  C="table"  mode=3  flags=4
+--   0034  opcode=19  A=0  B=54  C=_  mode=2  flags=0
+--   0035  opcode=41  A=15  B=0  C=_  mode=1  flags=2
+--   0036  opcode=105  A=16  B=16  C=0  mode=0  flags=0
+--   0037  opcode=126  A=15  B=48  C=0  mode=3  flags=4
+--   0038  opcode=19  A=0  B=48  C=_  mode=2  flags=0
+--   0039  opcode=3  A=17  B=0  C=0  mode=0  flags=0
+--   0040  opcode=46  A=16  B=17  C=0  mode=0  flags=0
+--   0041  opcode=108  A=17  B="pairs"  C=_  mode=1  flags=2
+--   0042  opcode=46  A=18  B=14  C=0  mode=0  flags=0
+--   0043  opcode=51  A=17  B=2  C=19  mode=0  flags=0
+--   0044  opcode=19  A=0  B=45  C=_  mode=2  flags=0
+--   0045  opcode=135  A=16  B=20  C=21  mode=0  flags=0
+--   0046  opcode=133  A=17  B=44  C=2  mode=3  flags=0
+--   0047  opcode=19  A=0  B=44  C=_  mode=2  flags=0
+--   0048  opcode=41  A=15  B=1  C=_  mode=1  flags=2
+--   0049  opcode=126  A=15  B=36  C=1  mode=3  flags=4
+--   0050  opcode=19  A=0  B=36  C=_  mode=2  flags=0
+--   0051  opcode=135  A=2  B=13  C=16  mode=0  flags=0
+--   0052  opcode=19  A=0  B=55  C=_  mode=2  flags=0
+--   0053  opcode=19  A=0  B=36  C=_  mode=2  flags=0
+--   0054  opcode=19  A=0  B=55  C=_  mode=2  flags=0
+--   0055  opcode=135  A=2  B=13  C=14  mode=0  flags=0
+--   0056  opcode=133  A=10  B=29  C=2  mode=3  flags=0
+--   0057  opcode=19  A=0  B=29  C=_  mode=2  flags=0
+--   0058  opcode=41  A=9  B=2  C=_  mode=1  flags=2
+--   0059  opcode=126  A=9  B=15  C=2  mode=3  flags=4
+--   0060  opcode=19  A=0  B=15  C=_  mode=2  flags=0
+--   0061  opcode=41  A=1  B=1  C=_  mode=1  flags=2
+--   0062  opcode=19  A=0  B=63  C=_  mode=2  flags=0
+--   0063  opcode=19  A=0  B=15  C=_  mode=2  flags=0
+--   0064  opcode=126  A=1  B=86  C=2  mode=3  flags=4
+--   0065  opcode=19  A=0  B=86  C=_  mode=2  flags=0
+--   0066  opcode=41  A=9  B=0  C=_  mode=1  flags=2
+--   0067  opcode=75  A=1  B=73  C=9  mode=3  flags=1
+--   0068  opcode=19  A=0  B=73  C=_  mode=2  flags=0
+--   0069  opcode=105  A=8  B=8  C=0  mode=0  flags=0
+--   0070  opcode=124  A=8  B=0  C=2  mode=3  flags=0
+--   0071  opcode=66  A=0  B=2  C=0  mode=0  flags=0
+--   0072  opcode=66  A=0  B=3  C=0  mode=0  flags=0
+--   0073  opcode=41  A=9  B=2  C=_  mode=1  flags=2
+--   0074  opcode=75  A=2  B=77  C=9  mode=3  flags=1
+--   0075  opcode=19  A=0  B=77  C=_  mode=2  flags=0
+--   0076  opcode=41  A=1  B=3  C=_  mode=1  flags=2
+--   0077  opcode=19  A=0  B=86  C=_  mode=2  flags=0
+--   0078  opcode=126  A=9  B=66  C=0  mode=3  flags=4
+--   0079  opcode=19  A=0  B=66  C=_  mode=2  flags=0
+--   0080  opcode=105  A=7  B=7  C=0  mode=0  flags=0
+--   0081  opcode=124  A=7  B=1  C=3  mode=3  flags=0
+--   0082  opcode=66  A=0  B=3  C=0  mode=0  flags=0
+--   0083  opcode=66  A=0  B=6  C=0  mode=0  flags=0
+--   0084  opcode=66  A=0  B=2  C=0  mode=0  flags=0
+--   0085  opcode=41  A=9  B=1  C=_  mode=1  flags=2
+--   0086  opcode=19  A=0  B=66  C=_  mode=2  flags=0
+--   0087  opcode=126  A=1  B=2  C=1  mode=3  flags=4
+--   0088  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0089  opcode=41  A=9  B=0  C=_  mode=1  flags=2
+--   0090  opcode=126  A=9  B=97  C=0  mode=3  flags=4
+--   0091  opcode=19  A=0  B=97  C=_  mode=2  flags=0
+--   0092  opcode=105  A=5  B=5  C=0  mode=0  flags=0
+--   0093  opcode=124  A=5  B=2  C=3  mode=3  flags=0
+--   0094  opcode=68  A=0  B=0  C=0  mode=0  flags=0
+--   0095  opcode=68  A=0  B=1  C=0  mode=0  flags=0
+--   0096  opcode=66  A=0  B=2  C=0  mode=0  flags=0
+--   0097  opcode=41  A=9  B=1  C=_  mode=1  flags=2
+--   0098  opcode=126  A=9  B=108  C=1  mode=3  flags=4
+--   0099  opcode=19  A=0  B=108  C=_  mode=2  flags=0
+--   0100  opcode=105  A=6  B=6  C=0  mode=0  flags=0
+--   0101  opcode=124  A=6  B=3  C=6  mode=3  flags=0
+--   0102  opcode=66  A=0  B=3  C=0  mode=0  flags=0
+--   0103  opcode=68  A=0  B=2  C=0  mode=0  flags=0
+--   0104  opcode=66  A=0  B=4  C=0  mode=0  flags=0
+--   0105  opcode=68  A=0  B=0  C=0  mode=0  flags=0
+--   0106  opcode=68  A=0  B=1  C=0  mode=0  flags=0
+--   0107  opcode=66  A=0  B=2  C=0  mode=0  flags=0
+--   0108  opcode=41  A=9  B=2  C=_  mode=1  flags=2
+--   0109  opcode=126  A=9  B=89  C=2  mode=3  flags=4
+--   0110  opcode=19  A=0  B=89  C=_  mode=2  flags=0
+--   0111  opcode=41  A=1  B=2  C=_  mode=1  flags=2
+--   0112  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0113  opcode=19  A=0  B=89  C=_  mode=2  flags=0
+--   0114  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0115  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.3.0: params=1, constants=0, instructions=5, children=0
+-- instructions:
+--   0001  opcode=72  A=1  B=0  C=0  mode=0  flags=0
+--   0002  opcode=47  A=1  B=1  C=0  mode=0  flags=0
+--   0003  opcode=72  A=2  B=1  C=0  mode=0  flags=0
+--   0004  opcode=111  A=1  B=3  C=0  mode=0  flags=0
+--   0005  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.3.1: params=3, constants=5, instructions=50, children=0
+-- constants:
+--   [1] 0
+--   [2] 1
+--   [3] "set:"
+--   [4] "tostring"
+--   [5] 2
+-- instructions:
+--   0001  opcode=41  A=3  B=0  C=_  mode=1  flags=2
+--   0002  opcode=105  A=4  B=4  C=0  mode=0  flags=0
+--   0003  opcode=126  A=3  B=2  C=0  mode=3  flags=4
+--   0004  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0005  opcode=41  A=4  B=0  C=_  mode=1  flags=2
+--   0006  opcode=41  A=5  B=0  C=_  mode=1  flags=2
+--   0007  opcode=126  A=5  B=29  C=0  mode=3  flags=4
+--   0008  opcode=19  A=0  B=29  C=_  mode=2  flags=0
+--   0009  opcode=126  A=4  B=23  C=1  mode=3  flags=4
+--   0010  opcode=19  A=0  B=23  C=_  mode=2  flags=0
+--   0011  opcode=72  A=6  B=0  C=0  mode=0  flags=0
+--   0012  opcode=26  A=6  B=6  C=1  mode=0  flags=4
+--   0013  opcode=78  A=6  B=0  C=0  mode=0  flags=0
+--   0014  opcode=22  A=2  B=22  C=0  mode=3  flags=0
+--   0015  opcode=19  A=0  B=22  C=_  mode=2  flags=0
+--   0016  opcode=72  A=6  B=1  C=0  mode=0  flags=0
+--   0017  opcode=41  A=7  B="set:"  C=_  mode=1  flags=2
+--   0018  opcode=108  A=8  B="tostring"  C=_  mode=1  flags=2
+--   0019  opcode=46  A=9  B=0  C=0  mode=0  flags=0
+--   0020  opcode=2  A=8  B=2  C=2  mode=0  flags=0
+--   0021  opcode=24  A=7  B=7  C=8  mode=0  flags=0
+--   0022  opcode=57  A=6  B=2  C=1  mode=0  flags=0
+--   0023  opcode=41  A=4  B=2  C=_  mode=1  flags=2
+--   0024  opcode=75  A=2  B=28  C=4  mode=3  flags=1
+--   0025  opcode=19  A=0  B=28  C=_  mode=2  flags=0
+--   0026  opcode=83  A=6  B=1  C=0  mode=0  flags=0
+--   0027  opcode=46  A=7  B=1  C=0  mode=0  flags=0
+--   0028  opcode=111  A=6  B=3  C=0  mode=0  flags=0
+--   0029  opcode=41  A=5  B=1  C=_  mode=1  flags=2
+--   0030  opcode=126  A=5  B=6  C=1  mode=3  flags=4
+--   0031  opcode=19  A=0  B=6  C=_  mode=2  flags=0
+--   0032  opcode=126  A=4  B=5  C=0  mode=3  flags=4
+--   0033  opcode=19  A=0  B=5  C=_  mode=2  flags=0
+--   0034  opcode=72  A=6  B=2  C=0  mode=0  flags=0
+--   0035  opcode=47  A=6  B=6  C=0  mode=0  flags=0
+--   0036  opcode=29  A=6  B=41  C=1  mode=3  flags=0
+--   0037  opcode=19  A=0  B=41  C=_  mode=2  flags=0
+--   0038  opcode=83  A=6  B=0  C=0  mode=0  flags=0
+--   0039  opcode=72  A=7  B=2  C=0  mode=0  flags=0
+--   0040  opcode=47  A=7  B=7  C=0  mode=0  flags=0
+--   0041  opcode=111  A=6  B=3  C=0  mode=0  flags=0
+--   0042  opcode=72  A=6  B=2  C=0  mode=0  flags=0
+--   0043  opcode=135  A=6  B=0  C=1  mode=0  flags=0
+--   0044  opcode=41  A=4  B=1  C=_  mode=1  flags=2
+--   0045  opcode=19  A=0  B=5  C=_  mode=2  flags=0
+--   0046  opcode=19  A=0  B=6  C=_  mode=2  flags=0
+--   0047  opcode=19  A=0  B=5  C=_  mode=2  flags=0
+--   0048  opcode=19  A=0  B=49  C=_  mode=2  flags=0
+--   0049  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0050  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.3.2: params=0, constants=13, instructions=85, children=1
+-- constants:
+--   [1] 0
+--   [2] 1
+--   [3] "isfile"
+--   [4] "readfile"
+--   [5] "no_file"
+--   [6] "pcall"
+--   [7] 2
+--   [8] "loaded"
+--   [9] "type"
+--   [10] "table"
+--   [11] "corrupt_json"
+--   [12] "pairs"
+--   [13] nil
+-- instructions:
+--   0001  opcode=41  A=0  B=0  C=_  mode=1  flags=2
+--   0002  opcode=105  A=1  B=3  C=0  mode=0  flags=0
+--   0003  opcode=126  A=0  B=78  C=1  mode=3  flags=4
+--   0004  opcode=19  A=0  B=78  C=_  mode=2  flags=0
+--   0005  opcode=105  A=3  B=3  C=0  mode=0  flags=0
+--   0006  opcode=41  A=4  B=0  C=_  mode=1  flags=2
+--   0007  opcode=126  A=4  B=38  C=0  mode=3  flags=4
+--   0008  opcode=19  A=0  B=38  C=_  mode=2  flags=0
+--   0009  opcode=126  A=1  B=32  C=0  mode=3  flags=4
+--   0010  opcode=19  A=0  B=32  C=_  mode=2  flags=0
+--   0011  opcode=108  A=5  B="isfile"  C=_  mode=1  flags=2
+--   0012  opcode=22  A=5  B=21  C=0  mode=3  flags=0
+--   0013  opcode=19  A=0  B=21  C=_  mode=2  flags=0
+--   0014  opcode=108  A=5  B="readfile"  C=_  mode=1  flags=2
+--   0015  opcode=22  A=5  B=21  C=0  mode=3  flags=0
+--   0016  opcode=19  A=0  B=21  C=_  mode=2  flags=0
+--   0017  opcode=108  A=5  B="isfile"  C=_  mode=1  flags=2
+--   0018  opcode=72  A=6  B=0  C=0  mode=0  flags=0
+--   0019  opcode=2  A=5  B=2  C=2  mode=0  flags=0
+--   0020  opcode=131  A=5  B=24  C=1  mode=3  flags=0
+--   0021  opcode=19  A=0  B=24  C=_  mode=2  flags=0
+--   0022  opcode=83  A=5  B=0  C=0  mode=0  flags=0
+--   0023  opcode=41  A=6  B="no_file"  C=_  mode=1  flags=2
+--   0024  opcode=111  A=5  B=3  C=0  mode=0  flags=0
+--   0025  opcode=108  A=5  B="pcall"  C=_  mode=1  flags=2
+--   0026  opcode=124  A=6  B=0  C=2  mode=3  flags=0
+--   0027  opcode=68  A=0  B=1  C=0  mode=0  flags=0
+--   0028  opcode=68  A=0  B=0  C=0  mode=0  flags=0
+--   0029  opcode=51  A=5  B=2  C=6  mode=0  flags=0
+--   0030  opcode=46  A=3  B=6  C=0  mode=0  flags=0
+--   0031  opcode=46  A=2  B=5  C=0  mode=0  flags=0
+--   0032  opcode=41  A=1  B=1  C=_  mode=1  flags=2
+--   0033  opcode=126  A=1  B=37  C=2  mode=3  flags=4
+--   0034  opcode=19  A=0  B=37  C=_  mode=2  flags=0
+--   0035  opcode=83  A=5  B=1  C=0  mode=0  flags=0
+--   0036  opcode=41  A=6  B="loaded"  C=_  mode=1  flags=2
+--   0037  opcode=111  A=5  B=3  C=0  mode=0  flags=0
+--   0038  opcode=41  A=4  B=1  C=_  mode=1  flags=2
+--   0039  opcode=75  A=1  B=6  C=4  mode=3  flags=1
+--   0040  opcode=19  A=0  B=6  C=_  mode=2  flags=0
+--   0041  opcode=126  A=1  B=5  C=1  mode=3  flags=4
+--   0042  opcode=19  A=0  B=5  C=_  mode=2  flags=0
+--   0043  opcode=22  A=2  B=49  C=0  mode=3  flags=0
+--   0044  opcode=19  A=0  B=49  C=_  mode=2  flags=0
+--   0045  opcode=108  A=5  B="type"  C=_  mode=1  flags=2
+--   0046  opcode=46  A=6  B=3  C=0  mode=0  flags=0
+--   0047  opcode=2  A=5  B=2  C=2  mode=0  flags=0
+--   0048  opcode=106  A=5  B=52  C="table"  mode=3  flags=4
+--   0049  opcode=19  A=0  B=52  C=_  mode=2  flags=0
+--   0050  opcode=83  A=5  B=0  C=0  mode=0  flags=0
+--   0051  opcode=41  A=6  B="corrupt_json"  C=_  mode=1  flags=2
+--   0052  opcode=111  A=5  B=3  C=0  mode=0  flags=0
+--   0053  opcode=108  A=5  B="pairs"  C=_  mode=1  flags=2
+--   0054  opcode=46  A=6  B=3  C=0  mode=0  flags=0
+--   0055  opcode=51  A=5  B=2  C=7  mode=0  flags=0
+--   0056  opcode=19  A=0  B=71  C=_  mode=2  flags=0
+--   0057  opcode=72  A=10  B=2  C=0  mode=0  flags=0
+--   0058  opcode=47  A=10  B=10  C=8  mode=0  flags=0
+--   0059  opcode=106  A=10  B=71  C=_  mode=3  flags=4
+--   0060  opcode=19  A=0  B=71  C=_  mode=2  flags=0
+--   0061  opcode=108  A=10  B="type"  C=_  mode=1  flags=2
+--   0062  opcode=72  A=11  B=2  C=0  mode=0  flags=0
+--   0063  opcode=47  A=11  B=11  C=8  mode=0  flags=0
+--   0064  opcode=2  A=10  B=2  C=2  mode=0  flags=0
+--   0065  opcode=108  A=11  B="type"  C=_  mode=1  flags=2
+--   0066  opcode=46  A=12  B=9  C=0  mode=0  flags=0
+--   0067  opcode=2  A=11  B=2  C=2  mode=0  flags=0
+--   0068  opcode=29  A=10  B=71  C=11  mode=3  flags=0
+--   0069  opcode=19  A=0  B=71  C=_  mode=2  flags=0
+--   0070  opcode=72  A=10  B=2  C=0  mode=0  flags=0
+--   0071  opcode=135  A=10  B=8  C=9  mode=0  flags=0
+--   0072  opcode=133  A=5  B=56  C=2  mode=3  flags=0
+--   0073  opcode=19  A=0  B=56  C=_  mode=2  flags=0
+--   0074  opcode=41  A=1  B=2  C=_  mode=1  flags=2
+--   0075  opcode=19  A=0  B=5  C=_  mode=2  flags=0
+--   0076  opcode=19  A=0  B=6  C=_  mode=2  flags=0
+--   0077  opcode=19  A=0  B=5  C=_  mode=2  flags=0
+--   0078  opcode=19  A=0  B=84  C=_  mode=2  flags=0
+--   0079  opcode=75  A=0  B=2  C=0  mode=3  flags=1
+--   0080  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0081  opcode=41  A=1  B=0  C=_  mode=1  flags=2
+--   0082  opcode=105  A=2  B=2  C=0  mode=0  flags=0
+--   0083  opcode=41  A=0  B=1  C=_  mode=1  flags=2
+--   0084  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0085  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.3.2.0: params=0, constants=2, instructions=8, children=0
+-- constants:
+--   [1] "JSONDecode"
+--   [2] "readfile"
+-- instructions:
+--   0001  opcode=72  A=0  B=0  C=0  mode=0  flags=0
+--   0002  opcode=43  A=0  B=0  C="JSONDecode"  mode=0  flags=4
+--   0003  opcode=108  A=2  B="readfile"  C=_  mode=1  flags=2
+--   0004  opcode=72  A=3  B=1  C=0  mode=0  flags=0
+--   0005  opcode=67  A=2  B=3  C=0  mode=0  flags=0
+--   0006  opcode=10  A=0  B=0  C=0  mode=0  flags=0
+--   0007  opcode=134  A=0  B=0  C=0  mode=0  flags=0
+--   0008  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.3.3: params=1, constants=17, instructions=128, children=1
+-- constants:
+--   [1] 0
+--   [2] 1
+--   [3] 2
+--   [4] 17
+--   [5] "tag"
+--   [6] "bytes"
+--   [7] "reason"
+--   [8] "manual"
+--   [9] "warn"
+--   [10] "[Nebula] Save failed: "
+--   [11] "tostring"
+--   [12] 3
+--   [13] "[Nebula] Encode failed: "
+--   [14] "pcall"
+--   [15] "writefile"
+--   [16] "[Nebula] Executor missing writefile; skipped save ("
+--   [17] ")"
+-- instructions:
+--   0001  opcode=41  A=1  B=0  C=_  mode=1  flags=2
+--   0002  opcode=105  A=2  B=6  C=0  mode=0  flags=0
+--   0003  opcode=126  A=1  B=6  C=1  mode=3  flags=4
+--   0004  opcode=19  A=0  B=6  C=_  mode=2  flags=0
+--   0005  opcode=105  A=4  B=5  C=0  mode=0  flags=0
+--   0006  opcode=41  A=1  B=2  C=_  mode=1  flags=2
+--   0007  opcode=126  A=1  B=121  C=2  mode=3  flags=4
+--   0008  opcode=19  A=0  B=121  C=_  mode=2  flags=0
+--   0009  opcode=105  A=6  B=6  C=0  mode=0  flags=0
+--   0010  opcode=126  A=2  B=53  C=2  mode=3  flags=4
+--   0011  opcode=19  A=0  B=53  C=_  mode=2  flags=0
+--   0012  opcode=22  A=5  B=45  C=0  mode=3  flags=0
+--   0013  opcode=19  A=0  B=45  C=_  mode=2  flags=0
+--   0014  opcode=41  A=7  B=0  C=_  mode=1  flags=2
+--   0015  opcode=105  A=8  B=10  C=0  mode=0  flags=0
+--   0016  opcode=75  A=1  B=21  C=7  mode=3  flags=1
+--   0017  opcode=19  A=0  B=21  C=_  mode=2  flags=0
+--   0018  opcode=41  A=11  B=0  C=_  mode=1  flags=2
+--   0019  opcode=78  A=11  B=0  C=0  mode=0  flags=0
+--   0020  opcode=83  A=11  B=1  C=0  mode=0  flags=0
+--   0021  opcode=65  A=11  B=2  C=0  mode=0  flags=0
+--   0022  opcode=126  A=7  B=15  C=0  mode=3  flags=4
+--   0023  opcode=19  A=0  B=15  C=_  mode=2  flags=0
+--   0024  opcode=72  A=11  B=1  C=0  mode=0  flags=0
+--   0025  opcode=46  A=12  B=4  C=0  mode=0  flags=0
+--   0026  opcode=72  A=13  B=0  C=0  mode=0  flags=0
+--   0027  opcode=26  A=13  B=13  C=17  mode=0  flags=4
+--   0028  opcode=92  A=11  B=13  C=13  mode=0  flags=0
+--   0029  opcode=46  A=10  B=13  C=0  mode=0  flags=0
+--   0030  opcode=46  A=9  B=12  C=0  mode=0  flags=0
+--   0031  opcode=46  A=8  B=11  C=0  mode=0  flags=0
+--   0032  opcode=72  A=11  B=2  C=0  mode=0  flags=0
+--   0033  opcode=72  A=12  B=2  C=0  mode=0  flags=0
+--   0034  opcode=16  A=12  B=12  C=0  mode=0  flags=0
+--   0035  opcode=26  A=12  B=12  C=1  mode=0  flags=4
+--   0036  opcode=3  A=13  B=0  C=3  mode=0  flags=0
+--   0037  opcode=123  A=13  B="tag"  C=9  mode=0  flags=2
+--   0038  opcode=123  A=13  B="bytes"  C=10  mode=0  flags=2
+--   0039  opcode=39  A=14  B=41  C=0  mode=3  flags=0
+--   0040  opcode=19  A=0  B=41  C=_  mode=2  flags=0
+--   0041  opcode=41  A=14  B="manual"  C=_  mode=1  flags=2
+--   0042  opcode=123  A=13  B="reason"  C=14  mode=0  flags=2
+--   0043  opcode=135  A=11  B=12  C=13  mode=0  flags=0
+--   0044  opcode=41  A=7  B=1  C=_  mode=1  flags=2
+--   0045  opcode=19  A=0  B=15  C=_  mode=2  flags=0
+--   0046  opcode=108  A=7  B="warn"  C=_  mode=1  flags=2
+--   0047  opcode=41  A=8  B="[Nebula] Save failed: "  C=_  mode=1  flags=2
+--   0048  opcode=108  A=9  B="tostring"  C=_  mode=1  flags=2
+--   0049  opcode=46  A=10  B=6  C=0  mode=0  flags=0
+--   0050  opcode=2  A=9  B=2  C=2  mode=0  flags=0
+--   0051  opcode=24  A=8  B=8  C=9  mode=0  flags=0
+--   0052  opcode=57  A=7  B=2  C=1  mode=0  flags=0
+--   0053  opcode=41  A=2  B=3  C=_  mode=1  flags=2
+--   0054  opcode=75  A=1  B=78  C=2  mode=3  flags=1
+--   0055  opcode=19  A=0  B=78  C=_  mode=2  flags=0
+--   0056  opcode=131  A=3  B=70  C=1  mode=3  flags=0
+--   0057  opcode=19  A=0  B=70  C=_  mode=2  flags=0
+--   0058  opcode=41  A=7  B=0  C=_  mode=1  flags=2
+--   0059  opcode=126  A=7  B=58  C=0  mode=3  flags=4
+--   0060  opcode=19  A=0  B=58  C=_  mode=2  flags=0
+--   0061  opcode=108  A=8  B="warn"  C=_  mode=1  flags=2
+--   0062  opcode=41  A=9  B="[Nebula] Encode failed: "  C=_  mode=1  flags=2
+--   0063  opcode=108  A=10  B="tostring"  C=_  mode=1  flags=2
+--   0064  opcode=46  A=11  B=4  C=0  mode=0  flags=0
+--   0065  opcode=2  A=10  B=2  C=2  mode=0  flags=0
+--   0066  opcode=24  A=9  B=9  C=10  mode=0  flags=0
+--   0067  opcode=57  A=8  B=2  C=1  mode=0  flags=0
+--   0068  opcode=83  A=8  B=0  C=0  mode=0  flags=0
+--   0069  opcode=65  A=8  B=2  C=0  mode=0  flags=0
+--   0070  opcode=19  A=0  B=58  C=_  mode=2  flags=0
+--   0071  opcode=108  A=7  B="pcall"  C=_  mode=1  flags=2
+--   0072  opcode=108  A=8  B="writefile"  C=_  mode=1  flags=2
+--   0073  opcode=72  A=9  B=3  C=0  mode=0  flags=0
+--   0074  opcode=46  A=10  B=4  C=0  mode=0  flags=0
+--   0075  opcode=92  A=7  B=10  C=8  mode=0  flags=0
+--   0076  opcode=46  A=6  B=8  C=0  mode=0  flags=0
+--   0077  opcode=46  A=5  B=7  C=0  mode=0  flags=0
+--   0078  opcode=41  A=2  B=2  C=_  mode=1  flags=2
+--   0079  opcode=126  A=2  B=115  C=0  mode=3  flags=4
+--   0080  opcode=19  A=0  B=115  C=_  mode=2  flags=0
+--   0081  opcode=108  A=7  B="writefile"  C=_  mode=1  flags=2
+--   0082  opcode=131  A=7  B=107  C=1  mode=3  flags=0
+--   0083  opcode=19  A=0  B=107  C=_  mode=2  flags=0
+--   0084  opcode=41  A=7  B=0  C=_  mode=1  flags=2
+--   0085  opcode=105  A=8  B=8  C=0  mode=0  flags=0
+--   0086  opcode=126  A=7  B=85  C=0  mode=3  flags=4
+--   0087  opcode=19  A=0  B=85  C=_  mode=2  flags=0
+--   0088  opcode=41  A=8  B=0  C=_  mode=1  flags=2
+--   0089  opcode=75  A=0  B=88  C=8  mode=3  flags=1
+--   0090  opcode=19  A=0  B=88  C=_  mode=2  flags=0
+--   0091  opcode=41  A=9  B=0  C=_  mode=1  flags=2
+--   0092  opcode=126  A=9  B=91  C=0  mode=3  flags=4
+--   0093  opcode=19  A=0  B=91  C=_  mode=2  flags=0
+--   0094  opcode=108  A=10  B="warn"  C=_  mode=1  flags=2
+--   0095  opcode=41  A=11  B="[Nebula] Executor missing writefile; skipped save ("  C=_  mode=1  flags=2
+--   0096  opcode=108  A=12  B="tostring"  C=_  mode=1  flags=2
+--   0097  opcode=46  A=13  B=0  C=0  mode=0  flags=0
+--   0098  opcode=2  A=12  B=2  C=2  mode=0  flags=0
+--   0099  opcode=41  A=13  B=")"  C=_  mode=1  flags=2
+--   0100  opcode=24  A=11  B=11  C=13  mode=0  flags=0
+--   0101  opcode=57  A=10  B=2  C=1  mode=0  flags=0
+--   0102  opcode=83  A=10  B=0  C=0  mode=0  flags=0
+--   0103  opcode=65  A=10  B=2  C=0  mode=0  flags=0
+--   0104  opcode=19  A=0  B=91  C=_  mode=2  flags=0
+--   0105  opcode=19  A=0  B=88  C=_  mode=2  flags=0
+--   0106  opcode=19  A=0  B=107  C=_  mode=2  flags=0
+--   0107  opcode=19  A=0  B=85  C=_  mode=2  flags=0
+--   0108  opcode=108  A=7  B="pcall"  C=_  mode=1  flags=2
+--   0109  opcode=124  A=8  B=0  C=2  mode=3  flags=0
+--   0110  opcode=68  A=0  B=4  C=0  mode=0  flags=0
+--   0111  opcode=68  A=0  B=5  C=0  mode=0  flags=0
+--   0112  opcode=51  A=7  B=2  C=8  mode=0  flags=0
+--   0113  opcode=46  A=4  B=8  C=0  mode=0  flags=0
+--   0114  opcode=46  A=3  B=7  C=0  mode=0  flags=0
+--   0115  opcode=41  A=2  B=1  C=_  mode=1  flags=2
+--   0116  opcode=126  A=2  B=9  C=3  mode=3  flags=4
+--   0117  opcode=19  A=0  B=9  C=_  mode=2  flags=0
+--   0118  opcode=83  A=7  B=0  C=0  mode=0  flags=0
+--   0119  opcode=65  A=7  B=2  C=0  mode=0  flags=0
+--   0120  opcode=19  A=0  B=9  C=_  mode=2  flags=0
+--   0121  opcode=19  A=0  B=127  C=_  mode=2  flags=0
+--   0122  opcode=126  A=1  B=2  C=0  mode=3  flags=4
+--   0123  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0124  opcode=41  A=2  B=0  C=_  mode=1  flags=2
+--   0125  opcode=105  A=3  B=3  C=0  mode=0  flags=0
+--   0126  opcode=41  A=1  B=1  C=_  mode=1  flags=2
+--   0127  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0128  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.3.3.0: params=0, constants=1, instructions=6, children=0
+-- constants:
+--   [1] "JSONEncode"
+-- instructions:
+--   0001  opcode=72  A=0  B=0  C=0  mode=0  flags=0
+--   0002  opcode=43  A=0  B=0  C="JSONEncode"  mode=0  flags=4
+--   0003  opcode=72  A=2  B=1  C=0  mode=0  flags=0
+--   0004  opcode=49  A=0  B=2  C=0  mode=0  flags=0
+--   0005  opcode=134  A=0  B=0  C=0  mode=0  flags=0
+--   0006  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.4: params=2, constants=15, instructions=54, children=0
+-- constants:
+--   [1] 0
+--   [2] 1
+--   [3] "setmetatable"
+--   [4] "label"
+--   [5] "MainScheduler"
+--   [6] 3
+--   [7] "connection"
+--   [8] nil
+--   [9] 2
+--   [10] "totalTicks"
+--   [11] "running"
+--   [12] false
+--   [13] "maxBudgetMs"
+--   [14] 8.5
+--   [15] "jobs"
+-- instructions:
+--   0001  opcode=41  A=2  B=0  C=_  mode=1  flags=2
+--   0002  opcode=105  A=3  B=3  C=0  mode=0  flags=0
+--   0003  opcode=41  A=4  B=0  C=_  mode=1  flags=2
+--   0004  opcode=126  A=4  B=34  C=0  mode=3  flags=4
+--   0005  opcode=19  A=0  B=34  C=_  mode=2  flags=0
+--   0006  opcode=126  A=2  B=25  C=0  mode=3  flags=4
+--   0007  opcode=19  A=0  B=25  C=_  mode=2  flags=0
+--   0008  opcode=41  A=5  B=0  C=_  mode=1  flags=2
+--   0009  opcode=126  A=5  B=12  C=1  mode=3  flags=4
+--   0010  opcode=19  A=0  B=12  C=_  mode=2  flags=0
+--   0011  opcode=41  A=2  B=1  C=_  mode=1  flags=2
+--   0012  opcode=19  A=0  B=25  C=_  mode=2  flags=0
+--   0013  opcode=126  A=5  B=8  C=0  mode=3  flags=4
+--   0014  opcode=19  A=0  B=8  C=_  mode=2  flags=0
+--   0015  opcode=108  A=6  B="setmetatable"  C=_  mode=1  flags=2
+--   0016  opcode=3  A=7  B=0  C=0  mode=0  flags=0
+--   0017  opcode=72  A=8  B=0  C=0  mode=0  flags=0
+--   0018  opcode=81  A=6  B=8  C=2  mode=0  flags=0
+--   0019  opcode=46  A=3  B=6  C=0  mode=0  flags=0
+--   0020  opcode=39  A=6  B=22  C=0  mode=3  flags=0
+--   0021  opcode=19  A=0  B=22  C=_  mode=2  flags=0
+--   0022  opcode=41  A=6  B="MainScheduler"  C=_  mode=1  flags=2
+--   0023  opcode=123  A=3  B="label"  C=6  mode=0  flags=2
+--   0024  opcode=41  A=5  B=1  C=_  mode=1  flags=2
+--   0025  opcode=19  A=0  B=8  C=_  mode=2  flags=0
+--   0026  opcode=126  A=2  B=33  C=3  mode=3  flags=4
+--   0027  opcode=19  A=0  B=33  C=_  mode=2  flags=0
+--   0028  opcode=41  A=5  B=0  C=_  mode=1  flags=2
+--   0029  opcode=126  A=5  B=28  C=0  mode=3  flags=4
+--   0030  opcode=19  A=0  B=28  C=_  mode=2  flags=0
+--   0031  opcode=136  A=3  B="connection"  C=_  mode=0  flags=6
+--   0032  opcode=65  A=3  B=2  C=0  mode=0  flags=0
+--   0033  opcode=19  A=0  B=28  C=_  mode=2  flags=0
+--   0034  opcode=41  A=4  B=1  C=_  mode=1  flags=2
+--   0035  opcode=126  A=4  B=3  C=1  mode=3  flags=4
+--   0036  opcode=19  A=0  B=3  C=_  mode=2  flags=0
+--   0037  opcode=126  A=2  B=41  C=2  mode=3  flags=4
+--   0038  opcode=19  A=0  B=41  C=_  mode=2  flags=0
+--   0039  opcode=136  A=3  B="totalTicks"  C=0  mode=0  flags=6
+--   0040  opcode=136  A=3  B="running"  C=false  mode=0  flags=6
+--   0041  opcode=41  A=2  B=3  C=_  mode=1  flags=2
+--   0042  opcode=126  A=2  B=2  C=1  mode=3  flags=4
+--   0043  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0044  opcode=39  A=5  B=46  C=1  mode=3  flags=0
+--   0045  opcode=19  A=0  B=46  C=_  mode=2  flags=0
+--   0046  opcode=41  A=5  B=8.5  C=_  mode=1  flags=2
+--   0047  opcode=123  A=3  B="maxBudgetMs"  C=5  mode=0  flags=2
+--   0048  opcode=3  A=5  B=0  C=0  mode=0  flags=0
+--   0049  opcode=123  A=3  B="jobs"  C=5  mode=0  flags=2
+--   0050  opcode=41  A=2  B=2  C=_  mode=1  flags=2
+--   0051  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0052  opcode=19  A=0  B=3  C=_  mode=2  flags=0
+--   0053  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0054  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.5: params=4, constants=14, instructions=35, children=0
+-- constants:
+--   [1] 0
+--   [2] 1
+--   [3] "name"
+--   [4] "interval"
+--   [5] "math"
+--   [6] "max"
+--   [7] 0.1
+--   [8] 0.01
+--   [9] "elapsed"
+--   [10] "runs"
+--   [11] "active"
+--   [12] true
+--   [13] "fn"
+--   [14] "jobs"
+-- instructions:
+--   0001  opcode=41  A=4  B=0  C=_  mode=1  flags=2
+--   0002  opcode=105  A=5  B=5  C=0  mode=0  flags=0
+--   0003  opcode=41  A=6  B=0  C=_  mode=1  flags=2
+--   0004  opcode=126  A=6  B=3  C=0  mode=3  flags=4
+--   0005  opcode=19  A=0  B=3  C=_  mode=2  flags=0
+--   0006  opcode=126  A=4  B=8  C=1  mode=3  flags=4
+--   0007  opcode=19  A=0  B=8  C=_  mode=2  flags=0
+--   0008  opcode=65  A=5  B=2  C=0  mode=0  flags=0
+--   0009  opcode=126  A=4  B=2  C=0  mode=3  flags=4
+--   0010  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0011  opcode=3  A=7  B=0  C=6  mode=0  flags=0
+--   0012  opcode=123  A=7  B="name"  C=1  mode=0  flags=2
+--   0013  opcode=108  A=8  B="math"  C=_  mode=1  flags=2
+--   0014  opcode=119  A=8  B=8  C="max"  mode=0  flags=4
+--   0015  opcode=39  A=9  B=17  C=2  mode=3  flags=0
+--   0016  opcode=19  A=0  B=17  C=_  mode=2  flags=0
+--   0017  opcode=41  A=9  B=0.1  C=_  mode=1  flags=2
+--   0018  opcode=41  A=10  B=0.01  C=_  mode=1  flags=2
+--   0019  opcode=81  A=8  B=10  C=2  mode=0  flags=0
+--   0020  opcode=123  A=7  B="interval"  C=8  mode=0  flags=2
+--   0021  opcode=136  A=7  B="elapsed"  C=0  mode=0  flags=6
+--   0022  opcode=136  A=7  B="runs"  C=0  mode=0  flags=6
+--   0023  opcode=136  A=7  B="active"  C=true  mode=0  flags=6
+--   0024  opcode=123  A=7  B="fn"  C=3  mode=0  flags=2
+--   0025  opcode=46  A=5  B=7  C=0  mode=0  flags=0
+--   0026  opcode=119  A=7  B=0  C="jobs"  mode=0  flags=4
+--   0027  opcode=119  A=8  B=0  C="jobs"  mode=0  flags=4
+--   0028  opcode=16  A=8  B=8  C=0  mode=0  flags=0
+--   0029  opcode=26  A=8  B=8  C=1  mode=0  flags=4
+--   0030  opcode=135  A=7  B=8  C=5  mode=0  flags=0
+--   0031  opcode=41  A=4  B=1  C=_  mode=1  flags=2
+--   0032  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0033  opcode=19  A=0  B=3  C=_  mode=2  flags=0
+--   0034  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0035  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.6: params=1, constants=7, instructions=52, children=0
+-- constants:
+--   [1] 0
+--   [2] 1
+--   [3] "jobs"
+--   [4] -1
+--   [5] "active"
+--   [6] "table"
+--   [7] "remove"
+-- instructions:
+--   0001  opcode=41  A=1  B=0  C=_  mode=1  flags=2
+--   0002  opcode=105  A=2  B=2  C=0  mode=0  flags=0
+--   0003  opcode=41  A=3  B=0  C=_  mode=1  flags=2
+--   0004  opcode=126  A=3  B=3  C=0  mode=3  flags=4
+--   0005  opcode=19  A=0  B=3  C=_  mode=2  flags=0
+--   0006  opcode=126  A=1  B=8  C=1  mode=3  flags=4
+--   0007  opcode=19  A=0  B=8  C=_  mode=2  flags=0
+--   0008  opcode=65  A=2  B=2  C=0  mode=0  flags=0
+--   0009  opcode=126  A=1  B=2  C=0  mode=3  flags=4
+--   0010  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0011  opcode=41  A=4  B=0  C=_  mode=1  flags=2
+--   0012  opcode=126  A=4  B=15  C=1  mode=3  flags=4
+--   0013  opcode=19  A=0  B=15  C=_  mode=2  flags=0
+--   0014  opcode=41  A=1  B=1  C=_  mode=1  flags=2
+--   0015  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0016  opcode=126  A=4  B=11  C=0  mode=3  flags=4
+--   0017  opcode=19  A=0  B=11  C=_  mode=2  flags=0
+--   0018  opcode=41  A=2  B=0  C=_  mode=1  flags=2
+--   0019  opcode=119  A=5  B=0  C="jobs"  mode=0  flags=4
+--   0020  opcode=16  A=5  B=5  C=0  mode=0  flags=0
+--   0021  opcode=41  A=6  B=1  C=_  mode=1  flags=2
+--   0022  opcode=41  A=7  B=-1  C=_  mode=1  flags=2
+--   0023  opcode=56  A=5  B=46  C=_  mode=2  flags=0
+--   0024  opcode=41  A=9  B=0  C=_  mode=1  flags=2
+--   0025  opcode=105  A=10  B=10  C=0  mode=0  flags=0
+--   0026  opcode=126  A=9  B=25  C=0  mode=3  flags=4
+--   0027  opcode=19  A=0  B=25  C=_  mode=2  flags=0
+--   0028  opcode=119  A=11  B=0  C="jobs"  mode=0  flags=4
+--   0029  opcode=47  A=10  B=11  C=8  mode=0  flags=0
+--   0030  opcode=119  A=11  B=10  C="active"  mode=0  flags=4
+--   0031  opcode=131  A=11  B=45  C=1  mode=3  flags=0
+--   0032  opcode=19  A=0  B=45  C=_  mode=2  flags=0
+--   0033  opcode=41  A=11  B=0  C=_  mode=1  flags=2
+--   0034  opcode=126  A=11  B=33  C=0  mode=3  flags=4
+--   0035  opcode=19  A=0  B=33  C=_  mode=2  flags=0
+--   0036  opcode=108  A=12  B="table"  C=_  mode=1  flags=2
+--   0037  opcode=119  A=12  B=12  C="remove"  mode=0  flags=4
+--   0038  opcode=119  A=13  B=0  C="jobs"  mode=0  flags=4
+--   0039  opcode=46  A=14  B=8  C=0  mode=0  flags=0
+--   0040  opcode=69  A=12  B=14  C=1  mode=0  flags=0
+--   0041  opcode=26  A=2  B=2  C=1  mode=0  flags=4
+--   0042  opcode=19  A=0  B=45  C=_  mode=2  flags=0
+--   0043  opcode=19  A=0  B=33  C=_  mode=2  flags=0
+--   0044  opcode=19  A=0  B=45  C=_  mode=2  flags=0
+--   0045  opcode=19  A=0  B=25  C=_  mode=2  flags=0
+--   0046  opcode=113  A=5  B=23  C=_  mode=2  flags=0
+--   0047  opcode=41  A=4  B=1  C=_  mode=1  flags=2
+--   0048  opcode=19  A=0  B=11  C=_  mode=2  flags=0
+--   0049  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0050  opcode=19  A=0  B=3  C=_  mode=2  flags=0
+--   0051  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0052  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.7: params=2, constants=22, instructions=118, children=0
+-- constants:
+--   [1] 0
+--   [2] 1
+--   [3] 2
+--   [4] "totalTicks"
+--   [5] "ipairs"
+--   [6] "jobs"
+--   [7] "active"
+--   [8] "elapsed"
+--   [9] "interval"
+--   [10] "pcall"
+--   [11] "fn"
+--   [12] "runs"
+--   [13] "warn"
+--   [14] "string"
+--   [15] "format"
+--   [16] "[Nebula:%s] Job '%s' error: %s"
+--   [17] "label"
+--   [18] "name"
+--   [19] "tostring"
+--   [20] false
+--   [21] 30
+--   [22] "pruneInactive"
+-- instructions:
+--   0001  opcode=41  A=2  B=0  C=_  mode=1  flags=2
+--   0002  opcode=105  A=3  B=3  C=0  mode=0  flags=0
+--   0003  opcode=41  A=4  B=0  C=_  mode=1  flags=2
+--   0004  opcode=75  A=1  B=9  C=4  mode=3  flags=1
+--   0005  opcode=19  A=0  B=9  C=_  mode=2  flags=0
+--   0006  opcode=126  A=2  B=2  C=2  mode=3  flags=4
+--   0007  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0008  opcode=65  A=3  B=2  C=0  mode=0  flags=0
+--   0009  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0010  opcode=75  A=0  B=3  C=4  mode=3  flags=1
+--   0011  opcode=19  A=0  B=3  C=_  mode=2  flags=0
+--   0012  opcode=126  A=2  B=18  C=0  mode=3  flags=4
+--   0013  opcode=19  A=0  B=18  C=_  mode=2  flags=0
+--   0014  opcode=119  A=5  B=0  C="totalTicks"  mode=0  flags=4
+--   0015  opcode=26  A=5  B=5  C=1  mode=0  flags=4
+--   0016  opcode=123  A=0  B="totalTicks"  C=5  mode=0  flags=2
+--   0017  opcode=41  A=3  B=0  C=_  mode=1  flags=2
+--   0018  opcode=41  A=2  B=1  C=_  mode=1  flags=2
+--   0019  opcode=126  A=2  B=114  C=1  mode=3  flags=4
+--   0020  opcode=19  A=0  B=114  C=_  mode=2  flags=0
+--   0021  opcode=108  A=5  B="ipairs"  C=_  mode=1  flags=2
+--   0022  opcode=119  A=6  B=0  C="jobs"  mode=0  flags=4
+--   0023  opcode=51  A=5  B=2  C=7  mode=0  flags=0
+--   0024  opcode=19  A=0  B=105  C=_  mode=2  flags=0
+--   0025  opcode=119  A=10  B=9  C="active"  mode=0  flags=4
+--   0026  opcode=22  A=10  B=105  C=0  mode=3  flags=0
+--   0027  opcode=19  A=0  B=105  C=_  mode=2  flags=0
+--   0028  opcode=41  A=10  B=0  C=_  mode=1  flags=2
+--   0029  opcode=126  A=10  B=28  C=0  mode=3  flags=4
+--   0030  opcode=19  A=0  B=28  C=_  mode=2  flags=0
+--   0031  opcode=119  A=11  B=9  C="elapsed"  mode=0  flags=4
+--   0032  opcode=34  A=11  B=11  C=1  mode=0  flags=0
+--   0033  opcode=123  A=9  B="elapsed"  C=11  mode=0  flags=2
+--   0034  opcode=119  A=11  B=9  C="elapsed"  mode=0  flags=4
+--   0035  opcode=119  A=12  B=9  C="interval"  mode=0  flags=4
+--   0036  opcode=58  A=12  B=105  C=11  mode=3  flags=0
+--   0037  opcode=19  A=0  B=105  C=_  mode=2  flags=0
+--   0038  opcode=41  A=11  B=0  C=_  mode=1  flags=2
+--   0039  opcode=105  A=12  B=14  C=0  mode=0  flags=0
+--   0040  opcode=126  A=11  B=44  C=0  mode=3  flags=4
+--   0041  opcode=19  A=0  B=44  C=_  mode=2  flags=0
+--   0042  opcode=41  A=12  B=0  C=_  mode=1  flags=2
+--   0043  opcode=105  A=13  B=13  C=0  mode=0  flags=0
+--   0044  opcode=41  A=11  B=1  C=_  mode=1  flags=2
+--   0045  opcode=126  A=11  B=39  C=1  mode=3  flags=4
+--   0046  opcode=19  A=0  B=39  C=_  mode=2  flags=0
+--   0047  opcode=105  A=14  B=14  C=0  mode=0  flags=0
+--   0048  opcode=126  A=12  B=67  C=1  mode=3  flags=4
+--   0049  opcode=19  A=0  B=67  C=_  mode=2  flags=0
+--   0050  opcode=41  A=15  B=0  C=_  mode=1  flags=2
+--   0051  opcode=75  A=0  B=62  C=15  mode=3  flags=1
+--   0052  opcode=19  A=0  B=62  C=_  mode=2  flags=0
+--   0053  opcode=108  A=16  B="pcall"  C=_  mode=1  flags=2
+--   0054  opcode=119  A=17  B=9  C="fn"  mode=0  flags=4
+--   0055  opcode=119  A=18  B=9  C="runs"  mode=0  flags=4
+--   0056  opcode=46  A=19  B=1  C=0  mode=0  flags=0
+--   0057  opcode=119  A=20  B=0  C="totalTicks"  mode=0  flags=4
+--   0058  opcode=92  A=16  B=20  C=17  mode=0  flags=0
+--   0059  opcode=46  A=14  B=17  C=0  mode=0  flags=0
+--   0060  opcode=46  A=13  B=16  C=0  mode=0  flags=0
+--   0061  opcode=26  A=3  B=3  C=1  mode=0  flags=4
+--   0062  opcode=41  A=15  B=1  C=_  mode=1  flags=2
+--   0063  opcode=126  A=15  B=50  C=1  mode=3  flags=4
+--   0064  opcode=19  A=0  B=50  C=_  mode=2  flags=0
+--   0065  opcode=41  A=12  B=2  C=_  mode=1  flags=2
+--   0066  opcode=19  A=0  B=67  C=_  mode=2  flags=0
+--   0067  opcode=19  A=0  B=50  C=_  mode=2  flags=0
+--   0068  opcode=126  A=12  B=93  C=2  mode=3  flags=4
+--   0069  opcode=19  A=0  B=93  C=_  mode=2  flags=0
+--   0070  opcode=131  A=13  B=89  C=1  mode=3  flags=0
+--   0071  opcode=19  A=0  B=89  C=_  mode=2  flags=0
+--   0072  opcode=41  A=15  B=0  C=_  mode=1  flags=2
+--   0073  opcode=126  A=15  B=72  C=0  mode=3  flags=4
+--   0074  opcode=19  A=0  B=72  C=_  mode=2  flags=0
+--   0075  opcode=108  A=16  B="warn"  C=_  mode=1  flags=2
+--   0076  opcode=108  A=17  B="string"  C=_  mode=1  flags=2
+--   0077  opcode=119  A=17  B=17  C="format"  mode=0  flags=4
+--   0078  opcode=41  A=18  B="[Nebula:%s] Job '%s' error: %s"  C=_  mode=1  flags=2
+--   0079  opcode=119  A=19  B=0  C="label"  mode=0  flags=4
+--   0080  opcode=119  A=20  B=9  C="name"  mode=0  flags=4
+--   0081  opcode=108  A=21  B="tostring"  C=_  mode=1  flags=2
+--   0082  opcode=46  A=22  B=14  C=0  mode=0  flags=0
+--   0083  opcode=67  A=21  B=22  C=0  mode=0  flags=0
+--   0084  opcode=90  A=17  B=0  C=0  mode=0  flags=0
+--   0085  opcode=62  A=16  B=0  C=1  mode=0  flags=0
+--   0086  opcode=136  A=9  B="active"  C=false  mode=0  flags=6
+--   0087  opcode=19  A=0  B=105  C=_  mode=2  flags=0
+--   0088  opcode=19  A=0  B=72  C=_  mode=2  flags=0
+--   0089  opcode=19  A=0  B=105  C=_  mode=2  flags=0
+--   0090  opcode=126  A=14  B=105  C=false  mode=3  flags=4
+--   0091  opcode=19  A=0  B=105  C=_  mode=2  flags=0
+--   0092  opcode=136  A=9  B="active"  C=false  mode=0  flags=6
+--   0093  opcode=19  A=0  B=105  C=_  mode=2  flags=0
+--   0094  opcode=126  A=12  B=47  C=0  mode=3  flags=4
+--   0095  opcode=19  A=0  B=47  C=_  mode=2  flags=0
+--   0096  opcode=136  A=9  B="elapsed"  C=0  mode=0  flags=6
+--   0097  opcode=119  A=15  B=9  C="runs"  mode=0  flags=4
+--   0098  opcode=26  A=15  B=15  C=1  mode=0  flags=4
+--   0099  opcode=123  A=9  B="runs"  C=15  mode=0  flags=2
+--   0100  opcode=41  A=12  B=1  C=_  mode=1  flags=2
+--   0101  opcode=19  A=0  B=47  C=_  mode=2  flags=0
+--   0102  opcode=19  A=0  B=105  C=_  mode=2  flags=0
+--   0103  opcode=19  A=0  B=39  C=_  mode=2  flags=0
+--   0104  opcode=19  A=0  B=105  C=_  mode=2  flags=0
+--   0105  opcode=19  A=0  B=28  C=_  mode=2  flags=0
+--   0106  opcode=133  A=5  B=24  C=2  mode=3  flags=0
+--   0107  opcode=19  A=0  B=24  C=_  mode=2  flags=0
+--   0108  opcode=119  A=5  B=0  C="totalTicks"  mode=0  flags=4
+--   0109  opcode=35  A=5  B=5  C=30  mode=0  flags=4
+--   0110  opcode=126  A=5  B=113  C=0  mode=3  flags=4
+--   0111  opcode=19  A=0  B=113  C=_  mode=2  flags=0
+--   0112  opcode=43  A=5  B=0  C="pruneInactive"  mode=0  flags=4
+--   0113  opcode=57  A=5  B=2  C=1  mode=0  flags=0
+--   0114  opcode=41  A=2  B=2  C=_  mode=1  flags=2
+--   0115  opcode=41  A=4  B=1  C=_  mode=1  flags=2
+--   0116  opcode=19  A=0  B=3  C=_  mode=2  flags=0
+--   0117  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0118  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.8: params=1, constants=5, instructions=13, children=1
+-- constants:
+--   [1] "running"
+--   [2] true
+--   [3] "connection"
+--   [4] "Heartbeat"
+--   [5] "Connect"
+-- instructions:
+--   0001  opcode=119  A=1  B=0  C="running"  mode=0  flags=4
+--   0002  opcode=22  A=1  B=4  C=0  mode=3  flags=0
+--   0003  opcode=19  A=0  B=4  C=_  mode=2  flags=0
+--   0004  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+--   0005  opcode=136  A=0  B="running"  C=true  mode=0  flags=6
+--   0006  opcode=72  A=1  B=0  C=0  mode=0  flags=0
+--   0007  opcode=119  A=1  B=1  C="Heartbeat"  mode=0  flags=4
+--   0008  opcode=43  A=1  B=1  C="Connect"  mode=0  flags=4
+--   0009  opcode=124  A=3  B=0  C=1  mode=3  flags=0
+--   0010  opcode=66  A=0  B=0  C=0  mode=0  flags=0
+--   0011  opcode=81  A=1  B=3  C=2  mode=0  flags=0
+--   0012  opcode=123  A=0  B="connection"  C=1  mode=0  flags=2
+--   0013  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.8.0: params=1, constants=3, instructions=15, children=0
+-- constants:
+--   [1] 0
+--   [2] "running"
+--   [3] "step"
+-- instructions:
+--   0001  opcode=41  A=1  B=0  C=_  mode=1  flags=2
+--   0002  opcode=126  A=1  B=1  C=0  mode=3  flags=4
+--   0003  opcode=19  A=0  B=1  C=_  mode=2  flags=0
+--   0004  opcode=72  A=2  B=0  C=0  mode=0  flags=0
+--   0005  opcode=119  A=2  B=2  C="running"  mode=0  flags=4
+--   0006  opcode=131  A=2  B=8  C=1  mode=3  flags=0
+--   0007  opcode=19  A=0  B=8  C=_  mode=2  flags=0
+--   0008  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+--   0009  opcode=72  A=2  B=0  C=0  mode=0  flags=0
+--   0010  opcode=43  A=2  B=2  C="step"  mode=0  flags=4
+--   0011  opcode=46  A=4  B=0  C=0  mode=0  flags=0
+--   0012  opcode=69  A=2  B=4  C=1  mode=0  flags=0
+--   0013  opcode=19  A=0  B=14  C=_  mode=2  flags=0
+--   0014  opcode=19  A=0  B=1  C=_  mode=2  flags=0
+--   0015  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.9: params=1, constants=6, instructions=20, children=0
+-- constants:
+--   [1] 0
+--   [2] "running"
+--   [3] false
+--   [4] "connection"
+--   [5] "Disconnect"
+--   [6] nil
+-- instructions:
+--   0001  opcode=41  A=1  B=0  C=_  mode=1  flags=2
+--   0002  opcode=105  A=2  B=2  C=0  mode=0  flags=0
+--   0003  opcode=126  A=1  B=2  C=0  mode=3  flags=4
+--   0004  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0005  opcode=41  A=2  B=0  C=_  mode=1  flags=2
+--   0006  opcode=75  A=0  B=5  C=2  mode=3  flags=1
+--   0007  opcode=19  A=0  B=5  C=_  mode=2  flags=0
+--   0008  opcode=136  A=0  B="running"  C=false  mode=0  flags=6
+--   0009  opcode=119  A=3  B=0  C="connection"  mode=0  flags=4
+--   0010  opcode=22  A=3  B=19  C=0  mode=3  flags=0
+--   0011  opcode=19  A=0  B=19  C=_  mode=2  flags=0
+--   0012  opcode=119  A=3  B=0  C="connection"  mode=0  flags=4
+--   0013  opcode=43  A=3  B=3  C="Disconnect"  mode=0  flags=4
+--   0014  opcode=57  A=3  B=2  C=1  mode=0  flags=0
+--   0015  opcode=136  A=0  B="connection"  C=_  mode=0  flags=6
+--   0016  opcode=19  A=0  B=19  C=_  mode=2  flags=0
+--   0017  opcode=19  A=0  B=5  C=_  mode=2  flags=0
+--   0018  opcode=19  A=0  B=19  C=_  mode=2  flags=0
+--   0019  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0020  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.10: params=3, constants=11, instructions=117, children=0
+-- constants:
+--   [1] 0
+--   [2] 1
+--   [3] "pairs"
+--   [4] "skipLocked"
+--   [5] "type"
+--   [6] "table"
+--   [7] "Locked"
+--   [8] true
+--   [9] "overrides"
+--   [10] nil
+--   [11] 2
+-- instructions:
+--   0001  opcode=41  A=3  B=0  C=_  mode=1  flags=2
+--   0002  opcode=105  A=4  B=5  C=0  mode=0  flags=0
+--   0003  opcode=126  A=3  B=98  C=1  mode=3  flags=4
+--   0004  opcode=19  A=0  B=98  C=_  mode=2  flags=0
+--   0005  opcode=41  A=5  B=0  C=_  mode=1  flags=2
+--   0006  opcode=108  A=6  B="pairs"  C=_  mode=1  flags=2
+--   0007  opcode=46  A=7  B=2  C=0  mode=0  flags=0
+--   0008  opcode=51  A=6  B=2  C=8  mode=0  flags=0
+--   0009  opcode=19  A=0  B=95  C=_  mode=2  flags=0
+--   0010  opcode=41  A=11  B=0  C=_  mode=1  flags=2
+--   0011  opcode=105  A=12  B=12  C=0  mode=0  flags=0
+--   0012  opcode=126  A=11  B=11  C=0  mode=3  flags=4
+--   0013  opcode=19  A=0  B=11  C=_  mode=2  flags=0
+--   0014  opcode=119  A=13  B=4  C="skipLocked"  mode=0  flags=4
+--   0015  opcode=71  A=12  B=26  C=13  mode=3  flags=0
+--   0016  opcode=19  A=0  B=26  C=_  mode=2  flags=0
+--   0017  opcode=108  A=13  B="type"  C=_  mode=1  flags=2
+--   0018  opcode=46  A=14  B=10  C=0  mode=0  flags=0
+--   0019  opcode=2  A=13  B=2  C=2  mode=0  flags=0
+--   0020  opcode=126  A=13  B=24  C="table"  mode=3  flags=4
+--   0021  opcode=19  A=0  B=24  C=_  mode=2  flags=0
+--   0022  opcode=119  A=13  B=10  C="Locked"  mode=0  flags=4
+--   0023  opcode=106  A=13  B=25  C=true  mode=3  flags=4
+--   0024  opcode=19  A=0  B=25  C=_  mode=2  flags=0
+--   0025  opcode=1  A=12  B=0  C=0  mode=0  flags=0
+--   0026  opcode=83  A=12  B=1  C=0  mode=0  flags=0
+--   0027  opcode=108  A=13  B="type"  C=_  mode=1  flags=2
+--   0028  opcode=46  A=14  B=10  C=0  mode=0  flags=0
+--   0029  opcode=2  A=13  B=2  C=2  mode=0  flags=0
+--   0030  opcode=126  A=13  B=95  C="table"  mode=3  flags=4
+--   0031  opcode=19  A=0  B=95  C=_  mode=2  flags=0
+--   0032  opcode=131  A=12  B=95  C=1  mode=3  flags=0
+--   0033  opcode=19  A=0  B=95  C=_  mode=2  flags=0
+--   0034  opcode=108  A=13  B="pairs"  C=_  mode=1  flags=2
+--   0035  opcode=119  A=14  B=4  C="overrides"  mode=0  flags=4
+--   0036  opcode=51  A=13  B=2  C=15  mode=0  flags=0
+--   0037  opcode=19  A=0  B=91  C=_  mode=2  flags=0
+--   0038  opcode=22  A=1  B=69  C=0  mode=3  flags=0
+--   0039  opcode=19  A=0  B=69  C=_  mode=2  flags=0
+--   0040  opcode=47  A=18  B=10  C=16  mode=0  flags=0
+--   0041  opcode=106  A=18  B=91  C=_  mode=3  flags=4
+--   0042  opcode=19  A=0  B=91  C=_  mode=2  flags=0
+--   0043  opcode=41  A=18  B=0  C=_  mode=1  flags=2
+--   0044  opcode=126  A=18  B=48  C=1  mode=3  flags=4
+--   0045  opcode=19  A=0  B=48  C=_  mode=2  flags=0
+--   0046  opcode=135  A=10  B=16  C=17  mode=0  flags=0
+--   0047  opcode=26  A=5  B=5  C=1  mode=0  flags=4
+--   0048  opcode=19  A=0  B=91  C=_  mode=2  flags=0
+--   0049  opcode=75  A=0  B=43  C=18  mode=3  flags=1
+--   0050  opcode=19  A=0  B=43  C=_  mode=2  flags=0
+--   0051  opcode=72  A=19  B=0  C=0  mode=0  flags=0
+--   0052  opcode=72  A=20  B=0  C=0  mode=0  flags=0
+--   0053  opcode=47  A=20  B=20  C=9  mode=0  flags=0
+--   0054  opcode=131  A=20  B=56  C=1  mode=3  flags=0
+--   0055  opcode=19  A=0  B=56  C=_  mode=2  flags=0
+--   0056  opcode=3  A=20  B=0  C=0  mode=0  flags=0
+--   0057  opcode=135  A=19  B=9  C=20  mode=0  flags=0
+--   0058  opcode=72  A=19  B=0  C=0  mode=0  flags=0
+--   0059  opcode=47  A=19  B=19  C=9  mode=0  flags=0
+--   0060  opcode=47  A=19  B=19  C=16  mode=0  flags=0
+--   0061  opcode=126  A=19  B=66  C=_  mode=3  flags=4
+--   0062  opcode=19  A=0  B=66  C=_  mode=2  flags=0
+--   0063  opcode=72  A=19  B=0  C=0  mode=0  flags=0
+--   0064  opcode=47  A=19  B=19  C=9  mode=0  flags=0
+--   0065  opcode=47  A=20  B=10  C=16  mode=0  flags=0
+--   0066  opcode=135  A=19  B=16  C=20  mode=0  flags=0
+--   0067  opcode=41  A=18  B=1  C=_  mode=1  flags=2
+--   0068  opcode=19  A=0  B=43  C=_  mode=2  flags=0
+--   0069  opcode=19  A=0  B=91  C=_  mode=2  flags=0
+--   0070  opcode=41  A=18  B=0  C=_  mode=1  flags=2
+--   0071  opcode=105  A=19  B=19  C=0  mode=0  flags=0
+--   0072  opcode=126  A=18  B=71  C=0  mode=3  flags=4
+--   0073  opcode=19  A=0  B=71  C=_  mode=2  flags=0
+--   0074  opcode=72  A=20  B=0  C=0  mode=0  flags=0
+--   0075  opcode=47  A=20  B=20  C=9  mode=0  flags=0
+--   0076  opcode=71  A=19  B=80  C=20  mode=3  flags=0
+--   0077  opcode=19  A=0  B=80  C=_  mode=2  flags=0
+--   0078  opcode=72  A=20  B=0  C=0  mode=0  flags=0
+--   0079  opcode=47  A=20  B=20  C=9  mode=0  flags=0
+--   0080  opcode=47  A=19  B=20  C=16  mode=0  flags=0
+--   0081  opcode=106  A=19  B=91  C=_  mode=3  flags=4
+--   0082  opcode=19  A=0  B=91  C=_  mode=2  flags=0
+--   0083  opcode=41  A=20  B=0  C=_  mode=1  flags=2
+--   0084  opcode=75  A=0  B=83  C=20  mode=3  flags=1
+--   0085  opcode=19  A=0  B=83  C=_  mode=2  flags=0
+--   0086  opcode=135  A=10  B=16  C=19  mode=0  flags=0
+--   0087  opcode=26  A=5  B=5  C=1  mode=0  flags=4
+--   0088  opcode=19  A=0  B=91  C=_  mode=2  flags=0
+--   0089  opcode=19  A=0  B=83  C=_  mode=2  flags=0
+--   0090  opcode=19  A=0  B=91  C=_  mode=2  flags=0
+--   0091  opcode=19  A=0  B=71  C=_  mode=2  flags=0
+--   0092  opcode=133  A=13  B=37  C=2  mode=3  flags=0
+--   0093  opcode=19  A=0  B=37  C=_  mode=2  flags=0
+--   0094  opcode=19  A=0  B=95  C=_  mode=2  flags=0
+--   0095  opcode=19  A=0  B=11  C=_  mode=2  flags=0
+--   0096  opcode=133  A=6  B=9  C=2  mode=3  flags=0
+--   0097  opcode=19  A=0  B=9  C=_  mode=2  flags=0
+--   0098  opcode=41  A=3  B=2  C=_  mode=1  flags=2
+--   0099  opcode=75  A=0  B=112  C=3  mode=3  flags=1
+--   0100  opcode=19  A=0  B=112  C=_  mode=2  flags=0
+--   0101  opcode=72  A=6  B=1  C=0  mode=0  flags=0
+--   0102  opcode=47  A=4  B=6  C=0  mode=0  flags=0
+--   0103  opcode=22  A=4  B=109  C=0  mode=3  flags=0
+--   0104  opcode=19  A=0  B=109  C=_  mode=2  flags=0
+--   0105  opcode=108  A=6  B="type"  C=_  mode=1  flags=2
+--   0106  opcode=46  A=7  B=2  C=0  mode=0  flags=0
+--   0107  opcode=2  A=6  B=2  C=2  mode=0  flags=0
+--   0108  opcode=106  A=6  B=111  C="table"  mode=3  flags=4
+--   0109  opcode=19  A=0  B=111  C=_  mode=2  flags=0
+--   0110  opcode=41  A=6  B=0  C=_  mode=1  flags=2
+--   0111  opcode=65  A=6  B=2  C=0  mode=0  flags=0
+--   0112  opcode=41  A=3  B=1  C=_  mode=1  flags=2
+--   0113  opcode=126  A=3  B=2  C=2  mode=3  flags=4
+--   0114  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0115  opcode=65  A=5  B=2  C=0  mode=0  flags=0
+--   0116  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0117  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.11: params=2, constants=17, instructions=114, children=0
+-- constants:
+--   [1] 0
+--   [2] 1
+--   [3] 2
+--   [4] "self_or_nil"
+--   [5] "Team"
+--   [6] "teammate"
+--   [7] 3
+--   [8] "FindFirstChild"
+--   [9] "Head"
+--   [10] "Health"
+--   [11] "dead_or_incomplete"
+--   [12] 4
+--   [13] "Character"
+--   [14] "no_char"
+--   [15] "FindFirstChildOfClass"
+--   [16] "Humanoid"
+--   [17] "HumanoidRootPart"
+-- instructions:
+--   0001  opcode=41  A=2  B=0  C=_  mode=1  flags=2
+--   0002  opcode=105  A=3  B=7  C=0  mode=0  flags=0
+--   0003  opcode=126  A=2  B=7  C=0  mode=3  flags=4
+--   0004  opcode=19  A=0  B=7  C=_  mode=2  flags=0
+--   0005  opcode=41  A=3  B=0  C=_  mode=1  flags=2
+--   0006  opcode=105  A=4  B=4  C=0  mode=0  flags=0
+--   0007  opcode=41  A=2  B=1  C=_  mode=1  flags=2
+--   0008  opcode=126  A=2  B=108  C=2  mode=3  flags=4
+--   0009  opcode=19  A=0  B=108  C=_  mode=2  flags=0
+--   0010  opcode=105  A=7  B=7  C=0  mode=0  flags=0
+--   0011  opcode=41  A=8  B=0  C=_  mode=1  flags=2
+--   0012  opcode=126  A=8  B=58  C=1  mode=3  flags=4
+--   0013  opcode=19  A=0  B=58  C=_  mode=2  flags=0
+--   0014  opcode=75  A=0  B=38  C=3  mode=3  flags=1
+--   0015  opcode=19  A=0  B=38  C=_  mode=2  flags=0
+--   0016  opcode=22  A=0  B=20  C=0  mode=3  flags=0
+--   0017  opcode=19  A=0  B=20  C=_  mode=2  flags=0
+--   0018  opcode=72  A=9  B=0  C=0  mode=0  flags=0
+--   0019  opcode=29  A=0  B=23  C=9  mode=3  flags=0
+--   0020  opcode=19  A=0  B=23  C=_  mode=2  flags=0
+--   0021  opcode=83  A=9  B=0  C=0  mode=0  flags=0
+--   0022  opcode=41  A=10  B="self_or_nil"  C=_  mode=1  flags=2
+--   0023  opcode=111  A=9  B=3  C=0  mode=0  flags=0
+--   0024  opcode=131  A=1  B=37  C=1  mode=3  flags=0
+--   0025  opcode=19  A=0  B=37  C=_  mode=2  flags=0
+--   0026  opcode=72  A=9  B=0  C=0  mode=0  flags=0
+--   0027  opcode=119  A=9  B=9  C="Team"  mode=0  flags=4
+--   0028  opcode=22  A=9  B=37  C=0  mode=3  flags=0
+--   0029  opcode=19  A=0  B=37  C=_  mode=2  flags=0
+--   0030  opcode=119  A=9  B=0  C="Team"  mode=0  flags=4
+--   0031  opcode=72  A=10  B=0  C=0  mode=0  flags=0
+--   0032  opcode=119  A=10  B=10  C="Team"  mode=0  flags=4
+--   0033  opcode=29  A=9  B=37  C=10  mode=3  flags=0
+--   0034  opcode=19  A=0  B=37  C=_  mode=2  flags=0
+--   0035  opcode=83  A=9  B=0  C=0  mode=0  flags=0
+--   0036  opcode=41  A=10  B="teammate"  C=_  mode=1  flags=2
+--   0037  opcode=111  A=9  B=3  C=0  mode=0  flags=0
+--   0038  opcode=41  A=3  B=1  C=_  mode=1  flags=2
+--   0039  opcode=126  A=3  B=57  C=3  mode=3  flags=4
+--   0040  opcode=19  A=0  B=57  C=_  mode=2  flags=0
+--   0041  opcode=43  A=9  B=4  C="FindFirstChild"  mode=0  flags=4
+--   0042  opcode=41  A=11  B="Head"  C=_  mode=1  flags=2
+--   0043  opcode=81  A=9  B=11  C=2  mode=0  flags=0
+--   0044  opcode=46  A=7  B=9  C=0  mode=0  flags=0
+--   0045  opcode=22  A=5  B=53  C=0  mode=3  flags=0
+--   0046  opcode=19  A=0  B=53  C=_  mode=2  flags=0
+--   0047  opcode=22  A=6  B=53  C=0  mode=3  flags=0
+--   0048  opcode=19  A=0  B=53  C=_  mode=2  flags=0
+--   0049  opcode=22  A=7  B=53  C=0  mode=3  flags=0
+--   0050  opcode=19  A=0  B=53  C=_  mode=2  flags=0
+--   0051  opcode=119  A=9  B=5  C="Health"  mode=0  flags=4
+--   0052  opcode=121  A=0  B=56  C=9  mode=3  flags=1
+--   0053  opcode=19  A=0  B=56  C=_  mode=2  flags=0
+--   0054  opcode=83  A=9  B=0  C=0  mode=0  flags=0
+--   0055  opcode=41  A=10  B="dead_or_incomplete"  C=_  mode=1  flags=2
+--   0056  opcode=111  A=9  B=3  C=0  mode=0  flags=0
+--   0057  opcode=41  A=3  B=4  C=_  mode=1  flags=2
+--   0058  opcode=41  A=8  B=2  C=_  mode=1  flags=2
+--   0059  opcode=75  A=0  B=83  C=8  mode=3  flags=1
+--   0060  opcode=19  A=0  B=83  C=_  mode=2  flags=0
+--   0061  opcode=126  A=3  B=65  C=4  mode=3  flags=4
+--   0062  opcode=19  A=0  B=65  C=_  mode=2  flags=0
+--   0063  opcode=83  A=9  B=1  C=0  mode=0  flags=0
+--   0064  opcode=46  A=10  B=6  C=0  mode=0  flags=0
+--   0065  opcode=111  A=9  B=3  C=0  mode=0  flags=0
+--   0066  opcode=126  A=3  B=82  C=1  mode=3  flags=4
+--   0067  opcode=19  A=0  B=82  C=_  mode=2  flags=0
+--   0068  opcode=41  A=9  B=0  C=_  mode=1  flags=2
+--   0069  opcode=126  A=9  B=77  C=0  mode=3  flags=4
+--   0070  opcode=19  A=0  B=77  C=_  mode=2  flags=0
+--   0071  opcode=119  A=4  B=0  C="Character"  mode=0  flags=4
+--   0072  opcode=131  A=4  B=76  C=1  mode=3  flags=0
+--   0073  opcode=19  A=0  B=76  C=_  mode=2  flags=0
+--   0074  opcode=83  A=10  B=0  C=0  mode=0  flags=0
+--   0075  opcode=41  A=11  B="no_char"  C=_  mode=1  flags=2
+--   0076  opcode=111  A=10  B=3  C=0  mode=0  flags=0
+--   0077  opcode=41  A=9  B=1  C=_  mode=1  flags=2
+--   0078  opcode=126  A=9  B=68  C=1  mode=3  flags=4
+--   0079  opcode=19  A=0  B=68  C=_  mode=2  flags=0
+--   0080  opcode=41  A=3  B=2  C=_  mode=1  flags=2
+--   0081  opcode=19  A=0  B=82  C=_  mode=2  flags=0
+--   0082  opcode=19  A=0  B=68  C=_  mode=2  flags=0
+--   0083  opcode=41  A=8  B=1  C=_  mode=1  flags=2
+--   0084  opcode=126  A=8  B=11  C=2  mode=3  flags=4
+--   0085  opcode=19  A=0  B=11  C=_  mode=2  flags=0
+--   0086  opcode=126  A=3  B=10  C=2  mode=3  flags=4
+--   0087  opcode=19  A=0  B=10  C=_  mode=2  flags=0
+--   0088  opcode=41  A=9  B=0  C=_  mode=1  flags=2
+--   0089  opcode=126  A=9  B=92  C=1  mode=3  flags=4
+--   0090  opcode=19  A=0  B=92  C=_  mode=2  flags=0
+--   0091  opcode=41  A=3  B=3  C=_  mode=1  flags=2
+--   0092  opcode=19  A=0  B=10  C=_  mode=2  flags=0
+--   0093  opcode=126  A=9  B=88  C=0  mode=3  flags=4
+--   0094  opcode=19  A=0  B=88  C=_  mode=2  flags=0
+--   0095  opcode=43  A=10  B=4  C="FindFirstChildOfClass"  mode=0  flags=4
+--   0096  opcode=41  A=12  B="Humanoid"  C=_  mode=1  flags=2
+--   0097  opcode=81  A=10  B=12  C=2  mode=0  flags=0
+--   0098  opcode=46  A=5  B=10  C=0  mode=0  flags=0
+--   0099  opcode=43  A=10  B=4  C="FindFirstChild"  mode=0  flags=4
+--   0100  opcode=41  A=12  B="HumanoidRootPart"  C=_  mode=1  flags=2
+--   0101  opcode=81  A=10  B=12  C=2  mode=0  flags=0
+--   0102  opcode=46  A=6  B=10  C=0  mode=0  flags=0
+--   0103  opcode=41  A=9  B=1  C=_  mode=1  flags=2
+--   0104  opcode=19  A=0  B=88  C=_  mode=2  flags=0
+--   0105  opcode=19  A=0  B=10  C=_  mode=2  flags=0
+--   0106  opcode=19  A=0  B=11  C=_  mode=2  flags=0
+--   0107  opcode=19  A=0  B=10  C=_  mode=2  flags=0
+--   0108  opcode=19  A=0  B=113  C=_  mode=2  flags=0
+--   0109  opcode=126  A=2  B=2  C=1  mode=3  flags=4
+--   0110  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0111  opcode=105  A=5  B=6  C=0  mode=0  flags=0
+--   0112  opcode=41  A=2  B=2  C=_  mode=1  flags=2
+--   0113  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0114  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.12: params=2, constants=14, instructions=137, children=0
+-- constants:
+--   [1] 0
+--   [2] 1
+--   [3] 2
+--   [4] 250
+--   [5] "ipairs"
+--   [6] "GetPlayers"
+--   [7] "Position"
+--   [8] "Magnitude"
+--   [9] 3
+--   [10] "Character"
+--   [11] "FindFirstChild"
+--   [12] "HumanoidRootPart"
+--   [13] "math"
+--   [14] "huge"
+-- instructions:
+--   0001  opcode=41  A=2  B=0  C=_  mode=1  flags=2
+--   0002  opcode=105  A=3  B=7  C=0  mode=0  flags=0
+--   0003  opcode=126  A=2  B=6  C=1  mode=3  flags=4
+--   0004  opcode=19  A=0  B=6  C=_  mode=2  flags=0
+--   0005  opcode=105  A=5  B=6  C=0  mode=0  flags=0
+--   0006  opcode=41  A=2  B=2  C=_  mode=1  flags=2
+--   0007  opcode=75  A=2  B=130  C=2  mode=3  flags=1
+--   0008  opcode=19  A=0  B=130  C=_  mode=2  flags=0
+--   0009  opcode=105  A=7  B=7  C=0  mode=0  flags=0
+--   0010  opcode=41  A=8  B=0  C=_  mode=1  flags=2
+--   0011  opcode=126  A=8  B=109  C=0  mode=3  flags=4
+--   0012  opcode=19  A=0  B=109  C=_  mode=2  flags=0
+--   0013  opcode=126  A=3  B=86  C=2  mode=3  flags=4
+--   0014  opcode=19  A=0  B=86  C=_  mode=2  flags=0
+--   0015  opcode=41  A=9  B=0  C=_  mode=1  flags=2
+--   0016  opcode=126  A=9  B=81  C=0  mode=3  flags=4
+--   0017  opcode=19  A=0  B=81  C=_  mode=2  flags=0
+--   0018  opcode=39  A=7  B=20  C=0  mode=3  flags=0
+--   0019  opcode=19  A=0  B=20  C=_  mode=2  flags=0
+--   0020  opcode=41  A=7  B=250  C=_  mode=1  flags=2
+--   0021  opcode=108  A=10  B="ipairs"  C=_  mode=1  flags=2
+--   0022  opcode=72  A=11  B=0  C=0  mode=0  flags=0
+--   0023  opcode=43  A=11  B=11  C="GetPlayers"  mode=0  flags=4
+--   0024  opcode=67  A=11  B=12  C=0  mode=0  flags=0
+--   0025  opcode=129  A=10  B=0  C=12  mode=0  flags=0
+--   0026  opcode=19  A=0  B=78  C=_  mode=2  flags=0
+--   0027  opcode=41  A=15  B=0  C=_  mode=1  flags=2
+--   0028  opcode=105  A=16  B=18  C=0  mode=0  flags=0
+--   0029  opcode=75  A=0  B=33  C=15  mode=3  flags=1
+--   0030  opcode=19  A=0  B=33  C=_  mode=2  flags=0
+--   0031  opcode=41  A=16  B=0  C=_  mode=1  flags=2
+--   0032  opcode=105  A=17  B=17  C=0  mode=0  flags=0
+--   0033  opcode=41  A=15  B=1  C=_  mode=1  flags=2
+--   0034  opcode=126  A=15  B=28  C=1  mode=3  flags=4
+--   0035  opcode=19  A=0  B=28  C=_  mode=2  flags=0
+--   0036  opcode=105  A=18  B=18  C=0  mode=0  flags=0
+--   0037  opcode=126  A=16  B=36  C=0  mode=3  flags=4
+--   0038  opcode=19  A=0  B=36  C=_  mode=2  flags=0
+--   0039  opcode=72  A=19  B=1  C=0  mode=0  flags=0
+--   0040  opcode=46  A=20  B=14  C=0  mode=0  flags=0
+--   0041  opcode=46  A=21  B=1  C=0  mode=0  flags=0
+--   0042  opcode=92  A=19  B=21  C=20  mode=0  flags=0
+--   0043  opcode=46  A=18  B=20  C=0  mode=0  flags=0
+--   0044  opcode=46  A=17  B=19  C=0  mode=0  flags=0
+--   0045  opcode=22  A=17  B=78  C=0  mode=3  flags=0
+--   0046  opcode=19  A=0  B=78  C=_  mode=2  flags=0
+--   0047  opcode=41  A=19  B=0  C=_  mode=1  flags=2
+--   0048  opcode=105  A=20  B=21  C=0  mode=0  flags=0
+--   0049  opcode=126  A=19  B=66  C=1  mode=3  flags=4
+--   0050  opcode=19  A=0  B=66  C=_  mode=2  flags=0
+--   0051  opcode=64  A=21  B=78  C=7  mode=3  flags=0
+--   0052  opcode=19  A=0  B=78  C=_  mode=2  flags=0
+--   0053  opcode=41  A=22  B=0  C=_  mode=1  flags=2
+--   0054  opcode=105  A=23  B=23  C=0  mode=0  flags=0
+--   0055  opcode=126  A=22  B=54  C=0  mode=3  flags=4
+--   0056  opcode=19  A=0  B=54  C=_  mode=2  flags=0
+--   0057  opcode=41  A=23  B=0  C=_  mode=1  flags=2
+--   0058  opcode=126  A=23  B=57  C=0  mode=3  flags=4
+--   0059  opcode=19  A=0  B=57  C=_  mode=2  flags=0
+--   0060  opcode=46  A=7  B=21  C=0  mode=0  flags=0
+--   0061  opcode=46  A=6  B=14  C=0  mode=0  flags=0
+--   0062  opcode=19  A=0  B=78  C=_  mode=2  flags=0
+--   0063  opcode=19  A=0  B=57  C=_  mode=2  flags=0
+--   0064  opcode=19  A=0  B=78  C=_  mode=2  flags=0
+--   0065  opcode=19  A=0  B=54  C=_  mode=2  flags=0
+--   0066  opcode=19  A=0  B=78  C=_  mode=2  flags=0
+--   0067  opcode=126  A=19  B=48  C=0  mode=3  flags=4
+--   0068  opcode=19  A=0  B=48  C=_  mode=2  flags=0
+--   0069  opcode=119  A=22  B=18  C="Position"  mode=0  flags=4
+--   0070  opcode=119  A=23  B=5  C="Position"  mode=0  flags=4
+--   0071  opcode=91  A=20  B=22  C=23  mode=0  flags=0
+--   0072  opcode=119  A=21  B=20  C="Magnitude"  mode=0  flags=4
+--   0073  opcode=41  A=19  B=1  C=_  mode=1  flags=2
+--   0074  opcode=19  A=0  B=48  C=_  mode=2  flags=0
+--   0075  opcode=19  A=0  B=78  C=_  mode=2  flags=0
+--   0076  opcode=19  A=0  B=36  C=_  mode=2  flags=0
+--   0077  opcode=19  A=0  B=78  C=_  mode=2  flags=0
+--   0078  opcode=19  A=0  B=28  C=_  mode=2  flags=0
+--   0079  opcode=133  A=10  B=26  C=2  mode=3  flags=0
+--   0080  opcode=19  A=0  B=26  C=_  mode=2  flags=0
+--   0081  opcode=41  A=9  B=1  C=_  mode=1  flags=2
+--   0082  opcode=126  A=9  B=15  C=1  mode=3  flags=4
+--   0083  opcode=19  A=0  B=15  C=_  mode=2  flags=0
+--   0084  opcode=41  A=3  B=3  C=_  mode=1  flags=2
+--   0085  opcode=19  A=0  B=86  C=_  mode=2  flags=0
+--   0086  opcode=19  A=0  B=15  C=_  mode=2  flags=0
+--   0087  opcode=126  A=3  B=108  C=0  mode=3  flags=4
+--   0088  opcode=19  A=0  B=108  C=_  mode=2  flags=0
+--   0089  opcode=41  A=9  B=0  C=_  mode=1  flags=2
+--   0090  opcode=126  A=9  B=93  C=1  mode=3  flags=4
+--   0091  opcode=19  A=0  B=93  C=_  mode=2  flags=0
+--   0092  opcode=41  A=3  B=1  C=_  mode=1  flags=2
+--   0093  opcode=19  A=0  B=108  C=_  mode=2  flags=0
+--   0094  opcode=126  A=9  B=89  C=0  mode=3  flags=4
+--   0095  opcode=19  A=0  B=89  C=_  mode=2  flags=0
+--   0096  opcode=72  A=10  B=2  C=0  mode=0  flags=0
+--   0097  opcode=71  A=4  B=100  C=10  mode=3  flags=0
+--   0098  opcode=19  A=0  B=100  C=_  mode=2  flags=0
+--   0099  opcode=72  A=10  B=2  C=0  mode=0  flags=0
+--   0100  opcode=119  A=4  B=10  C="Character"  mode=0  flags=4
+--   0101  opcode=71  A=5  B=106  C=4  mode=3  flags=0
+--   0102  opcode=19  A=0  B=106  C=_  mode=2  flags=0
+--   0103  opcode=43  A=10  B=4  C="FindFirstChild"  mode=0  flags=4
+--   0104  opcode=41  A=12  B="HumanoidRootPart"  C=_  mode=1  flags=2
+--   0105  opcode=81  A=10  B=12  C=2  mode=0  flags=0
+--   0106  opcode=46  A=5  B=10  C=0  mode=0  flags=0
+--   0107  opcode=41  A=9  B=1  C=_  mode=1  flags=2
+--   0108  opcode=19  A=0  B=89  C=_  mode=2  flags=0
+--   0109  opcode=41  A=8  B=1  C=_  mode=1  flags=2
+--   0110  opcode=75  A=1  B=10  C=8  mode=3  flags=1
+--   0111  opcode=19  A=0  B=10  C=_  mode=2  flags=0
+--   0112  opcode=126  A=3  B=121  C=1  mode=3  flags=4
+--   0113  opcode=19  A=0  B=121  C=_  mode=2  flags=0
+--   0114  opcode=131  A=5  B=119  C=1  mode=3  flags=0
+--   0115  opcode=19  A=0  B=119  C=_  mode=2  flags=0
+--   0116  opcode=105  A=9  B=9  C=0  mode=0  flags=0
+--   0117  opcode=108  A=10  B="math"  C=_  mode=1  flags=2
+--   0118  opcode=119  A=10  B=10  C="huge"  mode=0  flags=4
+--   0119  opcode=111  A=9  B=3  C=0  mode=0  flags=0
+--   0120  opcode=105  A=6  B=6  C=0  mode=0  flags=0
+--   0121  opcode=41  A=3  B=2  C=_  mode=1  flags=2
+--   0122  opcode=126  A=3  B=9  C=3  mode=3  flags=4
+--   0123  opcode=19  A=0  B=9  C=_  mode=2  flags=0
+--   0124  opcode=46  A=9  B=6  C=0  mode=0  flags=0
+--   0125  opcode=46  A=10  B=7  C=0  mode=0  flags=0
+--   0126  opcode=111  A=9  B=3  C=0  mode=0  flags=0
+--   0127  opcode=19  A=0  B=9  C=_  mode=2  flags=0
+--   0128  opcode=19  A=0  B=10  C=_  mode=2  flags=0
+--   0129  opcode=19  A=0  B=9  C=_  mode=2  flags=0
+--   0130  opcode=19  A=0  B=136  C=_  mode=2  flags=0
+--   0131  opcode=126  A=2  B=2  C=0  mode=3  flags=4
+--   0132  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0133  opcode=41  A=3  B=0  C=_  mode=1  flags=2
+--   0134  opcode=105  A=4  B=4  C=0  mode=0  flags=0
+--   0135  opcode=41  A=2  B=1  C=_  mode=1  flags=2
+--   0136  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0137  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.13: params=3, constants=15, instructions=101, children=1
+-- constants:
+--   [1] 0
+--   [2] 3
+--   [3] 1
+--   [4] 0.05
+--   [5] 2
+--   [6] 1.5
+--   [7] 0.5
+--   [8] "task"
+--   [9] "wait"
+--   [10] "pcall"
+--   [11] "warn"
+--   [12] "string"
+--   [13] "format"
+--   [14] "[Nebula] '%s' failed after %d attempts: %s"
+--   [15] "tostring"
+-- instructions:
+--   0001  opcode=41  A=4  B=0  C=_  mode=1  flags=2
+--   0002  opcode=105  A=5  B=9  C=0  mode=0  flags=0
+--   0003  opcode=126  A=4  B=8  C=3  mode=3  flags=4
+--   0004  opcode=19  A=0  B=8  C=_  mode=2  flags=0
+--   0005  opcode=83  A=10  B=0  C=0  mode=0  flags=0
+--   0006  opcode=46  A=11  B=9  C=0  mode=0  flags=0
+--   0007  opcode=46  A=12  B=7  C=0  mode=0  flags=0
+--   0008  opcode=70  A=10  B=2  C=0  mode=0  flags=0
+--   0009  opcode=75  A=0  B=25  C=4  mode=3  flags=1
+--   0010  opcode=19  A=0  B=25  C=_  mode=2  flags=0
+--   0011  opcode=41  A=10  B=0  C=_  mode=1  flags=2
+--   0012  opcode=126  A=10  B=15  C=1  mode=3  flags=4
+--   0013  opcode=19  A=0  B=15  C=_  mode=2  flags=0
+--   0014  opcode=41  A=4  B=1  C=_  mode=1  flags=2
+--   0015  opcode=19  A=0  B=25  C=_  mode=2  flags=0
+--   0016  opcode=126  A=10  B=11  C=0  mode=3  flags=4
+--   0017  opcode=19  A=0  B=11  C=_  mode=2  flags=0
+--   0018  opcode=72  A=11  B=0  C=0  mode=0  flags=0
+--   0019  opcode=125  A=12  B=0  C=0  mode=0  flags=0
+--   0020  opcode=129  A=11  B=0  C=12  mode=0  flags=0
+--   0021  opcode=46  A=6  B=12  C=0  mode=0  flags=0
+--   0022  opcode=46  A=5  B=11  C=0  mode=0  flags=0
+--   0023  opcode=41  A=7  B=0  C=_  mode=1  flags=2
+--   0024  opcode=41  A=10  B=1  C=_  mode=1  flags=2
+--   0025  opcode=19  A=0  B=11  C=_  mode=2  flags=0
+--   0026  opcode=126  A=4  B=38  C=1  mode=3  flags=4
+--   0027  opcode=19  A=0  B=38  C=_  mode=2  flags=0
+--   0028  opcode=41  A=10  B=0  C=_  mode=1  flags=2
+--   0029  opcode=126  A=10  B=33  C=0  mode=3  flags=4
+--   0030  opcode=19  A=0  B=33  C=_  mode=2  flags=0
+--   0031  opcode=41  A=8  B=0.05  C=_  mode=1  flags=2
+--   0032  opcode=105  A=9  B=9  C=0  mode=0  flags=0
+--   0033  opcode=41  A=10  B=1  C=_  mode=1  flags=2
+--   0034  opcode=126  A=10  B=28  C=1  mode=3  flags=4
+--   0035  opcode=19  A=0  B=28  C=_  mode=2  flags=0
+--   0036  opcode=41  A=4  B=2  C=_  mode=1  flags=2
+--   0037  opcode=19  A=0  B=38  C=_  mode=2  flags=0
+--   0038  opcode=19  A=0  B=28  C=_  mode=2  flags=0
+--   0039  opcode=126  A=4  B=2  C=2  mode=3  flags=4
+--   0040  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0041  opcode=41  A=10  B=0  C=_  mode=1  flags=2
+--   0042  opcode=105  A=11  B=12  C=0  mode=0  flags=0
+--   0043  opcode=126  A=10  B=62  C=2  mode=3  flags=4
+--   0044  opcode=19  A=0  B=62  C=_  mode=2  flags=0
+--   0045  opcode=72  A=13  B=1  C=0  mode=0  flags=0
+--   0046  opcode=102  A=14  B=8  C=1.5  mode=0  flags=4
+--   0047  opcode=41  A=15  B=0.05  C=_  mode=1  flags=2
+--   0048  opcode=41  A=16  B=0.5  C=_  mode=1  flags=2
+--   0049  opcode=81  A=13  B=16  C=2  mode=0  flags=0
+--   0050  opcode=46  A=8  B=13  C=0  mode=0  flags=0
+--   0051  opcode=108  A=13  B="task"  C=_  mode=1  flags=2
+--   0052  opcode=22  A=13  B=85  C=0  mode=3  flags=0
+--   0053  opcode=19  A=0  B=85  C=_  mode=2  flags=0
+--   0054  opcode=108  A=13  B="task"  C=_  mode=1  flags=2
+--   0055  opcode=119  A=13  B=13  C="wait"  mode=0  flags=4
+--   0056  opcode=22  A=13  B=85  C=0  mode=3  flags=0
+--   0057  opcode=19  A=0  B=85  C=_  mode=2  flags=0
+--   0058  opcode=108  A=13  B="task"  C=_  mode=1  flags=2
+--   0059  opcode=119  A=13  B=13  C="wait"  mode=0  flags=4
+--   0060  opcode=46  A=14  B=8  C=0  mode=0  flags=0
+--   0061  opcode=57  A=13  B=2  C=1  mode=0  flags=0
+--   0062  opcode=19  A=0  B=85  C=_  mode=2  flags=0
+--   0063  opcode=126  A=10  B=74  C=0  mode=3  flags=4
+--   0064  opcode=19  A=0  B=74  C=_  mode=2  flags=0
+--   0065  opcode=26  A=7  B=7  C=1  mode=0  flags=4
+--   0066  opcode=108  A=13  B="pcall"  C=_  mode=1  flags=2
+--   0067  opcode=124  A=14  B=0  C=3  mode=3  flags=0
+--   0068  opcode=66  A=0  B=6  C=0  mode=0  flags=0
+--   0069  opcode=66  A=0  B=2  C=0  mode=0  flags=0
+--   0070  opcode=66  A=0  B=5  C=0  mode=0  flags=0
+--   0071  opcode=51  A=13  B=2  C=14  mode=0  flags=0
+--   0072  opcode=46  A=12  B=14  C=0  mode=0  flags=0
+--   0073  opcode=46  A=11  B=13  C=0  mode=0  flags=0
+--   0074  opcode=41  A=10  B=1  C=_  mode=1  flags=2
+--   0075  opcode=126  A=10  B=42  C=1  mode=3  flags=4
+--   0076  opcode=19  A=0  B=42  C=_  mode=2  flags=0
+--   0077  opcode=22  A=11  B=82  C=0  mode=3  flags=0
+--   0078  opcode=19  A=0  B=82  C=_  mode=2  flags=0
+--   0079  opcode=83  A=13  B=1  C=0  mode=0  flags=0
+--   0080  opcode=46  A=14  B=12  C=0  mode=0  flags=0
+--   0081  opcode=46  A=15  B=7  C=0  mode=0  flags=0
+--   0082  opcode=70  A=13  B=2  C=0  mode=0  flags=0
+--   0083  opcode=46  A=9  B=12  C=0  mode=0  flags=0
+--   0084  opcode=41  A=10  B=2  C=_  mode=1  flags=2
+--   0085  opcode=19  A=0  B=42  C=_  mode=2  flags=0
+--   0086  opcode=58  A=1  B=40  C=7  mode=3  flags=0
+--   0087  opcode=19  A=0  B=40  C=_  mode=2  flags=0
+--   0088  opcode=108  A=10  B="warn"  C=_  mode=1  flags=2
+--   0089  opcode=108  A=11  B="string"  C=_  mode=1  flags=2
+--   0090  opcode=119  A=11  B=11  C="format"  mode=0  flags=4
+--   0091  opcode=41  A=12  B="[Nebula] '%s' failed after %d attempts: %s"  C=_  mode=1  flags=2
+--   0092  opcode=46  A=13  B=0  C=0  mode=0  flags=0
+--   0093  opcode=46  A=14  B=7  C=0  mode=0  flags=0
+--   0094  opcode=108  A=15  B="tostring"  C=_  mode=1  flags=2
+--   0095  opcode=46  A=16  B=9  C=0  mode=0  flags=0
+--   0096  opcode=67  A=15  B=16  C=0  mode=0  flags=0
+--   0097  opcode=90  A=11  B=0  C=0  mode=0  flags=0
+--   0098  opcode=62  A=10  B=0  C=1  mode=0  flags=0
+--   0099  opcode=41  A=4  B=3  C=_  mode=1  flags=2
+--   0100  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0101  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.13.0: params=0, constants=4, instructions=49, children=0
+-- constants:
+--   [1] 0
+--   [2] 1
+--   [3] 2
+--   [4] "unpack"
+-- instructions:
+--   0001  opcode=41  A=0  B=0  C=_  mode=1  flags=2
+--   0002  opcode=105  A=1  B=1  C=0  mode=0  flags=0
+--   0003  opcode=126  A=0  B=2  C=0  mode=3  flags=4
+--   0004  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0005  opcode=41  A=1  B=0  C=_  mode=1  flags=2
+--   0006  opcode=126  A=1  B=5  C=0  mode=3  flags=4
+--   0007  opcode=19  A=0  B=5  C=_  mode=2  flags=0
+--   0008  opcode=41  A=2  B=0  C=_  mode=1  flags=2
+--   0009  opcode=126  A=2  B=8  C=0  mode=3  flags=4
+--   0010  opcode=19  A=0  B=8  C=_  mode=2  flags=0
+--   0011  opcode=72  A=3  B=0  C=0  mode=0  flags=0
+--   0012  opcode=126  A=3  B=17  C=0  mode=3  flags=4
+--   0013  opcode=19  A=0  B=17  C=_  mode=2  flags=0
+--   0014  opcode=72  A=3  B=1  C=0  mode=0  flags=0
+--   0015  opcode=5  A=3  B=1  C=0  mode=0  flags=0
+--   0016  opcode=134  A=3  B=0  C=0  mode=0  flags=0
+--   0017  opcode=19  A=0  B=36  C=_  mode=2  flags=0
+--   0018  opcode=72  A=3  B=0  C=0  mode=0  flags=0
+--   0019  opcode=126  A=3  B=26  C=1  mode=3  flags=4
+--   0020  opcode=19  A=0  B=26  C=_  mode=2  flags=0
+--   0021  opcode=72  A=3  B=1  C=0  mode=0  flags=0
+--   0022  opcode=72  A=4  B=2  C=0  mode=0  flags=0
+--   0023  opcode=119  A=4  B=4  C=1  mode=0  flags=4
+--   0024  opcode=49  A=3  B=4  C=0  mode=0  flags=0
+--   0025  opcode=134  A=3  B=0  C=0  mode=0  flags=0
+--   0026  opcode=19  A=0  B=36  C=_  mode=2  flags=0
+--   0027  opcode=72  A=3  B=0  C=0  mode=0  flags=0
+--   0028  opcode=126  A=3  B=36  C=2  mode=3  flags=4
+--   0029  opcode=19  A=0  B=36  C=_  mode=2  flags=0
+--   0030  opcode=72  A=3  B=1  C=0  mode=0  flags=0
+--   0031  opcode=72  A=4  B=2  C=0  mode=0  flags=0
+--   0032  opcode=119  A=4  B=4  C=1  mode=0  flags=4
+--   0033  opcode=72  A=5  B=2  C=0  mode=0  flags=0
+--   0034  opcode=119  A=5  B=5  C=2  mode=0  flags=4
+--   0035  opcode=49  A=3  B=5  C=0  mode=0  flags=0
+--   0036  opcode=134  A=3  B=0  C=0  mode=0  flags=0
+--   0037  opcode=72  A=3  B=1  C=0  mode=0  flags=0
+--   0038  opcode=108  A=4  B="unpack"  C=_  mode=1  flags=2
+--   0039  opcode=72  A=5  B=2  C=0  mode=0  flags=0
+--   0040  opcode=41  A=6  B=1  C=_  mode=1  flags=2
+--   0041  opcode=72  A=7  B=0  C=0  mode=0  flags=0
+--   0042  opcode=132  A=4  B=7  C=0  mode=0  flags=0
+--   0043  opcode=10  A=3  B=0  C=0  mode=0  flags=0
+--   0044  opcode=134  A=3  B=0  C=0  mode=0  flags=0
+--   0045  opcode=19  A=0  B=8  C=_  mode=2  flags=0
+--   0046  opcode=19  A=0  B=5  C=_  mode=2  flags=0
+--   0047  opcode=19  A=0  B=48  C=_  mode=2  flags=0
+--   0048  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0049  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.14: params=3, constants=7, instructions=50, children=0
+-- constants:
+--   [1] 0
+--   [2] "Instance"
+--   [3] "new"
+--   [4] "pairs"
+--   [5] 1
+--   [6] "next"
+--   [7] "Parent"
+-- instructions:
+--   0001  opcode=41  A=3  B=0  C=_  mode=1  flags=2
+--   0002  opcode=105  A=4  B=4  C=0  mode=0  flags=0
+--   0003  opcode=41  A=5  B=0  C=_  mode=1  flags=2
+--   0004  opcode=75  A=0  B=3  C=5  mode=3  flags=1
+--   0005  opcode=19  A=0  B=3  C=_  mode=2  flags=0
+--   0006  opcode=126  A=3  B=30  C=0  mode=3  flags=4
+--   0007  opcode=19  A=0  B=30  C=_  mode=2  flags=0
+--   0008  opcode=41  A=6  B=0  C=_  mode=1  flags=2
+--   0009  opcode=126  A=6  B=25  C=0  mode=3  flags=4
+--   0010  opcode=19  A=0  B=25  C=_  mode=2  flags=0
+--   0011  opcode=108  A=7  B="Instance"  C=_  mode=1  flags=2
+--   0012  opcode=119  A=7  B=7  C="new"  mode=0  flags=4
+--   0013  opcode=46  A=8  B=0  C=0  mode=0  flags=0
+--   0014  opcode=2  A=7  B=2  C=2  mode=0  flags=0
+--   0015  opcode=46  A=4  B=7  C=0  mode=0  flags=0
+--   0016  opcode=108  A=7  B="pairs"  C=_  mode=1  flags=2
+--   0017  opcode=39  A=8  B=19  C=1  mode=3  flags=0
+--   0018  opcode=19  A=0  B=19  C=_  mode=2  flags=0
+--   0019  opcode=3  A=8  B=0  C=0  mode=0  flags=0
+--   0020  opcode=51  A=7  B=2  C=9  mode=0  flags=0
+--   0021  opcode=19  A=0  B=22  C=_  mode=2  flags=0
+--   0022  opcode=135  A=4  B=10  C=11  mode=0  flags=0
+--   0023  opcode=133  A=7  B=21  C=2  mode=3  flags=0
+--   0024  opcode=19  A=0  B=21  C=_  mode=2  flags=0
+--   0025  opcode=41  A=6  B=1  C=_  mode=1  flags=2
+--   0026  opcode=75  A=1  B=8  C=6  mode=3  flags=1
+--   0027  opcode=19  A=0  B=8  C=_  mode=2  flags=0
+--   0028  opcode=41  A=3  B=1  C=_  mode=1  flags=2
+--   0029  opcode=19  A=0  B=30  C=_  mode=2  flags=0
+--   0030  opcode=19  A=0  B=8  C=_  mode=2  flags=0
+--   0031  opcode=126  A=3  B=2  C=1  mode=3  flags=4
+--   0032  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0033  opcode=41  A=6  B=0  C=_  mode=1  flags=2
+--   0034  opcode=126  A=6  B=33  C=0  mode=3  flags=4
+--   0035  opcode=19  A=0  B=33  C=_  mode=2  flags=0
+--   0036  opcode=22  A=2  B=44  C=0  mode=3  flags=0
+--   0037  opcode=19  A=0  B=44  C=_  mode=2  flags=0
+--   0038  opcode=108  A=7  B="next"  C=_  mode=1  flags=2
+--   0039  opcode=46  A=8  B=2  C=0  mode=0  flags=0
+--   0040  opcode=105  A=9  B=9  C=0  mode=0  flags=0
+--   0041  opcode=19  A=0  B=42  C=_  mode=2  flags=0
+--   0042  opcode=123  A=11  B="Parent"  C=4  mode=0  flags=2
+--   0043  opcode=133  A=7  B=41  C=2  mode=3  flags=0
+--   0044  opcode=19  A=0  B=41  C=_  mode=2  flags=0
+--   0045  opcode=65  A=4  B=2  C=0  mode=0  flags=0
+--   0046  opcode=19  A=0  B=33  C=_  mode=2  flags=0
+--   0047  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0048  opcode=19  A=0  B=3  C=_  mode=2  flags=0
+--   0049  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0050  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.15: params=2, constants=31, instructions=168, children=0
+-- constants:
+--   [1] 0
+--   [2] "get"
+--   [3] "autoOrbit"
+--   [4] 1
+--   [5] 3
+--   [6] "scanRadius"
+--   [7] 25
+--   [8] 500
+--   [9] "allowTeam"
+--   [10] 4.5
+--   [11] "math"
+--   [12] "pi"
+--   [13] 2
+--   [14] "CFrame"
+--   [15] "new"
+--   [16] "Position"
+--   [17] "Angles"
+--   [18] 2.5
+--   [19] 6
+--   [20] "AssemblyLinearVelocity"
+--   [21] "Vector3"
+--   [22] "zero"
+--   [23] 4
+--   [24] 600
+--   [25] "print"
+--   [26] "string"
+--   [27] "format"
+--   [28] "[Nebula] Orbit heartbeat #%d active"
+--   [29] "Character"
+--   [30] "FindFirstChild"
+--   [31] "HumanoidRootPart"
+-- instructions:
+--   0001  opcode=41  A=2  B=0  C=_  mode=1  flags=2
+--   0002  opcode=105  A=3  B=7  C=0  mode=0  flags=0
+--   0003  opcode=75  A=0  B=26  C=2  mode=3  flags=1
+--   0004  opcode=19  A=0  B=26  C=_  mode=2  flags=0
+--   0005  opcode=72  A=8  B=0  C=0  mode=0  flags=0
+--   0006  opcode=119  A=8  B=8  C="get"  mode=0  flags=4
+--   0007  opcode=41  A=9  B="autoOrbit"  C=_  mode=1  flags=2
+--   0008  opcode=2  A=8  B=2  C=2  mode=0  flags=0
+--   0009  opcode=46  A=3  B=8  C=0  mode=0  flags=0
+--   0010  opcode=131  A=3  B=25  C=1  mode=3  flags=0
+--   0011  opcode=19  A=0  B=25  C=_  mode=2  flags=0
+--   0012  opcode=41  A=8  B=0  C=_  mode=1  flags=2
+--   0013  opcode=105  A=9  B=9  C=0  mode=0  flags=0
+--   0014  opcode=75  A=0  B=13  C=8  mode=3  flags=1
+--   0015  opcode=19  A=0  B=13  C=_  mode=2  flags=0
+--   0016  opcode=41  A=9  B=0  C=_  mode=1  flags=2
+--   0017  opcode=126  A=9  B=16  C=0  mode=3  flags=4
+--   0018  opcode=19  A=0  B=16  C=_  mode=2  flags=0
+--   0019  opcode=105  A=10  B=10  C=0  mode=0  flags=0
+--   0020  opcode=78  A=10  B=1  C=0  mode=0  flags=0
+--   0021  opcode=83  A=10  B=1  C=0  mode=0  flags=0
+--   0022  opcode=65  A=10  B=2  C=0  mode=0  flags=0
+--   0023  opcode=19  A=0  B=16  C=_  mode=2  flags=0
+--   0024  opcode=19  A=0  B=25  C=_  mode=2  flags=0
+--   0025  opcode=19  A=0  B=13  C=_  mode=2  flags=0
+--   0026  opcode=41  A=2  B=1  C=_  mode=1  flags=2
+--   0027  opcode=126  A=2  B=122  C=3  mode=3  flags=4
+--   0028  opcode=19  A=0  B=122  C=_  mode=2  flags=0
+--   0029  opcode=131  A=6  B=73  C=1  mode=3  flags=0
+--   0030  opcode=19  A=0  B=73  C=_  mode=2  flags=0
+--   0031  opcode=41  A=8  B=0  C=_  mode=1  flags=2
+--   0032  opcode=105  A=9  B=9  C=0  mode=0  flags=0
+--   0033  opcode=126  A=8  B=60  C=0  mode=3  flags=4
+--   0034  opcode=19  A=0  B=60  C=_  mode=2  flags=0
+--   0035  opcode=41  A=10  B=0  C=_  mode=1  flags=2
+--   0036  opcode=126  A=10  B=55  C=0  mode=3  flags=4
+--   0037  opcode=19  A=0  B=55  C=_  mode=2  flags=0
+--   0038  opcode=72  A=11  B=2  C=0  mode=0  flags=0
+--   0039  opcode=72  A=12  B=0  C=0  mode=0  flags=0
+--   0040  opcode=119  A=12  B=12  C="get"  mode=0  flags=4
+--   0041  opcode=41  A=13  B="scanRadius"  C=_  mode=1  flags=2
+--   0042  opcode=2  A=12  B=2  C=2  mode=0  flags=0
+--   0043  opcode=41  A=13  B=25  C=_  mode=1  flags=2
+--   0044  opcode=41  A=14  B=500  C=_  mode=1  flags=2
+--   0045  opcode=81  A=11  B=14  C=2  mode=0  flags=0
+--   0046  opcode=46  A=9  B=11  C=0  mode=0  flags=0
+--   0047  opcode=72  A=11  B=3  C=0  mode=0  flags=0
+--   0048  opcode=46  A=12  B=9  C=0  mode=0  flags=0
+--   0049  opcode=72  A=13  B=0  C=0  mode=0  flags=0
+--   0050  opcode=119  A=13  B=13  C="get"  mode=0  flags=4
+--   0051  opcode=41  A=14  B="allowTeam"  C=_  mode=1  flags=2
+--   0052  opcode=67  A=13  B=14  C=0  mode=0  flags=0
+--   0053  opcode=80  A=11  B=0  C=2  mode=0  flags=0
+--   0054  opcode=78  A=11  B=1  C=0  mode=0  flags=0
+--   0055  opcode=41  A=10  B=1  C=_  mode=1  flags=2
+--   0056  opcode=126  A=10  B=35  C=1  mode=3  flags=4
+--   0057  opcode=19  A=0  B=35  C=_  mode=2  flags=0
+--   0058  opcode=41  A=8  B=1  C=_  mode=1  flags=2
+--   0059  opcode=19  A=0  B=60  C=_  mode=2  flags=0
+--   0060  opcode=19  A=0  B=35  C=_  mode=2  flags=0
+--   0061  opcode=75  A=1  B=32  C=8  mode=3  flags=1
+--   0062  opcode=19  A=0  B=32  C=_  mode=2  flags=0
+--   0063  opcode=72  A=10  B=4  C=0  mode=0  flags=0
+--   0064  opcode=72  A=11  B=1  C=0  mode=0  flags=0
+--   0065  opcode=72  A=12  B=0  C=0  mode=0  flags=0
+--   0066  opcode=119  A=12  B=12  C="get"  mode=0  flags=4
+--   0067  opcode=41  A=13  B="allowTeam"  C=_  mode=1  flags=2
+--   0068  opcode=67  A=12  B=13  C=0  mode=0  flags=0
+--   0069  opcode=129  A=10  B=0  C=11  mode=0  flags=0
+--   0070  opcode=46  A=7  B=11  C=0  mode=0  flags=0
+--   0071  opcode=46  A=6  B=10  C=0  mode=0  flags=0
+--   0072  opcode=19  A=0  B=73  C=_  mode=2  flags=0
+--   0073  opcode=19  A=0  B=32  C=_  mode=2  flags=0
+--   0074  opcode=22  A=6  B=121  C=0  mode=3  flags=0
+--   0075  opcode=19  A=0  B=121  C=_  mode=2  flags=0
+--   0076  opcode=22  A=7  B=121  C=0  mode=3  flags=0
+--   0077  opcode=19  A=0  B=121  C=_  mode=2  flags=0
+--   0078  opcode=41  A=8  B=0  C=_  mode=1  flags=2
+--   0079  opcode=105  A=9  B=9  C=0  mode=0  flags=0
+--   0080  opcode=126  A=8  B=79  C=0  mode=3  flags=4
+--   0081  opcode=19  A=0  B=79  C=_  mode=2  flags=0
+--   0082  opcode=41  A=9  B=0  C=_  mode=1  flags=2
+--   0083  opcode=126  A=9  B=112  C=0  mode=3  flags=4
+--   0084  opcode=19  A=0  B=112  C=_  mode=2  flags=0
+--   0085  opcode=72  A=10  B=5  C=0  mode=0  flags=0
+--   0086  opcode=102  A=11  B=1  C=4.5  mode=0  flags=4
+--   0087  opcode=34  A=10  B=10  C=11  mode=0  flags=0
+--   0088  opcode=108  A=11  B="math"  C=_  mode=1  flags=2
+--   0089  opcode=119  A=11  B=11  C="pi"  mode=0  flags=4
+--   0090  opcode=102  A=11  B=11  C=2  mode=0  flags=4
+--   0091  opcode=73  A=10  B=10  C=11  mode=0  flags=0
+--   0092  opcode=78  A=10  B=5  C=0  mode=0  flags=0
+--   0093  opcode=108  A=10  B="CFrame"  C=_  mode=1  flags=2
+--   0094  opcode=119  A=10  B=10  C="new"  mode=0  flags=4
+--   0095  opcode=119  A=11  B=7  C="Position"  mode=0  flags=4
+--   0096  opcode=2  A=10  B=2  C=2  mode=0  flags=0
+--   0097  opcode=108  A=11  B="CFrame"  C=_  mode=1  flags=2
+--   0098  opcode=119  A=11  B=11  C="Angles"  mode=0  flags=4
+--   0099  opcode=41  A=12  B=0  C=_  mode=1  flags=2
+--   0100  opcode=72  A=13  B=5  C=0  mode=0  flags=0
+--   0101  opcode=41  A=14  B=0  C=_  mode=1  flags=2
+--   0102  opcode=81  A=11  B=14  C=2  mode=0  flags=0
+--   0103  opcode=42  A=10  B=10  C=11  mode=0  flags=0
+--   0104  opcode=108  A=11  B="CFrame"  C=_  mode=1  flags=2
+--   0105  opcode=119  A=11  B=11  C="new"  mode=0  flags=4
+--   0106  opcode=41  A=12  B=0  C=_  mode=1  flags=2
+--   0107  opcode=41  A=13  B=2.5  C=_  mode=1  flags=2
+--   0108  opcode=41  A=14  B=6  C=_  mode=1  flags=2
+--   0109  opcode=81  A=11  B=14  C=2  mode=0  flags=0
+--   0110  opcode=42  A=10  B=10  C=11  mode=0  flags=0
+--   0111  opcode=123  A=5  B="CFrame"  C=10  mode=0  flags=2
+--   0112  opcode=41  A=9  B=1  C=_  mode=1  flags=2
+--   0113  opcode=126  A=9  B=82  C=1  mode=3  flags=4
+--   0114  opcode=19  A=0  B=82  C=_  mode=2  flags=0
+--   0115  opcode=108  A=10  B="Vector3"  C=_  mode=1  flags=2
+--   0116  opcode=119  A=10  B=10  C="zero"  mode=0  flags=4
+--   0117  opcode=123  A=5  B="AssemblyLinearVelocity"  C=10  mode=0  flags=2
+--   0118  opcode=19  A=0  B=121  C=_  mode=2  flags=0
+--   0119  opcode=19  A=0  B=82  C=_  mode=2  flags=0
+--   0120  opcode=19  A=0  B=121  C=_  mode=2  flags=0
+--   0121  opcode=19  A=0  B=79  C=_  mode=2  flags=0
+--   0122  opcode=41  A=2  B=4  C=_  mode=1  flags=2
+--   0123  opcode=126  A=2  B=136  C=4  mode=3  flags=4
+--   0124  opcode=19  A=0  B=136  C=_  mode=2  flags=0
+--   0125  opcode=35  A=8  B=0  C=600  mode=0  flags=4
+--   0126  opcode=126  A=8  B=134  C=0  mode=3  flags=4
+--   0127  opcode=19  A=0  B=134  C=_  mode=2  flags=0
+--   0128  opcode=108  A=8  B="print"  C=_  mode=1  flags=2
+--   0129  opcode=108  A=9  B="string"  C=_  mode=1  flags=2
+--   0130  opcode=119  A=9  B=9  C="format"  mode=0  flags=4
+--   0131  opcode=41  A=10  B="[Nebula] Orbit heartbeat #%d active"  C=_  mode=1  flags=2
+--   0132  opcode=46  A=11  B=0  C=0  mode=0  flags=0
+--   0133  opcode=132  A=9  B=11  C=0  mode=0  flags=0
+--   0134  opcode=62  A=8  B=0  C=1  mode=0  flags=0
+--   0135  opcode=83  A=8  B=1  C=0  mode=0  flags=0
+--   0136  opcode=65  A=8  B=2  C=0  mode=0  flags=0
+--   0137  opcode=126  A=2  B=152  C=2  mode=3  flags=4
+--   0138  opcode=19  A=0  B=152  C=_  mode=2  flags=0
+--   0139  opcode=131  A=5  B=142  C=1  mode=3  flags=0
+--   0140  opcode=19  A=0  B=142  C=_  mode=2  flags=0
+--   0141  opcode=83  A=8  B=1  C=0  mode=0  flags=0
+--   0142  opcode=65  A=8  B=2  C=0  mode=0  flags=0
+--   0143  opcode=72  A=8  B=4  C=0  mode=0  flags=0
+--   0144  opcode=72  A=9  B=1  C=0  mode=0  flags=0
+--   0145  opcode=72  A=10  B=0  C=0  mode=0  flags=0
+--   0146  opcode=119  A=10  B=10  C="get"  mode=0  flags=4
+--   0147  opcode=41  A=11  B="allowTeam"  C=_  mode=1  flags=2
+--   0148  opcode=67  A=10  B=11  C=0  mode=0  flags=0
+--   0149  opcode=129  A=8  B=0  C=9  mode=0  flags=0
+--   0150  opcode=46  A=7  B=9  C=0  mode=0  flags=0
+--   0151  opcode=46  A=6  B=8  C=0  mode=0  flags=0
+--   0152  opcode=41  A=2  B=3  C=_  mode=1  flags=2
+--   0153  opcode=126  A=2  B=2  C=1  mode=3  flags=4
+--   0154  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0155  opcode=72  A=8  B=6  C=0  mode=0  flags=0
+--   0156  opcode=71  A=4  B=159  C=8  mode=3  flags=0
+--   0157  opcode=19  A=0  B=159  C=_  mode=2  flags=0
+--   0158  opcode=72  A=8  B=6  C=0  mode=0  flags=0
+--   0159  opcode=119  A=4  B=8  C="Character"  mode=0  flags=4
+--   0160  opcode=71  A=5  B=165  C=4  mode=3  flags=0
+--   0161  opcode=19  A=0  B=165  C=_  mode=2  flags=0
+--   0162  opcode=43  A=8  B=4  C="FindFirstChild"  mode=0  flags=4
+--   0163  opcode=41  A=10  B="HumanoidRootPart"  C=_  mode=1  flags=2
+--   0164  opcode=81  A=8  B=10  C=2  mode=0  flags=0
+--   0165  opcode=46  A=5  B=8  C=0  mode=0  flags=0
+--   0166  opcode=41  A=2  B=2  C=_  mode=1  flags=2
+--   0167  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0168  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.16: params=0, constants=5, instructions=27, children=0
+-- constants:
+--   [1] 0
+--   [2] "FindFirstChild"
+--   [3] "Modules"
+--   [4] "WeaponRegistry"
+--   [5] "require"
+-- instructions:
+--   0001  opcode=41  A=0  B=0  C=_  mode=1  flags=2
+--   0002  opcode=105  A=1  B=1  C=0  mode=0  flags=0
+--   0003  opcode=75  A=0  B=2  C=0  mode=3  flags=1
+--   0004  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0005  opcode=72  A=2  B=0  C=0  mode=0  flags=0
+--   0006  opcode=43  A=2  B=2  C="FindFirstChild"  mode=0  flags=4
+--   0007  opcode=41  A=4  B="Modules"  C=_  mode=1  flags=2
+--   0008  opcode=81  A=2  B=4  C=2  mode=0  flags=0
+--   0009  opcode=71  A=1  B=16  C=2  mode=3  flags=0
+--   0010  opcode=19  A=0  B=16  C=_  mode=2  flags=0
+--   0011  opcode=72  A=2  B=0  C=0  mode=0  flags=0
+--   0012  opcode=119  A=2  B=2  C="Modules"  mode=0  flags=4
+--   0013  opcode=43  A=2  B=2  C="FindFirstChild"  mode=0  flags=4
+--   0014  opcode=41  A=4  B="WeaponRegistry"  C=_  mode=1  flags=2
+--   0015  opcode=81  A=2  B=4  C=2  mode=0  flags=0
+--   0016  opcode=46  A=1  B=2  C=0  mode=0  flags=0
+--   0017  opcode=22  A=1  B=23  C=0  mode=3  flags=0
+--   0018  opcode=19  A=0  B=23  C=_  mode=2  flags=0
+--   0019  opcode=108  A=2  B="require"  C=_  mode=1  flags=2
+--   0020  opcode=46  A=3  B=1  C=0  mode=0  flags=0
+--   0021  opcode=2  A=2  B=2  C=2  mode=0  flags=0
+--   0022  opcode=131  A=2  B=24  C=1  mode=3  flags=0
+--   0023  opcode=19  A=0  B=24  C=_  mode=2  flags=0
+--   0024  opcode=3  A=2  B=0  C=0  mode=0  flags=0
+--   0025  opcode=65  A=2  B=2  C=0  mode=0  flags=0
+--   0026  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0027  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.17: params=1, constants=1, instructions=6, children=0
+-- constants:
+--   [1] "Rifle"
+-- instructions:
+--   0001  opcode=72  A=1  B=0  C=0  mode=0  flags=0
+--   0002  opcode=41  A=2  B="Rifle"  C=_  mode=1  flags=2
+--   0003  opcode=46  A=3  B=0  C=0  mode=0  flags=0
+--   0004  opcode=72  A=4  B=1  C=0  mode=0  flags=0
+--   0005  opcode=69  A=1  B=4  C=1  mode=0  flags=0
+--   0006  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.18: params=1, constants=1, instructions=6, children=0
+-- constants:
+--   [1] "Melee"
+-- instructions:
+--   0001  opcode=72  A=1  B=0  C=0  mode=0  flags=0
+--   0002  opcode=41  A=2  B="Melee"  C=_  mode=1  flags=2
+--   0003  opcode=46  A=3  B=0  C=0  mode=0  flags=0
+--   0004  opcode=72  A=4  B=1  C=0  mode=0  flags=0
+--   0005  opcode=69  A=1  B=4  C=1  mode=0  flags=0
+--   0006  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.19: params=1, constants=1, instructions=6, children=0
+-- constants:
+--   [1] "start"
+-- instructions:
+--   0001  opcode=22  A=0  B=5  C=0  mode=3  flags=0
+--   0002  opcode=19  A=0  B=5  C=_  mode=2  flags=0
+--   0003  opcode=72  A=1  B=0  C=0  mode=0  flags=0
+--   0004  opcode=43  A=1  B=1  C="start"  mode=0  flags=4
+--   0005  opcode=57  A=1  B=2  C=1  mode=0  flags=0
+--   0006  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.20: params=1, constants=0, instructions=1, children=0
+-- instructions:
+--   0001  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.21: params=0, constants=22, instructions=79, children=0
+-- constants:
+--   [1] 0
+--   [2] 2
+--   [3] "set"
+--   [4] 1
+--   [5] "TextColor3"
+--   [6] "Color3"
+--   [7] "fromRGB"
+--   [8] 160
+--   [9] 240
+--   [10] 190
+--   [11] 175
+--   [12] 180
+--   [13] 192
+--   [14] "Text"
+--   [15] " [ON]"
+--   [16] " [OFF]"
+--   [17] "BackgroundColor3"
+--   [18] 42
+--   [19] 62
+--   [20] 54
+--   [21] 30
+--   [22] 33
+-- instructions:
+--   0001  opcode=41  A=0  B=0  C=_  mode=1  flags=2
+--   0002  opcode=105  A=1  B=1  C=0  mode=0  flags=0
+--   0003  opcode=75  A=0  B=2  C=0  mode=3  flags=1
+--   0004  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0005  opcode=41  A=1  B=0  C=_  mode=1  flags=2
+--   0006  opcode=126  A=1  B=17  C=2  mode=3  flags=4
+--   0007  opcode=19  A=0  B=17  C=_  mode=2  flags=0
+--   0008  opcode=72  A=2  B=0  C=0  mode=0  flags=0
+--   0009  opcode=119  A=2  B=2  C="set"  mode=0  flags=4
+--   0010  opcode=72  A=3  B=1  C=0  mode=0  flags=0
+--   0011  opcode=72  A=4  B=2  C=0  mode=0  flags=0
+--   0012  opcode=83  A=5  B=1  C=0  mode=0  flags=0
+--   0013  opcode=69  A=2  B=5  C=1  mode=0  flags=0
+--   0014  opcode=72  A=2  B=3  C=0  mode=0  flags=0
+--   0015  opcode=72  A=3  B=2  C=0  mode=0  flags=0
+--   0016  opcode=57  A=2  B=2  C=1  mode=0  flags=0
+--   0017  opcode=19  A=0  B=78  C=_  mode=2  flags=0
+--   0018  opcode=126  A=1  B=50  C=1  mode=3  flags=4
+--   0019  opcode=19  A=0  B=50  C=_  mode=2  flags=0
+--   0020  opcode=72  A=2  B=4  C=0  mode=0  flags=0
+--   0021  opcode=72  A=3  B=2  C=0  mode=0  flags=0
+--   0022  opcode=22  A=3  B=31  C=0  mode=3  flags=0
+--   0023  opcode=19  A=0  B=31  C=_  mode=2  flags=0
+--   0024  opcode=108  A=3  B="Color3"  C=_  mode=1  flags=2
+--   0025  opcode=119  A=3  B=3  C="fromRGB"  mode=0  flags=4
+--   0026  opcode=41  A=4  B=160  C=_  mode=1  flags=2
+--   0027  opcode=41  A=5  B=240  C=_  mode=1  flags=2
+--   0028  opcode=41  A=6  B=190  C=_  mode=1  flags=2
+--   0029  opcode=81  A=3  B=6  C=2  mode=0  flags=0
+--   0030  opcode=131  A=3  B=37  C=1  mode=3  flags=0
+--   0031  opcode=19  A=0  B=37  C=_  mode=2  flags=0
+--   0032  opcode=108  A=3  B="Color3"  C=_  mode=1  flags=2
+--   0033  opcode=119  A=3  B=3  C="fromRGB"  mode=0  flags=4
+--   0034  opcode=41  A=4  B=175  C=_  mode=1  flags=2
+--   0035  opcode=41  A=5  B=180  C=_  mode=1  flags=2
+--   0036  opcode=41  A=6  B=192  C=_  mode=1  flags=2
+--   0037  opcode=81  A=3  B=6  C=2  mode=0  flags=0
+--   0038  opcode=123  A=2  B="TextColor3"  C=3  mode=0  flags=2
+--   0039  opcode=72  A=2  B=4  C=0  mode=0  flags=0
+--   0040  opcode=72  A=3  B=5  C=0  mode=0  flags=0
+--   0041  opcode=72  A=4  B=2  C=0  mode=0  flags=0
+--   0042  opcode=22  A=4  B=46  C=0  mode=3  flags=0
+--   0043  opcode=19  A=0  B=46  C=_  mode=2  flags=0
+--   0044  opcode=41  A=4  B=" [ON]"  C=_  mode=1  flags=2
+--   0045  opcode=131  A=4  B=47  C=1  mode=3  flags=0
+--   0046  opcode=19  A=0  B=47  C=_  mode=2  flags=0
+--   0047  opcode=41  A=4  B=" [OFF]"  C=_  mode=1  flags=2
+--   0048  opcode=24  A=3  B=3  C=4  mode=0  flags=0
+--   0049  opcode=123  A=2  B="Text"  C=3  mode=0  flags=2
+--   0050  opcode=41  A=1  B=2  C=_  mode=1  flags=2
+--   0051  opcode=75  A=0  B=5  C=1  mode=3  flags=1
+--   0052  opcode=19  A=0  B=5  C=_  mode=2  flags=0
+--   0053  opcode=72  A=2  B=2  C=0  mode=0  flags=0
+--   0054  opcode=122  A=2  B=2  C=0  mode=0  flags=0
+--   0055  opcode=78  A=2  B=2  C=0  mode=0  flags=0
+--   0056  opcode=72  A=2  B=4  C=0  mode=0  flags=0
+--   0057  opcode=72  A=3  B=2  C=0  mode=0  flags=0
+--   0058  opcode=22  A=3  B=67  C=0  mode=3  flags=0
+--   0059  opcode=19  A=0  B=67  C=_  mode=2  flags=0
+--   0060  opcode=108  A=3  B="Color3"  C=_  mode=1  flags=2
+--   0061  opcode=119  A=3  B=3  C="fromRGB"  mode=0  flags=4
+--   0062  opcode=41  A=4  B=42  C=_  mode=1  flags=2
+--   0063  opcode=41  A=5  B=62  C=_  mode=1  flags=2
+--   0064  opcode=41  A=6  B=54  C=_  mode=1  flags=2
+--   0065  opcode=81  A=3  B=6  C=2  mode=0  flags=0
+--   0066  opcode=131  A=3  B=73  C=1  mode=3  flags=0
+--   0067  opcode=19  A=0  B=73  C=_  mode=2  flags=0
+--   0068  opcode=108  A=3  B="Color3"  C=_  mode=1  flags=2
+--   0069  opcode=119  A=3  B=3  C="fromRGB"  mode=0  flags=4
+--   0070  opcode=41  A=4  B=30  C=_  mode=1  flags=2
+--   0071  opcode=41  A=5  B=33  C=_  mode=1  flags=2
+--   0072  opcode=41  A=6  B=42  C=_  mode=1  flags=2
+--   0073  opcode=81  A=3  B=6  C=2  mode=0  flags=0
+--   0074  opcode=123  A=2  B="BackgroundColor3"  C=3  mode=0  flags=2
+--   0075  opcode=41  A=1  B=1  C=_  mode=1  flags=2
+--   0076  opcode=19  A=0  B=5  C=_  mode=2  flags=0
+--   0077  opcode=19  A=0  B=78  C=_  mode=2  flags=0
+--   0078  opcode=19  A=0  B=2  C=_  mode=2  flags=0
+--   0079  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.22: params=1, constants=7, instructions=34, children=0
+-- constants:
+--   [1] "UserInputType"
+--   [2] "Enum"
+--   [3] "MouseButton1"
+--   [4] "Touch"
+--   [5] 0
+--   [6] "Position"
+--   [7] 1
+-- instructions:
+--   0001  opcode=119  A=1  B=0  C="UserInputType"  mode=0  flags=4
+--   0002  opcode=108  A=2  B="Enum"  C=_  mode=1  flags=2
+--   0003  opcode=119  A=2  B=2  C="UserInputType"  mode=0  flags=4
+--   0004  opcode=119  A=2  B=2  C="MouseButton1"  mode=0  flags=4
+--   0005  opcode=15  A=1  B=12  C=2  mode=3  flags=0
+--   0006  opcode=19  A=0  B=12  C=_  mode=2  flags=0
+--   0007  opcode=119  A=1  B=0  C="UserInputType"  mode=0  flags=4
+--   0008  opcode=108  A=2  B="Enum"  C=_  mode=1  flags=2
+--   0009  opcode=119  A=2  B=2  C="UserInputType"  mode=0  flags=4
+--   0010  opcode=119  A=2  B=2  C="Touch"  mode=0  flags=4
+--   0011  opcode=29  A=1  B=33  C=2  mode=3  flags=0
+--   0012  opcode=19  A=0  B=33  C=_  mode=2  flags=0
+--   0013  opcode=41  A=1  B=0  C=_  mode=1  flags=2
+--   0014  opcode=105  A=2  B=2  C=0  mode=0  flags=0
+--   0015  opcode=126  A=1  B=14  C=0  mode=3  flags=4
+--   0016  opcode=19  A=0  B=14  C=_  mode=2  flags=0
+--   0017  opcode=41  A=2  B=0  C=_  mode=1  flags=2
+--   0018  opcode=126  A=2  B=24  C=0  mode=3  flags=4
+--   0019  opcode=19  A=0  B=24  C=_  mode=2  flags=0
+--   0020  opcode=83  A=3  B=1  C=0  mode=0  flags=0
+--   0021  opcode=78  A=3  B=0  C=0  mode=0  flags=0
+--   0022  opcode=119  A=3  B=0  C="Position"  mode=0  flags=4
+--   0023  opcode=78  A=3  B=1  C=0  mode=0  flags=0
+--   0024  opcode=41  A=2  B=1  C=_  mode=1  flags=2
+--   0025  opcode=126  A=2  B=17  C=1  mode=3  flags=4
+--   0026  opcode=19  A=0  B=17  C=_  mode=2  flags=0
+--   0027  opcode=72  A=3  B=3  C=0  mode=0  flags=0
+--   0028  opcode=119  A=3  B=3  C="Position"  mode=0  flags=4
+--   0029  opcode=78  A=3  B=2  C=0  mode=0  flags=0
+--   0030  opcode=19  A=0  B=33  C=_  mode=2  flags=0
+--   0031  opcode=19  A=0  B=17  C=_  mode=2  flags=0
+--   0032  opcode=19  A=0  B=33  C=_  mode=2  flags=0
+--   0033  opcode=19  A=0  B=14  C=_  mode=2  flags=0
+--   0034  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.23: params=1, constants=4, instructions=15, children=0
+-- constants:
+--   [1] "UserInputType"
+--   [2] "Enum"
+--   [3] "MouseButton1"
+--   [4] "Touch"
+-- instructions:
+--   0001  opcode=119  A=1  B=0  C="UserInputType"  mode=0  flags=4
+--   0002  opcode=108  A=2  B="Enum"  C=_  mode=1  flags=2
+--   0003  opcode=119  A=2  B=2  C="UserInputType"  mode=0  flags=4
+--   0004  opcode=119  A=2  B=2  C="MouseButton1"  mode=0  flags=4
+--   0005  opcode=15  A=1  B=12  C=2  mode=3  flags=0
+--   0006  opcode=19  A=0  B=12  C=_  mode=2  flags=0
+--   0007  opcode=119  A=1  B=0  C="UserInputType"  mode=0  flags=4
+--   0008  opcode=108  A=2  B="Enum"  C=_  mode=1  flags=2
+--   0009  opcode=119  A=2  B=2  C="UserInputType"  mode=0  flags=4
+--   0010  opcode=119  A=2  B=2  C="Touch"  mode=0  flags=4
+--   0011  opcode=29  A=1  B=14  C=2  mode=3  flags=0
+--   0012  opcode=19  A=0  B=14  C=_  mode=2  flags=0
+--   0013  opcode=83  A=1  B=0  C=0  mode=0  flags=0
+--   0014  opcode=78  A=1  B=0  C=0  mode=0  flags=0
+--   0015  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.24: params=1, constants=12, instructions=46, children=0
+-- constants:
+--   [1] "UserInputType"
+--   [2] "Enum"
+--   [3] "MouseMovement"
+--   [4] "Touch"
+--   [5] 0
+--   [6] "Position"
+--   [7] "UDim2"
+--   [8] "new"
+--   [9] "X"
+--   [10] "Scale"
+--   [11] "Offset"
+--   [12] "Y"
+-- instructions:
+--   0001  opcode=72  A=1  B=0  C=0  mode=0  flags=0
+--   0002  opcode=22  A=1  B=45  C=0  mode=3  flags=0
+--   0003  opcode=19  A=0  B=45  C=_  mode=2  flags=0
+--   0004  opcode=119  A=1  B=0  C="UserInputType"  mode=0  flags=4
+--   0005  opcode=108  A=2  B="Enum"  C=_  mode=1  flags=2
+--   0006  opcode=119  A=2  B=2  C="UserInputType"  mode=0  flags=4
+--   0007  opcode=119  A=2  B=2  C="MouseMovement"  mode=0  flags=4
+--   0008  opcode=15  A=1  B=15  C=2  mode=3  flags=0
+--   0009  opcode=19  A=0  B=15  C=_  mode=2  flags=0
+--   0010  opcode=119  A=1  B=0  C="UserInputType"  mode=0  flags=4
+--   0011  opcode=108  A=2  B="Enum"  C=_  mode=1  flags=2
+--   0012  opcode=119  A=2  B=2  C="UserInputType"  mode=0  flags=4
+--   0013  opcode=119  A=2  B=2  C="Touch"  mode=0  flags=4
+--   0014  opcode=29  A=1  B=45  C=2  mode=3  flags=0
+--   0015  opcode=19  A=0  B=45  C=_  mode=2  flags=0
+--   0016  opcode=41  A=1  B=0  C=_  mode=1  flags=2
+--   0017  opcode=105  A=2  B=2  C=0  mode=0  flags=0
+--   0018  opcode=126  A=1  B=17  C=0  mode=3  flags=4
+--   0019  opcode=19  A=0  B=17  C=_  mode=2  flags=0
+--   0020  opcode=119  A=3  B=0  C="Position"  mode=0  flags=4
+--   0021  opcode=72  A=4  B=1  C=0  mode=0  flags=0
+--   0022  opcode=91  A=2  B=3  C=4  mode=0  flags=0
+--   0023  opcode=72  A=3  B=2  C=0  mode=0  flags=0
+--   0024  opcode=108  A=4  B="UDim2"  C=_  mode=1  flags=2
+--   0025  opcode=119  A=4  B=4  C="new"  mode=0  flags=4
+--   0026  opcode=72  A=5  B=3  C=0  mode=0  flags=0
+--   0027  opcode=119  A=5  B=5  C="X"  mode=0  flags=4
+--   0028  opcode=119  A=5  B=5  C="Scale"  mode=0  flags=4
+--   0029  opcode=72  A=6  B=3  C=0  mode=0  flags=0
+--   0030  opcode=119  A=6  B=6  C="X"  mode=0  flags=4
+--   0031  opcode=119  A=6  B=6  C="Offset"  mode=0  flags=4
+--   0032  opcode=119  A=7  B=2  C="X"  mode=0  flags=4
+--   0033  opcode=34  A=6  B=6  C=7  mode=0  flags=0
+--   0034  opcode=72  A=7  B=3  C=0  mode=0  flags=0
+--   0035  opcode=119  A=7  B=7  C="Y"  mode=0  flags=4
+--   0036  opcode=119  A=7  B=7  C="Scale"  mode=0  flags=4
+--   0037  opcode=72  A=8  B=3  C=0  mode=0  flags=0
+--   0038  opcode=119  A=8  B=8  C="Y"  mode=0  flags=4
+--   0039  opcode=119  A=8  B=8  C="Offset"  mode=0  flags=4
+--   0040  opcode=119  A=9  B=2  C="Y"  mode=0  flags=4
+--   0041  opcode=34  A=8  B=8  C=9  mode=0  flags=0
+--   0042  opcode=81  A=4  B=8  C=2  mode=0  flags=0
+--   0043  opcode=123  A=3  B="Position"  C=4  mode=0  flags=2
+--   0044  opcode=19  A=0  B=45  C=_  mode=2  flags=0
+--   0045  opcode=19  A=0  B=17  C=_  mode=2  flags=0
+--   0046  opcode=38  A=0  B=1  C=0  mode=0  flags=0
+-- proto 0.25: params=2, constants=4, instructions=14, children=0
+-- constants:
+--   [1] "KeyCode"
+--   [2] "Enum"
+--   [3] "RightShift"
+--   [4] "Enabled"
+-- instructions:
+--   0001  opcode=131  A=1  B=13  C=1  mode=3  flags=0
+--   0002  opcode=19  A=0  B=13  C=_  mode=2  flags=0
+--   0003  opcode=119  A=2  B=0  C="KeyCode"  mode=0  flags=4
+--   0004  opcode=108  A=3  B="Enum"  C=_  mode=1  flags=2
+--   0005  opcode=119  A=3  B=3  C="KeyCode"  mode=0  flags=4
+--   0006  opcode=119  A=3  B=3  C="RightShift"  mode=0  flags=4
+--   0007  opcode=29  A=2  B=13  C=3  mode=3  flags=0
+--   0008  opcode=19  A=0  B=13  C=_  mode=2  flags=0
+--   0009  opcode=72  A=2  B=0  C=0  mode=0  flags=0
+--   0010  opcode=72  A=3  B=0  C=0  mode=0  flags=0
+--   0011  opcode=119  A=3  B=3  C="Enabled"  mode=0  flags=4
+--   0012  opcode=122  A=3  B=3  C=0  mode=0  flags=0
+--   0013  opcode=123  A=2  B="Enabled"  C=3  mode=0  flags=2
+--   0014  opcode=38  A=0  B=1  C=0  mode=0  flags=0
 print("Deobf By Zed")

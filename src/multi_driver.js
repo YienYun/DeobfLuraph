@@ -90,20 +90,41 @@ async function runLuaObfuscator(job) {
       + '(the LuaObfuscator transforms cannot parse Lua without it)');
   }
   const cli = path.join(OBFUSCATORS, 'luaobfuscator', 'src', 'cli.js');
-  const stdout = runNodeCli([cli, job.sourcePath, '--stdout'], job.args.timeout);
+  const reportPath = job.path('.luaobfuscator.json');
+  const stdout = runNodeCli([cli, job.sourcePath, '--stdout', '--json-report', reportPath], job.args.timeout);
   if (!stdout.trim()) throw new Error('LuaObfuscator returned empty stdout');
-  const out = job.write(job.path('.luaobfuscator.lua'), stdout);
-  // The VM presets are decoded into a rehosted machine: register ops, proto
-  // tables and `::Lnn::` labels. That is the payload, decoded, but it is not
-  // source yet and goto/labels are rejected by Lua 5.1 and by Luau.
-  if (/^\s*::L\d+::/m.test(stdout)) {
-    const labels = (stdout.match(/::L\d+::/g) || []).length;
-    const gotos = (stdout.match(/\bgoto\s+L\d+/g) || []).length;
-    job.warnings.push(`LuaObfuscator VM payload decoded into a rehosted machine (${labels} labels, `
-      + `${gotos} goto jumps): it still needs structural lifting before it is runnable Luau.`);
-    process.stderr.write(`[!] decoded VM payload uses ${labels} labels / ${gotos} gotos: rehost, not source\n`);
+  let report = null;
+  try {
+    report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+  } catch (err) {
+    report = null;
   }
-  return finalizeStaticResult(job, out, 'LuaObfuscator');
+  const stats = report ? report.stats : null;
+  let source = stdout;
+  if (stats && stats.vmOutputMode === 'vm-ir') {
+    // The VM presets (OBFUSCATE!, Chaotic Evil) ship their script as bytecode
+    // for an interpreter whose opcodes are randomised per build. The payload is
+    // decoded, but decoding it is not lifting it: label the result as what it
+    // is, with the counts, instead of letting a listing pass for source.
+    const preserved = stats.vmPreservedInstructions || 0;
+    const header = [
+      `-- LuaObfuscator: decoded VM payload only (${preserved} instructions preserved as IR).`,
+      '-- No source lift: this build\'s interpreter opcodes are randomised, so the',
+      '-- listing below is the recovered bytecode plus a best-effort preview.',
+      '',
+    ].join('\n');
+    source = header + stdout;
+    job.luaobf = { mode: 'vm-ir', preserved, instructions: stats.vmInstructions || 0 };
+    job.warnings.push(`LuaObfuscator preserved ${preserved} VM instructions as IR: the payload is `
+      + 'decoded but not lifted back to source (randomised opcodes).');
+    process.stderr.write(`[!] VM payload decoded, not lifted: ${preserved} instructions preserved as IR\n`);
+  } else if (stats) {
+    job.luaobf = { mode: stats.vmOutputMode, decodedStrings: stats.decodedStrings || 0 };
+  }
+  const out = job.write(job.path('.luaobfuscator.lua'), source);
+  const finalized = finalizeStaticResult(job, out, 'LuaObfuscator');
+  if (job.luaobf && job.luaobf.mode === 'vm-ir') job.resultType = 'vm-ir';
+  return finalized;
 }
 
 async function runPsu(job) {

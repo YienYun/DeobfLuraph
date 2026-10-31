@@ -1,7 +1,5 @@
-local n
-n = 1494280530
-local n2
-n2 = 93860970
+local number = 1494280530
+local number2 = 93860970
 local TweenService, UserInputService, RunService, MarketplaceService, HttpService, httpRequest, localPlayer
 
 do
@@ -58,8 +56,7 @@ do
 	localPlayer = Players.LocalPlayer
 end
 
-local hui
-hui = nil
+local hui = nil
 
 pcall(function()
 	if typeof(gethui) ~= "function" then
@@ -68,10 +65,10 @@ pcall(function()
 	hui = gethui()
 end)
 
-local home, vrzg9YaNPjUrl, tbl, tbl2, n3, n4, tbl3
+local home, vrzg9YaNPjUrl, data, data2, number3, number4, data3
 
 do
-	local n5 = n - 2783575027
+	local number5 = number - 2783575027
 
 	if not hui then
 		pcall(function()
@@ -86,36 +83,35 @@ do
 
 	if not hui then
 		hui = localPlayer:WaitForChild("PlayerGui")
-		n2 = n2 + n5 + 1289294497
+		number2 = number2 + number5 + 1289294497
 	end
 
 	home = "Free Script Loader"
 	vrzg9YaNPjUrl = "https://discord.gg/vrzg9YaNPj"
-	tbl = { items = { "Violent District", "Break and Steal", "Anime Dice" } }
-	tbl2 = {}
-	local n6 = n2 + 95095349
-	local n7 = n5 // n6 - 3670288205 + n6
-	local n8 = n6 + n7 + n7
-	local n9 = (n7 + 1217751808) // n8
-	n3 = n8 + n9 + n9
-	n4 = n9 - n3
-	tbl3 = {}
+	data = { items = { "Violent District", "Break and Steal", "Anime Dice" } }
+	data2 = {}
+	local number6 = number2 + 95095349
+	local number7 = number5 // number6 - 3670288205 + number6
+	local number8 = number6 + number7 + number7
+	local number9 = (number7 + 1217751808) // number8
+	number3 = number8 + number9 + number9
+	number4 = number9 - number3
+	data3 = {}
 end
 
-local n32 = bit32.band(n3, 4294967295)
-local v = bit32.band(t1926_545_1[1], 65535)
-local v2 = bit32.rshift(t1926_545_1[1], 16)
-local n322 = bit32.band(n32, 65535)
-local v3
-v3 = bit32.band(v * n322 + bit32.lshift(bit32.band(v * bit32.rshift(n32, 16) + v2 * n322, 65535), 16), 4294967295)
-tbl3.name = "Evomon Gold V4"
-tbl3.desc = "Auto hunt / evolve / VIP farm"
-tbl3.icon = "rbxassetid://112510549708715"
-tbl3.match = { "evomon" }
-tbl3.url = "https://raw.githubusercontent.com/unclebitcoin100x-bot/waduhek/refs/heads/main/evg.lua"
-tbl3.premiumOnly = true
+local number5 = bit32.band(number3, 4294967295)
+local value = bit32.band(t1926_545_1[1], 65535)
+local value2 = bit32.rshift(t1926_545_1[1], 16)
+local number6 = bit32.band(number5, 65535)
+local value3 = bit32.band(value * number6 + bit32.lshift(bit32.band(value * bit32.rshift(number5, 16) + value2 * number6, 65535), 16), 4294967295)
+data3.name = "Evomon Gold V4"
+data3.desc = "Auto hunt / evolve / VIP farm"
+data3.icon = "rbxassetid://112510549708715"
+data3.match = { "evomon" }
+data3.url = "https://raw.githubusercontent.com/unclebitcoin100x-bot/waduhek/refs/heads/main/evg.lua"
+data3.premiumOnly = true
 
-tbl2[1] = {
+data2[1] = {
 	name = "Violent District",
 	desc = "Survivor / Killer / ESP / OP",
 	icon = "rbxthumb://type=GameIcon&id=6739698191&w=150&h=150",
@@ -123,7 +119,7 @@ tbl2[1] = {
 	url = "https://raw.githubusercontent.com/unclebitcoin100x-bot/waduhek/refs/heads/main/vd.lua",
 }
 
-tbl2[2] = {
+data2[2] = {
 	name = "Break and Steal",
 	desc = "Auto steal / farm / defense",
 	icon = "rbxthumb://type=GameIcon&id=10765288803&w=150&h=150",
@@ -131,7 +127,7 @@ tbl2[2] = {
 	url = "https://api.luarmor.net/files/v4/loaders/1c42f17db76929706a530cdc272ffea3.lua",
 }
 
-tbl2[3] = {
+data2[3] = {
 	name = "Anime Dice",
 	desc = "Auto roll / farm / luck",
 	icon = "rbxthumb://type=GameIcon&id=10708913337&w=150&h=150",
@@ -139,7 +135,7 @@ tbl2[3] = {
 	url = "https://raw.githubusercontent.com/unclebitcoin100x-bot/waduhek/refs/heads/main/ad.lua",
 }
 
-tbl2[4] = {
+data2[4] = {
 	name = "Ride A Pet",
 	desc = "Auto farm / egg / ride",
 	icon = "rbxthumb://type=GameIcon&id=10035204815&w=150&h=150",
@@ -147,7 +143,7 @@ tbl2[4] = {
 	url = "https://raw.githubusercontent.com/unclebitcoin100x-bot/waduhek/main/rap.lua",
 }
 
-tbl2[5] = {
+data2[5] = {
 	name = "Capybara VS Plant",
 	desc = "Auto farm",
 	icon = "rbxassetid://105645768765428",
@@ -156,7 +152,7 @@ tbl2[5] = {
 	genv = { SCRIPT_KEY = "KEYLESS" },
 }
 
-tbl2[6] = {
+data2[6] = {
 	name = "Steal an Egg",
 	desc = "Auto steal / farm",
 	icon = "rbxassetid://71490087912254",
@@ -164,7 +160,7 @@ tbl2[6] = {
 	url = "https://raw.githubusercontent.com/unclebitcoin100x-bot/waduhek/refs/heads/main/sae3.lua",
 }
 
-tbl2[7] = {
+data2[7] = {
 	name = "Grow a Chicken Fighter",
 	desc = "Auto farm / fight",
 	icon = "rbxassetid://94197048748373",
@@ -173,7 +169,7 @@ tbl2[7] = {
 	genv = { SCRIPT_KEY = "KEYLESS" },
 }
 
-tbl2[8] = {
+data2[8] = {
 	name = "Anime Expedition",
 	desc = "Auto match / farm",
 	icon = "rbxassetid://131974959514318",
@@ -182,7 +178,7 @@ tbl2[8] = {
 	genv = { SCRIPT_KEY = "KEYLESS" },
 }
 
-tbl2[9] = {
+data2[9] = {
 	name = "Iron Souls",
 	desc = "Auto farm / forge / upgrade",
 	icon = "rbxassetid://114063353587790",
@@ -191,7 +187,7 @@ tbl2[9] = {
 	genv = { SCRIPT_KEY = "KEYLESS" },
 }
 
-tbl2[10] = {
+data2[10] = {
 	name = "Anime Card Farm",
 	desc = "Auto farm / cards",
 	icon = "rbxassetid://115169947896689",
@@ -200,7 +196,7 @@ tbl2[10] = {
 	genv = { SCRIPT_KEY = "KEYLESS" },
 }
 
-tbl2[11] = {
+data2[11] = {
 	name = "Roblox Anti AFK",
 	desc = "Blocks idle kick / any game",
 	icon = "rbxassetid://118103427371929",
@@ -209,7 +205,7 @@ tbl2[11] = {
 	genv = { SCRIPT_KEY = "KEYLESS" },
 }
 
-tbl2[12] = {
+data2[12] = {
 	name = "Grow A Garden 2",
 	desc = "Auto farm / shop / sell",
 	icon = "rbxassetid://103507136591905",
@@ -217,7 +213,7 @@ tbl2[12] = {
 	url = "https://raw.githubusercontent.com/JualNasiRendang/gag2/refs/heads/main/gag2.lua",
 }
 
-tbl2[13] = {
+data2[13] = {
 	name = "Tap Heroes: Pet Simulator 99",
 	desc = "Auto tap / farm",
 	icon = "rbxassetid://95633120003456",
@@ -225,7 +221,7 @@ tbl2[13] = {
 	url = "https://raw.githubusercontent.com/JualNasiRendang/tap-heroes-pet-99/refs/heads/main/tapheroes.lua",
 }
 
-tbl2[14] = {
+data2[14] = {
 	name = "Haze Seas",
 	desc = "Auto punch / farm",
 	icon = "rbxassetid://95336994655521",
@@ -234,7 +230,7 @@ tbl2[14] = {
 	genv = { SCRIPT_KEY = "KEYLESS" },
 }
 
-tbl2[15] = {
+data2[15] = {
 	name = "Build an Anthill",
 	desc = "Auto food / collect / sell sugar",
 	icon = "rbxassetid://74203696854385",
@@ -246,7 +242,7 @@ tbl2[15] = {
 	},
 }
 
-tbl2[16] = {
+data2[16] = {
 	name = "Build a Ring Farm",
 	desc = "Auto farm",
 	icon = "rbxassetid://131809011640166",
@@ -254,7 +250,7 @@ tbl2[16] = {
 	url = "https://raw.githubusercontent.com/JualNasiRendang/nasirendang-barf/refs/heads/main/nasirendang-barf.lua",
 }
 
-tbl2[17] = {
+data2[17] = {
 	name = "Evomon",
 	desc = "Auto hunt / evolve",
 	icon = "rbxassetid://112510549708715",
@@ -262,15 +258,15 @@ tbl2[17] = {
 	url = "https://raw.githubusercontent.com/JualNasiRendang/nasirendang-evomon/refs/heads/main/nasirendang-evomon.lua",
 }
 
-tbl2[18] = tbl3
-local fn
+data2[18] = data3
+local callback
 
-fn = function(arg)
-	for _, v4 in ipairs(tbl2) do
-		if v4.name ~= arg then
+callback = function(argument)
+	for _, value4 in ipairs(data2) do
+		if value4.name ~= argument then
 			continue
 		end
-		return v4
+		return value4
 	end
 
 	return nil
@@ -312,19 +308,19 @@ end
 local readJsonFile, saveFile
 
 do
-	local n5 = 86400
+	local number7 = 86400
 
 	readJsonFile = function()
-		local ok, result = pcall(readfile, "nr_loader_autoexec.json")
+		local ok, response = pcall(readfile, "nr_loader_autoexec.json")
 
-		if ok and type(result) == "string" and result ~= "" then
-			local ok2, result2 = pcall(function()
-				return HttpService:JSONDecode(result)
+		if ok and type(response) == "string" and response ~= "" then
+			local ok2, response2 = pcall(function()
+				return HttpService:JSONDecode(response)
 			end)
 
-			if ok2 and type(result2) == "table" and result2.gameName and result2.expiresAt then
-				if not (result2.expiresAt <= os.time()) then
-					return result2
+			if ok2 and type(response2) == "table" and response2.gameName and response2.expiresAt then
+				if not (response2.expiresAt <= os.time()) then
+					return response2
 				end
 				pcall(delfile, "nr_loader_autoexec.json")
 				return nil
@@ -334,9 +330,9 @@ do
 		return nil
 	end
 
-	saveFile = function(arg)
-		if arg then
-			pcall(writefile, "nr_loader_autoexec.json", HttpService:JSONEncode({ gameName = arg, enabledAt = os.time(), expiresAt = os.time() + n5, durationHours = 24 }))
+	saveFile = function(argument)
+		if argument then
+			pcall(writefile, "nr_loader_autoexec.json", HttpService:JSONEncode({ gameName = argument, enabledAt = os.time(), expiresAt = os.time() + number7, durationHours = 24 }))
 			pcall(writefile, "autoexec/nr_loader.lua", "loadstring(game:HttpGet(\"https://raw.githubusercontent.com/JualNasiRendang/loader/refs/heads/main/main.lua\"))()")
 			pcall(writefile, "autoexecute/nr_loader.lua", "loadstring(game:HttpGet(\"https://raw.githubusercontent.com/JualNasiRendang/loader/refs/heads/main/main.lua\"))()")
 			if queueOnTeleport then
@@ -352,14 +348,14 @@ do
 	end
 end
 
-local tbl4, backgroundTransparency, tweenInfo, n42, tweenInfo2, tweenInfo3, tweenInfo4, fn2, getUICorner, n5
-local fn3, n6, ScreenGui, n7, Frame, UIScale
+local data4, backgroundTransparency, tweenInfo, number7, tweenInfo2, tweenInfo3, tweenInfo4, callback2, getUICorner, number8
+local callback3, number9, ScreenGui, number10, Frame, UIScale
 
 do
-	local n8 = n3 + n4
-	local n43 = bit32.rshift(n4, 23)
+	local number11 = number3 + number4
+	local number12 = bit32.rshift(number4, 23)
 
-	tbl4 = {
+	data4 = {
 		Window = Color3.new(0.054901961237192154, 0.062745101749897, 0.058823529630899429),
 		TopBar = Color3.new(0.070588238537311554, 0.08235294371843338, 0.078431375324726105),
 		Panel = Color3.new(0.043137256056070328, 0.050980392843484879, 0.047058824449777603),
@@ -374,58 +370,58 @@ do
 
 	backgroundTransparency = 0.2
 	tweenInfo = TweenInfo.new(0.16, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-	n42 = bit32.lshift(n43, 9)
+	number7 = bit32.lshift(number12, 9)
 	tweenInfo2 = TweenInfo.new(0.26, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
 	tweenInfo3 = TweenInfo.new(0.18, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
 	tweenInfo4 = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 
-	fn2 = function(arg, arg2, arg3)
-		local instance = Instance.new(arg)
-		local v4 = pairs
-		arg2 = arg2 or {}
+	callback2 = function(argument, argument2, argument3)
+		local instance = Instance.new(argument)
+		local value4 = pairs
+		argument2 = argument2 or {}
 
-		for k, v5 in v4(arg2) do
-			instance[k] = v5
+		for k, value5 in value4(argument2) do
+			instance[k] = value5
 		end
 
-		local v5 = ipairs
-		arg3 = arg3 or {}
+		local value5 = ipairs
+		argument3 = argument3 or {}
 
-		for _, v6 in v5(arg3) do
-			v6.Parent = instance
+		for _, value6 in value5(argument3) do
+			value6.Parent = instance
 		end
 
 		return instance
 	end
 
-	getUICorner = function(arg)
-		return fn2("UICorner", { CornerRadius = UDim.new(0, arg or 8) })
+	getUICorner = function(argument)
+		return callback2("UICorner", { CornerRadius = UDim.new(0, argument or 8) })
 	end
 
-	n5 = 325043278
+	number8 = 325043278
 
-	fn3 = function(arg, thickness, transparency)
-		local uiStroke = { Color = arg or tbl4.Border }
+	callback3 = function(argument, thickness, transparency)
+		local uiStroke = { Color = argument or data4.Border }
 
-		if n5 + 117422833 == 132803028 then
-			n5 = bit32.bxor(n5, 3545652547)
+		if number8 + 117422833 == 132803028 then
+			number8 = bit32.bxor(number8, 3545652547)
 		end
 
 		uiStroke.Thickness = thickness
 		uiStroke.Transparency = transparency or 0.2
 		uiStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-		return fn2("UIStroke", uiStroke)
+		return callback2("UIStroke", uiStroke)
 	end
 
-	local tbl5 = {}
-	n6 = n8 + 494365338
+	local data5 = {}
+	number9 = number11 + 494365338
 	local huis = { hui, localPlayer:FindFirstChildOfClass("PlayerGui") }
-	local v32 = v3
-	local n62 = bit32.band(n6, 4294967295)
-	local v322 = bit32.band(v32, 65535)
-	local v323 = bit32.rshift(v32, 16)
-	local n622 = bit32.band(n62, 65535)
-	local v4 = bit32.band(v322 * n622 + bit32.lshift(bit32.band(v322 * bit32.rshift(n62, 16) + v323 * n622, 65535), 16), 4294967295)
+	local value4 = value3
+	local number13 = bit32.band(number9, 4294967295)
+	local value5 = bit32.band(value4, 65535)
+	local value6 = bit32.rshift(value4, 16)
+	local number14 = bit32.band(number13, 65535)
+	local value7 = bit32.band(value5 * number14 + bit32.lshift(bit32.band(value5 * bit32.rshift(number13, 16) + value6 * number14, 65535), 16), 4294967295)
 
 	pcall(function()
 		if gethui then
@@ -439,8 +435,8 @@ do
 	end)
 
 	for _, hui2 in ipairs(huis) do
-		if hui2 and not tbl5[hui2] then
-			tbl5[hui2] = true
+		if hui2 and not data5[hui2] then
+			data5[hui2] = true
 
 			for _, child in ipairs(hui2:GetChildren()) do
 				if child.Name == "NR_Loader" then
@@ -452,7 +448,7 @@ do
 		end
 	end
 
-	ScreenGui = fn2("ScreenGui", {
+	ScreenGui = callback2("ScreenGui", {
 		Name = "NR_Loader",
 		Parent = hui,
 		ResetOnSpawn = false,
@@ -461,26 +457,26 @@ do
 		DisplayOrder = 1000,
 	})
 
-	local n9 = 420
-	local n10 = 330
-	n5 = bit32.bxor(n5, 202264007)
-	local n11 = v4 // n42
-	n7 = n6 + n42
+	local number15 = 420
+	local number16 = 330
+	number8 = bit32.bxor(number8, 202264007)
+	local number17 = value7 // number7
+	number10 = number9 + number7
 
-	Frame = fn2("Frame", {
+	Frame = callback2("Frame", {
 		Name = "Window",
 		Parent = ScreenGui,
 		Active = true,
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.new(0.5, 0, 0.5, 0),
 		Size = UDim2.new(0, 420, 0, 330),
-		BackgroundColor3 = tbl4.Window,
+		BackgroundColor3 = data4.Window,
 		BackgroundTransparency = 0.12,
 		BorderSizePixel = 0,
 		ClipsDescendants = true,
-	}, { getUICorner(14), fn3(tbl4.Border, 1) })
+	}, { getUICorner(14), callback3(data4.Border, 1) })
 
-	UIScale = fn2("UIScale", { Parent = Frame })
+	UIScale = callback2("UIScale", { Parent = Frame })
 
 	local function clampValue()
 		local currentCamera = workspace.CurrentCamera
@@ -492,18 +488,18 @@ do
 			viewportSize = Vector2.new(800, 600)
 		end
 
-		local n12 = math.min((viewportSize.X - 20) / n9, (viewportSize.Y - 20) / n10)
+		local number18 = math.min((viewportSize.X - 20) / number15, (viewportSize.Y - 20) / number16)
 
 		if UserInputService.TouchEnabled then
-			n12 *= 0.78
+			number18 *= 0.78
 		end
 
-		UIScale.Scale = math.clamp(n12, 0.34, 1)
+		UIScale.Scale = math.clamp(number18, 0.34, 1)
 	end
 
 	clampValue()
 
-	local function fn4()
+	local function callback4()
 		local currentCamera = workspace.CurrentCamera
 
 		if currentCamera then
@@ -515,20 +511,20 @@ do
 		end
 	end
 
-	fn4()
-	local n12 = n11 + 523800463
+	callback4()
+	local number18 = number17 + 523800463
 
-	local function fn5()
-		if n12 + 142506498 ~= 403438049 then
-			n12 = bit32.bxor(n12, 2796132829)
+	local function callback5()
+		if number18 + 142506498 ~= 403438049 then
+			number18 = bit32.bxor(number18, 2796132829)
 		end
 
 		clampValue()
-		fn4()
+		callback4()
 	end
 
-	n12 = 260931551
-	workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(fn5)
+	number18 = 260931551
+	workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(callback5)
 end
 
 do
@@ -542,9 +538,9 @@ end
 
 TweenService:Create(Frame, tweenInfo4, { BackgroundTransparency = 0.12 }):Play()
 TweenService:Create(Frame.UIStroke, tweenInfo4, { Transparency = 0.2 }):Play()
-local fn4
+local callback4
 
-local Frame2 = fn2("Frame", {
+local Frame2 = callback2("Frame", {
 	Name = "Toasts",
 	Parent = ScreenGui,
 	AnchorPoint = Vector2.new(1, 1),
@@ -554,7 +550,7 @@ local Frame2 = fn2("Frame", {
 	BackgroundTransparency = 1,
 })
 
-fn2("UIListLayout", {
+callback2("UIListLayout", {
 	Parent = Frame2,
 	Padding = UDim.new(0, 6),
 	VerticalAlignment = Enum.VerticalAlignment.Bottom,
@@ -562,24 +558,24 @@ fn2("UIListLayout", {
 	SortOrder = Enum.SortOrder.LayoutOrder,
 })
 
-fn4 = function(arg, arg2, arg3)
+callback4 = function(argument, argument2, argument3)
 	local danger
 
-	if arg2 then
-		danger = tbl4.Danger or tbl4.Accent
+	if argument2 then
+		danger = data4.Danger or data4.Accent
 	else
-		danger = tbl4.Accent
+		danger = data4.Accent
 	end
 
-	local Frame3 = fn2("Frame", {
+	local Frame3 = callback2("Frame", {
 		Parent = Frame2,
 		Size = UDim2.new(1, 0, 0, 44),
-		BackgroundColor3 = tbl4.Window,
+		BackgroundColor3 = data4.Window,
 		BackgroundTransparency = 0.05,
 		BorderSizePixel = 0,
-	}, { getUICorner(8), fn3(danger, 1) })
+	}, { getUICorner(8), callback3(danger, 1) })
 
-	fn2("Frame", {
+	callback2("Frame", {
 		Parent = Frame3,
 		Size = UDim2.new(0, 3, 1, -12),
 		Position = UDim2.new(0, 6, 0.5, -16),
@@ -587,33 +583,33 @@ fn4 = function(arg, arg2, arg3)
 		BorderSizePixel = 0,
 	}, { getUICorner(2) })
 
-	local TextLabel = fn2("TextLabel", {
+	local TextLabel = callback2("TextLabel", {
 		Parent = Frame3,
 		Position = UDim2.new(0, 16, 0, 0),
 		Size = UDim2.new(1, -26, 1, 0),
 		BackgroundTransparency = 1,
 		Font = Enum.Font.Gotham,
-		Text = arg,
-		TextColor3 = tbl4.Text,
+		Text = argument,
+		TextColor3 = data4.Text,
 		TextSize = 12,
 		TextWrapped = true,
 		TextXAlignment = Enum.TextXAlignment.Left,
 	})
 
-	TweenService:Create(fn2("UIScale", { Parent = Frame3, Scale = 0.85 }), tweenInfo3, { Scale = 1 }):Play()
+	TweenService:Create(callback2("UIScale", { Parent = Frame3, Scale = 0.85 }), tweenInfo3, { Scale = 1 }):Play()
 	local delay = task.delay
-	arg3 = arg3 or 5
-	local n8 = 47489607
+	argument3 = argument3 or 5
+	local number11 = 47489607
 
-	local function fn5()
+	local function callback5()
 		local Frame4 = Frame3
 
-		if n8 + 171137026 == 305624577 then
-			local n82 = n8
-			if n8 ~= 490807331 then
+		if number11 + 171137026 == 305624577 then
+			local number12 = number11
+			if number11 ~= 490807331 then
 				return
 			end
-			n8 = bit32.bxor(n82, 2293314731)
+			number11 = bit32.bxor(number12, 2293314731)
 		end
 
 		if Frame4.Parent then
@@ -629,54 +625,54 @@ fn4 = function(arg, arg2, arg3)
 		end
 	end
 
-	n8 = 490807331
-	delay(arg3, fn5)
+	number11 = 490807331
+	delay(argument3, callback5)
 end
 
-local Frame3, TextButton, ImageLabel, TextLabel, TextLabel2, TextButton2, n8, n9, TextButton3, fn5
-local v4
+local Frame3, TextButton, ImageLabel, TextLabel, TextLabel2, TextButton2, number11, number12, TextButton3, callback5
+local value4
 
 do
-	local v5 = bit32.band(3920625664, n7)
+	local value5 = bit32.band(3920625664, number10)
 
-	Frame3 = fn2("Frame", {
+	Frame3 = callback2("Frame", {
 		Name = "TopBar",
 		Parent = Frame,
 		Size = UDim2.new(1, 0, 0, 52),
-		BackgroundColor3 = tbl4.TopBar,
+		BackgroundColor3 = data4.TopBar,
 		BackgroundTransparency = 0.1,
 		BorderSizePixel = 0,
 	}, { getUICorner(14) })
 
-	local n10 = n7 + v5
+	local number13 = number10 + value5
 
-	fn2("Frame", {
+	callback2("Frame", {
 		Parent = Frame3,
 		Size = UDim2.new(1, 0, 0, 14),
 		Position = UDim2.new(0, 0, 1, -14),
-		BackgroundColor3 = tbl4.TopBar,
+		BackgroundColor3 = data4.TopBar,
 		BackgroundTransparency = 0.1,
 		BorderSizePixel = 0,
 	})
 
-	local n11 = v5 // n10
+	local number14 = value5 // number13
 
-	TextButton = fn2("TextButton", {
+	TextButton = callback2("TextButton", {
 		Parent = Frame3,
 		Name = "Back",
 		Size = UDim2.new(0, 26, 0, 26),
 		Position = UDim2.new(0, 12, 0.5, -13),
-		BackgroundColor3 = tbl4.Control,
+		BackgroundColor3 = data4.Control,
 		BackgroundTransparency = 1,
 		AutoButtonColor = false,
 		Text = "<",
 		Font = Enum.Font.GothamBold,
 		TextSize = 14,
-		TextColor3 = tbl4.SubText,
+		TextColor3 = data4.SubText,
 		Visible = false,
 	}, { getUICorner(8) })
 
-	ImageLabel = fn2("ImageLabel", {
+	ImageLabel = callback2("ImageLabel", {
 		Parent = Frame3,
 		Size = UDim2.new(0, 32, 0, 32),
 		Position = UDim2.new(0, 14, 0.5, -16),
@@ -684,106 +680,106 @@ do
 		Image = "rbxassetid://124947058155926",
 	}, { getUICorner(8) })
 
-	local n12 = n10 - 441651735
+	local number15 = number13 - 441651735
 
-	TextLabel = fn2("TextLabel", {
+	TextLabel = callback2("TextLabel", {
 		Parent = Frame3,
 		Size = UDim2.new(1, -160, 0, 17),
 		Position = UDim2.new(0, 56, 0, 10),
 		BackgroundTransparency = 1,
 		Font = Enum.Font.GothamBold,
 		Text = "Nasi Rendang LUA",
-		TextColor3 = tbl4.Text,
+		TextColor3 = data4.Text,
 		TextSize = 14,
 		TextXAlignment = Enum.TextXAlignment.Left,
 		TextTruncate = Enum.TextTruncate.AtEnd,
 	})
 
-	local n112 = bit32.bor(n11, n12)
+	local number16 = bit32.bor(number14, number15)
 
-	TextLabel2 = fn2("TextLabel", {
+	TextLabel2 = callback2("TextLabel", {
 		Parent = Frame3,
 		Size = UDim2.new(1, -160, 0, 13),
 		Position = UDim2.new(0, 56, 0, 27),
 		BackgroundTransparency = 1,
 		Font = Enum.Font.Gotham,
 		Text = home,
-		TextColor3 = tbl4.SubText,
+		TextColor3 = data4.SubText,
 		TextSize = 11,
 		TextXAlignment = Enum.TextXAlignment.Left,
 		TextTruncate = Enum.TextTruncate.AtEnd,
 	})
 
-	local n1122 = n112
+	local number17 = number16
 
-	TextButton2 = fn2("TextButton", {
+	TextButton2 = callback2("TextButton", {
 		Parent = Frame3,
 		Size = UDim2.new(0, 26, 0, 26),
 		Position = UDim2.new(1, -36, 0.5, -13),
-		BackgroundColor3 = tbl4.Control,
+		BackgroundColor3 = data4.Control,
 		BackgroundTransparency = backgroundTransparency,
 		Text = "x",
 		Font = Enum.Font.GothamBold,
 		TextSize = 14,
-		TextColor3 = tbl4.SubText,
+		TextColor3 = data4.SubText,
 		AutoButtonColor = false,
 	}, { getUICorner(8) })
 
-	n8 = n112 - n1122
-	n9 = n12 + 80861551 - 68467876
-	local border = tbl4.Border
+	number11 = number16 - number17
+	number12 = number15 + 80861551 - 68467876
+	local border = data4.Border
 
-	TextButton3 = fn2("TextButton", {
+	TextButton3 = callback2("TextButton", {
 		Parent = Frame3,
 		Name = "Logout",
 		Size = UDim2.new(0, 58, 0, 24),
 		Position = UDim2.new(1, -100, 0.5, -12),
-		BackgroundColor3 = tbl4.Control,
+		BackgroundColor3 = data4.Control,
 		BackgroundTransparency = backgroundTransparency,
 		AutoButtonColor = false,
 		Text = "Logout",
 		Font = Enum.Font.GothamBold,
 		TextSize = 11,
-		TextColor3 = tbl4.SubText,
+		TextColor3 = data4.SubText,
 		Visible = false,
-	}, { getUICorner(8), fn3(border, 1) })
+	}, { getUICorner(8), callback3(border, 1) })
 
-	fn5 = function(arg, arg2, textColor3)
-		arg.MouseEnter:Connect(function()
+	callback5 = function(argument, argument2, textColor3)
+		argument.MouseEnter:Connect(function()
 			local TweenService2 = TweenService
 			local create = TweenService.Create
-			local tbl5 = {}
-			local arg22 = arg2
+			local data5 = {}
+			local argument3 = argument2
 
-			if not arg2 then
-				arg22 = tbl4.Text
+			if not argument2 then
+				argument3 = data4.Text
 			end
 
-			tbl5.TextColor3 = arg22
-			create(TweenService2, arg, tweenInfo, tbl5):Play()
+			data5.TextColor3 = argument3
+			create(TweenService2, argument, tweenInfo, data5):Play()
 		end)
 
-		arg.MouseLeave:Connect(function()
+		argument.MouseLeave:Connect(function()
 			local TweenService2 = TweenService
 			local create = TweenService.Create
-			local tbl5 = {}
-			tbl5.TextColor3 = textColor3 or tbl4.SubText
-			create(TweenService2, arg, tweenInfo, tbl5):Play()
+			local data5 = {}
+			data5.TextColor3 = textColor3 or data4.SubText
+			create(TweenService2, argument, tweenInfo, data5):Play()
 		end)
 	end
 
-	local danger = tbl4.Danger
-	local v6 = bit32.band(n1122 - n8, 4294967295)
-	local v62 = bit32.band(v6, 65535)
-	v4 = bit32.band(v62 * 35151 + bit32.lshift(bit32.band(v62 * 0 + bit32.rshift(v6, 16) * 35151, 65535), 16), 4294967295)
-	fn5(TextButton2, danger)
+	local danger = data4.Danger
+	local value6 = bit32.band(number17 - number11, 4294967295)
+	local value7 = bit32.band(value6, 65535)
+	value4 = bit32.band(value7 * 35151 + bit32.lshift(bit32.band(value7 * 0 + bit32.rshift(value6, 16) * 35151, 65535), 16), 4294967295)
+	callback5(TextButton2, danger)
 end
 
-fn5(TextButton, tbl4.Text)
-fn5(TextButton3, tbl4.Danger)
+callback5(TextButton, data4.Text)
+callback5(TextButton3, data4.Danger)
 
 do
-	local flag = nil
+	local condition = nil
 	local position = nil
 	local position2 = nil
 	local input = nil
@@ -795,17 +791,16 @@ do
 		end
 		local position3 = input2.Position
 		local position4 = Frame.Position
-		flag = true
+		condition = true
 		position = position3
 		position2 = position4
-		local connection = nil
 
-		connection = input2.Changed:Connect(function()
+				local connection = input2.Changed:Connect(function()
 			if input2.UserInputState ~= Enum.UserInputState.End then
 				return
 			end
-			flag = false
-			connection:Disconnect()
+			condition = false
+			TextButton:Disconnect()
 		end)
 	end)
 
@@ -822,9 +817,9 @@ do
 	end)
 
 	UserInputService.InputChanged:Connect(function(input2)
-		if flag and input2 == input then
-			local n10 = input2.Position - position
-			Frame.Position = UDim2.new(position2.X.Scale, position2.X.Offset + n10.X, position2.Y.Scale, position2.Y.Offset + n10.Y)
+		if condition and input2 == input then
+			local number13 = input2.Position - position
+			Frame.Position = UDim2.new(position2.X.Scale, position2.X.Offset + number13.X, position2.Y.Scale, position2.Y.Offset + number13.Y)
 			return
 		end
 	end)
@@ -833,7 +828,7 @@ end
 local Frame4, Frame5, Frame6
 
 do
-	local Frame7 = fn2("Frame", {
+	local Frame7 = callback2("Frame", {
 		Name = "Content",
 		Parent = Frame,
 		Position = UDim2.new(0, 0, 0, 52),
@@ -842,7 +837,7 @@ do
 		ClipsDescendants = true,
 	})
 
-	Frame4 = fn2("Frame", {
+	Frame4 = callback2("Frame", {
 		Name = "Home",
 		Parent = Frame7,
 		Size = UDim2.new(1, 0, 1, 0),
@@ -850,7 +845,7 @@ do
 		BackgroundTransparency = 1,
 	})
 
-	Frame5 = fn2("Frame", {
+	Frame5 = callback2("Frame", {
 		Name = "Gold",
 		Parent = Frame7,
 		Size = UDim2.new(1, 0, 1, 0),
@@ -859,7 +854,7 @@ do
 		Visible = false,
 	})
 
-	Frame6 = fn2("Frame", {
+	Frame6 = callback2("Frame", {
 		Name = "Games",
 		Parent = Frame7,
 		Size = UDim2.new(1, 0, 1, 0),
@@ -869,81 +864,80 @@ do
 	})
 end
 
-local flag
-flag = false
-local tbl5, tbl6, str, fn6
+local condition = false
+local data5, data6, text, callback6
 
 do
-	local tbl7 = { gold = -1, home = 0, games = 1 }
-	local tbl8 = { gold = Frame5, home = Frame4, games = Frame6 }
-	tbl5 = { gold = "Gold members", home = home, games = "Choose a game" }
-	tbl6 = { v = false }
-	str = "home"
+	local data7 = { gold = -1, home = 0, games = 1 }
+	local data8 = { gold = Frame5, home = Frame4, games = Frame6 }
+	data5 = { gold = "Gold members", home = home, games = "Choose a game" }
+	data6 = { v = false }
+	text = "home"
 
-	fn6 = function(arg)
-		if str ~= arg then
-			if arg == "games" and not tbl6.v then
+	callback6 = function(argument)
+		if text ~= argument then
+			if argument == "games" and not data6.v then
 				return
 			end
 
-			if arg == "gold" and not flag then
+			if argument == "gold" and not condition then
 				return
 			end
 
-			if tbl8[arg] then
-				str = arg
-				local v5 = tbl7[arg]
+			if data8[argument] then
+				text = argument
+				local value5 = data7[argument]
 
-				for k, v6 in pairs(tbl8) do
-					v6.Visible = true
-					TweenService:Create(v6, tweenInfo2, { Position = UDim2.fromScale(tbl7[k] - v5, 0) }):Play()
+				for k, value6 in pairs(data8) do
+					value6.Visible = true
+					TweenService:Create(value6, tweenInfo2, { Position = UDim2.fromScale(data7[k] - value5, 0) }):Play()
 				end
 
-				local flag2 = arg == "home"
-				TextButton.Visible = not flag2
+				local condition2 = argument == "home"
+				TextButton.Visible = not condition2
 				local TweenService2 = TweenService
 				local create = TweenService.Create
-				local tbl9 = {}
+				local data9 = {}
 				local uDim2New = UDim2.new
-				local n10
+				local number13
 
-				if flag2 then
-					n10 = 14
+				if condition2 then
+					number13 = 14
 				else
-					n10 = 44
+					number13 = 44
 				end
 
-				tbl9.Position = uDim2New(0, n10, 0.5, -16)
-				create(TweenService2, ImageLabel, tweenInfo2, tbl9):Play()
-				local n11
+				data9.Position = uDim2New(0, number13, 0.5, -16)
+				create(TweenService2, ImageLabel, tweenInfo2, data9):Play()
+				local number14
 
-				if flag2 then
-					n11 = 56
+				if condition2 then
+					number14 = 56
 				else
-					n11 = 86
+					number14 = 86
 				end
 
-				TweenService:Create(TextLabel, tweenInfo2, { Position = UDim2.new(0, n11, 0, 10) }):Play()
-				TweenService:Create(TextLabel2, tweenInfo2, { Position = UDim2.new(0, n11, 0, 27) }):Play()
-				TextLabel2.Text = tbl5[arg]
-				local n12 = 376740006
+				TweenService:Create(TextLabel, tweenInfo2, { Position = UDim2.new(0, number14, 0, 10) }):Play()
+				TweenService:Create(TextLabel2, tweenInfo2, { Position = UDim2.new(0, number14, 0, 27) }):Play()
+				TextLabel2.Text = data5[argument]
+				local number15 = 376740006
 
-				local function fn7()
-					local v6 = pairs
+				local function callback7()
+					local value6 = pairs
 
-					if bit32.bxor(n12, 111691750) == 300206944 then
-						n12 = bit32.bxor(n12, 3591534891)
+					if bit32.bxor(number15, 111691750) == 300206944 then
+						number15 = bit32.bxor(number15, 3591534891)
 					end
 
-					for k, v7 in v6(tbl8) do
-						if k ~= str then
-							v7.Visible = false
+					for k, value7 in value6(data8) do
+						if k ~= text then
+							value7.Visible = false
 						end
 					end
 				end
 
-				n12 = 375570629
-				task.delay(0.28, fn7)
+				number15 = 375570629
+				task.delay(0.28, callback7)
 				return
 			end
 		end
@@ -954,29 +948,29 @@ do
 	local mouseButton1Click = TextButton.MouseButton1Click
 	local mouseButton1Click2 = mouseButton1Click
 	local connect = mouseButton1Click.Connect
-	local n10 = 440146619
+	local number13 = 440146619
 
-	local function fn7()
-		if bit32.bxor(n10, 99430202) == 23217081 then
-			n10 = bit32.bxor(n10, 1348751597)
+	local function callback7()
+		if bit32.bxor(number13, 99430202) == 23217081 then
+			number13 = bit32.bxor(number13, 1348751597)
 		end
 
-		fn6("home")
+		callback6("home")
 	end
 
-	n10 = 165499731
-	connect(mouseButton1Click2, fn7)
+	number13 = 165499731
+	connect(mouseButton1Click2, callback7)
 end
 
-local UIStroke, TextLabel3, keyUrl, fn7, fn8, flag2, fn9, fn10, Frame7, TextBox
-local fn11, color, TextButton4, TextButton5, TextButton6, TextButton7, configMap, Frame8, TextLabel4, n10
-local fn12, TextLabel5, n11, Frame9, TextBox2, TextButton8, n12, n13
+local UIStroke, TextLabel3, keyUrl, callback7, callback8, condition2, callback9, callback10, Frame7, TextBox
+local callback11, color, TextButton4, TextButton5, TextButton6, TextButton7, configMap, Frame8, TextLabel4, number13
+local callback12, TextLabel5, number14, Frame9, TextBox2, TextButton8, number15, number16
 
 do
-	local n14 = n9 + v4 + 1954270278
+	local number17 = number12 + value4 + 1954270278
 
-	UIStroke = fn2("UIStroke", {
-		Parent = fn2("ImageLabel", {
+	UIStroke = callback2("UIStroke", {
+		Parent = callback2("ImageLabel", {
 			Parent = Frame4,
 			Size = UDim2.new(0, 60, 0, 60),
 			AnchorPoint = Vector2.new(0.5, 0),
@@ -984,109 +978,109 @@ do
 			BackgroundTransparency = 1,
 			Image = "rbxassetid://124947058155926",
 		}, { getUICorner(14) }),
-		Color = tbl4.Accent,
+		Color = data4.Accent,
 		Thickness = 1.5,
 		Transparency = 0.55,
 		ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 	})
 
-	fn2("TextLabel", {
+	callback2("TextLabel", {
 		Parent = Frame4,
 		Size = UDim2.new(1, -32, 0, 20),
 		Position = UDim2.new(0, 16, 0, 72),
 		BackgroundTransparency = 1,
 		Font = Enum.Font.GothamBold,
 		Text = "Nasi Rendang LUA Free Script",
-		TextColor3 = tbl4.Text,
+		TextColor3 = data4.Text,
 		TextSize = 16,
 		TextXAlignment = Enum.TextXAlignment.Center,
 	})
 
-	TextLabel3 = fn2("TextLabel", {
+	TextLabel3 = callback2("TextLabel", {
 		Parent = Frame4,
 		Size = UDim2.new(1, -32, 0, 14),
 		Position = UDim2.new(0, 16, 0, 92),
 		BackgroundTransparency = 1,
 		Font = Enum.Font.Gotham,
 		Text = "Detecting game...",
-		TextColor3 = tbl4.SubText,
+		TextColor3 = data4.SubText,
 		TextSize = 11,
 		TextXAlignment = Enum.TextXAlignment.Center,
 		TextTruncate = Enum.TextTruncate.AtEnd,
 	})
 
 	keyUrl = "https://www.nrlscript.com/key"
-	local tbl7 = { gold = { service = "1 Months", identifier = "1133593", provider = "1 Months Service" } }
+	local data7 = { gold = { service = "1 Months", identifier = "1133593", provider = "1 Months Service" } }
 
-	fn7 = function(arg, arg2, arg3)
+	callback7 = function(argument, argument2, argument3)
 		local concat = table.concat
-		local tbl8 = {}
-		local str2 = tostring(os.time())
-		local str3, v5
+		local data8 = {}
+		local text2 = tostring(os.time())
+		local text3, value5
 
-		if arg2 then
-			if arg3 then
-				str3 = tostring(arg3) or ""
+		if argument2 then
+			if argument3 then
+				text3 = tostring(argument3) or ""
 			else
-				str3 = ""
-				tbl8[1] = arg
-				tbl8[2] = str2
-				tbl8[3] = arg2
-				tbl8[4] = str3
-				v5 = concat(tbl8, "|")
-				pcall(writefile, "nr_loader_key.txt", v5)
+				text3 = ""
+				data8[1] = argument
+				data8[2] = text2
+				data8[3] = argument2
+				data8[4] = text3
+				value5 = concat(data8, "|")
+				pcall(writefile, "nr_loader_key.txt", value5)
 				return
 			end
 		else
-			arg2 = ""
+			argument2 = ""
 
-			if arg3 then
-				str3 = tostring(arg3)
+			if argument3 then
+				text3 = tostring(argument3)
 
-				if not str3 then
-					str3 = ""
-					tbl8[1] = arg
-					tbl8[2] = str2
-					tbl8[3] = arg2
-					tbl8[4] = str3
-					v5 = concat(tbl8, "|")
-					pcall(writefile, "nr_loader_key.txt", v5)
+				if not text3 then
+					text3 = ""
+					data8[1] = argument
+					data8[2] = text2
+					data8[3] = argument2
+					data8[4] = text3
+					value5 = concat(data8, "|")
+					pcall(writefile, "nr_loader_key.txt", value5)
 					return
 				end
 			else
-				str3 = ""
-				tbl8[1] = arg
-				tbl8[2] = str2
-				tbl8[3] = arg2
-				tbl8[4] = str3
-				v5 = concat(tbl8, "|")
-				pcall(writefile, "nr_loader_key.txt", v5)
+				text3 = ""
+				data8[1] = argument
+				data8[2] = text2
+				data8[3] = argument2
+				data8[4] = text3
+				value5 = concat(data8, "|")
+				pcall(writefile, "nr_loader_key.txt", value5)
 				return
 			end
 		end
 
-		tbl8[1] = arg
-		tbl8[2] = str2
-		tbl8[3] = arg2
-		tbl8[4] = str3
-		v5 = concat(tbl8, "|")
-		pcall(writefile, "nr_loader_key.txt", v5)
+		data8[1] = argument
+		data8[2] = text2
+		data8[3] = argument2
+		data8[4] = text3
+		value5 = concat(data8, "|")
+		pcall(writefile, "nr_loader_key.txt", value5)
 	end
 
-	fn8 = function()
-		local ok, result = pcall(readfile, "nr_loader_key.txt")
+	callback8 = function()
+		local ok, response = pcall(readfile, "nr_loader_key.txt")
 
-		if ok and type(result) == "string" and result ~= "" then
+		if ok and type(response) == "string" and response ~= "" then
 			local matchs = {}
 
-			for match in (result .. "|"):gmatch("([^|]*)|") do
+			for match in (response .. "|"):gmatch("([^|]*)|") do
 				matchs[#matchs + 1] = match
 			end
 
-			local str2 = (matchs[1] or ""):gsub("%s+", "")
+			local text2 = (matchs[1] or ""):gsub("%s+", "")
 
-			if str2 ~= "" then
-				local num = tonumber(matchs[2])
+			if text2 ~= "" then
+				local number18 = tonumber(matchs[2])
 				local match
 
 				if matchs[3] then
@@ -1099,11 +1093,11 @@ do
 					match = nil
 				end
 
-				local num2 = tonumber(matchs[4])
-				if num then
-					return str2, os.time() - num, match, num2
+				local number19 = tonumber(matchs[4])
+				if number18 then
+					return text2, os.time() - number18, match, number19
 				end
-				return str2, math.huge, match, num2
+				return text2, math.huge, match, number19
 			end
 
 			return nil
@@ -1112,48 +1106,48 @@ do
 		return nil
 	end
 
-	flag2 = false
+	condition2 = false
 
-	local function fn13()
-		local ok, result = pcall(function()
+	local function callback13()
+		local ok, response = pcall(function()
 			return gethwid()
 		end)
 
-		if ok and type(result) == "string" and result ~= "" then
-			return result
+		if ok and type(response) == "string" and response ~= "" then
+			return response
 		end
 		return "uid-" .. tostring(localPlayer.UserId)
 	end
 
-	local n15 = n14 + 2579646458
-	local v5, v6, v7, v8, v9
+	local number18 = number17 + 2579646458
+	local value5, value6, value7, value8, value9
 
-	local function fn14(arg)
+	local function callback14(argument)
 		if httpRequest then
-			local str2 = ("%s?key=%s&hwid=%s"):format("https://www.nrlscript.com/api/verify", HttpService:UrlEncode(arg), HttpService:UrlEncode(fn13()))
-			local n16 = 503905154
+			local text2 = ("%s?key=%s&hwid=%s"):format("https://www.nrlscript.com/api/verify", HttpService:UrlEncode(argument), HttpService:UrlEncode(callback13()))
+			local number19 = 503905154
 
-			local function fn15()
+			local function callback15()
 				local requestData = {}
-				local str22 = str2
+				local text3 = text2
 
-				if n16 == 302681685 then
-					n16 = bit32.bxor(n16, 2632809597)
+				if number19 == 302681685 then
+					number19 = bit32.bxor(number19, 2632809597)
 				end
 
-				requestData.Url = str22
+				requestData.Url = text3
 				requestData.Method = "GET"
 				requestData.Headers = { Accept = "application/json", ["User-Agent"] = "NRL-Loader/1.0", ["Cache-Control"] = "no-cache" }
 				return httpRequest(requestData)
 			end
 
-			n16 = 488185262
-			local ok, result = pcall(fn15)
+			number19 = 488185262
+			local ok, response = pcall(callback15)
 
-			if ok and type(result) == "table" then
-				local v10 = tostring
-				v10(result.Body or result.body or "")
-				return false, "Empty response from key server (HTTP " .. tostring(result.StatusCode or result.status_code or result.Status or "?") .. ")"
+			if ok and type(response) == "table" then
+				local value10 = tostring
+				value10(response.Body or response.body or "")
+				return false, "Empty response from key server (HTTP " .. tostring(response.StatusCode or response.status_code or response.Status or "?") .. ")"
 			end
 
 			return false, "Network error — check your connection"
@@ -1162,97 +1156,97 @@ do
 		return false, "Executor has no HTTP request support"
 	end
 
-	local v10 = nil
+	local value10 = nil
 
 	local function compileChunk()
-		if v10 then
-			return v10
+		if value10 then
+			return value10
 		end
 
-		local ok, result = pcall(function()
+		local ok, response = pcall(function()
 			return loadstring(game:HttpGet("https://jnkie.com/sdk/library.lua"))()
 		end)
 
 		if ok then
-			if type(result) ~= "table" then
-				return nil, tostring(result)
+			if type(response) ~= "table" then
+				return nil, tostring(response)
 			end
-			v10 = result
-			return v10
+			value10 = response
+			return value10
 		end
 
-		return nil, tostring(result)
+		return nil, tostring(response)
 	end
 
-	local function fn15(arg, arg2)
-		arg.service = arg2.service
-		arg.identifier = arg2.identifier
-		arg.provider = arg2.provider
+	local function callback15(argument, argument2)
+		argument.service = argument2.service
+		argument.identifier = argument2.identifier
+		argument.provider = argument2.provider
 	end
 
-	local function fn16(arg)
-		local v11, v12 = compileChunk()
-		if not v11 then
-			return false, "SDK load failed: " .. tostring(v12)
+	local function callback16(argument)
+		local value11, value12 = compileChunk()
+		if not value11 then
+			return false, "SDK load failed: " .. tostring(value12)
 		end
-		fn15(v11, tbl7.gold)
+		callback15(value11, data7.gold)
 
-		local ok, result = pcall(function()
-			return v11.check_key(arg)
+		local ok, response = pcall(function()
+			return value11.check_key(argument)
 		end)
 
 		if ok then
-			if result and result.valid then
+			if response and response.valid then
 				return true, "gold"
 			end
 			return false, "Invalid key"
 		end
 
-		return false, "check_key error: " .. tostring(result)
+		return false, "check_key error: " .. tostring(response)
 	end
 
-	fn9 = function(arg, arg2)
-		if arg then
-			if arg ~= "" then
-				local scriptKey = arg:gsub("%s", ""):upper()
-				local v11, v12, n16
+	callback9 = function(argument, argument2)
+		if argument then
+			if argument ~= "" then
+				local scriptKey = argument:gsub("%s", ""):upper()
+				local value11, value12, number19
 
-				if arg2 ~= "gold" then
-					local v13
-					v13, v11, v12 = fn14(scriptKey)
+				if argument2 ~= "gold" then
+					local value13
+					value13, value11, value12 = callback14(scriptKey)
 
-					if v13 then
+					if value13 then
 						getgenv().SCRIPT_KEY = scriptKey
 
-						if v12 then
-							n16 = os.time() + v12
+						if value12 then
+							number19 = os.time() + value12
 						else
-							n16 = nil
+							number19 = nil
 						end
 
-						fn7(scriptKey, v11, n16)
-						return true, v11, n16
+						callback7(scriptKey, value11, number19)
+						return true, value11, number19
 					end
 				else
-					local v13
-					v13, v11 = fn16(scriptKey)
-					v12 = nil
+					local value13
+					value13, value11 = callback16(scriptKey)
+					value12 = nil
 
-					if v13 then
+					if value13 then
 						getgenv().SCRIPT_KEY = scriptKey
 
-						if v12 then
-							n16 = os.time() + v12
+						if value12 then
+							number19 = os.time() + value12
 						else
-							n16 = nil
+							number19 = nil
 						end
 
-						fn7(scriptKey, v11, n16)
-						return true, v11, n16
+						callback7(scriptKey, value11, number19)
+						return true, value11, number19
 					end
 				end
 
-				return false, v11
+				return false, value11
 			end
 
 			return false, "Enter a key first"
@@ -1261,119 +1255,119 @@ do
 		return false, "Enter a key first"
 	end
 
-	fn10 = function(arg)
-		local v11, v12, v13 = fn9(arg, "free")
+	callback10 = function(argument)
+		local value11, value12, value13 = callback9(argument, "free")
 
-		if not v11 then
-			if not v12:find("Network error") and not v12:find("HTTP request support") and not v12:find("Empty response") and not v12:match("^HTTP %d") then
-				if flag then
-					local v14
-					v14, v12, v13 = fn9(arg, "gold")
-					if v14 then
-						return true, v12, v13
+		if not value11 then
+			if not value12:find("Network error") and not value12:find("HTTP request support") and not value12:find("Empty response") and not value12:match("^HTTP %d") then
+				if condition then
+					local value14
+					value14, value12, value13 = callback9(argument, "gold")
+					if value14 then
+						return true, value12, value13
 					end
 				end
 
 				return false, "Invalid key"
 			end
 
-			return false, v12
+			return false, value12
 		end
 
-		return true, v12, v13
+		return true, value12, value13
 	end
 
-	local border = tbl4.Border
+	local border = data4.Border
 
-	Frame7 = fn2("Frame", {
+	Frame7 = callback2("Frame", {
 		Parent = Frame4,
 		Size = UDim2.new(1, -80, 0, 32),
 		Position = UDim2.new(0, 40, 0, 112),
-		BackgroundColor3 = tbl4.Control,
+		BackgroundColor3 = data4.Control,
 		BackgroundTransparency = backgroundTransparency,
 		BorderSizePixel = 0,
-	}, { getUICorner(9), fn3(border, 1) })
+	}, { getUICorner(9), callback3(border, 1) })
 
-	local n16 = n15 + 3448942451 + 3448942451
+	local number19 = number18 + 3448942451 + 3448942451
 
-	TextBox = fn2("TextBox", {
+	TextBox = callback2("TextBox", {
 		Parent = Frame7,
 		Size = UDim2.new(1, -16, 1, 0),
 		Position = UDim2.new(0, 8, 0, 0),
 		BackgroundTransparency = 1,
 		PlaceholderText = "Paste your key (Standard / Lifetime)",
-		PlaceholderColor3 = tbl4.SubText,
+		PlaceholderColor3 = data4.SubText,
 		Text = "",
 		Font = Enum.Font.GothamBold,
-		TextColor3 = tbl4.Text,
+		TextColor3 = data4.Text,
 		TextSize = 12,
 		ClearTextOnFocus = false,
 		TextXAlignment = Enum.TextXAlignment.Center,
 	})
 
-	fn11 = function(arg, arg2, arg3)
-		local arg22, arg32, UIScale2, mouseButton1Down, mouseButton1Down2, connect, fn17
+	callback11 = function(argument, argument2, argument3)
+		local argument4, argument5, UIScale2, mouseButton1Down, mouseButton1Down2, connect, callback17
 
-		if arg2 then
-			arg22 = arg2
-			arg32 = arg3 or 0
+		if argument2 then
+			argument4 = argument2
+			argument5 = argument3 or 0
 		else
-			arg22 = 0.1
+			argument4 = 0.1
 
-			if arg3 then
-				arg32 = arg3
-				UIScale2 = arg3("UIScale", { Parent = arg })
+			if argument3 then
+				argument5 = argument3
+				UIScale2 = argument3("UIScale", { Parent = argument })
 
-				arg.MouseEnter:Connect(function()
+				argument.MouseEnter:Connect(function()
 					TweenService:Create(UIScale2, tweenInfo, { Scale = 1.03 }):Play()
-					TweenService:Create(arg, tweenInfo, { BackgroundTransparency = arg32 }):Play()
+					TweenService:Create(argument, tweenInfo, { BackgroundTransparency = argument5 }):Play()
 				end)
 
-				arg.MouseLeave:Connect(function()
+				argument.MouseLeave:Connect(function()
 					TweenService:Create(UIScale2, tweenInfo, { Scale = 1 }):Play()
-					TweenService:Create(arg, tweenInfo, { BackgroundTransparency = arg22 }):Play()
+					TweenService:Create(argument, tweenInfo, { BackgroundTransparency = argument4 }):Play()
 				end)
 
-				mouseButton1Down = arg.MouseButton1Down
+				mouseButton1Down = argument.MouseButton1Down
 				mouseButton1Down2 = mouseButton1Down
 				connect = mouseButton1Down.Connect
 
-				fn17 = function()
+				callback17 = function()
 					TweenService:Create(UIScale2, tweenInfo, { Scale = 0.97 }):Play()
 				end
 
-				connect(mouseButton1Down2, fn17)
+				connect(mouseButton1Down2, callback17)
 
-				arg.MouseButton1Up:Connect(function()
+				argument.MouseButton1Up:Connect(function()
 					TweenService:Create(UIScale2, tweenInfo, { Scale = 1.03 }):Play()
 				end)
 
 				return UIScale2
 			else
-				arg32 = 0
-				UIScale2 = arg3("UIScale", { Parent = arg })
+				argument5 = 0
+				UIScale2 = argument3("UIScale", { Parent = argument })
 
-				arg.MouseEnter:Connect(function()
+				argument.MouseEnter:Connect(function()
 					TweenService:Create(UIScale2, tweenInfo, { Scale = 1.03 }):Play()
-					TweenService:Create(arg, tweenInfo, { BackgroundTransparency = arg32 }):Play()
+					TweenService:Create(argument, tweenInfo, { BackgroundTransparency = argument5 }):Play()
 				end)
 
-				arg.MouseLeave:Connect(function()
+				argument.MouseLeave:Connect(function()
 					TweenService:Create(UIScale2, tweenInfo, { Scale = 1 }):Play()
-					TweenService:Create(arg, tweenInfo, { BackgroundTransparency = arg22 }):Play()
+					TweenService:Create(argument, tweenInfo, { BackgroundTransparency = argument4 }):Play()
 				end)
 
-				mouseButton1Down = arg.MouseButton1Down
+				mouseButton1Down = argument.MouseButton1Down
 				mouseButton1Down2 = mouseButton1Down
 				connect = mouseButton1Down.Connect
 
-				fn17 = function()
+				callback17 = function()
 					TweenService:Create(UIScale2, tweenInfo, { Scale = 0.97 }):Play()
 				end
 
-				connect(mouseButton1Down2, fn17)
+				connect(mouseButton1Down2, callback17)
 
-				arg.MouseButton1Up:Connect(function()
+				argument.MouseButton1Up:Connect(function()
 					TweenService:Create(UIScale2, tweenInfo, { Scale = 1.03 }):Play()
 				end)
 
@@ -1381,29 +1375,29 @@ do
 			end
 		end
 
-		UIScale2 = arg3("UIScale", { Parent = arg })
+		UIScale2 = argument3("UIScale", { Parent = argument })
 
-		arg.MouseEnter:Connect(function()
+		argument.MouseEnter:Connect(function()
 			TweenService:Create(UIScale2, tweenInfo, { Scale = 1.03 }):Play()
-			TweenService:Create(arg, tweenInfo, { BackgroundTransparency = arg32 }):Play()
+			TweenService:Create(argument, tweenInfo, { BackgroundTransparency = argument5 }):Play()
 		end)
 
-		arg.MouseLeave:Connect(function()
+		argument.MouseLeave:Connect(function()
 			TweenService:Create(UIScale2, tweenInfo, { Scale = 1 }):Play()
-			TweenService:Create(arg, tweenInfo, { BackgroundTransparency = arg22 }):Play()
+			TweenService:Create(argument, tweenInfo, { BackgroundTransparency = argument4 }):Play()
 		end)
 
-		mouseButton1Down = arg.MouseButton1Down
+		mouseButton1Down = argument.MouseButton1Down
 		mouseButton1Down2 = mouseButton1Down
 		connect = mouseButton1Down.Connect
 
-		fn17 = function()
+		callback17 = function()
 			TweenService:Create(UIScale2, tweenInfo, { Scale = 0.97 }):Play()
 		end
 
-		connect(mouseButton1Down2, fn17)
+		connect(mouseButton1Down2, callback17)
 
-		arg.MouseButton1Up:Connect(function()
+		argument.MouseButton1Up:Connect(function()
 			TweenService:Create(UIScale2, tweenInfo, { Scale = 1.03 }):Play()
 		end)
 
@@ -1411,50 +1405,50 @@ do
 	end
 
 	color = Color3.new(1, 0.84705883264541626, 0.36078432202339172)
-	local border2 = tbl4.Border
+	local border2 = data4.Border
 
-	TextButton4 = fn2("TextButton", {
+	TextButton4 = callback2("TextButton", {
 		Parent = Frame4,
 		Size = UDim2.new(0.5, -46, 0, 34),
 		Position = UDim2.new(0, 40, 0, 152),
-		BackgroundColor3 = tbl4.Control,
+		BackgroundColor3 = data4.Control,
 		BackgroundTransparency = backgroundTransparency,
 		BorderSizePixel = 0,
 		AutoButtonColor = false,
 		Font = Enum.Font.GothamBold,
 		Text = "GET KEY",
 		TextSize = 12,
-		TextColor3 = tbl4.Text,
-	}, { getUICorner(10), fn3(border2, 1) })
+		TextColor3 = data4.Text,
+	}, { getUICorner(10), callback3(border2, 1) })
 
-	fn11(TextButton4, 0.2, 0.05)
-	local n17 = 0 - n16
-	local accent = tbl4.Accent
+	callback11(TextButton4, 0.2, 0.05)
+	local number20 = 0 - number19
+	local accent = data4.Accent
 
-	TextButton5 = fn2("TextButton", {
+	TextButton5 = callback2("TextButton", {
 		Parent = Frame4,
 		Size = UDim2.new(0.5, -46, 0, 34),
 		Position = UDim2.new(0.5, 6, 0, 152),
-		BackgroundColor3 = tbl4.AccentDim,
+		BackgroundColor3 = data4.AccentDim,
 		BackgroundTransparency = 0.1,
 		BorderSizePixel = 0,
 		AutoButtonColor = false,
 		Font = Enum.Font.GothamBold,
 		Text = "CHECK KEY",
 		TextSize = 12,
-		TextColor3 = tbl4.Text,
-	}, { getUICorner(10), fn3(accent, 1, 0.15) })
+		TextColor3 = data4.Text,
+	}, { getUICorner(10), callback3(accent, 1, 0.15) })
 
-	fn11(TextButton5)
-	local n18 = n16 + n17
-	local n19 = n17 - 312862738
-	local n20 = n18 + n19
+	callback11(TextButton5)
+	local number21 = number19 + number20
+	local number22 = number20 - 312862738
+	local number23 = number21 + number22
 
-	TextButton6 = fn2("TextButton", {
+	TextButton6 = callback2("TextButton", {
 		Parent = Frame4,
 		Size = UDim2.new(1, -80, 0, 38),
 		Position = UDim2.new(0, 40, 0, 194),
-		BackgroundColor3 = tbl4.Control,
+		BackgroundColor3 = data4.Control,
 		BackgroundTransparency = backgroundTransparency,
 		BorderSizePixel = 0,
 		AutoButtonColor = false,
@@ -1462,39 +1456,39 @@ do
 		Text = "GOLD MEMBER KEY",
 		TextSize = 12,
 		TextColor3 = color,
-		Visible = flag,
-	}, { getUICorner(10), fn3(Color3.new(1, 0.84705883264541626, 0.36078432202339172), 1, 0.2) })
+		Visible = condition,
+	}, { getUICorner(10), callback3(Color3.new(1, 0.84705883264541626, 0.36078432202339172), 1, 0.2) })
 
-	fn11(TextButton6, 0.2, 0.05)
-	local v11 = bit32.band(2804890629 // n19, n20)
-	local accent2 = tbl4.Accent
+	callback11(TextButton6, 0.2, 0.05)
+	local value11 = bit32.band(2804890629 // number22, number23)
+	local accent2 = data4.Accent
 
-	TextButton7 = fn2("TextButton", {
+	TextButton7 = callback2("TextButton", {
 		Parent = Frame4,
 		Size = UDim2.new(1, -80, 0, 44),
 		Position = UDim2.new(0, 40, 0, 150),
-		BackgroundColor3 = tbl4.AccentDim,
+		BackgroundColor3 = data4.AccentDim,
 		BackgroundTransparency = 1,
 		BorderSizePixel = 0,
 		AutoButtonColor = false,
 		Font = Enum.Font.GothamBold,
 		Text = "CHOOSE GAME",
 		TextSize = 13,
-		TextColor3 = tbl4.Text,
+		TextColor3 = data4.Text,
 		Visible = false,
-	}, { getUICorner(10), fn3(accent2, 1, 1) })
+	}, { getUICorner(10), callback3(accent2, 1, 1) })
 
-	fn11(TextButton7)
+	callback11(TextButton7)
 
 	TextButton7.MouseButton1Click:Connect(function()
-		if flag2 then
-			fn6("games")
+		if condition2 then
+			callback6("games")
 			return
 		end
 	end)
 
-	local n21 = n20 + 1944484691
-	local v112 = bit32.band(v11, n21)
+	local number24 = number23 + 1944484691
+	local value12 = bit32.band(value11, number24)
 
 	configMap = {
 		lifetime = {
@@ -1508,83 +1502,83 @@ do
 			toast = "Premium key valid — access granted.",
 		},
 		gold = { label = "★  GOLD", color = color, toast = "Gold key valid — welcome, member!" },
-		free = { label = "STANDARD", color = tbl4.SubText, toast = "Key valid — access granted." },
+		free = { label = "STANDARD", color = data4.SubText, toast = "Key valid — access granted." },
 	}
 
-	local border3 = tbl4.Border
-	local n212 = bit32.bor(n21, v112)
+	local border3 = data4.Border
+	local number25 = bit32.bor(number24, value12)
 
-	Frame8 = fn2("Frame", {
+	Frame8 = callback2("Frame", {
 		Parent = Frame4,
 		Name = "TierBadge",
 		AnchorPoint = Vector2.new(0.5, 0),
 		Position = UDim2.new(0.5, 0, 0, 110),
 		Size = UDim2.new(0, 0, 0, 28),
 		AutomaticSize = Enum.AutomaticSize.X,
-		BackgroundColor3 = tbl4.Control,
+		BackgroundColor3 = data4.Control,
 		BackgroundTransparency = 0.08,
 		BorderSizePixel = 0,
 		Visible = false,
-	}, { getUICorner(14), fn3(border3, 1) })
+	}, { getUICorner(14), callback3(border3, 1) })
 
-	fn2("UIPadding", { Parent = Frame8, PaddingLeft = UDim.new(0, 16), PaddingRight = UDim.new(0, 16) })
-	local v1122 = bit32.band(v112, 858646822)
-	local n22 = n21 - 327345407
+	callback2("UIPadding", { Parent = Frame8, PaddingLeft = UDim.new(0, 16), PaddingRight = UDim.new(0, 16) })
+	local value13 = bit32.band(value12, 858646822)
+	local number26 = number24 - 327345407
 
-	TextLabel4 = fn2("TextLabel", {
+	TextLabel4 = callback2("TextLabel", {
 		Parent = Frame8,
 		AutomaticSize = Enum.AutomaticSize.X,
 		Size = UDim2.new(0, 0, 0, 28),
 		BackgroundTransparency = 1,
 		Font = Enum.Font.GothamBold,
 		Text = "",
-		TextColor3 = tbl4.Text,
+		TextColor3 = data4.Text,
 		TextSize = 12,
 		TextYAlignment = Enum.TextYAlignment.Center,
 	})
 
-	n10 = 3888000
+	number13 = 3888000
 
-	fn12 = function(arg)
-		local n23 = math.floor(arg / 86400)
-		local n24 = math.floor(arg % 86400 / 3600)
-		local n25 = math.floor(arg % 3600 / 60)
+	callback12 = function(argument)
+		local number27 = math.floor(argument / 86400)
+		local number28 = math.floor(argument % 86400 / 3600)
+		local number29 = math.floor(argument % 3600 / 60)
 
-		local function fn17(arg2, arg3)
-			local str2
+		local function callback17(argument2, argument3)
+			local text2
 
-			if arg2 ~= 1 then
-				str2 = "s"
+			if argument2 ~= 1 then
+				text2 = "s"
 			else
-				str2 = ""
+				text2 = ""
 			end
 
-			return arg2 .. " " .. arg3 .. str2
+			return argument2 .. " " .. argument3 .. text2
 		end
 
-		if not (n23 > 0) then
-			if not (n24 > 0) then
+		if not (number27 > 0) then
+			if not (number28 > 0) then
 				local format = ("Key expires in %s").format
-				local v12 = fn17(math.max(n25, 1), "minute")
-				return format("Key expires in %s", v12)
+				local value14 = callback17(math.max(number29, 1), "minute")
+				return format("Key expires in %s", value14)
 			end
 
 			local format = ("Key expires in %s %s").format
-			local v12 = fn17(n24, "hour")
-			local v13 = fn17(n25, "minute")
-			return format("Key expires in %s %s", v12, v13)
+			local value14 = callback17(number28, "hour")
+			local value15 = callback17(number29, "minute")
+			return format("Key expires in %s %s", value14, value15)
 		end
 
 		local format = ("Key expires in %s %s").format
-		local v12 = fn17(n23, "day")
-		local v13 = fn17(n24, "hour")
-		return format("Key expires in %s %s", v12, v13)
+		local value14 = callback17(number27, "day")
+		local value15 = callback17(number28, "hour")
+		return format("Key expires in %s %s", value14, value15)
 	end
 
-	local n23 = n212 // 15
-	local v11222 = bit32.band(v1122, n22)
+	local number27 = number25 // 15
+	local value14 = bit32.band(value13, number26)
 
-	TextLabel5 = fn2("TextLabel", {
+	TextLabel5 = callback2("TextLabel", {
 		Parent = Frame4,
 		Name = "ExpiryLabel",
 		AnchorPoint = Vector2.new(0.5, 0),
@@ -1593,16 +1587,16 @@ do
 		BackgroundTransparency = 1,
 		Font = Enum.Font.Gotham,
 		Text = "",
-		TextColor3 = tbl4.SubText,
+		TextColor3 = data4.SubText,
 		TextSize = 11,
 		TextXAlignment = Enum.TextXAlignment.Center,
 		TextTruncate = Enum.TextTruncate.AtEnd,
 		Visible = false,
 	})
 
-	n11 = n22 + n23
+	number14 = number26 + number27
 
-	fn2("TextLabel", {
+	callback2("TextLabel", {
 		Parent = Frame5,
 		Size = UDim2.new(1, -32, 0, 22),
 		Position = UDim2.new(0, 16, 0, 58),
@@ -1614,24 +1608,24 @@ do
 		TextXAlignment = Enum.TextXAlignment.Center,
 	})
 
-	Frame9 = fn2("Frame", {
+	Frame9 = callback2("Frame", {
 		Parent = Frame5,
 		Size = UDim2.new(1, -80, 0, 34),
 		Position = UDim2.new(0, 40, 0, 102),
-		BackgroundColor3 = tbl4.Control,
+		BackgroundColor3 = data4.Control,
 		BackgroundTransparency = backgroundTransparency,
 		BorderSizePixel = 0,
-	}, { getUICorner(9), fn3(Color3.new(1, 0.84705883264541626, 0.36078432202339172), 1, 0.2) })
+	}, { getUICorner(9), callback3(Color3.new(1, 0.84705883264541626, 0.36078432202339172), 1, 0.2) })
 
-	local n24 = v11222 // 85
+	local number28 = value14 // 85
 
-	TextBox2 = fn2("TextBox", {
+	TextBox2 = callback2("TextBox", {
 		Parent = Frame9,
 		Size = UDim2.new(1, -16, 1, 0),
 		Position = UDim2.new(0, 8, 0, 0),
 		BackgroundTransparency = 1,
 		PlaceholderText = "Paste your Gold key",
-		PlaceholderColor3 = tbl4.SubText,
+		PlaceholderColor3 = data4.SubText,
 		Text = "",
 		Font = Enum.Font.GothamBold,
 		TextColor3 = color,
@@ -1640,27 +1634,27 @@ do
 		TextXAlignment = Enum.TextXAlignment.Center,
 	})
 
-	local tbl8 = {}
-	tbl8.Parent = Frame5
-	tbl8.Size = UDim2.new(0.5, -46, 0, 38)
-	tbl8.Position = UDim2.new(0, 40, 0, 148)
-	tbl8.BackgroundColor3 = tbl4.Control
-	tbl8.BackgroundTransparency = backgroundTransparency
-	tbl8.BorderSizePixel = 0
-	tbl8.AutoButtonColor = false
-	local n242 = n24
-	tbl8.Font = Enum.Font.GothamBold
-	tbl8.Text = "GET GOLD KEY"
-	tbl8.TextSize = 11
-	tbl8.TextColor3 = color
-	TextButton8 = fn2("TextButton", tbl8, { getUICorner(10), fn3(Color3.new(1, 0.84705883264541626, 0.36078432202339172), 1, 0.2) })
-	n12 = n24 * 34579
-	fn11(TextButton8, 0.2, 0.05)
-	n13 = n242 * 43225
+	local data8 = {}
+	data8.Parent = Frame5
+	data8.Size = UDim2.new(0.5, -46, 0, 38)
+	data8.Position = UDim2.new(0, 40, 0, 148)
+	data8.BackgroundColor3 = data4.Control
+	data8.BackgroundTransparency = backgroundTransparency
+	data8.BorderSizePixel = 0
+	data8.AutoButtonColor = false
+	local number29 = number28
+	data8.Font = Enum.Font.GothamBold
+	data8.Text = "GET GOLD KEY"
+	data8.TextSize = 11
+	data8.TextColor3 = color
+	TextButton8 = callback2("TextButton", data8, { getUICorner(10), callback3(Color3.new(1, 0.84705883264541626, 0.36078432202339172), 1, 0.2) })
+	number15 = number28 * 34579
+	callback11(TextButton8, 0.2, 0.05)
+	number16 = number29 * 43225
 end
 
 do
-	local TextButton9 = fn2("TextButton", {
+	local TextButton9 = callback2("TextButton", {
 		Parent = Frame5,
 		Size = UDim2.new(0.5, -46, 0, 38),
 		Position = UDim2.new(0.5, 6, 0, 148),
@@ -1672,67 +1666,67 @@ do
 		Text = "CHECK KEY",
 		TextSize = 12,
 		TextColor3 = color,
-	}, { getUICorner(10), fn3(Color3.new(1, 0.84705883264541626, 0.36078432202339172), 1, 0.15) })
+	}, { getUICorner(10), callback3(Color3.new(1, 0.84705883264541626, 0.36078432202339172), 1, 0.15) })
 
-	fn11(TextButton9)
+	callback11(TextButton9)
 
-	local function fn13(arg, arg2)
-		if flag2 then
+	local function callback13(argument, argument2)
+		if condition2 then
 			return
 		end
-		flag2 = true
-		tbl6.v = true
-		local nrTier
+		condition2 = true
+		data6.v = true
+		local argument3
 
-		if arg then
-			if configMap[arg] then
-				nrTier = arg
+		if argument then
+			if configMap[argument] then
+				argument3 = argument
 			else
-				nrTier = "free"
+				argument3 = "free"
 			end
 		else
-			nrTier = "free"
+			argument3 = "free"
 		end
 
-		local configEntry = configMap[nrTier]
-		local flag3 = nrTier ~= "free"
-		getgenv().NR_TIER = nrTier
+		local configEntry = configMap[argument3]
+		local condition3 = argument3 ~= "free"
+		getgenv().NR_TIER = argument3
 		local genv = getgenv()
-		genv.NR_GOLD = nrTier == "gold" or nrTier == "lifetime"
-		local tbl7 = { Frame7, TextButton4, TextButton5, TextButton6, Frame9, TextButton8, TextButton9 }
+		genv.NR_GOLD = argument3 == "gold" or argument3 == "lifetime"
+		local data7 = { Frame7, TextButton4, TextButton5, TextButton6, Frame9, TextButton8, TextButton9 }
 
-		for _, v5 in ipairs(tbl7) do
-			TweenService:Create(v5, configEntry, { BackgroundTransparency = 1 }):Play()
-			local uiStroke = v5:FindFirstChildOfClass("UIStroke")
+		for _, value5 in ipairs(data7) do
+			TweenService:Create(value5, configEntry, { BackgroundTransparency = 1 }):Play()
+			local uiStroke = value5:FindFirstChildOfClass("UIStroke")
 
 			if uiStroke then
 				TweenService:Create(uiStroke, configEntry, { Transparency = 1 }):Play()
 			end
 
-			if v5:IsA("TextButton") then
-				TweenService:Create(v5, configEntry, { TextTransparency = 1 }):Play()
+			if value5:IsA("TextButton") then
+				TweenService:Create(value5, configEntry, { TextTransparency = 1 }):Play()
 			end
 		end
 
 		TweenService:Create(TextBox, configEntry, { TextTransparency = 1 }):Play()
 		TweenService:Create(TextBox2, configEntry, { TextTransparency = 1 }):Play()
-		local v5, v6
+		local value5, value6
 
-		local function fn14()
-			for _, v7 in ipairs(tbl7) do
-				if v7.Parent then
-					v7.Visible = false
+		local function callback14()
+			for _, value7 in ipairs(data7) do
+				if value7.Parent then
+					value7.Visible = false
 				end
 			end
 
-			if flag3 then
+			if condition3 then
 				TextLabel4.Text = configEntry.label
 				TextLabel4.TextColor3 = configEntry.color
 				Frame8.UIStroke.Color = configEntry.color
 				Frame8.Visible = true
-				TweenService:Create(fn2("UIScale", { Parent = Frame8, Scale = 0.8 }), tweenInfo3, { Scale = 1 }):Play()
+				TweenService:Create(callback2("UIScale", { Parent = Frame8, Scale = 0.8 }), tweenInfo3, { Scale = 1 }):Play()
 
-				if nrTier == "lifetime" then
+				if argument3 == "lifetime" then
 					Frame8.UIStroke.Transparency = 0.05
 
 					task.spawn(function()
@@ -1755,38 +1749,38 @@ do
 			end
 
 			TextButton7.Visible = true
-			TweenService:Create(TextButton7, flag3, { BackgroundTransparency = 0.1 }):Play()
-			TweenService:Create(TextButton7.UIStroke, flag3, { Transparency = 0.15 }):Play()
+			TweenService:Create(TextButton7, condition3, { BackgroundTransparency = 0.1 }):Play()
+			TweenService:Create(TextButton7.UIStroke, condition3, { Transparency = 0.15 }):Play()
 
 			while true do
 			end
 		end
 
-		task.delay(0.18, fn14)
+		task.delay(0.18, callback14)
 
-		if flag3 then
-			tbl5.home = configEntry.label
-			tbl5.games = configEntry.label
-			arg.Text = configEntry.label
-			TweenService:Create(arg, configEntry, { TextColor3 = configEntry.color }):Play()
+		if condition3 then
+			data5.home = configEntry.label
+			data5.games = configEntry.label
+			argument.Text = configEntry.label
+			TweenService:Create(argument, configEntry, { TextColor3 = configEntry.color }):Play()
 
-			if arg2 and arg2 - os.time() < n10 then
+			if argument2 and argument2 - os.time() < number13 then
 				TextLabel5.Visible = true
 
 				task.spawn(function()
 					while TextLabel5.Visible do
 						if TextLabel5.Parent then
-							local n14 = arg2 - os.time()
+							local number17 = argument2 - os.time()
 
-							if not (n14 <= 0) then
-								TextLabel5.Text = fn12(n14)
+							if not (number17 <= 0) then
+								TextLabel5.Text = callback12(number17)
 								local TextLabel6 = TextLabel5
 								local danger
 
-								if n14 < 3600 then
-									danger = tbl4.Danger or tbl4.SubText
+								if number17 < 3600 then
+									danger = data4.Danger or data4.SubText
 								else
-									danger = tbl4.SubText
+									danger = data4.SubText
 									TextLabel6.TextColor3 = danger
 									task.wait(30)
 									continue
@@ -1798,7 +1792,7 @@ do
 							end
 
 							TextLabel5.Text = "Key expired — grab a new one"
-							TextLabel5.TextColor3 = tbl4.Danger
+							TextLabel5.TextColor3 = data4.Danger
 							return
 						end
 
@@ -1806,23 +1800,23 @@ do
 					end
 				end)
 			end
-		elseif arg2 and arg2 - os.time() < n10 then
+		elseif argument2 and argument2 - os.time() < number13 then
 			TextLabel5.Visible = true
 
 			task.spawn(function()
 				while TextLabel5.Visible do
 					if TextLabel5.Parent then
-						local n14 = arg2 - os.time()
+						local number17 = argument2 - os.time()
 
-						if not (n14 <= 0) then
-							TextLabel5.Text = fn12(n14)
+						if not (number17 <= 0) then
+							TextLabel5.Text = callback12(number17)
 							local TextLabel6 = TextLabel5
 							local danger
 
-							if n14 < 3600 then
-								danger = tbl4.Danger or tbl4.SubText
+							if number17 < 3600 then
+								danger = data4.Danger or data4.SubText
 							else
-								danger = tbl4.SubText
+								danger = data4.SubText
 								TextLabel6.TextColor3 = danger
 								task.wait(30)
 								continue
@@ -1834,7 +1828,7 @@ do
 						end
 
 						TextLabel5.Text = "Key expired — grab a new one"
-						TextLabel5.TextColor3 = tbl4.Danger
+						TextLabel5.TextColor3 = data4.Danger
 						return
 					end
 
@@ -1843,159 +1837,159 @@ do
 			end)
 		end
 
-		if str ~= "home" then
-			fn6("home")
+		if text ~= "home" then
+			callback6("home")
 		end
 
-		fn4(configEntry.toast)
+		callback4(configEntry.toast)
 	end
 
-	local flag3 = false
+	local condition3 = false
 
-	local function fn14(arg, arg2, arg3, arg4, arg5, text, arg6)
-		local n14 = 165333668
+	local function callback14(argument, argument2, argument3, argument4, argument5, text2, argument6)
+		local number17 = 165333668
 
-		local function fn15(...)
-			if not flag2 and not flag3 then
-				local v5 = arg
+		local function callback15(...)
+			if not condition2 and not condition3 then
+				local argument7 = argument
 
-				if bit32.bxor(v5, 428331801) ~= 142473909 then
-					v5 = bit32.bxor(v5, 630834127)
+				if bit32.bxor(argument7, 428331801) ~= 142473909 then
+					argument7 = bit32.bxor(argument7, 630834127)
 				end
 
-				local text2 = v5.Text
-				flag3 = true
-				arg3.Text = "CHECKING..."
+				local text3 = argument7.Text
+				condition3 = true
+				argument3.Text = "CHECKING..."
 
 				task.spawn(function()
-					local ok, result, result2, result3 = pcall(fn9, text2, arg5)
-					flag3 = false
-					arg3.Text = text
+					local ok, response, response2, response3 = pcall(callback9, text3, argument5)
+					condition3 = false
+					argument3.Text = text2
 
 					if ok then
-						if result then
-							fn13(result2, result3)
+						if response then
+							callback13(response2, response3)
 							return
 						end
-						local position = arg2.Position
+						local position = argument2.Position
 
 						for i = 1, 4 do
-							local arg22 = arg2
+							local argument8 = argument2
 							local uDim2FromOffset = UDim2.fromOffset
-							local n15
+							local number18
 
 							if i % 2 == 0 then
-								n15 = 5
+								number18 = 5
 							else
-								n15 = -5
+								number18 = -5
 							end
 
-							arg22.Position = position + uDim2FromOffset(n15, 0)
+							argument8.Position = position + uDim2FromOffset(number18, 0)
 							task.wait(0.04)
 						end
 
-						arg2.Position = position
-						TweenService:Create(arg2.UIStroke, result3, { Color = tbl4.Danger, Transparency = 0.1 }):Play()
-						local n15 = 102754315
+						argument2.Position = position
+						TweenService:Create(argument2.UIStroke, response3, { Color = data4.Danger, Transparency = 0.1 }):Play()
+						local number18 = 102754315
 
-						local function fn16()
-							if n15 ~= 276785316 then
-								n15 = bit32.bxor(n15, 1428776417)
+						local function callback16()
+							if number18 ~= 276785316 then
+								number18 = bit32.bxor(number18, 1428776417)
 							end
 
-							TweenService:Create(arg2.UIStroke, result3, { Color = arg6, Transparency = 0.2 }):Play()
+							TweenService:Create(argument2.UIStroke, response3, { Color = argument6, Transparency = 0.2 }):Play()
 						end
 
-						n15 = 276785316
-						task.delay(0.8, fn16)
-						fn4(result2 or "Invalid key.", true, 4)
+						number18 = 276785316
+						task.delay(0.8, callback16)
+						callback4(response2 or "Invalid key.", true, 4)
 						return
 					end
 
-					pcall(rconsoleerr, "[NRL] validateKey crash: " .. tostring(result) .. "\n")
-					fn4("Key check crashed: " .. tostring(result), true, 10)
+					pcall(rconsoleerr, "[NRL] validateKey crash: " .. tostring(response) .. "\n")
+					callback4("Key check crashed: " .. tostring(response), true, 10)
 				end, ...)
 
 				return
 			end
 		end
 
-		n14 = 301607340
-		return fn15
+		number17 = 301607340
+		return callback15
 	end
 
-	local v5 = fn14(TextBox, Frame7, TextButton5, n12 + 54569172, "free", "CHECK KEY", tbl4.Border)
-	local v6 = fn14(TextBox2, Frame9, TextButton9, 54569172, "gold", "CHECK KEY", Color3.new(1, 0.84705883264541626, 0.36078432202339172))
-	TextButton5.MouseButton1Click:Connect(v5)
+	local value5 = callback14(TextBox, Frame7, TextButton5, number15 + 54569172, "free", "CHECK KEY", data4.Border)
+	local value6 = callback14(TextBox2, Frame9, TextButton9, 54569172, "gold", "CHECK KEY", Color3.new(1, 0.84705883264541626, 0.36078432202339172))
+	TextButton5.MouseButton1Click:Connect(value5)
 
 	TextBox.FocusLost:Connect(function(enterPressed)
 		if enterPressed then
-			v5()
+			value5()
 			return
 		end
 	end)
 
-	TextButton9.MouseButton1Click:Connect(v6)
+	TextButton9.MouseButton1Click:Connect(value6)
 
 	TextBox2.FocusLost:Connect(function(enterPressed)
 		if enterPressed then
-			v6()
+			value6()
 			return
 		end
 	end)
 
 	TextButton6.MouseButton1Click:Connect(function()
-		fn6("gold")
+		callback6("gold")
 	end)
 
 	TextButton4.MouseButton1Click:Connect(function()
-		if flag2 then
+		if condition2 then
 			return
 		end
 		local ok = pcall(setclipboard, "https://www.nrlscript.com/key")
-		local str2
+		local text2
 
 		if ok then
-			str2 = "Key page copied — open it in your browser: " .. keyUrl or "Open this in your browser: " .. keyUrl
+			text2 = "Key page copied — open it in your browser: " .. keyUrl or "Open this in your browser: " .. keyUrl
 		else
-			str2 = "Open this in your browser: " .. keyUrl
-			fn4(str2, not ok, 8)
+			text2 = "Open this in your browser: " .. keyUrl
+			callback4(text2, not ok, 8)
 			return
 		end
 
-		fn4(str2, not ok, 8)
+		callback4(text2, not ok, 8)
 	end)
 
 	TextButton8.MouseButton1Click:Connect(function()
-		if flag2 then
+		if condition2 then
 			return
 		end
 		local ok = pcall(setclipboard, "https://discord.gg/vrzg9YaNPj")
-		local str2
+		local text2
 
 		if ok then
-			str2 = "Discord invite copied — join to get Gold key."
+			text2 = "Discord invite copied — join to get Gold key."
 		else
-			str2 = "Join Discord: " .. vrzg9YaNPjUrl
+			text2 = "Join Discord: " .. vrzg9YaNPjUrl
 		end
 
-		fn4(str2, not ok)
+		callback4(text2, not ok)
 	end)
 
 	task.spawn(function()
-		local v7 = fn8()
+		local value7 = callback8()
 
-		if v7 then
-			local v8, v9, v10 = fn10(v7)
+		if value7 then
+			local value8, value9, value10 = callback10(value7)
 
-			if v8 then
-				getgenv().SCRIPT_KEY = v7
-				fn13(v9, v10)
-				fn7(v7, v9, v10)
+			if value8 then
+				getgenv().SCRIPT_KEY = value7
+				callback13(value9, value10)
+				callback7(value7, value9, value10)
 				return
 			end
 
-			if v9 == "Invalid key" then
+			if value9 == "Invalid key" then
 				pcall(delfile, "nr_loader_key.txt")
 				return
 			end
@@ -2003,20 +1997,20 @@ do
 	end)
 
 	TextButton3.MouseButton1Click:Connect(function()
-		local n14 = 913867998
-		local n15 = 3190641505
+		local number17 = 913867998
+		local number18 = 3190641505
 
-		if flag2 then
+		if condition2 then
 			pcall(delfile, "nr_loader_key.txt")
 			getgenv().SCRIPT_KEY = nil
 			getgenv().NR_TIER = nil
 			getgenv().NR_GOLD = nil
-			local n16 = n14 // n15
-			flag2 = false
-			tbl6.v = false
+			local number19 = number17 // number18
+			condition2 = false
+			data6.v = false
 
-			if str ~= "home" then
-				fn6("home")
+			if text ~= "home" then
+				callback6("home")
 			end
 
 			TextButton3.Visible = false
@@ -2024,13 +2018,13 @@ do
 			TextLabel5.Visible = false
 			TweenService:Create(TextButton7, tweenInfo, { BackgroundTransparency = 1, TextTransparency = 1 }):Play()
 			TweenService:Create(TextButton7.UIStroke, tweenInfo, { Transparency = 1 }):Play()
-			local n17 = n16 - 4068920330
+			local number20 = number19 - 4068920330
 
-			local function fn15()
+			local function callback15()
 				local TextButton10 = TextButton7
 
-				if bit32.bxor(n17, 366569084) ~= 78120299 then
-					n17 = bit32.bxor(n17, 3139527465)
+				if bit32.bxor(number20, 366569084) ~= 78120299 then
+					number20 = bit32.bxor(number20, 3139527465)
 				end
 
 				if TextButton10.Parent then
@@ -2039,16 +2033,16 @@ do
 				end
 			end
 
-			n17 = 292643607
-			task.delay(0.18, fn15)
-			tbl5.home = home
-			tbl5.games = "Choose a game"
+			number20 = 292643607
+			task.delay(0.18, callback15)
+			data5.home = home
+			data5.games = "Choose a game"
 			TextLabel2.Text = home
-			TweenService:Create(TextLabel2, tweenInfo, { TextColor3 = tbl4.SubText }):Play()
+			TweenService:Create(TextLabel2, tweenInfo, { TextColor3 = data4.SubText }):Play()
 			TextBox.Text = ""
 			TextBox2.Text = ""
 
-			for _, v7 in ipairs({
+			for _, value7 in ipairs({
 				{ o = Frame7, bg = backgroundTransparency, stroke = 0.2 },
 				{ o = TextButton4, bg = backgroundTransparency, stroke = 0.2, text = true },
 				{ o = TextButton5, bg = 0.1, stroke = 0.15, text = true },
@@ -2057,34 +2051,34 @@ do
 				{ o = TextButton8, bg = backgroundTransparency, stroke = 0.2, text = true },
 				{ o = TextButton9, bg = 0.1, stroke = 0.15, text = true },
 			}) do
-				v7.o.Visible = v7.o ~= TextButton6 or false
-				TweenService:Create(v7.o, tweenInfo, { BackgroundTransparency = v7.bg }):Play()
-				local uiStroke = v7.o:FindFirstChildOfClass("UIStroke")
+				value7.o.Visible = value7.o ~= TextButton6 or false
+				TweenService:Create(value7.o, tweenInfo, { BackgroundTransparency = value7.bg }):Play()
+				local uiStroke = value7.o:FindFirstChildOfClass("UIStroke")
 
 				if uiStroke then
-					TweenService:Create(uiStroke, tweenInfo, { Transparency = v7.stroke }):Play()
+					TweenService:Create(uiStroke, tweenInfo, { Transparency = value7.stroke }):Play()
 				end
 
-				if v7.text and v7.o:IsA("TextButton") then
-					TweenService:Create(v7.o, tweenInfo, { TextTransparency = 0 }):Play()
+				if value7.text and value7.o:IsA("TextButton") then
+					TweenService:Create(value7.o, tweenInfo, { TextTransparency = 0 }):Play()
 				end
 			end
 
 			TweenService:Create(TextBox, tweenInfo, { TextTransparency = 0 }):Play()
 			TweenService:Create(TextBox2, tweenInfo, { TextTransparency = 0 }):Play()
-			fn4("Key logged out — paste a new key to switch.")
+			callback4("Key logged out — paste a new key to switch.")
 			return
 		end
 	end)
 end
 
-local flag3, n14, ScrollingFrame, str2, str3, flag4
+local condition3, number17, ScrollingFrame, text2, text3, condition4
 
 do
-	local n122 = bit32.band(n12, n13)
-	local n15 = n13 + n122
+	local number18 = bit32.band(number15, number16)
+	local number19 = number16 + number18
 
-	local tbl7 = {
+	local data7 = {
 		Parent = Frame4,
 		Size = UDim2.new(1, -80, 0, 18),
 		Position = UDim2.new(0, 40, 0, 240),
@@ -2093,20 +2087,20 @@ do
 		Font = Enum.Font.Gotham,
 		Text = "Need help? discord.gg/vrzg9YaNPj — click to copy",
 		TextSize = 10,
-		TextColor3 = tbl4.Accent,
+		TextColor3 = data4.Accent,
 	}
 
-	fn2("TextButton", tbl7).MouseButton1Click:Connect(function()
+	callback2("TextButton", data7).MouseButton1Click:Connect(function()
 		local ok = pcall(setclipboard, "https://discord.gg/vrzg9YaNPj")
-		local str4
+		local text4
 
 		if ok then
-			str4 = "Invite link copied to clipboard"
+			text4 = "Invite link copied to clipboard"
 		else
-			str4 = "setclipboard unavailable"
+			text4 = "setclipboard unavailable"
 		end
 
-		fn4(str4, not ok)
+		callback4(text4, not ok)
 	end)
 
 	local textLabel = {
@@ -2120,40 +2114,40 @@ do
 
 	local format = ("%d scripts available  |  %s").format
 
-	local function fn13()
-		local n16 = 152732062
+	local function callback13()
+		local number20 = 152732062
 
-		local function fn14()
-			local v5 = identifyexecutor
-			if bit32.bxor(n16, 114914498) ~= 314880253 then
-				n16 = bit32.bxor(n16, 888543741)
-				return v5()
+		local function callback14()
+			local value5 = identifyexecutor
+			if bit32.bxor(number20, 114914498) ~= 314880253 then
+				number20 = bit32.bxor(number20, 888543741)
+				return value5()
 			end
-			return v5()
+			return value5()
 		end
 
-		n16 = 337495103
-		local ok, result = pcall(fn14)
-		if ok and result then
-			return result
+		number20 = 337495103
+		local ok, response = pcall(callback14)
+		if ok and response then
+			return response
 		end
 		return "Volt"
 	end
 
-	local v5 = fn13(n15 - 3810238358)
-	textLabel.Text = format("%d scripts available  |  %s", #tbl2, v5)
-	textLabel.TextColor3 = tbl4.SubText
+	local value5 = callback13(number19 - 3810238358)
+	textLabel.Text = format("%d scripts available  |  %s", #data2, value5)
+	textLabel.TextColor3 = data4.SubText
 	textLabel.TextSize = 10
 	textLabel.TextXAlignment = Enum.TextXAlignment.Center
-	fn2("TextLabel", textLabel)
-	flag3 = true
+	callback2("TextLabel", textLabel)
+	condition3 = true
 
 	task.spawn(function()
-		while flag3 do
+		while condition3 do
 			TweenService:Create(UIStroke, TweenInfo.new(1.1, Enum.EasingStyle.Sine), { Transparency = 0.85 }):Play()
 			task.wait(1.15)
 
-			if flag3 then
+			if condition3 then
 				TweenService:Create(UIStroke, TweenInfo.new(1.1, Enum.EasingStyle.Sine), { Transparency = 0.45 }):Play()
 				task.wait(1.15)
 				continue
@@ -2163,9 +2157,9 @@ do
 		end
 	end)
 
-	n14 = n122 * n15 - n15
+	number17 = number18 * number19 - number19
 
-	ScrollingFrame = fn2("ScrollingFrame", {
+	ScrollingFrame = callback2("ScrollingFrame", {
 		Parent = Frame6,
 		Size = UDim2.new(1, -20, 1, -12),
 		Position = UDim2.new(0, 10, 0, 6),
@@ -2175,14 +2169,14 @@ do
 		AutomaticCanvasSize = Enum.AutomaticSize.Y,
 		ScrollingDirection = Enum.ScrollingDirection.Y,
 		ScrollBarThickness = 3,
-		ScrollBarImageColor3 = tbl4.Border,
+		ScrollBarImageColor3 = data4.Border,
 		ScrollBarImageTransparency = 0.3,
 	})
 
-	local n152 = bit32.band(n15, n11)
-	fn2("UIListLayout", { Parent = ScrollingFrame, Padding = UDim.new(0, 8), SortOrder = Enum.SortOrder.LayoutOrder })
+	local number20 = bit32.band(number19, number14)
+	callback2("UIListLayout", { Parent = ScrollingFrame, Padding = UDim.new(0, 8), SortOrder = Enum.SortOrder.LayoutOrder })
 
-	fn2("UIPadding", {
+	callback2("UIPadding", {
 		Parent = ScrollingFrame,
 		PaddingTop = UDim.new(0, 4),
 		PaddingBottom = UDim.new(0, 6),
@@ -2190,54 +2184,53 @@ do
 		PaddingRight = UDim.new(0, 6),
 	})
 
-	str2 = ""
-	str3 = ""
-	flag4 = false
-	local tbl8 = {}
+	text2 = ""
+	text3 = ""
+	condition4 = false
+	local data8 = {}
 
-	-- This Source Was Generated by discord.gg/c3xVMnUUBv
-	local function fn14()
-		for _, v6 in ipairs(tbl8) do
-			task.spawn(v6, str2, str3)
+	local function callback14()
+		for _, value6 in ipairs(data8) do
+			task.spawn(value6, text2, text3)
 		end
 	end
 
-	local function fn15(arg)
-		if flag4 then
-			task.spawn(arg, str2, str3)
+	local function callback15(argument)
+		if condition4 then
+			task.spawn(argument, text2, text3)
 		end
 
 		local insert = table.insert
-		insert(tbl8, arg)
+		insert(data8, argument)
 	end
 
-	local n16 = n152 + 254071946
+	local number21 = number20 + 254071946
 
-	local function fn16(arg, arg2, arg3)
-		if arg and arg.match and #arg.match ~= 0 then
-			local str4 = (arg2 or ""):lower()
-			local str5 = (arg3 or ""):lower()
-			local v6 = ipairs
-			local n162, flag5, v7
+	local function callback16(argument, argument2, argument3)
+		if argument and argument.match and #argument.match ~= 0 then
+			local text4 = (argument2 or ""):lower()
+			local text5 = (argument3 or ""):lower()
+			local value6 = ipairs
+			local number22, condition5, value7
 
-			if n16 ~= 382946598 then
-				n162, flag5, v7 = v6(arg.match)
+			if number21 ~= 382946598 then
+				number22, condition5, value7 = value6(argument.match)
 			else
-				n162 = bit32.bxor(n16, 3282889763)
-				flag5 = n16 + 67944929 ~= 270464497
+				number22 = bit32.bxor(number21, 3282889763)
+				condition5 = number21 + 67944929 ~= 270464497
 
 				if nil <= nil then
-					n162, flag5, v7 = v6(arg.match)
+					number22, condition5, value7 = value6(argument.match)
 				end
 			end
 
-			for _, v8 in n162, flag5, v7 do
-				local str6 = v8:lower()
-				if str4 ~= "" and str4:find(str6, 1, true) then
+			for _, value8 in number22, condition5, value7 do
+				local text6 = value8:lower()
+				if text4 ~= "" and text4:find(text6, 1, true) then
 					return true
 				end
 
-				if str5 ~= "" and str5:find(str6, 1, true) then
+				if text5 ~= "" and text5:find(text6, 1, true) then
 					return true
 				end
 			end
@@ -2248,25 +2241,25 @@ do
 
 	task.spawn(function()
 		for i = 1, 5 do
-			local n17 = 225940537
+			local number22 = 225940537
 
-			local function fn17()
-				if n17 ~= 451973260 then
-					n17 = bit32.bxor(n17, 2287805977)
+			local function callback17()
+				if number22 ~= 451973260 then
+					number22 = bit32.bxor(number22, 2287805977)
 				end
 
 				return MarketplaceService:GetProductInfo(game.PlaceId)
 			end
 
-			n17 = 451973260
-			local ok, result = pcall(fn17)
+			number22 = 451973260
+			local ok, response = pcall(callback17)
 
 			if ok then
-				if result then
-					if type(result.Name) ~= "string" then
+				if response then
+					if type(response.Name) ~= "string" then
 						task.wait(i * 0.4)
-					elseif result.Name ~= "" then
-						str2 = result.Name
+					elseif response.Name ~= "" then
+						text2 = response.Name
 						break
 					else
 						task.wait(i * 0.4)
@@ -2279,21 +2272,21 @@ do
 			end
 		end
 
-		local n17 = 100655444
+		local number22 = 100655444
 
-		local function fn17()
-			local function fn18(arg)
+		local function callback17()
+			local function callback18(argument)
 				local response
 
 				if typeof(httpRequest) == "function" then
-					response = httpRequest({ Url = arg, Method = "GET" })
+					response = httpRequest({ Url = argument, Method = "GET" })
 					if response and response.Body then
 						return response.Body
 					end
 				end
 
 				if typeof(request) == "function" then
-					response = request({ Url = arg, Method = "GET" })
+					response = request({ Url = argument, Method = "GET" })
 					if response and response.Body then
 						return response.Body
 					end
@@ -2301,15 +2294,15 @@ do
 
 				while true do
 					if game.HttpGet then
-						local v6 = pcall
+						local value6 = pcall
 						local httpGet = game.HttpGet
 						local gameRef = game
-						response = not not arg
+						response = not not argument
 
 						if response then
-							local v7, v8 = v6(httpGet, gameRef, arg, true)
-							if v7 and v8 then
-								return v8
+							local value7, value8 = value6(httpGet, gameRef, argument, true)
+							if value7 and value8 then
+								return value8
 							end
 							return nil
 						end
@@ -2325,94 +2318,94 @@ do
 				return response.Body
 			end
 
-			if bit32.bxor(n17, 477423004) ~= 304635019 then
-				n17 = bit32.bxor(n17, 1521049049)
+			if bit32.bxor(number22, 477423004) ~= 304635019 then
+				number22 = bit32.bxor(number22, 1521049049)
 			end
 
 			if game.GameId and game.GameId ~= 0 then
-				local v6 = fn18("https://games.roblox.com/v1/games?universeIds=" .. tostring(game.GameId))
+				local value6 = callback18("https://games.roblox.com/v1/games?universeIds=" .. tostring(game.GameId))
 
-				if v6 and type(v6) == "string" then
-					local match = v6:match("\"name\"%s*:%s*\"([^\"]+)\"")
+				if value6 and type(value6) == "string" then
+					local match = value6:match("\"name\"%s*:%s*\"([^\"]+)\"")
 					if match then
-						str3 = match
+						text3 = match
 						return
 					end
 				end
 			end
 		end
 
-		n17 = 240957719
-		pcall(fn17)
+		number22 = 240957719
+		pcall(callback17)
 
-		if str2 == "" and type(game.Name) == "string" and game.Name ~= "" and game.Name ~= "Game" then
-			str2 = game.Name
+		if text2 == "" and type(game.Name) == "string" and game.Name ~= "" and game.Name ~= "Game" then
+			text2 = game.Name
 		end
 
-		flag4 = true
+		condition4 = true
 		local name
 
-		if str2 ~= "" then
-			name = str2
+		if text2 ~= "" then
+			name = text2
 
-			if not str2 then
-				if str3 ~= "" then
-					name = str3 or ""
+			if not text2 then
+				if text3 ~= "" then
+					name = text3 or ""
 				else
 					name = ""
 				end
 			end
-		elseif str3 ~= "" then
-			name = str3 or ""
+		elseif text3 ~= "" then
+			name = text3 or ""
 		else
 			name = ""
 		end
 
 		local TextLabel6 = TextLabel3
-		local text
+		local text4
 
 		if name ~= "" then
-			text = "In game: " .. name or "Game not identified"
+			text4 = "In game: " .. name or "Game not identified"
 		else
-			text = "Game not identified"
-			TextLabel6.Text = text
-			fn14()
+			text4 = "Game not identified"
+			TextLabel6.Text = text4
+			callback14()
 			return
 		end
 
-		TextLabel6.Text = text
-		fn14()
+		TextLabel6.Text = text4
+		callback14()
 	end)
 
-	local flag5 = false
+	local condition5 = false
 
-	local function fn17()
+	local function callback17()
 		local nrTier = getgenv().NR_TIER
 
 		if nrTier ~= "gold" and nrTier ~= "premium" and nrTier ~= "lifetime" then
-			local ok, result = pcall(readfile, "nr_loader_key.txt")
+			local ok, response = pcall(readfile, "nr_loader_key.txt")
 
-			if ok and type(result) == "string" and result ~= "" then
-				local parts = result:split("|")
-				local str4
+			if ok and type(response) == "string" and response ~= "" then
+				local parts = response:split("|")
+				local text4
 
 				if parts[3] then
-					str4 = parts[3]:lower()
+					text4 = parts[3]:lower()
 
-					if str4 then
-						if str4 ~= "gold" and str4 ~= "premium" and str4 ~= "lifetime" then
+					if text4 then
+						if text4 ~= "gold" and text4 ~= "premium" and text4 ~= "lifetime" then
 							return false
 						end
 						return true
 					end
 				end
 
-				str4 = ""
-				if str4 == "premium" then
+				text4 = ""
+				if text4 == "premium" then
 					return true
 				end
 
-				if str4 == "lifetime" then
+				if text4 == "lifetime" then
 					return true
 				end
 			end
@@ -2423,117 +2416,117 @@ do
 		return true
 	end
 
-	local function fn18(arg, arg2, arg3)
+	local function callback18(argument, argument2, argument3)
 		task.spawn(function()
-			local n17 = 2922779251
-			if arg.delayed then
-				arg3(false, "Delayed", "This script is currently under maintenance / repair.")
+			local number22 = 2922779251
+			if argument.delayed then
+				argument3(false, "Delayed", "This script is currently under maintenance / repair.")
 				return
 			end
 
-			if arg.premiumOnly then
-				if not fn17() then
-					arg3(false, "Premium Only", arg.name .. " khusus member Premium / Gold / Lifetime!")
+			if argument.premiumOnly then
+				if not callback17() then
+					argument3(false, "Premium Only", argument.name .. " khusus member Premium / Gold / Lifetime!")
 					return
 				end
-				n17 = 2922779251
+				number22 = 2922779251
 			end
 
-			arg2("Fetching...")
-			local n18 = 21514261
+			argument2("Fetching...")
+			local number23 = 21514261
 
-			local function fn19()
+			local function callback19()
 				local gameRef = game
 
-				if bit32.bxor(n18, 406709984) == 159080375 then
-					n18 = bit32.bxor(n18, 4107919673)
+				if bit32.bxor(number23, 406709984) == 159080375 then
+					number23 = bit32.bxor(number23, 4107919673)
 				end
 
-				return gameRef:HttpGet(arg.url, true)
+				return gameRef:HttpGet(argument.url, true)
 			end
 
-			n18 = 522309152
-			local ok, result = pcall(fn19)
+			number23 = 522309152
+			local ok, response = pcall(callback19)
 
-			if ok and type(result) == "string" and result ~= "" then
-				if not result:sub(1, 15):lower():find("<!doctype") and not result:lower():find("^404: not found") then
-					arg2("Loading...")
+			if ok and type(response) == "string" and response ~= "" then
+				if not response:sub(1, 15):lower():find("<!doctype") and not response:lower():find("^404: not found") then
+					argument2("Loading...")
 
-					if arg.genv then
+					if argument.genv then
 						local genv = getgenv()
 
-						for k, v6 in pairs(arg.genv) do
+						for k, value6 in pairs(argument.genv) do
 							if k ~= "SCRIPT_KEY" then
-								genv[k] = v6
-							elseif not flag2 then
-								genv[k] = v6
+								genv[k] = value6
+							elseif not condition2 then
+								genv[k] = value6
 							end
 						end
 					end
 
-					local v6 = fn8()
+					local value6 = callback8()
 
-					if v6 and getgenv().SCRIPT_KEY == nil then
-						getgenv().SCRIPT_KEY = v6
+					if value6 and getgenv().SCRIPT_KEY == nil then
+						getgenv().SCRIPT_KEY = value6
 					end
 
-					local chunk, loadErr = loadstring(result, "@" .. arg.name)
+					local chunk, loadErr = loadstring(response, "@" .. argument.name)
 					if not chunk then
-						arg3(false, "Compile error", ("loadstring: %s"):format(tostring(loadErr)))
+						argument3(false, "Compile error", ("loadstring: %s"):format(tostring(loadErr)))
 						return
 					end
-					arg3(true, "Loaded", ("%s loaded."):format(arg.name))
+					argument3(true, "Loaded", ("%s loaded."):format(argument.name))
 
 					if readJsonFile() and queueOnTeleport then
 						pcall(queueOnTeleport, "loadstring(game:HttpGet(\"https://raw.githubusercontent.com/JualNasiRendang/loader/refs/heads/main/main.lua\"))()")
 					end
 
-					local n19 = 235668477
+					local number24 = 235668477
 
-					local function fn20()
-						local ok2, result2 = pcall(chunk)
+					local function callback20()
+						local ok2, response2 = pcall(chunk)
 
-						if n19 + 155233870 ~= 187571276 then
+						if number24 + 155233870 ~= 187571276 then
 							if ok2 then
 								return
 							end
 						else
-							n19 = bit32.bxor(n19, 2767411019)
+							number24 = bit32.bxor(number24, 2767411019)
 							if ok2 then
 								return
 							end
 						end
 
-						warn(("[NRL] %s runtime error: %s"):format(arg.name, tostring(result2)))
+						warn(("[NRL] %s runtime error: %s"):format(argument.name, tostring(response2)))
 					end
 
-					n19 = 267790901
-					task.spawn(fn20)
+					number24 = 267790901
+					task.spawn(callback20)
 					return
 				end
 
-				arg3(false, "Bad URL", ("%s returned a web page, not Lua. The raw link is wrong or the file is missing."):format(arg.name))
+				argument3(false, "Bad URL", ("%s returned a web page, not Lua. The raw link is wrong or the file is missing."):format(argument.name))
 				return
 			end
 
-			arg3(false, "Fetch failed", ("HttpGet failed for %s — check the raw URL or your connection."):format(arg.name))
+			argument3(false, "Fetch failed", ("HttpGet failed for %s — check the raw URL or your connection."):format(argument.name))
 		end)
 	end
 
-	local function fn19(arg, arg2, arg3, arg4)
-		if flag5 then
+	local function callback19(argument, argument2, argument3, argument4)
+		if condition5 then
 			return
 		end
-		flag5 = true
-		arg3.Text = "Fetching..."
-		arg3.TextColor3 = tbl4.SubText
-		arg4.Visible = true
-		local flag6 = true
+		condition5 = true
+		argument3.Text = "Fetching..."
+		argument3.TextColor3 = data4.SubText
+		argument4.Visible = true
+		local condition6 = true
 
 		task.spawn(function()
-			while flag6 do
-				if arg4.Parent then
-					arg4.Rotation = (arg4.Rotation + 6) % 360
+			while condition6 do
+				if argument4.Parent then
+					argument4.Rotation = (argument4.Rotation + 6) % 360
 					RunService.Heartbeat:Wait()
 					continue
 				end
@@ -2542,56 +2535,56 @@ do
 			end
 		end)
 
-		local function fn20(arg5, text)
-			flag6 = false
-			arg4.Visible = false
-			arg3.Text = text
-			local arg32 = arg3
+		local function callback20(argument5, text4)
+			condition6 = false
+			argument4.Visible = false
+			argument3.Text = text4
+			local argument6 = argument3
 			local accent
 
-			if arg5 then
-				accent = tbl4.Accent or tbl4.Danger
+			if argument5 then
+				accent = data4.Accent or data4.Danger
 			else
-				accent = tbl4.Danger
+				accent = data4.Danger
 			end
 
-			arg32.TextColor3 = accent
+			argument6.TextColor3 = accent
 			local TweenService2 = TweenService
 			local create = TweenService.Create
-			local uiStroke = arg2.UIStroke
+			local uiStroke = argument2.UIStroke
 			local allowedProps = {}
 			local accent2
 
-			if arg5 then
-				accent2 = tbl4.Accent or tbl4.Danger
+			if argument5 then
+				accent2 = data4.Accent or data4.Danger
 			else
-				accent2 = tbl4.Danger
+				accent2 = data4.Danger
 				allowedProps.Color = accent2
 				allowedProps.Transparency = 0.1
-				local v6 = create(TweenService2, uiStroke, tweenInfo, allowedProps)
-				v6:Play()
-				flag5 = false
+				local value6 = create(TweenService2, uiStroke, tweenInfo, allowedProps)
+				value6:Play()
+				condition5 = false
 				return
 			end
 
 			allowedProps.Color = accent2
 			allowedProps.Transparency = 0.1
 			create(TweenService2, uiStroke, tweenInfo, allowedProps):Play()
-			flag5 = false
+			condition5 = false
 		end
 
-		fn18(arg, function(text)
-			arg3.Text = text
-		end, function(arg5, arg6, arg7)
-			arg5(arg5, arg6)
-			fn4(arg7, not arg5, 8)
+		callback18(argument, function(text4)
+			argument3.Text = text4
+		end, function(argument5, argument6, argument7)
+			argument5(argument5, argument6)
+			callback4(argument7, not argument5, 8)
 
-			if arg5 then
+			if argument5 then
 				task.delay(0.6, function()
 					TweenService:Create(Frame, tweenInfo4, { BackgroundTransparency = 1 }):Play()
-					TweenService:Create(arg5, tweenInfo4, { Scale = arg5.Scale * 0.92 }):Play()
+					TweenService:Create(argument5, tweenInfo4, { Scale = argument5.Scale * 0.92 }):Play()
 					task.wait(0.32)
-					flag3 = false
+					condition3 = false
 					if ScreenGui.Parent then
 						ScreenGui:Destroy()
 						return
@@ -2605,109 +2598,109 @@ do
 
 	local list = {}
 
-	local function fn20()
-		for _, v6 in ipairs(list) do
-			pcall(v6)
+	local function callback20()
+		for _, value6 in ipairs(list) do
+			pcall(value6)
 		end
 	end
 
-	n16 = bit32.bxor(n16, 286808282)
+	number21 = bit32.bxor(number21, 286808282)
 
-	local function fn21(arg, arg2, arg3)
-		local n17 = 178670851
-		local n18 = 1134156754
-		local flag6 = arg.premiumOnly == true
-		local color2, n19
+	local function callback21(argument, argument2, argument3)
+		local number22 = 178670851
+		local number23 = 1134156754
+		local condition6 = argument.premiumOnly == true
+		local color2, number24
 
-		if flag6 then
+		if condition6 then
 			color2 = Color3.new(1, 0.84705883264541626, 0.36078432202339172)
 
 			if color then
-				n19 = 0.35
+				number24 = 0.35
 			else
-				color2 = tbl4.Border
+				color2 = data4.Border
 
-				if flag6 then
-					n19 = 0.35
+				if condition6 then
+					number24 = 0.35
 				else
-					n19 = 0.2
+					number24 = 0.2
 				end
 			end
 		else
-			color2 = tbl4.Border
+			color2 = data4.Border
 
-			if flag6 then
-				n19 = 0.35
+			if condition6 then
+				number24 = 0.35
 			else
-				n19 = 0.2
+				number24 = 0.2
 			end
 		end
 
-		local n20 = n17 // n18
+		local number25 = number22 // number23
 
-		local TextButton9 = fn2("TextButton", {
+		local TextButton9 = callback2("TextButton", {
 			Parent = ScrollingFrame,
-			LayoutOrder = arg3,
+			LayoutOrder = argument3,
 			Size = UDim2.new(1, 0, 0, 58),
-			BackgroundColor3 = tbl4.Control,
+			BackgroundColor3 = data4.Control,
 			BackgroundTransparency = backgroundTransparency,
 			BorderSizePixel = 0,
 			AutoButtonColor = false,
 			Text = "",
-		}, { getUICorner(10), fn3(color2, 1, n19) })
+		}, { getUICorner(10), callback3(color2, 1, number24) })
 
-		fn2("ImageLabel", {
+		callback2("ImageLabel", {
 			Parent = TextButton9,
 			Size = UDim2.new(0, 34, 0, 34),
 			Position = UDim2.new(0, 12, 0.5, -17),
-			BackgroundColor3 = tbl4.Panel,
+			BackgroundColor3 = data4.Panel,
 			BackgroundTransparency = 0.3,
-			Image = arg.icon,
+			Image = argument.icon,
 		}, { getUICorner(8) })
 
-		local tbl9 = {
+		local data9 = {
 			Parent = TextButton9,
 			Size = UDim2.new(1, -205, 0, 16),
 			Position = UDim2.new(0, 56, 0, 10),
 			BackgroundTransparency = 1,
 			Font = Enum.Font.GothamBold,
-			Text = arg.name,
+			Text = argument.name,
 		}
 
 		local color3
 
-		if flag6 then
+		if condition6 then
 			color3 = Color3.new(1, 0.84705883264541626, 0.36078432202339172)
 
 			if not color then
-				color3 = tbl4.Text
+				color3 = data4.Text
 			end
 		else
-			color3 = tbl4.Text
+			color3 = data4.Text
 		end
 
-		tbl9.TextColor3 = color3
-		tbl9.TextSize = 13
-		tbl9.TextXAlignment = Enum.TextXAlignment.Left
-		tbl9.TextTruncate = Enum.TextTruncate.AtEnd
-		fn2("TextLabel", tbl9)
-		local n21 = 447444964
+		data9.TextColor3 = color3
+		data9.TextSize = 13
+		data9.TextXAlignment = Enum.TextXAlignment.Left
+		data9.TextTruncate = Enum.TextTruncate.AtEnd
+		callback2("TextLabel", data9)
+		local number26 = 447444964
 
-		local tbl10 = {
+		local data10 = {
 			Parent = TextButton9,
 			Size = UDim2.new(1, -205, 0, 14),
 			Position = UDim2.new(0, 56, 0, 28),
 			BackgroundTransparency = 1,
 			Font = Enum.Font.Gotham,
-			Text = arg.desc,
+			Text = argument.desc,
 		}
 
-		tbl10.TextColor3 = tbl4.SubText
-		tbl10.TextSize = 11
-		tbl10.TextXAlignment = Enum.TextXAlignment.Left
-		tbl10.TextTruncate = Enum.TextTruncate.AtEnd
-		fn2("TextLabel", tbl10)
-		local flag7 = arg.delayed == true
+		data10.TextColor3 = data4.SubText
+		data10.TextSize = 11
+		data10.TextXAlignment = Enum.TextXAlignment.Left
+		data10.TextTruncate = Enum.TextTruncate.AtEnd
+		callback2("TextLabel", data10)
+		local condition7 = argument.delayed == true
 
 		local textLabel2 = {
 			Parent = TextButton9,
@@ -2718,53 +2711,53 @@ do
 			Font = Enum.Font.GothamBold,
 		}
 
-		local text
+		local text4
 
-		if flag7 then
-			text = "● DELAYED"
-		elseif flag6 then
-			text = "★ PREMIUM ONLY"
+		if condition7 then
+			text4 = "● DELAYED"
+		elseif condition6 then
+			text4 = "★ PREMIUM ONLY"
 		else
-			text = ""
+			text4 = ""
 		end
 
-		textLabel2.Text = text
+		textLabel2.Text = text4
 		local danger
 
-		if flag7 then
-			danger = tbl4.Danger
+		if condition7 then
+			danger = data4.Danger
 
 			if not danger then
-				if flag6 then
+				if condition6 then
 					danger = Color3.new(1, 0.84705883264541626, 0.36078432202339172)
 
 					if not color then
-						danger = tbl4.SubText
-						n20 = n20 - n21 - 3847522332
+						danger = data4.SubText
+						number25 = number25 - number26 - 3847522332
 					end
 				else
-					danger = tbl4.SubText
-					n20 = n20 - n21 - 3847522332
+					danger = data4.SubText
+					number25 = number25 - number26 - 3847522332
 				end
 			end
-		elseif flag6 then
+		elseif condition6 then
 			danger = Color3.new(1, 0.84705883264541626, 0.36078432202339172)
 
 			if not color then
-				danger = tbl4.SubText
-				n20 = n20 - n21 - 3847522332
+				danger = data4.SubText
+				number25 = number25 - number26 - 3847522332
 			end
 		else
-			danger = tbl4.SubText
-			n20 = n20 - n21 - 3847522332
+			danger = data4.SubText
+			number25 = number25 - number26 - 3847522332
 		end
 
 		textLabel2.TextColor3 = danger
 		textLabel2.TextSize = 9.5
 		textLabel2.TextXAlignment = Enum.TextXAlignment.Right
-		local TextLabel6 = fn2("TextLabel", textLabel2)
+		local TextLabel6 = callback2("TextLabel", textLabel2)
 
-		local ImageLabel2 = fn2("ImageLabel", {
+		local ImageLabel2 = callback2("ImageLabel", {
 			Parent = TextButton9,
 			AnchorPoint = Vector2.new(1, 0.5),
 			Position = UDim2.new(1, -12, 0.5, 0),
@@ -2772,12 +2765,12 @@ do
 			BackgroundTransparency = 1,
 			Visible = false,
 			Image = "rbxasset://textures/loading/robloxTiltRight.png",
-			ImageColor3 = tbl4.Accent,
+			ImageColor3 = data4.Accent,
 		})
 
-		local n22 = n20 + n21
+		local number27 = number25 + number26
 
-		local TextLabel7 = fn2("TextLabel", {
+		local TextLabel7 = callback2("TextLabel", {
 			Parent = TextButton9,
 			AnchorPoint = Vector2.new(1, 0.5),
 			Position = UDim2.new(1, -12, 0.5, 0),
@@ -2785,115 +2778,115 @@ do
 			BackgroundTransparency = 1,
 			Font = Enum.Font.GothamBold,
 			Text = ">",
-			TextColor3 = tbl4.SubText,
+			TextColor3 = data4.SubText,
 			TextSize = 12,
 		})
 
-		local border = tbl4.Border
+		local border = data4.Border
 
-		local TextButton10 = fn2("TextButton", {
+		local TextButton10 = callback2("TextButton", {
 			Parent = TextButton9,
 			AnchorPoint = Vector2.new(1, 0),
 			Position = UDim2.new(1, -26, 0, 31),
 			Size = UDim2.new(0, 116, 0, 20),
-			BackgroundColor3 = tbl4.Control,
+			BackgroundColor3 = data4.Control,
 			BackgroundTransparency = backgroundTransparency,
 			BorderSizePixel = 0,
 			AutoButtonColor = false,
 			Text = "⚡ Auto Execute: OFF",
 			Font = Enum.Font.Gotham,
 			TextSize = 8.5,
-			TextColor3 = tbl4.SubText,
-		}, { getUICorner(6), fn3(border, 1) })
+			TextColor3 = data4.SubText,
+		}, { getUICorner(6), callback3(border, 1) })
 
-		local function fn22()
+		local function callback22()
 			local jsonFile = readJsonFile()
 
-			if jsonFile and jsonFile.gameName == arg.name then
-				local n23 = math.max(1, math.ceil((jsonFile.expiresAt - os.time()) / 3600))
-				TextButton10.BackgroundColor3 = tbl4.AccentDim
+			if jsonFile and jsonFile.gameName == argument.name then
+				local number28 = math.max(1, math.ceil((jsonFile.expiresAt - os.time()) / 3600))
+				TextButton10.BackgroundColor3 = data4.AccentDim
 				TextButton10.BackgroundTransparency = 0.1
-				TextButton10.Text = ("⚡ Auto Execute: %dh"):format(n23)
+				TextButton10.Text = ("⚡ Auto Execute: %dh"):format(number28)
 				TextButton10.TextColor3 = Color3.new(1, 1, 1)
 				local TextButton11 = TextButton10
 				local font = Enum.Font
 				TextButton11.Font = font.GothamBold
-				TextButton10.UIStroke.Color = tbl4.Accent
+				TextButton10.UIStroke.Color = data4.Accent
 				TextButton10.UIStroke.Transparency = 0.2
 				return
 			end
 
-			TextButton10.BackgroundColor3 = tbl4.Control
+			TextButton10.BackgroundColor3 = data4.Control
 			TextButton10.BackgroundTransparency = backgroundTransparency
 			TextButton10.Text = "⚡ Auto Execute: OFF"
-			TextButton10.TextColor3 = tbl4.SubText
+			TextButton10.TextColor3 = data4.SubText
 			TextButton10.Font = Enum.Font.Gotham
-			TextButton10.UIStroke.Color = tbl4.Border
+			TextButton10.UIStroke.Color = data4.Border
 			TextButton10.UIStroke.Transparency = 0.5
 		end
 
-		fn22()
-		table.insert(list, fn22)
-		local n23 = 0
+		callback22()
+		table.insert(list, callback22)
+		local number28 = 0
 		local mouseButton1Down = TextButton10.MouseButton1Down
 		local mouseButton1Down2 = mouseButton1Down
 		local connect = mouseButton1Down.Connect
-		local n24 = n22 + 84920319
+		local number29 = number27 + 84920319
 
-		local function fn23()
+		local function callback23()
 			local now = os.clock()
 
-			if n24 ~= 30169862 then
-				n24 = bit32.bxor(n24, 591718409)
+			if number29 ~= 30169862 then
+				number29 = bit32.bxor(number29, 591718409)
 			end
 
-			n23 = now + 0.4
+			number28 = now + 0.4
 		end
 
-		n24 = 30169862
-		connect(mouseButton1Down2, fn23)
+		number29 = 30169862
+		connect(mouseButton1Down2, callback23)
 
 		TextButton10.MouseButton1Click:Connect(function()
 			local jsonFile = readJsonFile()
 
-			if jsonFile and jsonFile.gameName == arg.name then
+			if jsonFile and jsonFile.gameName == argument.name then
 				saveFile(nil)
-				fn20()
-				fn4("Auto Execute turned OFF for " .. arg.name)
+				callback20()
+				callback4("Auto Execute turned OFF for " .. argument.name)
 				return
 			end
 
-			if arg.delayed then
-				fn4("This script is currently under maintenance / repair.", true, 5)
+			if argument.delayed then
+				callback4("This script is currently under maintenance / repair.", true, 5)
 				return
 			end
 
-			if flag6 and not fn17() then
-				fn4("Khusus member Premium / Gold / Lifetime!", true, 5)
+			if condition6 and not callback17() then
+				callback4("Khusus member Premium / Gold / Lifetime!", true, 5)
 				return
 			end
 			pcall(setclipboard, "loadstring(game:HttpGet(\"https://raw.githubusercontent.com/JualNasiRendang/loader/refs/heads/main/main.lua\"))()")
-			fn4(("[Auto Exec: 24h] %s aktif! Link dicopy ke clipboard."):format(arg.name))
+			callback4(("[Auto Exec: 24h] %s aktif! Link dicopy ke clipboard."):format(argument.name))
 		end)
 
-		local n25 = 179420946
+		local number30 = 179420946
 
-		local function fn24(arg4, arg5)
-			if TextButton9.Parent and fn16(arg, arg4, arg5) then
+		local function callback24(argument4, argument5)
+			if TextButton9.Parent and callback16(argument, argument4, argument5) then
 				local TextLabel8 = TextLabel6
-				local text2
+				local text5
 
-				if flag6 then
-					text2 = "CURRENT (PREMIUM)"
+				if condition6 then
+					text5 = "CURRENT (PREMIUM)"
 				else
-					text2 = "CURRENT GAME"
+					text5 = "CURRENT GAME"
 				end
 
-				TextLabel8.Text = text2
+				TextLabel8.Text = text5
 				local TextLabel9 = TextLabel6
-				local uiScale, TweenService2, create, uiStroke, allowedProps, color4, v6, n252
+				local uiScale, TweenService2, create, uiStroke, allowedProps, color4, value6, number31
 
-				if flag6 then
+				if condition6 then
 					local color5 = Color3.new(1, 0.84705883264541626, 0.36078432202339172)
 
 					if color then
@@ -2903,7 +2896,7 @@ do
 
 						if uiScale then
 							uiScale.Scale = 0.97
-							local tween = TweenService:Create(uiScale, flag6, { Scale = 1 })
+							local tween = TweenService:Create(uiScale, condition6, { Scale = 1 })
 							tween:Play()
 						end
 
@@ -2912,40 +2905,40 @@ do
 						uiStroke = TextButton9.UIStroke
 						allowedProps = {}
 
-						if flag6 then
+						if condition6 then
 							color4 = Color3.new(1, 0.84705883264541626, 0.36078432202339172)
 
 							if color then
 								allowedProps.Color = color4
 								allowedProps.Transparency = 0.1
-								v6 = create(TweenService2, uiStroke, n24, allowedProps)
-								n252 = n25
-								v6:Play()
+								value6 = create(TweenService2, uiStroke, number29, allowedProps)
+								number31 = number30
+								value6:Play()
 
 								while true do
 								end
 							end
 						end
 
-						color4 = tbl4.AccentDim
+						color4 = data4.AccentDim
 						allowedProps.Color = color4
 						allowedProps.Transparency = 0.1
-						v6 = create(TweenService2, uiStroke, n24, allowedProps)
-						n252 = n25
-						v6:Play()
+						value6 = create(TweenService2, uiStroke, number29, allowedProps)
+						number31 = number30
+						value6:Play()
 
 						while true do
 						end
 					end
 				end
 
-				TextLabel9.TextColor3 = tbl4.Accent
+				TextLabel9.TextColor3 = data4.Accent
 				TextButton9.LayoutOrder = -1
 				uiScale = TextButton9:FindFirstChildOfClass("UIScale")
 
 				if uiScale then
 					uiScale.Scale = 0.97
-					TweenService:Create(uiScale, flag6, { Scale = 1 }):Play()
+					TweenService:Create(uiScale, condition6, { Scale = 1 }):Play()
 				end
 
 				TweenService2 = TweenService
@@ -2953,109 +2946,110 @@ do
 				uiStroke = TextButton9.UIStroke
 				allowedProps = {}
 
-				if flag6 then
+				if condition6 then
 					color4 = Color3.new(1, 0.84705883264541626, 0.36078432202339172)
 
 					if color then
 						allowedProps.Color = color4
 						allowedProps.Transparency = 0.1
-						v6 = create(TweenService2, uiStroke, n24, allowedProps)
-						n252 = n25
-						v6:Play()
+						value6 = create(TweenService2, uiStroke, number29, allowedProps)
+						number31 = number30
+						value6:Play()
 
 						while true do
 						end
 					end
 				end
 
-				allowedProps.Color = tbl4.AccentDim
+				allowedProps.Color = data4.AccentDim
 				allowedProps.Transparency = 0.1
-				v6 = create(TweenService2, uiStroke, n24, allowedProps)
-				n252 = n25
-				v6:Play()
+				value6 = create(TweenService2, uiStroke, number29, allowedProps)
+				number31 = number30
+				value6:Play()
 
 				while true do
 				end
 			end
 		end
 
-		n25 = 377145784
-		fn15(fn24)
-		local UIScale2 = fn2("UIScale", { Parent = TextButton9 })
+		number30 = 377145784
+		callback15(callback24)
+		local UIScale2 = callback2("UIScale", { Parent = TextButton9 })
 		local mouseEnter = TextButton9.MouseEnter
 		local mouseEnter2 = mouseEnter
 		local connect2 = mouseEnter.Connect
-		local n26 = n22 - 4258339010
+		local number31 = number27 - 4258339010
 
-		local function fn25()
-			TweenService:Create(TextButton9, n24, { BackgroundTransparency = 0.05 }):Play()
+		local function callback25()
+			TweenService:Create(TextButton9, number29, { BackgroundTransparency = 0.05 }):Play()
 
-			if n26 + 220569372 == 279743517 then
-				n26 = bit32.bxor(n26, 3556695743)
+			if number31 + 220569372 == 279743517 then
+				number31 = bit32.bxor(number31, 3556695743)
 			end
 
-			TweenService:Create(UIScale2, n24, { Scale = 1.015 }):Play()
+			TweenService:Create(UIScale2, number29, { Scale = 1.015 }):Play()
 			local TweenService2 = TweenService
 			local create = TweenService.Create
-			local tbl11 = {}
+			local data11 = {}
 			local color4
 
-			if flag6 then
+			-- This Source Was Generated by discord.gg/c3xVMnUUBv
+			if condition6 then
 				color4 = Color3.new(1, 0.84705883264541626, 0.36078432202339172)
 
 				if not color then
-					color4 = tbl4.Accent
+					color4 = data4.Accent
 				end
 			else
-				color4 = tbl4.Accent
-				tbl11.TextColor3 = color4
-				local v6 = create(TweenService2, TextLabel7, n24, tbl11)
-				v6:Play()
+				color4 = data4.Accent
+				data11.TextColor3 = color4
+				local value6 = create(TweenService2, TextLabel7, number29, data11)
+				value6:Play()
 				return
 			end
 
-			tbl11.TextColor3 = color4
-			create(TweenService2, TextLabel7, n24, tbl11):Play()
+			data11.TextColor3 = color4
+			create(TweenService2, TextLabel7, number29, data11):Play()
 		end
 
-		n26 = 352978003
-		connect2(mouseEnter2, fn25)
+		number31 = 352978003
+		connect2(mouseEnter2, callback25)
 		local mouseLeave = TextButton9.MouseLeave
 		local mouseLeave2 = mouseLeave
 		local connect3 = mouseLeave.Connect
-		local n27 = n22 - 339996067
+		local number32 = number27 - 339996067
 
-		local function fn26()
-			if bit32.bxor(n27, 283816386) ~= 462702415 then
-				n27 = bit32.bxor(n27, 3452637031)
+		local function callback26()
+			if bit32.bxor(number32, 283816386) ~= 462702415 then
+				number32 = bit32.bxor(number32, 3452637031)
 			end
 
-			TweenService:Create(TextButton9, n24, { BackgroundTransparency = backgroundTransparency }):Play()
-			TweenService:Create(UIScale2, n24, { Scale = 1 }):Play()
-			TweenService:Create(TextLabel7, n24, { TextColor3 = tbl4.SubText }):Play()
+			TweenService:Create(TextButton9, number29, { BackgroundTransparency = backgroundTransparency }):Play()
+			TweenService:Create(UIScale2, number29, { Scale = 1 }):Play()
+			TweenService:Create(TextLabel7, number29, { TextColor3 = data4.SubText }):Play()
 		end
 
-		n27 = 192870029
-		connect3(mouseLeave2, fn26)
+		number32 = 192870029
+		connect3(mouseLeave2, callback26)
 
 		TextButton9.MouseButton1Click:Connect(function()
-			if not (os.clock() < n23) then
-				if arg.delayed then
-					fn4("This script is currently under maintenance / repair.", true, 5)
+			if not (os.clock() < number28) then
+				if argument.delayed then
+					callback4("This script is currently under maintenance / repair.", true, 5)
 					return
 				end
 
-				if flag5 then
-					fn4("Another script is still loading.", true, 3)
+				if condition5 then
+					callback4("Another script is still loading.", true, 3)
 					return
 				end
 
-				if flag6 and not fn17() then
-					fn4("Evomon Gold V4 khusus member Premium / Gold / Lifetime!", true, 5)
+				if condition6 and not callback17() then
+					callback4("Evomon Gold V4 khusus member Premium / Gold / Lifetime!", true, 5)
 					return
 				end
 				TextLabel7.Visible = false
-				fn19(arg, TextButton9, TextLabel6, ImageLabel2)
+				callback19(argument, TextButton9, TextLabel6, ImageLabel2)
 				return
 			end
 		end)
@@ -3063,10 +3057,10 @@ do
 		TextButton9.BackgroundTransparency = 1
 		UIScale2.Scale = 0.96
 
-		task.delay(0.04 * arg3, function()
+		task.delay(0.04 * argument3, function()
 			if TextButton9.Parent then
-				TweenService:Create(TextButton9, n24, { BackgroundTransparency = backgroundTransparency }):Play()
-				TweenService:Create(UIScale2, flag6, { Scale = 1 }):Play()
+				TweenService:Create(TextButton9, number29, { BackgroundTransparency = backgroundTransparency }):Play()
+				TweenService:Create(UIScale2, condition6, { Scale = 1 }):Play()
 				return
 			end
 		end)
@@ -3074,34 +3068,34 @@ do
 		return TextButton9
 	end
 
-	for i, v6 in ipairs(tbl2) do
-		fn21(v6, n14 + 269302503, i)
+	for i, value6 in ipairs(data2) do
+		callback21(value6, number17 + 269302503, i)
 	end
 
-	local function fn22()
-		local n17 = 2961806243
-		local n18 = 1208887655
+	local function callback22()
+		local number22 = 2961806243
+		local number23 = 1208887655
 		if not Frame.Visible then
 			return
 		end
 		local list2 = {}
 
-		for _, item in ipairs(tbl.items) do
-			local v6 = fn(item)
+		for _, entry in ipairs(data.items) do
+			local value6 = callback(entry)
 
-			if v6 then
-				list2[#list2 + 1] = v6
+			if value6 then
+				list2[#list2 + 1] = value6
 			end
 		end
 
 		if #list2 == 0 then
-			print(("[NRL] whats-new: no catalog match for {%s} — check the names in WHATS_NEW.items"):format(table.concat(tbl.items, ", ")))
+			print(("[NRL] whats-new: no catalog match for {%s} — check the names in WHATS_NEW.items"):format(table.concat(data.items, ", ")))
 			return
 		end
-		local n19 = 46 + #list2 * 34 + 8 + 32
-		local n20 = n19 + 14
+		local number24 = 46 + #list2 * 34 + 8 + 32
+		local number25 = number24 + 14
 
-		local TextButton9 = fn2("TextButton", {
+		local TextButton9 = callback2("TextButton", {
 			Name = "WhatsNew",
 			Parent = Frame,
 			Size = UDim2.new(1, 0, 1, 0),
@@ -3113,42 +3107,42 @@ do
 			ZIndex = 50,
 		})
 
-		local tbl9 = {
+		local data9 = {
 			Parent = TextButton9,
 			Active = true,
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			Position = UDim2.new(0.5, 0, 0.5, 0),
-			Size = UDim2.fromOffset(300, n20),
-			BackgroundColor3 = tbl4.Window,
+			Size = UDim2.fromOffset(300, number25),
+			BackgroundColor3 = data4.Window,
 			BackgroundTransparency = 0.02,
 			BorderSizePixel = 0,
 		}
 
-		tbl9.ZIndex = 51
-		local accent = tbl4.Accent
-		local Frame10 = tbl9("Frame", tbl9, { getUICorner(12), fn3(accent, 1, 0.25) })
-		local accent2 = tbl4.Accent
+		data9.ZIndex = 51
+		local accent = data4.Accent
+		local Frame10 = data9("Frame", data9, { getUICorner(12), callback3(accent, 1, 0.25) })
+		local accent2 = data4.Accent
 
-		local tbl10 = {
-			Parent = tbl9("Frame", {
+		local data10 = {
+			Parent = data9("Frame", {
 				Parent = Frame10,
 				Position = UDim2.new(0, 14, 0, 14),
 				Size = UDim2.new(0, 42, 0, 16),
-				BackgroundColor3 = tbl4.AccentDim,
+				BackgroundColor3 = data4.AccentDim,
 				BorderSizePixel = 0,
 				ZIndex = 52,
-			}, { getUICorner(8), fn3(accent2, 1, 0.3) }),
+			}, { getUICorner(8), callback3(accent2, 1, 0.3) }),
 			Size = UDim2.new(1, 0, 1, 0),
 			BackgroundTransparency = 1,
 		}
 
 		local font = Enum.Font
-		tbl10.Font = font.GothamBold
-		tbl10.Text = "NEW"
-		tbl10.TextSize = 9
-		tbl10.TextColor3 = tbl4.Accent
-		tbl10.ZIndex = 53
-		tbl9("TextLabel", tbl10)
+		data10.Font = font.GothamBold
+		data10.Text = "NEW"
+		data10.TextSize = 9
+		data10.TextColor3 = data4.Accent
+		data10.ZIndex = 53
+		data9("TextLabel", data10)
 
 		local textLabel2 = {
 			Parent = Frame10,
@@ -3158,29 +3152,29 @@ do
 			Font = Enum.Font.GothamBold,
 		}
 
-		local text
+		local text4
 
 		if not (#list2 > 1) then
-			text = "New Game Added"
+			text4 = "New Game Added"
 		else
-			text = "New Games Added"
+			text4 = "New Games Added"
 		end
 
-		textLabel2.Text = text
-		textLabel2.TextColor3 = tbl4.Text
+		textLabel2.Text = text4
+		textLabel2.TextColor3 = data4.Text
 		textLabel2.TextSize = 14
 		textLabel2.ZIndex = 52
 		textLabel2.TextXAlignment = Enum.TextXAlignment.Left
 		local textTruncate = Enum.TextTruncate
 		textLabel2.TextTruncate = textTruncate.AtEnd
-		tbl9("TextLabel", textLabel2)
+		data9("TextLabel", textLabel2)
 
-		local tbl11 = {
+		local data11 = {
 			Parent = Frame10,
 			AnchorPoint = Vector2.new(1, 0),
 			Position = UDim2.new(1, -12, 0, 12),
 			Size = UDim2.new(0, 20, 0, 20),
-			BackgroundColor3 = tbl4.Control,
+			BackgroundColor3 = data4.Control,
 			BackgroundTransparency = backgroundTransparency,
 			AutoButtonColor = false,
 			Text = "x",
@@ -3188,69 +3182,69 @@ do
 			TextSize = 12,
 		}
 
-		local tbl42 = tbl4
-		tbl11.TextColor3 = tbl42.SubText
-		tbl11.ZIndex = 52
-		local TextButton10 = tbl9("TextButton", tbl11, { getUICorner(6) })
-		fn5(TextButton10, tbl4.Danger)
-		local tween, fn23
+		local data12 = data4
+		data11.TextColor3 = data12.SubText
+		data11.ZIndex = 52
+		local TextButton10 = data9("TextButton", data11, { getUICorner(6) })
+		callback5(TextButton10, data4.Danger)
+		local tween, callback23
 
-		for i, v6 in ipairs(list2) do
-			local Frame11 = tbl9("Frame", {
+		for i, value6 in ipairs(list2) do
+			local Frame11 = data9("Frame", {
 				Parent = Frame10,
 				Position = UDim2.fromOffset(14, 46 + (i - 1) * 34),
 				Size = UDim2.new(1, -28, 0, 30),
-				BackgroundColor3 = tbl4.Control,
+				BackgroundColor3 = data4.Control,
 				BackgroundTransparency = 1,
 				BorderSizePixel = 0,
 				ZIndex = 52,
 			}, { getUICorner(8) })
 
-			tbl9("ImageLabel", {
+			data9("ImageLabel", {
 				Parent = Frame11,
 				Size = UDim2.new(0, 24, 0, 24),
 				Position = UDim2.new(0, 8, 0.5, -12),
-				BackgroundColor3 = tbl4.Panel,
+				BackgroundColor3 = data4.Panel,
 				BackgroundTransparency = 0.3,
-				Image = v6.icon,
+				Image = value6.icon,
 				ZIndex = 53,
 			}, { getUICorner(6) })
 
-			tbl9("TextLabel", {
+			data9("TextLabel", {
 				Parent = Frame11,
 				Position = UDim2.new(0, 40, 0, 3),
 				Size = UDim2.new(1, -50, 0, 13),
 				BackgroundTransparency = 1,
 				Font = Enum.Font.GothamBold,
-				Text = v6.name,
-				TextColor3 = tbl4.Text,
+				Text = value6.name,
+				TextColor3 = data4.Text,
 				TextSize = 12,
 				ZIndex = 53,
 				TextXAlignment = Enum.TextXAlignment.Left,
 				TextTruncate = Enum.TextTruncate.AtEnd,
 			})
 
-			tbl9("TextLabel", {
+			data9("TextLabel", {
 				Parent = Frame11,
 				Position = UDim2.new(0, 40, 0, 16),
 				Size = UDim2.new(1, -50, 0, 12),
 				BackgroundTransparency = 1,
 				Font = Enum.Font.Gotham,
-				Text = v6.desc,
-				TextColor3 = tbl4.SubText,
+				Text = value6.desc,
+				TextColor3 = data4.SubText,
 				TextSize = 10,
 				ZIndex = 53,
 				TextXAlignment = Enum.TextXAlignment.Left,
 				TextTruncate = Enum.TextTruncate.AtEnd,
 			})
 
-			local n21 = n17 + 234209498
+			local number26 = number22 + 234209498
 
-			fn23 = function()
+			callback23 = function()
 				local Frame12 = Frame11
 
-				if n21 + 41790811 ~= 398591706 then
-					n21 = bit32.bxor(n21, 2983333227)
+				if number26 + 41790811 ~= 398591706 then
+					number26 = bit32.bxor(number26, 2983333227)
 				end
 
 				if Frame12.Parent then
@@ -3259,16 +3253,16 @@ do
 				end
 			end
 
-			n21 = 356800895
-			task.delay(0.05 * i, fn23)
+			number26 = 356800895
+			task.delay(0.05 * i, callback23)
 		end
 
-		local tbl12 = {
+		local data13 = {
 			Parent = Frame10,
 			AnchorPoint = Vector2.new(0.5, 1),
 			Position = UDim2.new(0.5, 0, 1, -14),
 			Size = UDim2.new(1, -28, 0, 32),
-			BackgroundColor3 = tbl4.AccentDim,
+			BackgroundColor3 = data4.AccentDim,
 			BackgroundTransparency = 0.1,
 			BorderSizePixel = 0,
 			AutoButtonColor = false,
@@ -3277,105 +3271,105 @@ do
 			TextSize = 12,
 		}
 
-		local tbl43 = tbl4
+		local data14 = data4
 
-		if n17 + 62417772 ~= 62417772 then
-			local n172 = bit32.band(bit32.rshift(n17, 29), 7)
-			local n173 = bit32.band(bit32.bxor(n17, n172), 536870911)
-			local v6 = bit32.bxor(208594413, n173)
-			local v62 = bit32.lshift(v6, 13)
-			local v63 = bit32.band(bit32.bxor(v6, v62), 536870911)
-			local v632 = bit32.rshift(v63, 13)
-			local v633 = bit32.bxor(v63, v632)
-			local v6332 = bit32.lshift(v633, 14)
-			local v6333 = bit32.band(bit32.bxor(v633, v6332), 536870911)
-			local v63332 = bit32.lshift(v6333, 13)
-			local v63333 = bit32.band(bit32.bxor(v6333, v63332), 536870911)
-			local v633332 = bit32.rshift(v63333, 13)
-			local v633333 = bit32.bxor(v63333, v633332)
-			local v6333332 = bit32.lshift(v633333, 14)
-			local v6333333 = bit32.band(bit32.bxor(v633333, v6333332), 536870911)
-			local v63333332 = bit32.lshift(v6333333, 13)
-			local v63333333 = bit32.band(bit32.bxor(v6333333, v63333332), 536870911)
-			local v633333332 = bit32.rshift(v63333333, 13)
-			local v633333333 = bit32.bxor(v63333333, v633333332)
-			local v6333333332 = bit32.lshift(v633333333, 14)
-			local v6333333333 = bit32.band(bit32.bxor(v633333333, v6333333332), 536870911)
-			local v63333333332 = bit32.lshift(v6333333333, 13)
-			local v63333333333 = bit32.band(bit32.bxor(v6333333333, v63333333332), 536870911)
-			local v633333333332 = bit32.rshift(v63333333333, 13)
-			local v633333333333 = bit32.bxor(v63333333333, v633333333332)
-			local v6333333333332 = bit32.lshift(v633333333333, 14)
-			local v6333333333333 = bit32.band(bit32.bxor(v633333333333, v6333333333332), 536870911)
-			local v63333333333332 = table.pack(bit32.lshift(v6333333333333, 13))
+		if number22 + 62417772 ~= 62417772 then
+			local number26 = bit32.band(bit32.rshift(number22, 29), 7)
+			local number27 = bit32.band(bit32.bxor(number22, number26), 536870911)
+			local value6 = bit32.bxor(208594413, number27)
+			local value7 = bit32.lshift(value6, 13)
+			local value8 = bit32.band(bit32.bxor(value6, value7), 536870911)
+			local value9 = bit32.rshift(value8, 13)
+			local value10 = bit32.bxor(value8, value9)
+			local value11 = bit32.lshift(value10, 14)
+			local value12 = bit32.band(bit32.bxor(value10, value11), 536870911)
+			local value13 = bit32.lshift(value12, 13)
+			local value14 = bit32.band(bit32.bxor(value12, value13), 536870911)
+			local value15 = bit32.rshift(value14, 13)
+			local value16 = bit32.bxor(value14, value15)
+			local value17 = bit32.lshift(value16, 14)
+			local value18 = bit32.band(bit32.bxor(value16, value17), 536870911)
+			local value19 = bit32.lshift(value18, 13)
+			local value20 = bit32.band(bit32.bxor(value18, value19), 536870911)
+			local value21 = bit32.rshift(value20, 13)
+			local value22 = bit32.bxor(value20, value21)
+			local value23 = bit32.lshift(value22, 14)
+			local value24 = bit32.band(bit32.bxor(value22, value23), 536870911)
+			local value25 = bit32.lshift(value24, 13)
+			local value26 = bit32.band(bit32.bxor(value24, value25), 536870911)
+			local value27 = bit32.rshift(value26, 13)
+			local value28 = bit32.bxor(value26, value27)
+			local value29 = bit32.lshift(value28, 14)
+			local value30 = bit32.band(bit32.bxor(value28, value29), 536870911)
+			local value31 = table.pack(bit32.lshift(value30, 13))
 		end
 
-		tbl12.TextColor3 = tbl43.Text
-		tbl12.ZIndex = 52
-		local accent3 = tbl4.Accent
-		local TextButton11 = tbl9("TextButton", tbl12, { getUICorner(9), fn3(accent3, 1, 0.2) })
+		data13.TextColor3 = data14.Text
+		data13.ZIndex = 52
+		local accent3 = data4.Accent
+		local TextButton11 = data9("TextButton", data13, { getUICorner(9), callback3(accent3, 1, 0.2) })
 
-		if n18 + 358666450 == 358666456 then
-			fn11(TextButton11)
-			local UIScale2 = tbl9("UIScale", { Parent = Frame10, Scale = 0.9 })
+		if number23 + 358666450 == 358666456 then
+			callback11(TextButton11)
+			local UIScale2 = data9("UIScale", { Parent = Frame10, Scale = 0.9 })
 
-			if n18 ~= 70470227 then
+			if number23 ~= 70470227 then
 				Frame10.BackgroundTransparency = 1
 				Frame10.UIStroke.Transparency = 1
-				TweenService:Create(TextButton9, fn23, { BackgroundTransparency = 0.45 }):Play()
-				tween = TweenService:Create(UIScale2, tbl11, { Scale = 1 })
+				TweenService:Create(TextButton9, callback23, { BackgroundTransparency = 0.45 }):Play()
+				tween = TweenService:Create(UIScale2, data11, { Scale = 1 })
 				tween:Play()
-				TweenService:Create(Frame10, fn23, { BackgroundTransparency = 0.02 }):Play()
-				TweenService:Create(Frame10.UIStroke, fn23, { Transparency = 0.25 }):Play()
-				local flag6 = false
+				TweenService:Create(Frame10, callback23, { BackgroundTransparency = 0.02 }):Play()
+				TweenService:Create(Frame10.UIStroke, callback23, { Transparency = 0.25 }):Play()
+				local condition6 = false
 
-				local function fn24()
-					if flag6 then
+				local function callback24()
+					if condition6 then
 						return
 					end
-					flag6 = true
-					TweenService:Create(TextButton9, fn23, { BackgroundTransparency = 1 }):Play()
-					TweenService:Create(UIScale2, fn23, { Scale = 0.92 }):Play()
-					TweenService:Create(Frame10, fn23, { BackgroundTransparency = 1 }):Play()
-					TweenService:Create(Frame10.UIStroke, fn23, { Transparency = 1 }):Play()
+					condition6 = true
+					TweenService:Create(TextButton9, callback23, { BackgroundTransparency = 1 }):Play()
+					TweenService:Create(UIScale2, callback23, { Scale = 0.92 }):Play()
+					TweenService:Create(Frame10, callback23, { BackgroundTransparency = 1 }):Play()
+					TweenService:Create(Frame10.UIStroke, callback23, { Transparency = 1 }):Play()
 
 					for _, descendant in ipairs(Frame10:GetDescendants()) do
 						local tween2
 
 						if descendant:IsA("TextLabel") then
-							tween2 = TweenService:Create(descendant, fn23, { TextTransparency = 1 })
+							tween2 = TweenService:Create(descendant, callback23, { TextTransparency = 1 })
 							tween2:Play()
 						elseif descendant:IsA("TextButton") then
-							tween2 = TweenService:Create(descendant, fn23, { TextTransparency = 1 })
+							tween2 = TweenService:Create(descendant, callback23, { TextTransparency = 1 })
 							tween2:Play()
 						end
 
 						local tween3
 
 						if descendant:IsA("Frame") then
-							tween3 = TweenService:Create(descendant, fn23, { BackgroundTransparency = 1 })
+							tween3 = TweenService:Create(descendant, callback23, { BackgroundTransparency = 1 })
 							tween3:Play()
 						elseif descendant:IsA("ImageLabel") then
-							tween3 = TweenService:Create(descendant, fn23, { BackgroundTransparency = 1 })
+							tween3 = TweenService:Create(descendant, callback23, { BackgroundTransparency = 1 })
 							tween3:Play()
 						end
 
 						if descendant:IsA("ImageLabel") then
-							TweenService:Create(descendant, fn23, { ImageTransparency = 1 }):Play()
+							TweenService:Create(descendant, callback23, { ImageTransparency = 1 }):Play()
 						end
 
 						if descendant:IsA("UIStroke") then
-							TweenService:Create(descendant, fn23, { Transparency = 1 }):Play()
+							TweenService:Create(descendant, callback23, { Transparency = 1 }):Play()
 						end
 					end
 
-					local n21 = 25351274
+					local number26 = 25351274
 
 					local function destroyAll()
 						local TextButton12 = TextButton9
 
-						if n21 == 18717777 then
-							n21 = bit32.bxor(n21, 3473670903)
+						if number26 == 18717777 then
+							number26 = bit32.bxor(number26, 3473670903)
 						end
 
 						if TextButton12.Parent then
@@ -3384,19 +3378,19 @@ do
 						end
 					end
 
-					n21 = 394384446
+					number26 = 394384446
 					task.delay(0.34, destroyAll)
 				end
 
-				TextButton11.MouseButton1Click:Connect(fn24)
-				TextButton10.MouseButton1Click:Connect(fn24)
+				TextButton11.MouseButton1Click:Connect(callback24)
+				TextButton10.MouseButton1Click:Connect(callback24)
 				return
 			end
 
-			local n182 = bit32.band(bit32.rshift(n18, 29), 7)
-			local n183 = bit32.band(bit32.bxor(n18, n182), 536870911)
-			local v6 = bit32.bxor(120745192, n183)
-			local v62 = table.pack(bit32.lshift(v6, 13))
+			local number26 = bit32.band(bit32.rshift(number23, 29), 7)
+			local number27 = bit32.band(bit32.bxor(number23, number26), 536870911)
+			local value6 = bit32.bxor(120745192, number27)
+			local value7 = table.pack(bit32.lshift(value6, 13))
 
 			while true do
 			end
@@ -3406,29 +3400,29 @@ do
 		end
 	end
 
-	print(("[NRL] whats-new: showing %d item(s)"):format(#tbl.items))
-	local n17 = 20
+	print(("[NRL] whats-new: showing %d item(s)"):format(#data.items))
+	local number22 = 20
 
-	local function fn23(arg)
+	local function callback23(argument)
 		local jsonFile = readJsonFile()
 
 		if jsonFile and jsonFile.gameName then
-			local v6 = fn(jsonFile.gameName)
+			local value6 = callback(jsonFile.gameName)
 
-			if v6 then
+			if value6 then
 				math.max(1, math.ceil((jsonFile.expiresAt - os.time()) / 3600))
-				local n18 = 204307130
+				local number23 = 204307130
 
-				local function fn24()
+				local function callback24()
 					local now = os.clock()
 
 					while true do
-						if fn16(v6, str2, str3) then
-							if v6.premiumOnly and not fn17() then
+						if callback16(value6, text2, text3) then
+							if value6.premiumOnly and not callback17() then
 								saveFile(nil)
 								Frame.Visible = true
-								fn4("Auto Execute dibatalkan: " .. v6.name .. " khusus member Premium / Gold / Lifetime!", true, 6)
-								arg()
+								callback4("Auto Execute dibatalkan: " .. value6.name .. " khusus member Premium / Gold / Lifetime!", true, 6)
+								argument()
 								return
 							end
 
@@ -3439,24 +3433,24 @@ do
 							end
 
 							Frame.Visible = false
-							local tbl9 = {}
-							if n18 == 98192377 then
+							local data9 = {}
+							if number23 == 98192377 then
 								continue
 							end
-							tbl9.Parent = ScreenGui
-							tbl9.Active = true
-							tbl9.AnchorPoint = Vector2.new(0.5, 0)
-							tbl9.Position = UDim2.new(0.5, 0, 0, 24)
-							tbl9.Size = UDim2.new(0, 360, 0, 62)
+							data9.Parent = ScreenGui
+							data9.Active = true
+							data9.AnchorPoint = Vector2.new(0.5, 0)
+							data9.Position = UDim2.new(0.5, 0, 0, 24)
+							data9.Size = UDim2.new(0, 360, 0, 62)
 
 							while true do
 							end
 						else
-							if flag4 then
+							if condition4 then
 								break
 							end
 
-							if not (n17 < os.clock() - now) then
+							if not (number22 < os.clock() - now) then
 								task.wait(0.1)
 								continue
 							end
@@ -3464,12 +3458,12 @@ do
 						end
 					end
 
-					print(("[NRL] auto-exec: %s tidak cocok dengan place=%q universe=%q"):format(v6.name, str2, str3))
-					arg()
+					print(("[NRL] auto-exec: %s tidak cocok dengan place=%q universe=%q"):format(value6.name, text2, text3))
+					argument()
 				end
 
-				n18 = 191084961
-				task.spawn(fn24)
+				number23 = 191084961
+				task.spawn(callback24)
 				return true
 			end
 		end
@@ -3477,17 +3471,17 @@ do
 		return false
 	end
 
-	local function fn24()
-		task.delay(0.35, fn22)
+	local function callback24()
+		task.delay(0.35, callback22)
 	end
 
-	if not fn23(fn24) then
-		fn24()
+	if not callback23(callback24) then
+		callback24()
 	end
 end
 
 local function destroyAll()
-	flag3 = false
+	condition3 = false
 	TweenService:Create(Frame, tweenInfo4, { BackgroundTransparency = 1 }):Play()
 	TweenService:Create(Frame.UIStroke, tweenInfo4, { Transparency = 1 }):Play()
 	TweenService:Create(UIScale, tweenInfo4, { Scale = UIScale.Scale * 0.9 }):Play()
@@ -3509,5 +3503,5 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
 	end
 end)
 
-fn4("Nasi Rendang loader ready. Pick a game.")
+callback4("Nasi Rendang loader ready. Pick a game.")
 print("Deobf By Zed")

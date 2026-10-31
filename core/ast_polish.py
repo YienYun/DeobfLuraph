@@ -819,10 +819,97 @@ def _collapse_single_packs(text):
         return text
     return _apply_edits(btext, edits).decode("utf-8", "surrogateescape")
 
+def _merge_local_decls(text):
+    """`local x` immediately followed by `x = expr` is one statement: fold the
+    first assignment into the declaration. Only adjacent pairs are touched, so
+    nothing is evaluated earlier than it was."""
+    try:
+        root = _parse_ast(text)
+    except Exception:
+        return text
+    btext = text.encode("utf-8")
+    starts = _line_starts(btext)
+    edits = []
+
+    def rng(node):
+        return _loc_bytes(node["location"], starts)
+
+    def visit_block(blk):
+        body = blk.get("body") or []
+        for i, st in enumerate(body[:-1]):
+            if st.get("type") != "AstStatLocal":
+                continue
+            vars_ = st.get("vars") or []
+            vals = st.get("values") or []
+            if len(vars_) != 1 or len(vals) > 1:
+                continue
+            if vals and vals[0].get("type") != "AstExprConstantNil":
+                continue
+            nxt = body[i + 1]
+            if nxt.get("type") != "AstStatAssign":
+                continue
+            avars = nxt.get("vars") or []
+            avals = nxt.get("values") or []
+            if len(avars) != 1 or len(avals) != 1:
+                continue
+            if avars[0].get("type") != "AstExprLocal":
+                continue
+            if avars[0]["local"]["location"] != vars_[0]["location"]:
+                continue
+            value = avals[0]
+            if value.get("type") == "AstExprFunction":
+                continue
+            vs, ve = rng(value)
+            name_s, name_e = rng(vars_[0])
+            ds, de = rng(st)
+            as0, ae0 = rng(nxt)
+            as0, ae0 = _expand_full_line_delete(btext, as0, ae0)
+            # keep the indentation of the declaration line
+            line_start = btext.rfind(b"\n", 0, ds) + 1
+            indent = btext[line_start:ds]
+            new_decl = indent + b"local " + btext[name_s:name_e] + b" = " + btext[vs:ve]
+            edits.append((ds, de, new_decl))
+            edits.append((as0, ae0, b""))
+        for st in body:
+            if isinstance(st, dict):
+                for k, v in st.items():
+                    if k == "body" and isinstance(v, dict) and v.get("type") == "AstStatBlock":
+                        visit_block(v)
+                    elif isinstance(v, dict):
+                        _walk_blocks(v)
+                    elif isinstance(v, list):
+                        for item in v:
+                            if isinstance(item, dict):
+                                _walk_blocks(item)
+
+    def _walk_blocks(node):
+        if not isinstance(node, dict):
+            return
+        if node.get("type") == "AstStatBlock":
+            visit_block(node)
+            return
+        for v in node.values():
+            if isinstance(v, dict):
+                _walk_blocks(v)
+            elif isinstance(v, list):
+                for item in v:
+                    if isinstance(item, dict):
+                        _walk_blocks(item)
+
+    _walk_blocks(root)
+    if not edits:
+        return text
+    return _apply_edits(btext, edits).decode("utf-8", "surrogateescape")
+
+
 def polish_ast(text):
     text = _strip_unused_params_and_dead_locals(text)
     text = _unwrap_top_level_iife(text)
     text = _sugar_local_functions(text)
+    try:
+        text = _merge_local_decls(text)
+    except Exception as ex:                        # never lose a working output
+        print("[!] local merge pass failed: %s" % ex, file=sys.stderr)
     try:
         text = _collapse_single_packs(text)
     except Exception as ex:                        # never lose a working output

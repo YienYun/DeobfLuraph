@@ -49,6 +49,27 @@ GLOBAL_CALLS = {"tick": "now", "time": "now", "os.clock": "now", "os.time": "now
 GLOBAL_REFS = {"game": "gameRef", "workspace": "workspaceRef", "_G": "genv",
                "request": "httpRequest", "http_request": "httpRequest"}
 
+# House style: a generated name is always a full word. The inference engine
+# still works with its short internal keys, but the identifier that reaches the
+# output is spelled out -- `n` becomes `number`, `tbl` becomes `data`, and so on.
+# Numbers are only appended when two names would collide.
+BRAND = {
+    "v": "value",
+    "val": "value",
+    "tbl": "data",
+    "str": "text",
+    "n": "number",
+    "num": "number",
+    "flag": "condition",
+    "fn": "callback",
+    "result": "response",
+    "obj": "object",
+    "kind": "valueType",
+    "arg": "argument",
+    "item": "entry",
+    "ctx": "context",
+}
+
 WEAK = {"str", "n", "tbl", "flag", "fn", "value", "key", "kind", "num", "obj", "result"}
 WEAK_1CHAR = WEAK | {"v", "arg"}
 
@@ -1491,11 +1512,12 @@ class Namer:
                     taken.setdefault("_", []).append(info)
                     continue
                 base = "unused"
+            base = BRAND.get(base, base)
             if not base or not re.match(r"^[A-Za-z_]\w*$", base) or base in reserved:
-                alt = {"i": "idx", "j": "idx", "k": "key", "v": "val"}.get(base)
-                base = alt if (alt and alt not in reserved) else ((base or "v") + "_")
+                alt = {"i": "idx", "j": "idx", "k": "key", "v": "value"}.get(base)
+                base = alt if (alt and alt not in reserved) else ((base or "value") + "_")
                 if not re.match(r"^[A-Za-z_]\w*$", base) or base in reserved:
-                    base = "val" if "val" not in reserved else "item_"
+                    base = "value" if "value" not in reserved else "entry_"
             n = 1
             while True:
                 cand = base if n == 1 else "%s%d" % (base, n)

@@ -1556,8 +1556,15 @@ class Renderer:
             ind = getattr(self, "cur_ind", "")
             return "\n".join([e.lines[0]] + [ind + l for l in e.lines[1:]])
         if isinstance(e, GenIterE):
-            yld = "a, b, c, d, e, g, h, i, j, k" if getattr(e, "flat", False) else "{a, b, c, d, e, g, h, i, j, k}"
-            return "(function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for a, b, c, d, e, g, h, i, j, k in f, s, var do coroutine.yield(true, %s) end end); co(); return co end)(%s)" % (yld, ", ".join(self.expr(a) for a in e.args))
+            # Every yielded value needs its own slot, but only the first two are
+            # ever named in the script: spell the rest out instead of `a..k`.
+            slots = ["key", "item", "third", "fourth", "fifth", "sixth", "seventh",
+                     "eighth", "ninth", "tenth"]
+            yld = ", ".join(slots) if getattr(e, "flat", False) else "{%s}" % ", ".join(slots)
+            return ("(function(iteratorFn, state, control) local co = coroutine.wrap(function() "
+                    "coroutine.yield(); for %s in iteratorFn, state, control do "
+                    "coroutine.yield(true, %s) end end); co(); return co end)(%s)"
+                    % (", ".join(slots), yld, ", ".join(self.expr(a) for a in e.args)))
         if isinstance(e, TempVal):
             return "t%s[%d]" % (e.t, e.i)
         if isinstance(e, TailCount):

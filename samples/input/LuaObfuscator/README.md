@@ -66,6 +66,33 @@ The remaining work is a relooper over that listing (natural loops, post-dominato
 if/else, `break`/`continue` for loop exits), and the oracle to prove it is the
 sandbox behaviour comparison the two source presets already pass.
 
+## Engine comparison (`node tools/compare_engines.js`)
+
+`Upload/LuaObfuscator-Deobfuscator-main.zip` (LeakD) is vendored unchanged at
+`core/obfuscators/luaobfuscator_leakd/` so both engines can be measured on the
+same files. Measured 2026-11-01, output of `tools/compare_engines.js`:
+
+```
+sample                engine     mode        parses  runs  prints  behaviour   note
+ChaoticEvil.lua       this repo  vm-ir       yes     yes   0/2     nothing     decoded, not lifted (2,958 instr)
+ChaoticEvil.lua       LeakD      output      no      no    0/2     -           labels + goto, does not parse
+ChaoticGood.lua       this repo  devirtualized yes    yes   2/2     identical   runs, same lines as the original
+ChaoticGood.lua       LeakD      output      no      no    0/2     -           v147true (syntax error)
+ObfucateGood.lua      this repo  devirtualized yes    yes   2/2     identical
+ObfucateGood.lua      LeakD      refused     no      no    0/2     -           not_luaobfuscator
+Obfucate_Old2.lua     this repo  machine     no      no    0/2     -           fully decoded, labels not structured
+Obfucate_Old2.lua     LeakD      refused     no      no    0/2     -           incomplete_evil:missing_xor_bootstrap
+ObfuscateV1.lua       this repo  vm-ir       yes     yes   0/2     nothing     decoded, not lifted
+ObfuscateV1.lua       LeakD      refused     no      no    0/2     -           incomplete_evil:missing_xor_bootstrap
+Obfuscate_old.lua     this repo  vm-ir       yes     yes   0/2     nothing     decoded, not lifted
+Obfuscate_old.lua     LeakD      refused     no      no    0/2     -           incomplete_evil:missing_xor_bootstrap
+```
+
+"identical" means every line the file prints (watermark excluded) matches the
+original, in order, when both are run in the sandbox. LeakD's Chaotic Good
+output also returns a register it never assigns (`return v57, v59, v58`), so
+even after the syntax error is fixed the signature would be wrong.
+
 ## Why the other VM presets stop at decoded IR
 
 The site's VM presets keep the script as bytecode for an interpreter that is

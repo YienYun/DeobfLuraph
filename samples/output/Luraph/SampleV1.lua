@@ -1,8 +1,4 @@
-local n
-n = 140455651
 loadstring(game:HttpGet("https://raw.githubusercontent.com/scriptpastebin/Blox-Fruits/refs/heads/main/core.luau"))()
-local n2
-n2 = 737086916
 local v
 
 v = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloxfruitsnokey/Redz-Hub/refs/heads/main/Gavz/ui.luau"))():MakeWindow({
@@ -12,8 +8,6 @@ v = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloxfruitsnokey/R
 })
 
 v:NewMinimizer({ KeyCode = Enum.KeyCode.LeftControl }):CreateMobileMinimizer({ Image = "rbxassetid://108267040590174", BackgroundColor3 = Color3.fromRGB(25, 25, 25) })
-local n3
-n3 = 608388172
 local tbl
 
 tbl = {
@@ -34,33 +28,24 @@ tbl = {
 }
 
 tbl.Info:AddSection("Status Server")
-local n4
-n4 = 604487395
-local n5
 
 do
 	local timeZoneParagraph = tbl.Info:AddParagraph("Time Zone", "")
-	n5 = 95612715
 	local gameTimeParagraph = tbl.Info:AddParagraph("Game Time", "")
-	local n6 = nil
-	local n7 = nil
 
 	UpdateOS = function()
-		n6 = 962841611
-		n7 = 409903086
 		local dateStr = os.date("*t")
-		local n8 = dateStr.hour % 24
-		local flag = n8 < 12
+		local n = dateStr.hour % 24
+		local flag = n < 12
 
 		if flag then
 			flag = "AM"
 		end
 
-		local str = string.format("%02i:%02i:%02i %s", (n8 - 1) % 12 + 1, dateStr.min, dateStr.sec, flag or "PM")
+		local str = string.format("%02i:%02i:%02i %s", (n - 1) % 12 + 1, dateStr.min, dateStr.sec, flag or "PM")
 		local str2 = string.format("%02d/%02d/%04d", dateStr.day, dateStr.month, dateStr.year)
 		local LocalizationService = game:GetService("LocalizationService")
 		local localPlayer = game:GetService("Players").LocalPlayer
-		local n9 = nil
 		local countryRegionCode
 
 		if getgenv().countryRegionCode then
@@ -69,7 +54,6 @@ do
 			local v2, v3, ok
 
 			ok, countryRegionCode = pcall(function()
-				n9 = 1028702138
 				return LocalizationService:GetCountryRegionForPlayerAsync(localPlayer)
 			end)
 
@@ -90,12 +74,9 @@ do
 		end
 	end)
 
-	local n8 = nil
-
 	UpdateGameTime = function()
-		n8 = 440584001
-		local n9 = math.floor(workspace.DistributedGameTime + 0.5)
-		gameTimeParagraph:SetDesc(math.floor(n9 / 3600) % 24 .. " Hour (h) " .. math.floor(n9 / 60) % 60 .. " Minute (m) " .. math.floor(n9 / 1) % 60 .. " Second (s)")
+		local n = math.floor(workspace.DistributedGameTime + 0.5)
+		gameTimeParagraph:SetDesc(math.floor(n / 3600) % 24 .. " Hour (h) " .. math.floor(n / 60) % 60 .. " Minute (m) " .. math.floor(n / 1) % 60 .. " Second (s)")
 	end
 end
 
@@ -111,11 +92,9 @@ do
 	local str = ""
 
 	spawn(function()
-		local n6 = nil
 		local v2, v3, v4
 
 		pcall(function()
-			n6 = 74506917
 			wait(1)
 			local status = game.Workspace._WorldOrigin.Locations:FindFirstChild("Mirage Island") ~= nil
 
@@ -165,13 +144,8 @@ end
 do
 	local kitsuneIslandParagraph = tbl.Info:AddParagraph("Kitsune Island", "Status: ")
 	local str = ""
-	local n6 = nil
-	local n7 = nil
 
 	spawn(function()
-		n6 = 922698428
-		n7 = 811384937
-
 		if task.wait(1) then
 			repeat
 				pcall(function()
@@ -222,13 +196,8 @@ end
 do
 	local frozenDimensionParagraph = tbl.Info:AddParagraph("Frozen Dimension", "Status: ")
 	local str = ""
-	local n6 = nil
-	local n7 = nil
 
 	spawn(function()
-		n6 = 353759688
-		n7 = 895705536
-
 		while wait(1) do
 			pcall(function()
 				local frozenDimension = game.Workspace._WorldOrigin.Locations:FindFirstChild("Frozen Dimension")
@@ -250,13 +219,8 @@ end
 
 do
 	local cakePrinceParagraph = tbl.Info:AddParagraph("Cake Prince", "")
-	local n6 = nil
-	local n7 = nil
 
 	spawn(function()
-		n6 = 168425429
-		n7 = 894392514
-
 		if wait(1) then
 			local exitTo = nil
 			local v2, result, str
@@ -355,18 +319,11 @@ end
 do
 	local ripIndraParagraph = tbl.Info:AddParagraph("Rip Indra", "Status: ")
 	local str = ""
-	local n6 = nil
-	local n7 = nil
 
 	spawn(function()
-		n6 = 523463407
-		n7 = 34355649
-		local n8 = nil
-
 		if wait(1) then
 			repeat
 				pcall(function()
-					n8 = 724514294
 					local status
 
 					if game:GetService("ReplicatedStorage"):FindFirstChild("rip_indra True Form") then
@@ -396,12 +353,10 @@ do
 	local str = ""
 
 	spawn(function()
-		local n6 = nil
 		local v2, v3, v4, v5
 
 		while wait(1) do
 			pcall(function()
-				n6 = 670121425
 				local status
 
 				if game:GetService("ReplicatedStorage"):FindFirstChild("Dough King") then
@@ -492,14 +447,9 @@ end)
 local legendarySwordParagraph = tbl.Info:AddParagraph("Legendary Sword", "Status: ")
 
 spawn(function()
-	local n6 = nil
-	local n7 = nil
-
 	if wait(5) then
 		repeat
 			pcall(function()
-				n6 = 462927818
-				n7 = 986923015
 				local parts = {}
 				local v2, v3, v4 = ipairs({ "Shizu", "Saishi", "Oroshi" })
 				local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v5, v32, v42, v52, v6, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v5, v32, v42, v52, v6, v7, v8, v9, v10) end end); co(); return co end)(v3, v4)
@@ -570,13 +520,8 @@ end)
 
 do
 	local boneParagraph = tbl.Info:AddParagraph("Bone", "")
-	local n6 = nil
-	local n7 = nil
 
 	spawn(function()
-		n6 = 556369206
-		n7 = 878715967
-
 		if wait(1) then
 			repeat
 				pcall(function()
@@ -609,16 +554,11 @@ tbl.Main:AddDropdown({
 tbl.Main:AddSection("Farming")
 
 do
-	local n6 = nil
-	local n7 = nil
-
 	FarmLevel = tbl.Main:AddToggle({
 		Name = "Auto Farm Level",
 		Description = "",
 		Default = false,
 		Callback = function(level)
-			n6 = 611492828
-			n7 = 508730066
 			_G.Level = level
 
 			if not level then
@@ -666,31 +606,22 @@ Ecto = tbl.Main:AddToggle({
 })
 
 tbl.Main:AddSection("Chest")
-local n6 = nil
 
 ChestTW = tbl.Main:AddToggle({
 	Name = "Auto Farm Chest",
 	Description = "",
 	Default = false,
 	Callback = function(autoFarmChest)
-		n6 = 60850868
 		_G.AutoFarmChest = autoFarmChest
 	end,
 })
-
-local n7 = nil
 
 ChestBP = tbl.Main:AddToggle({
 	Name = "Auto Chest Bypass",
 	Description = "",
 	Default = false,
 	Callback = function(autoChestBP)
-		n7 = 329955782
 		_G.AutoChestBP = autoChestBP
-		local n8 = nil
-		local n9 = nil
-		local n10 = nil
-		local n11 = nil
 
 		if autoChestBP then
 			local localPlayer = game:GetService("Players").LocalPlayer
@@ -708,7 +639,6 @@ ChestBP = tbl.Main:AddToggle({
 			end
 
 			local function fn2()
-				n9 = 895961618
 				local iter_z_1
 
 				if flag2 then
@@ -818,8 +748,6 @@ ChestBP = tbl.Main:AddToggle({
 			end
 
 			local function fn3()
-				n10 = 1043683424
-				n11 = 156228063
 				if flag then
 					return
 				end
@@ -881,7 +809,6 @@ ChestBP = tbl.Main:AddToggle({
 			end
 
 			localPlayer.CharacterAdded:Connect(function()
-				n8 = 947579463
 				fn()
 				task.wait(0.5)
 
@@ -907,16 +834,11 @@ StopI = tbl.Main:AddToggle({
 tbl.Main:AddSection("Collect Berry")
 
 do
-	local n8 = nil
-	local n9 = nil
-
 	Berry = tbl.Main:AddToggle({
 		Name = "Auto Farm Berry",
 		Description = "",
 		Default = false,
 		Callback = function(autoBerry)
-			n8 = 753131424
-			n9 = 207512129
 			_G.AutoBerry = autoBerry
 		end,
 	})
@@ -934,9 +856,6 @@ BerryH = tbl.Main:AddToggle({
 tbl.Main:AddSection("Farm Mob")
 
 do
-	local n8 = nil
-	local n9 = nil
-
 	if World1 then
 		tbl.Main:AddDropdown({
 			Name = "Select Mob",
@@ -968,8 +887,6 @@ do
 				"Galley Captain",
 			},
 			Callback = function(selectMob)
-				n8 = 807550778
-				n9 = 681975705
 				getgenv().SelectMob = selectMob
 			end,
 		})
@@ -977,9 +894,6 @@ do
 end
 
 do
-	local n8 = nil
-	local n9 = nil
-
 	if World2 then
 		tbl.Main:AddDropdown({
 			Name = "Select Mob",
@@ -1009,8 +923,6 @@ do
 				"Water Fighter",
 			},
 			Callback = function(selectMob)
-				n8 = 585691261
-				n9 = 398263946
 				getgenv().SelectMob = selectMob
 			end,
 		})
@@ -1112,14 +1024,11 @@ tbl.Main:AddSection("Farm Elite Hunter")
 local elitesProcessParagraph = tbl.Main:AddParagraph("Elites Process", "")
 
 spawn(function()
-	local n8 = nil
-
 	if wait(Sec) then
 		local v2, v3, v4
 
 		repeat
 			pcall(function()
-				n8 = 447457440
 				elitesProcessParagraph:SetDesc("Elite Progress : " .. tostring(replicated.Remotes.CommF_:InvokeServer("EliteHunter", "Progress") or 0))
 			end)
 		until not wait(Sec)
@@ -2844,29 +2753,21 @@ spawn(function()
 end)
 
 do
-	local n8 = nil
-	local n9 = nil
-
 	EliteQ = tbl.Main:AddToggle({
 		Name = "Auto Farm Elite",
 		Description = "",
 		Default = false,
 		Callback = function(farmEliteHunt)
-			n8 = 835046712
-			n9 = 411755947
 			_G.FarmEliteHunt = farmEliteHunt
 		end,
 	})
 end
-
-local n8 = nil
 
 EliteH = tbl.Main:AddToggle({
 	Name = "Auto Farm Elite + Hop",
 	Description = "",
 	Default = false,
 	Callback = function(farmEliteH)
-		n8 = 165822274
 		_G.FarmEliteH = farmEliteH
 	end,
 })
@@ -2917,14 +2818,11 @@ Cake = tbl.Main:AddToggle({
 	end,
 })
 
-local n9 = nil
-
 CakeQ = tbl.Main:AddToggle({
 	Name = "Accept Quests",
 	Description = "",
 	Default = false,
 	Callback = function(acceptQuestC)
-		n9 = 893253937
 		_G.AcceptQuestC = acceptQuestC
 	end,
 })
@@ -2954,13 +2852,10 @@ tbl.Main:AddToggle({
 	end,
 })
 
-local n10 = nil
-
 tbl.Main:AddToggle({
 	Name = "Auto Farm Dough King + Hop",
 	Default = false,
 	Callback = function(autoHopDough)
-		n10 = 575117960
 		_G.AutoHop_Dough = autoHopDough
 	end,
 })
@@ -2969,12 +2864,9 @@ tbl.Main:AddSection("Farming Bone")
 local bonesParagraph = tbl.Main:AddParagraph("Bones", "")
 
 spawn(function()
-	local n11 = nil
-
 	if wait(1) then
 		repeat
 			pcall(function()
-				n11 = 527032599
 				local response = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Bones", "Check")
 				bonesParagraph:SetDesc("Bones : " .. tostring(response))
 			end)
@@ -2992,16 +2884,11 @@ tbl.Main:AddToggle({
 })
 
 do
-	local n11 = nil
-	local n12 = nil
-
 	BoneQ = tbl.Main:AddToggle({
 		Name = "Accept Quests",
 		Description = "",
 		Default = false,
 		Callback = function(acceptQuestB)
-			n11 = 1033257055
-			n12 = 506341273
 			_G.AcceptQuestB = acceptQuestB
 		end,
 	})
@@ -3016,14 +2903,11 @@ tbl.Main:AddToggle({
 	end,
 })
 
-local n11 = nil
-
 RanBone = tbl.Main:AddToggle({
 	Name = "Auto Random Bones",
 	Description = "",
 	Default = false,
 	Callback = function(autoRandomBone)
-		n11 = 753361169
 		_G.Auto_Random_Bone = autoRandomBone
 	end,
 })
@@ -3050,17 +2934,9 @@ tbl.Main:AddSection("Tyrant of the Skies")
 
 do
 	local bossSpawnParagraph = tbl.Main:AddParagraph("Boss Spawn", "")
-	local n12 = nil
 
 	spawn(function()
-		n12 = 360075839
-		local n13 = nil
-		local n14 = nil
-
 		pcall(function()
-			n13 = 525892065
-			n14 = 1061946163
-
 			if wait(1) then
 				local exitTo2, enemies
 
@@ -3169,13 +3045,8 @@ end
 
 do
 	local checkStatusEyesParagraph = tbl.Main:AddParagraph("Check Status Eyes", "")
-	local n12 = nil
-	local n13 = nil
 
 	task.spawn(function()
-		n12 = 684401847
-		n13 = 488885059
-
 		if task.wait(1) then
 			local exitTo = nil
 			local result, result2
@@ -3259,16 +3130,11 @@ do
 end
 
 do
-	local n12 = nil
-	local n13 = nil
-
 	FarmTyrant = tbl.Main:AddToggle({
 		Name = "Auto Farm Boss TOTS",
 		Description = "",
 		Default = false,
 		Callback = function(farmTyrant)
-			n12 = 117038148
-			n13 = 998549409
 			_G.FarmTyrant = farmTyrant
 		end,
 	})
@@ -3284,14 +3150,12 @@ FarmPhaBinh = tbl.Main:AddToggle({
 })
 
 tbl.Main:AddSection("Farm Material")
-local n12 = nil
 
 Test = tbl.Main:AddDropdown({
 	Name = "Choose Material",
 	Description = "",
 	Options = MaterialList,
 	Callback = function(selectMaterial)
-		n12 = 300003701
 		getgenv().SelectMaterial = selectMaterial
 	end,
 })
@@ -3308,16 +3172,11 @@ Toggle = tbl.Main:AddToggle({
 tbl.Main:AddSection("Farm Boss")
 
 do
-	local n13 = nil
-	local n14 = nil
-
 	BossDropdown = tbl.Main:AddDropdown({
 		Name = "Select Boss",
 		Description = "",
 		Options = BossList,
 		Callback = function(findBoss)
-			n13 = 143412392
-			n14 = 408768452
 			_G.FindBoss = findBoss
 		end,
 	})
@@ -3333,28 +3192,20 @@ FarmBoss = tbl.Main:AddToggle({
 })
 
 do
-	local n13 = nil
-	local n14 = nil
-
 	BossQ = tbl.Main:AddToggle({
 		Name = "Accept Quests",
 		Description = "",
 		Default = true,
 		Callback = function(acceptQuestBoss)
-			n13 = 617275046
-			n14 = 893811601
 			_G.AcceptQuestBoss = acceptQuestBoss
 		end,
 	})
 end
 
-local n13 = nil
-
 FarmAllBoss = tbl.Main:AddToggle({
 	Name = "Auto Farm All Boss",
 	Default = false,
 	Callback = function(autoFarmAllBoss)
-		n13 = 589905519
 		_G.AutoFarmAllBoss = autoFarmAllBoss
 	end,
 })
@@ -3362,26 +3213,18 @@ FarmAllBoss = tbl.Main:AddToggle({
 tbl.Main:AddSection("Farming Mastery")
 
 do
-	local n14 = nil
-	local n15 = nil
-
 	tbl.Main:AddDropdown({
 		Name = "Choose Island",
 		Description = "",
 		Options = { "Cake", "Bone" },
 		Default = Bone,
 		Callback = function(arg)
-			n14 = 48651533
-			n15 = 711763559
 			SelectIsland = arg
 		end,
 	})
 end
 
 do
-	local n14 = nil
-	local n15 = nil
-
 	tbl.Main:AddSlider({
 		Title = "NPC Health % Switch to Weapon",
 		Description = "Switches to mastery weapon moves when NPC HP drops below this percent",
@@ -3389,17 +3232,12 @@ do
 		Max = 95,
 		Default = 70,
 		Callback = function(masteryHealthPct)
-			n14 = 913565413
-			n15 = 114794156
 			_G.MasteryHealthPct = masteryHealthPct
 		end,
 	})
 end
 
 do
-	local n14 = nil
-	local n15 = nil
-
 	tbl.Main:AddDropdown({
 		Name = "Select Skills to Use",
 		Description = "Select which skills to spam (locked skills are auto-skipped)",
@@ -3407,8 +3245,6 @@ do
 		Default = { "Z", "X", "C", "V", "F" },
 		MultiSelect = true,
 		Callback = function(selectedMasterySkills)
-			n14 = 642997887
-			n15 = 697086408
 			_G.SelectedMasterySkills = selectedMasterySkills
 		end,
 	})
@@ -3449,27 +3285,16 @@ do
 	local statusParagraph = tbl.Main:AddParagraph("Status", "Status : Idle")
 
 	SetMagnetStatus = function(status)
-		local n14 = nil
-		local n15 = nil
-
 		if statusParagraph and statusParagraph.SetDesc then
 			local v2, v3
 
 			pcall(function()
-				n14 = 671250623
-				n15 = 311781512
 				statusParagraph:SetDesc("Status : " .. status)
 			end)
 		end
 	end
 
-	local n14 = nil
-	local n15 = nil
-
 	task.spawn(function()
-		n14 = 832487746
-		n15 = 475031797
-
 		if task.wait(1) then
 			repeat
 				pcall(function()
@@ -3503,28 +3328,28 @@ do
 						end
 					end
 
-					local str, str2, n16, str3, n17
+					local str, str2, n, str3, n2
 
 					if exitTo == 1 then
 						str = "🔴"
 
 						if flag then
 							str2 = "🟢"
-							n16 = (10 - min) * 60 - sec
+							n = (10 - min) * 60 - sec
 
-							if n16 < 0 then
-								n16 = 0
+							if n < 0 then
+								n = 0
 							end
 
-							str3 = string.format("%s ACTIVE - Time Left: %02d:%02d", str2, math.floor(n16 / 60), n16 % 60)
+							str3 = string.format("%s ACTIVE - Time Left: %02d:%02d", str2, math.floor(n / 60), n % 60)
 						else
-							n17 = (60 - min) * 60 - sec
+							n2 = (60 - min) * 60 - sec
 
-							if n17 <= 0 then
-								n17 = 0
+							if n2 <= 0 then
+								n2 = 0
 							end
 
-							str3 = string.format("%s INACTIVE - Next Event: %02d:%02d", str, math.floor(n17 / 60), n17 % 60)
+							str3 = string.format("%s INACTIVE - Next Event: %02d:%02d", str, math.floor(n2 / 60), n2 % 60)
 						end
 					else
 						local attribute = v5:GetAttribute("MagnetEnemy")
@@ -3566,31 +3391,31 @@ do
 
 							if flag then
 								str2 = "🟢"
-								n16 = (10 - min) * 60 - sec
+								n = (10 - min) * 60 - sec
 
-								if n16 < 0 then
-									n16 = 0
+								if n < 0 then
+									n = 0
 								end
 
-								str3 = string.format("%s ACTIVE - Time Left: %02d:%02d", str2, math.floor(n16 / 60), n16 % 60)
+								str3 = string.format("%s ACTIVE - Time Left: %02d:%02d", str2, math.floor(n / 60), n % 60)
 							else
-								n17 = (60 - min) * 60 - sec
+								n2 = (60 - min) * 60 - sec
 
-								if n17 <= 0 then
-									n17 = 0
+								if n2 <= 0 then
+									n2 = 0
 								end
 
-								str3 = string.format("%s INACTIVE - Next Event: %02d:%02d", str, math.floor(n17 / 60), n17 % 60)
+								str3 = string.format("%s INACTIVE - Next Event: %02d:%02d", str, math.floor(n2 / 60), n2 % 60)
 							end
 						else
 							local str4 = "🟢"
-							local n18 = (10 - min) * 60 - sec
+							local n3 = (10 - min) * 60 - sec
 
-							if n18 < 0 then
-								n18 = 0
+							if n3 < 0 then
+								n3 = 0
 							end
 
-							str3 = string.format("%s ACTIVE - Time Left: %02d:%02d (✅ Enemies Found)", str4, math.floor(n18 / 60), n18 % 60)
+							str3 = string.format("%s ACTIVE - Time Left: %02d:%02d (✅ Enemies Found)", str4, math.floor(n3 / 60), n3 % 60)
 						end
 					end
 
@@ -3604,15 +3429,10 @@ end
 _G.MagnetEventSpawnIndex = _G.MagnetEventSpawnIndex or 1
 
 do
-	local n14 = nil
-	local n15 = nil
-
 	tbl.Main:AddToggle({
 		Name = "Auto Farm Magnet Token",
 		Default = false,
 		Callback = function(autoMagnetToken)
-			n14 = 52190155
-			n15 = 1039095665
 			_G.AutoMagnetToken = autoMagnetToken
 			local v2 = SetMagnetStatus
 			local autoMagnetToken2 = autoMagnetToken
@@ -3631,15 +3451,12 @@ do
 end
 
 tbl.Settings:AddSection("Settings / Configure")
-local n14 = nil
 
--- This Source Was Generated by discord.gg/c3xVMnUUBv
 Initialize = tbl.Settings:AddToggle({
 	Name = "Fast Attack",
 	Description = "",
 	Default = true,
 	Callback = function(seriality)
-		n14 = 667966716
 		_G.Seriality = seriality
 	end,
 })
@@ -3676,21 +3493,16 @@ tbl.Settings:AddSlider({
 	end,
 })
 
-local n15 = nil
-
 tbl.Settings:AddToggle({
 	Name = "Auto Set Spawn Point",
 	Default = false,
 	Callback = function(set)
-		n15 = 927703734
 		getgenv().Set = set
-		local n16 = nil
 
 		if set then
 			local v2, v3
 
 			pcall(function()
-				n16 = 869469746
 				game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("SetSpawnPoint")
 			end)
 		end
@@ -3714,35 +3526,28 @@ tbl.Settings:AddToggle({
 	end,
 })
 
-local n16 = nil
-
 RaceV3Aura = tbl.Settings:AddToggle({
 	Name = "Auto Turn on Race V3",
 	Description = "",
 	Default = false,
 	Flag = "AutoTurnonRaceV3",
 	Callback = function(raceClickAutov3)
-		n16 = 624714633
 		_G.RaceClickAutov3 = raceClickAutov3
 	end,
 })
 
 do
-	local n17 = nil
-	local n18 = nil
-
 	RaceV4Aura = tbl.Settings:AddToggle({
 		Name = "Auto Turn on Race V4",
 		Description = "",
 		Default = false,
 		Callback = function(raceClickAutov4)
-			n17 = 353210241
-			n18 = 283295182
 			_G.RaceClickAutov4 = raceClickAutov4
 		end,
 	})
 end
 
+-- This Source Was Generated by discord.gg/c3xVMnUUBv
 RandomAround = tbl.Settings:AddToggle({
 	Name = "Auto Turn on Spin  xyz",
 	Description = "",
@@ -3788,16 +3593,10 @@ DisblesNotify = tbl.Settings:AddToggle({
 	end,
 })
 
-local n17 = nil
-
 tbl.Settings:AddToggle({
 	Name = "Anti AFK",
 	Default = true,
 	Callback = function(arg)
-		n17 = 148937531
-		local n18 = nil
-		local n19 = nil
-
 		if arg then
 			local VirtualUser = game:GetService("VirtualUser")
 
@@ -3808,8 +3607,6 @@ tbl.Settings:AddToggle({
 			local v2, v3
 
 			game:GetService("Players").LocalPlayer.Idled:Connect(function()
-				n18 = 808230803
-				n19 = 186919014
 				local cFrame = workspace.CurrentCamera.CFrame
 				cFrame:Button2Down(Vector2.new(0, 0), cFrame)
 				wait(1)
@@ -3840,9 +3637,6 @@ tbl.Settings:AddToggle({
 tbl.Esp:AddSection("Stats Upgrade")
 
 do
-	local n18 = nil
-	local n19 = nil
-
 	StatusSelect = tbl.Esp:AddSlider({
 		Name = "Stats Value",
 		Description = "",
@@ -3851,8 +3645,6 @@ do
 		Max = 1000,
 		Rounding = 1,
 		Callback = function(arg)
-			n18 = 845700654
-			n19 = 50993120
 			pSats = arg
 		end,
 	})
@@ -3877,16 +3669,11 @@ StatsUpg = tbl.Esp:AddToggle({
 })
 
 do
-	local n18 = nil
-	local n19 = nil
-
 	StatsUpg = tbl.Esp:AddToggle({
 		Name = "Auto Gun",
 		Description = "",
 		Default = false,
 		Callback = function(autoGun)
-			n18 = 918607324
-			n19 = 124019470
 			_G.Auto_Gun = autoGun
 		end,
 	})
@@ -3911,7 +3698,6 @@ StatsUpg = tbl.Esp:AddToggle({
 })
 
 tbl.Fish:AddSection("Fishing")
-local n18 = nil
 
 tbl.Fish:AddDropdown({
 	Name = "Select Fishing Rod",
@@ -3919,12 +3705,9 @@ tbl.Fish:AddDropdown({
 	Options = { "Fishing Rod", "Gold Rod", "Shark Rod", "Shell Rod", "Treasure Rod" },
 	Default = "Fishing Rod",
 	Callback = function(selectedRod)
-		n18 = 24985459
 		_G.SelectedRod = selectedRod
 	end,
 })
-
-local n19 = nil
 
 BaitDropdown = tbl.Fish:AddDropdown({
 	Name = "Select Bait",
@@ -3940,17 +3723,12 @@ BaitDropdown = tbl.Fish:AddDropdown({
 	},
 	Default = "Basic Bait",
 	Callback = function(selectedBait)
-		n19 = 352254215
 		_G.SelectedBait = selectedBait
-		local n20 = nil
-		local n21 = nil
 
 		if _G.AutoBuyBait then
 			local v2, v3, v4
 
 			pcall(function()
-				n20 = 66490399
-				n21 = 376631805
 				Remotes.RFCraft:InvokeServer("Craft", _G.SelectedBait, {})
 			end)
 		end
@@ -3958,24 +3736,15 @@ BaitDropdown = tbl.Fish:AddDropdown({
 })
 
 do
-	local n20 = nil
-	local n21 = nil
-
 	BuyBaitToggle = tbl.Fish:AddToggle({
 		Name = "Auto Buy Bait",
 		Description = "",
 		Default = false,
 		Callback = function(autoBuyBait)
-			n20 = 387005600
-			n21 = 273934639
 			_G.AutoBuyBait = autoBuyBait
-			local n22 = nil
-			local n23 = nil
 
 			if autoBuyBait then
 				pcall(function()
-					n22 = 906862072
-					n23 = 190674523
 					Remotes.RFCraft:InvokeServer("Craft", _G.SelectedBait, {})
 				end)
 			end
@@ -3992,14 +3761,11 @@ FishingToggle = tbl.Fish:AddToggle({
 	end,
 })
 
-local n20 = nil
-
 FishingQ = tbl.Fish:AddToggle({
 	Name = "Auto Quest Fishing",
 	Description = "",
 	Default = false,
 	Callback = function(autoFishingQuest)
-		n20 = 203194267
 		_G.AutoFishingQuest = autoFishingQuest
 	end,
 })
@@ -4048,16 +3814,11 @@ SpamSkillZ = tbl.Fish:AddToggle({
 })
 
 do
-	local n21 = nil
-	local n22 = nil
-
 	TravelDress = tbl.Quests:AddToggle({
 		Name = "Auto Quest Sea 2",
 		Description = "",
 		Default = false,
 		Callback = function(travelDres)
-			n21 = 231652075
-			n22 = 1011797974
 			_G.TravelDres = travelDres
 		end,
 	})
@@ -4073,26 +3834,21 @@ Zou = tbl.Quests:AddToggle({
 })
 
 tbl.Quests:AddSection("Tushita + Yama")
-local n21 = nil
 
 Q = tbl.Quests:AddToggle({
 	Name = "Auto Tushita Sword",
 	Description = "",
 	Default = false,
 	Callback = function(autoTushita)
-		n21 = 587300030
 		_G.Auto_Tushita = autoTushita
 	end,
 })
-
-local n22 = nil
 
 Q = tbl.Quests:AddToggle({
 	Name = "Auto Yama Sword",
 	Description = "",
 	Default = false,
 	Callback = function(autoYama)
-		n22 = 194751762
 		_G.Auto_Yama = autoYama
 	end,
 })
@@ -4101,19 +3857,11 @@ tbl.Quests:AddSection("Skull Guitars / Misc")
 
 do
 	local skullGuitarQuestsParagraph = tbl.Quests:AddParagraph("Skull Guitar Quests", "")
-	local n23 = nil
-	local n24 = nil
 
 	spawn(function()
-		n23 = 381298345
-		n24 = 358770775
-		local n25 = nil
-
 		if wait(0.2) then
 			repeat
 				pcall(function()
-					n25 = 279256361
-
 					if Quest1 ~= true then
 						if Quest2 ~= true then
 							if Quest3 ~= true then
@@ -8505,16 +8253,11 @@ Q = tbl.Quests:AddToggle({
 })
 
 do
-	local n23 = nil
-	local n24 = nil
-
 	Q = tbl.Quests:AddToggle({
 		Name = "Auto Yama CDK",
 		Description = "",
 		Default = false,
 		Callback = function(cdkYm)
-			n23 = 143161327
-			n24 = 91789391
 			_G.CDK_YM = cdkYm
 		end,
 	})
@@ -8530,13 +8273,11 @@ Q = tbl.Quests:AddToggle({
 })
 
 tbl.Quests:AddSection("True Triple Katana Sword")
-local n23 = nil
 
 tbl.Quests:AddButton({
 	Name = "Buy Legendary Sword",
 	Description = "",
 	Callback = function()
-		n23 = 343759994
 		replicated.Remotes.CommF_:InvokeServer("LegendarySwordDealer", "1")
 		replicated.Remotes.CommF_:InvokeServer("LegendarySwordDealer", "2")
 		replicated.Remotes.CommF_:InvokeServer("LegendarySwordDealer", "3")
@@ -8563,16 +8304,11 @@ Q = tbl.Quests:AddToggle({
 tbl.Quests:AddSection("Pole / God Enal's")
 
 do
-	local n24 = nil
-	local n25 = nil
-
 	Q = tbl.Quests:AddToggle({
 		Name = "Auto Pole V1",
 		Description = "",
 		Default = false,
 		Callback = function(autoPole)
-			n24 = 518763879
-			n25 = 899140058
 			_G.AutoPole = autoPole
 		end,
 	})
@@ -8606,16 +8342,11 @@ Q = tbl.Quests:AddToggle({
 })
 
 do
-	local n24 = nil
-	local n25 = nil
-
 	Q = tbl.Quests:AddToggle({
 		Name = "Auto Cybrog",
 		Description = "",
 		Default = false,
 		Callback = function(autoColShad)
-			n24 = 572522368
-			n25 = 123936271
 			_G.AutoColShad = autoColShad
 		end,
 	})
@@ -8640,16 +8371,11 @@ Q = tbl.Quests:AddToggle({
 })
 
 do
-	local n24 = nil
-	local n25 = nil
-
 	Q = tbl.Quests:AddToggle({
 		Name = "Auto Warden Sword",
 		Description = "",
 		Default = false,
 		Callback = function(wardenBoss)
-			n24 = 854853774
-			n25 = 180317805
 			_G.WardenBoss = wardenBoss
 		end,
 	})
@@ -8664,14 +8390,11 @@ Q = tbl.Quests:AddToggle({
 	end,
 })
 
-local n24 = nil
-
 Q = tbl.Quests:AddToggle({
 	Name = "Auto Swan Coat",
 	Description = "",
 	Default = false,
 	Callback = function(swanCoat)
-		n24 = 210348888
 		_G.SwanCoat = swanCoat
 	end,
 })
@@ -8705,29 +8428,21 @@ Q = tbl.Quests:AddToggle({
 	end,
 })
 
-local n25 = nil
-
 Q = tbl.Quests:AddToggle({
 	Name = "Auto Long Sword",
 	Description = "",
 	Default = false,
 	Callback = function(longsWord)
-		n25 = 494440262
 		_G.LongsWord = longsWord
 	end,
 })
 
 do
-	local n26 = nil
-	local n27 = nil
-
 	Q = tbl.Quests:AddToggle({
 		Name = "Auto Black Spikey",
 		Description = "",
 		Default = false,
 		Callback = function(blackSpikey)
-			n26 = 494312787
-			n27 = 302639079
 			_G.BlackSpikey = blackSpikey
 		end,
 	})
@@ -8743,48 +8458,33 @@ Q = tbl.Quests:AddToggle({
 })
 
 do
-	local n26 = nil
-	local n27 = nil
-
 	Q = tbl.Quests:AddToggle({
 		Name = "Auto Midnight Blade",
 		Description = "",
 		Default = false,
 		Callback = function(autoEcBoss)
-			n26 = 243262003
-			n27 = 815179469
 			_G.AutoEcBoss = autoEcBoss
 		end,
 	})
 end
 
 do
-	local n26 = nil
-	local n27 = nil
-
 	Q = tbl.Quests:AddToggle({
 		Name = "Auto Darkbeard",
 		Description = "",
 		Default = false,
 		Callback = function(autoDefDarkCoat)
-			n26 = 339454072
-			n27 = 740611486
 			_G.Auto_Def_DarkCoat = autoDefDarkCoat
 		end,
 	})
 end
 
 do
-	local n26 = nil
-	local n27 = nil
-
 	Q = tbl.Quests:AddToggle({
 		Name = "Auto Unlocked DonSwan",
 		Description = "",
 		Default = false,
 		Callback = function(autoDonAcces)
-			n26 = 547968898
-			n27 = 221499729
 			_G.Auto_DonAcces = autoDonAcces
 		end,
 	})
@@ -8802,16 +8502,11 @@ Q = tbl.Quests:AddToggle({
 tbl.Quests:AddSection("Cavender + Twin Hooks + Bigmom")
 
 do
-	local n26 = nil
-	local n27 = nil
-
 	Q = tbl.Quests:AddToggle({
 		Name = "Auto Bigmom",
 		Description = "",
 		Default = false,
 		Callback = function(autoBigmom)
-			n26 = 775857844
-			n27 = 781029094
 			_G.AutoBigmom = autoBigmom
 		end,
 	})
@@ -8845,16 +8540,11 @@ Q = tbl.Quests:AddToggle({
 })
 
 do
-	local n26 = nil
-	local n27 = nil
-
 	Q = tbl.Quests:AddToggle({
 		Name = "Auto Lei Accessory",
 		Description = "",
 		Default = false,
 		Callback = function(autoKilo)
-			n26 = 467614460
-			n27 = 441689955
 			_G.AutoKilo = autoKilo
 		end,
 	})
@@ -8871,41 +8561,30 @@ Q = tbl.Quests:AddToggle({
 	end,
 })
 
-local n26 = nil
-
 tbl.Quests:AddButton({
 	Name = "Buy Buso Colors",
 	Description = "",
 	Callback = function()
-		n26 = 700989614
 		replicated.Remotes.CommF_:InvokeServer("ColorsDealer", "2")
 	end,
 })
 
 do
-	local n27 = nil
-	local n28 = nil
-
 	Q = tbl.Quests:AddToggle({
 		Name = "Auto Rainbow Colors",
 		Description = "",
 		Default = false,
 		Callback = function(autoRainbowHaki)
-			n27 = 1060425011
-			n28 = 960757799
 			_G.Auto_Rainbow_Haki = autoRainbowHaki
 		end,
 	})
 end
-
-local n27 = nil
 
 Q = tbl.Quests:AddToggle({
 	Name = "Accept Rainbow Quest Faster",
 	Description = "",
 	Default = false,
 	Callback = function(getQFast)
-		n27 = 883354946
 		_G.GetQFast = getQFast
 	end,
 })
@@ -8913,48 +8592,33 @@ Q = tbl.Quests:AddToggle({
 tbl.Quests:AddSection("Instinct / Observation")
 
 do
-	local n28 = nil
-	local n29 = nil
-
 	Q = tbl.Quests:AddToggle({
 		Name = "Auto Farm Observation",
 		Description = "",
 		Default = false,
 		Callback = function(obsFarm)
-			n28 = 718728732
-			n29 = 537539272
 			_G.obsFarm = obsFarm
 		end,
 	})
 end
 
 do
-	local n28 = nil
-	local n29 = nil
-
 	Q = tbl.Quests:AddToggle({
 		Name = "Auto Observation V2",
 		Description = "",
 		Default = false,
 		Callback = function(autoKenVTWO)
-			n28 = 383422226
-			n29 = 278487306
 			_G.AutoKenVTWO = autoKenVTWO
 		end,
 	})
 end
 
 do
-	local n28 = nil
-	local n29 = nil
-
 	Bartilo = tbl.Quests:AddToggle({
 		Name = "Auto Done Bartilo Quest",
 		Description = "",
 		Default = false,
 		Callback = function(bartiloQuest)
-			n28 = 651443665
-			n29 = 667672167
 			_G.Bartilo_Quest = bartiloQuest
 		end,
 	})
@@ -9016,14 +8680,11 @@ ElectricClaw = tbl.Quests:AddToggle({
 	end,
 })
 
-local n28 = nil
-
 DragonTalon = tbl.Quests:AddToggle({
 	Name = "Auto DragonTalon",
 	Description = "",
 	Default = false,
 	Callback = function(autoDragonTalon)
-		n28 = 173168126
 		_G.AutoDragonTalon = autoDragonTalon
 	end,
 })
@@ -9051,13 +8712,8 @@ tbl.Race:AddSection("Mystic Island / Full Moon")
 do
 	local fullMoonStatusParagraph = tbl.Race:AddParagraph("FullMoon Status", "")
 	local mirageIslandStatusParagraph = tbl.Race:AddParagraph("Mirage Island Status", "")
-	local n29 = nil
-	local n30 = nil
 
 	spawn(function()
-		n29 = 641748994
-		n30 = 920253683
-
 		if wait(0.2) then
 			local exitTo2, map
 
@@ -9255,13 +8911,7 @@ do
 		end
 	end)
 
-	local n31 = nil
-	local n32 = nil
-
 	spawn(function()
-		n31 = 533102104
-		n32 = 520867806
-
 		if wait(0.2) then
 			repeat
 				pcall(function()
@@ -9304,14 +8954,11 @@ do
 	end)
 end
 
-local n29 = nil
-
 tbl.Race:AddToggle({
 	Name = "Auto Find Mirage Island",
 	Description = "",
 	Default = false,
 	Callback = function(findMirage)
-		n29 = 85557401
 		_G.FindMirage = findMirage
 	end,
 })
@@ -9377,14 +9024,11 @@ tbl.Race:AddToggle({
 	end,
 })
 
-local n30 = nil
-
 tbl.Race:AddToggle({
 	Name = "Auto Tween Advanced Fruit Dealer",
 	Description = "",
 	Default = false,
 	Callback = function(addealer)
-		n30 = 873991738
 		_G.Addealer = addealer
 	end,
 })
@@ -9428,14 +9072,12 @@ tbl.Race:AddToggle({
 })
 
 tbl.Race:AddSection("Upgrade Races V2 And V3")
-local n31 = nil
 
 RaceMink = tbl.Race:AddToggle({
 	Name = "Auto Upgrade Mink",
 	Description = "",
 	Default = false,
 	Callback = function(autoMink)
-		n31 = 38028260
 		_G.Auto_Mink = autoMink
 	end,
 })
@@ -9471,11 +9113,7 @@ tbl.Race:AddSection("Trials Quest V4")
 local tiersV4StatusParagraph = tbl.Race:AddParagraph("Tiers V4 Status", "")
 
 spawn(function()
-	local n32 = nil
-
 	pcall(function()
-		n32 = 192101871
-
 		if wait(0.2) then
 			local tiersV4StatusParagraph2 = tiersV4StatusParagraph
 			local setDesc = tiersV4StatusParagraph.SetDesc
@@ -9505,28 +9143,20 @@ PullLv = tbl.Race:AddToggle({
 	end,
 })
 
-local n32 = nil
-
 Train = tbl.Race:AddToggle({
 	Name = "Auto Train V4",
 	Description = "",
 	Default = false,
 	Callback = function(acientOne)
-		n32 = 617148653
 		_G.AcientOne = acientOne
 	end,
 })
 
 do
-	local n33 = nil
-	local n34 = nil
-
 	tbl.Race:AddButton({
 		Name = "Teleport to Temple of Time",
 		Description = "",
 		Callback = function()
-			n33 = 390815948
-			n34 = 160105193
 			local localPlayer = game:GetService("Players").LocalPlayer
 			local character = localPlayer.Character
 
@@ -9594,13 +9224,9 @@ tbl.Race:AddButton({
 			character.CFrame = cframe
 		end
 
-		local n33 = nil
-		local n34 = nil
 		local v2, v3
 
 		task.delay(2, function()
-			n33 = 73256290
-			n34 = 435775731
 			_tp(cframe2)
 		end)
 
@@ -9615,32 +9241,22 @@ tbl.Race:AddButton({
 })
 
 do
-	local n33 = nil
-	local n34 = nil
-
 	Doors = tbl.Race:AddToggle({
 		Name = "Auto Teleport to Race Doors",
 		Description = "",
 		Default = false,
 		Callback = function(tpDoor)
-			n33 = 1058545742
-			n34 = 9277180
 			_G.TPDoor = tpDoor
 		end,
 	})
 end
 
 do
-	local n33 = nil
-	local n34 = nil
-
 	Trials = tbl.Race:AddToggle({
 		Name = "Auto Complete Trial Race",
 		Description = "",
 		Default = false,
 		Callback = function(completeTrials)
-			n33 = 198970564
-			n34 = 200465144
 			_G.Complete_Trials = completeTrials
 		end,
 	})
@@ -9684,14 +9300,12 @@ BlazeEM = tbl.Prehistoric:AddToggle({
 })
 
 tbl.Prehistoric:AddSection("Drago Trial")
-local n33 = nil
 
 Toggle = tbl.Prehistoric:AddToggle({
 	Name = "Tween To Upgrade Droco Trial",
 	Description = "",
 	Default = false,
 	Callback = function(upgDrago)
-		n33 = 723809490
 		_G.UPGDrago = upgDrago
 	end,
 })
@@ -9705,14 +9319,11 @@ Toggle = tbl.Prehistoric:AddToggle({
 	end,
 })
 
-local n34 = nil
-
 fireflower = tbl.Prehistoric:AddToggle({
 	Name = "Auto Drago (V2)",
 	Description = "",
 	Default = false,
 	Callback = function(autoFireFlowers)
-		n34 = 514249207
 		_G.AutoFireFlowers = autoFireFlowers
 	end,
 })
@@ -9727,16 +9338,11 @@ Toggle = tbl.Prehistoric:AddToggle({
 })
 
 do
-	local n35 = nil
-	local n36 = nil
-
 	Toggle = tbl.Prehistoric:AddToggle({
 		Name = "Auto Relic Drago Trial [Beta]",
 		Description = "",
 		Default = false,
 		Callback = function(relic123)
-			n35 = 219756131
-			n36 = 1067843138
 			_G.Relic123 = relic123
 		end,
 	})
@@ -9769,14 +9375,11 @@ bdrago = tbl.Prehistoric:AddToggle({
 	end,
 })
 
-local n35 = nil
-
 UpTalon = tbl.Prehistoric:AddToggle({
 	Name = "Upgrade Dragon Talon With Uzoth",
 	Description = "",
 	Default = false,
 	Callback = function(dtUzoth)
-		n35 = 556765331
 		_G.DT_Uzoth = dtUzoth
 	end,
 })
@@ -9791,36 +9394,25 @@ tbl.Prehistoric:AddButton({
 	end,
 })
 
-local n36 = nil
-
 tbl.Prehistoric:AddButton({
 	Name = "Craft Dragonstorm",
 	Description = "",
 	Callback = function()
-		n36 = 549158270
 		game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack({ "CraftItem", "Craft", "Dragonstorm" }))
 	end,
 })
 
-local n37 = nil
-
 tbl.Prehistoric:AddButton({
 	Name = "Craft Dino Hood",
 	Callback = function()
-		n37 = 371338808
 		game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack({ "CraftItem", "Craft", "DinoHood" }))
 	end,
 })
 
 do
-	local n38 = nil
-	local n39 = nil
-
 	tbl.Prehistoric:AddButton({
 		Name = "Craft T-Rex Skull",
 		Callback = function()
-			n38 = 304729826
-			n39 = 732993717
 			game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack({ "CraftItem", "Craft", "TRexSkull" }))
 		end,
 	})
@@ -9830,11 +9422,8 @@ tbl.Prehistoric:AddSection("Prehistoric Island")
 
 do
 	local prehistoricIslandStatusParagraph = tbl.Prehistoric:AddParagraph("Prehistoric Island Status", "")
-	local n38 = nil
 
 	spawn(function()
-		n38 = 759512807
-
 		if wait(0.2) then
 			local exitTo = nil
 
@@ -9903,15 +9492,10 @@ tbl.Prehistoric:AddButton({
 })
 
 do
-	local n38 = nil
-	local n39 = nil
-
 	tbl.Prehistoric:AddToggle({
 		Name = "Craft Volcanic Magnet",
 		Default = false,
 		Callback = function(autoCraftVolcanic)
-			n38 = 709086280
-			n39 = 674131807
 			getgenv().AutoCraftVolcanic = autoCraftVolcanic
 		end,
 	})
@@ -9927,28 +9511,20 @@ tbl.Prehistoric:AddToggle({
 	end,
 })
 
-local n38 = nil
-
 tbl.Prehistoric:AddToggle({
 	Name = "Auto Start Prehistoric Event",
 	Default = false,
 	Callback = function(autoStartPrehistoric)
-		n38 = 820516957
 		_G.AutoStartPrehistoric = autoStartPrehistoric
 	end,
 })
 
 do
-	local n39 = nil
-	local n40 = nil
-
 	tbl.Prehistoric:AddToggle({
 		Name = "Auto Patch Prehistoric Event",
 		Description = "",
 		Default = false,
 		Callback = function(prehisSkills)
-			n39 = 291915262
-			n40 = 879200296
 			_G.Prehis_Skills = prehisSkills
 			PrehisUser.Skills = prehisSkills
 		end,
@@ -9973,27 +9549,21 @@ Vocan = tbl.Prehistoric:AddToggle({
 	end,
 })
 
-local n39 = nil
-
 Vocan = tbl.Prehistoric:AddToggle({
 	Name = "Auto Collect Dragon Eggs",
 	Description = "",
 	Default = false,
 	Callback = function(prehisDe)
-		n39 = 663531001
 		_G.Prehis_DE = prehisDe
 		PrehisUser.DE = prehisDe
 	end,
 })
-
-local n40 = nil
 
 Toggle = tbl.Prehistoric:AddToggle({
 	Name = "Auto Reset When Complete Volcano",
 	Description = "",
 	Default = false,
 	Callback = function(resetPH)
-		n40 = 289674073
 		_G.ResetPH = resetPH
 	end,
 })
@@ -10015,11 +9585,7 @@ tbl.SeaEvent:AddToggle({
 	end,
 })
 
-local n41 = nil
-
 game:GetService("RunService").RenderStepped:Connect(function()
-	n41 = 455525191
-
 	if getgenv().SpeedBoat then
 		local localPlayer = game:GetService("Players").LocalPlayer
 
@@ -10044,8 +9610,6 @@ game:GetService("RunService").RenderStepped:Connect(function()
 	end
 end)
 
-local n42 = nil
-
 tbl.SeaEvent:AddSlider({
 	Name = "Ship Speed",
 	Min = 0,
@@ -10053,21 +9617,15 @@ tbl.SeaEvent:AddSlider({
 	Increment = 1,
 	Default = 300,
 	Callback = function(arg)
-		n42 = 964619642
 		SetSpeedBoat = arg
 	end,
 })
 
 do
-	local n43 = nil
-	local n44 = nil
-
 	tbl.SeaEvent:AddToggle({
 		Name = "Auto Press W",
 		Default = false,
 		Callback = function(autoPressW)
-			n43 = 335137055
-			n44 = 685937935
 			getgenv().AutoPressW = autoPressW
 		end,
 	})
@@ -10092,27 +9650,19 @@ tbl.SeaEvent:AddButton({
 })
 
 do
-	local n43 = nil
-	local n44 = nil
-
 	tbl.SeaEvent:AddButton({
 		Name = "Craft TerrorJaw",
 		Description = "",
 		Callback = function()
-			n43 = 583478173
-			n44 = 1059511027
 			game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack({ "CraftItem", "Craft", "TerrorJaw" }))
 		end,
 	})
 end
 
-local n43 = nil
-
 tbl.SeaEvent:AddButton({
 	Name = "Craft SharkAnchor",
 	Description = "",
 	Callback = function()
-		n43 = 17359483
 		game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack({ "CraftItem", "Craft", "SharkAnchor" }))
 	end,
 })
@@ -10134,15 +9684,10 @@ tbl.SeaEvent:AddButton({
 })
 
 do
-	local n44 = nil
-	local n45 = nil
-
 	tbl.SeaEvent:AddButton({
 		Name = "Craft LeviathanBoat",
 		Description = "",
 		Callback = function()
-			n44 = 111244305
-			n45 = 366017107
 			game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack({ "CraftItem", "Craft", "LeviathanBoat" }))
 		end,
 	})
@@ -10175,30 +9720,20 @@ Q = tbl.SeaEvent:AddDropdown({
 })
 
 do
-	local n44 = nil
-	local n45 = nil
-
 	tbl.SeaEvent:AddButton({
 		Name = "Buy Boats",
 		Description = "",
 		Callback = function()
-			n44 = 275654704
-			n45 = 557400365
 			replicated.Remotes.CommF_:InvokeServer("BuyBoat", _G.SelectedBoat)
 		end,
 	})
 end
 
 do
-	local n44 = nil
-	local n45 = nil
-
 	Q = tbl.SeaEvent:AddDropdown({
 		Name = "Select Sea Level",
 		Options = ListSeaZone,
 		Callback = function(dangerSc)
-			n44 = 690181949
-			n45 = 1043216362
 			_G.DangerSc = dangerSc
 		end,
 	})
@@ -10216,32 +9751,22 @@ Q = tbl.SeaEvent:AddToggle({
 tbl.SeaEvent:AddSection("Entity Sea Event")
 
 do
-	local n44 = nil
-	local n45 = nil
-
 	tbl.SeaEvent:AddToggle({
 		Name = "Auto Shark",
 		Description = "",
 		Default = false,
 		Callback = function(shark)
-			n44 = 694874167
-			n45 = 558302413
 			_G.Shark = shark
 		end,
 	})
 end
 
 do
-	local n44 = nil
-	local n45 = nil
-
 	tbl.SeaEvent:AddToggle({
 		Name = "Auto Piranha",
 		Description = "",
 		Default = false,
 		Callback = function(piranha)
-			n44 = 341221554
-			n45 = 490297682
 			_G.Piranha = piranha
 		end,
 	})
@@ -10265,26 +9790,20 @@ tbl.SeaEvent:AddToggle({
 	end,
 })
 
-local n44 = nil
-
 tbl.SeaEvent:AddToggle({
 	Name = "Auto Haunted Crew Member",
 	Description = "",
 	Default = false,
 	Callback = function(hcm)
-		n44 = 81775093
 		_G.HCM = hcm
 	end,
 })
-
-local n45 = nil
 
 tbl.SeaEvent:AddToggle({
 	Name = "Auto Attack PirateGrandBrigade",
 	Description = "",
 	Default = false,
 	Callback = function(pgb)
-		n45 = 180001069
 		_G.PGB = pgb
 	end,
 })
@@ -10298,14 +9817,11 @@ tbl.SeaEvent:AddToggle({
 	end,
 })
 
-local n46 = nil
-
 tbl.SeaEvent:AddToggle({
 	Name = "Auto Attack Sea Beast",
 	Description = "",
 	Default = false,
 	Callback = function(seaBeast1)
-		n46 = 162098875
 		_G.SeaBeast1 = seaBeast1
 	end,
 })
@@ -10378,29 +9894,21 @@ spawn(function()
 end)
 
 do
-	local n47 = nil
-	local n48 = nil
-
 	tbl.SeaEvent:AddToggle({
 		Name = "Auto Find Kitsune Island",
 		Description = "",
 		Default = false,
 		Callback = function(autofindKitIs)
-			n47 = 740917077
-			n48 = 961380742
 			_G.AutofindKitIs = autofindKitIs
 		end,
 	})
 end
-
-local n47 = nil
 
 tbl.SeaEvent:AddToggle({
 	Name = "Auto Teleport to Shrine Actived",
 	Description = "",
 	Default = false,
 	Callback = function(tweenShrine)
-		n47 = 589263070
 		_G.tweenShrine = tweenShrine
 	end,
 })
@@ -10443,11 +9951,8 @@ tbl.SeaEvent:AddSection("Frozen Dimension Event")
 
 do
 	local frozenDimensionStatusParagraph = tbl.SeaEvent:AddParagraph("FrozenDimension Status", "")
-	local n48 = nil
 
 	spawn(function()
-		n48 = 910912658
-
 		pcall(function()
 			if wait(0.2) then
 				local locations = workspace._WorldOrigin.Locations
@@ -10501,11 +10006,8 @@ end
 
 do
 	local spyStatusParagraph = tbl.SeaEvent:AddParagraph("Spy Status", "")
-	local n48 = nil
 
 	spawn(function()
-		n48 = 164515640
-
 		if wait(0.2) then
 			repeat
 				pcall(function()
@@ -10531,14 +10033,11 @@ tbl.SeaEvent:AddButton({
 	end,
 })
 
-local n48 = nil
-
 tbl.SeaEvent:AddToggle({
 	Name = "Auto Teleport Frozen Dimension",
 	Description = "",
 	Default = false,
 	Callback = function(frozenTP)
-		n48 = 783598477
 		_G.FrozenTP = frozenTP
 	end,
 })
@@ -10552,14 +10051,11 @@ tbl.SeaEvent:AddToggle({
 	end,
 })
 
-local n49 = nil
-
 tbl.SeaEvent:AddToggle({
 	Name = "Auto Attack Leviathan",
 	Description = "",
 	Default = false,
 	Callback = function(leviathan1)
-		n49 = 668626538
 		_G.Leviathan1 = leviathan1
 	end,
 })
@@ -10603,25 +10099,16 @@ tbl.Esp:AddToggle({
 	end,
 })
 
-local n50 = nil
-
 tbl.Esp:AddToggle({
 	Name = "Esp Player",
 	Description = "",
 	Default = false,
 	Callback = function(arg)
-		n50 = 960938136
 		PlayerEsp = arg
-		local n51 = nil
-		local n52 = nil
-		local n53 = nil
 		local v2, v3, v4
 
 		if arg then
 			task.spawn(function()
-				n51 = 981333573
-				n52 = 918321055
-
 				while PlayerEsp do
 					EspPly()
 					task.wait()
@@ -10641,8 +10128,6 @@ tbl.Esp:AddToggle({
 					local v6 = v5[3]
 
 					pcall(function()
-						n53 = 272643386
-
 						if not isnil(v6.Character) and not isnil(v6.Character.Head) and v6.Character.Head:FindFirstChild("NameEsp" .. Number) then
 							v6.Character.Head:FindFirstChild("NameEsp" .. Number):Destroy()
 						end
@@ -10659,15 +10144,12 @@ tbl.Esp:AddToggle({
 	Default = false,
 	Callback = function(arg)
 		ChestESP = arg
-		local n51 = nil
 		local v2
 
 		if arg then
 			local v3, v4
 
 			task.spawn(function()
-				n51 = 36542958
-
 				while ChestESP do
 					ChestEsp()
 					task.wait()
@@ -10701,8 +10183,6 @@ tbl.Esp:AddToggle({
 	Default = false,
 	Callback = function(arg)
 		DevilFruitESP = arg
-		local n51 = nil
-		local n52 = nil
 		local v2, v3, v4, v5
 
 		if arg then
@@ -10728,9 +10208,6 @@ tbl.Esp:AddToggle({
 
 				while true do
 					pcall(function()
-						n51 = 224251596
-						n52 = 109579123
-
 						if v7:FindFirstChild("Handle") and v7.Handle:FindFirstChild("NameEsp" .. Number) then
 							v7.Handle:FindFirstChild("NameEsp" .. Number):Destroy()
 						end
@@ -10750,18 +10227,12 @@ tbl.Esp:AddToggle({
 })
 
 do
-	local n51 = nil
-	local n52 = nil
-
 	tbl.Esp:AddToggle({
 		Name = "Esp Island",
 		Description = "",
 		Default = false,
 		Callback = function(arg)
-			n51 = 256130135
-			n52 = 937608034
 			IslandESP = arg
-			local n53 = nil
 			local v2, v3
 
 			if arg then
@@ -10784,8 +10255,6 @@ do
 						local v6 = v5[3]
 
 						pcall(function()
-							n53 = 30321953
-
 							if v6:FindFirstChild("NameEsp") then
 								v6:FindFirstChild("NameEsp"):Destroy()
 							end
@@ -10803,8 +10272,6 @@ tbl.Esp:AddToggle({
 	Default = false,
 	Callback = function(arg)
 		FlowerESP = arg
-		local n51 = nil
-		local n52 = nil
 		local v2, v3, v4, v5
 
 		if arg then
@@ -10827,9 +10294,6 @@ tbl.Esp:AddToggle({
 					local v10 = v9[3]
 
 					pcall(function()
-						n51 = 131353217
-						n52 = 713385975
-
 						if v10.Name == "Flower2" then
 							if v10:FindFirstChild("NameEsp" .. Number) then
 								local v11 = v10:FindFirstChild("NameEsp" .. Number)
@@ -10867,23 +10331,17 @@ tbl.Esp:AddToggle({
 	end,
 })
 
-local n51 = nil
-
 tbl.Esp:AddToggle({
 	Name = "Esp Haki Color",
 	Description = "",
 	Default = false,
 	Callback = function(arg)
-		n51 = 937665072
 		ColorEsp = arg
-		local n52 = nil
 
 		if arg then
 			local v2, v3
 
 			task.spawn(function()
-				n52 = 433063051
-
 				while ColorEsp do
 					HakiClorEsp()
 					task.wait()
@@ -10895,24 +10353,16 @@ tbl.Esp:AddToggle({
 	end,
 })
 
-local n52 = nil
-
 tbl.Esp:AddToggle({
 	Name = "Esp Gear",
 	Description = "",
 	Default = false,
 	Callback = function(arg)
-		n52 = 182989401
 		ESPGear = arg
-		local n53 = nil
-		local n54 = nil
 		local v2, mysticIsland
 
 		if arg then
 			task.spawn(function()
-				n53 = 325399986
-				n54 = 957326650
-
 				while ESPGear do
 					gearEsp()
 					task.wait()
@@ -10955,7 +10405,6 @@ tbl.Esp:AddToggle({
 	Default = false,
 	Callback = function(arg)
 		EspEventIsland = arg
-		local n53 = nil
 		local v2, v3
 
 		if arg then
@@ -10978,8 +10427,6 @@ tbl.Esp:AddToggle({
 					local v8 = v7[3]
 
 					pcall(function()
-						n53 = 1026082811
-
 						if v8:FindFirstChild("NameEsp") then
 							v8:FindFirstChild("NameEsp"):Destroy()
 						end
@@ -11027,12 +10474,7 @@ do
 		end
 	end)
 
-	local n53 = nil
-	local n54 = nil
-
 	pcall(function()
-		n53 = 388071331
-		n54 = 897874573
 		stockFruitParagraph:SetDesc(getFruitStock())
 	end)
 end
@@ -11066,38 +10508,26 @@ StoredF = tbl.Raids:AddToggle({
 })
 
 do
-	local n53 = nil
-	local n54 = nil
-
 	TwF = tbl.Raids:AddToggle({
 		Name = "Auto Tween to Fruit",
 		Description = "",
 		Default = false,
 		Callback = function(twFruits)
-			n53 = 225819709
-			n54 = 192659979
 			_G.TwFruits = twFruits
 		end,
 	})
 end
 
 do
-	local n53 = nil
-	local n54 = nil
-
 	BringF = tbl.Raids:AddToggle({
 		Name = "Auto Collect Fruit",
 		Description = "",
 		Default = false,
 		Callback = function(instanceF)
-			n53 = 169839588
-			n54 = 783034416
 			_G.InstanceF = instanceF
 		end,
 	})
 end
-
-local n53 = nil
 
 tbl.Raids:AddDropdown({
 	Name = "Select Fruit Shop",
@@ -11145,18 +10575,14 @@ tbl.Raids:AddDropdown({
 		"Dragon-Dragon",
 	},
 	Callback = function(selectFruit)
-		n53 = 266066510
 		getgenv().SelectFruit = selectFruit
 	end,
 })
-
-local n54 = nil
 
 tbl.Raids:AddToggle({
 	Name = "Auto Buy Fruit Shop",
 	Default = false,
 	Callback = function(autoBuyFruitSniper)
-		n54 = 351782506
 		getgenv().AutoBuyFruitSniper = autoBuyFruitSniper
 	end,
 })
@@ -11187,28 +10613,20 @@ Q = tbl.Raids:AddDropdown({
 	end,
 })
 
-local n55 = nil
-
 Q = tbl.Raids:AddToggle({
 	Name = "Auto Select Dungeon Chip",
 	Description = "",
 	Default = false,
 	Callback = function(autoSelectDungeon)
-		n55 = 96858186
 		_G.AutoSelectDungeon = autoSelectDungeon
 	end,
 })
 
 do
-	local n56 = nil
-	local n57 = nil
-
 	tbl.Raids:AddToggle({
 		Name = "Get Fruit In Inventory Below 1M",
 		Default = false,
 		Callback = function(autoGetFruit)
-			n56 = 1068927663
-			n57 = 988673409
 			getgenv().AutoGetFruit = autoGetFruit
 		end,
 	})
@@ -11224,13 +10642,10 @@ tbl.Raids:AddButton({
 	end,
 })
 
-local n56 = nil
-
 tbl.Raids:AddButton({
 	Name = "Buy Dungeon Chips [Devil Fruit]",
 	Description = "",
 	Callback = function()
-		n56 = 716520050
 		if GetBP("Special Microchip") then
 			return
 		end
@@ -11328,16 +10743,11 @@ AutoChipBeli = tbl.Raids:AddToggle({
 })
 
 do
-	local n57 = nil
-	local n58 = nil
-
 	AutoChipFruit = tbl.Raids:AddToggle({
 		Name = "Auto Buy Chip [Devil Fruit]",
 		Description = "",
 		Default = false,
 		Callback = function(autoChipFruit)
-			n57 = 292579603
-			n58 = 945437456
 			_G.AutoChipFruit = autoChipFruit
 		end,
 	})
@@ -11361,14 +10771,11 @@ Raiding = tbl.Raids:AddToggle({
 	end,
 })
 
-local n57 = nil
-
 KillAuraRaid = tbl.Raids:AddToggle({
 	Name = "Kill Aura (Island 4 & 5)",
 	Description = "",
 	Default = false,
 	Callback = function(killAuraRaid)
-		n57 = 311779206
 		_G.KillAuraRaid = killAuraRaid
 	end,
 })
@@ -11382,13 +10789,10 @@ tbl.Raids:AddToggle({
 	end,
 })
 
-local n58 = nil
-
 tbl.Raids:AddToggle({
 	Name = "Auto Teleport To Lab",
 	Default = false,
 	Callback = function(tpLab)
-		n58 = 911033741
 		_G.TpLab = tpLab
 		local exitTo10
 
@@ -12055,48 +11459,33 @@ tbl.Raids:AddButton({
 })
 
 do
-	local n59 = nil
-	local n60 = nil
-
 	tbl.Raids:AddToggle({
 		Name = "Auto Buy Microchip Law",
 		Description = "",
 		Default = false,
 		Callback = function(autoBuyMicrochipLaw)
-			n59 = 111732086
-			n60 = 366170588
 			getgenv().AutoBuyMicrochipLaw = autoBuyMicrochipLaw
 		end,
 	})
 end
 
 do
-	local n59 = nil
-	local n60 = nil
-
 	tbl.Raids:AddToggle({
 		Name = "Auto Start Law Raids",
 		Description = "",
 		Default = false,
 		Callback = function(autoStartLawRaids)
-			n59 = 206642345
-			n60 = 891454801
 			getgenv().AutoStartLawRaids = autoStartLawRaids
 		end,
 	})
 end
 
 do
-	local n59 = nil
-	local n60 = nil
-
 	tbl.Raids:AddToggle({
 		Name = "Auto Kill Law",
 		Description = "",
 		Default = false,
 		Callback = function(autoLawKak)
-			n59 = 577945051
-			n60 = 312090061
 			_G.AutoLawKak = autoLawKak
 		end,
 	})
@@ -12122,42 +11511,29 @@ tbl.Raids:AddToggle({
 })
 
 do
-	local n59 = nil
-	local n60 = nil
-
 	tbl.Raids:AddToggle({
 		Name = "TP Exit (2)",
 		Default = false,
 		Callback = function(tpFloor2)
-			n59 = 690924872
-			n60 = 495030611
 			_G.TPFloor2 = tpFloor2
 		end,
 	})
 end
 
 do
-	local n59 = nil
-	local n60 = nil
-
 	tbl.Raids:AddToggle({
 		Name = "TP Exit (3)",
 		Default = false,
 		Callback = function(tpFloor3)
-			n59 = 608076177
-			n60 = 701049793
 			_G.TPFloor3 = tpFloor3
 		end,
 	})
 end
 
-local n59 = nil
-
 tbl.Raids:AddToggle({
 	Name = "TP Exit (4)",
 	Default = false,
 	Callback = function(tpFloor4)
-		n59 = 153030796
 		_G.TPFloor4 = tpFloor4
 	end,
 })
@@ -12170,12 +11546,12 @@ spawn(function()
 
 	while wait(Sec) do
 		pcall(function()
-			local n60 = #game:GetService("Players"):GetPlayers()
+			local n = #game:GetService("Players"):GetPlayers()
 
-			if n60 ~= 12 then
-				allPlayersOnServerParagraph:SetDesc("All Players : " .. n60 .. " / 12")
+			if n ~= 12 then
+				allPlayersOnServerParagraph:SetDesc("All Players : " .. n .. " / 12")
 			else
-				allPlayersOnServerParagraph:SetDesc("All Players : " .. n60 .. " / 12 [Max]")
+				allPlayersOnServerParagraph:SetDesc("All Players : " .. n .. " / 12 [Max]")
 			end
 		end)
 	end
@@ -12195,11 +11571,7 @@ do
 		return ""
 	end
 
-	local n60 = nil
-
 	spawn(function()
-		n60 = 345692894
-
 		if wait(0.2) then
 			local v2, v3
 
@@ -12242,48 +11614,33 @@ tbl.Combat:AddToggle({
 })
 
 do
-	local n60 = nil
-	local n61 = nil
-
 	tbl.Combat:AddToggle({
 		Name = "Spectate Select Players",
 		Description = "",
 		Default = false,
 		Callback = function(arg)
-			n60 = 47606393
-			n61 = 450667358
 			SpectatePlys = arg
 		end,
 	})
 end
 
 do
-	local n60 = nil
-	local n61 = nil
-
 	tbl.Combat:AddDropdown({
 		Name = "Select Aim Method",
 		Description = "",
 		Options = { "Aim Player", "Nearest Aim" },
 		Callback = function(arg)
-			n60 = 450289839
-			n61 = 836758616
 			ABmethod = arg
 		end,
 	})
 end
 
 do
-	local n60 = nil
-	local n61 = nil
-
 	tbl.Combat:AddToggle({
 		Name = "Aimbot Method Skills",
 		Description = "",
 		Default = false,
 		Callback = function(aimMethod)
-			n60 = 192766560
-			n61 = 349885454
 			_G.AimMethod = aimMethod
 		end,
 	})
@@ -12301,20 +11658,13 @@ tbl.Combat:AddToggle({
 tbl.Combat:AddSection("Quests Players")
 
 do
-	local n60 = nil
-	local n61 = nil
-
 	tbl.Combat:AddButton({
 		Name = "Get player quests",
 		Description = "",
 		Callback = function()
-			n60 = 892305827
-			n61 = 681696453
-			local n62 = nil
 			local v2, v3
 
 			pcall(function()
-				n62 = 750312018
 				game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("PlayerHunter")
 			end)
 		end,
@@ -12352,15 +11702,10 @@ tbl.Combat:AddToggle({
 })
 
 do
-	local n60 = nil
-	local n61 = nil
-
 	tbl.Combat:AddToggle({
 		Name = "Auto Safe Mode",
 		Default = false,
 		Callback = function(safeMode)
-			n60 = 995052408
-			n61 = 624771675
 			_G.SafeMode = safeMode
 		end,
 	})
@@ -12403,14 +11748,11 @@ tbl.Combat:AddToggle({
 	end,
 })
 
-local n60 = nil
-
 tbl.Combat:AddToggle({
 	Name = "Instance Energy [ INF ]",
 	Description = "",
 	Default = false,
 	Callback = function(arg)
-		n60 = 683870474
 		infEnergy = arg
 
 		if arg then
@@ -12419,14 +11761,11 @@ tbl.Combat:AddToggle({
 	end,
 })
 
-local n61 = nil
-
 tbl.Combat:AddToggle({
 	Name = "Instance Soru [ INF ]",
 	Description = "",
 	Default = false,
 	Callback = function(infSoru)
-		n61 = 744809026
 		_G.InfSoru = infSoru
 
 		if infSoru then
@@ -12458,16 +11797,11 @@ tbl.Combat:AddToggle({
 })
 
 do
-	local n62 = nil
-	local n63 = nil
-
 	tbl.Combat:AddToggle({
 		Name = "Accept Allies",
 		Description = "",
 		Default = false,
 		Callback = function(acceptAlly)
-			n62 = 502399689
-			n63 = 972754773
 			_G.AcceptAlly = acceptAlly
 		end,
 	})
@@ -12476,41 +11810,28 @@ end
 tbl.Travel:AddSection("Travel - Worlds")
 
 do
-	local n62 = nil
-	local n63 = nil
-
 	tbl.Travel:AddButton({
 		Name = "Travel East Blue (World 1)",
 		Description = "",
 		Callback = function()
-			n62 = 405528124
-			n63 = 754856788
 			replicated.Remotes.CommF_:InvokeServer("TravelMain")
 		end,
 	})
 end
 
-local n62 = nil
-
 tbl.Travel:AddButton({
 	Name = "Travel Dressrosa (World 2)",
 	Description = "",
 	Callback = function()
-		n62 = 550664574
 		replicated.Remotes.CommF_:InvokeServer("TravelDressrosa")
 	end,
 })
 
 do
-	local n63 = nil
-	local n64 = nil
-
 	tbl.Travel:AddButton({
 		Name = "Travel Zou (World 3)",
 		Description = "",
 		Callback = function()
-			n63 = 175624796
-			n64 = 135981250
 			replicated.Remotes.CommF_:InvokeServer("TravelZou")
 		end,
 	})
@@ -12536,16 +11857,11 @@ while true do
 end
 
 do
-	local n63 = nil
-	local n64 = nil
-
 	Travelllll = tbl.Travel:AddDropdown({
 		Name = "Select Travelling",
 		Description = "",
 		Options = Location,
 		Callback = function(island)
-			n63 = 85117405
-			n64 = 457689084
 			_G.Island = island
 		end,
 	})
@@ -12583,11 +11899,11 @@ GoIsland = tbl.Travel:AddToggle({
 				local v6 = _tp
 				local cFrame = v5.CFrame
 				local cFrameNew = CFrame.new
-				local n63 = 0
+				local n = 0
 				local exitTo2 = nil
 
 				while true do
-					v6(cFrame * cFrameNew(n63, 30, 0))
+					v6(cFrame * cFrameNew(n, 30, 0))
 
 					if _G.Teleport then
 						exitTo2 = 1
@@ -12740,29 +12056,19 @@ while true do
 	end
 end
 
-local n63 = nil
-
 NPCsPos = tbl.Travel:AddDropdown({
 	Name = "Select NPCs",
 	Options = NPCList,
 	Callback = function(arg)
-		n63 = 1051675978
 		NPClist = arg
 	end,
 })
-
-local n64
-n64 = nil
-local n65
-n65 = nil
 
 GoNPCs = tbl.Travel:AddToggle({
 	Name = "Auto Tween to NPC",
 	Description = "",
 	Default = false,
 	Callback = function(tpNpc)
-		n64 = 82226874
-		n65 = 565471458
 		_G.TPNpc = tpNpc
 	end,
 })
@@ -12778,27 +12084,19 @@ tbl.Shop:AddButton({
 })
 
 do
-	local n66 = nil
-	local n67 = nil
-
 	tbl.Shop:AddButton({
 		Name = "Buy Geppo",
 		Description = "",
 		Callback = function()
-			n66 = 738709861
-			n67 = 909547372
 			replicated.Remotes.CommF_:InvokeServer("BuyHaki", "Geppo")
 		end,
 	})
 end
 
-local n66 = nil
-
 tbl.Shop:AddButton({
 	Name = "Buy Soru",
 	Description = "",
 	Callback = function()
-		n66 = 457283242
 		replicated.Remotes.CommF_:InvokeServer("BuyHaki", "Soru")
 	end,
 })
@@ -12812,13 +12110,11 @@ tbl.Shop:AddButton({
 })
 
 tbl.Shop:AddSection("Fighting - Style")
-local n67 = nil
 
 tbl.Shop:AddButton({
 	Name = "Buy Black Leg",
 	Description = "",
 	Callback = function()
-		n67 = 345102573
 		replicated.Remotes.CommF_:InvokeServer("BuyBlackLeg")
 	end,
 })
@@ -12831,24 +12127,18 @@ tbl.Shop:AddButton({
 	end,
 })
 
-local n68 = nil
-
 tbl.Shop:AddButton({
 	Name = "Buy Fishman Karate",
 	Description = "",
 	Callback = function()
-		n68 = 1065088353
 		replicated.Remotes.CommF_:InvokeServer("BuyFishmanKarate")
 	end,
 })
-
-local n69 = nil
 
 tbl.Shop:AddButton({
 	Name = "Buy DragonClaw",
 	Description = "",
 	Callback = function()
-		n69 = 355983673
 		replicated.Remotes.CommF_:InvokeServer("BlackbeardReward", "DragonClaw", "2")
 	end,
 })
@@ -12870,15 +12160,10 @@ tbl.Shop:AddButton({
 })
 
 do
-	local n70 = nil
-	local n71 = nil
-
 	tbl.Shop:AddButton({
 		Name = "Buy Sharkman Karate",
 		Description = "",
 		Callback = function()
-			n70 = 572595073
-			n71 = 1056466037
 			replicated.Remotes.CommF_:InvokeServer("BuySharkmanKarate")
 		end,
 	})
@@ -12892,13 +12177,10 @@ tbl.Shop:AddButton({
 	end,
 })
 
-local n70 = nil
-
 tbl.Shop:AddButton({
 	Name = "Buy DragonTalon",
 	Description = "",
 	Callback = function()
-		n70 = 594192680
 		replicated.Remotes.CommF_:InvokeServer("BuyDragonTalon")
 	end,
 })
@@ -12912,15 +12194,10 @@ tbl.Shop:AddButton({
 })
 
 do
-	local n71 = nil
-	local n72 = nil
-
 	tbl.Shop:AddButton({
 		Name = "Buy SanguineArt",
 		Description = "",
 		Callback = function()
-			n71 = 59169610
-			n72 = 233609015
 			replicated.Remotes.CommF_:InvokeServer("BuySanguineArt")
 		end,
 	})
@@ -12944,13 +12221,10 @@ tbl.Shop:AddButton({
 	end,
 })
 
-local n71 = nil
-
 tbl.Shop:AddButton({
 	Name = "Buy Swordsman Hat",
 	Description = "",
 	Callback = function()
-		n71 = 798772095
 		replicated.Remotes.CommF_:InvokeServer("BuyItem", "Swordsman Hat")
 	end,
 })
@@ -12963,13 +12237,10 @@ tbl.Shop:AddButton({
 	end,
 })
 
-local n72 = nil
-
 tbl.Shop:AddButton({
 	Name = "Buy Ghoul Mask",
 	Description = "",
 	Callback = function()
-		n72 = 1049673534
 		replicated.Remotes.CommF_:InvokeServer("Ectoplasm", "Buy", 2)
 	end,
 })
@@ -12985,38 +12256,27 @@ tbl.Shop:AddButton({
 })
 
 do
-	local n73 = nil
-	local n74 = nil
-
 	tbl.Shop:AddButton({
 		Name = "Buy Katana",
 		Description = "",
 		Callback = function()
-			n73 = 672226701
-			n74 = 287148114
 			replicated.Remotes.CommF_:InvokeServer("BuyItem", "Katana")
 		end,
 	})
 end
 
-local n73 = nil
-
 tbl.Shop:AddButton({
 	Name = "Buy Iron Mace",
 	Description = "",
 	Callback = function()
-		n73 = 755221571
 		replicated.Remotes.CommF_:InvokeServer("BuyItem", "Iron Mace")
 	end,
 })
-
-local n74 = nil
 
 tbl.Shop:AddButton({
 	Name = "Buy Duel Katana",
 	Description = "",
 	Callback = function()
-		n74 = 89842277
 		replicated.Remotes.CommF_:InvokeServer("BuyItem", "Duel Katana")
 	end,
 })
@@ -13029,13 +12289,10 @@ tbl.Shop:AddButton({
 	end,
 })
 
-local n75 = nil
-
 tbl.Shop:AddButton({
 	Name = "Buy Pipe",
 	Description = "",
 	Callback = function()
-		n75 = 654272556
 		replicated.Remotes.CommF_:InvokeServer("BuyItem", "Pipe")
 	end,
 })
@@ -13064,13 +12321,10 @@ tbl.Shop:AddButton({
 	end,
 })
 
-local n76 = nil
-
 tbl.Shop:AddButton({
 	Name = "Buy Slingshot",
 	Description = "",
 	Callback = function()
-		n76 = 1064081424
 		replicated.Remotes.CommF_:InvokeServer("BuyItem", "Slingshot")
 	end,
 })
@@ -13092,15 +12346,10 @@ tbl.Shop:AddButton({
 })
 
 do
-	local n77 = nil
-	local n78 = nil
-
 	tbl.Shop:AddButton({
 		Name = "Buy Flintlock",
 		Description = "",
 		Callback = function()
-			n77 = 456814190
-			n78 = 149575426
 			replicated.Remotes.CommF_:InvokeServer("BuyItem", "Flintlock")
 		end,
 	})
@@ -13114,13 +12363,10 @@ tbl.Shop:AddButton({
 	end,
 })
 
-local n77 = nil
-
 tbl.Shop:AddButton({
 	Name = "Buy Cannon",
 	Description = "",
 	Callback = function()
-		n77 = 661524211
 		replicated.Remotes.CommF_:InvokeServer("BuyItem", "Cannon")
 	end,
 })
@@ -13144,30 +12390,19 @@ tbl.Shop:AddButton({
 })
 
 do
-	local n78 = nil
-	local n79 = nil
-
 	tbl.Shop:AddButton({
 		Name = "Buy Reroll Race",
 		Description = "",
 		Callback = function()
-			n78 = 9949170
-			n79 = 850065121
 			replicated.Remotes.CommF_:InvokeServer("BlackbeardReward", "Reroll", "2")
 		end,
 	})
 end
 
-local n78
-n78 = nil
-local n79 = nil
-
 tbl.Shop:AddButton({
 	Name = "Buy Ghoul Race",
 	Description = "",
 	Callback = function()
-		n78 = 774906485
-		n79 = 21633180
 		replicated.Remotes.CommF_:InvokeServer("Ectoplasm", " Change", 4)
 	end,
 })
@@ -13196,14 +12431,11 @@ tbl.Shop:AddButton({
 })
 
 tbl.Misc:AddSection("Server - Function")
-local n80 = nil
 
 tbl.Misc:AddButton({
 	Name = "Redeem All Codes",
 	Description = "",
 	Callback = function()
-		n80 = 639402064
-
 		local nameList = {
 			"LIGHTNINGABUSE",
 			"1LOSTADMIN",
@@ -13258,8 +12490,6 @@ tbl.Misc:AddButton({
 		local redeem = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):FindFirstChild("Redeem")
 
 		if redeem then
-			local n81 = nil
-			local n82 = nil
 			local v2, v3, v4 = ipairs(nameList)
 			local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v5, v32, v42, v52, v6, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v5, v32, v42, v52, v6, v7, v8, v9, v10) end end); co(); return co end)(v3, v4)
 			local v5, v6, v7
@@ -13274,9 +12504,6 @@ tbl.Misc:AddButton({
 					task.wait(0)
 
 					pcall(function()
-						n81 = 592362480
-						n82 = 295405002
-
 						if redeem.InvokeServer then
 							redeem:InvokeServer(v9)
 						else
@@ -13297,24 +12524,16 @@ tbl.Misc:AddButton({
 	end,
 })
 
-local n81 = nil
-
 tbl.Misc:AddButton({
 	Name = "Hop Server",
 	Description = "",
 	Callback = function()
-		n81 = 772945254
-		local n82 = nil
-		local n83 = nil
-
 		task.spawn(function()
-			n82 = 321063495
-			n83 = 775667422
 			local HttpService = game:GetService("HttpService")
 			local TeleportService = game:GetService("TeleportService")
 			local placeId = game.PlaceId
 			local Players = game:GetService("Players")
-			local v2, ok, v3, v4, id, result
+			local id, v2, v3, v4, ok, result
 
 			ok, result = pcall(function()
 				local response = game:HttpGet("https://games.roblox.com/v1/games/" .. placeId .. "/servers/Public?sortOrder=Asc&limit=100")
@@ -13324,8 +12543,8 @@ tbl.Misc:AddButton({
 			if ok and result then
 				id = nil
 				local v5, v6
-				v5, v4, v6 = pairs(result)
-				local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v7, v32, v42, v52, v62, v72, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v7, v32, v42, v52, v62, v72, v8, v9, v10) end end); co(); return co end)(v4, v6)
+				v5, v2, v6 = pairs(result)
+				local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v7, v32, v42, v52, v62, v72, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v7, v32, v42, v52, v62, v72, v8, v9, v10) end end); co(); return co end)(v2, v6)
 
 				while true do
 					local v7 = table.pack(iter_z_1())
@@ -13371,13 +12590,10 @@ tbl.Misc:AddButton({
 	end,
 })
 
-local n82 = nil
-
 tbl.Misc:AddButton({
 	Name = "Hop to Lowest Pings Server",
 	Description = "",
 	Callback = function()
-		n82 = 567473711
 		game:GetService("HttpService")
 		local TeleportService = game:GetService("TeleportService")
 		local Stats = game:GetService("Stats")
@@ -13413,16 +12629,11 @@ tbl.Misc:AddButton({
 })
 
 do
-	local n83 = nil
-	local n84 = nil
-
 	tbl.Misc:AddTextBox({
 		Name = "Input Job Id",
 		Placeholder = "Job ID",
 		ClearOnFocus = true,
 		Callback = function(job)
-			n83 = 212007157
-			n84 = 757624657
 			getgenv().Job = job
 		end,
 	})
@@ -13465,17 +12676,11 @@ tbl.Misc:AddButton({
 	end,
 })
 
-local n83
-n83 = nil
-local n84 = nil
-
 DisbleChat = tbl.Misc:AddToggle({
 	Name = "Disable Chat GUI",
 	Description = "",
 	Default = false,
 	Callback = function(rechat)
-		n83 = 834835690
-		n84 = 850505124
 		_G.Rechat = rechat
 
 		if _G.Rechat ~= true then
@@ -13505,24 +12710,18 @@ DisbleLeaderB = tbl.Misc:AddToggle({
 	end,
 })
 
-local n85 = nil
-
 tbl.Misc:AddButton({
 	Name = "Set Pirate Team",
 	Description = "",
 	Callback = function()
-		n85 = 1025483282
 		Pirates()
 	end,
 })
-
-local n86 = nil
 
 tbl.Misc:AddButton({
 	Name = "Set Marine Team",
 	Description = "",
 	Callback = function()
-		n86 = 518519970
 		Marines()
 	end,
 })
@@ -13651,27 +12850,19 @@ tbl.Misc:AddButton({
 })
 
 do
-	local n87 = nil
-	local n88 = nil
-
 	tbl.Misc:AddButton({
 		Name = "Turn on Low CPU",
 		Description = "",
 		Callback = function()
-			n87 = 852477412
-			n88 = 814277590
 			LowCpu()
 		end,
 	})
 end
 
-local n87 = nil
-
 tbl.Misc:AddButton({
 	Name = "Turn on increase Boats",
 	Description = "",
 	Callback = function()
-		n87 = 597127335
 		local v2, v3, v4 = pairs(workspace.Boats:GetDescendants())
 		local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v5, v32, v42, v52, v6, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v5, v32, v42, v52, v6, v7, v8, v9, v10) end end); co(); return co end)(v3, v4)
 		local v5 = table.pack(iter_z_1())
@@ -13705,16 +12896,10 @@ tbl.Misc:AddButton({
 })
 
 do
-	local n88 = nil
-	local n89 = nil
-
 	tbl.Misc:AddButton({
 		Name = "Remove Sky Fog",
 		Description = "",
 		Callback = function()
-			n88 = 340111625
-			n89 = 1012991894
-
 			if Lighting:FindFirstChild("LightingLayers") then
 				Lighting.LightingLayers:Destroy()
 			end
@@ -13736,8 +12921,6 @@ tbl.Misc:AddButton({
 	Name = "Rain Fruits (Client)",
 	Description = "",
 	Callback = function()
-		local n88 = nil
-		local n89 = nil
 		local v2, v3, v4 = pairs(game:GetObjects("rbxassetid://14759368201")[1]:GetChildren())
 		local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v5, v32, v42, v52, v6, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v5, v32, v42, v52, v6, v7, v8, v9, v10) end end); co(); return co end)(v3, v4)
 
@@ -13760,9 +12943,6 @@ tbl.Misc:AddButton({
 
 						while true do
 							v6.Handle.Touched:Connect(function(hit)
-								n88 = 631667604
-								n89 = 521000969
-
 								if hit.Parent == plr.Character then
 									v6.Parent = plr.Backpack
 									plr.Character.Humanoid:EquipTool(v6)
@@ -13794,9 +12974,6 @@ tbl.Misc:AddButton({
 					return
 				else
 					v6.Handle.Touched:Connect(function(hit)
-						n88 = 631667604
-						n89 = 521000969
-
 						if hit.Parent == plr.Character then
 							v6.Parent = plr.Backpack
 							plr.Character.Humanoid:EquipTool(v6)
@@ -13809,16 +12986,11 @@ tbl.Misc:AddButton({
 })
 
 do
-	local n88 = nil
-	local n89 = nil
-
 	briggt1 = tbl.Misc:AddToggle({
 		Name = "Turn on Full Bright",
 		Description = "",
 		Default = false,
 		Callback = function(arg)
-			n88 = 325975154
-			n89 = 891762181
 			bright = arg
 
 			if arg ~= true then
@@ -13869,16 +13041,11 @@ walkWater = tbl.Misc:AddToggle({
 })
 
 do
-	local n88 = nil
-	local n89 = nil
-
 	iceWalk = tbl.Misc:AddToggle({
 		Name = "Turn on Ice Walk",
 		Description = "",
 		Default = false,
 		Callback = function(walkWater_)
-			n88 = 626286440
-			n89 = 134137993
 			_G.WalkWater = walkWater_
 		end,
 	})

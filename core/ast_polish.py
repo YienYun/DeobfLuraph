@@ -327,6 +327,40 @@ def _strip_unused_params_and_dead_locals(text):
 
         edits = []
 
+        # 1a. State keys left behind by the devirtualizer: `local n` followed by
+        # one `n = <number>` and never read anywhere. They are pure junk -- the
+        # value only ever fed the VM's own dispatch -- so both statements go.
+        writes_by_vloc = {}
+        for vloc, refs in local_refs.items():
+            sts = [assign_lhs_refs[id(r)] for r in refs if id(r) in assign_lhs_refs]
+            if sts:
+                writes_by_vloc[vloc] = sts
+
+        dead_key_stmts = []
+        for vloc, (decl_st, idx) in local_decls.items():
+            if len(decl_st.get("vars", ())) != 1:
+                continue
+            vals = decl_st.get("values", ())
+            init = vals[idx] if idx < len(vals) else None
+            if init is not None and init.get("type") != "AstExprConstantNil":
+                continue
+            if any(id(r) not in assign_lhs_refs for r in local_refs.get(vloc, ())):
+                continue
+            writes = writes_by_vloc.get(vloc, ())
+            if not writes:
+                continue
+            if any(len(w.get("vars", ())) != 1 or len(w.get("values", ())) != 1 for w in writes):
+                continue
+            if any(not _is_pure_expr(w["values"][0]) for w in writes):
+                continue
+            dead_key_stmts.append(decl_st)
+            dead_key_stmts.extend(writes)
+
+        for st in dead_key_stmts:
+            s0, e0 = _loc_bytes(st["location"], starts)
+            s0, e0 = _expand_full_line_delete(btext, s0, e0)
+            edits.append((s0, e0, b""))
+
         # 1. Dead unread single-var pure `local x = ...` statements
         for st in dead_stat_cands:
             vloc = st["vars"][0]["location"]

@@ -1,0 +1,29 @@
+{
+  "file": "/home/user/DeobfLuraph/samples/input/Luraph/SampleV3.lua",
+  "bytes": 1150185,
+  "lines": 2,
+  "luarmor": true,
+  "confidence": 0.9,
+  "signatures": [
+    "luarmor_host",
+    "loader_api"
+  ],
+  "has_bsdata0": false,
+  "has_blob": false,
+  "luraph_payload": true,
+  "module_id": null,
+  "cache_key": null,
+  "init_url": null,
+  "bsdata0": null,
+  "iocs": {
+    "api_endpoint": [
+      "https://api.luarmor.net/files/v4/loaders/130307ddb90b87125e0a381843ee1563.lua"
+    ],
+    "loader_id": [
+      "130307ddb90b87125e0a381843ee1563"
+    ]
+  },
+  "notes": [],
+  "kind": "luarmor_payload",
+  "label": "Luarmor-served payload (Luraph v15)"
+}

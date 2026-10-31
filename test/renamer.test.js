@@ -67,6 +67,29 @@ end)()
   assert.equal(newOut, origOut);
 });
 
+test('renamer keeps multi-name locals without initializers instead of leaking their writes as globals', () => {
+  // darklua's remove_unused_variable deletes the whole statement when one name of a
+  // `local a, b` (no initializers) is unused, so `a = ...` would become a global write.
+  const sample = `
+local function collect()
+  local kept, neverUsed
+  kept = 0
+  for i = 1, 3 do
+    kept = kept + i
+  end
+  return kept
+end
+print(collect(), kept)
+`;
+  const origOut = runLuau(sample);
+  assert.equal(origOut.trim(), '6\tnil');
+
+  const res = renamer.cleanAndRename(sample, { comments: 'none' });
+  assert.equal(res.stats.ast_valid, true);
+  assert.match(res.source, /local kept, neverUsed/);
+  assert.equal(runLuau(res.source), origOut);
+});
+
 test('renamer prevents variable shadowing, preserves executor guards, and comments idempotently', () => {
   const sample = `
 game = { GetService = function(_, s) return { Name = s } end }

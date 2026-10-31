@@ -8,6 +8,7 @@ Sesuai prinsip *zero fragile regex*, sistem ini dibangun langsung di atas **3 fo
 
 1. **[`seaofvoices/darklua`](https://github.com/seaofvoices/darklua)** (`renamer/vendor/darklua`, MIT License — Rust/WASM Luau AST Compiler)
    - Menghapus kode mati & menyederhanakan ekspresi secara sah di level AST Luau (`compute_expression`, `convert_index_to_field`, `filter_after_early_return`, `remove_empty_do`, `remove_unused_if_branch`, `remove_unused_variable`, `remove_unused_while`).
+   - `remove_unused_variable` otomatis dilewati kalau file punya deklarasi `local a, b` tanpa initializer: versi darklua ini menghapus **seluruh** statement saat salah satu nama tidak terpakai, sehingga `a = ...` berubah jadi penulisan global. Deklarasinya dibiarkan utuh dan alasannya muncul di `warnings`.
 2. **[`officialmelon/BetterDecompiler` v2.0.0](https://github.com/officialmelon/BetterDecompiler)** (`renamer/vendor/betterdecompiler` -> `renamer/bin/betterdecompiler`)
    - Lexer + Scope-Resolving Luau Parser + **Verified Renamer (`sameResolution`)**: setiap perubahan nama variabel di-parse ulang dan diverifikasi bahwa 100% referensi token tetap menunjuk ke binding yang persis sama (mustahil terjadi *variable shadowing* atau perubahan perilaku!).
    - Diperluas khusus untuk mengenali pola variabel/fungsi DeobfLuraph, API Roblox & Executor (`getgenv`, `gethui`, `readfile`, `writefile`, `request`, `WebSocket`, `Drawing`, `fireproximityprompt`, dll.), serta **Smart Contextual Commenter** (offline instan maupun berbasis AI LLM).

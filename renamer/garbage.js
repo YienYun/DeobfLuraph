@@ -23,6 +23,37 @@ const DEFAULT_DARKLUA_RULES = [
   'convert_index_to_field',
 ];
 
+/**
+ * `local a, b, c` without initializers. darklua's `remove_unused_variable` drops
+ * the *whole* statement when only one of those names is unused -- the other
+ * bindings disappear too, so their later writes silently become globals
+ * (`local a, unused` + `a = 1` -> `a = 1` as a global). Detect that shape and
+ * leave the rule out; correctness beats the extra dead-name removal.
+ */
+function hasMultiDeclarationWithoutValue(src) {
+  const re = /\blocal\b/g;
+  let m;
+  while ((m = re.exec(src))) {
+    let i = m.index + 5;
+    let names = 0;
+    let ok = true;
+    let sawValue = false;
+    for (;;) {
+      while (i < src.length && /\s/.test(src[i])) i++;
+      const start = i;
+      while (i < src.length && /[A-Za-z0-9_]/.test(src[i])) i++;
+      if (i === start || /^[0-9]/.test(src[start] || '')) { ok = false; break; }
+      names++;
+      while (i < src.length && /\s/.test(src[i])) i++;
+      if (src[i] === ',') { i++; continue; }
+      if (src[i] === '=' && src[i + 1] !== '=') sawValue = true;
+      break;
+    }
+    if (ok && names >= 2 && !sawValue) return true;
+  }
+  return false;
+}
+
 let _darklua = null;
 function loadDarklua() {
   if (!_darklua) {
@@ -213,8 +244,14 @@ function cleanGarbage(source, opts = {}) {
   }
 
   if (!opts.noDarklua) {
+    const rules = (opts.darkluaRules || DEFAULT_DARKLUA_RULES).slice();
+    if (rules.includes('remove_unused_variable') && hasMultiDeclarationWithoutValue(current)) {
+      rules.splice(rules.indexOf('remove_unused_variable'), 1);
+      warnings.push('darklua remove_unused_variable skipped: the file declares multi-name locals ' +
+                    'without initializers, which darklua would delete entirely (writes would become globals)');
+    }
     try {
-      const d = runDarkluaClean(current, opts.darkluaRules || DEFAULT_DARKLUA_RULES);
+      const d = runDarkluaClean(current, rules);
       current = d.source;
       darkluaApplied = d.applied;
       if (d.warning) warnings.push(d.warning);
@@ -237,6 +274,7 @@ function cleanGarbage(source, opts = {}) {
 
 module.exports = {
   DEFAULT_DARKLUA_RULES,
+  hasMultiDeclarationWithoutValue,
   checkLuauAst,
   countNonEmptyLines,
   resolveStyluaBin,

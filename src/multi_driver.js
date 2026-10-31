@@ -156,7 +156,7 @@ async function runHercules(job) {
   const cli = path.join(OBFUSCATORS, 'hercules', 'deobfhercules.py');
   const out = job.path('.hercules.lua');
   runPythonCli([cli, job.sourcePath, out, '--timeout', String(job.args.timeout)], job.args.timeout + 10, {
-    env: { PYTHONPATH: path.join(OBFUSCATORS, 'hercules') },
+    env: pythonEnv({ PYTHONPATH: path.join(OBFUSCATORS, 'hercules') }),
   });
   return finalizeStaticResult(job, out, 'Hercules');
 }
@@ -216,7 +216,7 @@ async function runMoonveil(job) {
       timeout: (mvTimeout + 30) * 1000,
       maxBuffer: 64 * 1024 * 1024,
       windowsHide: true,
-      env: { PYTHONPATH: mvDir },
+      env: pythonEnv({ PYTHONPATH: mvDir }),
     }
   );
   if (!r.error && r.status === 0 && fs.existsSync(out) && fs.statSync(out).size > 0) {
@@ -232,7 +232,7 @@ async function runIronbrew1(job) {
   let patched = null;
   try {
     const r = spawnSync(getPythonBin(), [bridgePy, 'ironbrew1-instrument', job.sourcePath], {
-      env: { PYTHONPATH: CORE },
+      env: pythonEnv({ PYTHONPATH: CORE }),
       maxBuffer: 64 * 1024 * 1024,
       timeout: 60000,
       windowsHide: true,
@@ -304,7 +304,7 @@ async function runIronbrew1(job) {
       'utf8'
     );
     execFileSync(getPythonBin(), [bridgePy, 'ironbrew1-lift', cfgPath], {
-      env: { PYTHONPATH: CORE },
+      env: pythonEnv({ PYTHONPATH: CORE }),
       stdio: 'inherit',
     });
     if (fs.existsSync(statsPath)) {
@@ -332,7 +332,7 @@ async function runLuraphV14(job) {
   let patched = job.source;
   if (!args.noHooks) {
     const r = spawnSync(getPythonBin(), [bridgePy, 'patch-entries-v14', job.sourcePath], {
-      env: { PYTHONPATH: CORE },
+      env: pythonEnv({ PYTHONPATH: CORE }),
       maxBuffer: 64 * 1024 * 1024,
       timeout: 60000,
       windowsHide: true,
@@ -421,7 +421,7 @@ async function runLuraphV14(job) {
         'utf8'
       );
       execFileSync(getPythonBin(), [bridgePy, 'pipeline-v14', cfgPath], {
-        env: { PYTHONPATH: CORE },
+        env: pythonEnv({ PYTHONPATH: CORE }),
         stdio: 'inherit',
       });
       if (fs.existsSync(statsPath)) {

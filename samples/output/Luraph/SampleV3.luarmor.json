@@ -25,5 +25,12 @@
   },
   "notes": [],
   "kind": "luarmor_payload",
-  "label": "Luarmor-served payload (Luraph v15)"
+  "label": "Luarmor-served payload (Luraph v15)",
+  "result_type": "devirtualized",
+  "run_status": "script error: Script:1: invalid argument #1 to 'band' (number expected, got userdata)",
+  "runtime": {
+    "stubs": 5,
+    "unlifted_blocks": 0
+  },
+  "blocked": null
 }

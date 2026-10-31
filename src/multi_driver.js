@@ -121,9 +121,27 @@ async function runLuaObfuscator(job) {
   } else if (stats) {
     job.luaobf = { mode: stats.vmOutputMode, decodedStrings: stats.decodedStrings || 0 };
   }
+  const labels = (source.match(/^\s*::L\d+::/gm) || []).length;
+  if (stats && stats.vmOutputMode === 'devirtualized' && labels > 0) {
+    // Every instruction of the payload is now decoded and classified, and the
+    // result is a register machine with `::Lnn::` labels and `goto`. That is a
+    // faithful listing, but Luau has no labels and no goto: it is not source.
+    const header = [
+      `-- LuaObfuscator: decoded register machine (${labels} labelled blocks, ${stats.vmInstructions} instructions).`,
+      '-- Every instruction is classified and the control flow is intact, but this is',
+      '-- still a machine listing: labels/goto are not Luau. Structural lift pending.',
+      '',
+    ].join('\n');
+    source = header + source;
+    job.luaobf = { mode: 'machine', blocks: labels, instructions: stats.vmInstructions || 0 };
+    job.warnings.push(`LuaObfuscator decoded the payload to a register machine with ${labels} `
+      + 'labelled blocks; it is not Luau source until the labels are structured away.');
+    process.stderr.write(`[!] decoded to a register machine: ${labels} labelled blocks, not Luau source\n`);
+  }
   const out = job.write(job.path('.luaobfuscator.lua'), source);
   const finalized = finalizeStaticResult(job, out, 'LuaObfuscator');
   if (job.luaobf && job.luaobf.mode === 'vm-ir') job.resultType = 'vm-ir';
+  if (job.luaobf && job.luaobf.mode === 'machine') job.resultType = 'machine';
   return finalized;
 }
 

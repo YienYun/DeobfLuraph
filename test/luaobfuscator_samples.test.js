@@ -24,6 +24,10 @@ const { isValidLuaSyntax } = require('../src/luac_decompile');
 
 const SOURCE_PRESETS = ['ChaoticGood.lua', 'ObfucateGood.lua'];
 const VM_PRESETS = ['ChaoticEvil.lua', 'ObfuscateV1.lua', 'Obfuscate_old.lua'];
+// A second build of the same script at OBFUSCATE (old): its interpreter has a
+// dispatch the analyzer can read, so the whole payload is classified and the
+// result is a register machine -- decoded, but still not Luau source.
+const MACHINE_PRESETS = ['Obfucate_Old2.lua'];
 
 function hasLuaparse() {
   const probe = spawnSync(process.execPath, ['-e', "require.resolve('luaparse')"], { cwd: ROOT });
@@ -69,7 +73,7 @@ function sandboxPrints(file) {
 }
 
 test('LuaObfuscator: all five presets are detected and decode without an error', { skip: SKIP }, () => {
-  for (const sample of [...SOURCE_PRESETS, ...VM_PRESETS]) {
+  for (const sample of [...SOURCE_PRESETS, ...VM_PRESETS, ...MACHINE_PRESETS]) {
     const { code, stats } = deobf(sample);
     assert.ok(code.trim().length > 0, `${sample}: output is not empty`);
     assert.ok(!/LuaObfuscator\.com/.test(code), `${sample}: the site banner is gone`);
@@ -106,6 +110,33 @@ for (const sample of VM_PRESETS) {
     assert.ok(stats.stats.vmPreservedInstructions > 500, 'the bytecode is preserved, not dropped');
     assert.match(code, /decoded wrapper strings:|^-- constants:$/m, 'the payload was decoded, not just skipped');
     assert.match(code, /best-effort source preview/, 'a preview of the lifted body is included');
+  });
+}
+
+for (const sample of MACHINE_PRESETS) {
+  test(`LuaObfuscator: ${sample} decodes every instruction and is reported as a machine listing`, { skip: SKIP }, () => {
+    const { code, stats } = deobf(sample);
+    assert.equal(stats.outputMode, 'devirtualized', 'no instruction is left unclassified');
+    assert.equal(stats.stats.vmPreservedInstructions, 0, 'nothing is preserved as raw IR');
+    assert.equal(stats.stats.vmSuperinstructionError, null, 'the interpreter analysis succeeds');
+    assert.match(code, /^\s*::L\d+::/m, 'the control flow survives as labelled blocks');
+    assert.match(code, /return unpack\(r,/, 'range returns are recognised');
+    assert.match(code, /local protos = \{\}/, 'the proto table is rebuilt');
+  });
+
+  test(`LuaObfuscator: ${sample} is not passed off as Luau source`, { skip: SKIP }, () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'lo-machine-'));
+    const out = path.join(dir, 'machine.lua');
+    const reportFile = path.join(dir, 'report.json');
+    const r = spawnSync(process.execPath, [path.join(ROOT, 'deob.js'), path.join(IN, sample), '-o', out, '--report', reportFile], {
+      cwd: ROOT, encoding: 'utf8', timeout: 300000, maxBuffer: 32 * 1024 * 1024,
+    });
+    assert.equal(r.status, 0);
+    assert.match(r.stderr, /result \(machine\)/, 'reported as a machine listing, not devirtualized');
+    const report = JSON.parse(fs.readFileSync(reportFile, 'utf8'));
+    assert.equal(report.result_type, 'machine');
+    assert.match(fs.readFileSync(out, 'utf8'), /labels\/goto are not Luau/, 'the header says what it is');
+    fs.rmSync(dir, { recursive: true, force: true });
   });
 }
 

@@ -2278,6 +2278,8 @@ function emitInstruction(instruction, semantics, proto) {
       return [`do return ${rangeArgs(a, "top")} end`];
     case "return_range":
       return [`do return ${rangeArgs(a, a + b)} end`];
+    case "return_two":
+      return [`do return ${registerName(a)}, ${registerName(a + 1)} end`];
     case "append_varargs":
       return [`for i = ${a + 1}, top do table.insert(${registerName(a)}, r[i]) end`];
     case "setlist":
@@ -3109,6 +3111,9 @@ function liftProtoBody(proto, profile, upvalues = []) {
       case "return_varargs":
       case "return_range":
         emitSourceLine(ctx, `do return ${renderExpr(getReg(ctx, a))} end`);
+        break;
+      case "return_two":
+        emitSourceLine(ctx, `do return ${renderExpr(getReg(ctx, a))}, ${renderExpr(getReg(ctx, a + 1))} end`);
         break;
       case "jmp":
       case "forprep":

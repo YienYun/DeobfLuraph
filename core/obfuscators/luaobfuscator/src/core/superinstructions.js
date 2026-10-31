@@ -702,6 +702,22 @@ function classifySegment(analysis, segment) {
     return { kind: "self_k" };
   }
 
+  // `x = r[A]; return unpack(r, x, x + B)` -- a range return written through the
+  // unpack alias (`local v13 = unpack or table.unpack`), which the plain
+  // `doreturn r[...]` shape below cannot see.
+  if (new RegExp(`^(?:local)?${temp}=${a};(?:do)?return[A-Za-z_][A-Za-z0-9_]*\\(${r},\\1,\\1\\+${b}\\);end$`).test(text)) {
+    return { kind: "return_range" };
+  }
+  // `x = r[A]; return r[x], r[x + 1]` -- the pinned two-value return
+  if (new RegExp(`^(?:local)?${temp}=${a};(?:do)?return${r}\\[\\1\\],${r}\\[\\1\\+1\\];end$`).test(text)) {
+    return { kind: "return_two" };
+  }
+  // copy-on-truthy test: `x = r[C]; if not x then pc = pc + 1 else r[A] = x; pc = B end`
+  // (the closed-form of testset: assign and jump when the tested register is truthy)
+  if (new RegExp(`${temp}=${r}\\[${c}\\];if\\(not\\1or[^;]*\\)then${pc}=${pc}\\+1;.*${ra}=\\1;${pc}=${b};`).test(text)) {
+    return { kind: "testset_truthy" };
+  }
+
   if (new RegExp(`${factory}\\(${children}\\[${b}\\]`).test(text)) return { kind: "closure" };
   if (
     text.includes(`${factory}(`) &&

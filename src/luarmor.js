@@ -78,7 +78,10 @@ function headerLines(meta, stats) {
   const out = [`-- Luarmor v4: ${meta.label}`];
   if (meta.module_id) out.push(`-- module id : ${meta.module_id}`);
   if (meta.cache_key) out.push(`-- cache key : ${meta.cache_key}`);
-  if (meta.init_url) out.push(`-- init      : ${meta.init_url}`);
+  if (meta.init_url) {
+    const tag = meta.kind === 'hub_pointer' ? 'loader    ' : 'init      ';
+    out.push(`-- ${tag}: ${meta.init_url}`);
+  }
   const bs = meta.bsdata0 || {};
   if (bs.client_tag) out.push(`-- client tag: ${bs.client_tag.value}`);
   if (bs.build_stamp) out.push(`-- build stamp: ${bs.build_stamp.value} (${bs.build_stamp.iso})`);
@@ -108,12 +111,15 @@ function prependHeader(resultPath, meta, stats) {
  * analysis on top, so the result is honest and still a valid Lua file.
  */
 function annotateStub(source, meta, stats) {
-  const notes = [
-    '--',
-    '-- This file is a loader stub, not the protected script. It fetches its init',
-    '-- and asks the Luarmor server for the script at runtime; the script text is',
-    '-- not present in these bytes, so there is nothing here to devirtualize.',
-  ];
+  const notes = ['--'];
+  if (meta.kind === 'hub_pointer') {
+    notes.push('-- This file is only a pointer to a Luarmor loader. Fetch the url in the');
+    notes.push('-- header, and run the file it returns through this same command.');
+  } else {
+    notes.push('-- This file is a loader stub, not the protected script. It fetches its init');
+    notes.push('-- and asks the Luarmor server for the script at runtime; the script text is');
+    notes.push('-- not present in these bytes, so there is nothing here to devirtualize.');
+  }
   return headerLines(meta, stats) + '\n' + notes.join('\n') + '\n\n' + source;
 }
 

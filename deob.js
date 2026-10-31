@@ -318,7 +318,7 @@ async function processFile(absInput, args) {
         const stubPath = job.path('.luarmor-stub.lua');
         fs.mkdirSync(path.dirname(stubPath), { recursive: true });
         fs.writeFileSync(stubPath, luarmor.annotateStub(fixed, meta), 'latin1');
-        job.resultType = 'luarmor-client-stub';
+        job.resultType = meta.kind === 'hub_pointer' ? 'luarmor-hub-pointer' : 'luarmor-client-stub';
         result = stubPath;
       }
     } else if (plugin.name === 'luraph_v15') {

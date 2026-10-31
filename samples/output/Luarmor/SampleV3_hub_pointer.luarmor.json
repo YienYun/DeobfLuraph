@@ -1,0 +1,31 @@
+{
+  "file": "/home/user/DeobfLuraph/samples/input/Luarmor/SampleV3_hub_pointer.lua",
+  "bytes": 108,
+  "lines": 2,
+  "luarmor": true,
+  "confidence": 0.9,
+  "signatures": [
+    "luarmor_host",
+    "loader_api"
+  ],
+  "has_bsdata0": false,
+  "has_blob": false,
+  "luraph_payload": false,
+  "module_id": null,
+  "cache_key": null,
+  "init_url": "https://api.luarmor.net/files/v4/loaders/ff2f66df8811e8d694770d532d0a0d1f.lua",
+  "bsdata0": null,
+  "iocs": {
+    "api_endpoint": [
+      "https://api.luarmor.net/files/v4/loaders/ff2f66df8811e8d694770d532d0a0d1f.lua"
+    ],
+    "loader_id": [
+      "ff2f66df8811e8d694770d532d0a0d1f"
+    ]
+  },
+  "notes": [
+    "this file is a pointer: fetch that url, what it returns is the loader (a Luraph v15 chunk, not the script)"
+  ],
+  "kind": "hub_pointer",
+  "label": "one-line pointer to a Luarmor loader"
+}

@@ -97,6 +97,7 @@ KIND_LABEL = {
     "luarmor_payload": "Luarmor-served payload (Luraph v15)",
     "luraph_payload_unwrapped": "Luraph v15 chunk without Luarmor markers",
     "keysystem_script": "plain script that uses the Luarmor key system",
+    "hub_pointer": "one-line pointer to a Luarmor loader",
     "unknown": "not a Luarmor file",
 }
 
@@ -123,6 +124,16 @@ def analyze_bytes(raw, name="<bytes>"):
         "notes": [],
     }
     meta["kind"] = kind_of(text, meta)
+    # A hub script is often nothing but `loadstring(game:HttpGet(<loader>))()`:
+    # there is no code here, and the one useful fact is where to fetch next.
+    if (meta["kind"] == "keysystem_script" and not meta["has_bsdata0"]
+            and len(raw) < 4000 and meta["iocs"].get("loader_id")):
+        meta["kind"] = "hub_pointer"
+        endpoints = meta["iocs"].get("api_endpoint") or []
+        if endpoints:
+            meta["init_url"] = endpoints[0]
+        meta["notes"].append("this file is a pointer: fetch that url, what it returns is the "
+                             "loader (a Luraph v15 chunk, not the script)")
     meta["label"] = KIND_LABEL[meta["kind"]]
 
     if meta["has_bsdata0"]:

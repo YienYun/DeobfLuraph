@@ -6,6 +6,7 @@ Real files from the Luarmor v4 chain, plus what the track does with them.
 | --- | --- |
 | `SampleV1_client_stub.lua` | a saved client stub (1.4 KB): `_bsdata0` + cache key + init URL. Carries no script — it downloads one after the licence handshake. |
 | `SampleV1.lua` | the full 780 KB chain as delivered (stamp 1793260940): `_bsdata0` + a 10,710-byte superflow blob + a Luraph v15 chunk. The chunk is the loader bootstrap, so it lifts to one function (`while true do end`): every check Luarmor makes fails offline and the kick line is inside the retry loop, so the session payload stays encrypted. |
+| `SampleV3_hub_pointer.lua` | a 108-byte hub script (`loadstring(game:HttpGet(...))()`) that only points at loader `ff2f66df...`. Reported as `hub_pointer`: there is no code here, the header carries the url to fetch next. |
 | `SampleV2_sephal_init.lua` | the sephal init (331 KB): `superflow_bytecode={...}` followed by a Luraph v15 chunk. This *is* code, and it gets devirtualized. |
 
 A Luarmor-*served* payload (a Luraph v15 chunk that references
@@ -14,7 +15,7 @@ A Luarmor-*served* payload (a Luraph v15 chunk that references
 lifts to 42 functions with 0 unlifted blocks.
 
 ```bash
-node deob.js samples/input/Luarmor            # both samples -> samples/output/Luarmor
+node deob.js samples/input/Luarmor            # every sample -> samples/output/Luarmor
 python3 core/obfuscators/luarmor/analyze.py samples/input/Luarmor/SampleV1_client_stub.lua
 ```
 
@@ -26,3 +27,7 @@ so a bootstrap-sized file is never mistaken for the protected script.
 
 > Licensing loaders are analysed, not bypassed: the licence check and the
 > session payload behind it are server-side steps that stay server-side.
+
+The payload only exists at runtime, so a working session has to hand it over:
+`tools/capture/luarmor_capture.luau` hooks the fetch and `loadstring` calls and
+drops every stage into `DeobCapture/`, which `node deob.js` then routes.

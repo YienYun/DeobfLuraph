@@ -114,28 +114,36 @@ for (const sample of VM_PRESETS) {
 }
 
 for (const sample of MACHINE_PRESETS) {
-  test(`LuaObfuscator: ${sample} decodes every instruction and is reported as a machine listing`, { skip: SKIP }, () => {
+  test(`LuaObfuscator: ${sample} decodes every instruction and restructures the control flow`, { skip: SKIP }, () => {
     const { code, stats } = deobf(sample);
     assert.equal(stats.outputMode, 'devirtualized', 'no instruction is left unclassified');
     assert.equal(stats.stats.vmPreservedInstructions, 0, 'nothing is preserved as raw IR');
     assert.equal(stats.stats.vmSuperinstructionError, null, 'the interpreter analysis succeeds');
-    assert.match(code, /^\s*::L\d+::/m, 'the control flow survives as labelled blocks');
-    assert.match(code, /return unpack\(r,/, 'range returns are recognised');
     assert.match(code, /local protos = \{\}/, 'the proto table is rebuilt');
+    assert.match(code, /^-- LuaObfuscator: register machine restructured to Luau/m, 'the header says what it is');
+    // the listing's labels and gotos are gone: this is Luau, not assembly
+    assert.ok(!/^\s*::L\d+::/m.test(code), 'no labels survive');
+    assert.ok(!/\bgoto\s+L\d+/.test(code), 'no goto survives');
+    assert.match(code, /while true do/, 'loops are rebuilt');
   });
 
-  test(`LuaObfuscator: ${sample} is not passed off as Luau source`, { skip: SKIP }, () => {
+  test(`LuaObfuscator: ${sample} output parses as Luau`, { skip: SKIP }, () => {
+    const { code } = deobf(sample);
+    assert.ok(isValidLuaSyntax(code), 'the restructured output parses');
+    assert.ok(code.split('\n').length > 1000, `expected the whole payload, got ${code.split('\n').length} lines`);
+  });
+
+  test(`LuaObfuscator: ${sample} is reported as devirtualized, not machine`, { skip: SKIP }, () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'lo-machine-'));
-    const out = path.join(dir, 'machine.lua');
+    const out = path.join(dir, 'structured.lua');
     const reportFile = path.join(dir, 'report.json');
     const r = spawnSync(process.execPath, [path.join(ROOT, 'deob.js'), path.join(IN, sample), '-o', out, '--report', reportFile], {
       cwd: ROOT, encoding: 'utf8', timeout: 300000, maxBuffer: 32 * 1024 * 1024,
     });
     assert.equal(r.status, 0);
-    assert.match(r.stderr, /result \(machine\)/, 'reported as a machine listing, not devirtualized');
+    assert.match(r.stderr, /result \(devirtualized\)/);
     const report = JSON.parse(fs.readFileSync(reportFile, 'utf8'));
-    assert.equal(report.result_type, 'machine');
-    assert.match(fs.readFileSync(out, 'utf8'), /labels\/goto are not Luau/, 'the header says what it is');
+    assert.equal(report.result_type, 'devirtualized');
     fs.rmSync(dir, { recursive: true, force: true });
   });
 }

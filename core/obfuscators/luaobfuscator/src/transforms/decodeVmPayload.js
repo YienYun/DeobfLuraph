@@ -1,10 +1,18 @@
 import { readLuaQuotedString, luaQuote } from "../core/luaStrings.js";
+import { structureMachineText } from "./machine/structure.js";
 import {
   analyzeSuperinstructionVm,
   expandSuperinstructionProto
 } from "../core/superinstructions.js";
 
 const OUTPUT_HEADER = "-- This file was deobfuscated by VX [ https://discord.gg/qa2fwcB7K ]";
+
+// Shown above a restructured payload: the control flow is rebuilt, the numbers
+// are not touched.
+const STRUCTURE_HEADER = [
+  "-- LuaObfuscator: register machine restructured to Luau.",
+  "-- Every instruction is classified; labels and goto are rebuilt as if/while/break."
+].join("\n");
 
 class ByteReader {
   constructor(bytes) {
@@ -2243,6 +2251,14 @@ function emitInstruction(instruction, semantics, proto) {
     case "call_var_assign1":
       return [`${registerName(a)} = ${registerName(a)}(${rangeArgs(a + 1, "top")})`];
     case "call1_multiret":
+      // In this build the "one argument" call still carries the last argument
+      // register in b: a call with more than one argument is a+1..b, and b is
+      // a+1 exactly when there really is a single argument.
+      if (b !== undefined && b > a + 1) {
+        return [
+          `do local out = pack(${registerName(a)}(${rangeArgs(a + 1, b)})); top = ${a} + out.n - 1; for i = 1, out.n do r[${a} + i - 1] = out[i] end end`
+        ];
+      }
       return [
         `do local out = pack(${registerName(a)}(${registerName(a + 1)})); top = ${a} + out.n - 1; for i = 1, out.n do r[${a} + i - 1] = out[i] end end`
       ];
@@ -3486,12 +3502,22 @@ function buildDecodedOutput(proto, encodedLength, decodedLength, options = {}) {
         const expanded = expandSuperinstructionProto(proto, analysis);
         const unknownCount = countUnknownInstructions(expanded);
         if (unknownCount === 0) {
+          const listing = buildRegisterSource(expanded);
+          // The listing is exact but still assembly: one label per instruction
+          // and a goto per jump, and Luau has neither. Rebuild the control flow
+          // Lua would have produced; a proto that will not fold keeps its blocks
+          // behind a `__pc` counter, so nothing is dropped either way.
+          const structure = structureMachineText(listing);
+          const lifted = structure.stats.failed === 0
+            ? `${STRUCTURE_HEADER}\n${structure.code}`
+            : listing;
           return {
-            code: buildRegisterSource(expanded),
+            code: lifted,
             outputMode: "devirtualized",
             instructionCount,
             expandedInstructionCount: countInstructions(expanded),
-            preservedInstructions: 0
+            preservedInstructions: 0,
+            structure: structure.stats
           };
         }
 

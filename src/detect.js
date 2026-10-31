@@ -79,7 +79,9 @@ const LUARMOR_SIGS = [
 function detectLuarmor(source) {
   const head = source.slice(0, 2500);
   if (/^\s*superflow_bytecode\s*=\s*\{/.test(head)) return 0.95;
-  if (/\b_bsdata0\s*=\s*\{/.test(head) && /luarmor\.net\/v4_init_/i.test(source)) return 0.95;
+  if (/\b_bsdata0\s*=\s*\{/.test(head) && (/\bsuperflow_bytecode\s*=\s*\{/.test(head) || /luarmor\.net\/v4_init_/i.test(source))) {
+    return 0.95;
+  }
   let hits = 0;
   for (const rx of LUARMOR_SIGS) {
     if (rx.test(source)) hits += 1;

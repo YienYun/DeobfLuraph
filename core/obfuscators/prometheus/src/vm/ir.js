@@ -66,8 +66,8 @@ function registerKey(vm, node) {
 function isAlias(vm, target) {
   const binding = bindingOf(target);
   if (!binding) return false;
-  const { args, upvals, gcDetect } = vm.container;
-  return binding === args || binding === upvals || binding === gcDetect;
+  const { args, upvals, gcDetect, env } = vm.container;
+  return binding === args || binding === upvals || binding === gcDetect || (!!env && binding === env);
 }
 
 function isAliasMove(vm, statement) {

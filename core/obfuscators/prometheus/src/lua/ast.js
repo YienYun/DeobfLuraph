@@ -54,7 +54,9 @@ const block = (statements = []) => ({ kind: Kind.Block, statements });
 const chunk = (body) => ({ kind: Kind.Chunk, body: body || block() });
 const nil = () => ({ kind: Kind.Nil });
 const boolean = (value) => ({ kind: value ? Kind.True : Kind.False });
-const number = (value) => ({ kind: Kind.Number, value });
+const number = (value, raw) => (raw !== undefined
+  ? { kind: Kind.Number, value, raw }
+  : { kind: Kind.Number, value });
 const string = (value) => ({ kind: Kind.String, value });
 const vararg = () => ({ kind: Kind.Vararg });
 const name = (id) => ({ kind: Kind.Name, name: id });

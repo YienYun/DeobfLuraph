@@ -113,11 +113,28 @@ function detectMoonveil(source) {
 }
 
 function detectPrometheus(source) {
-  const head500 = source.slice(0, 500);
-  if (/rometheus/i.test(head500)) return 0.92;
-  const trimmed = source.trimStart().slice(0, 3000);
-  if (trimmed.startsWith('return(function(...)') && (trimmed.match(/\\\d{3}/g) || []).length >= 3) {
-    return 0.85;
+  const head600 = source.slice(0, 600);
+  if (/rometheus/i.test(head600)) return 0.92;
+  const trimmed = source.replace(/^(?:\s|--(?:\[=*\[[\s\S]*?\]=*\]|[^\r\n]*))*/, '');
+  const head4k = trimmed.slice(0, 4000);
+  const sample = trimmed.slice(0, 24000) + '\n' + source.slice(-8000);
+  const mixedHex = (sample.match(/\b0[xX](?=[0-9a-fA-F]*[a-f])(?=[0-9a-fA-F]*[A-F])[0-9a-fA-F]+\b/g) || []).length;
+  if (head4k.startsWith('return(function(...)')) {
+    if ((head4k.match(/\\\d{3}/g) || []).length >= 3) return 0.85;
+    if (
+      mixedHex >= 2 ||
+      sample.includes('35184372088832') ||
+      /for\s+\w+\s*,\s*\w+\s+in\s+ipairs\(\{\{/.test(sample) ||
+      /^return\(function\(\.\.\.\)\s*local\s+[A-Za-z_][A-Za-z0-9_]?\s*=\s*\{(?:"[^"\\]*(?:\\.[^"\\]*)*"\s*[;,]\s*){4,}/.test(head4k)
+    ) {
+      return 0.86;
+    }
+  }
+  if (
+    mixedHex >= 6 &&
+    (sample.match(/\{[^{}\n]{1,160};[^{}\n]{1,160},|\{[^{}\n]{1,160},[^{}\n]{1,160};/g) || []).length >= 3
+  ) {
+    return 0.84;
   }
   return 0.0;
 }

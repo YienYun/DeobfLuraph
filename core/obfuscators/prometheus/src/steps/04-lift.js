@@ -18,7 +18,15 @@ function varargsArg(vm) {
   const bindings = (vm.wrapper && vm.wrapper.bindings) || [];
   const slot = vm.roles.varargs ? bindings.indexOf(vm.roles.varargs) : -1;
   if (slot < 0) return null;
-  return vm.wrapperCall.args[slot] || null;
+  const raw = vm.wrapperCall.args[slot] || null;
+  const inner = raw ? A.unparen(raw) : null;
+  if (inner && inner.kind === Kind.Table) {
+    const items = (inner.entries || []).filter((e) => e.type === 'item');
+    if (items.length === 1 && A.unparen(items[0].value).kind === Kind.Vararg) {
+      return A.table(items);
+    }
+  }
+  return raw;
 }
 
 const CARRIED = new Set([Kind.Name, Kind.Number, Kind.String, Kind.Nil, Kind.True, Kind.False]);

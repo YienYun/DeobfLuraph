@@ -300,6 +300,9 @@ class Lifter {
     this.isUpvalueTable = tableTest(vm);
     this.isRefsTable = refsTest(vm);
     this.isRefHelper = (vm.upvalues && vm.upvalues.isHelper) || (() => false);
+    this.isPackHelper = (vm.helpers && vm.helpers.isPack) || (() => false);
+    this.isUnpackHelper = (vm.helpers && vm.helpers.isUnpack) || (() => false);
+    this.isCallHelper = (vm.helpers && vm.helpers.isCall) || (() => false);
     this.active = new Set();
   }
 
@@ -326,6 +329,7 @@ class Lifter {
     if (!binding) return false;
     if (!this.vmBindings.has(binding) && !this.isRefHelper(callee)) return false;
     if (this.roleBindings.has(binding)) return false;
+    if (this.isPackHelper(callee) || this.isUnpackHelper(callee) || this.isCallHelper(callee)) return false;
     if (this.creatorFor(callee)) return false;
     if (binding === this.vm.containerBinding) return false;
     return true;
@@ -400,7 +404,7 @@ class Lifter {
         const name = this.cellFor(ctx, ctx.tokenOf(node.index));
         if (name) return A.name(name);
       }
-      const onEnv = isBinding(base, vm.roles.env);
+      const onEnv = isBinding(base, vm.roles.env) || isBinding(base, container.env);
       const onArgs = isBinding(base, container.args);
       if (onEnv || onArgs) {
         const key = unparen(render(node.index));
@@ -416,16 +420,36 @@ class Lifter {
       }
     }
     if (node.kind === Kind.Call) {
-      const creator = this.creatorFor(peel(ctx.block, node.base));
+      const callee = peel(ctx.block, node.base);
+      const creator = this.creatorFor(callee);
       if (creator) {
         const lifted = this.liftSite(node, ctx);
         if (lifted) return lifted;
+      }
+      if (this.isPackHelper(callee)) {
+        return A.table((node.args || []).map((arg) => ({ type: 'item', value: render(arg) })));
+      }
+      if (this.isUnpackHelper(callee)) {
+        return A.call(A.name('unpack'), (node.args || []).slice(0, 1).map(render));
+      }
+      if (this.isCallHelper(callee) && (node.args || []).length >= 2) {
+        const fnExpr = render(node.args[0]);
+        const callArgs = (node.args || []).slice(2).map(render);
+        if (fnExpr && fnExpr.kind === Kind.Name && fnExpr.name === 'getfenv') {
+          if (callArgs.length === 0 || (callArgs[0] && callArgs[0].kind === Kind.Number && callArgs[0].value === 1)) {
+            return A.name('_ENV');
+          }
+        }
+        return A.call(fnExpr, callArgs);
       }
     }
     if (node.kind === Kind.Name) {
       const binding = bindingOf(node);
       if (binding && binding === container.args) {
         return this.argsTable(ctx);
+      }
+      if (binding && container.env && binding === container.env) {
+        return A.name('_ENV');
       }
       const role = binding ? this.roleOf.get(binding) : null;
       if (role) return this.roleValue(role);

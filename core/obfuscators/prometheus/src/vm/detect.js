@@ -152,6 +152,10 @@ const ROLES = [
   ['setmetatable', ['setmetatable']],
   ['getmetatable', ['getmetatable']],
   ['select', ['select']],
+  ['tonumber', ['tonumber']],
+  ['error', ['error']],
+  ['setfenv', ['setfenv']],
+  ['getfenv', ['getfenv']],
 ];
 
 function globalsUsed(node) {
@@ -172,6 +176,12 @@ function classifyValue(node) {
   if (!inner) return null;
 
   if (inner.kind === Kind.Table) return 'varargs';
+  if (inner.kind === Kind.Name && inner.binding && inner.binding.kind === 'global') {
+    const gname = inner.binding.name;
+    if (gname === 'getfenv' || gname === 'setfenv' || gname === 'tonumber' || gname === 'error') {
+      return gname;
+    }
+  }
   const globals = globalsUsed(inner);
   for (const [role, candidates] of ROLES) {
     for (const candidate of candidates) {
@@ -229,9 +239,44 @@ function spreadsVarargs(node) {
     !entry.key && entry.value && unparen(entry.value).kind === Kind.Vararg));
 }
 
+function isVarargPackCall(node) {
+  const call = unparen(node);
+  if (!call || call.kind !== Kind.Call) return false;
+  const args = call.args || [];
+  return args.length === 1 && unparen(args[0]) && unparen(args[0]).kind === Kind.Vararg;
+}
+
+function matchPackHelper(fn) {
+  if (!fn || fn.kind !== Kind.Function || !fn.isVararg || (fn.params || []).length !== 0) return false;
+  const statements = fn.body.statements;
+  if (statements.length !== 1 || statements[0].kind !== Kind.Return) return false;
+  const expr = unparen(statements[0].expressions[0]);
+  return spreadsVarargs(expr);
+}
+
+function matchUnpackHelper(fn) {
+  if (!fn || fn.kind !== Kind.Function || readsVarargs(fn) || (fn.params || []).length !== 1) return false;
+  const statements = fn.body.statements;
+  if (statements.length !== 1 || statements[0].kind !== Kind.Return) return false;
+  const call = unparen(statements[0].expressions[0]);
+  if (!call || call.kind !== Kind.Call || (call.args || []).length < 1) return false;
+  return bindingOf(call.args[0]) === fn.bindings[0];
+}
+
+function matchCallHelper(fn) {
+  if (!fn || fn.kind !== Kind.Function || !fn.isVararg || (fn.params || []).length !== 2) return false;
+  const statements = fn.body.statements;
+  if (statements.length < 1) return false;
+  const tail = statements[statements.length - 1];
+  if (tail.kind !== Kind.Return || tail.expressions.length !== 1) return false;
+  const call = unparen(tail.expressions[0]);
+  if (!call || call.kind !== Kind.Call || (call.args || []).length !== 1) return false;
+  return bindingOf(call.base) === fn.bindings[0] && unparen(call.args[0]).kind === Kind.Vararg;
+}
+
 function matchContainer(fn, flow) {
   if (!fn || fn.kind !== Kind.Function || readsVarargs(fn)) return null;
-  if (!fn.params || fn.params.length !== 4 || !fn.bindings) return null;
+  if (!fn.params || (fn.params.length !== 4 && fn.params.length !== 5) || !fn.bindings) return null;
   const statements = fn.body.statements;
   if (statements.length < 2) return null;
 
@@ -290,7 +335,8 @@ function matchContainer(fn, flow) {
   const args = throughCopy(fn.bindings[1], flow);
   const upvals = throughCopy(fn.bindings[2], flow);
   const gcDetect = throughCopy(fn.bindings[3], flow);
-  const reserved = new Set([spill, args, upvals, gcDetect]);
+  const env = fn.bindings.length >= 5 ? throughCopy(fn.bindings[4], flow) : null;
+  const reserved = new Set([spill, args, upvals, gcDetect, ...(env ? [env] : [])]);
 
   return {
     fn,
@@ -303,12 +349,13 @@ function matchContainer(fn, flow) {
     args,
     upvals,
     gcDetect,
+    env,
   };
 }
 
 function matchClosureCreator(fn, containerBinding, flow) {
   if (!fn || fn.kind !== Kind.Function || readsVarargs(fn)) return null;
-  if (!fn.params || fn.params.length !== 2 || !fn.bindings) return null;
+  if (!fn.params || (fn.params.length !== 2 && fn.params.length !== 3) || !fn.bindings) return null;
   const [idParam, upvalsParam] = fn.bindings;
   let found = null;
   walk(fn.body, {
@@ -319,11 +366,13 @@ function matchClosureCreator(fn, containerBinding, flow) {
       const tail = body[body.length - 1];
       if (!tail || tail.kind !== Kind.Return || tail.expressions.length !== 1) return undefined;
       const call = unparen(tail.expressions[0]);
-      if (!call || call.kind !== Kind.Call || call.args.length !== 4) return undefined;
+      if (!call || call.kind !== Kind.Call || (call.args.length !== 4 && call.args.length !== 5)) return undefined;
       if (!carries(call.base, containerBinding, flow)) return undefined;
       if (!carries(call.args[0], idParam, flow)) return undefined;
       if (!carries(call.args[2], upvalsParam, flow)) return undefined;
-      if (!mayHold(call.args[1], Kind.Table, flow)) return undefined;
+      if (!mayHold(call.args[1], Kind.Table, flow) && !(node.isVararg && isVarargPackCall(call.args[1]))) {
+        return undefined;
+      }
       found = { inner: node, table: call.args[1], gcExpression: call.args[3] };
       return false;
     },
@@ -345,7 +394,7 @@ function matchClosureCreator(fn, containerBinding, flow) {
     fn,
     arity: (found.inner.params || []).length,
 
-    vararg: spreadsVarargs(found.table),
+    vararg: spreadsVarargs(found.table) || (!!found.inner.isVararg && isVarargPackCall(found.table)),
     proxyBinding,
   };
 }
@@ -607,6 +656,9 @@ function describe(container, parents, flow) {
   const creatorFns = new Set();
   let upvalues = null;
   let proxyBinding = null;
+  let packHelper = null;
+  let unpackHelper = null;
+  let callHelper = null;
   for (const fn of inner) {
     const creator = matchClosureCreator(fn, containerBinding, flow);
     if (creator) {
@@ -616,6 +668,18 @@ function describe(container, parents, flow) {
         creators.set(binding, creator);
         if (creator.proxyBinding) proxyBinding = creator.proxyBinding;
       }
+      continue;
+    }
+    if (!packHelper && matchPackHelper(fn)) {
+      packHelper = bindingForValue(fn, parents);
+      continue;
+    }
+    if (!unpackHelper && matchUnpackHelper(fn)) {
+      unpackHelper = bindingForValue(fn, parents);
+      continue;
+    }
+    if (!callHelper && matchCallHelper(fn)) {
+      callHelper = bindingForValue(fn, parents);
       continue;
     }
     if (!upvalues) {
@@ -631,6 +695,15 @@ function describe(container, parents, flow) {
     }
   }
   if (creators.size === 0) return { ok: false, reason: 'no closure creator' };
+
+  const helpers = {
+    pack: packHelper,
+    unpack: unpackHelper,
+    call: callHelper,
+    isPack: carrierTest(packHelper, flow),
+    isUnpack: carrierTest(unpackHelper, flow),
+    isCall: carrierTest(callHelper, flow),
+  };
 
   if (upvalues) {
     upvalues.isAlloc = carrierTest(upvalues.alloc, flow);
@@ -704,6 +777,7 @@ function describe(container, parents, flow) {
       creatorFor,
       upvalues,
       proxyBinding,
+      helpers,
       entry,
     },
   };

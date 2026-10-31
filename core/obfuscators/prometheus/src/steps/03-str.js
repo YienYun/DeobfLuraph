@@ -27,7 +27,10 @@ function preludeWrites(statement, inside, summary, copies) {
   walk(statement, {
     enter(node) {
       inside.set(node, statement);
-      if (node.kind === Kind.FunctionDeclaration) escapes = true;
+      if (node.kind === Kind.FunctionDeclaration) {
+        const tgt = node.target;
+        if (!tgt || tgt.kind !== Kind.Name || !isLocalBinding(tgt.binding)) escapes = true;
+      }
       return undefined;
     },
   });

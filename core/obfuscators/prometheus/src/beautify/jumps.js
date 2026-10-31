@@ -5,11 +5,12 @@ const { Kind } = require('../lua/ast');
 const { walk, collect } = require('../lua/walk');
 const { diverges, divergesBlock } = require('../util/flow');
 
-const TAILS = 8;
+const TAIL_STATEMENTS = 8;
+const TAIL_NODES = 48;
 
-const LOOPS = new Set([Kind.While, Kind.Repeat, Kind.NumericFor, Kind.GenericFor]);
+const LOOP_KINDS = new Set([Kind.While, Kind.Repeat, Kind.NumericFor, Kind.GenericFor]);
 
-const EXITS = new Set([Kind.Return, Kind.Break, Kind.Continue]);
+const LEAVING_KINDS = new Set([Kind.Return, Kind.Break, Kind.Continue]);
 
 function rootsOf(chunk) {
   const roots = [];

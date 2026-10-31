@@ -149,7 +149,7 @@ class Matcher {
 
   startCapture(si, pi, what) {
     const level = this.level;
-    if (level >= MAX_CAPTURES) this.error('too many captures');
+    if (level >= MAX_CAPS) this.error('too many captures');
     this.captureStart[level] = si;
     this.captureLen[level] = what;
     this.level = level + 1;
@@ -162,20 +162,20 @@ class Matcher {
     const level = this.captureToClose();
     this.captureLen[level] = si - this.captureStart[level];
     const result = this.match(si, pi);
-    if (result === -1) this.captureLen[level] = CAP_UNFINISHED;
+    if (result === -1) this.captureLen[level] = UNFINISHED;
     return result;
   }
 
   captureToClose() {
     for (let level = this.level - 1; level >= 0; level -= 1) {
-      if (this.captureLen[level] === CAP_UNFINISHED) return level;
+      if (this.captureLen[level] === UNFINISHED) return level;
     }
     return this.error('invalid capture');
   }
 
   matchCapture(si, index) {
     const level = index - 49;
-    if (level < 0 || level >= this.level || this.captureLen[level] === CAP_UNFINISHED) {
+    if (level < 0 || level >= this.level || this.captureLen[level] === UNFINISHED) {
       this.error(`invalid capture index %${level + 1}`);
     }
     const len = this.captureLen[level];

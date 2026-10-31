@@ -107,7 +107,7 @@ class Parser {
   blockEnds() {
     const t = this.token;
     if (t.kind === TokenKind.Eof) return true;
-    return t.kind === TokenKind.Keyword && BLOCK_TERMINATORS.has(t.value);
+    return t.kind === TokenKind.Keyword && TERMINATORS.has(t.value);
   }
 
   parseStatement() {
@@ -356,7 +356,7 @@ class Parser {
   parseSimpleExpression() {
     const t = this.token;
     switch (t.kind) {
-      case TokenKind.Number: this.advance(); return A.number(t.value);
+      case TokenKind.Number: this.advance(); return A.number(t.value, t.text);
       case TokenKind.String: this.advance(); return A.string(t.value);
       case TokenKind.Keyword:
         if (t.value === 'nil') { this.advance(); return A.nil(); }

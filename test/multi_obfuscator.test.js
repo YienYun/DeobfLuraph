@@ -25,6 +25,7 @@ test('multi-obfuscator detector classifies MoonSec, MoonVeil, Prometheus, PSU, I
     ['return({{},function(p,g)return function(k,d)local i=0b10100110 end end})', 'moonveil'],
     ['-- Obfuscated using Prometheus Obfuscator', 'prometheus'],
     ['return(function(...)local w={"\\069\\066\\081","\\104\\101\\108\\108\\111"} end)()', 'prometheus'],
+    ['return(function(...)local o={"A+8/e6h6="; "ANPeogiJ=", "ATIdSKiopy=="; "Aug59Tms=="; "L?,,I5n"} local a=0x4c6bd69b+0X4Fbb3D end)(...)', 'prometheus'],
     ['-- Protected by PSU Obfuscator v4.5', 'psu'],
     ['local x = "PSU|102938102938"', 'psu'],
     ['-- this file was generated using ironbrew1\nreturn 1', 'ironbrew1'],
@@ -306,4 +307,35 @@ test('modular luraph_v15 subpackages and luraph_v14 layer import cleanly with fu
   const luarmorSample = '_bsdata0={1,2,3}\nsuperflow_bytecode={4,5,6}\n';
   assert.equal(detect.detect(luarmorSample).plugin.name, 'luarmor_client');
 });
+
+test('Prometheus Strong (CFF + NumbersToExpressions + Vmify) deobfuscates cleanly into valid Luau', (t) => {
+  const samplePath = path.join(ROOT, 'samples', 'input', 'Prometheus', 'SampleV1.lua');
+  if (!fs.existsSync(samplePath)) {
+    t.skip('SampleV1.lua fixture not present');
+    return;
+  }
+  const raw = fs.readFileSync(samplePath, 'latin1');
+  assert.equal(detect.detect(raw).plugin.name, 'prometheus');
+
+  const { deobfuscate } = require('../core/obfuscators/prometheus/src/index');
+  const res = deobfuscate(raw, { name: 'SampleV1.lua', strict: true });
+  assert.equal(res.warnings.length, 0);
+  assert.ok(!/_p\d+_/.test(res.code), 'expected zero leftover raw register names');
+  assert.ok(res.code.includes('NebulaSentinelUI'), 'expected recovered UI strings');
+  assert.ok(res.code.includes('TargetOrbit'), 'expected recovered TargetOrbit job');
+  assert.ok(res.code.includes('Parent = '), 'expected recovered Parent table key');
+
+  const luauAst = path.join(ROOT, 'bin', process.platform === 'win32' ? 'luau-ast.exe' : 'luau-ast');
+  if (fs.existsSync(luauAst)) {
+    const tmp = path.join(os.tmpdir(), `prom-v1-${process.pid}.luau`);
+    try {
+      fs.writeFileSync(tmp, res.code, 'latin1');
+      const r = spawnSync(luauAst, [tmp], { encoding: 'utf8' });
+      assert.equal(r.status, 0, r.stderr);
+    } finally {
+      fs.rmSync(tmp, { force: true });
+    }
+  }
+});
+
 

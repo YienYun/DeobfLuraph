@@ -13,6 +13,7 @@ const shapes = require('../beautify/shapes');
 const jumps = require('../beautify/jumps');
 const loops = require('../beautify/loops');
 const callbacks = require('../beautify/callbacks');
+const { polishDecompiledAst } = require('../vmify/decompile');
 
 const ROUNDS = 8;
 
@@ -27,6 +28,7 @@ const PASSES = [
   ['pushed', (chunk) => declare.pushIn(chunk)],
   ['moved', (chunk) => declare.slide(chunk)],
   ['husks', (chunk) => declare.dropEmpty(chunk)],
+  ['tables', (chunk) => polishDecompiledAst(chunk)],
   ['functions', (chunk) => declare.localForm(chunk)],
   ['recursions', (chunk) => declare.recursiveForm(chunk)],
   ['assigned', (chunk) => declare.assignedForm(chunk)],

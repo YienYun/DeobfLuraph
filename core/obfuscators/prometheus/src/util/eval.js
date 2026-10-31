@@ -532,6 +532,13 @@ class Evaluator {
         });
       }
       case Kind.Call: {
+        if (!this.resolvingRounded && (node.args || []).some((a) => {
+          let cur = a;
+          while (cur && cur.kind === Kind.Paren) cur = cur.expression;
+          return !!(cur && cur.kind === Kind.Number && cur.roundedCandidates);
+        })) {
+          return { ok: false };
+        }
         const callee = this.evaluate(node.base, depth + 1);
         if (!callee.ok || !V.isCallable(callee.value)) return { ok: false };
         if (this.readsStale(callee.value)) return { ok: false };
@@ -715,34 +722,138 @@ class Evaluator {
     this.dirty = null;
     let made = 0;
     const disturbed = new Set();
+    const roundedSites = [];
+
+    const unwrapNum = (n) => {
+      let cur = n;
+      while (cur && cur.kind === Kind.Paren) cur = cur.expression;
+      return cur && cur.kind === Kind.Number ? cur : null;
+    };
+
+    const runCallTrial = (decoder, args) => {
+      const trial = effects.record(() => {
+        const given = [];
+        for (const argument of args) {
+          const value = this.evaluateCopied(argument);
+          if (!value.ok) return { ok: false };
+          given.push(value.value);
+        }
+        return this.callDeterministic(decoder, given);
+      });
+      for (const written of trial.writes) disturbed.add(written);
+      if (trial.value.ok) {
+        for (const written of trial.writes) {
+          if (written instanceof V.LuaTable) this.caches.add(written);
+        }
+      }
+      return trial.value.ok;
+    };
+
     walk(this.chunk, {
       enter: (node) => {
         if (made >= PRIME_LIMIT) return false;
+        if (node.kind === Kind.Index && node.index) {
+          let idxExpr = node.index;
+          while (idxExpr && idxExpr.kind === Kind.Paren) idxExpr = idxExpr.expression;
+          if (idxExpr && idxExpr.kind === Kind.Call) {
+            const call = idxExpr;
+            const args = call.args || [];
+            const hasRounded = args.some((a) => {
+              const num = unwrapNum(a);
+              return !!(num && num.roundedCandidates);
+            });
+            if (hasRounded) {
+              roundedSites.push({ indexNode: node, call });
+              return undefined;
+            }
+          }
+        }
         if (node.kind !== Kind.Call) return undefined;
         const args = node.args || [];
         if (!args.length || !args.every((argument) => C.isConstant(argument)
           || argument.kind === Kind.Name)) return undefined;
+        if (args.some((a) => { const n = unwrapNum(a); return !!(n && n.roundedCandidates); })) {
+          return undefined;
+        }
         const decoder = this.decoderAt(node.base);
         if (!decoder || this.readsStale(decoder)) return undefined;
         made += 1;
-
-        const trial = effects.record(() => {
-          const given = [];
-          for (const argument of args) {
-            const value = this.evaluateCopied(argument);
-            if (!value.ok) return { ok: false };
-            given.push(value.value);
-          }
-          return this.callDeterministic(decoder, given);
-        });
-        for (const written of trial.writes) disturbed.add(written);
-        if (!trial.value.ok) return undefined;
-        for (const written of trial.writes) {
-          if (written instanceof V.LuaTable) this.caches.add(written);
-        }
+        runCallTrial(decoder, args);
         return undefined;
       },
     });
+
+    if (roundedSites.length > 0 && this.caches.size > 0) {
+      const exactPool = new Map();
+      for (const tbl of this.caches) {
+        for (const val of tbl.map.values()) {
+          if (typeof val === 'string' && val.length > 0) {
+            exactPool.set(val, (exactPool.get(val) || 0) + 1);
+          }
+        }
+      }
+
+      const scoreCandidate = (str) => {
+        if (typeof str !== 'string') return -1;
+        for (let i = 0; i < str.length; i += 1) {
+          const b = str.charCodeAt(i);
+          if (!((b >= 32 && b <= 126) || b === 9 || b === 10 || b === 13)) return -1;
+        }
+        const inPool = exactPool.get(str) || 0;
+        const isIdent = /^[A-Za-z_][A-Za-z0-9_]*$/.test(str);
+        if (inPool > 0 && isIdent) {
+          return 1000000 + inPool * 1000 + str.length;
+        }
+        if (isIdent) {
+          const natural = /^[a-z][a-z0-9_]*$/.test(str)
+            || /^[A-Z][a-z0-9]+(?:[A-Z][a-z0-9]*)*$/.test(str)
+            || /^[a-z]+(?:[A-Z][a-z0-9]*)+$/.test(str);
+          const hasDigits = /\d/.test(str);
+          return (natural ? 100000 : 10000) - (hasDigits ? 2000 : 0);
+        }
+        return 100;
+      };
+
+      for (const { indexNode, call } of roundedSites) {
+        if (made >= PRIME_LIMIT) break;
+        const decoder = this.decoderAt(call.base);
+        const table = this.cacheAt(indexNode.base);
+        if (!decoder || !table || this.readsStale(decoder)) continue;
+        const args = call.args || [];
+        if (args.length !== 2) continue;
+        const firstArg = this.evaluateCopied(args[0]);
+        const seedNode = unwrapNum(args[1]);
+        if (!firstArg.ok || !seedNode || !seedNode.roundedCandidates) continue;
+
+        let bestSeed = seedNode.value;
+        let bestScore = -1;
+        for (const candSeed of seedNode.roundedCandidates) {
+          const attempt = effects.attempt(() => this.protect(() => {
+            const ret = this.rt.call(decoder, [firstArg.value, candSeed]);
+            return ops.index(this.rt, table, ret[0]);
+          }));
+          const ok = attempt.value && attempt.value.ok;
+          const str = ok ? attempt.value.value : undefined;
+          effects.undo(attempt);
+          if (!ok) continue;
+          const sc = scoreCandidate(str);
+          if (sc > bestScore) {
+            bestScore = sc;
+            bestSeed = candSeed;
+          }
+        }
+        seedNode.value = bestSeed;
+        delete seedNode.roundedCandidates;
+        made += 1;
+        if (runCallTrial(decoder, args)) {
+          const resolved = this.protect(() => ops.index(this.rt, table, bestSeed));
+          if (resolved.ok && typeof resolved.value === 'string' && resolved.value.length > 0) {
+            exactPool.set(resolved.value, (exactPool.get(resolved.value) || 0) + 1);
+          }
+        }
+      }
+    }
+
     this.distrust(disturbed);
     return made;
   }

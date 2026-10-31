@@ -2,7 +2,7 @@
 
 const { resolve } = require('./lua/scope');
 const { unparse } = require('./lua/unparse');
-const { matchWrapper } = require('./steps/01-wrap');
+const { matchWrapper, matchNamedWrapper } = require('./steps/01-wrap');
 const { detect } = require('./vm/detect');
 
 class Context {
@@ -54,6 +54,7 @@ const STEPS = [
   require('./steps/05-if'),
   require('./steps/06-proxy'),
   require('./steps/07-opt'),
+  require('./steps/07b-vmify'),
   require('./steps/08-vars'),
   require('./steps/09-fmt'),
   require('./steps/10-name'),
@@ -61,7 +62,7 @@ const STEPS = [
 ];
 
 const SETTLE = ['03-str', '06-proxy', '07-opt'];
-const FINAL = ['08-vars', '09-fmt', '10-name', '11-scope'];
+const FINAL = ['07b-vmify', '08-vars', '09-fmt', '10-name', '11-scope'];
 const PASSES = 4;
 const LAYERS = 8;
 
@@ -108,6 +109,7 @@ function settle(context, group, options, layer) {
 
 function stacked(context) {
   if (matchWrapper(context.chunk.body)) return true;
+  if (matchNamedWrapper(context.chunk, false)) return true;
   context.resolve();
   try {
     return detect(context.chunk).instances.length > 0;

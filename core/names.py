@@ -14,7 +14,31 @@ GENERATED = re.compile(
     r"|upv\d+(?:_\d+)?|[A-Z][a-z])$"
 )
 SINGLE_CHAR = re.compile(r"^[A-Za-z]$")
+# Two-letter names that are the script's own idiom and worth keeping; every other
+# 1-2 letter local is register noise from the obfuscated wrapper.
+KEEP_SHORT = {"ok", "id"}
+
+
+# The lifter's placeholders. They say nothing about the value and make nesting
+# hard to follow (`value`, `value2`, `value3` in three scopes). Unlike `argument`,
+# which is the conventional word for a callback's parameter, these are worth
+# re-deriving from how the value is used.
+GENERIC_STEM = re.compile(
+    r"^(?:value|val|data|number|num|text|list|item|item2|obj|result|res|tmp|temp|var|"
+    r"table|tab|thing|entry|state|self)(?:\d+)?$"
+)
 KEEP_2UPPER = {"UI", "ID", "OK", "IP", "OS", "WS", "HP", "XP", "AI", "DB", "FN", "FX", "IO"}
+
+
+def is_generated_name(nm):
+    """A name no author would write: wrapper registers, capture-table leftovers."""
+    if nm in KEEP_SHORT or nm in KEEP_2UPPER:
+        return False
+    if GENERATED.match(nm):
+        return True
+    return len(nm) <= 2 and nm != "_"
+
+
 KEYWORDS = {"and", "break", "do", "else", "elseif", "end", "false", "for", "function", "if", "in", "local",
             "nil", "not", "or", "repeat", "return", "then", "true", "until", "while", "continue", "type",
             "export", "self"}
@@ -337,6 +361,33 @@ def const_slot_int(e):
         v = e.get("value")
         if isinstance(v, (int, float)) and v == int(v) and 0 <= int(v) <= 100000:
             return int(v)
+    return None
+
+
+SIZE_FIELDS = ("Size", "AbsoluteSize", "ViewportSize", "CanvasSize", "ImageSize",
+               "ContentSize", "Scroll", "CellSize")
+
+
+def _index_tail(e, limit=3):
+    """The trailing index names of a chain (`a.b.C` -> ['b', 'C']), whatever the
+    root is -- the root is often a renamed local, so only the tail is stable."""
+    out = []
+    while e.get("type") == "AstExprIndexName" and len(out) < limit:
+        out.append(e["index"])
+        e = e["expr"]
+    out.reverse()
+    return out
+
+
+def _dimension_name(e):
+    """`width`/`height` for the X/Y (or W/H) of anything that is a size, which is
+    what Roblox UI code calls them; a bare `x`/`y` there reads like a register."""
+    tail = _index_tail(e)
+    if len(tail) < 2:
+        return None
+    last, prev = tail[-1], tail[-2]
+    if prev in SIZE_FIELDS:
+        return {"X": "width", "Y": "height", "W": "width", "H": "height"}.get(last)
     return None
 
 
@@ -1125,6 +1176,9 @@ class Namer:
                         return camel(s) if ok else None
             return str_arg_name(e)
         if t == "AstExprIndexName":
+            dim = _dimension_name(e)
+            if dim:
+                return dim
             d = dotted(e)
             if d in ("syn.request", "http.request"):
                 return "httpRequest"
@@ -1435,13 +1489,16 @@ class Namer:
             return True
         if nm in KEEP_2UPPER:
             return False
-        if GENERATED.match(nm):
+        if is_generated_name(nm):
+            return True
+        if GENERIC_STEM.match(nm) and not info.get("is_param"):
             return True
         if SINGLE_CHAR.match(nm):
-            if info.get("loop_var"):
-                return True
-            base = self.base_name(info)
-            return bool(base and base not in WEAK_1CHAR)
+            # A one-letter name is never the script's: it is what the wrapper's
+            # own locals turn into once the VM's registers are unrolled. Rename
+            # it from how it is used, and if the use says nothing, from a
+            # role-based fallback (see run()) -- never keep the letter.
+            return True
         return False
 
     def _assign_spill_fields(self, info):
@@ -1461,10 +1518,14 @@ class Namer:
                 duck = duck_type_members(info["slot_members"].get(k))
                 if duck:
                     base = duck
-            if not base or base == "v":
-                base = "slot%d" % k
+            # House style applies to field names too: `fn4` is `callback4`, and a
+            # slot nothing can be inferred from is `data` (what it holds), not
+            # `slot33` -- "slot" is our word for a VM register, not the script's.
+            base = BRAND.get(base, base) if base else None
+            if not base or base in WEAK_1CHAR or base == "v":
+                base = "data"
             if not re.match(r"^[A-Za-z_]\w*$", base) or base in KEYWORDS:
-                base = "slot%d" % k
+                base = "data"
             n = 1
             while True:
                 cand = base if n == 1 else "%s%d" % (base, n)
@@ -1491,7 +1552,8 @@ class Namer:
             info = self.locals[key]
             info["refs"].sort()
             nm = info["name"]
-            if (nm != "_" and not GENERATED.match(nm) and not SINGLE_CHAR.match(nm)) or nm in KEEP_2UPPER:
+            generic = GENERIC_STEM.match(nm) is not None and not info.get("is_param")
+            if (nm != "_" and not is_generated_name(nm) and not generic) or nm in KEEP_2UPPER:
                 if not info.get("spill"):
                     info["new"] = nm
                     taken.setdefault(nm, []).append(info)
@@ -1549,13 +1611,48 @@ class Namer:
     def fits(self, cand, info, taken):
         """No other local named `cand` has a scope overlapping this one's: a
         generated name never shadows (Luau lint: LocalShadow), even where it
-        would be legal because the outer one isn't referenced inside."""
+        would be legal because the outer one isn't referenced inside.
+
+        The one exception is a copy of the same thing: `local data = ctx.data`
+        inside a function that already holds `data` is what the original code
+        looked like, and numbering it `data7` only adds noise -- both names are
+        the same field, so shadowing costs the reader nothing."""
         s0, s1 = info["scope"]
+        origin = self.origin_key(info)
         for other in taken.get(cand, ()):
             o0, o1 = other["scope"]
             if s0 < o1 and o0 < s1:
+                if origin is not None and not any(s0 <= r <= s1 for r in other["refs"]):
+                    # A local that only caches a field (`local state = ctx.state`)
+                    # may reuse the field's name in a nested scope: every copy of
+                    # that field means the same table, so the reader is never in
+                    # doubt. Naming the third copy `state7` is the noise. The
+                    # outer name must not be read from inside this scope, or the
+                    # shadow would capture those reads.
+                    continue
                 return False
         return True
+
+    def origin_key(self, info):
+        """What a local was initialised from, when it is a plain path
+        (`ctx.data`, `workspace.CurrentCamera`): the identity of that path, so
+        two copies of the same field compare equal even after renaming."""
+        for expr, idx in info.get("hints", ()):
+            if idx != 0 or not isinstance(expr, dict):
+                continue
+            return self._path_key(expr)
+        return None
+
+    def _path_key(self, e):
+        t = e.get("type")
+        if t == "AstExprLocal":
+            return ("local", tuple(e["local"]["location"]))
+        if t == "AstExprGlobal":
+            return ("global", e["global"])
+        if t == "AstExprIndexName" and e.get("op") == ".":
+            base = self._path_key(e["expr"])
+            return (base, e["index"]) if base is not None else None
+        return None
 
     def rewrite(self):
         lines = self.text.split("\n")

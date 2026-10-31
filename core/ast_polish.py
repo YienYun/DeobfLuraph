@@ -1162,6 +1162,167 @@ def _declare_unresolved_captures(text):
     return "\n".join(lines[:at] + header.rstrip("\n").split("\n") + [""] + lines[at:])
 
 
+def _split_single_value_locals(text):
+    """`local a, b = expr` reads as two values and is not one.
+
+    It comes from the VM writing one register into two slots. The extra names
+    are nil until something assigns them, so spelling it out says that:
+
+        local a = expr
+        local b
+
+    Calls and `...` are left alone: those really do produce several values.
+    """
+    try:
+        root = _parse_ast(text)
+    except Exception:
+        return text
+    btext = text.encode("utf-8")
+    starts = _line_starts(btext)
+    edits = []
+
+    def walk(node, seen):
+        if not isinstance(node, dict) or id(node) in seen:
+            return
+        seen.add(id(node))
+        if node.get("type") == "AstStatBlock":
+            for st in node.get("body") or []:
+                if not isinstance(st, dict) or st.get("type") != "AstStatLocal":
+                    continue
+                vars_ = st.get("vars") or []
+                vals = st.get("values") or []
+                if len(vars_) < 2 or len(vals) != 1:
+                    continue
+                if vals[0].get("type") in ("AstExprCall", "AstExprVarargs"):
+                    continue
+                s0, e0 = _loc_bytes(st["location"], starts)
+                ls = btext.rfind(b"\n", 0, s0) + 1
+                indent = btext[ls:s0]
+                s0, e0 = _expand_full_line_delete(btext, s0, e0)
+                ls = s0
+                vs, ve = _loc_bytes(vars_[0]["location"], starts)
+                fs, fe = _loc_bytes(vals[0]["location"], starts)
+                rest = [btext[_loc_bytes(v["location"], starts)[0]:_loc_bytes(v["location"], starts)[1]]
+                        for v in vars_[1:]]
+                new = (indent + b"local " + btext[vs:ve] + b" = " + btext[fs:fe] + b"\n" +
+                       indent + b"local " + b", ".join(rest) + b"\n")
+                edits.append((ls, e0, new))
+        for v in node.values():
+            if isinstance(v, dict):
+                walk(v, seen)
+            elif isinstance(v, list):
+                for item in v:
+                    walk(item, seen)
+
+    walk(root, set())
+    if not edits:
+        return text
+    return _apply_edits(btext, edits).decode("utf-8", "surrogateescape")
+
+
+def _tidy_blank_lines(text):
+    """No blank line where a block opens or closes.
+
+    Everything else in the output is placed deliberately; a blank line right
+    after `then` or right before `end` is only ever left over from a statement
+    that was removed.
+    """
+    opener = re.compile(r"\b(then|do|else|repeat)\s*$")
+    closer = re.compile(r"^\s*(end|else|elseif\b|until\b)")
+    lines = text.split("\n")
+    out = []
+    for i, line in enumerate(lines):
+        if line.strip() == "" and out:
+            prev = out[-1]
+            nxt = next((l for l in lines[i + 1:] if l.strip() != ""), "")
+            if opener.search(prev) or closer.match(nxt or "end"):
+                continue
+        if line.strip() == "" and not out:
+            continue
+        out.append(line)
+    while out and not out[-1].strip():
+        out.pop()
+    return "\n".join(out) + "\n"
+
+
+def _empty_block(node):
+    return isinstance(node, dict) and node.get("type") == "AstStatBlock" and not (node.get("body") or [])
+
+
+def _drop_empty_branches(text):
+    """Remove the branches that do nothing.
+
+    The structurer keeps the shape of the VM's dispatch, so it produces a lot of
+    `else end`, `do end` and `if C then else <body> end`. None of that is source
+    anybody wrote, and all of it can go without changing behaviour: an empty
+    `else` and an empty `do` block are no-ops, `if C then else B end` is
+    `if not C then B end`, and `if C then end` on its own is a no-op.
+    """
+    try:
+        root = _parse_ast(text)
+    except Exception:
+        return text
+    btext = text.encode("utf-8")
+    starts = _line_starts(btext)
+    edits = []
+
+    def rng(node):
+        return _loc_bytes(node["location"], starts)
+
+    def drop_stmt(node):
+        s0, e0 = rng(node)
+        edits.append(_expand_full_line_delete(btext, s0, e0) + (b"",))
+
+    def handle_body(body):
+        for st in body:
+            if not isinstance(st, dict):
+                continue
+            if _empty_block(st):
+                drop_stmt(st)                                   # bare `do end`
+                continue
+            if st.get("type") != "AstStatIf":
+                continue
+            then_empty = _empty_block(st.get("thenbody"))
+            els = st.get("elsebody")
+            els_empty = els is None or _empty_block(els)
+            if els is None and then_empty:
+                if _is_inert_expr(st.get("condition")):
+                    drop_stmt(st)
+            elif els is not None and els_empty and not then_empty:
+                # keep the then-branch, drop "else" and the empty block after it
+                _, ts = rng(st["thenbody"])
+                _, te = rng(st["elsebody"])
+                edits.append((ts, te, b""))
+            elif then_empty and not els_empty and els.get("type") == "AstStatBlock":
+                # `if C then else B end` -> `if not (C) then B end`
+                cs, ce = rng(st["condition"])
+                edits.append((cs, cs, b"not ("))
+                edits.append((ce, ce, b")"))
+                _, ts = rng(st["thenbody"])
+                es, _ = rng(st["elsebody"])
+                edits.append((ts, es, b""))
+
+    def walk(node, seen):
+        if not isinstance(node, dict):
+            return
+        if id(node) in seen:
+            return
+        seen.add(id(node))
+        if node.get("type") == "AstStatBlock":
+            handle_body(node.get("body") or [])
+        for v in node.values():
+            if isinstance(v, dict):
+                walk(v, seen)
+            elif isinstance(v, list):
+                for item in v:
+                    walk(item, seen)
+
+    walk(root, set())
+    if not edits:
+        return text
+    return _apply_edits(btext, edits).decode("utf-8", "surrogateescape")
+
+
 def polish_ast(text):
     text = _strip_unused_params_and_dead_locals(text)
     text = _unwrap_top_level_iife(text)
@@ -1174,6 +1335,18 @@ def polish_ast(text):
         text = _trim_dead_stub_bodies(text)
     except Exception as ex:                        # never lose a working output
         print("[!] dead stub trim pass failed: %s" % ex, file=sys.stderr)
+    try:
+        text = _split_single_value_locals(text)
+    except Exception as ex:                        # never lose a working output
+        print("[!] single-value local pass failed: %s" % ex, file=sys.stderr)
+    try:
+        text = _drop_empty_branches(text)
+    except Exception as ex:                        # never lose a working output
+        print("[!] empty branch pass failed: %s" % ex, file=sys.stderr)
+    try:
+        text = _tidy_blank_lines(text)
+    except Exception as ex:                        # never lose a working output
+        print("[!] blank line pass failed: %s" % ex, file=sys.stderr)
     try:
         text = _declare_unresolved_captures(text)
     except Exception as ex:                        # never lose a working output

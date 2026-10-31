@@ -80,6 +80,7 @@ def lower(entry_key, order, D, link, prefix, upnames, closure):
     body = IDI.fold_pack_idioms(body, own)
     body = IDI.eliminate_dead_code(body, own)
     body = IDI.and_or(body)
+    body = IDI.fold_u32_masks(body)
     body = IDI.fold_single_use(body)
     body = IDI.fold_pack_idioms(body, own)
     body = IDI.while_cond(body)

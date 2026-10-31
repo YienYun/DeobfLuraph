@@ -527,6 +527,64 @@ def fold_single_use(body):
 
     return run(body)
 
+_BIT32_U32 = frozenset((
+    "band", "bor", "bxor", "bnot", "lshift", "rshift", "arshift",
+    "extract", "replace", "countlz", "countrz", "byteswap",
+))
+_U32_MAX = 4294967295.0
+
+def _is_u32(e, defs, depth=0):
+    """Is this expression always an unsigned 32-bit integer?"""
+    if depth > 8:
+        return False
+    if isinstance(e, CG.CallE) and e.method is None:
+        nm = _callee_name(e.fn)
+        return bool(nm) and nm.startswith("bit32.") and nm[6:] in _BIT32_U32
+    if isinstance(e, CG.LocalName):
+        d = defs.get(e.name)
+        return d is not None and _is_u32(d, defs, depth + 1)
+    if isinstance(e, Const):
+        v = e.v
+        return isinstance(v, (int, float)) and not isinstance(v, bool) and 0 <= v <= _U32_MAX
+    return False
+
+def fold_u32_masks(body):
+    """`bit32.band(X, 4294967295)` -> `X` when X is provably a uint32 already.
+
+    Luraph masks every intermediate back into 32 bits. The mask is meaningful
+    after real arithmetic (a product overflows), but a plain no-op after a
+    bit32 call, since those always return a uint32 -- including through a
+    local that is written once and only holds such a value."""
+    reads, writes, text = _counts_no_forprep(body)
+    defs = {}
+
+    def note(stmts):
+        for st in stmts:
+            if isinstance(st, CG.AssignS) and len(st.targets) == 1 \
+                    and isinstance(st.targets[0], CG.LocalName) \
+                    and len(st.values.items) == 1 and st.values.tail is None:
+                nm = st.targets[0].name
+                if writes.get(nm, 0) == 1 and nm not in defs:
+                    defs[nm] = st.values.items[0]
+            for sub in _sub_blocks(st):
+                note(sub)
+    note(body)
+    if not defs and not text:
+        return body
+
+    def sub(e):
+        if isinstance(e, CG.CallE) and e.method is None and _callee_name(e.fn) == "bit32.band" \
+                and e.args.tail is None and len(e.args.items) == 2:
+            a, b = e.args.items
+            if isinstance(b, Const) and b.v == _U32_MAX and _is_u32(a, defs):
+                return a
+            if isinstance(a, Const) and a.v == _U32_MAX and _is_u32(b, defs):
+                return b
+        return None
+
+    _map_body(body, sub)
+    return body
+
 def loop_vars(stmts):
     """for k, v in f() where v is never read -> for k in f(); an unused first
     variable before a used one becomes `_`."""

@@ -104,7 +104,8 @@ def lower(entry_key, order, D, link, prefix, upnames, closure):
     # pass never emits (behind a return/break) is dead code, not a lost one
     if nerr:
         nerr = text.count('error("devirt:')
-    return text, params, nerr, sr.fallbacks
+    fallbacks = sr.fallbacks + (1 if getattr(sr, "state_machine", False) else 0)
+    return text, params, nerr, fallbacks
 
 
 def _name_stray_regs(node, own):

@@ -548,6 +548,7 @@ class Structurer:
         self.ipdom, _ = dominators(0, lambda n: rsucc.get(n, []), lambda n: rpred.get(n, []))
         self.emitted = set()
         self.fallbacks = 0
+        self.state_machine = False
         self.stub_follows = set()
         self.gotos = []         
         self.loop_exit = {}     
@@ -944,6 +945,7 @@ def structure(entry, blocks, own=None, rounds=128):
     copied = 0
     nflag = 0
     for _ in range(rounds):
+        recompute_preds(blocks)     # the fixers below read b.preds
         sr = Structurer(entry, blocks)
         body = sr.run()
         if not sr.gotos:
@@ -980,10 +982,14 @@ def structure(entry, blocks, own=None, rounds=128):
         if not n:
             break
     if sr.fallbacks:
+        # irreducible control flow: one dispatch loop for the whole function.
+        # Count it as one fallback (not as one per goto) so the run summary
+        # says how many functions were not structured.
         if own is not None:
             own.add("state")
         body = state_machine(*first, "state", own)
         sr.fallbacks = 0
+        sr.state_machine = True
     return entry, body, sr
 
 def state_machine(entry, blocks, name, own=None):

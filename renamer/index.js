@@ -6,6 +6,7 @@ const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const garbage = require('./garbage');
+const { WATERMARK_COMMENT, WATERMARK_PRINT, injectWatermark } = require('../src/watermark');
 
 const DIRECTORY_EXTENSIONS = ['.lua', '.luau'];
 const FILE_EXTENSIONS = ['.lua', '.luau', '.txt'];
@@ -132,6 +133,10 @@ function cleanAndRename(source, opts = {}) {
     if (!astCheck.ok) {
       finalSource = source;
     }
+  }
+
+  if (source.includes(WATERMARK_COMMENT) || source.includes(WATERMARK_PRINT) || opts.fromDeobf) {
+    finalSource = injectWatermark(finalSource);
   }
 
   return {

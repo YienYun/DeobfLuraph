@@ -6,6 +6,7 @@ const path = require('path');
 const detectModule = require('./src/detect');
 const driver = require('./src/driver');
 const multiDriver = require('./src/multi_driver');
+const { injectWatermark } = require('./src/watermark');
 
 const DIRECTORY_EXTENSIONS = ['.lua', '.luau'];
 const FILE_EXTENSIONS = ['.lua', '.luau', '.txt'];
@@ -324,6 +325,9 @@ async function processFile(absInput, args) {
           throw new Error('strings output must not overwrite the input or report');
         }
         writeAtomically(stringsFinal, fs.readFileSync(stringsPath, 'utf8'));
+      }
+      if (job.resultType === 'devirtualized') {
+        content = injectWatermark(content);
       }
       writeAtomically(final, content);
       const report = {

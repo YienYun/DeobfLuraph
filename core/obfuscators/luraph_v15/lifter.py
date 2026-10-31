@@ -1023,6 +1023,9 @@ class ProtoLifter:
                         self.requests.add(rq)
                 if not self.making:
                     self.dump.miss("plain, path" if path is not None else "plain, no path")
+                    if os.environ.get("DEVIRT_MISS"):
+                        print("-- missing constant tid=%s slot=%r path=%r" % (obj.tid, key, path),
+                              file=sys.stderr)
                     v = Missing(key)
             return v
         if isinstance(obj, SymList):
@@ -1234,7 +1237,8 @@ class ProtoLifter:
         self.proto_ov.set(key, v, base)
 
     def check_decision(self, cond):
-
+        """A branch on a constant no decoder produced stops the walk here; the
+        block becomes the dead guard branch the backend prunes."""
         if any(isinstance(x, Missing) for x in walk_expr(cond)):
             raise Unsupported("needs a constant that is not decoded yet")
 

@@ -5788,7 +5788,9 @@ do
                         end
                         return true
                 end
+                local LASTDEC = "?"
                 local function decodePath(path, derivedCache, forced)
+                        LASTDEC = "start"
                         local steps, ovs, toks = {}, {}, {}
                         for st in string.gmatch(path, "[^,]+") do
                                 R.insert(toks, st)
@@ -5812,7 +5814,11 @@ do
                         local prefix = toks[1]
                         for si = 2, #steps do
                                 prefix ..= "," .. toks[si]
-                                if R.type(v) ~= "table" then v = nil break end
+                                if R.type(v) ~= "table" then
+                                        LASTDEC = "not-table@" .. si .. ":" .. R.type(v)
+                                        v = nil
+                                        break
+                                end
                                 local k = steps[si]
                                 local x
                                 if si == 2 then
@@ -5824,6 +5830,7 @@ do
                                         -- Luraph's decoder caches into the array: restore the slot afterwards
                                         derived = true
                                         if not canDecodeSlot(v, ovs[si]) then
+                                                LASTDEC = "candecode@" .. si .. ":" .. R.tostring(ovs[si])
                                                 v = nil
                                                 break
                                         end
@@ -5872,6 +5879,7 @@ do
                                                 end
                                                 local op = (R.type(k0) == "table" and R.type(k) == "number") and R.rawget(k0, k) or nil
                                                 if R.type(k) == "number" and R.getmetatable(v) ~= nil and not canDecodeSlot(v, op) then
+                                                        LASTDEC = "candecode-last@" .. si .. ":" .. R.tostring(op)
                                                         v = nil
                                                         break
                                                 end
@@ -5880,6 +5888,8 @@ do
                                                 if CFG.force_debug and not ok then
                                                         R.print("FORCEDBG", path, si, R.tostring(y))
                                                 end
+                                                if not ok then LASTDEC = "decode-err@" .. si .. ":" .. R.tostring(y)
+                                                elseif y == nil then LASTDEC = "decode-nil@" .. si end
                                                 if ok and y ~= nil then
                                                         x = y
                                                         if not derived then
@@ -5891,6 +5901,7 @@ do
                                         end
                                 end
                                 v = x
+                                if v == nil then LASTDEC = "nil@" .. si end
                         end
                         return v, derived
                 end
@@ -6105,6 +6116,7 @@ do
                                         sessBufs = applyBufs(bufs)
                                 end
                                 local vals = {}
+                                local dbg = {}
                                 local start = sentEnd + 1
                                 if string.sub(req, 1, 1) == "*" then
                                         req = string.sub(req, 2)
@@ -6115,6 +6127,9 @@ do
                                 for path in string.gmatch(req, "[^;]+") do
                                         local ok, v = R.pcall(decodeAny, path, sessDerived, sessForced)
                                         R.insert(vals, '["' .. path .. '",' .. (ok and v ~= nil and enc(v) or "null") .. "]")
+                                        if CFG.force_debug then
+                                                R.insert(dbg, '["' .. path .. '","' .. (ok and LASTDEC or ("pcall:" .. R.tostring(v))) .. '"]')
+                                        end
                                 end
                                 local newProtos = {}
                                 for proto, cap in R.next, PA do
@@ -6140,7 +6155,7 @@ do
                                         j += 1
                                 end
                                 sentEnd = #queue
-                                return '{"t":' .. R.fmt("%.4f", R.clock() - t0) .. ',"values":[' .. R.concat(vals, ",") .. '],"tables":{'
+                                return '{"t":' .. R.fmt("%.4f", R.clock() - t0) .. ',"values":[' .. R.concat(vals, ",") .. '],"dbg":[' .. R.concat(dbg, ",") .. '],"tables":{'
                                         .. R.concat(parts, ",") .. '},"new_protos":{' .. R.concat(newProtos, ",") .. "}}"
                         end
                 end

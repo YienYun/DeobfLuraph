@@ -20,6 +20,8 @@ def lower(entry_key, order, D, link, prefix, upnames, closure):
     import idioms as IDI
     from luasym import ClosureExpr, Pseudo
     entry, blocks = ST.build_cfg(entry_key, order, D, link)
+    if os.environ.get("DEVIRT_NO_GUARD_PRUNE") is None:
+        ST.prune_constant_guards(entry, blocks)
     if not os.environ.get("DEVIRT_NO_MERGE"):
         entry, _ = ST.merge_equivalent(entry, blocks, D)
     entry = ST.thread_empty(entry, blocks)

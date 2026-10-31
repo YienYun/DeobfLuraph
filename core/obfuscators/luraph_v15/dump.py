@@ -147,6 +147,12 @@ class Dump:
             first = not self._fetched_any
             self._fetched_any = True
             d = json.loads(self.fetcher([("*" if first else "") + rq], send))
+            if os.environ.get("DEVIRT_MISS"):
+                # per-path answer of the live decode: DEVIRT_MISS=<substr> filters
+                want = os.environ.get("DEVIRT_MISS")
+                if not want or want in rq:
+                    print("-- fetch %r -> %r %s" % (rq, [p_ for p_, _ in (d.get("values") or [])],
+                                                    d.get("dbg") or ""), file=sys.stderr)
             ft = self.fetch_time
             ft[0] += t1 - t0
             ft[1] += time.time() - t1

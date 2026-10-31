@@ -578,8 +578,9 @@ def main():
         text, stats, reqs, bufs = lift_program(a.source, a.protos, a.chunk)
         with open(a.all, "w", encoding="utf-8", newline="\n") as f:
             f.write(finish_text(text) + "\n")
-        print("%d functions, %d unlifted blocks, %d unstructured jumps, %d constant requests"
-              % (stats["functions"], stats["errors"], stats["fallbacks"], len(reqs)))
+        print("%d functions, %d unlifted blocks, %d unstructured jumps, %d constant requests%s"
+              % (stats["functions"], stats["errors"], stats["fallbacks"], len(reqs),
+                 " (%d dead guard branches dropped)" % stats["guards"] if stats.get("guards") else ""))
         print("missing constants:", LAST_DUMP[0].misses if LAST_DUMP else None)
         return
     prog = Program(a.source, a.protos, a.chunk)
@@ -613,7 +614,7 @@ class FunctionLifter:
 
     def __init__(self, prog):
         self.prog = prog
-        self.stats = {"functions": 0, "errors": 0, "fallbacks": 0}
+        self.stats = {"functions": 0, "errors": 0, "fallbacks": 0, "guards": 0}
         self.lifted = set()
 
     def lift(self, vm, vmobj, proto, upvals, upnames, depth=0, shared=None, init_facts=None):
@@ -1080,7 +1081,14 @@ def lift_program(source, protos_path, chunk_paths=(), fetch=None):
     if shared:
         at = next((i for i, l in enumerate(out) if l and not l.startswith("--")), len(out))
         out[at:at] = shared
+    import structure as _ST
+    fl.stats["guards"] = sum(_ST.GUARD_DROPS)
+    _ST.GUARD_DROPS[:] = []
     text = backend.polish("\n".join(out))
+    if os.environ.get("DEVIRT_MISS"):
+        print("[miss] %r" % (dict(prog.dump.misses),), file=sys.stderr)
+        print("[miss] fetched=%d requests=%d" % (len(getattr(prog.dump, "fetched", ())), len(prog.requests)),
+              file=sys.stderr)
     return text, fl.stats, prog.requests, buffer_patches(prog.dump)
 
 finish_text = backend.finish_text

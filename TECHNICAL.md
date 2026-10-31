@@ -61,11 +61,13 @@ To reconstruct valid, clean Luau source code, the engine executes a multi-pass p
 - Each proto is analyzed using **Sparse Conditional Constant Propagation (SCCP)**.
 - When the walker reaches lazy-encrypted constants, it queries the running Luau REPL server in memory (`harness.fetch`) via an IPC pipe.
 - The REPL decrypts the values on-the-fly and returns them in milliseconds, resolving thousands of constants in a few fast rounds.
+- A slot that the live Luraph decoder itself answers with `nil` (an integrity-check operand that no decoder ever produced) becomes a `Missing` expression. A branch on it cannot be decided, so the walk stops there and the block is flagged with `needs a constant that is not decoded yet`.
 
 ### Stage 4: Control Flow Graph (CFG) Reconstruction (`structure.py`, `loops.py`)
 - The basic blocks identified during symbolic walking are assembled into a directed CFG.
 - Dominator tree analysis identifies loops (`while true`, `for i = a, b, c`, `for k, v in pairs`) and conditionals (`if / elseif / else`).
 - Unreachable dead blocks created by opaque predicates are pruned.
+- Dead guard branches are pruned (`structure.prune_constant_guards`). A block flagged with `needs a constant that is not decoded yet` is the payload's tamper routine: in a healthy run the guard never fires, so the whole straight-line chain leading to it is dropped and the sibling branch (the real code) takes its place. A guard that is not the alternative of a condition keeps the statements already lifted and simply ends there. The count is reported as `dead guard branches dropped`, and `DEVIRT_NO_GUARD_PRUNE=1` disables the pass.
 
 ### Stage 5: Register Web Analysis & Local Naming (`variables.py`, `codegen.py`)
 - Virtual registers are mapped across basic block boundaries using Static Single Assignment (SSA) web analysis.
@@ -103,6 +105,8 @@ Debug and tuning hooks used by the Python core and the Node driver. None are req
 | `DEVIRT_DEBUG` | Python | Dump decision logs, block structure and non-payload lifts to stderr |
 | `DEVIRT_BLOCKS` | Python | Dump the CFG of the current function once (first hit only) |
 | `DEVIRT_NO_MERGE` | Python | Skip `merge_equivalent` CFG simplification |
+| `DEVIRT_NO_GUARD_PRUNE` | Python | Keep unliftable integrity-guard branches instead of pruning them |
+| `DEVIRT_MISS` | Python | Print every constant the lifter had to leave undecoded, with its path |
 | `DEVIRT_NO_NAMES` | Python | Skip the local-name inference pass (`names.py`) |
 | `DEOB_PROFILE` | Python | Write a cProfile dump of the `pipeline` branch to this path |
 | `DEOB_PRETIDY` | Python | Write the pre-tidy trace text to this path |

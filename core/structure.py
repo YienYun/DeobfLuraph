@@ -59,6 +59,67 @@ def build_cfg(entry_key, order, D, link):
             blocks[s].preds.append(b.id)
     return entry.id, blocks
 
+GUARD_ERR = "needs a constant that is not decoded yet"
+GUARD_DROPS = []
+
+def prune_constant_guards(entry, blocks):
+    """Luraph's integrity guards compare a register with a lazily decoded
+    constant. When that constant cannot be decoded (a tamper-check slot no
+    Lua-side decoder ever produced) the branch behind the guard cannot be
+    lifted while its sibling -- the real code -- can. Such a branch is a dead
+    end in a healthy run: drop it instead of emitting `error()`. A guard that
+    is not the alternative of a condition keeps its (already lifted)
+    statements and simply ends there."""
+    guards = [b for b in blocks.values()
+              if b.kind == "error" and (b.error or "").startswith(GUARD_ERR)]
+    if not guards:
+        return 0
+    gids = {b.id for b in guards}
+
+    def climb(g):
+        """The condition whose other branch is the real code, walking up the
+        straight-line chain (empty dispatcher hops and the tamper routine's
+        own straight-line code) that leads down to the unliftable branch.
+        -> (cond block, [chain blocks from the cond's successor down to g])"""
+        cur, chain = g, [g]
+        while len(cur.preds) == 1:
+            p = blocks.get(cur.preds[0])
+            if p is None:
+                return None, None
+            if p.kind == "cond" and len(p.succ) == 2:
+                return p, chain
+            if p.kind != "goto" or len(p.succ) != 1:
+                return None, None
+            chain.append(p)
+            cur = p
+        return None, None
+
+    n = 0
+    used = set()
+    for g in guards:
+        p, chain = climb(g)
+        if p is None or any(c.id in used for c in chain):
+            continue
+        t, e = p.succ
+        if chain[-1].id not in (t, e):
+            continue
+        other = e if chain[-1].id == t else t
+        if other in gids or blocks[other].kind == "error":
+            continue
+        p.kind, p.cond, p.succ = "goto", None, [other]
+        for c in chain:
+            c.preds, c.kind, c.stmts, c.succ = [], "end", [], []
+            c.error = None
+            used.add(c.id)
+        n += 1
+    for g in guards:
+        if g.kind == "error":
+            g.kind, g.error = "end", None
+            n += 1
+    if n:
+        GUARD_DROPS.append(n)
+    return n
+
 def fill(b, node, key, new_block, head_of, nodes, D, link):
     if getattr(node, "error", None):
         b.stmts += node.stmts

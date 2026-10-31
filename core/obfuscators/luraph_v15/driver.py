@@ -177,9 +177,10 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None):
             pending_constants = len(new)
             no_new_full_streak = (no_new_full_streak + 1) if not new else 0
             converged = not new and (not (requested | reqs) or devirt.same_patches(last_bufs, bufs) or no_new_full_streak >= 2)
-            print("[*]   %d functions, %d unlifted blocks, %d unstructured jumps, %d new constant requests (%.1fs)"
-                  % (stats["functions"], stats["errors"], stats["fallbacks"], len(new), time.time() - t1),
-                  file=sys.stderr)
+            print("[*]   %d functions, %d unlifted blocks, %d unstructured jumps, %d new constant requests%s (%.1fs)"
+                  % (stats["functions"], stats["errors"], stats["fallbacks"], len(new),
+                     " (%d dead guard branches dropped)" % stats["guards"] if stats.get("guards") else "",
+                     time.time() - t1), file=sys.stderr)
             if converged or rnd == rounds:
                 break
             if quick:

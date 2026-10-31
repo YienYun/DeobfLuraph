@@ -91,6 +91,9 @@ class BoxPart(Expr):
     def __init__(self, idx, k):
         self.idx, self.k = idx, k
 
+    def __repr__(self):
+        return "boxpart(%s,%s)" % (self.idx, self.k)
+
 def walk_expr(e):
     stack = [e]
     while stack:
@@ -114,7 +117,7 @@ def meet(a, b):
         return x is None or (x[0] == "c" and x[1] is None)
 
     for r, f in a.items():
-        if r == ("__live_cap__",):
+        if r in (("__live_cap__",), ("__open_ch__",)):
             continue
         g = b.get(r)
         if g is None:
@@ -177,7 +180,7 @@ def meet(a, b):
             elif not (_is_nil(f) and _is_nil(g)):
                 out[r] = ("any",)
     for r, g in b.items():
-        if r == ("__live_cap__",):
+        if r in (("__live_cap__",), ("__open_ch__",)):
             continue
         if r not in a:
             if g[0] == "c" and ((isinstance(r, int) and 800000 < r < 810000) or (isinstance(r, tuple) and r[0] in ("up", "vararg"))):
@@ -194,6 +197,10 @@ def meet(a, b):
     lcb = b.get(("__live_cap__",))
     if lca or lcb:
         out[("__live_cap__",)] = ("__live_cap__", (lca[1] if lca else frozenset()) | (lcb[1] if lcb else frozenset()))
+    oca = a.get(("__open_ch__",))
+    ocb = b.get(("__open_ch__",))
+    if oca or ocb:
+        out[("__open_ch__",)] = ("__open_ch__", (oca[1] if oca else frozenset()) | (ocb[1] if ocb else frozenset()))
     return out
 
 def fact_of(value):
@@ -489,6 +496,114 @@ def _single_const_fact(lf, reg):
             used.add(reg)
     return sv
 
+def _up_single_const_fact(lf, idx):
+    if lf is None:
+        return None
+    poisoned = getattr(lf, "up_single_poisoned", None)
+    if poisoned is not None and idx in poisoned:
+        return None
+    init_uf = getattr(lf, "init_facts", None)
+    if isinstance(init_uf, dict) and ("up", idx) in init_uf:
+        return None
+    sv = (getattr(lf, "up_single_val", None) or {}).get(idx)
+    if sv is not None:
+        used = getattr(lf, "up_single_used", None)
+        if used is not None:
+            used.add(idx)
+    return sv
+
+def _eval_with_single_consts(expr, facts, lf):
+    fv = eval_fact(expr, facts)
+    if (fv is None or fv[0] in ("any", "t", "cmp", "ord_cmp")) and lf is not None:
+        aug = None
+        cand_regs = []
+        cand_post_regs = []
+        cand_ups = []
+        sv_map = getattr(lf, "rcf_single_val", None) or {}
+        poisoned = getattr(lf, "rcf_single_poisoned", None) or ()
+        rcf_map = getattr(lf, "reg_const_fact", None) or {}
+        post_poisoned = getattr(lf, "rcf_post_cap_poisoned", None) or ()
+        post_val_map = getattr(lf, "rcf_post_cap_val", None) or {}
+        live_lc = facts.get(("__live_cap__",))
+        live_cap_regs = live_lc[1] if live_lc else ()
+        up_sv = getattr(lf, "up_single_val", None) or {}
+        up_poisoned = getattr(lf, "up_single_poisoned", None) or ()
+        init_uf = getattr(lf, "init_facts", None)
+        stack = [expr]
+        while stack:
+            x = stack.pop()
+            if isinstance(x, Reg):
+                cur = facts.get(x.n)
+                if cur is None or cur == ("any",):
+                    sv = sv_map.get(x.n)
+                    if sv is not None and x.n not in poisoned:
+                        if aug is None:
+                            aug = dict(facts)
+                        aug[x.n] = sv
+                        cand_regs.append(x.n)
+                    elif x.n in live_cap_regs and x.n not in post_poisoned:
+                        pv = rcf_map.get(x.n)
+                        prev_pv = post_val_map.get(x.n)
+                        if pv and pv[0] == "c" and isinstance(pv[1], (int, float)) and not isinstance(pv[1], bool) and (prev_pv is None or prev_pv == pv):
+                            if aug is None:
+                                aug = dict(facts)
+                            aug[x.n] = pv
+                            cand_post_regs.append((x.n, pv))
+            elif isinstance(x, Upval):
+                uk = ("up", x.idx)
+                cur = facts.get(uk)
+                if (cur is None or cur == ("any",)) and not (isinstance(init_uf, dict) and uk in init_uf):
+                    uv = up_sv.get(x.idx)
+                    if uv is not None and x.idx not in up_poisoned:
+                        if aug is None:
+                            aug = dict(facts)
+                        aug[uk] = uv
+                        cand_ups.append(x.idx)
+            elif isinstance(x, Expr):
+                stack += [v for v in x.__dict__.values() if isinstance(v, Expr)]
+                if isinstance(x, S.NewTable):
+                    stack += [y for kv in x.items for y in kv if isinstance(y, Expr)]
+        if aug is not None:
+            afv = eval_fact(expr, aug)
+            if afv and afv[0] == "c" and (isinstance(afv[1], (int, float, bool, bytes)) or afv[1] is None):
+                fv = afv
+                if cand_regs:
+                    used = getattr(lf, "rcf_single_used", None)
+                    if used is not None:
+                        used.update(cand_regs)
+                if cand_post_regs:
+                    cap_val = lf.__dict__.setdefault("rcf_post_cap_val", {})
+                    post_used = lf.__dict__.setdefault("rcf_post_cap_used", set())
+                    for rn, rpv in cand_post_regs:
+                        cap_val[rn] = rpv
+                        post_used.add(rn)
+                if cand_ups:
+                    up_used = getattr(lf, "up_single_used", None)
+                    if up_used is not None:
+                        up_used.update(cand_ups)
+    return fv
+
+
+def _post_cap_const_fact(lf, reg):
+    if lf is None:
+        return None
+    poisoned = getattr(lf, "rcf_post_cap_poisoned", None)
+    if poisoned is not None and reg in poisoned:
+        return None
+    rcf = getattr(lf, "reg_const_fact", None) or {}
+    fv = rcf.get(reg)
+    if fv and fv[0] == "c" and isinstance(fv[1], (int, float)) and not isinstance(fv[1], bool):
+        cap_val = lf.__dict__.setdefault("rcf_post_cap_val", {})
+        prev = cap_val.get(reg)
+        if prev is not None and prev != fv:
+            lf.__dict__.setdefault("rcf_post_cap_poisoned", set()).add(reg)
+            cap_val.pop(reg, None)
+            return None
+        cap_val[reg] = fv
+        lf.__dict__.setdefault("rcf_post_cap_used", set()).add(reg)
+        return fv
+    return None
+
 def _capture_closure_up_facts(c, facts, lf=None):
     if lf is not None and isinstance(c.proto, LTable) and not hasattr(c, "arg_facts"):
         for ch in getattr(lf, "children", ()):
@@ -498,29 +613,34 @@ def _capture_closure_up_facts(c, facts, lf=None):
     up_facts = getattr(c, "up_facts", None) or {}
     sv_map = getattr(lf, "rcf_single_val", None) or {}
     poisoned = getattr(lf, "rcf_single_poisoned", None) or ()
-    for i, u in enumerate(c.upvals, 1):
+    ub = getattr(c, "upval_base", 1)
+    for i, u in enumerate(c.upvals, ub):
         uf = None
         if isinstance(u, Reg):
             uf = facts.get(u.n)
-            if uf is None:
-                uf = _single_const_fact(lf, u.n)
+            if not (uf and uf[0] == "c"):
+                uf = _single_const_fact(lf, u.n) or _post_cap_const_fact(lf, u.n)
         elif isinstance(u, MaybeBox):
             uf = facts.get(u.reg)
-            if uf is None:
-                uf = _single_const_fact(lf, u.reg)
+            if not (uf and uf[0] == "c"):
+                uf = _single_const_fact(lf, u.reg) or _post_cap_const_fact(lf, u.reg)
         elif isinstance(u, (BoxProxy, Upval)):
             uf = facts.get(("up", u.idx))
+            if not (uf and uf[0] == "c"):
+                uf = _up_single_const_fact(lf, u.idx)
         elif isinstance(u, LTable):
             vals = list(u.h.values())
             ints = [v for v in vals if isinstance(v, int) and not isinstance(v, bool)]
             if any(isinstance(v, RegFile) for v in vals) and ints:
                 uf = facts.get(ints[0])
-                if uf is None:
-                    uf = _single_const_fact(lf, ints[0])
+                if not (uf and uf[0] == "c"):
+                    uf = _single_const_fact(lf, ints[0]) or _post_cap_const_fact(lf, ints[0])
             else:
                 ups = [v for v in vals if isinstance(v, UpContainer)]
                 if ups:
                     uf = facts.get(("up", ups[0].idx))
+                    if not (uf and uf[0] == "c"):
+                        uf = _up_single_const_fact(lf, ups[0].idx)
         elif isinstance(u, RegFile):
             for rk, rv in facts.items():
                 if isinstance(rk, int) and rk < 800000 and rv and rv[0] == "c" and isinstance(rv[1], (int, float)) and not isinstance(rv[1], bool):
@@ -541,7 +661,7 @@ def _capture_closure_up_facts(c, facts, lf=None):
                 up_facts[("up", i)] = ("t",)
     c.up_facts = up_facts
     open_regs = {}
-    for i, u in enumerate(c.upvals, 1):
+    for i, u in enumerate(c.upvals, ub):
         r = _upval_open_reg(u)
         if r is not None:
             cur_f = facts.get(r)
@@ -549,6 +669,10 @@ def _capture_closure_up_facts(c, facts, lf=None):
             if cur_f is None or (cur_f[0] == "c" and (cur_f[1] is None or (isinstance(cur_f[1], (int, float)) and not isinstance(cur_f[1], bool)))):
                 open_regs[i] = r
     c._open_up_regs = open_regs
+    if lf is not None:
+        prev_oc = facts.get(("__open_ch__",))
+        facts[("__open_ch__",)] = ("__open_ch__",
+                                   (prev_oc[1] if prev_oc else frozenset()) | frozenset((id(c),)))
     cregs = set(c._open_up_regs.values())
     if lf is not None and any(isinstance(u, (RegFile, FrameProxy)) for u in c.upvals):
         cregs |= set(lf.captured_regs)
@@ -560,17 +684,6 @@ def apply_stmt_facts(st, facts, lf, pos=None):
     if isinstance(st, Close):
         facts.pop(st.reg, None)
         if lf is not None:
-            poisoned = lf.__dict__.setdefault("rcf_single_poisoned", set())
-            sv_map = getattr(lf, "rcf_single_val", None)
-            used = getattr(lf, "rcf_single_used", None)
-            poisoned.add(st.reg)
-            if sv_map is not None:
-                sv_map.pop(st.reg, None)
-            if used is not None and st.reg in used:
-                lf.rcf_single_restart = True
-            rcf = getattr(lf, "reg_const_fact", None)
-            if rcf is not None:
-                rcf.pop(st.reg, None)
             rc_clos = getattr(lf, "reg_closure_fact", None)
             if rc_clos is not None:
                 rc_clos.pop(st.reg, None)
@@ -614,26 +727,7 @@ def apply_stmt_facts(st, facts, lf, pos=None):
                 rc_clos[st.target.n] = False
         fv = fact_of(st.value)
         if fv is None:
-            fv = eval_fact(st.value, facts)
-        if fv is None and lf is not None and isinstance(st.value, Bin) and st.value.op in ("Add", "Sub", "Mul", "Div", "Mod", "FloorDiv"):
-            aug = None
-            cand_regs = []
-            for rx in expr_regs(st.value):
-                if rx.n not in facts:
-                    sv = (getattr(lf, "rcf_single_val", None) or {}).get(rx.n)
-                    poisoned = getattr(lf, "rcf_single_poisoned", None) or ()
-                    if sv is not None and rx.n not in poisoned:
-                        if aug is None:
-                            aug = dict(facts)
-                        aug[rx.n] = sv
-                        cand_regs.append(rx.n)
-            if aug is not None:
-                afv = eval_fact(st.value, aug)
-                if afv and afv[0] == "c" and isinstance(afv[1], (int, float)) and not isinstance(afv[1], bool):
-                    fv = afv
-                    used = getattr(lf, "rcf_single_used", None)
-                    if used is not None:
-                        used.update(cand_regs)
+            fv = _eval_with_single_consts(st.value, facts, lf)
         if fv is None and isinstance(st.value, Reg):
             src = facts.get(st.value.n)
             fv = src if (src and src[0] == "r") else ("r", st.value.n)
@@ -669,6 +763,14 @@ def apply_stmt_facts(st, facts, lf, pos=None):
         if fv and fv[0] == "cmp" and fv[2] == tn:
             fv = None
         rcf = lf.__dict__.setdefault("reg_const_fact", {}) if lf is not None else None
+        if lf is not None:
+            pc_val = getattr(lf, "rcf_post_cap_val", None)
+            if pc_val is not None and st.target.n in pc_val and pc_val[st.target.n] != fv:
+                if not (is_nil_assign and st.target.n not in (getattr(lf, "rcf_post_cap_used", None) or ())):
+                    lf.__dict__.setdefault("rcf_post_cap_poisoned", set()).add(st.target.n)
+                    pc_val.pop(st.target.n, None)
+                    if st.target.n in (getattr(lf, "rcf_post_cap_used", None) or ()):
+                        lf.rcf_single_restart = True
         if fv is None:
             facts[st.target.n] = ("any",)
             if rcf is not None:
@@ -677,6 +779,9 @@ def apply_stmt_facts(st, facts, lf, pos=None):
                 for ch in getattr(lf, "children", ()):
                     cat = getattr(ch, "_created_at", None)
                     if cat is not None and pos is not None and cat[0] == pos[0] and pos[1] <= cat[1]:
+                        continue
+                    oc_ch = facts.get(("__open_ch__",))
+                    if oc_ch is not None and id(ch) not in oc_ch[1]:
                         continue
                     open_ups = getattr(ch, "_open_up_regs", None)
                     uf_map = getattr(ch, "up_facts", None)
@@ -690,7 +795,7 @@ def apply_stmt_facts(st, facts, lf, pos=None):
                                 if post_uf is not None:
                                     post_uf.pop(("up", ui), None)
                     if uf_map is not None:
-                        for ui, u in enumerate(ch.upvals, 1):
+                        for ui, u in enumerate(ch.upvals, getattr(ch, "upval_base", 1)):
                             if isinstance(u, RegFile):
                                 uf_map.pop(("up", (ui, st.target.n)), None)
                                 if post_uf is not None:
@@ -705,12 +810,15 @@ def apply_stmt_facts(st, facts, lf, pos=None):
                         cat = getattr(ch, "_created_at", None)
                         if cat is not None and pos is not None and cat[0] == pos[0] and pos[1] <= cat[1]:
                             continue
+                        oc_ch = facts.get(("__open_ch__",))
+                        if oc_ch is not None and id(ch) not in oc_ch[1]:
+                            continue
                         open_ups = getattr(ch, "_open_up_regs", None) or {}
                         uf_map = getattr(ch, "up_facts", None)
                         if uf_map is None:
                             continue
                         post_uf = ch.__dict__.setdefault("_post_up_facts", {})
-                        for ui, u in enumerate(ch.upvals, 1):
+                        for ui, u in enumerate(ch.upvals, getattr(ch, "upval_base", 1)):
                             ureg = _upval_open_reg(u)
                             if ureg == st.target.n:
                                 prev_uf = uf_map.get(("up", ui))
@@ -737,6 +845,9 @@ def apply_stmt_facts(st, facts, lf, pos=None):
                         cat = getattr(ch, "_created_at", None)
                         if cat is not None and pos is not None and cat[0] == pos[0] and pos[1] <= cat[1]:
                             continue
+                        oc_ch = facts.get(("__open_ch__",))
+                        if oc_ch is not None and id(ch) not in oc_ch[1]:
+                            continue
                         open_ups = getattr(ch, "_open_up_regs", None)
                         uf_map = getattr(ch, "up_facts", None)
                         post_uf = getattr(ch, "_post_up_facts", None)
@@ -750,7 +861,7 @@ def apply_stmt_facts(st, facts, lf, pos=None):
                                     if post_uf is not None:
                                         post_uf.pop(("up", ui), None)
                         if uf_map is not None:
-                            for ui, u in enumerate(ch.upvals, 1):
+                            for ui, u in enumerate(ch.upvals, getattr(ch, "upval_base", 1)):
                                 if isinstance(u, RegFile):
                                     uf_map.pop(("up", (ui, st.target.n)), None)
                                     if post_uf is not None:
@@ -766,6 +877,25 @@ def apply_stmt_facts(st, facts, lf, pos=None):
             if isinstance(init_uf, dict) and uk in init_uf and init_uf[uk] != fv:
                 init_uf.pop(uk, None)
                 lf.rcf_single_restart = True
+            up_poisoned = lf.__dict__.setdefault("up_single_poisoned", set())
+            up_sv = lf.__dict__.setdefault("up_single_val", {})
+            up_used = lf.__dict__.setdefault("up_single_used", set())
+            u_idx = st.target.idx
+            if u_idx not in up_poisoned:
+                if fv and fv[0] == "c" and isinstance(fv[1], (int, float)) and not isinstance(fv[1], bool):
+                    prev_uv = up_sv.get(u_idx)
+                    if prev_uv is None:
+                        up_sv[u_idx] = fv
+                    elif prev_uv != fv:
+                        up_poisoned.add(u_idx)
+                        up_sv.pop(u_idx, None)
+                        if u_idx in up_used:
+                            lf.rcf_single_restart = True
+                else:
+                    up_poisoned.add(u_idx)
+                    up_sv.pop(u_idx, None)
+                    if u_idx in up_used:
+                        lf.rcf_single_restart = True
         if fv is None:
             facts[uk] = ("any",)
         elif fv[0] in ("r", "cmp", "ord_cmp", "idx_reg", "m"):
@@ -860,7 +990,7 @@ def apply_stmt_facts(st, facts, lf, pos=None):
         for tc in invoked_closures:
             open_ups = getattr(tc, "_open_up_regs", None) or {}
             site_uf = {}
-            for ui, u in enumerate(tc.upvals, 1):
+            for ui, u in enumerate(tc.upvals, getattr(tc, "upval_base", 1)):
                 ureg = _upval_open_reg(u)
                 if ureg is not None and ui in open_ups:
                     ufv = facts.get(ureg)
@@ -1125,7 +1255,7 @@ def propagate(node, facts, succ, lf):
         if n.cond is not None:
             if _check_cff_bin(n.cond, f, lf):
                 return "cff_restart"
-            v = truth_of(eval_fact(n.cond, f))
+            v = truth_of(_eval_with_single_consts(n.cond, f, lf))
             n.decided = getattr(n, "decided", "unset")
             if v is None:
                 n.decided = None

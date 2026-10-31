@@ -19,6 +19,9 @@ def patch_entries(source, path):
         (l2, c2), var, pv = info["at"], info["var"], info["proto"]
         code = " __PF[%s]=%s " % (var, info.get("pf_key", pv))
         cap = "".join("__PA[%s].%s=%s;" % (pv, nm, nm) for nm in info.get("captures", ()))
+        for env_ in info.get("outer_env", ()):
+            if not env_.get("shadowed") and env_.get("field") and env_.get("name"):
+                cap += "__PA[%s].%s=%s;" % (pv, env_["field"], env_["name"])
         code += ("if __PA and not __PA[%s] then __PA[%s]={};__PA.n=__PA.n+1;__PA[%s].__seq=__PA.n;"
                  "__PA[%s].__maker=\"%s@%d,%d\";__PK[%s]=%s;%s end "
                  % (pv, pv, pv, pv, tag, l2, c2, info.get("pf_key", pv), var, cap))
@@ -36,7 +39,9 @@ def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths)
     from obfuscators.luraph_v14 import devirt as v14_devirt
 
     pkg15.devirt = v14_devirt
+    v14_devirt._set_v14_active(True)
     try:
         return v15_driver.lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths)
     finally:
+        v14_devirt._set_v14_active(False)
         pkg15.devirt = v15_devirt

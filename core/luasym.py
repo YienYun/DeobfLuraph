@@ -1084,6 +1084,10 @@ class Interp:
                 raise Unsupported("numeric for with symbolic bounds")
             if a is None or b is None or c is None:
                 pass  # bound unknown at capture: skip, like a while with an unknown (falsy) condition
+            elif not (isinstance(a, (int, float)) and not isinstance(a, bool)
+                      and isinstance(b, (int, float)) and not isinstance(b, bool)
+                      and isinstance(c, (int, float)) and not isinstance(c, bool)):
+                raise Unsupported("numeric for with symbolic bounds")
             else:
                 i = a
                 n = 0

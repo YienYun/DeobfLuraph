@@ -273,7 +273,7 @@ def rename(entry, blocks, prefix, captured):
         if n is None:
             k = counter.get(reg, 0)
             counter[reg] = k + 1
-            n = names[web] = "%s%d" % (prefix, reg) + ("" if k == 0 else "_%d" % k)
+            n = names[web] = "%s%s" % (prefix, reg) + ("" if k == 0 else "_%d" % k)
         return n
 
     def ren_use(bid, i):

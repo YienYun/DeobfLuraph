@@ -209,6 +209,16 @@ class Program:
                 continue
             ctor = self.ctors[id(vm)]
             assign_ctor = getattr(vm, "assign_ctor", {})
+            unique_by_key = {}
+            ambig_keys = set()
+            for (_b, ak), afn in assign_ctor.items():
+                if ak in ambig_keys:
+                    continue
+                if ak in unique_by_key and unique_by_key[ak] is not afn:
+                    del unique_by_key[ak]
+                    ambig_keys.add(ak)
+                else:
+                    unique_by_key[ak] = afn
             for nm, e in cap.items():
                 if not isinstance(e, LTable):
                     continue
@@ -221,9 +231,10 @@ class Program:
                     elif isinstance(k, int) and k in ctor:
                         fn = ctor[k]
                     elif isinstance(k, int):
-                        fn = assign_ctor.get((nm.encode("latin-1"), k))
+                        fn = assign_ctor.get((nm.encode("latin-1"), k)) or unique_by_key.get(k)
                     elif isinstance(k, bytes):
-                        fn = assign_ctor.get((nm.encode("latin-1"), S.fix_int(k)))
+                        ik = S.fix_int(k)
+                        fn = assign_ctor.get((nm.encode("latin-1"), ik)) or unique_by_key.get(ik)
                     if fn is not None:
                         v.node = fn
         g = LTable()
@@ -283,6 +294,11 @@ class Program:
         lf.rcf_single_val = {}
         lf.rcf_single_used = set()
         lf.rcf_single_restart = False
+        lf.rcf_post_cap_val = {}
+        lf.rcf_post_cap_used = set()
+        lf.mutated_upvals = set()
+        lf.up_single_val = {}
+        lf.up_single_used = set()
         poisoned0 = lf.__dict__.setdefault("rcf_single_poisoned", set())
         poisoned0.update(range(1, getattr(lf, "numparams", 0) + 1))
         poisoned0.update(lf.jump_regs)
@@ -333,7 +349,7 @@ class Program:
             if node is None:
                 try:
                     lf.cur_facts = facts.get(k, {})
-                    node = st.step(s, "%d_%d_" % (s.pc, len(order)))
+                    node = st.step(s, "%s_%d_" % (s.pc, len(order)))
                 except Unsupported as e:
                     if os.environ.get("DEVIRT_TB"):
                         import traceback
@@ -349,6 +365,9 @@ class Program:
                 if getattr(st, "new_carry", False):
 
                     st.new_carry = False
+                    lf.__dict__.get("rcf_single_poisoned", set()).clear()
+                    lf.__dict__.get("rcf_post_cap_poisoned", set()).clear()
+                    lf.__dict__.get("up_single_poisoned", set()).clear()
                     return s0, order, True
                 if getattr(lf, "cff_dropped", False):
                     lf.cff_dropped = False
@@ -626,6 +645,7 @@ class FunctionLifter:
             s0, order, restart = self.prog._walk(vm, lf, st, WALK_LIMIT)
             if not restart:
                 break
+        self._last_lf = lf
         self.prog.requests |= lf.requests
         vreg_init_map = {
             vr: iv for vr, iv in getattr(st, "vreg_init", {}).items()
@@ -692,7 +712,8 @@ class FunctionLifter:
                 if id(c.proto) not in frames:
                     frames[id(c.proto)] = self.frame_regs(vm, vmobj, c)
                 c.frame_map = frames[id(c.proto)]
-                c.frame_regs = sorted({r for i, e in enumerate(c.upvals, 1) if isinstance(e, RegFile)
+                ub = getattr(c, "upval_base", 1)
+                c.frame_regs = sorted({r for i, e in enumerate(c.upvals, ub) if isinstance(e, RegFile)
                                        for r in c.frame_map.get(i, ())})
         me = sys.modules[__name__]
         apply_frame_calls(order)
@@ -711,7 +732,8 @@ class FunctionLifter:
         """{upvalue index: registers} a closure reads or writes through the
         register frames it captured (`s[k] = s`), found by walking it (and
         its own closures that get the frame passed through)."""
-        idx = [i for i, e in enumerate(c.upvals, 1) if isinstance(e, (RegFile, FrameProxy))]
+        ub = getattr(c, "upval_base", 1)
+        idx = [i for i, e in enumerate(c.upvals, ub) if isinstance(e, (RegFile, FrameProxy))]
         cvm = getattr(c, "vm", None) or vm
         memo = self.__dict__.setdefault("_frame_memo", {})
         mkey = (id(c.proto), id(cvm), tuple(idx))
@@ -742,8 +764,9 @@ class FunctionLifter:
         if depth < 8:
             for g in lf.children:
                 if any(isinstance(e, FrameProxy) for e in g.upvals):
+                    g_ub = getattr(g, "upval_base", 1)
                     for gi, regs in self.frame_regs(cvm, vmobj, g, depth + 1).items():
-                        e = g.upvals[gi - 1]
+                        e = g.upvals[gi - g_ub]
                         if isinstance(e, FrameProxy):
                             uses.setdefault(e.idx, set()).update(regs)
         return uses
@@ -751,12 +774,13 @@ class FunctionLifter:
     def closure(self, vm, vmobj, c, parent_names, depth, parent_lf=None):
         import codegen as CG
         proto = c.proto
+        ub = getattr(c, "upval_base", 1)
         if isinstance(proto, PlainProto):
             capnames = getattr(c, "capnames", {})
             upnames = {}
-            for i, e in enumerate(c.upvals, 1):
+            for i, e in enumerate(c.upvals, ub):
                 if isinstance(e, Reg):
-                    upnames[i] = capnames.get(e.n, "r%d" % e.n)
+                    upnames[i] = capnames.get(e.n, "r%s" % e.n)
             text = proto.render(capnames, upnames, fl=self, vm=vm, vmobj=vmobj, depth=depth, parent_lf=parent_lf)
             f = CG.FuncE(text.splitlines())
             f.captures = set(upnames.values())
@@ -766,7 +790,7 @@ class FunctionLifter:
         capnames = getattr(c, "capnames", {})
         upnames = {}
         fmap = getattr(c, "frame_map", {})
-        for i, e in enumerate(c.upvals, 1):
+        for i, e in enumerate(c.upvals, ub):
             if isinstance(e, RegFile):
 
                 for r in fmap.get(i, ()):
@@ -793,7 +817,7 @@ class FunctionLifter:
             else:
                 upnames[i] = "nil"
         params = ["..."]
-        fidx = [i for i, e in enumerate(c.upvals, 1) if isinstance(e, (RegFile, FrameProxy))]
+        fidx = [i for i, e in enumerate(c.upvals, ub) if isinstance(e, (RegFile, FrameProxy))]
         cvm = getattr(c, "vm", None) or vm
 
         init_facts = dict(getattr(c, "up_facts", None) or {})
@@ -822,6 +846,30 @@ class FunctionLifter:
                                   UpList(fidx), upnames, depth + 1,
                                   shared=sh, init_facts=init_facts)
                 params = self.params
+                child_lf = getattr(self, "_last_lf", None)
+                if child_lf is not None and parent_lf is not None:
+                    mut_ups = getattr(child_lf, "mutated_upvals", None) or ()
+                    if mut_ups:
+                        for ui, u in enumerate(c.upvals, ub):
+                            if ui not in mut_ups:
+                                continue
+                            if isinstance(u, (BoxProxy, Upval)):
+                                parent_lf.__dict__.setdefault("mutated_upvals", set()).add(u.idx)
+                            else:
+                                from obfuscators.luraph_v15.dataflow import _upval_open_reg
+                                ureg = _upval_open_reg(u)
+                                if ureg is not None:
+                                    parent_lf.__dict__.setdefault("rcf_post_cap_poisoned", set()).add(ureg)
+                                    rcf = getattr(parent_lf, "reg_const_fact", None)
+                                    if rcf is not None:
+                                        rcf.pop(ureg, None)
+                                    for sib in getattr(parent_lf, "children", ()):
+                                        sib_uf = getattr(sib, "up_facts", None)
+                                        sib_open = getattr(sib, "_open_up_regs", None) or {}
+                                        if sib_uf:
+                                            for sui, sureg in list(sib_open.items()):
+                                                if sureg == ureg:
+                                                    sib_uf.pop(("up", sui), None)
             except Unsupported as ex:
                 lines = ["error(\"devirt: could not lift closure: %s\")" % str(ex).replace("\"", "'")]
                 params = ["..."]
@@ -829,12 +877,14 @@ class FunctionLifter:
                 # one broken function must not abort the whole 1000-function run:
                 # mark it explicitly and keep lifting the rest (same convention
                 # as the "unexplored successor" markers).
+                import traceback
                 pid = self.prog.dump.pid_of_table.get(proto.tid)
-                print("[!] lifting closure %s failed: %s: %s (stubbed with an error marker)"
+                tb_last = traceback.extract_tb(ex.__traceback__)[-1] if ex.__traceback__ else None
+                loc_s = " at %s:%s" % (os.path.basename(tb_last.filename), tb_last.lineno) if tb_last else ""
+                print("[!] lifting closure %s failed: %s: %s%s (stubbed with an error marker)"
                       % ("#%s" % pid if pid is not None else "t%s" % proto.tid,
-                         type(ex).__name__, ex), file=sys.stderr)
+                         type(ex).__name__, ex, loc_s), file=sys.stderr)
                 if os.environ.get("DEVIRT_TB"):
-                    import traceback
                     traceback.print_exc()
                 lines = ["error(\"devirt: could not lift closure: %s: %s\")"
                          % (type(ex).__name__, str(ex).replace("\"", "'"))]

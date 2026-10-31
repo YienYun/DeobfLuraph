@@ -221,7 +221,7 @@ def thread_empty(entry, blocks):
     def target(bid, seen=None):
         seen = seen or set()
         b = blocks[bid]
-        while b.kind == "goto" and not b.stmts and b.succ[0] not in seen and b.id != b.succ[0]:
+        while b.kind == "goto" and not b.stmts and b.succ and b.succ[0] not in seen and b.id != b.succ[0]:
             seen.add(b.id)
             b = blocks[b.succ[0]]
         return b.id

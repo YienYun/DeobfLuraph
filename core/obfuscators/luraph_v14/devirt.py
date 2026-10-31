@@ -41,17 +41,16 @@ class InterpTick:
 _DECODE_DEADLINE = [None]
 
 vmmap.unwrap_group = vmmap.unwrap
-_mi_orig = vmmap.maker_info
+_ACTIVE_V14 = [False]
 
 
-def _maker_info(root, disp=None):
-    if disp is None:
-        disp = vmmap.find_dispatchers(root)
-    return _mi_orig(root)
+def _set_v14_active(active):
+    _ACTIVE_V14[0] = bool(active)
+    D.vmmap = vmmap if active else D._orig_vmmap
 
 
-vmmap.maker_info = _maker_info
-D.vmmap = vmmap
+if not hasattr(D, "_orig_vmmap"):
+    D._orig_vmmap = D.vmmap
 
 
 class NilIndex(Missing):
@@ -69,6 +68,8 @@ def _interp_patches():
     orig_eval = S.Interp.eval
 
     def eval_(self, node, scope):
+        if not _ACTIVE_V14[0] or getattr(self.L, "_is_concrete_pf", False):
+            return orig_eval(self, node, scope)
         try:
             return orig_eval(self, node, scope)
         except Unsupported as ex:
@@ -91,18 +92,104 @@ def _interp_patches():
 
     orig_binop = S.Interp.binop
 
+    def _has_vararg_tail_count(x):
+        return isinstance(x, S.Expr) and any(
+            isinstance(y, S.TailCount) and isinstance(y.tail, S.VarargTail)
+            for y in walk_expr(x)
+        )
+
     def binop_(self, op, a, b):
-        if op in ("Add", "Sub", "Mul", "Div", "FloorDiv", "Mod", "Pow") and (a is None or b is None):
-            aa = a if a is not None else Missing("arith-left")
-            bb = b if b is not None else Missing("arith-right")
-            return self.L.sym_binop(op, aa, bb)
+        if _ACTIVE_V14[0]:
+            if isinstance(a, S.TailCount) and b == 0 and not isinstance(b, bool):
+                if op in ("CompareNe", "CompareGt", "CompareGe"):
+                    return True
+                if op in ("CompareEq", "CompareLt"):
+                    return False
+            if op == "CompareLt" and b == 0 and not isinstance(b, bool) and _has_vararg_tail_count(a):
+                return False
+            if op == "CompareGe" and b == 0 and not isinstance(b, bool) and _has_vararg_tail_count(a):
+                return True
+            if op in ("Add", "Sub", "Mul", "Div", "FloorDiv", "Mod", "Pow") and (a is None or b is None):
+                aa = a if a is not None else Missing("arith-left")
+                bb = b if b is not None else Missing("arith-right")
+                return self.L.sym_binop(op, aa, bb)
         return orig_binop(self, op, a, b)
     S.Interp.binop = binop_
     S.Interp._v14_nil_arith_patch = True
 
     orig_exec_stmt = S.Interp.exec_stmt
 
+    def _exec_v14_symbolic_for(interp, st, scope, a, b):
+        """Handle Luraph v14.9's register-copy / register-clear numeric for-loops
+        whose upper bound carries a TailCount or open register-pack top."""
+        body = (st.get("body") or {}).get("body") or ()
+        loop_loc = (st.get("var") or {}).get("location")
+        if not body or not loop_loc:
+            return False
+
+        # Resolve `b` if it is a vreg/PackTop backed by `packs` (e.g. `for w = R, c do l[w] = nil end`)
+        if (isinstance(b, S.Reg) or type(b).__name__ == "PackTop") and b.n in interp.L.packs:
+            b = interp.L.packs[b.n]
+        elif type(b).__name__ == "PackTop":
+            b = max(0, b.n - 1)
+
+        # Pattern A: Multi-return / open-vararg copy into register file:
+        #   `for j = R, u do K += 1; l[j] = x[K] end`
+        #   `for w = R, R + K do l[w] = G[f + M]; M += 1 end`
+        tcs = [y for y in walk_expr(b) if isinstance(y, S.TailCount)] if isinstance(b, S.Expr) else []
+        if tcs and len(body) == 2:
+            assign_st = next((s for s in body if s.get("type") == "AstStatAssign"), None)
+            inc_st = next((s for s in body if s.get("type") == "AstStatCompoundAssign" and s.get("op") == "Add"), None)
+            if assign_st and inc_st and len(assign_st.get("vars") or ()) == 1 and len(assign_st.get("values") or ()) == 1:
+                lhs = vmmap.unwrap(assign_st["vars"][0])
+                rhs = vmmap.unwrap(assign_st["values"][0])
+                if lhs.get("type") == "AstExprIndexExpr" and rhs.get("type") == "AstExprIndexExpr":
+                    dst_obj = interp.eval(lhs["expr"], scope)
+                    src_obj = interp.eval(rhs["expr"], scope)
+                    if isinstance(dst_obj, RegFile) and isinstance(src_obj, S.SymList):
+                        # Evaluate index expression on the first iteration (loop_var = a)
+                        probe = Scope(scope)
+                        probe.vars[loop_loc] = a
+                        if body[0] is inc_st:
+                            inc_loc = (inc_st.get("var") or {}).get("local", {}).get("location")
+                            if inc_loc:
+                                cur_v = interp.eval(inc_st["var"], probe)
+                                step_v = interp.eval(inc_st["value"], probe)
+                                if isinstance(cur_v, int) and isinstance(step_v, int):
+                                    probe.vars[inc_loc] = cur_v + step_v
+                        start_idx = interp.eval(rhs["index"], probe)
+                        if isinstance(start_idx, int) and start_idx >= 1:
+                            if start_idx == 1:
+                                sliced = src_obj
+                            elif start_idx - 1 <= len(src_obj.items):
+                                sliced = S.SymList(src_obj.items[start_idx - 1:], src_obj.tail)
+                            else:
+                                drop_n = start_idx - 1 - len(src_obj.items)
+                                sliced = S.SymList([], src_obj.tail.drop(drop_n) if src_obj.tail else None)
+                            ecnt = S.TailCount(sliced.tail) if sliced.tail is not None else len(sliced.items)
+                            interp.L.tmove(Multi([sliced, 1, ecnt, a, dst_obj]))
+                            if sliced.tail is not None:
+                                p_reg = a + len(sliced.items)
+                                interp.L.packs[p_reg] = S.SymList([], sliced.tail, nkey=p_reg)
+                                interp.L.pack_read.discard(p_reg)
+                                interp.L.pending_tail = None
+                            return True
+
+        # Pattern B: LOADNIL range up to multret top (`for H = R, K do ... M[u] = nil end`)
+        tb_b = interp.L._resolve_tail_bound(b) if hasattr(interp.L, "_resolve_tail_bound") else None
+        if tb_b is not None or (isinstance(b, S.SymList) and isinstance(b.nkey, int)):
+            n_top = tb_b[0] if tb_b is not None else b.nkey
+            if all(s.get("type") in ("AstStatAssign", "AstStatLocal") for s in body):
+                for r_idx in range(a, max(a, n_top)):
+                    interp.L.put(RegFile(), r_idx, None)
+                for pk in [pk for pk in list(interp.L.packs) if isinstance(pk, int) and pk >= a]:
+                    interp.L.packs.pop(pk, None)
+                return True
+        return False
+
     def exec_stmt_(self, st, scope):
+        if not _ACTIVE_V14[0]:
+            return orig_exec_stmt(self, st, scope)
         if st.get("type") == "AstStatFor":
             try:
                 a = self.eval(st["from"], scope)
@@ -112,6 +199,9 @@ def _interp_patches():
                 raise
             if a is None or b is None or c is None:
                 return
+            if isinstance(a, int) and not isinstance(a, bool) and c == 1 and is_sym(b):
+                if _exec_v14_symbolic_for(self, st, scope, a, b):
+                    return
         InterpTick.n += 1
         if _DECODE_DEADLINE[0] is not None and InterpTick.n % 2048 == 0 \
                 and time.monotonic() > _DECODE_DEADLINE[0]:
@@ -179,7 +269,7 @@ def _bind_unbound_nodes(cap, statics, outer_env):
     return bound
 
 
-def _prepare_maker_env(self, env, vm, proto):
+def _prepare_maker_env(self, env, vm, proto, fallback_cap=None):
     """Rebuild the maker's lexical parent scope from the __venvN captures
     the runtime made where the factory was installed; helpers the runtime
     captured without a body get their static AST bound back onto them."""
@@ -193,6 +283,8 @@ def _prepare_maker_env(self, env, vm, proto):
             if p is proto or p == proto:
                 cap = _cap
                 break
+        if cap is None and isinstance(fallback_cap, dict):
+            cap = fallback_cap
         if cap is None:
             return env
         parent = Scope()
@@ -200,6 +292,8 @@ def _prepare_maker_env(self, env, vm, proto):
             field, decl = env_.get("field"), env_.get("decl")
             if field in cap:
                 parent.vars[decl] = cap[field]
+            elif env_.get("name") in cap:
+                parent.vars[decl] = cap[env_["name"]]
         statics = dict(getattr(vm.info, "static_tables", None) or
                        (vm.info.get("static_tables") if isinstance(vm.info, dict) else {}) or {})
         # Deep mode (DEOB_V14_DECODE_BUDGET env): bind the static bodies onto
@@ -219,11 +313,49 @@ def _prepare_maker_env(self, env, vm, proto):
 
 
 def _proto_init(self, vm, dump, vmobj, proto, upvals, globals_tab, *args, **kwargs):
-    _lf_init(self, vm, dump, vmobj, proto, upvals, globals_tab, *args, **kwargs)
     self.nil_shadow = {}
+    self._is_v14 = bool(_ACTIVE_V14[0])
+    cap = kwargs.get("cap") if "cap" in kwargs else (args[0] if args else None)
+    shared = kwargs.get("shared") if "shared" in kwargs else (args[1] if len(args) > 1 else None)
+    src = cap if cap is not None else shared
+    extra_fb = {}
+    if _ACTIVE_V14[0] and isinstance(src, dict) and getattr(vm, "info", None):
+        assign_ctor = getattr(vm, "assign_ctor", {}) or {}
+        for env_ in vm.info.get("outer_env", ()):
+            field, nm = env_.get("field"), env_.get("name")
+            val = src.get(field) if field else None
+            if val is None and nm:
+                val = src.get(nm)
+            if val is not None:
+                if field:
+                    extra_fb[field] = val
+                    if field not in src:
+                        src[field] = val
+                if nm:
+                    extra_fb[nm] = val
+                    if nm not in src:
+                        src[nm] = val
+                if isinstance(val, LTable) and assign_ctor and nm:
+                    nb = nm.encode("latin-1")
+                    for k, v in val.h.items():
+                        if isinstance(v, OpaqueFn) and v.node is None:
+                            fn = assign_ctor.get((nb, k if isinstance(k, int) else S.fix_int(k)))
+                            if fn is not None:
+                                v.node = fn
+    _lf_init(self, vm, dump, vmobj, proto, upvals, globals_tab, *args, **kwargs)
+    if extra_fb:
+        fb = getattr(self, "cap_fallback", None)
+        if isinstance(fb, dict):
+            fb.update(extra_fb)
+        else:
+            self.cap_fallback = dict(extra_fb)
+    if _ACTIVE_V14[0] and getattr(self, "maker_scope", None) is not None:
+        _prepare_maker_env(self, self.maker_scope, vm, proto, fallback_cap=src)
 
 
 def _index(self, obj, key, it):
+    if not _ACTIVE_V14[0]:
+        return _lf_index(self, obj, key, it)
     if isinstance(key, Multi):
         key = key.first()
     if obj is None:
@@ -231,10 +363,18 @@ def _index(self, obj, key, it):
         if sk in self.nil_shadow:
             return self.nil_shadow[sk]
         return NilIndex(key)
+    if isinstance(obj, LTable) and isinstance(key, S.Reg):
+        cf = getattr(self, "cur_facts", {}).get(key.n)
+        if cf and cf[0] == "c" and isinstance(cf[1], (int, float)) and not isinstance(cf[1], bool):
+            kv = obj.get(S.norm_key(cf[1]))
+            if isinstance(kv, OpaqueFn):
+                return kv
     return _lf_index(self, obj, key, it)
 
 
 def _newindex(self, obj, key, v, it):
+    if not _ACTIVE_V14[0]:
+        return _lf_newindex(self, obj, key, v, it)
     if obj is None:
         if isinstance(key, Multi):
             key = key.first()
@@ -244,6 +384,8 @@ def _newindex(self, obj, key, v, it):
 
 
 def _value_of(self, v):
+    if not _ACTIVE_V14[0]:
+        return _lf_value_of(self, v)
     if isinstance(v, RegFile):
         return D.FrameArg(-1)
     if isinstance(v, LTable) and v.h and id(v) not in self.proto_arrays \
@@ -336,7 +478,205 @@ def _native_opaque_fn(self, fn):
                     "(function(%s) return %s end)(%s)" % (",".join(names), text, ",".join(values)))
 
 
+class _ConcretePFEnv:
+    """Concrete evaluator for pure VM helper closures (e.g. v14.9 `d[13][18][i]`)."""
+    _is_concrete_pf = True
+
+    def __init__(self, globals_tbl, max_steps=100000):
+        self.globals = globals_tbl
+        self.special = {}
+        self.steps = 0
+        self.max_steps = max_steps
+
+    def _tick(self):
+        self.steps += 1
+        if self.steps > self.max_steps:
+            raise Unsupported("concrete VM helper step budget exceeded")
+
+    def is_dispatch(self, st):
+        self._tick()
+        return False
+
+    def varargs(self, scope):
+        s = scope.lookup("...")
+        v = s.vars.get("...") if s else []
+        return v if isinstance(v, Multi) else Multi(list(v))
+
+    def newtable(self):
+        return LTable()
+
+    def set_list_tail(self, tbl, start, m):
+        for off, v in enumerate(m.items):
+            if v is not None:
+                tbl.h[start + off] = v
+
+    def index(self, obj, key, it):
+        self._tick()
+        if isinstance(obj, LTable):
+            return obj.get(S.norm_key(key))
+        if isinstance(obj, dict):
+            return obj.get(key)
+        raise Unsupported("concrete index %r[%r]" % (obj, key))
+
+    def newindex(self, obj, key, val, it):
+        self._tick()
+        if isinstance(obj, LTable):
+            k = S.norm_key(key)
+            if val is None:
+                obj.h.pop(k, None)
+            else:
+                obj.h[k] = val
+            return
+        if isinstance(obj, dict):
+            if val is None:
+                obj.pop(key, None)
+            else:
+                obj[key] = val
+            return
+        raise Unsupported("concrete newindex %r[%r]" % (obj, key))
+
+    def call_builtin(self, fn, args, it, stat=False):
+        self._tick()
+        av = args.items if isinstance(args, Multi) else list(args)
+        if isinstance(fn, OpaqueFn) and fn.node is not None:
+            return it.call(LuaFunc(fn.node, fn.env), args, stat=stat)
+        if isinstance(fn, D.Builtin):
+            f = S.FACT_CONCRETE.get(fn.name)
+            if f:
+                r = f(*av)
+                return r if isinstance(r, Multi) else Multi([r])
+            if fn.name == "table.create":
+                t = LTable()
+                n = int(av[0]) if av and av[0] is not None else 0
+                v = av[1] if len(av) >= 2 else None
+                if v is not None and 0 < n <= 4096:
+                    for i in range(1, n + 1):
+                        t.h[i] = v
+                return Multi([t])
+            if fn.name == "select":
+                if av and av[0] in (b"#", "#"):
+                    return Multi([len(av) - 1])
+                idx = int(av[0])
+                return Multi(list(av[idx:] if idx >= 1 else av[len(av) + idx:]))
+            if fn.name in ("table.unpack", "unpack"):
+                tbl = av[0]
+                i = int(av[1]) if len(av) >= 2 and av[1] is not None else 1
+                j = int(av[2]) if len(av) >= 3 and av[2] is not None else tbl.length()
+                return Multi([tbl.get(x) for x in range(i, j + 1)])
+            if fn.name == "table.move":
+                a1, f_i, e_i, t_i = av[0], int(av[1]), int(av[2]), int(av[3])
+                a2 = av[4] if len(av) >= 5 and av[4] is not None else a1
+                if e_i >= f_i:
+                    mv = [a1.get(x) for x in range(f_i, e_i + 1)]
+                    for off, v in enumerate(mv):
+                        if v is None:
+                            a2.h.pop(t_i + off, None)
+                        else:
+                            a2.h[t_i + off] = v
+                return Multi([a2])
+            if fn.name == "getfenv":
+                return Multi([self.globals])
+            if fn.name == "setfenv":
+                return Multi([av[0] if av else None])
+        raise Unsupported("concrete call %r" % (fn,))
+
+    def length(self, obj):
+        if isinstance(obj, LTable):
+            return obj.length()
+        if isinstance(obj, (bytes, str)):
+            return len(obj)
+        raise Unsupported("concrete len %r" % (obj,))
+
+
+def _clone_vm_ltable(t, skip_ids, seen=None):
+    if seen is None:
+        seen = {}
+    if not isinstance(t, LTable) or id(t) in skip_ids:
+        return t
+    if id(t) in seen:
+        return seen[id(t)]
+    nt = LTable(tid=t.tid)
+    seen[id(t)] = nt
+    for kk, vv in t.h.items():
+        nt.h[kk] = _clone_vm_ltable(vv, skip_ids, seen) if isinstance(vv, LTable) else vv
+    return nt
+
+
+def _resolve_pf_arg(self, x):
+    if isinstance(x, S.Const):
+        x = x.v
+    elif isinstance(x, S.Reg):
+        cf = getattr(self, "cur_facts", {}).get(x.n)
+        if cf and cf[0] == "c":
+            x = cf[1]
+    elif isinstance(x, S.Upval):
+        cf = getattr(self, "cur_facts", {}).get(("up", x.idx))
+        if cf and cf[0] == "c":
+            x = cf[1]
+    elif isinstance(x, D.BoxProxy):
+        cf = getattr(self, "cur_facts", {}).get(("up", x.idx))
+        if cf and cf[0] == "c":
+            x = cf[1]
+    if x is None or isinstance(x, (bool, int, float, bytes, str)):
+        return True, x
+    return False, None
+
+
+def _eval_concrete_pf_fn(self, pf_tid, args):
+    if args.tail is not None:
+        return None
+    raw_args = []
+    key_args = []
+    for x in args.items:
+        ok, vx = _resolve_pf_arg(self, x)
+        if not ok:
+            return None
+        raw_args.append(vx)
+        key_args.append((type(vx), vx))
+    cache = self.dump.__dict__.setdefault("_pf_eval_cache", {})
+    ck = (pf_tid, tuple(key_args))
+    if ck in cache:
+        return cache[ck]
+    cap = getattr(self.dump, "cap_by_self", {}).get(pf_tid)
+    if cap is None:
+        cache[ck] = None
+        return None
+    try:
+        m_args = self.vm.maker.get("args") or []
+        if len(m_args) < 2:
+            cache[ck] = None
+            return None
+        w_orig = cap.get(m_args[0]["name"])
+        k_orig = cap.get(m_args[1]["name"])
+        if not isinstance(w_orig, LTable) or not isinstance(k_orig, LTable):
+            cache[ck] = None
+            return None
+        skip_ids = {
+            id(cap[e["field"]])
+            for e in self.vm.info.get("outer_env", ())
+            if e.get("field") in cap and isinstance(cap[e["field"]], LTable)
+        }
+        seen = {}
+        w_copy = _clone_vm_ltable(w_orig, skip_ids, seen)
+        k_copy = _clone_vm_ltable(k_orig, skip_ids, seen)
+        env = _prepare_maker_env(self, Scope(), self.vm, w_orig, fallback_cap=cap)
+        it_c = S.Interp(_ConcretePFEnv(getattr(self, "globals_tab", None)))
+        clos = it_c.call(LuaFunc(self.vm.maker, env), Multi([w_copy, k_copy]), stat=False).first()
+        res = it_c.call(clos, Multi(raw_args), stat=False)
+        for rv in res.items:
+            if rv is not None and not isinstance(rv, (bool, int, float, bytes, str)):
+                cache[ck] = None
+                return None
+        cache[ck] = res
+        return res
+    except Exception:
+        cache[ck] = None
+        return None
+
+
 def _call_symbolic(self, fn, args, it, stat):
+    if not _ACTIVE_V14[0]:
+        return _lf_call_symbolic(self, fn, args, it, stat)
     if isinstance(fn, OpaqueFn) and fn.node is None and fn.pf_tid is None:
         vals = list(args.items)
         for i, proto in enumerate(vals):
@@ -349,6 +689,10 @@ def _call_symbolic(self, fn, args, it, stat):
             c = ClosureExpr(proto, entries)
             c.vm = self.vm
             return Multi([c])
+    if isinstance(fn, OpaqueFn) and fn.node is None and fn.pf_tid is not None:
+        cres = _eval_concrete_pf_fn(self, fn.pf_tid, args)
+        if cres is not None:
+            return Multi(list(cres.items))
     try:
         return _lf_call_symbolic(self, fn, args, it, stat)
     except Unsupported as ex:
@@ -442,11 +786,14 @@ def lift_program(source, protos_path, chunk_paths=(), fetch=None):
     wins (the reference's alternate-root selection, done engine-side)."""
     budget = float(os.environ.get("DEOB_V14_DECODE_BUDGET", "300"))
     old_deadline = _DECODE_DEADLINE[0]
+    prev_active = _ACTIVE_V14[0]
     _DECODE_DEADLINE[0] = time.monotonic() + budget
+    _set_v14_active(True)
     try:
         return _lift_program_inner(source, protos_path, chunk_paths, fetch)
     finally:
         _DECODE_DEADLINE[0] = old_deadline
+        _set_v14_active(prev_active)
 
 
 def _lift_program_inner(source, protos_path, chunk_paths=(), fetch=None):
@@ -485,9 +832,20 @@ def _lift_program_inner(source, protos_path, chunk_paths=(), fetch=None):
     return best_out
 
 
-collect_requests = D.collect_requests
-program_roots = D.program_roots
-Program = D.Program
+def _with_v14(fn):
+    def wrapped(*args, **kwargs):
+        prev = _ACTIVE_V14[0]
+        _set_v14_active(True)
+        try:
+            return fn(*args, **kwargs)
+        finally:
+            _set_v14_active(prev)
+    return wrapped
+
+
+collect_requests = _with_v14(D.collect_requests)
+program_roots = _with_v14(D.program_roots)
+Program = _with_v14(D.Program)
 Dump = D.Dump
 WalkCache = D.WalkCache
 run_big_stack = D.run_big_stack

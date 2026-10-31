@@ -697,7 +697,8 @@ class State:
         while isinstance(k, LTable):
             d += 1
             k = k.get(link)
-        return (self.mode, self.pc, d, tuple((rk, _hv(rv)) for rk, rv in self.jregs), self.ov.h if self.ov is not None else 0,
+        ov_k = self.ov if isinstance(self.ov, int) else (self.ov.h if self.ov is not None else 0)
+        return (self.mode, self.pc, d, tuple((rk, _hv(rv)) for rk, rv in self.jregs), ov_k,
                 tuple((r, _pack_sig(l)) for r, l in self.packs),
                 tuple((kk, _carry_key(v)) for kk, v in self.locs))
 
@@ -705,13 +706,28 @@ WALK_MAX_ERRORS = 100
 WALK_RESTARTS = 64
 WALK_LIMIT = int(os.environ.get("DEVIRT_WALK_LIMIT", 250000))
 
+class PackTop:
+    __slots__ = ("n",)
+    def __init__(self, n):
+        self.n = n
+    def __repr__(self):
+        return "packtop(%d)" % self.n
+
 def _carry_key(v):
     """Canonical state-key form of a carried local's value (equal states must
     merge even when the value objects differ, e.g. two Const(False))."""
+    if isinstance(v, PackTop):
+        return ("PT", v.n)
     if isinstance(v, RegFile):
         return "RF"
     if isinstance(v, EnvTable):
         return "ENV"
+    if isinstance(v, UpList):
+        return "UPL"
+    if isinstance(v, UpContainer):
+        return "UPC%s" % (v.idx,)
+    if isinstance(v, SymList):
+        return ("SL", tuple(_carry_key(x) for x in v.items), fmt_tail(v.tail) if v.tail is not None else None)
     if isinstance(v, LTable):
         return "T%s" % v.tid
     if isinstance(v, (Builtin, OpaqueFn)):

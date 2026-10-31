@@ -93,6 +93,8 @@ class ProtoLifter:
         self.pack_killed = set()     
         self.ov = None
         self.ov_base = None
+        self.proto_ov = None
+        self.proto_ov_base = None
         # (up i|vararg i) -> ("c", value) facts a caller knows about this proto's
         # upvalues/varargs; set by FunctionLifter.lift / _walk_one after construction
         self.init_facts = {}
@@ -126,17 +128,16 @@ class ProtoLifter:
         it = S.Interp(self)
         self.making = True
         env0 = Scope()
-        if cap is not None and getattr(vm, "outer", None):
+        if src and getattr(vm, "outer", None):
             # free names of the VM closure the maker's own scope cannot
             # resolve (helpers registered in an enclosing method: A, P, ...)
-            # come from the capture, bound at their real declaration keys so
-            # a scope miss falls back to the same values the real run saw.
-            # Attached before the maker call: the maker's body references
-            # them too (it registers itself into the helper table).
+            # come from the capture (or shared fallback for uncaptured child
+            # protos), bound at their real declaration keys so a scope miss
+            # falls back to the same values the real run saw.
             for key, nm in vm.outer.items():
-                if nm not in cap:
+                if nm not in src:
                     continue
-                v = cap[nm]
+                v = src[nm]
                 if v is None or isinstance(v, (LTable, Builtin, OpaqueFn, Opaque,
                                                int, float, bytes, bool)):
                     env0.vars[key] = v
@@ -211,6 +212,21 @@ class ProtoLifter:
     def _resolve_jval(self, v, _max_idx=None):
         if isinstance(v, Const) and isinstance(v.v, int) and not isinstance(v.v, bool):
             return v.v
+        if isinstance(v, Bin) and v.op in ("Add", "Sub", "Mul", "Mod", "FloorDiv"):
+            av = self._resolve_jval(v.a, _max_idx)
+            bv = self._resolve_jval(v.b, _max_idx)
+            if av is not None and bv is not None:
+                if v.op == "Add": return S.fix_int(av + bv)
+                if v.op == "Sub": return S.fix_int(av - bv)
+                if v.op == "Mul": return S.fix_int(av * bv)
+                if v.op == "Mod" and bv != 0: return S.fix_int(av % bv)
+                if v.op == "FloorDiv" and bv != 0: return S.fix_int(av // bv)
+            return None
+        if isinstance(v, Un) and v.op == "Minus":
+            av = self._resolve_jval(v.a, _max_idx)
+            if av is not None:
+                return S.fix_int(-av)
+            return None
         if isinstance(v, (Upval, Vararg)):
             k = ("up", v.idx) if isinstance(v, Upval) else ("vararg", v.i)
             for d in (getattr(self, "cur_facts", None), getattr(self, "init_facts", None)):
@@ -251,10 +267,11 @@ class ProtoLifter:
             self.pack_copies.pop(st.target.n, None)
             self.pack_read.discard(st.target.n)
             pt = getattr(self, "pending_tail", None)
-            if pt is not None and isinstance(st.value, Bin):
+            if pt is not None:
                 self.pending_tail = None
-                self.packs[st.target.n] = SymList([], pt[1], nkey=pt[0])
-                return
+                if isinstance(st.value, Bin) and any(isinstance(x, TailCount) and x.tail is pt[1] for x in walk_expr(st.value)):
+                    self.packs[st.target.n] = SymList([], pt[1], nkey=pt[0])
+                    return
             if isinstance(st.value, SymList):
                 self.packs[st.target.n] = st.value
                 if isinstance(st.value.nkey, int):
@@ -850,6 +867,8 @@ class ProtoLifter:
         if isinstance(key, Multi):
             key = key.first()
         if isinstance(obj, RegFile):
+            if isinstance(key, SymList):
+                raise Unsupported("symbolic register index")
             if is_sym(key):
                 arr = self.reg_array(key)
                 if arr is None:
@@ -928,7 +947,11 @@ class ProtoLifter:
                     print("   table tid=%s path=%s items=%s" % (obj.tid, self.dump.paths().get(obj.tid), str(list(obj.h.items())[:12])), file=sys.stderr)
                 raise Unsupported("symbolic index into a concrete VM table (key %s)" % fmt_expr(key))
             v = obj.get(key)
-            if self.ov_base is not None and obj.tid is not None:
+            if getattr(self, "_is_v14", False) and id(obj) in self.proto_arrays:
+                pov = self.cur_proto_ov()
+                if pov is not None and obj.tid is not None:
+                    v = pov.get((id(obj), S.norm_key(key)), v)
+            elif self.ov_base is not None and obj.tid is not None:
                 v = self.cur_ov().get((id(obj), S.norm_key(key)), v)
             if v is None and (obj.tid, S.norm_key(key)) in self.dump.late:
 
@@ -944,7 +967,8 @@ class ProtoLifter:
                             break
                 if isinstance(k0, LTable):
                     base = k0.get(key)
-                    cur = self.cur_ov().get((id(k0), key), base)
+                    k0_ov = self.cur_proto_ov() if (getattr(self, "_is_v14", False) and id(k0) in self.proto_arrays) else self.cur_ov()
+                    cur = k0_ov.get((id(k0), key), base) if k0_ov is not None else base
                     if _differs(cur, base):
                         if not self._can_decode_const(obj, cur):
                             return Missing(key)
@@ -981,7 +1005,11 @@ class ProtoLifter:
                             if isinstance(cand, LTable) and id(cand) in self.proto_arrays:
                                 k0 = cand
                                 break
-                    op = (self.cur_ov().get((id(k0), key), k0.get(key)) if self.ov_base is not None else k0.get(key)) if isinstance(k0, LTable) and isinstance(key, int) else None
+                    if isinstance(k0, LTable) and isinstance(key, int):
+                        k0_ov = self.cur_proto_ov() if (getattr(self, "_is_v14", False) and id(k0) in self.proto_arrays) else (self.cur_ov() if self.ov_base is not None else None)
+                        op = k0_ov.get((id(k0), key), k0.get(key)) if k0_ov is not None else k0.get(key)
+                    else:
+                        op = None
                     if isinstance(key, int) and not self._can_decode_const(obj, op):
                         return Missing(key)
                     if type(op) in (int, float):
@@ -1045,6 +1073,8 @@ class ProtoLifter:
         if isinstance(key, Multi):
             key = key.first()
         if isinstance(obj, RegFile):
+            if isinstance(key, SymList):
+                raise Unsupported("symbolic register store")
             if is_sym(key):
                 arr = self.reg_array(key)
                 if arr is None:
@@ -1060,7 +1090,10 @@ class ProtoLifter:
                 self.jvals[S.norm_key(key)] = v
                 self.jread.discard(S.norm_key(key))
                 return
-            if isinstance(v, LTable) and (id(v) in self.proto_arrays or (-1 in v.h and isinstance(v.h.get(9), LTable))):
+            if isinstance(v, LTable) and (
+                    id(v) in self.proto_arrays
+                    or (-1 in v.h and isinstance(v.h.get(9), LTable))
+                    or (v.h and all(isinstance(vv, OpaqueFn) for vv in v.h.values()))):
                 self.jvals[S.norm_key(key)] = v
                 self.jread.discard(S.norm_key(key))
                 return
@@ -1155,6 +1188,9 @@ class ProtoLifter:
                     self.out.clear()
                     raise Unsupported("symbolic value store into proto array")
                 self.mutated = True
+            if getattr(self, "_is_v14", False) and id(obj) in self.proto_arrays and obj.tid is not None:
+                self.write_proto_ov((id(obj), S.norm_key(key)), v, obj.get(key))
+                return
             if self.ov_base is not None and obj.tid is not None:
 
                 self.write_ov((id(obj), S.norm_key(key)), v, obj.get(key))
@@ -1188,6 +1224,14 @@ class ProtoLifter:
         if self.ov is None:
             self.ov = Overlay(self.ov_base)
         self.ov.set(key, v, base)
+
+    def cur_proto_ov(self):
+        return self.proto_ov if self.proto_ov is not None else self.proto_ov_base
+
+    def write_proto_ov(self, key, v, base):
+        if self.proto_ov is None:
+            self.proto_ov = Overlay(self.proto_ov_base)
+        self.proto_ov.set(key, v, base)
 
     def check_decision(self, cond):
 
@@ -1389,6 +1433,27 @@ class ProtoLifter:
             o = o.parent
         return keys
 
+    def _resolve_tail_bound(self, ex):
+        if not isinstance(ex, Expr):
+            return None
+        found_tails = []
+        def _ev(node):
+            if isinstance(node, Const) and isinstance(node.v, int) and not isinstance(node.v, bool):
+                return node.v
+            if isinstance(node, TailCount) and isinstance(node.tail, (VarargTail, TempTail)):
+                found_tails.append(node.tail)
+                return 0
+            if isinstance(node, Bin) and node.op in ("Add", "Sub"):
+                lv = _ev(node.a)
+                rv = _ev(node.b)
+                if lv is not None and rv is not None:
+                    return lv + rv if node.op == "Add" else lv - rv
+            return None
+        v0 = _ev(ex)
+        if v0 is not None and len(found_tails) == 1:
+            return (v0 + 1, found_tails[0])
+        return None
+
     def unpack(self, a):
         t = a.items[0] if a.items else None
         i = a.items[1] if len(a.items) > 1 else 1
@@ -1403,6 +1468,17 @@ class ProtoLifter:
                 if rv is not None:
                     j = rv
         if isinstance(t, RegFile):
+            if (isinstance(j, Reg) or type(j).__name__ == "PackTop") and j.n in self.packs:
+                self.pack_read.add(j.n)
+                j = self.packs[j.n]
+            elif type(j).__name__ == "PackTop":
+                j = max(0, j.n - 1)
+            tb = self._resolve_tail_bound(j) if isinstance(i, int) else None
+            if tb is not None:
+                t_tail, tail_obj = tb
+                if i <= t_tail:
+                    return Multi([FrameArg(n) if self.jvals.get(n) is FRAME else Reg(n) for n in range(i, t_tail)], tail_obj)
+                return Multi([], tail_obj.drop(i - t_tail) if tail_obj else None)
             if isinstance(i, int) and isinstance(j, SymList) and isinstance(j.nkey, int):
                 t_tail = j.nkey
                 if i <= t_tail:
@@ -1460,6 +1536,33 @@ class ProtoLifter:
         if is_sym(f) or is_sym(t):
             self._need_jreg(f, t)
             raise Unsupported("table.move with symbolic positions")
+        if (isinstance(e, Reg) or type(e).__name__ == "PackTop") and e.n in self.packs:
+            self.pack_read.add(e.n)
+            e = self.packs[e.n]
+        elif type(e).__name__ == "PackTop":
+            e = max(0, e.n - 1)
+        tb_e = self._resolve_tail_bound(e) if isinstance(src, RegFile) and isinstance(f, int) and isinstance(dst, Expr) and isinstance(t, int) else None
+        if tb_e is not None:
+            t_tail, tail_obj = tb_e
+            if f <= t_tail:
+                items = [FrameArg(n) if self.jvals.get(n) is FRAME else Reg(n) for n in range(f, t_tail)]
+                tail = tail_obj
+            else:
+                items = []
+                tail = tail_obj.drop(f - t_tail) if tail_obj else None
+            self.emit(SetList(dst, t, Multi(items, tail)))
+            return dst
+        if isinstance(src, RegFile) and isinstance(e, SymList) and isinstance(e.nkey, int) \
+                and isinstance(f, int) and isinstance(dst, Expr) and isinstance(t, int):
+            t_tail = e.nkey
+            if f <= t_tail:
+                items = [FrameArg(n) if self.jvals.get(n) is FRAME else Reg(n) for n in range(f, t_tail)]
+                tail = e.tail
+            else:
+                items = []
+                tail = e.tail.drop(f - t_tail) if e.tail else None
+            self.emit(SetList(dst, t, Multi(items, tail)))
+            return dst
         if isinstance(e, TailCount) and isinstance(src, SymList) and f == 1 and isinstance(dst, RegFile) and isinstance(t, int):
             for k, v in enumerate(src.items):
                 self.put(dst, t + k, v)
@@ -1581,6 +1684,20 @@ class ProtoLifter:
             if target is not None:
                 return self.make_closure(args, target)
             if node is not None:
+                n_args = node.get("args") or ()
+                if len(n_args) == 3 and not node.get("vararg") and len(args.items) >= 2 and isinstance(args.items[0], RegFile) and isinstance(args.items[1], int) and (
+                        len(args.items) < 3 or args.items[2] is None or isinstance(args.items[2], int) or type(args.items[2]).__name__ == "PackTop" or (isinstance(args.items[2], Reg) and args.items[2].n in self.packs)):
+                    if any(isinstance(sub, dict) and sub.get("type") == "AstExprConstantNumber" and sub.get("value") in (7997, 7998, 7999, 8000)
+                           for sub in iter_nodes(node)):
+                        return self.unpack(args)
+                if not n_args and node.get("vararg") and args.tail is not None:
+                    has_hash = any(isinstance(sub, dict) and sub.get("type") == "AstExprConstantString" and sub.get("value") in ("#", b"#")
+                                   for sub in iter_nodes(node))
+                    has_vtab = any(isinstance(sub, dict) and sub.get("type") == "AstExprTable"
+                                   for sub in iter_nodes(node))
+                    if has_hash and has_vtab:
+                        cnt_e = TailCount(args.tail) if not args.items else Bin("Add", Const(len(args.items)), TailCount(args.tail))
+                        return Multi([cnt_e, SymList(list(args.items), args.tail)])
                 return it.call_lua(LuaFunc(node, Scope()), args)
             # No AST node: a closure the trace never instantiated through a
             # hooked maker (e.g. a plain, non-virtualized function kept in the
@@ -1782,15 +1899,37 @@ class ProtoLifter:
                          getattr(self, "cur_pc", None), dict(dump.misses),
                          {t: dump.paths().get(t) for t in list(dump.lazy)[:12]}), file=sys.stderr)
             raise Unsupported("closure of non-proto")
-        entries = []
-        if isinstance(ups, LTable):
-            for i in range(1, ups.length() + 1):
-                entries.append(ups.get(i))
+        entries, upval_base = self._extract_upvals_table(ups)
         c = ClosureExpr(proto, entries)
+        c.upval_base = upval_base
+        if isinstance(ups, LTable):
+            c._ups_tbl = ups
         c.vm = vm
         if v149_proto_state:
             # the child's VM state is its own proto table (see above)
             c.state_table = proto
+        self._note_captured_upvals(entries)
+        self.children.append(c)
+        return c
+
+    def _extract_upvals_table(self, ups):
+        if not isinstance(ups, LTable) or not ups.h:
+            return [], 1
+        int_keys = [k for k in ups.h if isinstance(k, int) and not isinstance(k, bool)]
+        if getattr(self, "_is_v14", False):
+            # Luraph v14 upvalue tables are 0-based; key 0 is simply absent
+            # when that upvalue was nil at closure creation, so the
+            # presence test below would shift every index by one.
+            if int_keys:
+                m = max(int_keys)
+                return [ups.get(i) for i in range(0, m + 1)], 0
+            return [], 0
+        if int_keys and 0 in ups.h:
+            m = max(int_keys)
+            return [ups.get(i) for i in range(0, m + 1)], 0
+        return [ups.get(i) for i in range(1, ups.length() + 1)], 1
+
+    def _note_captured_upvals(self, entries):
         for e in entries:
             if isinstance(e, MaybeBox):
                 self.captured_regs.add(e.reg)
@@ -1798,8 +1937,15 @@ class ProtoLifter:
                 for v in e.h.values():
                     if isinstance(v, int) and any(isinstance(x, RegFile) for x in e.h.values()):
                         self.captured_regs.add(v)
-        self.children.append(c)
-        return c
+
+    def finalize_step_closures(self):
+        for c in self.children:
+            ups = getattr(c, "_ups_tbl", None)
+            if isinstance(ups, LTable) and not c.upvals and ups.h:
+                entries, upval_base = self._extract_upvals_table(ups)
+                c.upvals[:] = entries
+                c.upval_base = upval_base
+                self._note_captured_upvals(entries)
 
 def lst_nkey(lst):
     return lst.nkey if lst.nkey is not None else b"n"

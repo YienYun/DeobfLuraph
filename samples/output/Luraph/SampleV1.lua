@@ -1,1373 +1,3955 @@
--- run status: script error: Script:3: invalid argument #1 to 'insert' (table expected, got userdata)
---   /tmp/deobf_node_H5xLzL/SampleV1.deobf.luau.harness.luau:7495
---   Script:3
---   Script:3
---   Script:3
---   /tmp/deobf_node_H5xLzL/SampleV1.deobf.luau.harness.luau:7500
---   
--- 1171 statements recorded in 3.67s
--- URLs requested:
---   https://raw.githubusercontent.com/scriptpastebin/Blox-Fruits/refs/heads/main/core.luau
---   https://raw.githubusercontent.com/bloxfruitsnokey/Redz-Hub/refs/heads/main/Gavz/ui.luau
--- remotes fired/invoked:
---   ReplicatedStorage.Remotes.CommF_
---   Remotes.RFCraft
---   Remotes.RFJobsRemoteFunction
---   replicated.Remotes.CommF_
---   CommF_
---   CommF_2
---   CommF_3
---   CommF_4
---   CommF_5
---   CommF_6
---   CommF_7
---   CommF_8
---   ReplicatedStorage.Modules.Net["RF/Craft"]
---   RFKitsuneStatuePray
---   RFKitsuneStatuePray2
---   RETouchKitsuneStatue
---   RETouchKitsuneStatue2
--- warning: 35 unknown global(s) were answered by ever-callable proxies (guessed behaviour, see their call sites): replicated, World1, Bandit, World2, Raider, World3, Core, Sec, MaterialList, BossList, Bone, Remotes, ...
+local n
+n = 140455651
+loadstring(game:HttpGet("https://raw.githubusercontent.com/scriptpastebin/Blox-Fruits/refs/heads/main/core.luau"))()
+local n2
+n2 = 737086916
+local v
 
---@2 1:1,2:2
-task.spawn(function(...)
-end)
---@2 1:1,2:2
-task.spawn(function(...)
-end)
---@2 1:1,2:2
-task.delay(816, function(...)
-end)
---@1 1:1,2:2
-local ScreenGui = Instance.new("ScreenGui")
---@1 1:1,2:2
-local Frame = Instance.new("Frame")
---@1 1:1,2:2
-Frame.Position = UDim2.new(0, 0, 0, 0)
---@1 1:1,2:2
-Frame.Size = UDim2.new(0, 256, 0, 114)
---@1 1:1,2:2
-Frame.Parent = ScreenGui
---@1 1:1,2:2
-local Path2D = Instance.new("Path2D")
---@1 1:1,2:2
-Path2D.Parent = Frame
---@1 1:1,2:2
-Path2D:SetControlPoints({ Path2DControlPoint.new(UDim2.new(0.5, -1, 0, -6), UDim2.new(0, -7, 0, 1), UDim2.new(0, 5, 0, 7)), Path2DControlPoint.new(UDim2.new(0, 8, 0.375, 5), UDim2.new(0.125, -4, 0, 1), UDim2.new(0, 0, 0, 0)), Path2DControlPoint.new(UDim2.new(0.5, 9, 0.5, 8), UDim2.new(0, 5, 0, 7), UDim2.new(0, 0, 0, 0)) })
---@1 1:1,2:2
-Path2D:GetLength()
---@1 1:1,2:2
-Path2D:GetPositionOnCurve(0.375)
---@1 1:1,2:2
-Path2D:GetPositionOnCurve(0.5)
---@1 1:1,2:2
-Path2D:GetPositionOnCurve(0.4285714328289032)
---@1 1:1,2:2
-Path2D:GetTangentOnCurve(0.3333333432674408)
---@1 1:1,2:2
-Path2D:GetTangentOnCurve(0.25)
---@1 1:1,2:2
-Path2D:GetTangentOnCurve(0.57142859697341919)
---@1 1:1,2:2
-Path2D:GetPositionOnCurveArcLength(0.26666668057441711)
---@1 1:1,2:2
-Path2D:GetPositionOnCurveArcLength(0.4285714328289032)
---@1 1:1,2:2
-Path2D:GetTangentOnCurveArcLength(0.25)
---@1 1:1,2:2
-Path2D:GetTangentOnCurveArcLength(0.75)
---@1 1:1,2:2
-ScreenGui:Destroy()
---@2 1:1,2:2,29:26274
-local connection = game.ChildRemoved:Connect(function(child)
-end)
---@1 1:1,2:2,29:26274
-connection:Disconnect()
---@2 1:1,2:2,29:26466
-local connection2 = workspace.ChildRemoved:Connect(function(child2)
-end)
---@1 1:1,2:2,29:26466
-connection2:Disconnect()
---@1 1:1,2:2
-local Folder = Instance.new("Folder")
---@2 1:1,2:2,29:26665
-local connection3 = Folder.ChildRemoved:Connect(function(child3)
-end)
---@1 1:1,2:2,29:26665
-connection3:Disconnect()
---@1 1:1,2:2
-Folder:GetChildren()
---@1 1:1,2:2
-Folder:Destroy()
---@1 1:1,2:2
-local Folder2 = Instance.new("Folder", Folder)
---@2 1:1,2:2,29:26857
-local connection4 = Folder2.ChildRemoved:Connect(function(child4)
-end)
---@1 1:1,2:2,29:26857
-connection4:Disconnect()
---@1 1:1,2:2
-Folder2.Name = "431837289"
---@1 1:1,2:2
-Folder:WaitForChild("431837289")
---@1 1:1,2:2
-Folder:Destroy()
---@1 1:1,2:2
-Folder2:Destroy()
---@1 1:1,2:2
-local HttpService = game:GetService("HttpService")
---@2 1:1,2:2,29:27136
-local connection5 = HttpService.ChildRemoved:Connect(function(child5)
-end)
---@1 1:1,2:2,29:27136
-connection5:Disconnect()
---@1 1:1,2:2
-local RunService = game:GetService("RunService")
---@2 1:1,2:2,29:27335
-local connection6 = RunService.ChildRemoved:Connect(function(child6)
-end)
---@1 1:1,2:2,29:27335
-connection6:Disconnect()
---@1 1:1,2:2
--- loadstring() of 2442 bytes: " --[[\n\t\t\t\t .@%(/*,.......      ...,,*/(#%&@@.\n\t\t\t (*   ,/(#%%&&@@@@&%((////(((##%###((/**,,.     ,//(&.\n\t\t   /* .%@@@@@@@@%,  .(&@@@&&&&&&@@@@@@&#(*,........*%@@@(.  ,#.\n\t\t */ .&@@@@@@@*  (%,   *(&&@@"
---@1 1:1,37:28479
-local response = game:HttpGet("https://raw.githubusercontent.com/scriptpastebin/Blox-Fruits/refs/heads/main/core.luau")
---@1 1:1,37:28479
-loadstring(response)()
---@1 1:1,37:28479
-local response2 = game:HttpGet("https://raw.githubusercontent.com/bloxfruitsnokey/Redz-Hub/refs/heads/main/Gavz/ui.luau")
---@1 1:1,37:28479
-local result = loadstring(response2)()
---@5 1:1,37:28479
-local Window = result:MakeWindow({
+v = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloxfruitsnokey/Redz-Hub/refs/heads/main/Gavz/ui.luau"))():MakeWindow({
 	Title = "Gavz Hub : Blox Fruits",
+	SubTitle = "discord.gg/pKS6qzcaqB",
 	SaveFolder = "oknaiget.json",
-	SubTitle = "discord.gg/pKS6qzcaqB"
 })
---@1 1:1,37:28479
-local Minimizer = Window:NewMinimizer({ KeyCode = Enum.KeyCode.LeftControl })
---@1 1:1,37:28479
-Minimizer:CreateMobileMinimizer({ BackgroundColor3 = Color3.fromRGB(25, 25, 25), Image = "rbxassetid://108267040590174" })
---@1 1:1,37:28479
-local Tab = Window:MakeTab({ Title = "Tab Info And Status", Icon = "Info" })
---@1 1:1,37:28479
-local Tab2 = Window:MakeTab({ Title = "Tab Farming", Icon = "rbxassetid://7733960981" })
---@1 1:1,37:28479
-local Tab3 = Window:MakeTab({ Title = "Tab Setting", Icon = "rbxassetid://7734053495" })
---@1 1:1,37:28479
-local Tab4 = Window:MakeTab({ Title = "Tab Fishing", Icon = "rbxassetid://127664059821666" })
---@1 1:1,37:28479
-local Tab5 = Window:MakeTab({ Title = "Tab Quest And Item", Icon = "rbxassetid://13075622619" })
---@1 1:1,37:28479
-local Tab6 = Window:MakeTab({ Title = "Tab Sea Event", Icon = "waves" })
---@1 1:1,37:28479
-local Tab7 = Window:MakeTab({ Title = "Tab Mirage And Race", Icon = "rbxassetid://11162889532" })
---@1 1:1,37:28479
-local Tab8 = Window:MakeTab({ Title = "Tab Volcano Event", Icon = "tent" })
---@1 1:1,37:28479
-local Tab9 = Window:MakeTab({ Title = "Tab Stats And Esp", Icon = "rbxassetid://7040410130" })
---@1 1:1,37:28479
-local Tab10 = Window:MakeTab({ Title = "Tab Fruit And Raid", Icon = "rbxassetid://11155986081" })
---@1 1:1,37:28479
-local Tab11 = Window:MakeTab({ Title = "Tab Local Player", Icon = "rbxassetid://13075651575" })
---@1 1:1,37:28479
-local Tab12 = Window:MakeTab({ Title = "Tab Teleport", Icon = "locate" })
---@1 1:1,37:28479
-Window:MakeTab({ Title = "Tab Shopping", Icon = "rbxassetid://6031265976" })
---@1 1:1,37:28479
-Window:MakeTab({ Title = "Tab Miscellaneous", Icon = "rbxassetid://10709783577" })
---@1 1:1,37:28479
-Tab:AddSection("Status Server")
---@1 1:1,37:28479
-local Paragraph = Tab:AddParagraph("Time Zone", "")
---@1 1:1,37:28479
-local Paragraph2 = Tab:AddParagraph("Game Time", "")
---@14 1:1,37:28479
-spawn(function(...)
-	--@1 41:28691,42:28726
-	local LocalizationService = game:GetService("LocalizationService")
-	--@1 41:28691,42:28726
-	local Players = game:GetService("Players")
-	--@1 41:28691,42:28726,43:28869
-	local countryRegionForPlayerAsync = LocalizationService:GetCountryRegionForPlayerAsync(Players.LocalPlayer)
-	--@1 41:28691,42:28726
-	getgenv().countryRegionCode = countryRegionForPlayerAsync
-	--@1 41:28691,42:28726
-	Paragraph:SetDesc("31/10/2026" .. " - " .. "09:59:16 AM" .. " [ " .. countryRegionForPlayerAsync .. " ]")
-	--@1 41:28691
-	wait(1)
+
+v:NewMinimizer({ KeyCode = Enum.KeyCode.LeftControl }):CreateMobileMinimizer({ Image = "rbxassetid://108267040590174", BackgroundColor3 = Color3.fromRGB(25, 25, 25) })
+local n3
+n3 = 608388172
+local tbl
+
+tbl = {
+	Info = v:MakeTab({ Title = "Tab Info And Status", Icon = "Info" }),
+	Main = v:MakeTab({ Title = "Tab Farming", Icon = "rbxassetid://7733960981" }),
+	Settings = v:MakeTab({ Title = "Tab Setting", Icon = "rbxassetid://7734053495" }),
+	Fish = v:MakeTab({ Title = "Tab Fishing", Icon = "rbxassetid://127664059821666" }),
+	Quests = v:MakeTab({ Title = "Tab Quest And Item", Icon = "rbxassetid://13075622619" }),
+	SeaEvent = v:MakeTab({ Title = "Tab Sea Event", Icon = "waves" }),
+	Race = v:MakeTab({ Title = "Tab Mirage And Race", Icon = "rbxassetid://11162889532" }),
+	Prehistoric = v:MakeTab({ Title = "Tab Volcano Event", Icon = "tent" }),
+	Esp = v:MakeTab({ Title = "Tab Stats And Esp", Icon = "rbxassetid://7040410130" }),
+	Raids = v:MakeTab({ Title = "Tab Fruit And Raid", Icon = "rbxassetid://11155986081" }),
+	Combat = v:MakeTab({ Title = "Tab Local Player", Icon = "rbxassetid://13075651575" }),
+	Travel = v:MakeTab({ Title = "Tab Teleport", Icon = "locate" }),
+	Shop = v:MakeTab({ Title = "Tab Shopping", Icon = "rbxassetid://6031265976" }),
+	Misc = v:MakeTab({ Title = "Tab Miscellaneous", Icon = "rbxassetid://10709783577" }),
+}
+
+tbl.Info:AddSection("Status Server")
+local n4
+n4 = 604487395
+local n5
+
+do
+	local timeZoneParagraph = tbl.Info:AddParagraph("Time Zone", "")
+	n5 = 95612715
+	local gameTimeParagraph = tbl.Info:AddParagraph("Game Time", "")
+	local n6 = nil
+	local n7 = nil
+
+	UpdateOS = function()
+		n6 = 962841611
+		n7 = 409903086
+		local dateStr = os.date("*t")
+		local n8 = dateStr.hour % 24
+		local flag = n8 < 12
+
+		if flag then
+			flag = "AM"
+		end
+
+		local str = string.format("%02i:%02i:%02i %s", (n8 - 1) % 12 + 1, dateStr.min, dateStr.sec, flag or "PM")
+		local str2 = string.format("%02d/%02d/%04d", dateStr.day, dateStr.month, dateStr.year)
+		local LocalizationService = game:GetService("LocalizationService")
+		local localPlayer = game:GetService("Players").LocalPlayer
+		local n9 = nil
+		local countryRegionCode
+
+		if getgenv().countryRegionCode then
+			countryRegionCode = getgenv().countryRegionCode
+		else
+			local v2, v3, ok
+
+			ok, countryRegionCode = pcall(function()
+				n9 = 1028702138
+				return LocalizationService:GetCountryRegionForPlayerAsync(localPlayer)
+			end)
+
+			if ok then
+				getgenv().countryRegionCode = countryRegionCode
+			else
+				getgenv().countryRegionCode = "Unknown"
+			end
+		end
+
+		timeZoneParagraph:SetDesc(str2 .. " - " .. str .. " [ " .. countryRegionCode .. " ]")
+	end
+
+	spawn(function()
+		while true do
+			UpdateOS()
+			wait(1)
+		end
+	end)
+
+	local n8 = nil
+
+	UpdateGameTime = function()
+		n8 = 440584001
+		local n9 = math.floor(workspace.DistributedGameTime + 0.5)
+		gameTimeParagraph:SetDesc(math.floor(n9 / 3600) % 24 .. " Hour (h) " .. math.floor(n9 / 60) % 60 .. " Minute (m) " .. math.floor(n9 / 1) % 60 .. " Second (s)")
+	end
+end
+
+spawn(function()
+	while true do
+		UpdateGameTime()
+		wait(1)
+	end
 end)
---@6 1:1,37:28479
-spawn(function(...)
-	--@1 45:28933,47:28969
-	Paragraph2:SetDesc("0 Hour (h) 0 Minute (m) 0 Second (s)")
-	--@1 45:28933
-	wait(1)
+
+do
+	local mirageIslandParagraph = tbl.Info:AddParagraph("Mirage Island", "Status: ")
+	local str = ""
+
+	spawn(function()
+		local n6 = nil
+		local v2, v3, v4
+
+		pcall(function()
+			n6 = 74506917
+			wait(1)
+			local status = game.Workspace._WorldOrigin.Locations:FindFirstChild("Mirage Island") ~= nil
+
+			if status then
+				status = "✅"
+			end
+
+			while true do
+				status = status or "❌"
+
+				if status == str then
+					wait(1)
+					status = game.Workspace._WorldOrigin.Locations:FindFirstChild("Mirage Island") ~= nil
+					if status then
+						status = "✅"
+						continue
+					end
+					continue
+				end
+
+				break
+			end
+
+			while true do
+				mirageIslandParagraph:SetDesc("Status: " .. status)
+				str = status
+
+				while true do
+					wait(1)
+					status = game.Workspace._WorldOrigin.Locations:FindFirstChild("Mirage Island") ~= nil
+
+					if status then
+						status = "✅"
+					end
+
+					status = status or "❌"
+					if status == str then
+						continue
+					end
+					break
+				end
+			end
+		end)
+	end)
+end
+
+do
+	local kitsuneIslandParagraph = tbl.Info:AddParagraph("Kitsune Island", "Status: ")
+	local str = ""
+	local n6 = nil
+	local n7 = nil
+
+	spawn(function()
+		n6 = 922698428
+		n7 = 811384937
+
+		if task.wait(1) then
+			repeat
+				pcall(function()
+					local kitsuneIsland = game:GetService("Workspace").Map:FindFirstChild("KitsuneIsland")
+
+					if kitsuneIsland then
+						kitsuneIsland = "✅"
+					end
+
+					kitsuneIsland = kitsuneIsland or "❌"
+
+					if kitsuneIsland ~= str then
+						kitsuneIslandParagraph:SetDesc("Status: " .. kitsuneIsland)
+						str = kitsuneIsland
+					end
+				end)
+			until not task.wait(1)
+		end
+	end)
+end
+
+do
+	local prehistoricIslandParagraph = tbl.Info:AddParagraph("Prehistoric Island", "Status: ")
+	local str = ""
+
+	task.spawn(function()
+		if task.wait(1) then
+			repeat
+				pcall(function()
+					local prehistoricIsland = game.Workspace._WorldOrigin.Locations:FindFirstChild("Prehistoric Island")
+
+					if prehistoricIsland then
+						prehistoricIsland = "✅"
+					end
+
+					prehistoricIsland = prehistoricIsland or "❌"
+
+					if prehistoricIsland ~= str then
+						prehistoricIslandParagraph:SetDesc("Status: " .. prehistoricIsland)
+						str = prehistoricIsland
+					end
+				end)
+			until not task.wait(1)
+		end
+	end)
+end
+
+do
+	local frozenDimensionParagraph = tbl.Info:AddParagraph("Frozen Dimension", "Status: ")
+	local str = ""
+	local n6 = nil
+	local n7 = nil
+
+	spawn(function()
+		n6 = 353759688
+		n7 = 895705536
+
+		while wait(1) do
+			pcall(function()
+				local frozenDimension = game.Workspace._WorldOrigin.Locations:FindFirstChild("Frozen Dimension")
+
+				if frozenDimension then
+					frozenDimension = "✅"
+				end
+
+				frozenDimension = frozenDimension or "❌"
+
+				if frozenDimension ~= str then
+					frozenDimensionParagraph:SetDesc("Status: " .. frozenDimension)
+					str = frozenDimension
+				end
+			end)
+		end
+	end)
+end
+
+do
+	local cakePrinceParagraph = tbl.Info:AddParagraph("Cake Prince", "")
+	local n6 = nil
+	local n7 = nil
+
+	spawn(function()
+		n6 = 168425429
+		n7 = 894392514
+
+		if wait(1) then
+			local exitTo = nil
+			local result, v2, str
+
+			while true do
+				local ok
+
+				ok, result = pcall(function()
+					return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("CakePrinceSpawner")
+				end)
+
+				str = "Cake Prince: ✅"
+				if ok and type(result) == "string" then
+					exitTo = 1
+					break
+				end
+				cakePrinceParagraph:SetDesc(str)
+				if wait(1) then
+					continue
+				end
+				break
+			end
+
+			if exitTo == 1 then
+				local exitTo2 = nil
+
+				while true do
+					if string.len(result) >= 86 then
+						exitTo2 = 1
+						break
+					else
+						local exitTo3 = nil
+
+						while true do
+							cakePrinceParagraph:SetDesc(str)
+
+							if wait(1) then
+								local ok
+
+								ok, result = pcall(function()
+									return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("CakePrinceSpawner")
+								end)
+
+								if ok and type(result) == "string" then
+									exitTo3 = 1
+									break
+								end
+							else
+								break
+							end
+						end
+
+						if exitTo3 == 1 then
+							continue
+						end
+						break
+					end
+				end
+
+				if exitTo2 == 1 then
+					while true do
+						local str2 = "Killed: " .. string.sub(result, 39, 41)
+						local exitTo4 = nil
+
+						while true do
+							cakePrinceParagraph:SetDesc(str2)
+
+							if wait(1) then
+								local ok
+
+								ok, result = pcall(function()
+									return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("CakePrinceSpawner")
+								end)
+
+								str2 = "Cake Prince: ✅"
+								if ok and type(result) == "string" and string.len(result) >= 86 then
+									exitTo4 = 1
+									break
+								end
+							else
+								break
+							end
+						end
+
+						if exitTo4 == 1 then
+							continue
+						end
+						break
+					end
+				end
+			end
+		end
+	end)
+end
+
+do
+	local ripIndraParagraph = tbl.Info:AddParagraph("Rip Indra", "Status: ")
+	local str = ""
+	local n6 = nil
+	local n7 = nil
+
+	spawn(function()
+		n6 = 523463407
+		n7 = 34355649
+		local n8 = nil
+
+		if wait(1) then
+			repeat
+				pcall(function()
+					n8 = 724514294
+					local status
+
+					if game:GetService("ReplicatedStorage"):FindFirstChild("rip_indra True Form") then
+						status = "✅"
+					else
+						status = game:GetService("Workspace").Enemies:FindFirstChild("rip_indra")
+
+						if status then
+							status = "✅"
+						end
+
+						status = status or "❌"
+					end
+
+					if status ~= str then
+						ripIndraParagraph:SetDesc("Status: " .. status)
+						str = status
+					end
+				end)
+			until not wait(1)
+		end
+	end)
+end
+
+do
+	local doughKingParagraph = tbl.Info:AddParagraph("Dough King", "Status: ")
+	local str = ""
+
+	spawn(function()
+		local n6 = nil
+		local v2, v3, v4, v5
+
+		while wait(1) do
+			pcall(function()
+				n6 = 670121425
+				local status
+
+				if game:GetService("ReplicatedStorage"):FindFirstChild("Dough King") then
+					status = "✅"
+				else
+					status = game:GetService("Workspace").Enemies:FindFirstChild("Dough King")
+
+					if status then
+						status = "✅"
+					end
+
+					status = status or "❌"
+				end
+
+				if status ~= str then
+					doughKingParagraph:SetDesc("Status: " .. status)
+					str = status
+				end
+			end)
+		end
+	end)
+end
+
+local fullMoonParagraph = tbl.Info:AddParagraph("Full Moon", "")
+
+task.spawn(function()
+	if task.wait(1) then
+		local v2, v3
+
+		pcall(function()
+			local moonTextureId = game:GetService("Lighting").Sky.MoonTextureId
+			local str = "Moon: 0/5"
+
+			if moonTextureId ~= "http://www.roblox.com/asset/?id=9709149431" then
+				if moonTextureId ~= "http://www.roblox.com/asset/?id=9709149052" then
+					if moonTextureId ~= "http://www.roblox.com/asset/?id=9709143733" then
+						if moonTextureId ~= "http://www.roblox.com/asset/?id=9709150401" then
+							if moonTextureId == "http://www.roblox.com/asset/?id=9709149680" then
+								str = "Moon: 1/5"
+							end
+						else
+							str = "Moon: 2/5"
+						end
+					else
+						str = "Moon: 3/5"
+					end
+				else
+					str = "Moon: 4/5"
+				end
+			else
+				str = "Moon: 5/5 (Full Moon) ✅"
+			end
+
+			fullMoonParagraph:SetDesc(str)
+		end)
+
+		while task.wait(1) do
+			pcall(function()
+				local moonTextureId = game:GetService("Lighting").Sky.MoonTextureId
+				local str = "Moon: 0/5"
+
+				if moonTextureId ~= "http://www.roblox.com/asset/?id=9709149431" then
+					if moonTextureId ~= "http://www.roblox.com/asset/?id=9709149052" then
+						if moonTextureId ~= "http://www.roblox.com/asset/?id=9709143733" then
+							if moonTextureId ~= "http://www.roblox.com/asset/?id=9709150401" then
+								if moonTextureId == "http://www.roblox.com/asset/?id=9709149680" then
+									str = "Moon: 1/5"
+								end
+							else
+								str = "Moon: 2/5"
+							end
+						else
+							str = "Moon: 3/5"
+						end
+					else
+						str = "Moon: 4/5"
+					end
+				else
+					str = "Moon: 5/5 (Full Moon) ✅"
+				end
+
+				fullMoonParagraph:SetDesc(str)
+			end)
+		end
+	end
 end)
---@1 1:1,37:28479
-Tab:AddParagraph("Mirage Island", "Status: ")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 49:29065,51:29107
-	wait(1)
+
+local legendarySwordParagraph = tbl.Info:AddParagraph("Legendary Sword", "Status: ")
+
+spawn(function()
+	local n6 = nil
+	local n7 = nil
+
+	if wait(5) then
+		repeat
+			pcall(function()
+				n6 = 462927818
+				n7 = 986923015
+				local parts = {}
+				local v2, v3, v4 = ipairs({ "Shizu", "Saishi", "Oroshi" })
+				local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v5, v32, v42, v52, v6, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v5, v32, v42, v52, v6, v7, v8, v9, v10) end end); co(); return co end)(v3, v4)
+				local v5 = table.pack(iter_z_1())
+
+				if v5[1] then
+					local v6 = v5[3]
+					local exitTo = nil
+
+					while true do
+						if GetWP(v6) then
+							exitTo = 1
+							break
+						else
+							local v7 = table.pack(iter_z_1())
+							if v7[1] then
+								v6 = v7[3]
+								continue
+							end
+							break
+						end
+					end
+
+					if exitTo == 1 then
+						while true do
+							table.insert(parts, v6 .. " ✅")
+							local exitTo2 = nil
+
+							while true do
+								local v7 = table.pack(iter_z_1())
+
+								if not v7[1] then
+									break
+								else
+									v6 = v7[3]
+									if GetWP(v6) then
+										exitTo2 = 1
+										break
+									end
+								end
+							end
+
+							if exitTo2 == 1 then
+								continue
+							end
+							break
+						end
+					end
+				end
+
+				local legendarySwordParagraph2 = legendarySwordParagraph
+				local setDesc = legendarySwordParagraph.SetDesc
+				local str
+
+				if #parts > 0 then
+					str = table.concat(parts, ", ") or "Not Found"
+				else
+					str = "Not Found"
+					setDesc(legendarySwordParagraph2, str)
+					return
+				end
+
+				setDesc(legendarySwordParagraph2, str)
+			end)
+		until not wait(5)
+	end
 end)
---@1 1:1,37:28479
-Tab:AddParagraph("Kitsune Island", "Status: ")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 52:29135
-	task.wait(1)
-end)
---@1 1:1,37:28479
-Tab:AddParagraph("Prehistoric Island", "Status: ")
---@4 1:1,37:28479
-task.spawn(function(...)
-	--@1 53:29156
-	task.wait(1)
-end)
---@1 1:1,37:28479
-Tab:AddParagraph("Frozen Dimension", "Status: ")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 55:29198
-	wait(1)
-end)
---@1 1:1,37:28479
-Tab:AddParagraph("Cake Prince", "")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 56:29225
-	wait(1)
-end)
---@1 1:1,37:28479
-Tab:AddParagraph("Rip Indra", "Status: ")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 57:29243
-	wait(1)
-end)
---@1 1:1,37:28479
-Tab:AddParagraph("Dough King", "Status: ")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 58:29261
-	wait(1)
-end)
---@1 1:1,37:28479
-Tab:AddParagraph("Full Moon", "")
---@4 1:1,37:28479
-task.spawn(function(...)
-	--@1 59:29291
-	task.wait(1)
-end)
---@1 1:1,37:28479
-Tab:AddParagraph("Legendary Sword", "Status: ")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 61:29325
-	wait(5)
-end)
---@1 1:1,37:28479
-Tab:AddParagraph("Bone", "")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 62:29349
-	wait(1)
-end)
---@1 1:1,37:28479
-_G.ChooseWP = false
---@10 1:1,37:28479
-Tab2:AddDropdown({
+
+do
+	local boneParagraph = tbl.Info:AddParagraph("Bone", "")
+	local n6 = nil
+	local n7 = nil
+
+	spawn(function()
+		n6 = 556369206
+		n7 = 878715967
+
+		if wait(1) then
+			repeat
+				pcall(function()
+					local response = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Bones", "Check")
+					boneParagraph:SetDesc("You Have: " .. tostring(response) .. " Bones")
+				end)
+			until not wait(1)
+		end
+	end)
+end
+
+WeaponDropdown = tbl.Main:AddDropdown({
 	Name = "Select Weapon",
-	Default = "Melee",
 	Options = { "Melee", "Sword", "Blox Fruit", "Gun" },
-	Callback = function(state, arg2)
-		if state then
-			_G.ChooseWP = state
-		end
-	end
+	Default = "Melee",
+	Callback = function(chooseWP)
+		_G.ChooseWP = chooseWP
+	end,
 })
---@8 1:1,37:28479
-Tab2:AddDropdown({
+
+tbl.Main:AddDropdown({
 	Name = "UI Scale",
-	Default = "Normal",
 	Options = { "Small", "Normal", "Big" },
-	Callback = function(state, arg4)
-		Window:SetUIScale(nil)
-	end
+	Default = "Normal",
+	Callback = function(arg)
+		v:SetUIScale(({ Small = 0.8, Normal = 1, Big = 1.2 })[arg])
+	end,
 })
---@1 1:1,37:28479
-Tab2:AddSection("Farming")
---@1 1:1,37:28479
-_G.Level = false
---@10 1:1,37:28479
-Tab2:AddToggle({
-	Name = "Auto Farm Level",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg6)
-		if state then
-			_G.Level = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.AutoFarmNear = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+tbl.Main:AddSection("Farming")
+
+do
+	local n6 = nil
+	local n7 = nil
+
+	FarmLevel = tbl.Main:AddToggle({
+		Name = "Auto Farm Level",
+		Description = "",
+		Default = false,
+		Callback = function(level)
+			n6 = 611492828
+			n7 = 508730066
+			_G.Level = level
+
+			if not level then
+				alreadyTeleported = false
+				teleporting = false
+			end
+		end,
+	})
+end
+
+ClosetMons = tbl.Main:AddToggle({
 	Name = "Auto Farm Nearest",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg8)
-		if state then
-			_G.AutoFarmNear = state
-		end
-	end
+	Callback = function(autoFarmNear)
+		_G.AutoFarmNear = autoFarmNear
+	end,
 })
---@1 1:1,37:28479
-_G.AutoFactory = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+FactoryRaids = tbl.Main:AddToggle({
 	Name = "Auto Factory Raid",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg10)
-		if state then
-			_G.AutoFactory = state
-		end
-	end
+	Callback = function(autoFactory)
+		_G.AutoFactory = autoFactory
+	end,
 })
---@1 1:1,37:28479
-_G.AutoRaidCastle = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+CastleRaids = tbl.Main:AddToggle({
 	Name = "Auto Pirate Raid",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg12)
-		if state then
-			_G.AutoRaidCastle = state
-		end
-	end
+	Callback = function(autoRaidCastle)
+		_G.AutoRaidCastle = autoRaidCastle
+	end,
 })
---@1 1:1,37:28479
-_G.AutoEctoplasm = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+Ecto = tbl.Main:AddToggle({
 	Name = "Auto Farm Ectoplasm",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg14)
-		if state then
-			_G.AutoEctoplasm = state
-		end
-	end
+	Callback = function(autoEctoplasm)
+		_G.AutoEctoplasm = autoEctoplasm
+	end,
 })
---@1 1:1,37:28479
-Tab2:AddSection("Chest")
---@1 1:1,37:28479
-_G.AutoFarmChest = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+tbl.Main:AddSection("Chest")
+local n6 = nil
+
+ChestTW = tbl.Main:AddToggle({
 	Name = "Auto Farm Chest",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg16)
-		if state then
-			_G.AutoFarmChest = state
-		end
-	end
+	Callback = function(autoFarmChest)
+		n6 = 60850868
+		_G.AutoFarmChest = autoFarmChest
+	end,
 })
---@1 1:1,37:28479
-_G.AutoChestBP = false
---@22 1:1,37:28479
-Tab2:AddToggle({
+
+local n7 = nil
+
+ChestBP = tbl.Main:AddToggle({
 	Name = "Auto Chest Bypass",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg18)
-		if state then
-			_G.AutoChestBP = state
-			Players.LocalPlayer.CharacterAdded:Connect(function(character)
-				Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
-				task.wait(0.5)
-			end)
-			task.spawn(function(...)
-				local descendants = game:GetDescendants()
-				for k, v in pairs(descendants) do
-					v.Name:find("Chest")
+	Callback = function(autoChestBP)
+		n7 = 329955782
+		_G.AutoChestBP = autoChestBP
+		local n8 = nil
+		local n9 = nil
+		local n10 = nil
+		local n11 = nil
+
+		if autoChestBP then
+			local localPlayer = game:GetService("Players").LocalPlayer
+			local flag = false
+			local list = {}
+			local flag2 = true
+
+			local function fn()
+				if not localPlayer.Character then
+					localPlayer.CharacterAdded:Wait()
 				end
-				Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
-				task.wait(0.1)
+
+				localPlayer.Character:WaitForChild("HumanoidRootPart")
+				return localPlayer.Character
+			end
+
+			local function fn2()
+				n9 = 895961618
+				local iter_z_1
+
+				if flag2 then
+					flag2 = false
+					local v2, v3, v4 = pairs(game:GetDescendants())
+					iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v5, v32, v42, v52, v6, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v5, v32, v42, v52, v6, v7, v8, v9, v10) end end); co(); return co end)(v3, v4)
+					local exitTo = nil
+					local v5
+
+					while true do
+						local v6 = table.pack(iter_z_1())
+
+						if not v6[1] then
+							break
+						else
+							v5 = v6[3]
+							if v5.Name:find("Chest") and v5.ClassName == "Part" then
+								exitTo = 1
+								break
+							end
+						end
+					end
+
+					if exitTo == 1 then
+						while true do
+							table.insert(list, v5)
+							local exitTo2 = nil
+
+							while true do
+								local v6 = table.pack(iter_z_1())
+
+								if not v6[1] then
+									break
+								else
+									v5 = v6[3]
+									if v5.Name:find("Chest") and v5.ClassName == "Part" then
+										exitTo2 = 1
+										break
+									end
+								end
+							end
+
+							if exitTo2 == 1 then
+								continue
+							end
+							break
+						end
+					end
+				end
+
+				local list2 = {}
+				local v2, v3, n12 = pairs(list)
+				iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v4, v32, v42, v5, v6, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v4, v32, v42, v5, v6, v7, v8, v9, v10) end end); co(); return co end)(v3, n12)
+				local n13, lowerTorso
+
+				while true do
+					local v4 = table.pack(iter_z_1())
+
+					if not v4[1] then
+						break
+					else
+						local v5 = v4[3]
+
+						if v5:FindFirstChild("TouchInterest") then
+							while true do
+								table.insert(list2, v5)
+								local exitTo3 = nil
+
+								while true do
+									local v6 = table.pack(iter_z_1())
+
+									if not v6[1] then
+										break
+									else
+										v5 = v6[3]
+										if v5:FindFirstChild("TouchInterest") then
+											exitTo3 = 1
+											break
+										end
+									end
+								end
+
+								if exitTo3 == 1 then
+									continue
+								end
+								break
+							end
+
+							n13 = 203315553
+							lowerTorso = fn().LowerTorso
+
+							table.sort(list2, function(arg, arg2)
+								if not (list < n13) then
+									localPlayer += 943
+									list -= 854
+									n13 += 328
+									arg = 285270141
+									arg2 = 884326069
+									n12 = 733427011
+									error("devirt: needs a constant that is not decoded yet (at 0:156)")
+								end
+
+								return (lowerTorso.Position - arg.Position).Magnitude < (lowerTorso.Position - arg2.Position).Magnitude
+							end)
+
+							return list2
+						end
+					end
+				end
+
+				n13 = 203315553
+				lowerTorso = fn().LowerTorso
+
+				table.sort(list2, function(arg, arg2)
+					if not (list < n13) then
+						localPlayer += 943
+						list -= 854
+						n13 += 328
+						arg = 285270141
+						arg2 = 884326069
+						n12 = 733427011
+						error("devirt: needs a constant that is not decoded yet (at 0:156)")
+					end
+
+					return (lowerTorso.Position - arg.Position).Magnitude < (lowerTorso.Position - arg2.Position).Magnitude
+				end)
+
+				return list2
+			end
+
+			local function fn3()
+				n10 = 1043683424
+				n11 = 156228063
+				if flag then
+					return
+				end
+				flag = true
+
+				task.spawn(function()
+					while _G.AutoChestBP do
+						if localPlayer.Character and localPlayer.Character.Parent then
+							local v2 = fn2()
+
+							if #v2 > 0 then
+								local humanoidRootPart = fn().HumanoidRootPart
+
+								while true do
+									humanoidRootPart.CFrame = v2[1].CFrame
+									local exitTo = nil
+
+									while true do
+										task.wait(0.1)
+
+										if _G.AutoChestBP then
+											if localPlayer.Character and localPlayer.Character.Parent then
+												v2 = fn2()
+
+												if #v2 > 0 then
+													exitTo = 1
+													break
+												else
+													continue
+												end
+											end
+
+											break
+										else
+											break
+										end
+									end
+
+									if exitTo == 1 then
+										humanoidRootPart = fn().HumanoidRootPart
+										continue
+									end
+									break
+								end
+
+								flag = false
+								return
+							else
+								task.wait(0.1)
+								continue
+							end
+						end
+
+						break
+					end
+
+					flag = false
+				end)
+			end
+
+			localPlayer.CharacterAdded:Connect(function()
+				n8 = 947579463
+				fn()
+				task.wait(0.5)
+
+				if _G.AutoChestBP then
+					fn3()
+				end
 			end)
+
+			fn3()
 		end
-	end
+	end,
 })
---@1 1:1,37:28479
-_G.StopWhenChalice = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+StopI = tbl.Main:AddToggle({
 	Name = "Stop Items",
 	Description = "",
 	Default = true,
-	Callback = function(state, arg20)
-		if state then
-			_G.StopWhenChalice = state
-		end
-	end
+	Callback = function(stopWhenChalice)
+		_G.StopWhenChalice = stopWhenChalice
+	end,
 })
---@1 1:1,37:28479
-Tab2:AddSection("Collect Berry")
---@1 1:1,37:28479
-_G.AutoBerry = false
---@10 1:1,37:28479
-Tab2:AddToggle({
-	Name = "Auto Farm Berry",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg22)
-		if state then
-			_G.AutoBerry = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.AutoBerryH = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+tbl.Main:AddSection("Collect Berry")
+
+do
+	local n8 = nil
+	local n9 = nil
+
+	Berry = tbl.Main:AddToggle({
+		Name = "Auto Farm Berry",
+		Description = "",
+		Default = false,
+		Callback = function(autoBerry)
+			n8 = 753131424
+			n9 = 207512129
+			_G.AutoBerry = autoBerry
+		end,
+	})
+end
+
+BerryH = tbl.Main:AddToggle({
 	Name = "Auto Farm Berry + Hop",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg24)
-		if state then
-			_G.AutoBerryH = state
-		end
-	end
+	Callback = function(autoBerryH)
+		_G.AutoBerryH = autoBerryH
+	end,
 })
---@1 1:1,37:28479
-Tab2:AddSection("Farm Mob")
---@1 1:1,37:28479
-getgenv().SelectMob = false
---@35 1:1,37:28479
-Tab2:AddDropdown({
-	Name = "Select Mob",
-	Default = Bandit,
-	Options = {
-		"Bandit",
-		"Monkey",
-		"Gorilla",
-		"Pirate",
-		"Brute",
-		"Desert Bandit",
-		"Desert Officer",
-		"Snow Bandit",
-		"Snowman",
-		"Chief Petty Officer",
-		"Sky Bandit",
-		"Dark Master",
-		"Toga Warrior",
-		"Gladiator",
-		"Military Soldier",
-		"Military Spy",
-		"Fishman Warrior",
-		"Fishman Commando",
-		"God's Guard",
-		"Shanda",
-		"Royal Squad",
-		"Royal Soldier",
-		"Galley Pirate",
-		"Galley Captain"
-	},
-	Callback = function(state, arg26)
-		if state then
-			getgenv().SelectMob = state
-		end
+
+tbl.Main:AddSection("Farm Mob")
+
+do
+	local n8 = nil
+	local n9 = nil
+
+	if World1 then
+		tbl.Main:AddDropdown({
+			Name = "Select Mob",
+			Default = Bandit,
+			Options = {
+				"Bandit",
+				"Monkey",
+				"Gorilla",
+				"Pirate",
+				"Brute",
+				"Desert Bandit",
+				"Desert Officer",
+				"Snow Bandit",
+				"Snowman",
+				"Chief Petty Officer",
+				"Sky Bandit",
+				"Dark Master",
+				"Toga Warrior",
+				"Gladiator",
+				"Military Soldier",
+				"Military Spy",
+				"Fishman Warrior",
+				"Fishman Commando",
+				"God's Guard",
+				"Shanda",
+				"Royal Squad",
+				"Royal Soldier",
+				"Galley Pirate",
+				"Galley Captain",
+			},
+			Callback = function(selectMob)
+				n8 = 807550778
+				n9 = 681975705
+				getgenv().SelectMob = selectMob
+			end,
+		})
 	end
-})
---@30 1:1,37:28479
-Tab2:AddDropdown({
-	Name = "Select Mob",
-	Default = Raider,
-	Options = {
-		"Raider",
-		"Mercenary",
-		"Swan Pirate",
-		"Factory Staff",
-		"Marine Lieutenant",
-		"Marine Captain",
-		"Zombie",
-		"Vampire",
-		"Snow Trooper",
-		"Winter Warrior",
-		"Lab Subordinate",
-		"Horned Warrior",
-		"Magma Ninja",
-		"Lava Pirate",
-		"Ship Deckhand",
-		"Ship Engineer",
-		"Ship Steward",
-		"Ship Officer",
-		"Arctic Warrior",
-		"Snow Lurker",
-		"Sea Soldier",
-		"Water Fighter"
-	},
-	Callback = function(state, arg28)
+end
+
+do
+	local n8 = nil
+	local n9 = nil
+
+	if World2 then
+		tbl.Main:AddDropdown({
+			Name = "Select Mob",
+			Default = Raider,
+			Options = {
+				"Raider",
+				"Mercenary",
+				"Swan Pirate",
+				"Factory Staff",
+				"Marine Lieutenant",
+				"Marine Captain",
+				"Zombie",
+				"Vampire",
+				"Snow Trooper",
+				"Winter Warrior",
+				"Lab Subordinate",
+				"Horned Warrior",
+				"Magma Ninja",
+				"Lava Pirate",
+				"Ship Deckhand",
+				"Ship Engineer",
+				"Ship Steward",
+				"Ship Officer",
+				"Arctic Warrior",
+				"Snow Lurker",
+				"Sea Soldier",
+				"Water Fighter",
+			},
+			Callback = function(selectMob)
+				n8 = 585691261
+				n9 = 398263946
+				getgenv().SelectMob = selectMob
+			end,
+		})
 	end
-})
---@42 1:1,37:28479
-Tab2:AddDropdown({
-	Name = "Select Mob",
-	Options = {
-		"Pirate Millionaire",
-		"Dragon Crew Warrior",
-		"Dragon Crew Archer",
-		"Female Islander",
-		"Giant Islander",
-		"Marine Commodore",
-		"Marine Rear Admiral",
-		"Fishman Raider",
-		"Fishman Captain",
-		"Forest Pirate",
-		"Mythological Pirate",
-		"Jungle Pirate",
-		"Musketeer Pirate",
-		"Reborn Skeleton",
-		"Living Zombie",
-		"Demonic Soul",
-		"Posessed Mummy",
-		"Peanut Scout",
-		"Peanut President",
-		"Ice Cream Chef",
-		"Ice Cream Commander",
-		"Cookie Crafter",
-		"Cake Guard",
-		"Baking Staff",
-		"Head Baker",
-		"Cocoa Warrior",
-		"Chocolate Bar Battler",
-		"Sweet Thief",
-		"Candy Rebel",
-		"Candy Pirate",
-		"Snow Demon",
-		"Isle Outlaw",
-		"Island Boy",
-		"Sun-kissed Warrior",
-		"Isle Champion"
-	},
-	Callback = function(state, arg30)
-	end
-})
---@1 1:1,37:28479
-_G.AutoKillMob = false
---@9 1:1,37:28479
-Tab2:AddToggle({
+end
+
+if World3 then
+	tbl.Main:AddDropdown({
+		Name = "Select Mob",
+		Options = {
+			"Pirate Millionaire",
+			"Dragon Crew Warrior",
+			"Dragon Crew Archer",
+			"Female Islander",
+			"Giant Islander",
+			"Marine Commodore",
+			"Marine Rear Admiral",
+			"Fishman Raider",
+			"Fishman Captain",
+			"Forest Pirate",
+			"Mythological Pirate",
+			"Jungle Pirate",
+			"Musketeer Pirate",
+			"Reborn Skeleton",
+			"Living Zombie",
+			"Demonic Soul",
+			"Posessed Mummy",
+			"Peanut Scout",
+			"Peanut President",
+			"Ice Cream Chef",
+			"Ice Cream Commander",
+			"Cookie Crafter",
+			"Cake Guard",
+			"Baking Staff",
+			"Head Baker",
+			"Cocoa Warrior",
+			"Chocolate Bar Battler",
+			"Sweet Thief",
+			"Candy Rebel",
+			"Candy Pirate",
+			"Snow Demon",
+			"Isle Outlaw",
+			"Island Boy",
+			"Sun-kissed Warrior",
+			"Isle Champion",
+		},
+		Callback = function(selectMob)
+			getgenv().SelectMob = selectMob
+		end,
+	})
+end
+
+tbl.Main:AddToggle({
 	Name = "Auto Kill Mob",
 	Default = false,
-	Callback = function(state, arg32)
-		if state then
-			_G.AutoKillMob = state
+	Callback = function(autoKillMob)
+		_G.AutoKillMob = autoKillMob
+	end,
+})
+
+tbl.Main:AddSection("Farm All Island")
+
+local function fn()
+	local list = {}
+	local v2, v3, v4 = pairs(Core.Island or {})
+	local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v5, v32, v42, v52, v6, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v5, v32, v42, v52, v6, v7, v8, v9, v10) end end); co(); return co end)(v3, v4)
+
+	while true do
+		local v5 = table.pack(iter_z_1())
+
+		if not v5[1] then
+			break
+		else
+			table.insert(list, v5[2])
 		end
 	end
-})
---@1 1:1,37:28479
-Tab2:AddSection("Farm All Island")
---@2 
-for k2, v2 in pairs(Core.Island) do
+
+	table.sort(list)
+	return list
 end
---@1 1:1,37:28479
-_G.SelectIsland = false
---@9 1:1,37:28479
-Tab2:AddDropdown({
+
+tbl.Main:AddDropdown({
 	Name = "Select Island",
-	Options = { k2 },
-	Callback = function(state, arg34)
-		if state then
-			_G.SelectIsland = state
-		end
-	end
+	Options = fn(),
+	Callback = function(selectIsland)
+		_G.SelectIsland = selectIsland
+	end,
 })
---@1 1:1,37:28479
-_G.AutoFarmIsland = false
---@9 1:1,37:28479
-Tab2:AddToggle({
+
+tbl.Main:AddToggle({
 	Name = "Auto Farm All Island",
 	Default = false,
-	Callback = function(state, arg36)
-		if state then
-			_G.AutoFarmIsland = state
+	Callback = function(autoFarmIsland)
+		_G.AutoFarmIsland = autoFarmIsland
+	end,
+})
+
+tbl.Main:AddSection("Farm Elite Hunter")
+local elitesProcessParagraph = tbl.Main:AddParagraph("Elites Process", "")
+
+spawn(function()
+	local n8 = nil
+
+	if wait(Sec) then
+		local v2, v3, v4
+
+		repeat
+			pcall(function()
+				n8 = 447457440
+				elitesProcessParagraph:SetDesc("Elite Progress : " .. tostring(replicated.Remotes.CommF_:InvokeServer("EliteHunter", "Progress") or 0))
+			end)
+		until not wait(Sec)
+	end
+end)
+
+local eliteSpawnParagraph = tbl.Main:AddParagraph("Elite Spawn", "Status: ")
+
+spawn(function()
+	local str = ""
+
+	if wait(1) then
+		local str2, v2, eliteSpawnParagraph2, v3, ok, result, v4, ok2, str22, exitTo, ok3, result2, v5, ok4, exitTo3, urban, exitTo2, ok5, result3, v6, ok6, exitTo5, enemies, exitTo4, ok7, result4, v7, ok8, diablo, exitTo8, deandre, exitTo7, exitTo6, ok9, result5, v8, ok10, diablo2, Workspace, urban2, exitTo9, ok11, result6, v9, ok12, v10, setDesc, status, diablo3, diablo4
+
+		if game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") then
+			str2 = "✅"
+
+			ok, result = pcall(function()
+				return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+			end)
+
+			v4 = tostring
+			ok2 = ok
+
+			if ok2 then
+				ok2 = result
+			end
+
+			ok2 = ok2 or 0
+			local v11 = v4(ok2)
+			eliteSpawnParagraph:SetDesc("Status: " .. str2 .. " | Killed: " .. v11)
+			str22 = str2
+			exitTo = nil
+
+			while wait(1) do
+				local diablo5 = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre")
+
+				if diablo5 then
+					ok3, result2 = pcall(function()
+						return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+					end)
+
+					v5 = tostring
+					ok4 = ok3
+
+					if ok4 then
+						ok4 = result2
+					end
+
+					ok4 = ok4 or 0
+					v5(ok4)
+				else
+					exitTo = 1
+					break
+				end
+			end
+
+			if exitTo == 1 then
+				exitTo3 = nil
+
+				while true do
+					urban = game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+					exitTo2 = nil
+
+					while true do
+						if urban then
+							ok5, result3 = pcall(function()
+								return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+							end)
+
+							v6 = tostring
+							ok6 = ok5
+
+							if ok6 then
+								ok6 = result3
+							end
+
+							ok6 = ok6 or 0
+							v6(ok6)
+
+							if wait(1) then
+								urban = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre")
+
+								if urban then
+									continue
+								else
+									exitTo2 = 2
+									break
+								end
+							end
+
+							break
+						else
+							exitTo2 = 1
+							break
+						end
+					end
+
+					if exitTo2 == 1 then
+						exitTo3 = 1
+						break
+					elseif exitTo2 == 2 then
+						continue
+					end
+
+					break
+				end
+
+				if exitTo3 == 1 then
+					exitTo5 = nil
+
+					while true do
+						enemies = game:GetService("Workspace").Enemies
+
+						if enemies:FindFirstChild("Diablo") then
+							exitTo4 = nil
+
+							while true do
+								ok7, result4 = pcall(function()
+									return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+								end)
+
+								v7 = tostring
+								ok8 = ok7
+
+								if ok8 then
+									ok8 = result4
+								end
+
+								ok8 = ok8 or 0
+								v7(ok8)
+
+								if wait(1) then
+									diablo = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+
+									if diablo then
+										continue
+									else
+										exitTo4 = 1
+										break
+									end
+								end
+
+								break
+							end
+
+							if exitTo4 == 1 then
+								continue
+							end
+							break
+						else
+							exitTo5 = 1
+							break
+						end
+					end
+
+					if exitTo5 == 1 then
+						exitTo8 = nil
+
+						while true do
+							deandre = game:GetService("Workspace").Enemies:FindFirstChild("Deandre")
+							exitTo7 = nil
+
+							while true do
+								if deandre then
+									exitTo6 = nil
+
+									while true do
+										ok9, result5 = pcall(function()
+											return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+										end)
+
+										v8 = tostring
+										ok10 = ok9
+
+										if ok10 then
+											ok10 = result5
+										end
+
+										ok10 = ok10 or 0
+										v8(ok10)
+
+										if wait(1) then
+											diablo2 = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+
+											if diablo2 then
+												continue
+											else
+												exitTo6 = 1
+												break
+											end
+										end
+
+										break
+									end
+
+									if exitTo6 == 1 then
+										deandre = game:GetService("Workspace").Enemies:FindFirstChild("Diablo")
+
+										if deandre then
+											continue
+										else
+											exitTo7 = 2
+											break
+										end
+									end
+
+									break
+								else
+									exitTo7 = 1
+									break
+								end
+							end
+
+							if exitTo7 == 1 then
+								exitTo8 = 1
+								break
+							elseif exitTo7 == 2 then
+								continue
+							end
+
+							break
+						end
+
+						if exitTo8 == 1 then
+							Workspace = game:GetService("Workspace")
+
+							while true do
+								urban2 = Workspace.Enemies:FindFirstChild("Urban")
+
+								if urban2 then
+									urban2 = "✅"
+								end
+
+								urban2 = urban2 or "❌"
+								exitTo9 = nil
+
+								while true do
+									ok11, result6 = pcall(function()
+										return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+									end)
+
+									v9 = tostring
+									ok12 = ok11
+
+									if ok12 then
+										ok12 = result6
+									end
+
+									ok12 = ok12 or 0
+									v10 = v9(ok12)
+
+									if urban2 ~= str22 then
+										eliteSpawnParagraph2 = eliteSpawnParagraph
+										setDesc = eliteSpawnParagraph.SetDesc
+										status = urban2 .. " | Killed: " .. v10
+										setDesc(eliteSpawnParagraph2, "Status: " .. status)
+										str22 = urban2
+									end
+
+									if wait(1) then
+										diablo3 = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+
+										if diablo3 then
+											urban2 = "✅"
+											continue
+										else
+											diablo4 = game:GetService("Workspace").Enemies:FindFirstChild("Diablo") or game:GetService("Workspace").Enemies:FindFirstChild("Deandre")
+
+											if diablo4 then
+												urban2 = "✅"
+												continue
+											else
+												exitTo9 = 1
+												break
+											end
+										end
+									end
+
+									break
+								end
+
+								if exitTo9 == 1 then
+									Workspace = game:GetService("Workspace")
+									continue
+								end
+								break
+							end
+						end
+					end
+				end
+			end
+		elseif game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") then
+			str2 = "✅"
+
+			ok, result = pcall(function()
+				return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+			end)
+
+			v4 = tostring
+			ok2 = ok
+
+			if ok2 then
+				ok2 = result
+			end
+
+			eliteSpawnParagraph:SetDesc("Status: " .. str2 .. " | Killed: " .. v4(ok2 or 0))
+			str22 = str2
+			exitTo = nil
+
+			while wait(1) do
+				if game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") then
+					ok3, result2 = pcall(function()
+						return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+					end)
+
+					v5 = tostring
+					ok4 = ok3
+
+					if ok4 then
+						ok4 = result2
+					end
+
+					v5(ok4 or 0)
+				else
+					exitTo = 1
+					break
+				end
+			end
+
+			if exitTo == 1 then
+				exitTo3 = nil
+
+				while true do
+					urban = game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+					exitTo2 = nil
+
+					while true do
+						if urban then
+							ok5, result3 = pcall(function()
+								return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+							end)
+
+							v6 = tostring
+							ok6 = ok5
+
+							if ok6 then
+								ok6 = result3
+							end
+
+							ok6 = ok6 or 0
+							v6(ok6)
+
+							if wait(1) then
+								urban = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre")
+
+								if urban then
+									continue
+								else
+									exitTo2 = 2
+									break
+								end
+							end
+
+							break
+						else
+							exitTo2 = 1
+							break
+						end
+					end
+
+					if exitTo2 == 1 then
+						exitTo3 = 1
+						break
+					elseif exitTo2 == 2 then
+						continue
+					end
+
+					break
+				end
+
+				if exitTo3 == 1 then
+					exitTo5 = nil
+
+					while true do
+						enemies = game:GetService("Workspace").Enemies
+
+						if enemies:FindFirstChild("Diablo") then
+							exitTo4 = nil
+
+							while true do
+								ok7, result4 = pcall(function()
+									return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+								end)
+
+								v7 = tostring
+								ok8 = ok7
+
+								if ok8 then
+									ok8 = result4
+								end
+
+								ok8 = ok8 or 0
+								v7(ok8)
+
+								if wait(1) then
+									diablo = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+
+									if diablo then
+										continue
+									else
+										exitTo4 = 1
+										break
+									end
+								end
+
+								break
+							end
+
+							if exitTo4 == 1 then
+								continue
+							end
+							break
+						else
+							exitTo5 = 1
+							break
+						end
+					end
+
+					if exitTo5 == 1 then
+						exitTo8 = nil
+
+						while true do
+							deandre = game:GetService("Workspace").Enemies:FindFirstChild("Deandre")
+							exitTo7 = nil
+
+							while true do
+								if deandre then
+									exitTo6 = nil
+
+									while true do
+										ok9, result5 = pcall(function()
+											return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+										end)
+
+										v8 = tostring
+										ok10 = ok9
+
+										if ok10 then
+											ok10 = result5
+										end
+
+										ok10 = ok10 or 0
+										v8(ok10)
+
+										if wait(1) then
+											diablo2 = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+
+											if diablo2 then
+												continue
+											else
+												exitTo6 = 1
+												break
+											end
+										end
+
+										break
+									end
+
+									if exitTo6 == 1 then
+										deandre = game:GetService("Workspace").Enemies:FindFirstChild("Diablo")
+
+										if deandre then
+											continue
+										else
+											exitTo7 = 2
+											break
+										end
+									end
+
+									break
+								else
+									exitTo7 = 1
+									break
+								end
+							end
+
+							if exitTo7 == 1 then
+								exitTo8 = 1
+								break
+							elseif exitTo7 == 2 then
+								continue
+							end
+
+							break
+						end
+
+						if exitTo8 == 1 then
+							Workspace = game:GetService("Workspace")
+
+							while true do
+								urban2 = Workspace.Enemies:FindFirstChild("Urban")
+
+								if urban2 then
+									urban2 = "✅"
+								end
+
+								urban2 = urban2 or "❌"
+								exitTo9 = nil
+
+								while true do
+									ok11, result6 = pcall(function()
+										return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+									end)
+
+									v9 = tostring
+									ok12 = ok11
+
+									if ok12 then
+										ok12 = result6
+									end
+
+									ok12 = ok12 or 0
+									v10 = v9(ok12)
+
+									if urban2 ~= str22 then
+										eliteSpawnParagraph2 = eliteSpawnParagraph
+										setDesc = eliteSpawnParagraph.SetDesc
+										status = urban2 .. " | Killed: " .. v10
+										setDesc(eliteSpawnParagraph2, "Status: " .. status)
+										str22 = urban2
+									end
+
+									if wait(1) then
+										diablo3 = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+
+										if diablo3 then
+											urban2 = "✅"
+											continue
+										else
+											diablo4 = game:GetService("Workspace").Enemies:FindFirstChild("Diablo") or game:GetService("Workspace").Enemies:FindFirstChild("Deandre")
+
+											if diablo4 then
+												urban2 = "✅"
+												continue
+											else
+												exitTo9 = 1
+												break
+											end
+										end
+									end
+
+									break
+								end
+
+								if exitTo9 == 1 then
+									Workspace = game:GetService("Workspace")
+									continue
+								end
+								break
+							end
+						end
+					end
+				end
+			end
+		elseif game:GetService("ReplicatedStorage"):FindFirstChild("Urban") then
+			local str3 = "✅"
+
+			local ok13, result7 = pcall(function()
+				return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+			end)
+
+			local v11 = tostring
+			local ok14 = ok13
+
+			if ok14 then
+				ok14 = result7
+			end
+
+			eliteSpawnParagraph:SetDesc("Status: " .. str3 .. " | Killed: " .. v11(ok14 or 0))
+			str22 = str3
+			local exitTo10 = nil
+
+			while wait(1) do
+				urban = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre")
+
+				if urban then
+					if urban then
+						ok5, result3 = pcall(function()
+							return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+						end)
+
+						v6 = tostring
+						ok6 = ok5
+
+						if ok6 then
+							ok6 = result3
+						end
+
+						ok6 = ok6 or 0
+						v6(ok6)
+					else
+						exitTo10 = 2
+						break
+					end
+				else
+					exitTo10 = 1
+					break
+				end
+			end
+
+			if exitTo10 == 1 then
+				exitTo3 = nil
+
+				while true do
+					urban = game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+					exitTo2 = nil
+
+					while true do
+						if urban then
+							ok5, result3 = pcall(function()
+								return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+							end)
+
+							v6 = tostring
+							ok6 = ok5
+
+							if ok6 then
+								ok6 = result3
+							end
+
+							ok6 = ok6 or 0
+							v6(ok6)
+
+							if wait(1) then
+								urban = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre")
+
+								if urban then
+									continue
+								else
+									exitTo2 = 2
+									break
+								end
+							end
+
+							break
+						else
+							exitTo2 = 1
+							break
+						end
+					end
+
+					if exitTo2 == 1 then
+						exitTo3 = 1
+						break
+					elseif exitTo2 == 2 then
+						continue
+					end
+
+					break
+				end
+
+				if exitTo3 == 1 then
+					exitTo5 = nil
+
+					while true do
+						enemies = game:GetService("Workspace").Enemies
+
+						if enemies:FindFirstChild("Diablo") then
+							exitTo4 = nil
+
+							while true do
+								ok7, result4 = pcall(function()
+									return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+								end)
+
+								v7 = tostring
+								ok8 = ok7
+
+								if ok8 then
+									ok8 = result4
+								end
+
+								ok8 = ok8 or 0
+								v7(ok8)
+
+								if wait(1) then
+									diablo = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+
+									if diablo then
+										continue
+									else
+										exitTo4 = 1
+										break
+									end
+								end
+
+								break
+							end
+
+							if exitTo4 == 1 then
+								continue
+							end
+							break
+						else
+							exitTo5 = 1
+							break
+						end
+					end
+
+					if exitTo5 == 1 then
+						exitTo8 = nil
+
+						while true do
+							deandre = game:GetService("Workspace").Enemies:FindFirstChild("Deandre")
+							exitTo7 = nil
+
+							while true do
+								if deandre then
+									exitTo6 = nil
+
+									while true do
+										ok9, result5 = pcall(function()
+											return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+										end)
+
+										v8 = tostring
+										ok10 = ok9
+
+										if ok10 then
+											ok10 = result5
+										end
+
+										ok10 = ok10 or 0
+										v8(ok10)
+
+										if wait(1) then
+											diablo2 = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+
+											if diablo2 then
+												continue
+											else
+												exitTo6 = 1
+												break
+											end
+										end
+
+										break
+									end
+
+									if exitTo6 == 1 then
+										deandre = game:GetService("Workspace").Enemies:FindFirstChild("Diablo")
+
+										if deandre then
+											continue
+										else
+											exitTo7 = 2
+											break
+										end
+									end
+
+									break
+								else
+									exitTo7 = 1
+									break
+								end
+							end
+
+							if exitTo7 == 1 then
+								exitTo8 = 1
+								break
+							elseif exitTo7 == 2 then
+								continue
+							end
+
+							break
+						end
+
+						if exitTo8 == 1 then
+							Workspace = game:GetService("Workspace")
+
+							while true do
+								urban2 = Workspace.Enemies:FindFirstChild("Urban")
+
+								if urban2 then
+									urban2 = "✅"
+								end
+
+								urban2 = urban2 or "❌"
+								exitTo9 = nil
+
+								while true do
+									ok11, result6 = pcall(function()
+										return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+									end)
+
+									v9 = tostring
+									ok12 = ok11
+
+									if ok12 then
+										ok12 = result6
+									end
+
+									ok12 = ok12 or 0
+									v10 = v9(ok12)
+
+									if urban2 ~= str22 then
+										eliteSpawnParagraph2 = eliteSpawnParagraph
+										setDesc = eliteSpawnParagraph.SetDesc
+										status = urban2 .. " | Killed: " .. v10
+										setDesc(eliteSpawnParagraph2, "Status: " .. status)
+										str22 = urban2
+									end
+
+									if wait(1) then
+										diablo3 = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+
+										if diablo3 then
+											urban2 = "✅"
+											continue
+										else
+											diablo4 = game:GetService("Workspace").Enemies:FindFirstChild("Diablo") or game:GetService("Workspace").Enemies:FindFirstChild("Deandre")
+
+											if diablo4 then
+												urban2 = "✅"
+												continue
+											else
+												exitTo9 = 1
+												break
+											end
+										end
+									end
+
+									break
+								end
+
+								if exitTo9 == 1 then
+									Workspace = game:GetService("Workspace")
+									continue
+								end
+								break
+							end
+						end
+					end
+				end
+			elseif exitTo10 == 2 then
+				exitTo5 = nil
+
+				while true do
+					enemies = game:GetService("Workspace").Enemies
+
+					if enemies:FindFirstChild("Diablo") then
+						exitTo4 = nil
+
+						while true do
+							ok7, result4 = pcall(function()
+								return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+							end)
+
+							v7 = tostring
+							ok8 = ok7
+
+							if ok8 then
+								ok8 = result4
+							end
+
+							ok8 = ok8 or 0
+							v7(ok8)
+
+							if wait(1) then
+								diablo = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+
+								if diablo then
+									continue
+								else
+									exitTo4 = 1
+									break
+								end
+							end
+
+							break
+						end
+
+						if exitTo4 == 1 then
+							continue
+						end
+						break
+					else
+						exitTo5 = 1
+						break
+					end
+				end
+
+				if exitTo5 == 1 then
+					exitTo8 = nil
+
+					while true do
+						deandre = game:GetService("Workspace").Enemies:FindFirstChild("Deandre")
+						exitTo7 = nil
+
+						while true do
+							if deandre then
+								exitTo6 = nil
+
+								while true do
+									ok9, result5 = pcall(function()
+										return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+									end)
+
+									v8 = tostring
+									ok10 = ok9
+
+									if ok10 then
+										ok10 = result5
+									end
+
+									ok10 = ok10 or 0
+									v8(ok10)
+
+									if wait(1) then
+										diablo2 = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+
+										if diablo2 then
+											continue
+										else
+											exitTo6 = 1
+											break
+										end
+									end
+
+									break
+								end
+
+								if exitTo6 == 1 then
+									deandre = game:GetService("Workspace").Enemies:FindFirstChild("Diablo")
+
+									if deandre then
+										continue
+									else
+										exitTo7 = 2
+										break
+									end
+								end
+
+								break
+							else
+								exitTo7 = 1
+								break
+							end
+						end
+
+						if exitTo7 == 1 then
+							exitTo8 = 1
+							break
+						elseif exitTo7 == 2 then
+							continue
+						end
+
+						break
+					end
+
+					if exitTo8 == 1 then
+						Workspace = game:GetService("Workspace")
+
+						while true do
+							urban2 = Workspace.Enemies:FindFirstChild("Urban")
+
+							if urban2 then
+								urban2 = "✅"
+							end
+
+							urban2 = urban2 or "❌"
+							exitTo9 = nil
+
+							while true do
+								ok11, result6 = pcall(function()
+									return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+								end)
+
+								v9 = tostring
+								ok12 = ok11
+
+								if ok12 then
+									ok12 = result6
+								end
+
+								ok12 = ok12 or 0
+								v10 = v9(ok12)
+
+								if urban2 ~= str22 then
+									eliteSpawnParagraph2 = eliteSpawnParagraph
+									setDesc = eliteSpawnParagraph.SetDesc
+									status = urban2 .. " | Killed: " .. v10
+									setDesc(eliteSpawnParagraph2, "Status: " .. status)
+									str22 = urban2
+								end
+
+								if wait(1) then
+									diablo3 = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+
+									if diablo3 then
+										urban2 = "✅"
+										continue
+									else
+										diablo4 = game:GetService("Workspace").Enemies:FindFirstChild("Diablo") or game:GetService("Workspace").Enemies:FindFirstChild("Deandre")
+
+										if diablo4 then
+											urban2 = "✅"
+											continue
+										else
+											exitTo9 = 1
+											break
+										end
+									end
+								end
+
+								break
+							end
+
+							if exitTo9 == 1 then
+								Workspace = game:GetService("Workspace")
+								continue
+							end
+							break
+						end
+					end
+				end
+			end
+		elseif game:GetService("Workspace").Enemies:FindFirstChild("Diablo") then
+			local str3 = "✅"
+
+			local ok13, result7 = pcall(function()
+				return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+			end)
+
+			local v11 = tostring
+			local ok14 = ok13
+
+			if ok14 then
+				ok14 = result7
+			end
+
+			eliteSpawnParagraph:SetDesc("Status: " .. str3 .. " | Killed: " .. v11(ok14 or 0))
+			str22 = str3
+			local exitTo11 = nil
+
+			while wait(1) do
+				diablo = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+
+				if diablo then
+					ok7, result4 = pcall(function()
+						return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+					end)
+
+					v7 = tostring
+					ok8 = ok7
+
+					if ok8 then
+						ok8 = result4
+					end
+
+					ok8 = ok8 or 0
+					v7(ok8)
+				else
+					exitTo11 = 1
+					break
+				end
+			end
+
+			if exitTo11 == 1 then
+				exitTo5 = nil
+
+				while true do
+					if game:GetService("Workspace").Enemies:FindFirstChild("Diablo") then
+						exitTo4 = nil
+
+						while true do
+							ok7, result4 = pcall(function()
+								return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+							end)
+
+							v7 = tostring
+							ok8 = ok7
+
+							if ok8 then
+								ok8 = result4
+							end
+
+							ok8 = ok8 or 0
+							v7(ok8)
+
+							if wait(1) then
+								diablo = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+
+								if diablo then
+									continue
+								else
+									exitTo4 = 1
+									break
+								end
+							end
+
+							break
+						end
+
+						if exitTo4 == 1 then
+							continue
+						end
+						break
+					else
+						exitTo5 = 1
+						break
+					end
+				end
+
+				if exitTo5 == 1 then
+					exitTo8 = nil
+
+					while true do
+						deandre = game:GetService("Workspace").Enemies:FindFirstChild("Deandre")
+						exitTo7 = nil
+
+						while true do
+							if deandre then
+								exitTo6 = nil
+
+								while true do
+									ok9, result5 = pcall(function()
+										return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+									end)
+
+									v8 = tostring
+									ok10 = ok9
+
+									if ok10 then
+										ok10 = result5
+									end
+
+									ok10 = ok10 or 0
+									v8(ok10)
+
+									if wait(1) then
+										diablo2 = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+
+										if diablo2 then
+											continue
+										else
+											exitTo6 = 1
+											break
+										end
+									end
+
+									break
+								end
+
+								if exitTo6 == 1 then
+									deandre = game:GetService("Workspace").Enemies:FindFirstChild("Diablo")
+
+									if deandre then
+										continue
+									else
+										exitTo7 = 2
+										break
+									end
+								end
+
+								break
+							else
+								exitTo7 = 1
+								break
+							end
+						end
+
+						if exitTo7 == 1 then
+							exitTo8 = 1
+							break
+						elseif exitTo7 == 2 then
+							continue
+						end
+
+						break
+					end
+
+					if exitTo8 == 1 then
+						Workspace = game:GetService("Workspace")
+
+						while true do
+							urban2 = Workspace.Enemies:FindFirstChild("Urban")
+
+							if urban2 then
+								urban2 = "✅"
+							end
+
+							urban2 = urban2 or "❌"
+							exitTo9 = nil
+
+							while true do
+								ok11, result6 = pcall(function()
+									return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+								end)
+
+								v9 = tostring
+								ok12 = ok11
+
+								if ok12 then
+									ok12 = result6
+								end
+
+								ok12 = ok12 or 0
+								v10 = v9(ok12)
+
+								if urban2 ~= str22 then
+									eliteSpawnParagraph2 = eliteSpawnParagraph
+									setDesc = eliteSpawnParagraph.SetDesc
+									status = urban2 .. " | Killed: " .. v10
+									setDesc(eliteSpawnParagraph2, "Status: " .. status)
+									str22 = urban2
+								end
+
+								if wait(1) then
+									diablo3 = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+
+									if diablo3 then
+										urban2 = "✅"
+										continue
+									else
+										diablo4 = game:GetService("Workspace").Enemies:FindFirstChild("Diablo") or game:GetService("Workspace").Enemies:FindFirstChild("Deandre")
+
+										if diablo4 then
+											urban2 = "✅"
+											continue
+										else
+											exitTo9 = 1
+											break
+										end
+									end
+								end
+
+								break
+							end
+
+							if exitTo9 == 1 then
+								Workspace = game:GetService("Workspace")
+								continue
+							end
+							break
+						end
+					end
+				end
+			end
+		elseif game:GetService("Workspace").Enemies:FindFirstChild("Deandre") then
+			local str3 = "✅"
+
+			local ok13, result7 = pcall(function()
+				return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+			end)
+
+			local v11 = tostring
+			local ok14 = ok13
+
+			if ok14 then
+				ok14 = result7
+			end
+
+			eliteSpawnParagraph:SetDesc("Status: " .. str3 .. " | Killed: " .. v11(ok14 or 0))
+			str22 = str3
+			local exitTo12 = nil
+
+			while wait(1) do
+				diablo2 = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+
+				if diablo2 then
+					ok9, result5 = pcall(function()
+						return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+					end)
+
+					v8 = tostring
+					ok10 = ok9
+
+					if ok10 then
+						ok10 = result5
+					end
+
+					ok10 = ok10 or 0
+					v8(ok10)
+				else
+					deandre = game:GetService("Workspace").Enemies:FindFirstChild("Diablo")
+
+					if deandre then
+						if deandre then
+							ok9, result5 = pcall(function()
+								return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+							end)
+
+							v8 = tostring
+							ok10 = ok9
+
+							if ok10 then
+								ok10 = result5
+							end
+
+							ok10 = ok10 or 0
+							v8(ok10)
+						else
+							exitTo12 = 2
+							break
+						end
+					else
+						exitTo12 = 1
+						break
+					end
+				end
+			end
+
+			if exitTo12 == 1 then
+				exitTo8 = nil
+
+				while true do
+					deandre = game:GetService("Workspace").Enemies:FindFirstChild("Deandre")
+					exitTo7 = nil
+
+					while true do
+						if deandre then
+							exitTo6 = nil
+
+							while true do
+								ok9, result5 = pcall(function()
+									return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+								end)
+
+								v8 = tostring
+								ok10 = ok9
+
+								if ok10 then
+									ok10 = result5
+								end
+
+								ok10 = ok10 or 0
+								v8(ok10)
+
+								if wait(1) then
+									diablo2 = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+
+									if diablo2 then
+										continue
+									else
+										exitTo6 = 1
+										break
+									end
+								end
+
+								break
+							end
+
+							if exitTo6 == 1 then
+								deandre = game:GetService("Workspace").Enemies:FindFirstChild("Diablo")
+
+								if deandre then
+									continue
+								else
+									exitTo7 = 2
+									break
+								end
+							end
+
+							break
+						else
+							exitTo7 = 1
+							break
+						end
+					end
+
+					if exitTo7 == 1 then
+						exitTo8 = 1
+						break
+					elseif exitTo7 == 2 then
+						continue
+					end
+
+					break
+				end
+
+				if exitTo8 == 1 then
+					Workspace = game:GetService("Workspace")
+
+					while true do
+						urban2 = Workspace.Enemies:FindFirstChild("Urban")
+
+						if urban2 then
+							urban2 = "✅"
+						end
+
+						urban2 = urban2 or "❌"
+						exitTo9 = nil
+
+						while true do
+							ok11, result6 = pcall(function()
+								return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+							end)
+
+							v9 = tostring
+							ok12 = ok11
+
+							if ok12 then
+								ok12 = result6
+							end
+
+							ok12 = ok12 or 0
+							v10 = v9(ok12)
+
+							if urban2 ~= str22 then
+								eliteSpawnParagraph2 = eliteSpawnParagraph
+								setDesc = eliteSpawnParagraph.SetDesc
+								status = urban2 .. " | Killed: " .. v10
+								setDesc(eliteSpawnParagraph2, "Status: " .. status)
+								str22 = urban2
+							end
+
+							if wait(1) then
+								diablo3 = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+
+								if diablo3 then
+									urban2 = "✅"
+									continue
+								else
+									diablo4 = game:GetService("Workspace").Enemies:FindFirstChild("Diablo") or game:GetService("Workspace").Enemies:FindFirstChild("Deandre")
+
+									if diablo4 then
+										urban2 = "✅"
+										continue
+									else
+										exitTo9 = 1
+										break
+									end
+								end
+							end
+
+							break
+						end
+
+						if exitTo9 == 1 then
+							Workspace = game:GetService("Workspace")
+							continue
+						end
+						break
+					end
+				end
+			elseif exitTo12 == 2 then
+				Workspace = game:GetService("Workspace")
+
+				while true do
+					urban2 = Workspace.Enemies:FindFirstChild("Urban")
+
+					if urban2 then
+						urban2 = "✅"
+					end
+
+					urban2 = urban2 or "❌"
+					exitTo9 = nil
+
+					while true do
+						ok11, result6 = pcall(function()
+							return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+						end)
+
+						v9 = tostring
+						ok12 = ok11
+
+						if ok12 then
+							ok12 = result6
+						end
+
+						ok12 = ok12 or 0
+						v10 = v9(ok12)
+
+						if urban2 ~= str22 then
+							eliteSpawnParagraph2 = eliteSpawnParagraph
+							setDesc = eliteSpawnParagraph.SetDesc
+							status = urban2 .. " | Killed: " .. v10
+							setDesc(eliteSpawnParagraph2, "Status: " .. status)
+							str22 = urban2
+						end
+
+						if wait(1) then
+							diablo3 = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+
+							if diablo3 then
+								urban2 = "✅"
+								continue
+							else
+								diablo4 = game:GetService("Workspace").Enemies:FindFirstChild("Diablo") or game:GetService("Workspace").Enemies:FindFirstChild("Deandre")
+
+								if diablo4 then
+									urban2 = "✅"
+									continue
+								else
+									exitTo9 = 1
+									break
+								end
+							end
+						end
+
+						break
+					end
+
+					if exitTo9 == 1 then
+						Workspace = game:GetService("Workspace")
+						continue
+					end
+					break
+				end
+			end
+		else
+			urban2 = game:GetService("Workspace").Enemies:FindFirstChild("Urban")
+
+			if urban2 then
+				urban2 = "✅"
+			end
+
+			local exitTo14 = nil
+			local v11
+
+			while true do
+				urban2 = urban2 or "❌"
+				local exitTo13 = nil
+
+				while true do
+					local ok13, result7 = pcall(function()
+						return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+					end)
+
+					local v12 = tostring
+					local ok14 = ok13
+
+					if ok14 then
+						ok14 = result7
+					end
+
+					v11 = v12(ok14 or 0)
+
+					if urban2 == str then
+						if wait(1) then
+							if game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban") then
+								urban2 = "✅"
+								continue
+							elseif game:GetService("Workspace").Enemies:FindFirstChild("Diablo") or game:GetService("Workspace").Enemies:FindFirstChild("Deandre") then
+								urban2 = "✅"
+								continue
+							else
+								exitTo13 = 2
+								break
+							end
+						end
+					else
+						exitTo13 = 1
+						break
+					end
+
+					break
+				end
+
+				if exitTo13 == 1 then
+					exitTo14 = 1
+					break
+				elseif exitTo13 == 2 then
+					urban2 = game:GetService("Workspace").Enemies:FindFirstChild("Urban")
+					if urban2 then
+						urban2 = "✅"
+						continue
+					end
+					continue
+				end
+
+				break
+			end
+
+			if exitTo14 == 1 then
+				eliteSpawnParagraph2 = eliteSpawnParagraph
+				setDesc = eliteSpawnParagraph.SetDesc
+				status = urban2 .. " | Killed: " .. v11
+				local exitTo16 = nil
+
+				while true do
+					setDesc(eliteSpawnParagraph2, "Status: " .. status)
+					str22 = urban2
+					local exitTo15 = nil
+
+					while wait(1) do
+						diablo3 = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+
+						if diablo3 then
+							urban2 = "✅"
+
+							ok11, result6 = pcall(function()
+								return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+							end)
+
+							v9 = tostring
+							ok12 = ok11
+
+							if ok12 then
+								ok12 = result6
+							end
+
+							ok12 = ok12 or 0
+							v10 = v9(ok12)
+							if urban2 ~= str22 then
+								exitTo15 = 2
+								break
+							end
+						else
+							diablo4 = game:GetService("Workspace").Enemies:FindFirstChild("Diablo") or game:GetService("Workspace").Enemies:FindFirstChild("Deandre")
+
+							if diablo4 then
+								urban2 = "✅"
+
+								ok11, result6 = pcall(function()
+									return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+								end)
+
+								v9 = tostring
+								ok12 = ok11
+
+								if ok12 then
+									ok12 = result6
+								end
+
+								ok12 = ok12 or 0
+								v10 = v9(ok12)
+								if urban2 ~= str22 then
+									exitTo15 = 2
+									break
+								end
+							else
+								exitTo15 = 1
+								break
+							end
+						end
+					end
+
+					if exitTo15 == 1 then
+						exitTo16 = 1
+						break
+					elseif exitTo15 == 2 then
+						eliteSpawnParagraph2 = eliteSpawnParagraph
+						setDesc = eliteSpawnParagraph.SetDesc
+						status = urban2 .. " | Killed: " .. v10
+						continue
+					end
+
+					break
+				end
+
+				if exitTo16 == 1 then
+					Workspace = game:GetService("Workspace")
+
+					while true do
+						urban2 = Workspace.Enemies:FindFirstChild("Urban")
+
+						if urban2 then
+							urban2 = "✅"
+						end
+
+						urban2 = urban2 or "❌"
+						exitTo9 = nil
+
+						while true do
+							ok11, result6 = pcall(function()
+								return game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("EliteHunter", "Progress")
+							end)
+
+							v9 = tostring
+							ok12 = ok11
+
+							if ok12 then
+								ok12 = result6
+							end
+
+							ok12 = ok12 or 0
+							v10 = v9(ok12)
+
+							if urban2 ~= str22 then
+								eliteSpawnParagraph2 = eliteSpawnParagraph
+								setDesc = eliteSpawnParagraph.SetDesc
+								status = urban2 .. " | Killed: " .. v10
+								setDesc(eliteSpawnParagraph2, "Status: " .. status)
+								str22 = urban2
+							end
+
+							if wait(1) then
+								diablo3 = game:GetService("ReplicatedStorage"):FindFirstChild("Diablo") or game:GetService("ReplicatedStorage"):FindFirstChild("Deandre") or game:GetService("ReplicatedStorage"):FindFirstChild("Urban")
+
+								if diablo3 then
+									urban2 = "✅"
+									continue
+								else
+									diablo4 = game:GetService("Workspace").Enemies:FindFirstChild("Diablo") or game:GetService("Workspace").Enemies:FindFirstChild("Deandre")
+
+									if diablo4 then
+										urban2 = "✅"
+										continue
+									else
+										exitTo9 = 1
+										break
+									end
+								end
+							end
+
+							break
+						end
+
+						if exitTo9 == 1 then
+							Workspace = game:GetService("Workspace")
+							continue
+						end
+						break
+					end
+				end
+			end
 		end
 	end
-})
---@1 1:1,37:28479
-Tab2:AddSection("Farm Elite Hunter")
---@1 1:1,37:28479
-Tab2:AddParagraph("Elites Process", "")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 87:30137
-	wait(Sec)
 end)
---@1 1:1,37:28479
-Tab2:AddParagraph("Elite Spawn", "Status: ")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 88:30175
-	wait(1)
-end)
---@1 1:1,37:28479
-_G.FarmEliteHunt = false
---@10 1:1,37:28479
-Tab2:AddToggle({
-	Name = "Auto Farm Elite",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg38)
-		if state then
-			_G.FarmEliteHunt = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.FarmEliteH = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+do
+	local n8 = nil
+	local n9 = nil
+
+	EliteQ = tbl.Main:AddToggle({
+		Name = "Auto Farm Elite",
+		Description = "",
+		Default = false,
+		Callback = function(farmEliteHunt)
+			n8 = 835046712
+			n9 = 411755947
+			_G.FarmEliteHunt = farmEliteHunt
+		end,
+	})
+end
+
+local n8 = nil
+
+EliteH = tbl.Main:AddToggle({
 	Name = "Auto Farm Elite + Hop",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg40)
-		if state then
-			_G.FarmEliteH = state
-		end
-	end
+	Callback = function(farmEliteH)
+		n8 = 165822274
+		_G.FarmEliteH = farmEliteH
+	end,
 })
---@1 1:1,37:28479
-Tab2:AddSection("Farm Rip Indra")
---@1 1:1,37:28479
-_G.AutoRipIngay = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+tbl.Main:AddSection("Farm Rip Indra")
+
+tbl.Main:AddToggle({
 	Name = "Auto Attack Rip Indra",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg42)
-		if state then
-			_G.AutoRipIngay = state
-		end
-	end
+	Callback = function(autoRipIngay)
+		_G.AutoRipIngay = autoRipIngay
+	end,
 })
---@1 1:1,37:28479
-_G.AutoUnHaki = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+tbl.Main:AddToggle({
 	Name = "Auto Unlocked Haki",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg44)
-		if state then
-			_G.AutoUnHaki = state
-		end
-	end
+	Callback = function(autoUnHaki)
+		_G.AutoUnHaki = autoUnHaki
+	end,
 })
---@1 1:1,37:28479
-Tab2:AddSection("Farming Cake")
---@1 1:1,37:28479
-Tab2:AddParagraph("Cake Princes", "")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 93:30266
-	wait(0.2)
+
+tbl.Main:AddSection("Farming Cake")
+local cakePrincesParagraph = tbl.Main:AddParagraph("Cake Princes", "")
+
+spawn(function()
+	if wait(0.2) then
+		repeat
+			pcall(function()
+				local match = string.match(replicated.Remotes.CommF_:InvokeServer("CakePrinceSpawner"), "%d+")
+
+				if match then
+					cakePrincesParagraph:SetDesc("Killed : " .. 500 - tonumber(match))
+				end
+			end)
+		until not wait(0.2)
+	end
 end)
---@1 1:1,37:28479
-_G.Auto_Cake_Prince = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+Cake = tbl.Main:AddToggle({
 	Name = "Auto Farm Cake Prince",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg46)
-		if state then
-			_G.Auto_Cake_Prince = state
-		end
-	end
+	Callback = function(autoCakePrince)
+		_G.Auto_Cake_Prince = autoCakePrince
+	end,
 })
---@1 1:1,37:28479
-_G.AcceptQuestC = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+local n9 = nil
+
+CakeQ = tbl.Main:AddToggle({
 	Name = "Accept Quests",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg48)
-		if state then
-			_G.AcceptQuestC = state
-		end
-	end
+	Callback = function(acceptQuestC)
+		n9 = 893253937
+		_G.AcceptQuestC = acceptQuestC
+	end,
 })
---@1 1:1,37:28479
-_G.AutoSpawnCP = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+CakeSM = tbl.Main:AddToggle({
 	Name = "Auto Summon Cake Prince",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg50)
-		if state then
-			_G.AutoSpawnCP = state
-		end
-	end
+	Callback = function(autoSpawnCP)
+		_G.AutoSpawnCP = autoSpawnCP
+	end,
 })
---@1 1:1,37:28479
-_G.AutoDoughKing = false
---@9 1:1,37:28479
-Tab2:AddToggle({
+
+tbl.Main:AddToggle({
 	Name = "Auto Dough King [Fully]",
 	Default = false,
-	Callback = function(state, arg52)
-		if state then
-			_G.AutoDoughKing = state
-		end
-	end
+	Callback = function(autoDoughKing)
+		_G.AutoDoughKing = autoDoughKing
+	end,
 })
---@1 1:1,37:28479
-_G.AutoAttackDoughKing = false
---@9 1:1,37:28479
-Tab2:AddToggle({
+
+tbl.Main:AddToggle({
 	Name = "Auto Farm Dough King",
 	Default = false,
-	Callback = function(state, arg54)
-		if state then
-			_G.AutoAttackDoughKing = state
-		end
-	end
+	Callback = function(autoAttackDoughKing)
+		_G.AutoAttackDoughKing = autoAttackDoughKing
+	end,
 })
---@1 1:1,37:28479
-_G.AutoHop_Dough = false
---@9 1:1,37:28479
-Tab2:AddToggle({
+
+local n10 = nil
+
+tbl.Main:AddToggle({
 	Name = "Auto Farm Dough King + Hop",
 	Default = false,
-	Callback = function(state, arg56)
-		if state then
-			_G.AutoHop_Dough = state
-		end
-	end
+	Callback = function(autoHopDough)
+		n10 = 575117960
+		_G.AutoHop_Dough = autoHopDough
+	end,
 })
---@1 1:1,37:28479
-Tab2:AddSection("Farming Bone")
---@1 1:1,37:28479
-Tab2:AddParagraph("Bones", "")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 100:30389
-	wait(1)
+
+tbl.Main:AddSection("Farming Bone")
+local bonesParagraph = tbl.Main:AddParagraph("Bones", "")
+
+spawn(function()
+	local n11 = nil
+
+	if wait(1) then
+		repeat
+			pcall(function()
+				n11 = 527032599
+				local response = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Bones", "Check")
+				bonesParagraph:SetDesc("Bones : " .. tostring(response))
+			end)
+		until not wait(1)
+	end
 end)
---@1 1:1,37:28479
-_G.AutoFarm_Bone = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+tbl.Main:AddToggle({
 	Name = "Auto Farm Bone",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg58)
-		if state then
-			_G.AutoFarm_Bone = state
-		end
-	end
+	Callback = function(autoFarmBone)
+		_G.AutoFarm_Bone = autoFarmBone
+	end,
 })
---@1 1:1,37:28479
-_G.AcceptQuestB = false
---@10 1:1,37:28479
-Tab2:AddToggle({
-	Name = "Accept Quests",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg60)
-		if state then
-			_G.AcceptQuestB = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.AutoHytHallow = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+do
+	local n11 = nil
+	local n12 = nil
+
+	BoneQ = tbl.Main:AddToggle({
+		Name = "Accept Quests",
+		Description = "",
+		Default = false,
+		Callback = function(acceptQuestB)
+			n11 = 1033257055
+			n12 = 506341273
+			_G.AcceptQuestB = acceptQuestB
+		end,
+	})
+end
+
+tbl.Main:AddToggle({
 	Name = "Auto Soul Reaper",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg62)
-		if state then
-			_G.AutoHytHallow = state
-		end
-	end
+	Callback = function(autoHytHallow)
+		_G.AutoHytHallow = autoHytHallow
+	end,
 })
---@1 1:1,37:28479
-_G.Auto_Random_Bone = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+local n11 = nil
+
+RanBone = tbl.Main:AddToggle({
 	Name = "Auto Random Bones",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg64)
-		if state then
-			_G.Auto_Random_Bone = state
-		end
-	end
+	Callback = function(autoRandomBone)
+		n11 = 753361169
+		_G.Auto_Random_Bone = autoRandomBone
+	end,
 })
---@1 1:1,37:28479
-_G.TryLucky = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+Lucky = tbl.Main:AddToggle({
 	Name = "Auto Try Luck Gravestone",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg66)
-		if state then
-			_G.TryLucky = state
-		end
-	end
+	Callback = function(tryLucky)
+		_G.TryLucky = tryLucky
+	end,
 })
---@1 1:1,37:28479
-_G.Praying = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+Pray = tbl.Main:AddToggle({
 	Name = "Auto Pray Gravestone",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg68)
-		if state then
-			_G.Praying = state
-		end
-	end
+	Callback = function(praying)
+		_G.Praying = praying
+	end,
 })
---@1 1:1,37:28479
-Tab2:AddSection("Tyrant of the Skies")
---@1 1:1,37:28479
-Tab2:AddParagraph("Boss Spawn", "")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 107:30549,108:30555
-	wait(1)
-end)
---@1 1:1,37:28479
-Tab2:AddParagraph("Check Status Eyes", "")
---@4 1:1,37:28479
-task.spawn(function(...)
-	--@1 109:30571
-	task.wait(1)
-end)
---@1 1:1,37:28479
-_G.FarmTyrant = false
---@10 1:1,37:28479
-Tab2:AddToggle({
-	Name = "Auto Farm Boss TOTS",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg70)
-		if state then
-			_G.FarmTyrant = state
+
+tbl.Main:AddSection("Tyrant of the Skies")
+
+do
+	local bossSpawnParagraph = tbl.Main:AddParagraph("Boss Spawn", "")
+	local n12 = nil
+
+	spawn(function()
+		n12 = 360075839
+		local n13 = nil
+		local n14 = nil
+
+		pcall(function()
+			n13 = 525892065
+			n14 = 1061946163
+
+			if wait(1) then
+				local exitTo2, enemies
+
+				if workspace.Enemies:FindFirstChild("Tyrant of the Skies") then
+					local exitTo = nil
+
+					while true do
+						bossSpawnParagraph:SetDesc("✅")
+
+						if wait(1) then
+							if not workspace.Enemies:FindFirstChild("Tyrant of the Skies") then
+								exitTo = 1
+								break
+							end
+						else
+							break
+						end
+					end
+
+					if exitTo == 1 then
+						while true do
+							bossSpawnParagraph:SetDesc("❌")
+							exitTo2 = nil
+
+							while wait(1) do
+								enemies = workspace.Enemies
+
+								if enemies:FindFirstChild("Tyrant of the Skies") then
+									bossSpawnParagraph:SetDesc("✅")
+								else
+									exitTo2 = 1
+									break
+								end
+							end
+
+							if exitTo2 == 1 then
+								continue
+							end
+							break
+						end
+					end
+				else
+					local exitTo3 = nil
+
+					while true do
+						bossSpawnParagraph:SetDesc("❌")
+
+						if wait(1) then
+							if workspace.Enemies:FindFirstChild("Tyrant of the Skies") then
+								exitTo3 = 1
+								break
+							end
+						else
+							break
+						end
+					end
+
+					if exitTo3 == 1 then
+						local exitTo4 = nil
+
+						while true do
+							bossSpawnParagraph:SetDesc("✅")
+
+							if wait(1) then
+								enemies = workspace.Enemies
+
+								if enemies:FindFirstChild("Tyrant of the Skies") then
+									continue
+								else
+									exitTo4 = 1
+									break
+								end
+							end
+
+							break
+						end
+
+						if exitTo4 == 1 then
+							while true do
+								bossSpawnParagraph:SetDesc("❌")
+								exitTo2 = nil
+
+								while wait(1) do
+									enemies = workspace.Enemies
+
+									if enemies:FindFirstChild("Tyrant of the Skies") then
+										bossSpawnParagraph:SetDesc("✅")
+									else
+										exitTo2 = 1
+										break
+									end
+								end
+
+								if exitTo2 == 1 then
+									continue
+								end
+								break
+							end
+						end
+					end
+				end
+			end
+		end)
+	end)
+end
+
+do
+	local checkStatusEyesParagraph = tbl.Main:AddParagraph("Check Status Eyes", "")
+	local n12 = nil
+	local n13 = nil
+
+	task.spawn(function()
+		n12 = 684401847
+		n13 = 488885059
+
+		if task.wait(1) then
+			local exitTo = nil
+			local result, result2
+
+			while true do
+				local ok
+				ok, result, result2 = pcall(Check_Eye)
+
+				if ok then
+					exitTo = 1
+					break
+				elseif not task.wait(1) then
+					break
+				end
+			end
+
+			if exitTo == 1 then
+				local exitTo2 = nil
+
+				while true do
+					checkStatusEyesParagraph:SetDesc("Eyes: " .. result .. "/4")
+
+					if result2 then
+						exitTo2 = 1
+						break
+					else
+						local exitTo3 = nil
+
+						while task.wait(1) do
+							local ok
+							ok, result, result2 = pcall(Check_Eye)
+							if ok then
+								exitTo3 = 1
+								break
+							end
+						end
+
+						if exitTo3 == 1 then
+							continue
+						end
+						break
+					end
+				end
+
+				if exitTo2 == 1 then
+					while true do
+						local flag = true
+						local exitTo4 = nil
+
+						while task.wait(1) do
+							local ok, result3, result4 = pcall(Check_Eye)
+
+							if ok then
+								checkStatusEyesParagraph:SetDesc("Eyes: " .. result3 .. "/4")
+
+								if result4 then
+									if flag then
+										if result4 then
+											continue
+										end
+										flag = false
+									else
+										exitTo4 = 1
+										break
+									end
+								elseif not result4 then
+									flag = false
+								end
+							end
+						end
+
+						if exitTo4 == 1 then
+							continue
+						end
+						break
+					end
+				end
+			end
 		end
-	end
-})
---@1 1:1,37:28479
-_G.FarmPhaBinh = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+	end)
+end
+
+do
+	local n12 = nil
+	local n13 = nil
+
+	FarmTyrant = tbl.Main:AddToggle({
+		Name = "Auto Farm Boss TOTS",
+		Description = "",
+		Default = false,
+		Callback = function(farmTyrant)
+			n12 = 117038148
+			n13 = 998549409
+			_G.FarmTyrant = farmTyrant
+		end,
+	})
+end
+
+FarmPhaBinh = tbl.Main:AddToggle({
 	Name = "Auto Summon Boss",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg72)
-		if state then
-			_G.FarmPhaBinh = state
-		end
-	end
+	Callback = function(farmPhaBinh)
+		_G.FarmPhaBinh = farmPhaBinh
+	end,
 })
---@1 1:1,37:28479
-Tab2:AddSection("Farm Material")
---@1 1:1,37:28479
-getgenv().SelectMaterial = false
---@10 1:1,37:28479
-Tab2:AddDropdown({
+
+tbl.Main:AddSection("Farm Material")
+local n12 = nil
+
+Test = tbl.Main:AddDropdown({
 	Name = "Choose Material",
 	Description = "",
 	Options = MaterialList,
-	Callback = function(state, arg74)
-		if state then
-			getgenv().SelectMaterial = state
-		end
-	end
+	Callback = function(selectMaterial)
+		n12 = 300003701
+		getgenv().SelectMaterial = selectMaterial
+	end,
 })
---@1 1:1,37:28479
-getgenv().AutoMaterial = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+Toggle = tbl.Main:AddToggle({
 	Name = "Auto Farm Materials",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg76)
-		if state then
-			getgenv().AutoMaterial = state
-		end
-	end
+	Callback = function(autoMaterial)
+		getgenv().AutoMaterial = autoMaterial
+	end,
 })
---@1 1:1,37:28479
-Tab2:AddSection("Farm Boss")
---@1 1:1,37:28479
-_G.FindBoss = false
---@10 1:1,37:28479
-Tab2:AddDropdown({
-	Name = "Select Boss",
-	Description = "",
-	Options = BossList,
-	Callback = function(state, arg78)
-		if state then
-			_G.FindBoss = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.FarmBoss = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+tbl.Main:AddSection("Farm Boss")
+
+do
+	local n13 = nil
+	local n14 = nil
+
+	BossDropdown = tbl.Main:AddDropdown({
+		Name = "Select Boss",
+		Description = "",
+		Options = BossList,
+		Callback = function(findBoss)
+			n13 = 143412392
+			n14 = 408768452
+			_G.FindBoss = findBoss
+		end,
+	})
+end
+
+FarmBoss = tbl.Main:AddToggle({
 	Name = "Auto Farm Boss",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg80)
-		if state then
-			_G.FarmBoss = state
-		end
-	end
+	Callback = function(farmBoss)
+		_G.FarmBoss = farmBoss
+	end,
 })
---@1 1:1,37:28479
-_G.AcceptQuestBoss = false
---@10 1:1,37:28479
-Tab2:AddToggle({
-	Name = "Accept Quests",
-	Description = "",
-	Default = true,
-	Callback = function(state, arg82)
-		if state then
-			_G.AcceptQuestBoss = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.AutoFarmAllBoss = false
---@9 1:1,37:28479
-Tab2:AddToggle({
+
+do
+	local n13 = nil
+	local n14 = nil
+
+	BossQ = tbl.Main:AddToggle({
+		Name = "Accept Quests",
+		Description = "",
+		Default = true,
+		Callback = function(acceptQuestBoss)
+			n13 = 617275046
+			n14 = 893811601
+			_G.AcceptQuestBoss = acceptQuestBoss
+		end,
+	})
+end
+
+local n13 = nil
+
+FarmAllBoss = tbl.Main:AddToggle({
 	Name = "Auto Farm All Boss",
 	Default = false,
-	Callback = function(state, arg84)
-		if state then
-			_G.AutoFarmAllBoss = state
-		end
-	end
+	Callback = function(autoFarmAllBoss)
+		n13 = 589905519
+		_G.AutoFarmAllBoss = autoFarmAllBoss
+	end,
 })
---@1 1:1,37:28479
-Tab2:AddSection("Farming Mastery")
---@8 1:1,37:28479
-Tab2:AddDropdown({
-	Name = "Choose Island",
-	Description = "",
-	Default = Bone,
-	Options = { "Cake", "Bone" },
-	Callback = function(state, arg86)
-	end
-})
---@1 1:1,37:28479
-_G.MasteryHealthPct = false
---@12 1:1,37:28479
-Tab2:AddSlider({
-	Title = "NPC Health % Switch to Weapon",
-	Description = "Switches to mastery weapon moves when NPC HP drops below this percent",
-	Default = 70,
-	Max = 95,
-	Min = 10,
-	Callback = function(state, arg88)
-		if state then
-			_G.MasteryHealthPct = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.SelectedMasterySkills = false
---@12 1:1,37:28479
-Tab2:AddDropdown({
-	Name = "Select Skills to Use",
-	Description = "Select which skills to spam (locked skills are auto-skipped)",
-	Default = { "Z", "X", "C", "V", "F" },
-	MultiSelect = true,
-	Options = { "Z", "X", "C", "V", "F", "Y" },
-	Callback = function(state, arg90)
-		if state then
-			_G.SelectedMasterySkills = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.FarmMastery_Dev = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+tbl.Main:AddSection("Farming Mastery")
+
+do
+	local n14 = nil
+	local n15 = nil
+
+	tbl.Main:AddDropdown({
+		Name = "Choose Island",
+		Description = "",
+		Options = { "Cake", "Bone" },
+		Default = Bone,
+		Callback = function(arg)
+			n14 = 48651533
+			n15 = 711763559
+			SelectIsland = arg
+		end,
+	})
+end
+
+do
+	local n14 = nil
+	local n15 = nil
+
+	tbl.Main:AddSlider({
+		Title = "NPC Health % Switch to Weapon",
+		Description = "Switches to mastery weapon moves when NPC HP drops below this percent",
+		Min = 10,
+		Max = 95,
+		Default = 70,
+		Callback = function(masteryHealthPct)
+			n14 = 913565413
+			n15 = 114794156
+			_G.MasteryHealthPct = masteryHealthPct
+		end,
+	})
+end
+
+do
+	local n14 = nil
+	local n15 = nil
+
+	tbl.Main:AddDropdown({
+		Name = "Select Skills to Use",
+		Description = "Select which skills to spam (locked skills are auto-skipped)",
+		Options = { "Z", "X", "C", "V", "F", "Y" },
+		Default = { "Z", "X", "C", "V", "F" },
+		MultiSelect = true,
+		Callback = function(selectedMasterySkills)
+			n14 = 642997887
+			n15 = 697086408
+			_G.SelectedMasterySkills = selectedMasterySkills
+		end,
+	})
+end
+
+tbl.Main:AddToggle({
 	Name = "Auto Mastery Fruits",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg92)
-		if state then
-			_G.FarmMastery_Dev = state
-		end
-	end
+	Callback = function(farmMasteryDev)
+		_G.FarmMastery_Dev = farmMasteryDev
+	end,
 })
---@1 1:1,37:28479
-_G.FarmMastery_G = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+tbl.Main:AddToggle({
 	Name = "Auto Mastery Gun",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg94)
-		if state then
-			_G.FarmMastery_G = state
-		end
-	end
+	Callback = function(farmMasteryG)
+		_G.FarmMastery_G = farmMasteryG
+	end,
 })
---@1 1:1,37:28479
-_G.FarmMastery_S = false
---@10 1:1,37:28479
-Tab2:AddToggle({
+
+tbl.Main:AddToggle({
 	Name = "Auto Mastery All Sword",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg96)
-		if state then
-			_G.FarmMastery_S = state
-		end
-	end
+	Callback = function(farmMasteryS)
+		_G.FarmMastery_S = farmMasteryS
+	end,
 })
---@1 1:1,37:28479
+
 require(game.ReplicatedStorage.EventConfig.MagnetEvent26)
---@1 1:1,37:28479
-Tab2:AddSection("Update 30 / Magnet Token")
---@1 1:1,37:28479
-Tab2:AddParagraph("Magnet Event Status", "Loading...")
---@1 1:1,37:28479
-local Paragraph3 = Tab2:AddParagraph("Status", "Status : Idle")
---@4 1:1,37:28479
-task.spawn(function(...)
-	--@1 124:30895
-	task.wait(1)
-end)
---@1 1:1,37:28479
-_G.MagnetEventSpawnIndex = 1
---@13 1:1,37:28479
-Tab2:AddToggle({
-	Name = "Auto Farm Magnet Token",
-	Default = false,
-	Callback = function(state, arg98)
-		if state then
-			_G.AutoMagnetToken = state
-			Paragraph3:SetDesc("Status : Starting...")
-		else
-			_G.AutoMagnetToken = false
-			Paragraph3:SetDesc("Status : Idle")
+tbl.Main:AddSection("Update 30 / Magnet Token")
+
+do
+	local magnetEventStatusParagraph = tbl.Main:AddParagraph("Magnet Event Status", "Loading...")
+	local statusParagraph = tbl.Main:AddParagraph("Status", "Status : Idle")
+
+	SetMagnetStatus = function(status)
+		local n14 = nil
+		local n15 = nil
+
+		if statusParagraph and statusParagraph.SetDesc then
+			local v2, v3
+
+			pcall(function()
+				n14 = 671250623
+				n15 = 311781512
+				statusParagraph:SetDesc("Status : " .. status)
+			end)
 		end
 	end
-})
---@1 1:1,37:28479
-Tab3:AddSection("Settings / Configure")
---@1 1:1,37:28479
-_G.Seriality = false
---@10 1:1,37:28479
-Tab3:AddToggle({
+
+	local n14 = nil
+	local n15 = nil
+
+	task.spawn(function()
+		n14 = 832487746
+		n15 = 475031797
+
+		if task.wait(1) then
+			repeat
+				pcall(function()
+					local now = os.time()
+					local dateStr = os.date("*t", now)
+					local min = dateStr.min
+					local sec = dateStr.sec
+					local flag = min >= 0
+
+					if flag then
+						flag = min < 10
+					end
+
+					local v2, v3, v4 = pairs(workspace.Enemies:GetChildren())
+					local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v5, v32, v42, v52, v6, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v5, v32, v42, v52, v6, v7, v8, v9, v10) end end); co(); return co end)(v3, v4)
+					local exitTo = nil
+					local v5
+
+					while true do
+						local v6 = table.pack(iter_z_1())
+
+						if not v6[1] then
+							exitTo = 1
+							break
+						else
+							v5 = v6[3]
+							if not v5:IsA("Model") then
+								continue
+							end
+							break
+						end
+					end
+
+					local str, str2, n16, str3, n17
+
+					if exitTo == 1 then
+						str = "🔴"
+
+						if flag then
+							str2 = "🟢"
+							n16 = (10 - min) * 60 - sec
+
+							if n16 < 0 then
+								n16 = 0
+							end
+
+							str3 = string.format("%s ACTIVE - Time Left: %02d:%02d", str2, math.floor(n16 / 60), n16 % 60)
+						else
+							n17 = (60 - min) * 60 - sec
+
+							if n17 <= 0 then
+								n17 = 0
+							end
+
+							str3 = string.format("%s INACTIVE - Next Event: %02d:%02d", str, math.floor(n17 / 60), n17 % 60)
+						end
+					else
+						local attribute = v5:GetAttribute("MagnetEnemy")
+						local exitTo3 = nil
+
+						while attribute ~= true do
+							if not string.find(string.lower(v5.Name), "magnetized") then
+								local exitTo2 = nil
+
+								while true do
+									local v6 = table.pack(iter_z_1())
+
+									if not v6[1] then
+										exitTo2 = 1
+										break
+									else
+										v5 = v6[3]
+										if not v5:IsA("Model") then
+											continue
+										end
+										break
+									end
+								end
+
+								if exitTo2 == 1 then
+									exitTo3 = 1
+									break
+								else
+									attribute = v5:GetAttribute("MagnetEnemy")
+									continue
+								end
+							end
+
+							break
+						end
+
+						if exitTo3 == 1 then
+							str = "🔴"
+
+							if flag then
+								str2 = "🟢"
+								n16 = (10 - min) * 60 - sec
+
+								if n16 < 0 then
+									n16 = 0
+								end
+
+								str3 = string.format("%s ACTIVE - Time Left: %02d:%02d", str2, math.floor(n16 / 60), n16 % 60)
+							else
+								n17 = (60 - min) * 60 - sec
+
+								if n17 <= 0 then
+									n17 = 0
+								end
+
+								str3 = string.format("%s INACTIVE - Next Event: %02d:%02d", str, math.floor(n17 / 60), n17 % 60)
+							end
+						else
+							local str4 = "🟢"
+							local n18 = (10 - min) * 60 - sec
+
+							if n18 < 0 then
+								n18 = 0
+							end
+
+							str3 = string.format("%s ACTIVE - Time Left: %02d:%02d (✅ Enemies Found)", str4, math.floor(n18 / 60), n18 % 60)
+						end
+					end
+
+					magnetEventStatusParagraph:SetDesc(str3)
+				end)
+			until not task.wait(1)
+		end
+	end)
+end
+
+_G.MagnetEventSpawnIndex = _G.MagnetEventSpawnIndex or 1
+
+do
+	local n14 = nil
+	local n15 = nil
+
+	tbl.Main:AddToggle({
+		Name = "Auto Farm Magnet Token",
+		Default = false,
+		Callback = function(autoMagnetToken)
+			n14 = 52190155
+			n15 = 1039095665
+			_G.AutoMagnetToken = autoMagnetToken
+			local v2 = SetMagnetStatus
+			local autoMagnetToken2 = autoMagnetToken
+
+			if autoMagnetToken2 then
+				autoMagnetToken2 = "Starting..."
+			end
+
+			v2(autoMagnetToken2 or "Idle")
+
+			if not autoMagnetToken then
+				_G.MagnetEventSpawnIndex = 1
+			end
+		end,
+	})
+end
+
+tbl.Settings:AddSection("Settings / Configure")
+local n14 = nil
+
+Initialize = tbl.Settings:AddToggle({
 	Name = "Fast Attack",
 	Description = "",
 	Default = true,
-	Callback = function(state, arg100)
-		if state then
-			_G.Seriality = state
-		end
-	end
+	Callback = function(seriality)
+		n14 = 667966716
+		_G.Seriality = seriality
+	end,
 })
---@7 1:1,37:28479
-Tab3:AddToggle({
+
+Bringmob = tbl.Settings:AddToggle({
 	Name = "Bring Mobs",
 	Description = "",
 	Default = true,
-	Callback = function(state, arg102)
-	end
+	Callback = function(arg)
+		_B = arg
+	end,
 })
---@12 1:1,37:28479
-Tab3:AddToggle({
+
+tbl.Settings:AddToggle({
 	Name = "Auto Hop Server with time",
 	Default = false,
-	Callback = function(state, arg104)
-		if state then
-			_G.AutoHopServer = state
-		else
-			_G.AutoHopServer = false
+	Callback = function(autoHopServer)
+		_G.AutoHopServer = autoHopServer
+
+		if not autoHopServer then
 			_G.HopTimer = nil
 		end
-	end
+	end,
 })
---@11 1:1,37:28479
-Tab3:AddSlider({
+
+tbl.Settings:AddSlider({
 	Name = "Hop Delay (Minutes)",
+	Min = 5,
+	Max = 120,
 	Default = 30,
 	Increment = 1,
-	Max = 120,
-	Min = 5,
-	Callback = function(arg105, arg106)
-		--@1 131:31023
-		_G.HopDelay = (arg105 * 60)
-	end
+	Callback = function(arg)
+		_G.HopDelay = arg * 60
+	end,
 })
---@1 1:1,37:28479
-getgenv().Set = false
---@11 1:1,37:28479
-Tab3:AddToggle({
+
+local n15 = nil
+
+tbl.Settings:AddToggle({
 	Name = "Auto Set Spawn Point",
 	Default = false,
-	Callback = function(state, arg108)
-		if state then
-			getgenv().Set = state
-			local ReplicatedStorage = game:GetService("ReplicatedStorage")
-			ReplicatedStorage.Remotes.CommF_:InvokeServer("SetSpawnPoint")
+	Callback = function(set)
+		n15 = 927703734
+		getgenv().Set = set
+		local n16 = nil
+
+		if set then
+			local v2, v3
+
+			pcall(function()
+				n16 = 869469746
+				game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("SetSpawnPoint")
+			end)
 		end
-	end
+	end,
 })
---@7 1:1,37:28479
-Tab3:AddToggle({
+
+BusuAura = tbl.Settings:AddToggle({
 	Name = "Auto Turn on Buso",
 	Description = "",
 	Default = true,
-	Callback = function(state, arg110)
-	end
+	Callback = function(arg)
+		Boud = arg
+	end,
 })
---@1 1:1,37:28479
-getgenv().Observation = false
---@9 1:1,37:28479
-Tab3:AddToggle({
+
+tbl.Settings:AddToggle({
 	Name = "Auto Haki Observation",
 	Default = false,
-	Callback = function(state, arg112)
-		if state then
-			getgenv().Observation = state
-		end
-	end
+	Callback = function(observation)
+		getgenv().Observation = observation
+	end,
 })
---@1 1:1,37:28479
-_G.RaceClickAutov3 = false
---@11 1:1,37:28479
-Tab3:AddToggle({
+
+local n16 = nil
+
+RaceV3Aura = tbl.Settings:AddToggle({
 	Name = "Auto Turn on Race V3",
 	Description = "",
 	Default = false,
 	Flag = "AutoTurnonRaceV3",
-	Callback = function(state, arg114)
-		if state then
-			_G.RaceClickAutov3 = state
-		end
-	end
+	Callback = function(raceClickAutov3)
+		n16 = 624714633
+		_G.RaceClickAutov3 = raceClickAutov3
+	end,
 })
---@1 1:1,37:28479
-_G.RaceClickAutov4 = false
---@10 1:1,37:28479
-Tab3:AddToggle({
-	Name = "Auto Turn on Race V4",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg116)
-		if state then
-			_G.RaceClickAutov4 = state
-		end
-	end
-})
---@7 1:1,37:28479
-Tab3:AddToggle({
+
+do
+	local n17 = nil
+	local n18 = nil
+
+	RaceV4Aura = tbl.Settings:AddToggle({
+		Name = "Auto Turn on Race V4",
+		Description = "",
+		Default = false,
+		Callback = function(raceClickAutov4)
+			n17 = 353210241
+			n18 = 283295182
+			_G.RaceClickAutov4 = raceClickAutov4
+		end,
+	})
+end
+
+RandomAround = tbl.Settings:AddToggle({
 	Name = "Auto Turn on Spin  xyz",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg118)
-	end
+	Callback = function(arg)
+		RandomCFrame = arg
+	end,
 })
---@1 1:1,37:28479
-_G.Safemode = false
---@10 1:1,37:28479
-Tab3:AddToggle({
+
+SafeModes = tbl.Settings:AddToggle({
 	Name = "Safe Mode",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg120)
-		if state then
-			_G.Safemode = state
-		end
-	end
+	Callback = function(safemode)
+		_G.Safemode = safemode
+	end,
 })
---@1 1:1,37:28479
-_G.DestroyHit = false
---@10 1:1,37:28479
-Tab3:AddToggle({
+
+DisableHitVFX = tbl.Settings:AddToggle({
 	Name = "Remove Hit VFX",
 	Description = "Removes slash and sword visual effects for better visibility",
 	Default = false,
-	Callback = function(state, arg122)
-		if state then
-			_G.DestroyHit = state
-		end
-	end
+	Callback = function(destroyHit)
+		_G.DestroyHit = destroyHit
+	end,
 })
---@7 1:1,37:28479
-Tab3:AddToggle({
+
+RmvVFX = tbl.Settings:AddToggle({
 	Name = "Remove Death & Respawned VFX",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg124)
-	end
+	Callback = function(arg)
+		RDeath = arg
+	end,
 })
---@7 1:1,37:28479
-Tab3:AddToggle({
+
+DisblesNotify = tbl.Settings:AddToggle({
 	Name = "Disable Notify",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg126)
-	end
+	Callback = function(arg)
+		RemoveDamage = arg
+	end,
 })
---@10 1:1,37:28479
-Tab3:AddToggle({
+
+local n17 = nil
+
+tbl.Settings:AddToggle({
 	Name = "Anti AFK",
 	Default = true,
-	Callback = function(state, arg128)
-		if state then
+	Callback = function(arg)
+		n17 = 148937531
+		local n18 = nil
+		local n19 = nil
+
+		if arg then
 			local VirtualUser = game:GetService("VirtualUser")
-			wait()
+
+			repeat
+				wait()
+			until game:IsLoaded()
+
+			local v2, v3
+
+			game:GetService("Players").LocalPlayer.Idled:Connect(function()
+				n18 = 808230803
+				n19 = 186919014
+				local cFrame = workspace.CurrentCamera.CFrame
+				cFrame:Button2Down(Vector2.new(0, 0), cFrame)
+				wait(1)
+				local cFrame2 = workspace.CurrentCamera.CFrame
+				cFrame:Button2Up(Vector2.new(0, 0), cFrame2)
+			end)
 		end
-	end
+	end,
 })
---@1 1:1,37:28479
-getgenv().HopServerAdmin = false
---@10 1:1,37:28479
-Tab3:AddToggle({
+
+tbl.Settings:AddToggle({
 	Name = "Auto Anti - Admin Join Server",
 	Description = "",
 	Default = true,
-	Callback = function(state, arg130)
-		if state then
-			getgenv().HopServerAdmin = state
-		end
-	end
+	Callback = function(hopServerAdmin)
+		getgenv().HopServerAdmin = hopServerAdmin
+	end,
 })
---@1 1:1,37:28479
-getgenv().NoClip = false
---@9 1:1,37:28479
-Tab3:AddToggle({
+
+tbl.Settings:AddToggle({
 	Name = "No Clip",
 	Default = false,
-	Callback = function(state, arg132)
-		if state then
-			getgenv().NoClip = state
-		end
-	end
+	Callback = function(noClip)
+		getgenv().NoClip = noClip
+	end,
 })
---@1 1:1,37:28479
-Tab9:AddSection("Stats Upgrade")
---@10 1:1,37:28479
-Tab9:AddSlider({
-	Name = "Stats Value",
-	Description = "",
-	Default = 10,
-	Max = 1000,
-	Min = 0,
-	Rounding = 1,
-	Callback = function(state, arg134)
-	end
-})
---@1 1:1,37:28479
-_G.Auto_Melee = false
---@10 1:1,37:28479
-Tab9:AddToggle({
+
+tbl.Esp:AddSection("Stats Upgrade")
+
+do
+	local n18 = nil
+	local n19 = nil
+
+	StatusSelect = tbl.Esp:AddSlider({
+		Name = "Stats Value",
+		Description = "",
+		Default = 10,
+		Min = 0,
+		Max = 1000,
+		Rounding = 1,
+		Callback = function(arg)
+			n18 = 845700654
+			n19 = 50993120
+			pSats = arg
+		end,
+	})
+end
+
+StatsUpg = tbl.Esp:AddToggle({
 	Name = "Auto Melee",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg136)
-		if state then
-			_G.Auto_Melee = state
-		end
-	end
+	Callback = function(autoMelee)
+		_G.Auto_Melee = autoMelee
+	end,
 })
---@1 1:1,37:28479
-_G.Auto_Sword = false
---@10 1:1,37:28479
-Tab9:AddToggle({
+
+StatsUpg = tbl.Esp:AddToggle({
 	Name = "Auto Swords",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg138)
-		if state then
-			_G.Auto_Sword = state
-		end
-	end
+	Callback = function(autoSword)
+		_G.Auto_Sword = autoSword
+	end,
 })
---@1 1:1,37:28479
-_G.Auto_Gun = false
---@10 1:1,37:28479
-Tab9:AddToggle({
-	Name = "Auto Gun",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg140)
-		if state then
-			_G.Auto_Gun = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.Auto_DevilFruit = false
---@10 1:1,37:28479
-Tab9:AddToggle({
+
+do
+	local n18 = nil
+	local n19 = nil
+
+	StatsUpg = tbl.Esp:AddToggle({
+		Name = "Auto Gun",
+		Description = "",
+		Default = false,
+		Callback = function(autoGun)
+			n18 = 918607324
+			n19 = 124019470
+			_G.Auto_Gun = autoGun
+		end,
+	})
+end
+
+StatsUpg = tbl.Esp:AddToggle({
 	Name = "Auto Blox Fruit",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg142)
-		if state then
-			_G.Auto_DevilFruit = state
-		end
-	end
+	Callback = function(autoDevilFruit)
+		_G.Auto_DevilFruit = autoDevilFruit
+	end,
 })
---@1 1:1,37:28479
-_G.Auto_Defense = false
---@10 1:1,37:28479
-Tab9:AddToggle({
+
+StatsUpg = tbl.Esp:AddToggle({
 	Name = "Auto Defense",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg144)
-		if state then
-			_G.Auto_Defense = state
-		end
-	end
+	Callback = function(autoDefense)
+		_G.Auto_Defense = autoDefense
+	end,
 })
---@1 1:1,37:28479
-Tab4:AddSection("Fishing")
---@1 1:1,37:28479
-_G.SelectedRod = false
---@11 1:1,37:28479
-Tab4:AddDropdown({
+
+tbl.Fish:AddSection("Fishing")
+local n18 = nil
+
+tbl.Fish:AddDropdown({
 	Name = "Select Fishing Rod",
 	Description = "",
-	Default = "Fishing Rod",
 	Options = { "Fishing Rod", "Gold Rod", "Shark Rod", "Shell Rod", "Treasure Rod" },
-	Callback = function(state, arg146)
-		if state then
-			_G.SelectedRod = state
-		end
-	end
+	Default = "Fishing Rod",
+	Callback = function(selectedRod)
+		n18 = 24985459
+		_G.SelectedRod = selectedRod
+	end,
 })
---@1 1:1,37:28479
-_G.SelectedBait = false
---@19 1:1,37:28479
-Tab4:AddDropdown({
+
+local n19 = nil
+
+BaitDropdown = tbl.Fish:AddDropdown({
 	Name = "Select Bait",
 	Description = "",
-	Default = "Basic Bait",
 	Options = {
 		"Basic Bait",
 		"Kelp Bait",
@@ -1375,2185 +3957,7171 @@ Tab4:AddDropdown({
 		"Abyssal Bait",
 		"Frozen Bait",
 		"Epic Bait",
-		"Carnivore Bait"
+		"Carnivore Bait",
 	},
-	Callback = function(state, arg148)
-		if state then
-			_G.SelectedBait = state
+	Default = "Basic Bait",
+	Callback = function(selectedBait)
+		n19 = 352254215
+		_G.SelectedBait = selectedBait
+		local n20 = nil
+		local n21 = nil
+
+		if _G.AutoBuyBait then
+			local v2, v3, v4
+
+			pcall(function()
+				n20 = 66490399
+				n21 = 376631805
+				Remotes.RFCraft:InvokeServer("Craft", _G.SelectedBait, {})
+			end)
 		end
-	end
+	end,
 })
---@1 1:1,37:28479
-_G.AutoBuyBait = false
---@11 1:1,37:28479
-Tab4:AddToggle({
-	Name = "Auto Buy Bait",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg150)
-		if state then
-			_G.AutoBuyBait = state
-			Remotes.RFCraft:InvokeServer("Craft", false, {})
-		end
-	end
-})
---@1 1:1,37:28479
-_G.AutoFishing = false
---@10 1:1,37:28479
-Tab4:AddToggle({
+
+do
+	local n20 = nil
+	local n21 = nil
+
+	BuyBaitToggle = tbl.Fish:AddToggle({
+		Name = "Auto Buy Bait",
+		Description = "",
+		Default = false,
+		Callback = function(autoBuyBait)
+			n20 = 387005600
+			n21 = 273934639
+			_G.AutoBuyBait = autoBuyBait
+			local n22 = nil
+			local n23 = nil
+
+			if autoBuyBait then
+				pcall(function()
+					n22 = 906862072
+					n23 = 190674523
+					Remotes.RFCraft:InvokeServer("Craft", _G.SelectedBait, {})
+				end)
+			end
+		end,
+	})
+end
+
+FishingToggle = tbl.Fish:AddToggle({
 	Name = "Auto Fishing",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg152)
-		if state then
-			_G.AutoFishing = state
-		end
-	end
+	Callback = function(autoFishing)
+		_G.AutoFishing = autoFishing
+	end,
 })
---@1 1:1,37:28479
-_G.AutoFishingQuest = false
---@10 1:1,37:28479
-Tab4:AddToggle({
+
+local n20 = nil
+
+FishingQ = tbl.Fish:AddToggle({
 	Name = "Auto Quest Fishing",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg154)
-		if state then
-			_G.AutoFishingQuest = state
-		end
-	end
+	Callback = function(autoFishingQuest)
+		n20 = 203194267
+		_G.AutoFishingQuest = autoFishingQuest
+	end,
 })
---@1 1:1,37:28479
-_G.AutoQuestComplete = false
---@11 1:1,37:28479
-Tab4:AddToggle({
+
+QuestToggle = tbl.Fish:AddToggle({
 	Name = "Auto Complete Quest",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg156)
-		if state then
-			_G.AutoQuestComplete = state
-			Remotes.RFJobsRemoteFunction:InvokeServer("FishingNPC", "FinishQuest")
+	Callback = function(autoQuestComplete)
+		_G.AutoQuestComplete = autoQuestComplete
+
+		if autoQuestComplete then
+			local v2, v3, v4, v5
+
+			pcall(function()
+				Remotes.RFJobsRemoteFunction:InvokeServer("FishingNPC", "FinishQuest")
+			end)
 		end
-	end
+	end,
 })
---@1 1:1,37:28479
-_G.AutoSellFish = false
---@11 1:1,37:28479
-Tab4:AddToggle({
+
+SellFishToggle = tbl.Fish:AddToggle({
 	Name = "Auto Sell Fish",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg158)
-		if state then
-			_G.AutoSellFish = state
-			Remotes.RFJobsRemoteFunction:InvokeServer("FishingNPC", "SellFish")
+	Callback = function(autoSellFish)
+		_G.AutoSellFish = autoSellFish
+
+		if autoSellFish then
+			local v2, v3, v4, v5
+
+			pcall(function()
+				Remotes.RFJobsRemoteFunction:InvokeServer("FishingNPC", "SellFish")
+			end)
 		end
-	end
+	end,
 })
---@1 1:1,37:28479
-_G.AutoSkillZ = false
---@10 1:1,37:28479
-Tab4:AddToggle({
+
+SpamSkillZ = tbl.Fish:AddToggle({
 	Name = "Auto Spam Skill Z",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg160)
-		if state then
-			_G.AutoSkillZ = state
-		end
-	end
+	Callback = function(autoSkillZ)
+		_G.AutoSkillZ = autoSkillZ
+	end,
 })
---@1 1:1,37:28479
-_G.TravelDres = false
---@10 1:1,37:28479
-Tab5:AddToggle({
-	Name = "Auto Quest Sea 2",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg162)
-		if state then
-			_G.TravelDres = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.AutoZou = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+do
+	local n21 = nil
+	local n22 = nil
+
+	TravelDress = tbl.Quests:AddToggle({
+		Name = "Auto Quest Sea 2",
+		Description = "",
+		Default = false,
+		Callback = function(travelDres)
+			n21 = 231652075
+			n22 = 1011797974
+			_G.TravelDres = travelDres
+		end,
+	})
+end
+
+Zou = tbl.Quests:AddToggle({
 	Name = "Auto Quest Sea 3",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg164)
-		if state then
-			_G.AutoZou = state
-		end
-	end
+	Callback = function(autoZou)
+		_G.AutoZou = autoZou
+	end,
 })
---@1 1:1,37:28479
-Tab5:AddSection("Tushita + Yama")
---@1 1:1,37:28479
-_G.Auto_Tushita = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+tbl.Quests:AddSection("Tushita + Yama")
+local n21 = nil
+
+Q = tbl.Quests:AddToggle({
 	Name = "Auto Tushita Sword",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg166)
-		if state then
-			_G.Auto_Tushita = state
-		end
-	end
+	Callback = function(autoTushita)
+		n21 = 587300030
+		_G.Auto_Tushita = autoTushita
+	end,
 })
---@1 1:1,37:28479
-_G.Auto_Yama = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+local n22 = nil
+
+Q = tbl.Quests:AddToggle({
 	Name = "Auto Yama Sword",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg168)
-		if state then
-			_G.Auto_Yama = state
-		end
-	end
+	Callback = function(autoYama)
+		n22 = 194751762
+		_G.Auto_Yama = autoYama
+	end,
 })
---@1 1:1,37:28479
-Tab5:AddSection("Skull Guitars / Misc")
---@1 1:1,37:28479
-Tab5:AddParagraph("Skull Guitar Quests", "")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 167:31752
-	wait(0.2)
-end)
---@1 1:1,37:28479
-_G.Auto_Soul_Guitar = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+tbl.Quests:AddSection("Skull Guitars / Misc")
+
+do
+	local skullGuitarQuestsParagraph = tbl.Quests:AddParagraph("Skull Guitar Quests", "")
+	local n23 = nil
+	local n24 = nil
+
+	spawn(function()
+		n23 = 381298345
+		n24 = 358770775
+		local n25 = nil
+
+		if wait(0.2) then
+			repeat
+				pcall(function()
+					n25 = 279256361
+
+					if Quest1 ~= true then
+						if Quest2 ~= true then
+							if Quest3 ~= true then
+								if Quest4 ~= true then
+									if GetWP("Skull Guitar") then
+										skullGuitarQuestsParagraph:SetDesc("Quest Number : Collect!!")
+									else
+										skullGuitarQuestsParagraph:SetDesc("Quest Number : No Quest!!")
+									end
+								else
+									skullGuitarQuestsParagraph:SetDesc("Quest Number : Quest4")
+								end
+							else
+								skullGuitarQuestsParagraph:SetDesc("Quest Number : Quest3")
+							end
+						else
+							skullGuitarQuestsParagraph:SetDesc("Quest Number : Quest2")
+						end
+					else
+						skullGuitarQuestsParagraph:SetDesc("Quest Number : Quest1")
+					end
+				end)
+			until not wait(0.2)
+		end
+	end)
+end
+
+tbl.Quests:AddToggle({
 	Name = "Auto Skull Guitar",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg170)
-		if state then
-			_G.Auto_Soul_Guitar = state
-		end
-	end
+	Callback = function(autoSoulGuitar)
+		_G.Auto_Soul_Guitar = autoSoulGuitar
+	end,
 })
---@1 1:1,37:28479
-_G.AutoMatSoul = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+tbl.Quests:AddToggle({
 	Name = "Auto Farm Material Skull Guitar",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg172)
-		if state then
-			_G.AutoMatSoul = state
+	Callback = function(autoMatSoul)
+		_G.AutoMatSoul = autoMatSoul
+	end,
+})
+
+tbl.Quests:AddSection("Cursed Dual Katana")
+local paragraph = tbl.Quests:AddParagraph("Number Cursed dual katana quests", "Quest Numbers :")
+
+spawn(function()
+	if wait(0.2) then
+		local exitTo = nil
+
+		while true do
+			if QuestYama_1 ~= true then
+				if QuestYama_2 ~= true then
+					exitTo = 1
+					break
+				end
+				paragraph:SetDesc("Quest Numbers : yama quest 2")
+			else
+				paragraph:SetDesc("Quest Numbers : yama quest 1")
+			end
+
+			if wait(0.2) then
+				continue
+			end
+			break
+		end
+
+		if exitTo == 1 then
+			local paragraph2, setDesc, str, exitTo6, exitTo8, exitTo7, paragraph3, setDesc2, exitTo9, paragraph4, setDesc3, exitTo12, exitTo14, exitTo13, paragraph5, setDesc4, exitTo15, exitTo17, exitTo16, exitTo19, exitTo18, paragraph6, setDesc5, exitTo26, exitTo27, exitTo28
+
+			if QuestYama_3 ~= true then
+				local exitTo11, exitTo10, exitTo21, exitTo20, exitTo23, exitTo22
+
+				if QuestTushita_1 ~= true then
+					local exitTo2 = nil
+
+					while true do
+						if QuestTushita_2 ~= true then
+							exitTo2 = 1
+							break
+						else
+							paragraph:SetDesc("Quest Numbers : tushita quest 2")
+							local exitTo3 = nil
+
+							while wait(0.2) do
+								if QuestYama_1 ~= true then
+									if QuestYama_2 ~= true then
+										exitTo3 = 1
+										break
+									else
+										paragraph:SetDesc("Quest Numbers : yama quest 2")
+									end
+								else
+									paragraph:SetDesc("Quest Numbers : yama quest 1")
+								end
+							end
+
+							if exitTo3 == 1 then
+								if QuestYama_3 ~= true then
+									if QuestTushita_1 ~= true then
+										continue
+									else
+										exitTo2 = 3
+										break
+									end
+								else
+									exitTo2 = 2
+									break
+								end
+							end
+
+							break
+						end
+					end
+
+					if exitTo2 == 1 then
+						local exitTo5 = nil
+
+						while true do
+							if GetWP("Cursed Dual Katana") then
+								paragraph:SetDesc("Quest Numbers : CDK done!!")
+							end
+
+							local exitTo4 = nil
+
+							while wait(0.2) do
+								if QuestYama_1 ~= true then
+									if QuestYama_2 ~= true then
+										if QuestYama_3 ~= true then
+											if QuestTushita_1 ~= true then
+												if QuestTushita_2 ~= true then
+													exitTo4 = 3
+													break
+												else
+													paragraph:SetDesc("Quest Numbers : tushita quest 2")
+												end
+											else
+												exitTo4 = 2
+												break
+											end
+										else
+											exitTo4 = 1
+											break
+										end
+									else
+										paragraph:SetDesc("Quest Numbers : yama quest 2")
+									end
+								else
+									paragraph:SetDesc("Quest Numbers : yama quest 1")
+								end
+							end
+
+							if exitTo4 == 1 then
+								exitTo5 = 1
+								break
+							elseif exitTo4 == 2 then
+								exitTo5 = 2
+								break
+							elseif exitTo4 == 3 then
+								continue
+							end
+
+							break
+						end
+
+						if exitTo5 == 1 then
+							paragraph2 = paragraph
+							setDesc = paragraph.SetDesc
+							str = "Quest Numbers : yama quest 3"
+
+							while true do
+								setDesc(paragraph2, str)
+								exitTo6 = nil
+
+								while wait(0.2) do
+									if QuestYama_1 ~= true then
+										if QuestYama_2 ~= true then
+											if QuestYama_3 ~= true then
+												if QuestTushita_1 ~= true then
+													if QuestTushita_2 ~= true then
+														if GetWP("Cursed Dual Katana") then
+															paragraph:SetDesc("Quest Numbers : CDK done!!")
+															continue
+														end
+														continue
+													end
+
+													paragraph:SetDesc("Quest Numbers : tushita quest 2")
+												else
+													exitTo6 = 2
+													break
+												end
+											else
+												exitTo6 = 1
+												break
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 2")
+										end
+									else
+										paragraph:SetDesc("Quest Numbers : yama quest 1")
+									end
+								end
+
+								if exitTo6 == 1 then
+									paragraph2 = paragraph
+									setDesc = paragraph.SetDesc
+									continue
+								end
+
+								break
+							end
+
+							if exitTo6 == 2 then
+								exitTo8 = nil
+
+								while true do
+									paragraph:SetDesc("Quest Numbers : tushita quest 1")
+									exitTo7 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															if GetWP("Cursed Dual Katana") then
+																paragraph:SetDesc("Quest Numbers : CDK done!!")
+																continue
+															end
+															continue
+														end
+
+														paragraph:SetDesc("Quest Numbers : tushita quest 2")
+													else
+														exitTo7 = 2
+														break
+													end
+												else
+													exitTo7 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo7 == 1 then
+										exitTo8 = 1
+										break
+									elseif exitTo7 == 2 then
+										continue
+									end
+
+									break
+								end
+
+								if exitTo8 == 1 then
+									paragraph3 = paragraph
+									setDesc2 = paragraph.SetDesc
+
+									while true do
+										setDesc2(paragraph3, str)
+										exitTo9 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																if GetWP("Cursed Dual Katana") then
+																	paragraph:SetDesc("Quest Numbers : CDK done!!")
+																	continue
+																end
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+															continue
+														end
+
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													else
+														exitTo9 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo9 == 1 then
+											paragraph3 = paragraph
+											setDesc2 = paragraph.SetDesc
+											continue
+										end
+
+										break
+									end
+								end
+							end
+						elseif exitTo5 == 2 then
+							exitTo11 = nil
+
+							while true do
+								paragraph:SetDesc("Quest Numbers : tushita quest 1")
+								exitTo10 = nil
+
+								while wait(0.2) do
+									if QuestYama_1 ~= true then
+										if QuestYama_2 ~= true then
+											if QuestYama_3 ~= true then
+												if QuestTushita_1 ~= true then
+													if QuestTushita_2 ~= true then
+														if GetWP("Cursed Dual Katana") then
+															paragraph:SetDesc("Quest Numbers : CDK done!!")
+															continue
+														end
+														continue
+													end
+
+													paragraph:SetDesc("Quest Numbers : tushita quest 2")
+												else
+													exitTo10 = 2
+													break
+												end
+											else
+												exitTo10 = 1
+												break
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 2")
+										end
+									else
+										paragraph:SetDesc("Quest Numbers : yama quest 1")
+									end
+								end
+
+								if exitTo10 == 1 then
+									exitTo11 = 1
+									break
+								elseif exitTo10 == 2 then
+									continue
+								end
+
+								break
+							end
+
+							if exitTo11 == 1 then
+								paragraph3 = paragraph
+								setDesc2 = paragraph.SetDesc
+								str = "Quest Numbers : yama quest 3"
+
+								while true do
+									setDesc2(paragraph3, str)
+									exitTo9 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															if GetWP("Cursed Dual Katana") then
+																paragraph:SetDesc("Quest Numbers : CDK done!!")
+																continue
+															end
+															continue
+														end
+
+														paragraph:SetDesc("Quest Numbers : tushita quest 2")
+														continue
+													end
+
+													paragraph:SetDesc("Quest Numbers : tushita quest 1")
+												else
+													exitTo9 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo9 == 1 then
+										paragraph3 = paragraph
+										setDesc2 = paragraph.SetDesc
+										continue
+									end
+
+									break
+								end
+							end
+						end
+					elseif exitTo2 == 2 then
+						paragraph4 = paragraph
+						setDesc3 = paragraph.SetDesc
+						str = "Quest Numbers : yama quest 3"
+
+						while true do
+							setDesc3(paragraph4, str)
+							exitTo12 = nil
+
+							while wait(0.2) do
+								if QuestYama_1 ~= true then
+									if QuestYama_2 ~= true then
+										if QuestYama_3 ~= true then
+											if QuestTushita_1 ~= true then
+												if QuestTushita_2 ~= true then
+													exitTo12 = 3
+													break
+												else
+													paragraph:SetDesc("Quest Numbers : tushita quest 2")
+												end
+											else
+												exitTo12 = 2
+												break
+											end
+										else
+											exitTo12 = 1
+											break
+										end
+									else
+										paragraph:SetDesc("Quest Numbers : yama quest 2")
+									end
+								else
+									paragraph:SetDesc("Quest Numbers : yama quest 1")
+								end
+							end
+
+							if exitTo12 == 1 then
+								paragraph4 = paragraph
+								setDesc3 = paragraph.SetDesc
+								continue
+							end
+
+							break
+						end
+
+						if exitTo12 == 2 then
+							exitTo14 = nil
+
+							while true do
+								paragraph:SetDesc("Quest Numbers : tushita quest 1")
+								exitTo13 = nil
+
+								while wait(0.2) do
+									if QuestYama_1 ~= true then
+										if QuestYama_2 ~= true then
+											if QuestYama_3 ~= true then
+												if QuestTushita_1 ~= true then
+													if QuestTushita_2 ~= true then
+														exitTo13 = 3
+														break
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 2")
+													end
+												else
+													exitTo13 = 2
+													break
+												end
+											else
+												exitTo13 = 1
+												break
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 2")
+										end
+									else
+										paragraph:SetDesc("Quest Numbers : yama quest 1")
+									end
+								end
+
+								if exitTo13 == 1 then
+									exitTo14 = 1
+									break
+								elseif exitTo13 == 2 then
+									continue
+								end
+
+								break
+							end
+
+							if exitTo14 == 1 then
+								paragraph5 = paragraph
+								setDesc4 = paragraph.SetDesc
+
+								while true do
+									setDesc4(paragraph5, str)
+									exitTo15 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															exitTo15 = 2
+															break
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													end
+												else
+													exitTo15 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo15 == 1 then
+										paragraph5 = paragraph
+										setDesc4 = paragraph.SetDesc
+										continue
+									end
+
+									break
+								end
+
+								if exitTo15 == 2 then
+									exitTo17 = nil
+
+									while true do
+										if GetWP("Cursed Dual Katana") then
+											paragraph:SetDesc("Quest Numbers : CDK done!!")
+										end
+
+										exitTo16 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																exitTo16 = 2
+																break
+															else
+																paragraph:SetDesc("Quest Numbers : tushita quest 2")
+															end
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 1")
+														end
+													else
+														exitTo16 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo16 == 1 then
+											exitTo17 = 1
+											break
+										elseif exitTo16 == 2 then
+											continue
+										end
+
+										break
+									end
+
+									if exitTo17 == 1 then
+										paragraph3 = paragraph
+										setDesc2 = paragraph.SetDesc
+
+										while true do
+											setDesc2(paragraph3, str)
+											exitTo9 = nil
+
+											while wait(0.2) do
+												if QuestYama_1 ~= true then
+													if QuestYama_2 ~= true then
+														if QuestYama_3 ~= true then
+															if QuestTushita_1 ~= true then
+																if QuestTushita_2 ~= true then
+																	if GetWP("Cursed Dual Katana") then
+																		paragraph:SetDesc("Quest Numbers : CDK done!!")
+																		continue
+																	end
+																	continue
+																end
+
+																paragraph:SetDesc("Quest Numbers : tushita quest 2")
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 1")
+														else
+															exitTo9 = 1
+															break
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : yama quest 2")
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 1")
+												end
+											end
+
+											if exitTo9 == 1 then
+												paragraph3 = paragraph
+												setDesc2 = paragraph.SetDesc
+												continue
+											end
+
+											break
+										end
+									end
+								end
+							elseif exitTo13 == 3 then
+								exitTo17 = nil
+
+								while true do
+									if GetWP("Cursed Dual Katana") then
+										paragraph:SetDesc("Quest Numbers : CDK done!!")
+									end
+
+									exitTo16 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															exitTo16 = 2
+															break
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													end
+												else
+													exitTo16 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo16 == 1 then
+										exitTo17 = 1
+										break
+									elseif exitTo16 == 2 then
+										continue
+									end
+
+									break
+								end
+
+								if exitTo17 == 1 then
+									paragraph3 = paragraph
+									setDesc2 = paragraph.SetDesc
+
+									while true do
+										setDesc2(paragraph3, str)
+										exitTo9 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																if GetWP("Cursed Dual Katana") then
+																	paragraph:SetDesc("Quest Numbers : CDK done!!")
+																	continue
+																end
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+															continue
+														end
+
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													else
+														exitTo9 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo9 == 1 then
+											paragraph3 = paragraph
+											setDesc2 = paragraph.SetDesc
+											continue
+										end
+
+										break
+									end
+								end
+							end
+						elseif exitTo12 == 3 then
+							exitTo19 = nil
+
+							while true do
+								if GetWP("Cursed Dual Katana") then
+									paragraph:SetDesc("Quest Numbers : CDK done!!")
+								end
+
+								exitTo18 = nil
+
+								while wait(0.2) do
+									if QuestYama_1 ~= true then
+										if QuestYama_2 ~= true then
+											if QuestYama_3 ~= true then
+												if QuestTushita_1 ~= true then
+													if QuestTushita_2 ~= true then
+														exitTo18 = 3
+														break
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 2")
+													end
+												else
+													exitTo18 = 2
+													break
+												end
+											else
+												exitTo18 = 1
+												break
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 2")
+										end
+									else
+										paragraph:SetDesc("Quest Numbers : yama quest 1")
+									end
+								end
+
+								if exitTo18 == 1 then
+									exitTo19 = 1
+									break
+								elseif exitTo18 == 2 then
+									exitTo19 = 2
+									break
+								elseif exitTo18 == 3 then
+									continue
+								end
+
+								break
+							end
+
+							if exitTo19 == 1 then
+								paragraph2 = paragraph
+								setDesc = paragraph.SetDesc
+
+								while true do
+									setDesc(paragraph2, str)
+									exitTo6 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															if GetWP("Cursed Dual Katana") then
+																paragraph:SetDesc("Quest Numbers : CDK done!!")
+																continue
+															end
+															continue
+														end
+
+														paragraph:SetDesc("Quest Numbers : tushita quest 2")
+													else
+														exitTo6 = 2
+														break
+													end
+												else
+													exitTo6 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo6 == 1 then
+										paragraph2 = paragraph
+										setDesc = paragraph.SetDesc
+										continue
+									end
+
+									break
+								end
+
+								if exitTo6 == 2 then
+									exitTo8 = nil
+
+									while true do
+										paragraph:SetDesc("Quest Numbers : tushita quest 1")
+										exitTo7 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																if GetWP("Cursed Dual Katana") then
+																	paragraph:SetDesc("Quest Numbers : CDK done!!")
+																	continue
+																end
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+														else
+															exitTo7 = 2
+															break
+														end
+													else
+														exitTo7 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo7 == 1 then
+											exitTo8 = 1
+											break
+										elseif exitTo7 == 2 then
+											continue
+										end
+
+										break
+									end
+
+									if exitTo8 == 1 then
+										paragraph3 = paragraph
+										setDesc2 = paragraph.SetDesc
+
+										while true do
+											setDesc2(paragraph3, str)
+											exitTo9 = nil
+
+											while wait(0.2) do
+												if QuestYama_1 ~= true then
+													if QuestYama_2 ~= true then
+														if QuestYama_3 ~= true then
+															if QuestTushita_1 ~= true then
+																if QuestTushita_2 ~= true then
+																	if GetWP("Cursed Dual Katana") then
+																		paragraph:SetDesc("Quest Numbers : CDK done!!")
+																		continue
+																	end
+																	continue
+																end
+
+																paragraph:SetDesc("Quest Numbers : tushita quest 2")
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 1")
+														else
+															exitTo9 = 1
+															break
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : yama quest 2")
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 1")
+												end
+											end
+
+											if exitTo9 == 1 then
+												paragraph3 = paragraph
+												setDesc2 = paragraph.SetDesc
+												continue
+											end
+
+											break
+										end
+									end
+								end
+							elseif exitTo19 == 2 then
+								exitTo8 = nil
+
+								while true do
+									paragraph:SetDesc("Quest Numbers : tushita quest 1")
+									exitTo7 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															if GetWP("Cursed Dual Katana") then
+																paragraph:SetDesc("Quest Numbers : CDK done!!")
+																continue
+															end
+															continue
+														end
+
+														paragraph:SetDesc("Quest Numbers : tushita quest 2")
+													else
+														exitTo7 = 2
+														break
+													end
+												else
+													exitTo7 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo7 == 1 then
+										exitTo8 = 1
+										break
+									elseif exitTo7 == 2 then
+										continue
+									end
+
+									break
+								end
+
+								if exitTo8 == 1 then
+									paragraph3 = paragraph
+									setDesc2 = paragraph.SetDesc
+
+									while true do
+										setDesc2(paragraph3, str)
+										exitTo9 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																if GetWP("Cursed Dual Katana") then
+																	paragraph:SetDesc("Quest Numbers : CDK done!!")
+																	continue
+																end
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+															continue
+														end
+
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													else
+														exitTo9 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo9 == 1 then
+											paragraph3 = paragraph
+											setDesc2 = paragraph.SetDesc
+											continue
+										end
+
+										break
+									end
+								end
+							end
+						end
+					elseif exitTo2 == 3 then
+						exitTo21 = nil
+
+						while true do
+							paragraph:SetDesc("Quest Numbers : tushita quest 1")
+							exitTo20 = nil
+
+							while wait(0.2) do
+								if QuestYama_1 ~= true then
+									if QuestYama_2 ~= true then
+										if QuestYama_3 ~= true then
+											if QuestTushita_1 ~= true then
+												if QuestTushita_2 ~= true then
+													exitTo20 = 3
+													break
+												else
+													paragraph:SetDesc("Quest Numbers : tushita quest 2")
+												end
+											else
+												exitTo20 = 2
+												break
+											end
+										else
+											exitTo20 = 1
+											break
+										end
+									else
+										paragraph:SetDesc("Quest Numbers : yama quest 2")
+									end
+								else
+									paragraph:SetDesc("Quest Numbers : yama quest 1")
+								end
+							end
+
+							if exitTo20 == 1 then
+								exitTo21 = 1
+								break
+							elseif exitTo20 == 2 then
+								continue
+							end
+
+							break
+						end
+
+						if exitTo21 == 1 then
+							paragraph5 = paragraph
+							setDesc4 = paragraph.SetDesc
+							str = "Quest Numbers : yama quest 3"
+
+							while true do
+								setDesc4(paragraph5, str)
+								exitTo15 = nil
+
+								while wait(0.2) do
+									if QuestYama_1 ~= true then
+										if QuestYama_2 ~= true then
+											if QuestYama_3 ~= true then
+												if QuestTushita_1 ~= true then
+													if QuestTushita_2 ~= true then
+														exitTo15 = 2
+														break
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 2")
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : tushita quest 1")
+												end
+											else
+												exitTo15 = 1
+												break
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 2")
+										end
+									else
+										paragraph:SetDesc("Quest Numbers : yama quest 1")
+									end
+								end
+
+								if exitTo15 == 1 then
+									paragraph5 = paragraph
+									setDesc4 = paragraph.SetDesc
+									continue
+								end
+
+								break
+							end
+
+							if exitTo15 == 2 then
+								exitTo17 = nil
+
+								while true do
+									if GetWP("Cursed Dual Katana") then
+										paragraph:SetDesc("Quest Numbers : CDK done!!")
+									end
+
+									exitTo16 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															exitTo16 = 2
+															break
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													end
+												else
+													exitTo16 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo16 == 1 then
+										exitTo17 = 1
+										break
+									elseif exitTo16 == 2 then
+										continue
+									end
+
+									break
+								end
+
+								if exitTo17 == 1 then
+									paragraph3 = paragraph
+									setDesc2 = paragraph.SetDesc
+
+									while true do
+										setDesc2(paragraph3, str)
+										exitTo9 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																if GetWP("Cursed Dual Katana") then
+																	paragraph:SetDesc("Quest Numbers : CDK done!!")
+																	continue
+																end
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+															continue
+														end
+
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													else
+														exitTo9 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo9 == 1 then
+											paragraph3 = paragraph
+											setDesc2 = paragraph.SetDesc
+											continue
+										end
+
+										break
+									end
+								end
+							end
+						elseif exitTo20 == 3 then
+							exitTo23 = nil
+
+							while true do
+								if GetWP("Cursed Dual Katana") then
+									paragraph:SetDesc("Quest Numbers : CDK done!!")
+								end
+
+								exitTo22 = nil
+
+								while wait(0.2) do
+									if QuestYama_1 ~= true then
+										if QuestYama_2 ~= true then
+											if QuestYama_3 ~= true then
+												if QuestTushita_1 ~= true then
+													if QuestTushita_2 ~= true then
+														exitTo22 = 3
+														break
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 2")
+													end
+												else
+													exitTo22 = 2
+													break
+												end
+											else
+												exitTo22 = 1
+												break
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 2")
+										end
+									else
+										paragraph:SetDesc("Quest Numbers : yama quest 1")
+									end
+								end
+
+								if exitTo22 == 1 then
+									exitTo23 = 1
+									break
+								elseif exitTo22 == 2 then
+									exitTo23 = 2
+									break
+								elseif exitTo22 == 3 then
+									continue
+								end
+
+								break
+							end
+
+							if exitTo23 == 1 then
+								paragraph3 = paragraph
+								setDesc2 = paragraph.SetDesc
+								str = "Quest Numbers : yama quest 3"
+
+								while true do
+									setDesc2(paragraph3, str)
+									exitTo9 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															if GetWP("Cursed Dual Katana") then
+																paragraph:SetDesc("Quest Numbers : CDK done!!")
+																continue
+															end
+															continue
+														end
+
+														paragraph:SetDesc("Quest Numbers : tushita quest 2")
+														continue
+													end
+
+													paragraph:SetDesc("Quest Numbers : tushita quest 1")
+												else
+													exitTo9 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo9 == 1 then
+										paragraph3 = paragraph
+										setDesc2 = paragraph.SetDesc
+										continue
+									end
+
+									break
+								end
+							elseif exitTo23 == 2 then
+								exitTo11 = nil
+
+								while true do
+									paragraph:SetDesc("Quest Numbers : tushita quest 1")
+									exitTo10 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															if GetWP("Cursed Dual Katana") then
+																paragraph:SetDesc("Quest Numbers : CDK done!!")
+																continue
+															end
+															continue
+														end
+
+														paragraph:SetDesc("Quest Numbers : tushita quest 2")
+													else
+														exitTo10 = 2
+														break
+													end
+												else
+													exitTo10 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo10 == 1 then
+										exitTo11 = 1
+										break
+									elseif exitTo10 == 2 then
+										continue
+									end
+
+									break
+								end
+
+								if exitTo11 == 1 then
+									paragraph3 = paragraph
+									setDesc2 = paragraph.SetDesc
+									str = "Quest Numbers : yama quest 3"
+
+									while true do
+										setDesc2(paragraph3, str)
+										exitTo9 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																if GetWP("Cursed Dual Katana") then
+																	paragraph:SetDesc("Quest Numbers : CDK done!!")
+																	continue
+																end
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+															continue
+														end
+
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													else
+														exitTo9 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo9 == 1 then
+											paragraph3 = paragraph
+											setDesc2 = paragraph.SetDesc
+											continue
+										end
+
+										break
+									end
+								end
+							end
+						end
+					end
+				else
+					local exitTo25 = nil
+
+					while true do
+						paragraph:SetDesc("Quest Numbers : tushita quest 1")
+						local exitTo24 = nil
+
+						while wait(0.2) do
+							if QuestYama_1 ~= true then
+								if QuestYama_2 ~= true then
+									exitTo24 = 1
+									break
+								else
+									paragraph:SetDesc("Quest Numbers : yama quest 2")
+								end
+							else
+								paragraph:SetDesc("Quest Numbers : yama quest 1")
+							end
+						end
+
+						if exitTo24 == 1 then
+							if QuestYama_3 ~= true then
+								if QuestTushita_1 ~= true then
+									exitTo25 = 2
+									break
+								else
+									continue
+								end
+							else
+								exitTo25 = 1
+								break
+							end
+						end
+
+						break
+					end
+
+					if exitTo25 == 1 then
+						paragraph6 = paragraph
+						setDesc5 = paragraph.SetDesc
+						str = "Quest Numbers : yama quest 3"
+
+						while true do
+							setDesc5(paragraph6, str)
+							exitTo26 = nil
+
+							while wait(0.2) do
+								if QuestYama_1 ~= true then
+									if QuestYama_2 ~= true then
+										if QuestYama_3 ~= true then
+											if QuestTushita_1 ~= true then
+												exitTo26 = 2
+												break
+											else
+												paragraph:SetDesc("Quest Numbers : tushita quest 1")
+											end
+										else
+											exitTo26 = 1
+											break
+										end
+									else
+										paragraph:SetDesc("Quest Numbers : yama quest 2")
+									end
+								else
+									paragraph:SetDesc("Quest Numbers : yama quest 1")
+								end
+							end
+
+							if exitTo26 == 1 then
+								paragraph6 = paragraph
+								setDesc5 = paragraph.SetDesc
+								continue
+							end
+
+							break
+						end
+
+						if exitTo26 == 2 then
+							exitTo27 = nil
+
+							while true do
+								if QuestTushita_2 ~= true then
+									exitTo27 = 1
+									break
+								else
+									paragraph:SetDesc("Quest Numbers : tushita quest 2")
+									exitTo28 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														exitTo28 = 2
+														break
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													end
+												else
+													exitTo28 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo28 == 1 then
+										exitTo27 = 2
+										break
+									elseif exitTo28 == 2 then
+										continue
+									end
+
+									break
+								end
+							end
+
+							if exitTo27 == 1 then
+								exitTo17 = nil
+
+								while true do
+									if GetWP("Cursed Dual Katana") then
+										paragraph:SetDesc("Quest Numbers : CDK done!!")
+									end
+
+									exitTo16 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															exitTo16 = 2
+															break
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													end
+												else
+													exitTo16 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo16 == 1 then
+										exitTo17 = 1
+										break
+									elseif exitTo16 == 2 then
+										continue
+									end
+
+									break
+								end
+
+								if exitTo17 == 1 then
+									paragraph3 = paragraph
+									setDesc2 = paragraph.SetDesc
+
+									while true do
+										setDesc2(paragraph3, str)
+										exitTo9 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																if GetWP("Cursed Dual Katana") then
+																	paragraph:SetDesc("Quest Numbers : CDK done!!")
+																	continue
+																end
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+															continue
+														end
+
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													else
+														exitTo9 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo9 == 1 then
+											paragraph3 = paragraph
+											setDesc2 = paragraph.SetDesc
+											continue
+										end
+
+										break
+									end
+								end
+							elseif exitTo27 == 2 then
+								paragraph5 = paragraph
+								setDesc4 = paragraph.SetDesc
+
+								while true do
+									setDesc4(paragraph5, str)
+									exitTo15 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															exitTo15 = 2
+															break
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													end
+												else
+													exitTo15 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo15 == 1 then
+										paragraph5 = paragraph
+										setDesc4 = paragraph.SetDesc
+										continue
+									end
+
+									break
+								end
+
+								if exitTo15 == 2 then
+									exitTo17 = nil
+
+									while true do
+										if GetWP("Cursed Dual Katana") then
+											paragraph:SetDesc("Quest Numbers : CDK done!!")
+										end
+
+										exitTo16 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																exitTo16 = 2
+																break
+															else
+																paragraph:SetDesc("Quest Numbers : tushita quest 2")
+															end
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 1")
+														end
+													else
+														exitTo16 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo16 == 1 then
+											exitTo17 = 1
+											break
+										elseif exitTo16 == 2 then
+											continue
+										end
+
+										break
+									end
+
+									if exitTo17 == 1 then
+										paragraph3 = paragraph
+										setDesc2 = paragraph.SetDesc
+
+										while true do
+											setDesc2(paragraph3, str)
+											exitTo9 = nil
+
+											while wait(0.2) do
+												if QuestYama_1 ~= true then
+													if QuestYama_2 ~= true then
+														if QuestYama_3 ~= true then
+															if QuestTushita_1 ~= true then
+																if QuestTushita_2 ~= true then
+																	if GetWP("Cursed Dual Katana") then
+																		paragraph:SetDesc("Quest Numbers : CDK done!!")
+																		continue
+																	end
+																	continue
+																end
+
+																paragraph:SetDesc("Quest Numbers : tushita quest 2")
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 1")
+														else
+															exitTo9 = 1
+															break
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : yama quest 2")
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 1")
+												end
+											end
+
+											if exitTo9 == 1 then
+												paragraph3 = paragraph
+												setDesc2 = paragraph.SetDesc
+												continue
+											end
+
+											break
+										end
+									end
+								end
+							end
+						end
+					elseif exitTo25 == 2 then
+						local exitTo29 = nil
+
+						while true do
+							if QuestTushita_2 ~= true then
+								exitTo29 = 1
+								break
+							else
+								paragraph:SetDesc("Quest Numbers : tushita quest 2")
+								local exitTo30 = nil
+
+								while wait(0.2) do
+									if QuestYama_1 ~= true then
+										if QuestYama_2 ~= true then
+											exitTo30 = 1
+											break
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 2")
+										end
+									else
+										paragraph:SetDesc("Quest Numbers : yama quest 1")
+									end
+								end
+
+								if exitTo30 == 1 then
+									if QuestYama_3 ~= true then
+										if QuestTushita_1 ~= true then
+											continue
+										else
+											exitTo29 = 3
+											break
+										end
+									else
+										exitTo29 = 2
+										break
+									end
+								end
+
+								break
+							end
+						end
+
+						if exitTo29 == 1 then
+							exitTo23 = nil
+
+							while true do
+								if GetWP("Cursed Dual Katana") then
+									paragraph:SetDesc("Quest Numbers : CDK done!!")
+								end
+
+								exitTo22 = nil
+
+								while wait(0.2) do
+									if QuestYama_1 ~= true then
+										if QuestYama_2 ~= true then
+											if QuestYama_3 ~= true then
+												if QuestTushita_1 ~= true then
+													if QuestTushita_2 ~= true then
+														exitTo22 = 3
+														break
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 2")
+													end
+												else
+													exitTo22 = 2
+													break
+												end
+											else
+												exitTo22 = 1
+												break
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 2")
+										end
+									else
+										paragraph:SetDesc("Quest Numbers : yama quest 1")
+									end
+								end
+
+								if exitTo22 == 1 then
+									exitTo23 = 1
+									break
+								elseif exitTo22 == 2 then
+									exitTo23 = 2
+									break
+								elseif exitTo22 == 3 then
+									continue
+								end
+
+								break
+							end
+
+							if exitTo23 == 1 then
+								paragraph3 = paragraph
+								setDesc2 = paragraph.SetDesc
+								str = "Quest Numbers : yama quest 3"
+
+								while true do
+									setDesc2(paragraph3, str)
+									exitTo9 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															if GetWP("Cursed Dual Katana") then
+																paragraph:SetDesc("Quest Numbers : CDK done!!")
+																continue
+															end
+															continue
+														end
+
+														paragraph:SetDesc("Quest Numbers : tushita quest 2")
+														continue
+													end
+
+													paragraph:SetDesc("Quest Numbers : tushita quest 1")
+												else
+													exitTo9 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo9 == 1 then
+										paragraph3 = paragraph
+										setDesc2 = paragraph.SetDesc
+										continue
+									end
+
+									break
+								end
+							elseif exitTo23 == 2 then
+								exitTo11 = nil
+
+								while true do
+									paragraph:SetDesc("Quest Numbers : tushita quest 1")
+									exitTo10 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															if GetWP("Cursed Dual Katana") then
+																paragraph:SetDesc("Quest Numbers : CDK done!!")
+																continue
+															end
+															continue
+														end
+
+														paragraph:SetDesc("Quest Numbers : tushita quest 2")
+													else
+														exitTo10 = 2
+														break
+													end
+												else
+													exitTo10 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo10 == 1 then
+										exitTo11 = 1
+										break
+									elseif exitTo10 == 2 then
+										continue
+									end
+
+									break
+								end
+
+								if exitTo11 == 1 then
+									paragraph3 = paragraph
+									setDesc2 = paragraph.SetDesc
+									str = "Quest Numbers : yama quest 3"
+
+									while true do
+										setDesc2(paragraph3, str)
+										exitTo9 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																if GetWP("Cursed Dual Katana") then
+																	paragraph:SetDesc("Quest Numbers : CDK done!!")
+																	continue
+																end
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+															continue
+														end
+
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													else
+														exitTo9 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo9 == 1 then
+											paragraph3 = paragraph
+											setDesc2 = paragraph.SetDesc
+											continue
+										end
+
+										break
+									end
+								end
+							end
+						elseif exitTo29 == 2 then
+							paragraph5 = paragraph
+							setDesc4 = paragraph.SetDesc
+							str = "Quest Numbers : yama quest 3"
+
+							while true do
+								setDesc4(paragraph5, str)
+								exitTo15 = nil
+
+								while wait(0.2) do
+									if QuestYama_1 ~= true then
+										if QuestYama_2 ~= true then
+											if QuestYama_3 ~= true then
+												if QuestTushita_1 ~= true then
+													if QuestTushita_2 ~= true then
+														exitTo15 = 2
+														break
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 2")
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : tushita quest 1")
+												end
+											else
+												exitTo15 = 1
+												break
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 2")
+										end
+									else
+										paragraph:SetDesc("Quest Numbers : yama quest 1")
+									end
+								end
+
+								if exitTo15 == 1 then
+									paragraph5 = paragraph
+									setDesc4 = paragraph.SetDesc
+									continue
+								end
+
+								break
+							end
+
+							if exitTo15 == 2 then
+								exitTo17 = nil
+
+								while true do
+									if GetWP("Cursed Dual Katana") then
+										paragraph:SetDesc("Quest Numbers : CDK done!!")
+									end
+
+									exitTo16 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															exitTo16 = 2
+															break
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													end
+												else
+													exitTo16 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo16 == 1 then
+										exitTo17 = 1
+										break
+									elseif exitTo16 == 2 then
+										continue
+									end
+
+									break
+								end
+
+								if exitTo17 == 1 then
+									paragraph3 = paragraph
+									setDesc2 = paragraph.SetDesc
+
+									while true do
+										setDesc2(paragraph3, str)
+										exitTo9 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																if GetWP("Cursed Dual Katana") then
+																	paragraph:SetDesc("Quest Numbers : CDK done!!")
+																	continue
+																end
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+															continue
+														end
+
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													else
+														exitTo9 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo9 == 1 then
+											paragraph3 = paragraph
+											setDesc2 = paragraph.SetDesc
+											continue
+										end
+
+										break
+									end
+								end
+							end
+						elseif exitTo29 == 3 then
+							exitTo21 = nil
+
+							while true do
+								paragraph:SetDesc("Quest Numbers : tushita quest 1")
+								exitTo20 = nil
+
+								while wait(0.2) do
+									if QuestYama_1 ~= true then
+										if QuestYama_2 ~= true then
+											if QuestYama_3 ~= true then
+												if QuestTushita_1 ~= true then
+													if QuestTushita_2 ~= true then
+														exitTo20 = 3
+														break
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 2")
+													end
+												else
+													exitTo20 = 2
+													break
+												end
+											else
+												exitTo20 = 1
+												break
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 2")
+										end
+									else
+										paragraph:SetDesc("Quest Numbers : yama quest 1")
+									end
+								end
+
+								if exitTo20 == 1 then
+									exitTo21 = 1
+									break
+								elseif exitTo20 == 2 then
+									continue
+								end
+
+								break
+							end
+
+							if exitTo21 == 1 then
+								paragraph5 = paragraph
+								setDesc4 = paragraph.SetDesc
+								str = "Quest Numbers : yama quest 3"
+
+								while true do
+									setDesc4(paragraph5, str)
+									exitTo15 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															exitTo15 = 2
+															break
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													end
+												else
+													exitTo15 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo15 == 1 then
+										paragraph5 = paragraph
+										setDesc4 = paragraph.SetDesc
+										continue
+									end
+
+									break
+								end
+
+								if exitTo15 == 2 then
+									exitTo17 = nil
+
+									while true do
+										if GetWP("Cursed Dual Katana") then
+											paragraph:SetDesc("Quest Numbers : CDK done!!")
+										end
+
+										exitTo16 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																exitTo16 = 2
+																break
+															else
+																paragraph:SetDesc("Quest Numbers : tushita quest 2")
+															end
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 1")
+														end
+													else
+														exitTo16 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo16 == 1 then
+											exitTo17 = 1
+											break
+										elseif exitTo16 == 2 then
+											continue
+										end
+
+										break
+									end
+
+									if exitTo17 == 1 then
+										paragraph3 = paragraph
+										setDesc2 = paragraph.SetDesc
+
+										while true do
+											setDesc2(paragraph3, str)
+											exitTo9 = nil
+
+											while wait(0.2) do
+												if QuestYama_1 ~= true then
+													if QuestYama_2 ~= true then
+														if QuestYama_3 ~= true then
+															if QuestTushita_1 ~= true then
+																if QuestTushita_2 ~= true then
+																	if GetWP("Cursed Dual Katana") then
+																		paragraph:SetDesc("Quest Numbers : CDK done!!")
+																		continue
+																	end
+																	continue
+																end
+
+																paragraph:SetDesc("Quest Numbers : tushita quest 2")
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 1")
+														else
+															exitTo9 = 1
+															break
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : yama quest 2")
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 1")
+												end
+											end
+
+											if exitTo9 == 1 then
+												paragraph3 = paragraph
+												setDesc2 = paragraph.SetDesc
+												continue
+											end
+
+											break
+										end
+									end
+								end
+							elseif exitTo20 == 3 then
+								exitTo23 = nil
+
+								while true do
+									if GetWP("Cursed Dual Katana") then
+										paragraph:SetDesc("Quest Numbers : CDK done!!")
+									end
+
+									exitTo22 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															exitTo22 = 3
+															break
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+														end
+													else
+														exitTo22 = 2
+														break
+													end
+												else
+													exitTo22 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo22 == 1 then
+										exitTo23 = 1
+										break
+									elseif exitTo22 == 2 then
+										exitTo23 = 2
+										break
+									elseif exitTo22 == 3 then
+										continue
+									end
+
+									break
+								end
+
+								if exitTo23 == 1 then
+									paragraph3 = paragraph
+									setDesc2 = paragraph.SetDesc
+									str = "Quest Numbers : yama quest 3"
+
+									while true do
+										setDesc2(paragraph3, str)
+										exitTo9 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																if GetWP("Cursed Dual Katana") then
+																	paragraph:SetDesc("Quest Numbers : CDK done!!")
+																	continue
+																end
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+															continue
+														end
+
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													else
+														exitTo9 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo9 == 1 then
+											paragraph3 = paragraph
+											setDesc2 = paragraph.SetDesc
+											continue
+										end
+
+										break
+									end
+								elseif exitTo23 == 2 then
+									exitTo11 = nil
+
+									while true do
+										paragraph:SetDesc("Quest Numbers : tushita quest 1")
+										exitTo10 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																if GetWP("Cursed Dual Katana") then
+																	paragraph:SetDesc("Quest Numbers : CDK done!!")
+																	continue
+																end
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+														else
+															exitTo10 = 2
+															break
+														end
+													else
+														exitTo10 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo10 == 1 then
+											exitTo11 = 1
+											break
+										elseif exitTo10 == 2 then
+											continue
+										end
+
+										break
+									end
+
+									if exitTo11 == 1 then
+										paragraph3 = paragraph
+										setDesc2 = paragraph.SetDesc
+										str = "Quest Numbers : yama quest 3"
+
+										while true do
+											setDesc2(paragraph3, str)
+											exitTo9 = nil
+
+											while wait(0.2) do
+												if QuestYama_1 ~= true then
+													if QuestYama_2 ~= true then
+														if QuestYama_3 ~= true then
+															if QuestTushita_1 ~= true then
+																if QuestTushita_2 ~= true then
+																	if GetWP("Cursed Dual Katana") then
+																		paragraph:SetDesc("Quest Numbers : CDK done!!")
+																		continue
+																	end
+																	continue
+																end
+
+																paragraph:SetDesc("Quest Numbers : tushita quest 2")
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 1")
+														else
+															exitTo9 = 1
+															break
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : yama quest 2")
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 1")
+												end
+											end
+
+											if exitTo9 == 1 then
+												paragraph3 = paragraph
+												setDesc2 = paragraph.SetDesc
+												continue
+											end
+
+											break
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			else
+				local paragraph7 = paragraph
+				local setDesc6 = paragraph.SetDesc
+				str = "Quest Numbers : yama quest 3"
+				local exitTo32 = nil
+
+				while true do
+					setDesc6(paragraph7, str)
+					local exitTo31 = nil
+
+					while wait(0.2) do
+						if QuestYama_1 ~= true then
+							if QuestYama_2 ~= true then
+								exitTo31 = 1
+								break
+							else
+								paragraph:SetDesc("Quest Numbers : yama quest 2")
+							end
+						else
+							paragraph:SetDesc("Quest Numbers : yama quest 1")
+						end
+					end
+
+					if exitTo31 == 1 then
+						if QuestYama_3 ~= true then
+							exitTo32 = 1
+							break
+						else
+							paragraph7 = paragraph
+							setDesc6 = paragraph.SetDesc
+							continue
+						end
+					end
+
+					break
+				end
+
+				if exitTo32 == 1 then
+					if QuestTushita_1 ~= true then
+						local exitTo33 = nil
+
+						while true do
+							if QuestTushita_2 ~= true then
+								exitTo33 = 1
+								break
+							else
+								paragraph:SetDesc("Quest Numbers : tushita quest 2")
+								local exitTo34 = nil
+
+								while wait(0.2) do
+									if QuestYama_1 ~= true then
+										if QuestYama_2 ~= true then
+											exitTo34 = 1
+											break
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 2")
+										end
+									else
+										paragraph:SetDesc("Quest Numbers : yama quest 1")
+									end
+								end
+
+								if exitTo34 == 1 then
+									if QuestYama_3 ~= true then
+										if QuestTushita_1 ~= true then
+											continue
+										else
+											exitTo33 = 3
+											break
+										end
+									else
+										exitTo33 = 2
+										break
+									end
+								end
+
+								break
+							end
+						end
+
+						if exitTo33 == 1 then
+							exitTo19 = nil
+
+							while true do
+								if GetWP("Cursed Dual Katana") then
+									paragraph:SetDesc("Quest Numbers : CDK done!!")
+								end
+
+								exitTo18 = nil
+
+								while wait(0.2) do
+									if QuestYama_1 ~= true then
+										if QuestYama_2 ~= true then
+											if QuestYama_3 ~= true then
+												if QuestTushita_1 ~= true then
+													if QuestTushita_2 ~= true then
+														exitTo18 = 3
+														break
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 2")
+													end
+												else
+													exitTo18 = 2
+													break
+												end
+											else
+												exitTo18 = 1
+												break
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 2")
+										end
+									else
+										paragraph:SetDesc("Quest Numbers : yama quest 1")
+									end
+								end
+
+								if exitTo18 == 1 then
+									exitTo19 = 1
+									break
+								elseif exitTo18 == 2 then
+									exitTo19 = 2
+									break
+								elseif exitTo18 == 3 then
+									continue
+								end
+
+								break
+							end
+
+							if exitTo19 == 1 then
+								paragraph2 = paragraph
+								setDesc = paragraph.SetDesc
+
+								while true do
+									setDesc(paragraph2, str)
+									exitTo6 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															if GetWP("Cursed Dual Katana") then
+																paragraph:SetDesc("Quest Numbers : CDK done!!")
+																continue
+															end
+															continue
+														end
+
+														paragraph:SetDesc("Quest Numbers : tushita quest 2")
+													else
+														exitTo6 = 2
+														break
+													end
+												else
+													exitTo6 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo6 == 1 then
+										paragraph2 = paragraph
+										setDesc = paragraph.SetDesc
+										continue
+									end
+
+									break
+								end
+
+								if exitTo6 == 2 then
+									exitTo8 = nil
+
+									while true do
+										paragraph:SetDesc("Quest Numbers : tushita quest 1")
+										exitTo7 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																if GetWP("Cursed Dual Katana") then
+																	paragraph:SetDesc("Quest Numbers : CDK done!!")
+																	continue
+																end
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+														else
+															exitTo7 = 2
+															break
+														end
+													else
+														exitTo7 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo7 == 1 then
+											exitTo8 = 1
+											break
+										elseif exitTo7 == 2 then
+											continue
+										end
+
+										break
+									end
+
+									if exitTo8 == 1 then
+										paragraph3 = paragraph
+										setDesc2 = paragraph.SetDesc
+
+										while true do
+											setDesc2(paragraph3, str)
+											exitTo9 = nil
+
+											while wait(0.2) do
+												if QuestYama_1 ~= true then
+													if QuestYama_2 ~= true then
+														if QuestYama_3 ~= true then
+															if QuestTushita_1 ~= true then
+																if QuestTushita_2 ~= true then
+																	if GetWP("Cursed Dual Katana") then
+																		paragraph:SetDesc("Quest Numbers : CDK done!!")
+																		continue
+																	end
+																	continue
+																end
+
+																paragraph:SetDesc("Quest Numbers : tushita quest 2")
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 1")
+														else
+															exitTo9 = 1
+															break
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : yama quest 2")
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 1")
+												end
+											end
+
+											if exitTo9 == 1 then
+												paragraph3 = paragraph
+												setDesc2 = paragraph.SetDesc
+												continue
+											end
+
+											break
+										end
+									end
+								end
+							elseif exitTo19 == 2 then
+								exitTo8 = nil
+
+								while true do
+									paragraph:SetDesc("Quest Numbers : tushita quest 1")
+									exitTo7 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															if GetWP("Cursed Dual Katana") then
+																paragraph:SetDesc("Quest Numbers : CDK done!!")
+																continue
+															end
+															continue
+														end
+
+														paragraph:SetDesc("Quest Numbers : tushita quest 2")
+													else
+														exitTo7 = 2
+														break
+													end
+												else
+													exitTo7 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo7 == 1 then
+										exitTo8 = 1
+										break
+									elseif exitTo7 == 2 then
+										continue
+									end
+
+									break
+								end
+
+								if exitTo8 == 1 then
+									paragraph3 = paragraph
+									setDesc2 = paragraph.SetDesc
+
+									while true do
+										setDesc2(paragraph3, str)
+										exitTo9 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																if GetWP("Cursed Dual Katana") then
+																	paragraph:SetDesc("Quest Numbers : CDK done!!")
+																	continue
+																end
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+															continue
+														end
+
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													else
+														exitTo9 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo9 == 1 then
+											paragraph3 = paragraph
+											setDesc2 = paragraph.SetDesc
+											continue
+										end
+
+										break
+									end
+								end
+							end
+						elseif exitTo33 == 2 then
+							paragraph4 = paragraph
+							setDesc3 = paragraph.SetDesc
+
+							while true do
+								setDesc3(paragraph4, str)
+								exitTo12 = nil
+
+								while wait(0.2) do
+									if QuestYama_1 ~= true then
+										if QuestYama_2 ~= true then
+											if QuestYama_3 ~= true then
+												if QuestTushita_1 ~= true then
+													if QuestTushita_2 ~= true then
+														exitTo12 = 3
+														break
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 2")
+													end
+												else
+													exitTo12 = 2
+													break
+												end
+											else
+												exitTo12 = 1
+												break
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 2")
+										end
+									else
+										paragraph:SetDesc("Quest Numbers : yama quest 1")
+									end
+								end
+
+								if exitTo12 == 1 then
+									paragraph4 = paragraph
+									setDesc3 = paragraph.SetDesc
+									continue
+								end
+
+								break
+							end
+
+							if exitTo12 == 2 then
+								exitTo14 = nil
+
+								while true do
+									paragraph:SetDesc("Quest Numbers : tushita quest 1")
+									exitTo13 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															exitTo13 = 3
+															break
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+														end
+													else
+														exitTo13 = 2
+														break
+													end
+												else
+													exitTo13 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo13 == 1 then
+										exitTo14 = 1
+										break
+									elseif exitTo13 == 2 then
+										continue
+									end
+
+									break
+								end
+
+								if exitTo14 == 1 then
+									paragraph5 = paragraph
+									setDesc4 = paragraph.SetDesc
+
+									while true do
+										setDesc4(paragraph5, str)
+										exitTo15 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																exitTo15 = 2
+																break
+															else
+																paragraph:SetDesc("Quest Numbers : tushita quest 2")
+															end
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 1")
+														end
+													else
+														exitTo15 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo15 == 1 then
+											paragraph5 = paragraph
+											setDesc4 = paragraph.SetDesc
+											continue
+										end
+
+										break
+									end
+
+									if exitTo15 == 2 then
+										exitTo17 = nil
+
+										while true do
+											if GetWP("Cursed Dual Katana") then
+												paragraph:SetDesc("Quest Numbers : CDK done!!")
+											end
+
+											exitTo16 = nil
+
+											while wait(0.2) do
+												if QuestYama_1 ~= true then
+													if QuestYama_2 ~= true then
+														if QuestYama_3 ~= true then
+															if QuestTushita_1 ~= true then
+																if QuestTushita_2 ~= true then
+																	exitTo16 = 2
+																	break
+																else
+																	paragraph:SetDesc("Quest Numbers : tushita quest 2")
+																end
+															else
+																paragraph:SetDesc("Quest Numbers : tushita quest 1")
+															end
+														else
+															exitTo16 = 1
+															break
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : yama quest 2")
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 1")
+												end
+											end
+
+											if exitTo16 == 1 then
+												exitTo17 = 1
+												break
+											elseif exitTo16 == 2 then
+												continue
+											end
+
+											break
+										end
+
+										if exitTo17 == 1 then
+											paragraph3 = paragraph
+											setDesc2 = paragraph.SetDesc
+
+											while true do
+												setDesc2(paragraph3, str)
+												exitTo9 = nil
+
+												while wait(0.2) do
+													if QuestYama_1 ~= true then
+														if QuestYama_2 ~= true then
+															if QuestYama_3 ~= true then
+																if QuestTushita_1 ~= true then
+																	if QuestTushita_2 ~= true then
+																		if GetWP("Cursed Dual Katana") then
+																			paragraph:SetDesc("Quest Numbers : CDK done!!")
+																			continue
+																		end
+																		continue
+																	end
+
+																	paragraph:SetDesc("Quest Numbers : tushita quest 2")
+																	continue
+																end
+
+																paragraph:SetDesc("Quest Numbers : tushita quest 1")
+															else
+																exitTo9 = 1
+																break
+															end
+														else
+															paragraph:SetDesc("Quest Numbers : yama quest 2")
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : yama quest 1")
+													end
+												end
+
+												if exitTo9 == 1 then
+													paragraph3 = paragraph
+													setDesc2 = paragraph.SetDesc
+													continue
+												end
+
+												break
+											end
+										end
+									end
+								elseif exitTo13 == 3 then
+									exitTo17 = nil
+
+									while true do
+										if GetWP("Cursed Dual Katana") then
+											paragraph:SetDesc("Quest Numbers : CDK done!!")
+										end
+
+										exitTo16 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																exitTo16 = 2
+																break
+															else
+																paragraph:SetDesc("Quest Numbers : tushita quest 2")
+															end
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 1")
+														end
+													else
+														exitTo16 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo16 == 1 then
+											exitTo17 = 1
+											break
+										elseif exitTo16 == 2 then
+											continue
+										end
+
+										break
+									end
+
+									if exitTo17 == 1 then
+										paragraph3 = paragraph
+										setDesc2 = paragraph.SetDesc
+
+										while true do
+											setDesc2(paragraph3, str)
+											exitTo9 = nil
+
+											while wait(0.2) do
+												if QuestYama_1 ~= true then
+													if QuestYama_2 ~= true then
+														if QuestYama_3 ~= true then
+															if QuestTushita_1 ~= true then
+																if QuestTushita_2 ~= true then
+																	if GetWP("Cursed Dual Katana") then
+																		paragraph:SetDesc("Quest Numbers : CDK done!!")
+																		continue
+																	end
+																	continue
+																end
+
+																paragraph:SetDesc("Quest Numbers : tushita quest 2")
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 1")
+														else
+															exitTo9 = 1
+															break
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : yama quest 2")
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 1")
+												end
+											end
+
+											if exitTo9 == 1 then
+												paragraph3 = paragraph
+												setDesc2 = paragraph.SetDesc
+												continue
+											end
+
+											break
+										end
+									end
+								end
+							elseif exitTo12 == 3 then
+								exitTo19 = nil
+
+								while true do
+									if GetWP("Cursed Dual Katana") then
+										paragraph:SetDesc("Quest Numbers : CDK done!!")
+									end
+
+									exitTo18 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															exitTo18 = 3
+															break
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+														end
+													else
+														exitTo18 = 2
+														break
+													end
+												else
+													exitTo18 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo18 == 1 then
+										exitTo19 = 1
+										break
+									elseif exitTo18 == 2 then
+										exitTo19 = 2
+										break
+									elseif exitTo18 == 3 then
+										continue
+									end
+
+									break
+								end
+
+								if exitTo19 == 1 then
+									paragraph2 = paragraph
+									setDesc = paragraph.SetDesc
+
+									while true do
+										setDesc(paragraph2, str)
+										exitTo6 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																if GetWP("Cursed Dual Katana") then
+																	paragraph:SetDesc("Quest Numbers : CDK done!!")
+																	continue
+																end
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+														else
+															exitTo6 = 2
+															break
+														end
+													else
+														exitTo6 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo6 == 1 then
+											paragraph2 = paragraph
+											setDesc = paragraph.SetDesc
+											continue
+										end
+
+										break
+									end
+
+									if exitTo6 == 2 then
+										exitTo8 = nil
+
+										while true do
+											paragraph:SetDesc("Quest Numbers : tushita quest 1")
+											exitTo7 = nil
+
+											while wait(0.2) do
+												if QuestYama_1 ~= true then
+													if QuestYama_2 ~= true then
+														if QuestYama_3 ~= true then
+															if QuestTushita_1 ~= true then
+																if QuestTushita_2 ~= true then
+																	if GetWP("Cursed Dual Katana") then
+																		paragraph:SetDesc("Quest Numbers : CDK done!!")
+																		continue
+																	end
+																	continue
+																end
+
+																paragraph:SetDesc("Quest Numbers : tushita quest 2")
+															else
+																exitTo7 = 2
+																break
+															end
+														else
+															exitTo7 = 1
+															break
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : yama quest 2")
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 1")
+												end
+											end
+
+											if exitTo7 == 1 then
+												exitTo8 = 1
+												break
+											elseif exitTo7 == 2 then
+												continue
+											end
+
+											break
+										end
+
+										if exitTo8 == 1 then
+											paragraph3 = paragraph
+											setDesc2 = paragraph.SetDesc
+
+											while true do
+												setDesc2(paragraph3, str)
+												exitTo9 = nil
+
+												while wait(0.2) do
+													if QuestYama_1 ~= true then
+														if QuestYama_2 ~= true then
+															if QuestYama_3 ~= true then
+																if QuestTushita_1 ~= true then
+																	if QuestTushita_2 ~= true then
+																		if GetWP("Cursed Dual Katana") then
+																			paragraph:SetDesc("Quest Numbers : CDK done!!")
+																			continue
+																		end
+																		continue
+																	end
+
+																	paragraph:SetDesc("Quest Numbers : tushita quest 2")
+																	continue
+																end
+
+																paragraph:SetDesc("Quest Numbers : tushita quest 1")
+															else
+																exitTo9 = 1
+																break
+															end
+														else
+															paragraph:SetDesc("Quest Numbers : yama quest 2")
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : yama quest 1")
+													end
+												end
+
+												if exitTo9 == 1 then
+													paragraph3 = paragraph
+													setDesc2 = paragraph.SetDesc
+													continue
+												end
+
+												break
+											end
+										end
+									end
+								elseif exitTo19 == 2 then
+									exitTo8 = nil
+
+									while true do
+										paragraph:SetDesc("Quest Numbers : tushita quest 1")
+										exitTo7 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																if GetWP("Cursed Dual Katana") then
+																	paragraph:SetDesc("Quest Numbers : CDK done!!")
+																	continue
+																end
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+														else
+															exitTo7 = 2
+															break
+														end
+													else
+														exitTo7 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo7 == 1 then
+											exitTo8 = 1
+											break
+										elseif exitTo7 == 2 then
+											continue
+										end
+
+										break
+									end
+
+									if exitTo8 == 1 then
+										paragraph3 = paragraph
+										setDesc2 = paragraph.SetDesc
+
+										while true do
+											setDesc2(paragraph3, str)
+											exitTo9 = nil
+
+											while wait(0.2) do
+												if QuestYama_1 ~= true then
+													if QuestYama_2 ~= true then
+														if QuestYama_3 ~= true then
+															if QuestTushita_1 ~= true then
+																if QuestTushita_2 ~= true then
+																	if GetWP("Cursed Dual Katana") then
+																		paragraph:SetDesc("Quest Numbers : CDK done!!")
+																		continue
+																	end
+																	continue
+																end
+
+																paragraph:SetDesc("Quest Numbers : tushita quest 2")
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 1")
+														else
+															exitTo9 = 1
+															break
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : yama quest 2")
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 1")
+												end
+											end
+
+											if exitTo9 == 1 then
+												paragraph3 = paragraph
+												setDesc2 = paragraph.SetDesc
+												continue
+											end
+
+											break
+										end
+									end
+								end
+							end
+						elseif exitTo33 == 3 then
+							exitTo14 = nil
+
+							while true do
+								paragraph:SetDesc("Quest Numbers : tushita quest 1")
+								exitTo13 = nil
+
+								while wait(0.2) do
+									if QuestYama_1 ~= true then
+										if QuestYama_2 ~= true then
+											if QuestYama_3 ~= true then
+												if QuestTushita_1 ~= true then
+													if QuestTushita_2 ~= true then
+														exitTo13 = 3
+														break
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 2")
+													end
+												else
+													exitTo13 = 2
+													break
+												end
+											else
+												exitTo13 = 1
+												break
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 2")
+										end
+									else
+										paragraph:SetDesc("Quest Numbers : yama quest 1")
+									end
+								end
+
+								if exitTo13 == 1 then
+									exitTo14 = 1
+									break
+								elseif exitTo13 == 2 then
+									continue
+								end
+
+								break
+							end
+
+							if exitTo14 == 1 then
+								paragraph5 = paragraph
+								setDesc4 = paragraph.SetDesc
+
+								while true do
+									setDesc4(paragraph5, str)
+									exitTo15 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															exitTo15 = 2
+															break
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													end
+												else
+													exitTo15 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo15 == 1 then
+										paragraph5 = paragraph
+										setDesc4 = paragraph.SetDesc
+										continue
+									end
+
+									break
+								end
+
+								if exitTo15 == 2 then
+									exitTo17 = nil
+
+									while true do
+										if GetWP("Cursed Dual Katana") then
+											paragraph:SetDesc("Quest Numbers : CDK done!!")
+										end
+
+										exitTo16 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																exitTo16 = 2
+																break
+															else
+																paragraph:SetDesc("Quest Numbers : tushita quest 2")
+															end
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 1")
+														end
+													else
+														exitTo16 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo16 == 1 then
+											exitTo17 = 1
+											break
+										elseif exitTo16 == 2 then
+											continue
+										end
+
+										break
+									end
+
+									if exitTo17 == 1 then
+										paragraph3 = paragraph
+										setDesc2 = paragraph.SetDesc
+
+										while true do
+											setDesc2(paragraph3, str)
+											exitTo9 = nil
+
+											while wait(0.2) do
+												if QuestYama_1 ~= true then
+													if QuestYama_2 ~= true then
+														if QuestYama_3 ~= true then
+															if QuestTushita_1 ~= true then
+																if QuestTushita_2 ~= true then
+																	if GetWP("Cursed Dual Katana") then
+																		paragraph:SetDesc("Quest Numbers : CDK done!!")
+																		continue
+																	end
+																	continue
+																end
+
+																paragraph:SetDesc("Quest Numbers : tushita quest 2")
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 1")
+														else
+															exitTo9 = 1
+															break
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : yama quest 2")
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 1")
+												end
+											end
+
+											if exitTo9 == 1 then
+												paragraph3 = paragraph
+												setDesc2 = paragraph.SetDesc
+												continue
+											end
+
+											break
+										end
+									end
+								end
+							elseif exitTo13 == 3 then
+								exitTo17 = nil
+
+								while true do
+									if GetWP("Cursed Dual Katana") then
+										paragraph:SetDesc("Quest Numbers : CDK done!!")
+									end
+
+									exitTo16 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															exitTo16 = 2
+															break
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													end
+												else
+													exitTo16 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo16 == 1 then
+										exitTo17 = 1
+										break
+									elseif exitTo16 == 2 then
+										continue
+									end
+
+									break
+								end
+
+								if exitTo17 == 1 then
+									paragraph3 = paragraph
+									setDesc2 = paragraph.SetDesc
+
+									while true do
+										setDesc2(paragraph3, str)
+										exitTo9 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																if GetWP("Cursed Dual Katana") then
+																	paragraph:SetDesc("Quest Numbers : CDK done!!")
+																	continue
+																end
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+															continue
+														end
+
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													else
+														exitTo9 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo9 == 1 then
+											paragraph3 = paragraph
+											setDesc2 = paragraph.SetDesc
+											continue
+										end
+
+										break
+									end
+								end
+							end
+						end
+					else
+						local exitTo36 = nil
+
+						while true do
+							paragraph:SetDesc("Quest Numbers : tushita quest 1")
+							local exitTo35 = nil
+
+							while wait(0.2) do
+								if QuestYama_1 ~= true then
+									if QuestYama_2 ~= true then
+										exitTo35 = 1
+										break
+									else
+										paragraph:SetDesc("Quest Numbers : yama quest 2")
+									end
+								else
+									paragraph:SetDesc("Quest Numbers : yama quest 1")
+								end
+							end
+
+							if exitTo35 == 1 then
+								if QuestYama_3 ~= true then
+									if QuestTushita_1 ~= true then
+										exitTo36 = 2
+										break
+									else
+										continue
+									end
+								else
+									exitTo36 = 1
+									break
+								end
+							end
+
+							break
+						end
+
+						if exitTo36 == 1 then
+							paragraph6 = paragraph
+							setDesc5 = paragraph.SetDesc
+
+							while true do
+								setDesc5(paragraph6, str)
+								exitTo26 = nil
+
+								while wait(0.2) do
+									if QuestYama_1 ~= true then
+										if QuestYama_2 ~= true then
+											if QuestYama_3 ~= true then
+												if QuestTushita_1 ~= true then
+													exitTo26 = 2
+													break
+												else
+													paragraph:SetDesc("Quest Numbers : tushita quest 1")
+												end
+											else
+												exitTo26 = 1
+												break
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 2")
+										end
+									else
+										paragraph:SetDesc("Quest Numbers : yama quest 1")
+									end
+								end
+
+								if exitTo26 == 1 then
+									paragraph6 = paragraph
+									setDesc5 = paragraph.SetDesc
+									continue
+								end
+
+								break
+							end
+
+							if exitTo26 == 2 then
+								exitTo27 = nil
+
+								while true do
+									if QuestTushita_2 ~= true then
+										exitTo27 = 1
+										break
+									else
+										paragraph:SetDesc("Quest Numbers : tushita quest 2")
+										exitTo28 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															exitTo28 = 2
+															break
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 1")
+														end
+													else
+														exitTo28 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo28 == 1 then
+											exitTo27 = 2
+											break
+										elseif exitTo28 == 2 then
+											continue
+										end
+
+										break
+									end
+								end
+
+								if exitTo27 == 1 then
+									exitTo17 = nil
+
+									while true do
+										if GetWP("Cursed Dual Katana") then
+											paragraph:SetDesc("Quest Numbers : CDK done!!")
+										end
+
+										exitTo16 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																exitTo16 = 2
+																break
+															else
+																paragraph:SetDesc("Quest Numbers : tushita quest 2")
+															end
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 1")
+														end
+													else
+														exitTo16 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo16 == 1 then
+											exitTo17 = 1
+											break
+										elseif exitTo16 == 2 then
+											continue
+										end
+
+										break
+									end
+
+									if exitTo17 == 1 then
+										paragraph3 = paragraph
+										setDesc2 = paragraph.SetDesc
+
+										while true do
+											setDesc2(paragraph3, str)
+											exitTo9 = nil
+
+											while wait(0.2) do
+												if QuestYama_1 ~= true then
+													if QuestYama_2 ~= true then
+														if QuestYama_3 ~= true then
+															if QuestTushita_1 ~= true then
+																if QuestTushita_2 ~= true then
+																	if GetWP("Cursed Dual Katana") then
+																		paragraph:SetDesc("Quest Numbers : CDK done!!")
+																		continue
+																	end
+																	continue
+																end
+
+																paragraph:SetDesc("Quest Numbers : tushita quest 2")
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 1")
+														else
+															exitTo9 = 1
+															break
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : yama quest 2")
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 1")
+												end
+											end
+
+											if exitTo9 == 1 then
+												paragraph3 = paragraph
+												setDesc2 = paragraph.SetDesc
+												continue
+											end
+
+											break
+										end
+									end
+								elseif exitTo27 == 2 then
+									paragraph5 = paragraph
+									setDesc4 = paragraph.SetDesc
+
+									while true do
+										setDesc4(paragraph5, str)
+										exitTo15 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																exitTo15 = 2
+																break
+															else
+																paragraph:SetDesc("Quest Numbers : tushita quest 2")
+															end
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 1")
+														end
+													else
+														exitTo15 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo15 == 1 then
+											paragraph5 = paragraph
+											setDesc4 = paragraph.SetDesc
+											continue
+										end
+
+										break
+									end
+
+									if exitTo15 == 2 then
+										exitTo17 = nil
+
+										while true do
+											if GetWP("Cursed Dual Katana") then
+												paragraph:SetDesc("Quest Numbers : CDK done!!")
+											end
+
+											exitTo16 = nil
+
+											while wait(0.2) do
+												if QuestYama_1 ~= true then
+													if QuestYama_2 ~= true then
+														if QuestYama_3 ~= true then
+															if QuestTushita_1 ~= true then
+																if QuestTushita_2 ~= true then
+																	exitTo16 = 2
+																	break
+																else
+																	paragraph:SetDesc("Quest Numbers : tushita quest 2")
+																end
+															else
+																paragraph:SetDesc("Quest Numbers : tushita quest 1")
+															end
+														else
+															exitTo16 = 1
+															break
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : yama quest 2")
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 1")
+												end
+											end
+
+											if exitTo16 == 1 then
+												exitTo17 = 1
+												break
+											elseif exitTo16 == 2 then
+												continue
+											end
+
+											break
+										end
+
+										if exitTo17 == 1 then
+											paragraph3 = paragraph
+											setDesc2 = paragraph.SetDesc
+
+											while true do
+												setDesc2(paragraph3, str)
+												exitTo9 = nil
+
+												while wait(0.2) do
+													if QuestYama_1 ~= true then
+														if QuestYama_2 ~= true then
+															if QuestYama_3 ~= true then
+																if QuestTushita_1 ~= true then
+																	if QuestTushita_2 ~= true then
+																		if GetWP("Cursed Dual Katana") then
+																			paragraph:SetDesc("Quest Numbers : CDK done!!")
+																			continue
+																		end
+																		continue
+																	end
+
+																	paragraph:SetDesc("Quest Numbers : tushita quest 2")
+																	continue
+																end
+
+																paragraph:SetDesc("Quest Numbers : tushita quest 1")
+															else
+																exitTo9 = 1
+																break
+															end
+														else
+															paragraph:SetDesc("Quest Numbers : yama quest 2")
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : yama quest 1")
+													end
+												end
+
+												if exitTo9 == 1 then
+													paragraph3 = paragraph
+													setDesc2 = paragraph.SetDesc
+													continue
+												end
+
+												break
+											end
+										end
+									end
+								end
+							end
+						elseif exitTo36 == 2 then
+							exitTo27 = nil
+
+							while true do
+								if QuestTushita_2 ~= true then
+									exitTo27 = 1
+									break
+								else
+									paragraph:SetDesc("Quest Numbers : tushita quest 2")
+									exitTo28 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														exitTo28 = 2
+														break
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													end
+												else
+													exitTo28 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo28 == 1 then
+										exitTo27 = 2
+										break
+									elseif exitTo28 == 2 then
+										continue
+									end
+
+									break
+								end
+							end
+
+							if exitTo27 == 1 then
+								exitTo17 = nil
+
+								while true do
+									if GetWP("Cursed Dual Katana") then
+										paragraph:SetDesc("Quest Numbers : CDK done!!")
+									end
+
+									exitTo16 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															exitTo16 = 2
+															break
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													end
+												else
+													exitTo16 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo16 == 1 then
+										exitTo17 = 1
+										break
+									elseif exitTo16 == 2 then
+										continue
+									end
+
+									break
+								end
+
+								if exitTo17 == 1 then
+									paragraph3 = paragraph
+									setDesc2 = paragraph.SetDesc
+
+									while true do
+										setDesc2(paragraph3, str)
+										exitTo9 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																if GetWP("Cursed Dual Katana") then
+																	paragraph:SetDesc("Quest Numbers : CDK done!!")
+																	continue
+																end
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+															continue
+														end
+
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													else
+														exitTo9 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo9 == 1 then
+											paragraph3 = paragraph
+											setDesc2 = paragraph.SetDesc
+											continue
+										end
+
+										break
+									end
+								end
+							elseif exitTo27 == 2 then
+								paragraph5 = paragraph
+								setDesc4 = paragraph.SetDesc
+
+								while true do
+									setDesc4(paragraph5, str)
+									exitTo15 = nil
+
+									while wait(0.2) do
+										if QuestYama_1 ~= true then
+											if QuestYama_2 ~= true then
+												if QuestYama_3 ~= true then
+													if QuestTushita_1 ~= true then
+														if QuestTushita_2 ~= true then
+															exitTo15 = 2
+															break
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 2")
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : tushita quest 1")
+													end
+												else
+													exitTo15 = 1
+													break
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 2")
+											end
+										else
+											paragraph:SetDesc("Quest Numbers : yama quest 1")
+										end
+									end
+
+									if exitTo15 == 1 then
+										paragraph5 = paragraph
+										setDesc4 = paragraph.SetDesc
+										continue
+									end
+
+									break
+								end
+
+								if exitTo15 == 2 then
+									exitTo17 = nil
+
+									while true do
+										if GetWP("Cursed Dual Katana") then
+											paragraph:SetDesc("Quest Numbers : CDK done!!")
+										end
+
+										exitTo16 = nil
+
+										while wait(0.2) do
+											if QuestYama_1 ~= true then
+												if QuestYama_2 ~= true then
+													if QuestYama_3 ~= true then
+														if QuestTushita_1 ~= true then
+															if QuestTushita_2 ~= true then
+																exitTo16 = 2
+																break
+															else
+																paragraph:SetDesc("Quest Numbers : tushita quest 2")
+															end
+														else
+															paragraph:SetDesc("Quest Numbers : tushita quest 1")
+														end
+													else
+														exitTo16 = 1
+														break
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 2")
+												end
+											else
+												paragraph:SetDesc("Quest Numbers : yama quest 1")
+											end
+										end
+
+										if exitTo16 == 1 then
+											exitTo17 = 1
+											break
+										elseif exitTo16 == 2 then
+											continue
+										end
+
+										break
+									end
+
+									if exitTo17 == 1 then
+										paragraph3 = paragraph
+										setDesc2 = paragraph.SetDesc
+
+										while true do
+											setDesc2(paragraph3, str)
+											exitTo9 = nil
+
+											while wait(0.2) do
+												if QuestYama_1 ~= true then
+													if QuestYama_2 ~= true then
+														if QuestYama_3 ~= true then
+															if QuestTushita_1 ~= true then
+																if QuestTushita_2 ~= true then
+																	if GetWP("Cursed Dual Katana") then
+																		paragraph:SetDesc("Quest Numbers : CDK done!!")
+																		continue
+																	end
+																	continue
+																end
+
+																paragraph:SetDesc("Quest Numbers : tushita quest 2")
+																continue
+															end
+
+															paragraph:SetDesc("Quest Numbers : tushita quest 1")
+														else
+															exitTo9 = 1
+															break
+														end
+													else
+														paragraph:SetDesc("Quest Numbers : yama quest 2")
+													end
+												else
+													paragraph:SetDesc("Quest Numbers : yama quest 1")
+												end
+											end
+
+											if exitTo9 == 1 then
+												paragraph3 = paragraph
+												setDesc2 = paragraph.SetDesc
+												continue
+											end
+
+											break
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
 		end
 	end
-})
---@1 1:1,37:28479
-Tab5:AddSection("Cursed Dual Katana")
---@1 1:1,37:28479
-Tab5:AddParagraph("Number Cursed dual katana quests", "Quest Numbers :")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 170:31799
-	wait(0.2)
 end)
---@1 1:1,37:28479
-_G.CDK = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+Q = tbl.Quests:AddToggle({
 	Name = "Auto Get CDK [ Last Quest ]",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg174)
-		if state then
-			_G.CDK = state
-		end
-	end
+	Callback = function(cdk)
+		_G.CDK = cdk
+	end,
 })
---@1 1:1,37:28479
-_G.CDK_YM = false
---@10 1:1,37:28479
-Tab5:AddToggle({
-	Name = "Auto Yama CDK",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg176)
-		if state then
-			_G.CDK_YM = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.CDK_TS = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+do
+	local n23 = nil
+	local n24 = nil
+
+	Q = tbl.Quests:AddToggle({
+		Name = "Auto Yama CDK",
+		Description = "",
+		Default = false,
+		Callback = function(cdkYm)
+			n23 = 143161327
+			n24 = 91789391
+			_G.CDK_YM = cdkYm
+		end,
+	})
+end
+
+Q = tbl.Quests:AddToggle({
 	Name = "Auto Tushita CDK",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg178)
-		if state then
-			_G.CDK_TS = state
-		end
-	end
+	Callback = function(cdkTs)
+		_G.CDK_TS = cdkTs
+	end,
 })
---@1 1:1,37:28479
-Tab5:AddSection("True Triple Katana Sword")
---@9 1:1,37:28479
-Tab5:AddButton({
+
+tbl.Quests:AddSection("True Triple Katana Sword")
+local n23 = nil
+
+tbl.Quests:AddButton({
 	Name = "Buy Legendary Sword",
 	Description = "",
-	Callback = function(state, arg180)
+	Callback = function()
+		n23 = 343759994
 		replicated.Remotes.CommF_:InvokeServer("LegendarySwordDealer", "1")
 		replicated.Remotes.CommF_:InvokeServer("LegendarySwordDealer", "2")
 		replicated.Remotes.CommF_:InvokeServer("LegendarySwordDealer", "3")
-	end
+	end,
 })
---@7 1:1,37:28479
-Tab5:AddButton({
+
+tbl.Quests:AddButton({
 	Name = "Buy True Triple Katana Sword",
 	Description = "",
-	Callback = function(state, arg182)
+	Callback = function()
 		replicated.Remotes.CommF_:InvokeServer("MysteriousMan", "2")
-	end
+	end,
 })
---@1 1:1,37:28479
-_G.Tp_LgS = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+Q = tbl.Quests:AddToggle({
 	Name = "Tween to Legendary Sword Dealer",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg184)
-		if state then
-			_G.Tp_LgS = state
-		end
-	end
+	Callback = function(tpLgS)
+		_G.Tp_LgS = tpLgS
+	end,
 })
---@1 1:1,37:28479
-Tab5:AddSection("Pole / God Enal's")
---@1 1:1,37:28479
-_G.AutoPole = false
---@10 1:1,37:28479
-Tab5:AddToggle({
-	Name = "Auto Pole V1",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg186)
-		if state then
-			_G.AutoPole = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.AutoPoleV2 = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+tbl.Quests:AddSection("Pole / God Enal's")
+
+do
+	local n24 = nil
+	local n25 = nil
+
+	Q = tbl.Quests:AddToggle({
+		Name = "Auto Pole V1",
+		Description = "",
+		Default = false,
+		Callback = function(autoPole)
+			n24 = 518763879
+			n25 = 899140058
+			_G.AutoPole = autoPole
+		end,
+	})
+end
+
+Q = tbl.Quests:AddToggle({
 	Name = "Auto Pole V2 [Beta]",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg188)
-		if state then
-			_G.AutoPoleV2 = state
-		end
-	end
+	Callback = function(autoPoleV2)
+		_G.AutoPoleV2 = autoPoleV2
+	end,
 })
---@1 1:1,37:28479
-_G.AutoSaw = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+tbl.Quests:AddToggle({
 	Name = "Auto Saw Sword",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg190)
-		if state then
-			_G.AutoSaw = state
-		end
-	end
+	Callback = function(autoSaw)
+		_G.AutoSaw = autoSaw
+	end,
 })
---@1 1:1,37:28479
-_G.AutoSaber = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+Q = tbl.Quests:AddToggle({
 	Name = "Auto Saber Sword",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg192)
-		if state then
-			_G.AutoSaber = state
-		end
-	end
+	Callback = function(autoSaber)
+		_G.AutoSaber = autoSaber
+	end,
 })
---@1 1:1,37:28479
-_G.AutoColShad = false
---@10 1:1,37:28479
-Tab5:AddToggle({
-	Name = "Auto Cybrog",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg194)
-		if state then
-			_G.AutoColShad = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.AutoGetUsoap = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+do
+	local n24 = nil
+	local n25 = nil
+
+	Q = tbl.Quests:AddToggle({
+		Name = "Auto Cybrog",
+		Description = "",
+		Default = false,
+		Callback = function(autoColShad)
+			n24 = 572522368
+			n25 = 123936271
+			_G.AutoColShad = autoColShad
+		end,
+	})
+end
+
+Q = tbl.Quests:AddToggle({
 	Name = "Auto Usoap's Hat",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg196)
-		if state then
-			_G.AutoGetUsoap = state
-		end
-	end
+	Callback = function(autoGetUsoap)
+		_G.AutoGetUsoap = autoGetUsoap
+	end,
 })
---@1 1:1,37:28479
-_G.Greybeard = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+Q = tbl.Quests:AddToggle({
 	Name = "Auto Bisento V2",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg198)
-		if state then
-			_G.Greybeard = state
-		end
-	end
+	Callback = function(greybeard)
+		_G.Greybeard = greybeard
+	end,
 })
---@1 1:1,37:28479
-_G.WardenBoss = false
---@10 1:1,37:28479
-Tab5:AddToggle({
-	Name = "Auto Warden Sword",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg200)
-		if state then
-			_G.WardenBoss = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.MarinesCoat = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+do
+	local n24 = nil
+	local n25 = nil
+
+	Q = tbl.Quests:AddToggle({
+		Name = "Auto Warden Sword",
+		Description = "",
+		Default = false,
+		Callback = function(wardenBoss)
+			n24 = 854853774
+			n25 = 180317805
+			_G.WardenBoss = wardenBoss
+		end,
+	})
+end
+
+Q = tbl.Quests:AddToggle({
 	Name = "Auto Marine Coat",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg202)
-		if state then
-			_G.MarinesCoat = state
-		end
-	end
+	Callback = function(marinesCoat)
+		_G.MarinesCoat = marinesCoat
+	end,
 })
---@1 1:1,37:28479
-_G.SwanCoat = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+local n24 = nil
+
+Q = tbl.Quests:AddToggle({
 	Name = "Auto Swan Coat",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg204)
-		if state then
-			_G.SwanCoat = state
-		end
-	end
+	Callback = function(swanCoat)
+		n24 = 210348888
+		_G.SwanCoat = swanCoat
+	end,
 })
---@1 1:1,37:28479
-Tab5:AddSection("Rengoku Sword")
---@1 1:1,37:28479
-_G.IceBossRen = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+tbl.Quests:AddSection("Rengoku Sword")
+
+Q = tbl.Quests:AddToggle({
 	Name = "Auto Rengoku Sword",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg206)
-		if state then
-			_G.IceBossRen = state
-		end
-	end
+	Callback = function(iceBossRen)
+		_G.IceBossRen = iceBossRen
+	end,
 })
---@1 1:1,37:28479
-_G.KeysRen = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+Q = tbl.Quests:AddToggle({
 	Name = "Auto Key Rengoku",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg208)
-		if state then
-			_G.KeysRen = state
-		end
-	end
+	Callback = function(keysRen)
+		_G.KeysRen = keysRen
+	end,
 })
---@1 1:1,37:28479
-_G.AutoTridentW2 = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+Q = tbl.Quests:AddToggle({
 	Name = "Auto Dragon Trident",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg210)
-		if state then
-			_G.AutoTridentW2 = state
-		end
-	end
+	Callback = function(autoTridentW2)
+		_G.AutoTridentW2 = autoTridentW2
+	end,
 })
---@1 1:1,37:28479
-_G.LongsWord = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+local n25 = nil
+
+-- This Source Was Generated by discord.gg/c3xVMnUUBv
+Q = tbl.Quests:AddToggle({
 	Name = "Auto Long Sword",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg212)
-		if state then
-			_G.LongsWord = state
-		end
-	end
+	Callback = function(longsWord)
+		n25 = 494440262
+		_G.LongsWord = longsWord
+	end,
 })
---@1 1:1,37:28479
-_G.BlackSpikey = false
---@10 1:1,37:28479
-Tab5:AddToggle({
-	Name = "Auto Black Spikey",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg214)
-		if state then
-			_G.BlackSpikey = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.DarkBladev3 = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+do
+	local n26 = nil
+	local n27 = nil
+
+	Q = tbl.Quests:AddToggle({
+		Name = "Auto Black Spikey",
+		Description = "",
+		Default = false,
+		Callback = function(blackSpikey)
+			n26 = 494312787
+			n27 = 302639079
+			_G.BlackSpikey = blackSpikey
+		end,
+	})
+end
+
+Q = tbl.Quests:AddToggle({
 	Name = "Auto Dark Blade V3",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg216)
-		if state then
-			_G.DarkBladev3 = state
-		end
-	end
+	Callback = function(darkBladev3)
+		_G.DarkBladev3 = darkBladev3
+	end,
 })
---@1 1:1,37:28479
-_G.AutoEcBoss = false
---@10 1:1,37:28479
-Tab5:AddToggle({
-	Name = "Auto Midnight Blade",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg218)
-		if state then
-			_G.AutoEcBoss = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.Auto_Def_DarkCoat = false
---@10 1:1,37:28479
-Tab5:AddToggle({
-	Name = "Auto Darkbeard",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg220)
-		if state then
-			_G.Auto_Def_DarkCoat = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.Auto_DonAcces = false
---@10 1:1,37:28479
-Tab5:AddToggle({
-	Name = "Auto Unlocked DonSwan",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg222)
-		if state then
-			_G.Auto_DonAcces = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.Auto_SwanGG = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+do
+	local n26 = nil
+	local n27 = nil
+
+	Q = tbl.Quests:AddToggle({
+		Name = "Auto Midnight Blade",
+		Description = "",
+		Default = false,
+		Callback = function(autoEcBoss)
+			n26 = 243262003
+			n27 = 815179469
+			_G.AutoEcBoss = autoEcBoss
+		end,
+	})
+end
+
+do
+	local n26 = nil
+	local n27 = nil
+
+	Q = tbl.Quests:AddToggle({
+		Name = "Auto Darkbeard",
+		Description = "",
+		Default = false,
+		Callback = function(autoDefDarkCoat)
+			n26 = 339454072
+			n27 = 740611486
+			_G.Auto_Def_DarkCoat = autoDefDarkCoat
+		end,
+	})
+end
+
+do
+	local n26 = nil
+	local n27 = nil
+
+	Q = tbl.Quests:AddToggle({
+		Name = "Auto Unlocked DonSwan",
+		Description = "",
+		Default = false,
+		Callback = function(autoDonAcces)
+			n26 = 547968898
+			n27 = 221499729
+			_G.Auto_DonAcces = autoDonAcces
+		end,
+	})
+end
+
+Q = tbl.Quests:AddToggle({
 	Name = "Auto Swan Glasses",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg224)
-		if state then
-			_G.Auto_SwanGG = state
-		end
-	end
+	Callback = function(autoSwanGG)
+		_G.Auto_SwanGG = autoSwanGG
+	end,
 })
---@1 1:1,37:28479
-Tab5:AddSection("Cavender + Twin Hooks + Bigmom")
---@1 1:1,37:28479
-_G.AutoBigmom = false
---@10 1:1,37:28479
-Tab5:AddToggle({
-	Name = "Auto Bigmom",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg226)
-		if state then
-			_G.AutoBigmom = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.Auto_Cavender = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+tbl.Quests:AddSection("Cavender + Twin Hooks + Bigmom")
+
+do
+	local n26 = nil
+	local n27 = nil
+
+	Q = tbl.Quests:AddToggle({
+		Name = "Auto Bigmom",
+		Description = "",
+		Default = false,
+		Callback = function(autoBigmom)
+			n26 = 775857844
+			n27 = 781029094
+			_G.AutoBigmom = autoBigmom
+		end,
+	})
+end
+
+Q = tbl.Quests:AddToggle({
 	Name = "Auto Canvendish Sword",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg228)
-		if state then
-			_G.Auto_Cavender = state
-		end
-	end
+	Callback = function(autoCavender)
+		_G.Auto_Cavender = autoCavender
+	end,
 })
---@1 1:1,37:28479
-_G.TwinHook = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+Q = tbl.Quests:AddToggle({
 	Name = "Auto Twin Hooks",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg230)
-		if state then
-			_G.TwinHook = state
-		end
-	end
+	Callback = function(twinHook)
+		_G.TwinHook = twinHook
+	end,
 })
---@1 1:1,37:28479
-_G.AutoSerpentBow = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+Q = tbl.Quests:AddToggle({
 	Name = "Auto Serpent Bow",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg232)
-		if state then
-			_G.AutoSerpentBow = state
-		end
-	end
+	Callback = function(autoSerpentBow)
+		_G.AutoSerpentBow = autoSerpentBow
+	end,
 })
---@1 1:1,37:28479
-_G.AutoKilo = false
---@10 1:1,37:28479
-Tab5:AddToggle({
-	Name = "Auto Lei Accessory",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg234)
-		if state then
-			_G.AutoKilo = state
-		end
-	end
-})
---@1 1:1,37:28479
-Tab5:AddSection("Buso/Aura Colours")
---@1 1:1,37:28479
-_G.Tp_MasterA = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+do
+	local n26 = nil
+	local n27 = nil
+
+	Q = tbl.Quests:AddToggle({
+		Name = "Auto Lei Accessory",
+		Description = "",
+		Default = false,
+		Callback = function(autoKilo)
+			n26 = 467614460
+			n27 = 441689955
+			_G.AutoKilo = autoKilo
+		end,
+	})
+end
+
+tbl.Quests:AddSection("Buso/Aura Colours")
+
+Q = tbl.Quests:AddToggle({
 	Name = "Auto Teleport Barista Cousin",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg236)
-		if state then
-			_G.Tp_MasterA = state
-		end
-	end
+	Callback = function(tpMasterA)
+		_G.Tp_MasterA = tpMasterA
+	end,
 })
---@7 1:1,37:28479
-Tab5:AddButton({
+
+local n26 = nil
+
+tbl.Quests:AddButton({
 	Name = "Buy Buso Colors",
 	Description = "",
-	Callback = function(state, arg238)
+	Callback = function()
+		n26 = 700989614
 		replicated.Remotes.CommF_:InvokeServer("ColorsDealer", "2")
-	end
+	end,
 })
---@1 1:1,37:28479
-_G.Auto_Rainbow_Haki = false
---@10 1:1,37:28479
-Tab5:AddToggle({
-	Name = "Auto Rainbow Colors",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg240)
-		if state then
-			_G.Auto_Rainbow_Haki = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.GetQFast = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+do
+	local n27 = nil
+	local n28 = nil
+
+	Q = tbl.Quests:AddToggle({
+		Name = "Auto Rainbow Colors",
+		Description = "",
+		Default = false,
+		Callback = function(autoRainbowHaki)
+			n27 = 1060425011
+			n28 = 960757799
+			_G.Auto_Rainbow_Haki = autoRainbowHaki
+		end,
+	})
+end
+
+local n27 = nil
+
+Q = tbl.Quests:AddToggle({
 	Name = "Accept Rainbow Quest Faster",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg242)
-		if state then
-			_G.GetQFast = state
-		end
-	end
+	Callback = function(getQFast)
+		n27 = 883354946
+		_G.GetQFast = getQFast
+	end,
 })
---@1 1:1,37:28479
-Tab5:AddSection("Instinct / Observation")
---@1 1:1,37:28479
-_G.obsFarm = false
---@10 1:1,37:28479
-Tab5:AddToggle({
-	Name = "Auto Farm Observation",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg244)
-		if state then
-			_G.obsFarm = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.AutoKenVTWO = false
---@10 1:1,37:28479
-Tab5:AddToggle({
-	Name = "Auto Observation V2",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg246)
-		if state then
-			_G.AutoKenVTWO = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.Bartilo_Quest = false
---@10 1:1,37:28479
-Tab5:AddToggle({
-	Name = "Auto Done Bartilo Quest",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg248)
-		if state then
-			_G.Bartilo_Quest = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.CitizenQuest = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+tbl.Quests:AddSection("Instinct / Observation")
+
+do
+	local n28 = nil
+	local n29 = nil
+
+	Q = tbl.Quests:AddToggle({
+		Name = "Auto Farm Observation",
+		Description = "",
+		Default = false,
+		Callback = function(obsFarm)
+			n28 = 718728732
+			n29 = 537539272
+			_G.obsFarm = obsFarm
+		end,
+	})
+end
+
+do
+	local n28 = nil
+	local n29 = nil
+
+	Q = tbl.Quests:AddToggle({
+		Name = "Auto Observation V2",
+		Description = "",
+		Default = false,
+		Callback = function(autoKenVTWO)
+			n28 = 383422226
+			n29 = 278487306
+			_G.AutoKenVTWO = autoKenVTWO
+		end,
+	})
+end
+
+do
+	local n28 = nil
+	local n29 = nil
+
+	Bartilo = tbl.Quests:AddToggle({
+		Name = "Auto Done Bartilo Quest",
+		Description = "",
+		Default = false,
+		Callback = function(bartiloQuest)
+			n28 = 651443665
+			n29 = 667672167
+			_G.Bartilo_Quest = bartiloQuest
+		end,
+	})
+end
+
+CitizenQ = tbl.Quests:AddToggle({
 	Name = "Auto Done Citizen Quest",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg250)
-		if state then
-			_G.CitizenQuest = state
-		end
-	end
+	Callback = function(citizenQuest)
+		_G.CitizenQuest = citizenQuest
+	end,
 })
---@1 1:1,37:28479
-_G.DummyMan = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+Q = tbl.Quests:AddToggle({
 	Name = "Auto Training Dummy",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg252)
-		if state then
-			_G.DummyMan = state
-		end
-	end
+	Callback = function(dummyMan)
+		_G.DummyMan = dummyMan
+	end,
 })
---@1 1:1,37:28479
-Tab5:AddSection("Fighting Melee Styles")
---@1 1:1,37:28479
-_G.Auto_SuperHuman = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+tbl.Quests:AddSection("Fighting Melee Styles")
+
+SuperHuman = tbl.Quests:AddToggle({
 	Name = "Auto Superhuman",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg254)
-		if state then
-			_G.Auto_SuperHuman = state
-		end
-	end
+	Callback = function(autoSuperHuman)
+		_G.Auto_SuperHuman = autoSuperHuman
+	end,
 })
---@1 1:1,37:28479
-_G.AutoDeathStep = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+DeathStep = tbl.Quests:AddToggle({
 	Name = "Auto DeathStep",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg256)
-		if state then
-			_G.AutoDeathStep = state
-		end
-	end
+	Callback = function(autoDeathStep)
+		_G.AutoDeathStep = autoDeathStep
+	end,
 })
---@1 1:1,37:28479
-_G.Auto_SharkMan_Karate = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+SharkManV2 = tbl.Quests:AddToggle({
 	Name = "Auto Sharkman Karate",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg258)
-		if state then
-			_G.Auto_SharkMan_Karate = state
-		end
-	end
+	Callback = function(autoSharkManKarate)
+		_G.Auto_SharkMan_Karate = autoSharkManKarate
+	end,
 })
---@1 1:1,37:28479
-_G.Auto_Electric_Claw = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+ElectricClaw = tbl.Quests:AddToggle({
 	Name = "Auto ElectricClaw",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg260)
-		if state then
-			_G.Auto_Electric_Claw = state
-		end
-	end
+	Callback = function(autoElectricClaw)
+		_G.Auto_Electric_Claw = autoElectricClaw
+	end,
 })
---@1 1:1,37:28479
-_G.AutoDragonTalon = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+local n28 = nil
+
+DragonTalon = tbl.Quests:AddToggle({
 	Name = "Auto DragonTalon",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg262)
-		if state then
-			_G.AutoDragonTalon = state
-		end
-	end
+	Callback = function(autoDragonTalon)
+		n28 = 173168126
+		_G.AutoDragonTalon = autoDragonTalon
+	end,
 })
---@1 1:1,37:28479
-_G.Auto_God_Human = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+Godhuman = tbl.Quests:AddToggle({
 	Name = "Auto Godhuman",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg264)
-		if state then
-			_G.Auto_God_Human = state
-		end
-	end
+	Callback = function(autoGodHuman)
+		_G.Auto_God_Human = autoGodHuman
+	end,
 })
---@1 1:1,37:28479
-_G.Snaguine = false
---@10 1:1,37:28479
-Tab5:AddToggle({
+
+SanguineArt = tbl.Quests:AddToggle({
 	Name = "Auto SanguineArt",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg266)
-		if state then
-			_G.Snaguine = state
-		end
-	end
+	Callback = function(snaguine)
+		_G.Snaguine = snaguine
+	end,
 })
---@1 1:1,37:28479
-Tab7:AddSection("Mystic Island / Full Moon")
---@1 1:1,37:28479
-Tab7:AddParagraph("FullMoon Status", "")
---@1 1:1,37:28479
-Tab7:AddParagraph("Mirage Island Status", "")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 218:32616
-	wait(0.2)
-end)
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 219:32631
-	wait(0.2)
-end)
---@1 1:1,37:28479
-_G.FindMirage = false
---@10 1:1,37:28479
-Tab7:AddToggle({
+
+tbl.Race:AddSection("Mystic Island / Full Moon")
+
+do
+	local fullMoonStatusParagraph = tbl.Race:AddParagraph("FullMoon Status", "")
+	local mirageIslandStatusParagraph = tbl.Race:AddParagraph("Mirage Island Status", "")
+	local n29 = nil
+	local n30 = nil
+
+	spawn(function()
+		n29 = 641748994
+		n30 = 920253683
+
+		if wait(0.2) then
+			local exitTo2, map
+
+			if workspace.Map:FindFirstChild("MysticIsland") then
+				local exitTo = nil
+
+				while true do
+					mirageIslandStatusParagraph:SetDesc("Mirage Island : True")
+
+					if wait(0.2) then
+						if not workspace.Map:FindFirstChild("MysticIsland") then
+							exitTo = 1
+							break
+						end
+					else
+						break
+					end
+				end
+
+				if exitTo == 1 then
+					while true do
+						local locations = workspace._WorldOrigin.Locations
+
+						if locations:FindFirstChild("Mirage Island") then
+							exitTo2 = nil
+
+							while true do
+								mirageIslandStatusParagraph:SetDesc("Mirage Island : True")
+
+								if wait(0.2) then
+									map = workspace.Map
+
+									if map:FindFirstChild("MysticIsland") then
+										continue
+									else
+										exitTo2 = 1
+										break
+									end
+								end
+
+								break
+							end
+
+							if exitTo2 == 1 then
+								continue
+							end
+							break
+						else
+							mirageIslandStatusParagraph:SetDesc("Mirage Island : False")
+
+							if wait(0.2) then
+								map = workspace.Map
+
+								if map:FindFirstChild("MysticIsland") then
+									exitTo2 = nil
+
+									while true do
+										mirageIslandStatusParagraph:SetDesc("Mirage Island : True")
+
+										if wait(0.2) then
+											map = workspace.Map
+
+											if map:FindFirstChild("MysticIsland") then
+												continue
+											else
+												exitTo2 = 1
+												break
+											end
+										end
+
+										break
+									end
+
+									if exitTo2 == 1 then
+										continue
+									end
+								else
+									continue
+								end
+							end
+
+							break
+						end
+					end
+				end
+			else
+				local exitTo3 = nil
+
+				while true do
+					if workspace._WorldOrigin.Locations:FindFirstChild("Mirage Island") then
+						exitTo3 = 1
+						break
+					else
+						mirageIslandStatusParagraph:SetDesc("Mirage Island : False")
+
+						if wait(0.2) then
+							if workspace.Map:FindFirstChild("MysticIsland") then
+								exitTo3 = 1
+								break
+							else
+								continue
+							end
+						end
+
+						break
+					end
+				end
+
+				if exitTo3 == 1 then
+					local exitTo4 = nil
+
+					while true do
+						mirageIslandStatusParagraph:SetDesc("Mirage Island : True")
+
+						if wait(0.2) then
+							map = workspace.Map
+
+							if map:FindFirstChild("MysticIsland") then
+								continue
+							else
+								exitTo4 = 1
+								break
+							end
+						end
+
+						break
+					end
+
+					if exitTo4 == 1 then
+						while true do
+							if workspace._WorldOrigin.Locations:FindFirstChild("Mirage Island") then
+								exitTo2 = nil
+
+								while true do
+									mirageIslandStatusParagraph:SetDesc("Mirage Island : True")
+
+									if wait(0.2) then
+										map = workspace.Map
+
+										if map:FindFirstChild("MysticIsland") then
+											continue
+										else
+											exitTo2 = 1
+											break
+										end
+									end
+
+									break
+								end
+
+								if exitTo2 == 1 then
+									continue
+								end
+								break
+							else
+								mirageIslandStatusParagraph:SetDesc("Mirage Island : False")
+
+								if wait(0.2) then
+									map = workspace.Map
+
+									if map:FindFirstChild("MysticIsland") then
+										exitTo2 = nil
+
+										while true do
+											mirageIslandStatusParagraph:SetDesc("Mirage Island : True")
+
+											if wait(0.2) then
+												map = workspace.Map
+
+												if map:FindFirstChild("MysticIsland") then
+													continue
+												else
+													exitTo2 = 1
+													break
+												end
+											end
+
+											break
+										end
+
+										if exitTo2 == 1 then
+											continue
+										end
+									else
+										continue
+									end
+								end
+
+								break
+							end
+						end
+					end
+				end
+			end
+		end
+	end)
+
+	local n31 = nil
+	local n32 = nil
+
+	spawn(function()
+		n31 = 533102104
+		n32 = 520867806
+
+		if wait(0.2) then
+			repeat
+				pcall(function()
+					local v2 = Getmoon()
+
+					if v2 ~= "http://www.roblox.com/asset/?id=9709135895" then
+						if v2 ~= "http://www.roblox.com/asset/?id=9709139597" then
+							if v2 ~= "http://www.roblox.com/asset/?id=9709143733" then
+								if v2 ~= "http://www.roblox.com/asset/?id=9709149052" then
+									if v2 ~= "http://www.roblox.com/asset/?id=9709149431" then
+										if v2 ~= "http://www.roblox.com/asset/?id=9709149680" then
+											if v2 ~= "http://www.roblox.com/asset/?id=9709150086" then
+												if v2 == "http://www.roblox.com/asset/?id=9709150401" then
+													fullMoonStatusParagraph:SetDesc("Moon : 7 / 8")
+												end
+											else
+												fullMoonStatusParagraph:SetDesc("Moon : 6 / 8")
+											end
+										else
+											fullMoonStatusParagraph:SetDesc("Moon : 5 / 8 [ Last Night ]")
+										end
+									else
+										fullMoonStatusParagraph:SetDesc("Moon : 4 / 8 [ Full Moon ]")
+									end
+								else
+									fullMoonStatusParagraph:SetDesc("Moon : 3 / 8 [ Next Night ]")
+								end
+							else
+								fullMoonStatusParagraph:SetDesc("Moon : 2 / 8")
+							end
+						else
+							fullMoonStatusParagraph:SetDesc("Moon : 1 / 8")
+						end
+					else
+						fullMoonStatusParagraph:SetDesc("Moon : 0 / 8")
+					end
+				end)
+			until not wait(0.2)
+		end
+	end)
+end
+
+local n29 = nil
+
+tbl.Race:AddToggle({
 	Name = "Auto Find Mirage Island",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg268)
-		if state then
-			_G.FindMirage = state
-		end
-	end
+	Callback = function(findMirage)
+		n29 = 85557401
+		_G.FindMirage = findMirage
+	end,
 })
---@15 1:1,37:28479
-Tab7:AddToggle({
+
+tbl.Race:AddToggle({
 	Name = "Esp Mirage Island",
 	Description = "",
 	Value = false,
-	Callback = function(state, arg270)
-		if state then
-			task.spawn(function(...)
-				UpdateIslandMirageESP()
-				task.wait(1)
+	Callback = function(arg)
+		MirageIslandESP = arg
+
+		if MirageIslandESP then
+			local v2, v3
+
+			task.spawn(function()
+				while MirageIslandESP do
+					if UpdateIslandMirageESP then
+						UpdateIslandMirageESP()
+					end
+
+					task.wait(1)
+				end
 			end)
-		else
+		elseif UpdateIslandMirageESP then
 			UpdateIslandMirageESP()
 		end
-	end
+	end,
 })
---@1 1:1,37:28479
-_G.AutoMysticIsland = false
---@10 1:1,37:28479
-Tab7:AddToggle({
+
+tbl.Race:AddToggle({
 	Name = "Auto Tween To Mirage Island",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg272)
-		if state then
-			_G.AutoMysticIsland = state
-		end
-	end
+	Callback = function(autoMysticIsland)
+		_G.AutoMysticIsland = autoMysticIsland
+	end,
 })
---@1 1:1,37:28479
-_G.HighestMirage = false
---@10 1:1,37:28479
-Tab7:AddToggle({
+
+tbl.Race:AddToggle({
 	Name = "Auto Tween To Highest Point",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg274)
-		if state then
-			_G.HighestMirage = state
-		end
-	end
+	Callback = function(highestMirage)
+		_G.HighestMirage = highestMirage
+	end,
 })
---@1 1:1,37:28479
-_G.TPGEAR = false
---@10 1:1,37:28479
-Tab7:AddToggle({
+
+tbl.Race:AddToggle({
 	Name = "Auto Collect Gear",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg276)
-		if state then
-			_G.TPGEAR = state
-		end
-	end
+	Callback = function(tpgear)
+		_G.TPGEAR = tpgear
+	end,
 })
---@1 1:1,37:28479
-_G.can = false
---@10 1:1,37:28479
-Tab7:AddToggle({
+
+tbl.Race:AddToggle({
 	Name = "Change Transparency can see",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg278)
-		if state then
-			_G.can = state
-		end
-	end
+	Callback = function(can)
+		_G.can = can
+	end,
 })
---@1 1:1,37:28479
-_G.Addealer = false
---@10 1:1,37:28479
-Tab7:AddToggle({
+
+local n30 = nil
+
+tbl.Race:AddToggle({
 	Name = "Auto Tween Advanced Fruit Dealer",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg280)
-		if state then
-			_G.Addealer = state
-		end
-	end
+	Callback = function(addealer)
+		n30 = 873991738
+		_G.Addealer = addealer
+	end,
 })
---@1 1:1,37:28479
-_G.FarmChestM = false
---@10 1:1,37:28479
-Tab7:AddToggle({
+
+tbl.Race:AddToggle({
 	Name = "Auto Collect Mirage Chest",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg282)
-		if state then
-			_G.FarmChestM = state
-		end
-	end
+	Callback = function(farmChestM)
+		_G.FarmChestM = farmChestM
+	end,
 })
---@33 1:1,37:28479
-Tab7:AddButton({
+
+tbl.Race:AddButton({
 	Name = "Talk With Stone",
 	Description = "",
-	Callback = function(state, arg284)
-		if state then
-			local Remotes = replicated:WaitForChild("Remotes")
-			local CommF_ = Remotes:WaitForChild("CommF_")
-			CommF_:InvokeServer("RaceV4Progress", "Begin")
-			local Remotes2 = replicated:WaitForChild("Remotes")
-			local CommF_2 = Remotes2:WaitForChild("CommF_")
-			CommF_2:InvokeServer("RaceV4Progress", "Check")
-			local Remotes3 = replicated:WaitForChild("Remotes")
-			local CommF_3 = Remotes3:WaitForChild("CommF_")
-			CommF_3:InvokeServer("RaceV4Progress", "Teleport")
-			local Remotes4 = replicated:WaitForChild("Remotes")
-			local CommF_4 = Remotes4:WaitForChild("CommF_")
-			CommF_4:InvokeServer("RaceV4Progress", "Continue")
-		else
-			local Remotes5 = replicated:WaitForChild("Remotes")
-			local CommF_5 = Remotes5:WaitForChild("CommF_")
-			CommF_5:InvokeServer("RaceV4Progress", "Begin")
-			local Remotes6 = replicated:WaitForChild("Remotes")
-			local CommF_6 = Remotes6:WaitForChild("CommF_")
-			CommF_6:InvokeServer("RaceV4Progress", "Check")
-			local Remotes7 = replicated:WaitForChild("Remotes")
-			local CommF_7 = Remotes7:WaitForChild("CommF_")
-			CommF_7:InvokeServer("RaceV4Progress", "Teleport")
-			local Remotes8 = replicated:WaitForChild("Remotes")
-			local CommF_8 = Remotes8:WaitForChild("CommF_")
-			CommF_8:InvokeServer("RaceV4Progress", "Continue")
-		end
-	end
+	Callback = function()
+		replicated:WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer("RaceV4Progress", "Begin")
+		replicated:WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer("RaceV4Progress", "Check")
+		replicated:WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer("RaceV4Progress", "Teleport")
+		replicated:WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer("RaceV4Progress", "Continue")
+	end,
 })
---@7 1:1,37:28479
-Tab7:AddToggle({
+
+tbl.Race:AddToggle({
 	Name = "Auto Look At Moon",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg286)
-	end
+	Callback = function(arg)
+		LookM = arg
+	end,
 })
---@7 1:1,37:28479
-Tab7:AddToggle({
+
+tbl.Race:AddToggle({
 	Name = "Look Moon + Auto V3",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg288)
-	end
+	Callback = function(arg)
+		LookMV3 = arg
+	end,
 })
---@1 1:1,37:28479
-Tab7:AddSection("Upgrade Races V2 And V3")
---@1 1:1,37:28479
-_G.Auto_Mink = false
---@10 1:1,37:28479
-Tab7:AddToggle({
+
+tbl.Race:AddSection("Upgrade Races V2 And V3")
+local n31 = nil
+
+RaceMink = tbl.Race:AddToggle({
 	Name = "Auto Upgrade Mink",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg290)
-		if state then
-			_G.Auto_Mink = state
-		end
-	end
+	Callback = function(autoMink)
+		n31 = 38028260
+		_G.Auto_Mink = autoMink
+	end,
 })
---@1 1:1,37:28479
-_G.Auto_Human = false
---@10 1:1,37:28479
-Tab7:AddToggle({
+
+RaceHuman = tbl.Race:AddToggle({
 	Name = "Auto Upgrade Human",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg292)
-		if state then
-			_G.Auto_Human = state
-		end
-	end
+	Callback = function(autoHuman)
+		_G.Auto_Human = autoHuman
+	end,
 })
---@1 1:1,37:28479
-_G.Auto_Skypiea = false
---@10 1:1,37:28479
-Tab7:AddToggle({
+
+RaceSky = tbl.Race:AddToggle({
 	Name = "Auto Upgrade Angel",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg294)
-		if state then
-			_G.Auto_Skypiea = state
-		end
-	end
+	Callback = function(autoSkypiea)
+		_G.Auto_Skypiea = autoSkypiea
+	end,
 })
---@1 1:1,37:28479
-_G.Auto_Fish = false
---@10 1:1,37:28479
-Tab7:AddToggle({
+
+RaceFish = tbl.Race:AddToggle({
 	Name = "Auto Upgrade FishMan",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg296)
-		if state then
-			_G.Auto_Fish = state
-		end
-	end
+	Callback = function(autoFish)
+		_G.Auto_Fish = autoFish
+	end,
 })
---@1 1:1,37:28479
-Tab7:AddSection("Trials Quest V4")
---@1 1:1,37:28479
-Tab7:AddParagraph("Tiers V4 Status", "")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 236:32921,237:32933
-	wait(0.2)
+
+tbl.Race:AddSection("Trials Quest V4")
+local tiersV4StatusParagraph = tbl.Race:AddParagraph("Tiers V4 Status", "")
+
+spawn(function()
+	local n32 = nil
+
+	pcall(function()
+		n32 = 192101871
+
+		if wait(0.2) then
+			local tiersV4StatusParagraph2 = tiersV4StatusParagraph
+			local setDesc = tiersV4StatusParagraph.SetDesc
+			local str = " " .. plr.Data.Race.C.Value
+
+			while true do
+				setDesc(tiersV4StatusParagraph2, "Tiers - V4 : " .. str)
+
+				if wait(0.2) then
+					tiersV4StatusParagraph2 = tiersV4StatusParagraph
+					setDesc = tiersV4StatusParagraph.SetDesc
+					str = " " .. plr.Data.Race.C.Value
+				else
+					break
+				end
+			end
+		end
+	end)
 end)
---@1 1:1,37:28479
-_G.Lver = false
---@10 1:1,37:28479
-Tab7:AddToggle({
+
+PullLv = tbl.Race:AddToggle({
 	Name = "Auto Pull Lever",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg298)
-		if state then
-			_G.Lver = state
-		end
-	end
+	Callback = function(lver)
+		_G.Lver = lver
+	end,
 })
---@1 1:1,37:28479
-_G.AcientOne = false
---@10 1:1,37:28479
-Tab7:AddToggle({
+
+local n32 = nil
+
+Train = tbl.Race:AddToggle({
 	Name = "Auto Train V4",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg300)
-		if state then
-			_G.AcientOne = state
-		end
-	end
+	Callback = function(acientOne)
+		n32 = 617148653
+		_G.AcientOne = acientOne
+	end,
 })
---@14 1:1,37:28479
-Tab7:AddButton({
-	Name = "Teleport to Temple of Time",
-	Description = "",
-	Callback = function(state, arg302)
-		if state then
-			local HumanoidRootPart = Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-			HumanoidRootPart.CFrame = CFrame.new(28286.35546875, 14895.3017578125, 102.62469482421875)
-		else
-			local HumanoidRootPart2 = Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-			HumanoidRootPart2.CFrame = CFrame.new(28286.35546875, 14895.3017578125, 102.62469482421875)
-		end
-		workspace.Map:FindFirstChild("Temple of Time")
-	end
-})
---@15 1:1,37:28479
-Tab7:AddButton({
+
+do
+	local n33 = nil
+	local n34 = nil
+
+	tbl.Race:AddButton({
+		Name = "Teleport to Temple of Time",
+		Description = "",
+		Callback = function()
+			n33 = 390815948
+			n34 = 160105193
+			local localPlayer = game:GetService("Players").LocalPlayer
+			local character = localPlayer.Character
+
+			if character then
+				character = localPlayer.Character:FindFirstChild("HumanoidRootPart")
+			end
+
+			if character then
+				character.CFrame = CFrame.new(28286.35546875, 14895.3017578125, 102.62469482421875)
+			end
+
+			if not game:GetService("Workspace").Map:FindFirstChild("Temple of Time") and World3 then
+				local mapStash = game:GetService("ReplicatedStorage"):FindFirstChild("MapStash")
+
+				if mapStash and mapStash:FindFirstChild("Temple of Time") then
+					mapStash["Temple of Time"].Parent = workspace.Map
+				end
+			end
+		end,
+	})
+end
+
+tbl.Race:AddButton({
 	Name = "Teleport to Ancient One",
 	Description = "",
-	Callback = function(state, arg304)
-		if state then
-			local HumanoidRootPart3 = Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-			HumanoidRootPart3.CFrame = CFrame.new(28286.35546875, 14895.3017578125, 102.62469482421875)
-		else
-			local HumanoidRootPart4 = Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-			HumanoidRootPart4.CFrame = CFrame.new(28286.35546875, 14895.3017578125, 102.62469482421875)
+	Callback = function()
+		local localPlayer = game:GetService("Players").LocalPlayer
+
+		if localPlayer.Character then
+			local humanoidRootPart = localPlayer.Character:FindFirstChild("HumanoidRootPart")
+
+			if humanoidRootPart then
+				humanoidRootPart.CFrame = CFrame.new(28286.35546875, 14895.3017578125, 102.62469482421875)
+			end
 		end
-		workspace.Map:FindFirstChild("Temple of Time")
+
+		if not game:GetService("Workspace").Map:FindFirstChild("Temple of Time") and World3 then
+			local mapStash = game:GetService("ReplicatedStorage"):FindFirstChild("MapStash")
+
+			if mapStash and mapStash:FindFirstChild("Temple of Time") then
+				mapStash["Temple of Time"].Parent = workspace.Map
+			end
+		end
+
 		task.wait(2)
-	end
+		tween(CFrame.new(28981.552734375, 14888.4267578125, -120.245849609375))
+	end,
 })
---@16 1:1,37:28479
-Tab7:AddButton({
+
+tbl.Race:AddButton({
 	Name = "Teleport to Ancient Clock",
 	Description = "",
-	Callback = function(state, arg306)
-		if state then
-			local HumanoidRootPart5 = Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-			HumanoidRootPart5.CFrame = CFrame.new(28286.35546875, 14895.3017578125, 102.62469482421875)
-		else
-			local HumanoidRootPart6 = Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-			HumanoidRootPart6.CFrame = CFrame.new(28286.35546875, 14895.3017578125, 102.62469482421875)
+	Callback = function()
+		local localPlayer = game:GetService("Players").LocalPlayer
+		local character = localPlayer.Character
+
+		if character then
+			character = localPlayer.Character:FindFirstChild("HumanoidRootPart")
 		end
-		task.delay(2, function(...)
+
+		local cframe = CFrame.new(28286.35546875, 14895.3017578125, 102.62469482421875)
+		local cframe2 = CFrame.new(29549, 15069, -88)
+
+		if character then
+			character.CFrame = cframe
+		end
+
+		local n33 = nil
+		local n34 = nil
+		local v2, v3
+
+		task.delay(2, function()
+			n33 = 73256290
+			n34 = 435775731
+			_tp(cframe2)
 		end)
-		workspace.Map:FindFirstChild("Temple of Time")
-	end
-})
---@1 1:1,37:28479
-_G.TPDoor = false
---@10 1:1,37:28479
-Tab7:AddToggle({
-	Name = "Auto Teleport to Race Doors",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg308)
-		if state then
-			_G.TPDoor = state
+
+		if not workspace.Map:FindFirstChild("Temple of Time") and World3 then
+			local mapStash = game:GetService("ReplicatedStorage"):FindFirstChild("MapStash")
+
+			if mapStash and mapStash:FindFirstChild("Temple of Time") then
+				mapStash["Temple of Time"].Parent = workspace.Map
+			end
 		end
-	end
+	end,
 })
---@1 1:1,37:28479
-_G.Complete_Trials = false
---@10 1:1,37:28479
-Tab7:AddToggle({
-	Name = "Auto Complete Trial Race",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg310)
-		if state then
-			_G.Complete_Trials = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.Defeating = false
---@10 1:1,37:28479
-Tab7:AddToggle({
+
+do
+	local n33 = nil
+	local n34 = nil
+
+	Doors = tbl.Race:AddToggle({
+		Name = "Auto Teleport to Race Doors",
+		Description = "",
+		Default = false,
+		Callback = function(tpDoor)
+			n33 = 1058545742
+			n34 = 9277180
+			_G.TPDoor = tpDoor
+		end,
+	})
+end
+
+do
+	local n33 = nil
+	local n34 = nil
+
+	Trials = tbl.Race:AddToggle({
+		Name = "Auto Complete Trial Race",
+		Description = "",
+		Default = false,
+		Callback = function(completeTrials)
+			n33 = 198970564
+			n34 = 200465144
+			_G.Complete_Trials = completeTrials
+		end,
+	})
+end
+
+AutoKill = tbl.Race:AddToggle({
 	Name = "Auto Kill Player After Trial",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg312)
-		if state then
-			_G.Defeating = state
-		end
-	end
+	Callback = function(defeating)
+		_G.Defeating = defeating
+	end,
 })
---@1 1:1,37:28479
-Tab8:AddSection("Dojo Quest")
---@7 1:1,37:28479
-Tab8:AddButton({
+
+tbl.Prehistoric:AddSection("Dojo Quest")
+
+tbl.Prehistoric:AddButton({
 	Title = "Teleport To Dragon Dojo",
-	Callback = function(state, arg314)
-		ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(5661.5322265625, 1013.0907592773438, -334.96499633789062))
+	Callback = function()
+		game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(5661.5322265625, 1013.0907592773438, -334.96499633789062))
 		_tp(CFrame.new(5814.42724609375, 1208.3267822265625, 884.57855224609375))
-	end
+	end,
 })
---@1 1:1,37:28479
-_G.Dojoo = false
---@10 1:1,37:28479
-Tab8:AddToggle({
+
+DojoQ = tbl.Prehistoric:AddToggle({
 	Name = "Auto Dojo Trainer",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg316)
-		if state then
-			_G.Dojoo = state
-		end
-	end
+	Callback = function(dojoo)
+		_G.Dojoo = dojoo
+	end,
 })
---@1 1:1,37:28479
-_G.FarmBlazeEM = false
---@10 1:1,37:28479
-Tab8:AddToggle({
+
+BlazeEM = tbl.Prehistoric:AddToggle({
 	Name = "Auto Dragon Hunter",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg318)
-		if state then
-			_G.FarmBlazeEM = state
-		end
-	end
+	Callback = function(farmBlazeEM)
+		_G.FarmBlazeEM = farmBlazeEM
+	end,
 })
---@1 1:1,37:28479
-Tab8:AddSection("Drago Trial")
---@1 1:1,37:28479
-_G.UPGDrago = false
---@10 1:1,37:28479
-Tab8:AddToggle({
+
+tbl.Prehistoric:AddSection("Drago Trial")
+local n33 = nil
+
+Toggle = tbl.Prehistoric:AddToggle({
 	Name = "Tween To Upgrade Droco Trial",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg320)
-		if state then
-			_G.UPGDrago = state
-		end
-	end
+	Callback = function(upgDrago)
+		n33 = 723809490
+		_G.UPGDrago = upgDrago
+	end,
 })
---@1 1:1,37:28479
-_G.DragoV1 = false
---@10 1:1,37:28479
-Tab8:AddToggle({
+
+Toggle = tbl.Prehistoric:AddToggle({
 	Name = "Auto Drago (V1)",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg322)
-		if state then
-			_G.DragoV1 = state
-		end
-	end
+	Callback = function(dragoV1)
+		_G.DragoV1 = dragoV1
+	end,
 })
---@1 1:1,37:28479
-_G.AutoFireFlowers = false
---@10 1:1,37:28479
-Tab8:AddToggle({
+
+local n34 = nil
+
+fireflower = tbl.Prehistoric:AddToggle({
 	Name = "Auto Drago (V2)",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg324)
-		if state then
-			_G.AutoFireFlowers = state
-		end
-	end
+	Callback = function(autoFireFlowers)
+		n34 = 514249207
+		_G.AutoFireFlowers = autoFireFlowers
+	end,
 })
---@1 1:1,37:28479
-_G.DragoV3 = false
---@10 1:1,37:28479
-Tab8:AddToggle({
+
+Toggle = tbl.Prehistoric:AddToggle({
 	Name = "Auto Drago (V3)",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg326)
-		if state then
-			_G.DragoV3 = state
-		end
-	end
+	Callback = function(dragoV3)
+		_G.DragoV3 = dragoV3
+	end,
 })
---@1 1:1,37:28479
-_G.Relic123 = false
---@10 1:1,37:28479
-Tab8:AddToggle({
-	Name = "Auto Relic Drago Trial [Beta]",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg328)
-		if state then
-			_G.Relic123 = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.TrainDrago = false
---@10 1:1,37:28479
-Tab8:AddToggle({
+
+do
+	local n35 = nil
+	local n36 = nil
+
+	Toggle = tbl.Prehistoric:AddToggle({
+		Name = "Auto Relic Drago Trial [Beta]",
+		Description = "",
+		Default = false,
+		Callback = function(relic123)
+			n35 = 219756131
+			n36 = 1067843138
+			_G.Relic123 = relic123
+		end,
+	})
+end
+
+Toggle = tbl.Prehistoric:AddToggle({
 	Name = "Auto Train Drago v4",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg330)
-		if state then
-			_G.TrainDrago = state
-		end
-	end
+	Callback = function(trainDrago)
+		_G.TrainDrago = trainDrago
+	end,
 })
---@1 1:1,37:28479
-_G.TpDrago_Prehis = false
---@10 1:1,37:28479
-Tab8:AddToggle({
+
+dragoTpVolcano = tbl.Prehistoric:AddToggle({
 	Name = "Tween to Drago Trials",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg332)
-		if state then
-			_G.TpDrago_Prehis = state
-		end
-	end
+	Callback = function(tpDragoPrehis)
+		_G.TpDrago_Prehis = tpDragoPrehis
+	end,
 })
---@1 1:1,37:28479
-_G.BuyDrago = false
---@10 1:1,37:28479
-Tab8:AddToggle({
+
+bdrago = tbl.Prehistoric:AddToggle({
 	Name = "Swap Drago Race",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg334)
-		if state then
-			_G.BuyDrago = state
-		end
-	end
+	Callback = function(buyDrago)
+		_G.BuyDrago = buyDrago
+	end,
 })
---@1 1:1,37:28479
-_G.DT_Uzoth = false
---@10 1:1,37:28479
-Tab8:AddToggle({
+
+local n35 = nil
+
+UpTalon = tbl.Prehistoric:AddToggle({
 	Name = "Upgrade Dragon Talon With Uzoth",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg336)
-		if state then
-			_G.DT_Uzoth = state
-		end
-	end
+	Callback = function(dtUzoth)
+		n35 = 556765331
+		_G.DT_Uzoth = dtUzoth
+	end,
 })
---@1 1:1,37:28479
-Tab8:AddSection("Volcanic Crafting")
---@7 1:1,37:28479
-Tab8:AddButton({
+
+tbl.Prehistoric:AddSection("Volcanic Crafting")
+
+tbl.Prehistoric:AddButton({
 	Name = "Craft Dragonheart",
 	Description = "",
-	Callback = function(state, arg338)
-		ReplicatedStorage.Remotes.CommF_:InvokeServer("CraftItem", "Craft", "Dragonheart")
-	end
+	Callback = function()
+		game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack({ "CraftItem", "Craft", "Dragonheart" }))
+	end,
 })
---@7 1:1,37:28479
-Tab8:AddButton({
+
+local n36 = nil
+
+tbl.Prehistoric:AddButton({
 	Name = "Craft Dragonstorm",
 	Description = "",
-	Callback = function(state, arg340)
-		ReplicatedStorage.Remotes.CommF_:InvokeServer("CraftItem", "Craft", "Dragonstorm")
-	end
+	Callback = function()
+		n36 = 549158270
+		game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack({ "CraftItem", "Craft", "Dragonstorm" }))
+	end,
 })
---@6 1:1,37:28479
-Tab8:AddButton({
+
+local n37 = nil
+
+tbl.Prehistoric:AddButton({
 	Name = "Craft Dino Hood",
-	Callback = function(state, arg342)
-		ReplicatedStorage.Remotes.CommF_:InvokeServer("CraftItem", "Craft", "DinoHood")
-	end
+	Callback = function()
+		n37 = 371338808
+		game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack({ "CraftItem", "Craft", "DinoHood" }))
+	end,
 })
---@6 1:1,37:28479
-Tab8:AddButton({
-	Name = "Craft T-Rex Skull",
-	Callback = function(state, arg344)
-		ReplicatedStorage.Remotes.CommF_:InvokeServer("CraftItem", "Craft", "TRexSkull")
-	end
-})
---@1 1:1,37:28479
-Tab8:AddSection("Prehistoric Island")
---@1 1:1,37:28479
-Tab8:AddParagraph("Prehistoric Island Status", "")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 262:33442
-	wait(0.2)
-end)
---@6 1:1,37:28479
-Tab8:AddButton({
-	Name = "Craft Volcanic Magnet",
-	Callback = function(state, arg346)
-		ReplicatedStorage.Modules.Net["RF/Craft"]:InvokeServer("PossibleHardcode", "Volcanic Magnet")
-	end
-})
---@1 1:1,37:28479
-getgenv().AutoCraftVolcanic = false
---@9 1:1,37:28479
-Tab8:AddToggle({
-	Name = "Craft Volcanic Magnet",
-	Default = false,
-	Callback = function(state, arg348)
-		if state then
-			getgenv().AutoCraftVolcanic = state
+
+do
+	local n38 = nil
+	local n39 = nil
+
+	tbl.Prehistoric:AddButton({
+		Name = "Craft T-Rex Skull",
+		Callback = function()
+			n38 = 304729826
+			n39 = 732993717
+			game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack({ "CraftItem", "Craft", "TRexSkull" }))
+		end,
+	})
+end
+
+tbl.Prehistoric:AddSection("Prehistoric Island")
+
+do
+	local prehistoricIslandStatusParagraph = tbl.Prehistoric:AddParagraph("Prehistoric Island Status", "")
+	local n38 = nil
+
+	spawn(function()
+		n38 = 759512807
+
+		if wait(0.2) then
+			local exitTo = nil
+
+			while true do
+				if workspace.Map:FindFirstChild("PrehistoricIsland") then
+					prehistoricIslandStatusParagraph:SetDesc("Prehistoric Island : True")
+					if wait(0.2) then
+						continue
+					end
+					break
+				else
+					exitTo = 1
+					break
+				end
+			end
+
+			if exitTo == 1 then
+				while true do
+					local map
+
+					if not workspace._WorldOrigin.Locations:FindFirstChild("Prehistoric Island") then
+						prehistoricIslandStatusParagraph:SetDesc("Prehistoric Island : False")
+						if not wait(0.2) then
+							break
+						end
+						map = workspace.Map
+						if not map:FindFirstChild("PrehistoricIsland") then
+							continue
+						end
+					end
+
+					local exitTo2 = nil
+
+					while true do
+						prehistoricIslandStatusParagraph:SetDesc("Prehistoric Island : True")
+
+						if wait(0.2) then
+							map = workspace.Map
+
+							if map:FindFirstChild("PrehistoricIsland") then
+								continue
+							else
+								exitTo2 = 1
+								break
+							end
+						end
+
+						break
+					end
+
+					if exitTo2 == 1 then
+						continue
+					end
+					break
+				end
+			end
 		end
-	end
+	end)
+end
+
+tbl.Prehistoric:AddButton({
+	Name = "Craft Volcanic Magnet",
+	Callback = function()
+		game:GetService("ReplicatedStorage").Modules.Net["RF/Craft"]:InvokeServer("PossibleHardcode", "Volcanic Magnet")
+	end,
 })
---@14 1:1,37:28479
-Tab8:AddToggle({
+
+do
+	local n38 = nil
+	local n39 = nil
+
+	tbl.Prehistoric:AddToggle({
+		Name = "Craft Volcanic Magnet",
+		Default = false,
+		Callback = function(autoCraftVolcanic)
+			n38 = 709086280
+			n39 = 674131807
+			getgenv().AutoCraftVolcanic = autoCraftVolcanic
+		end,
+	})
+end
+
+tbl.Prehistoric:AddToggle({
 	Name = "Auto Find Prehistoric Island",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg350)
-		if state then
-			_G.Prehis_Find = state
-			PrehisUser.Find = state
-		else
-			_G.Prehis_Find = false
-			PrehisUser.Find = false
-		end
-	end
+	Callback = function(prehisFind)
+		_G.Prehis_Find = prehisFind
+		PrehisUser.Find = prehisFind
+	end,
 })
---@1 1:1,37:28479
-_G.AutoStartPrehistoric = false
---@9 1:1,37:28479
-Tab8:AddToggle({
+
+local n38 = nil
+
+tbl.Prehistoric:AddToggle({
 	Name = "Auto Start Prehistoric Event",
 	Default = false,
-	Callback = function(state, arg352)
-		if state then
-			_G.AutoStartPrehistoric = state
-		end
-	end
+	Callback = function(autoStartPrehistoric)
+		n38 = 820516957
+		_G.AutoStartPrehistoric = autoStartPrehistoric
+	end,
 })
---@14 1:1,37:28479
-Tab8:AddToggle({
-	Name = "Auto Patch Prehistoric Event",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg354)
-		if state then
-			_G.Prehis_Skills = state
-			PrehisUser.Skills = state
-		else
-			_G.Prehis_Skills = false
-			PrehisUser.Skills = false
-		end
-	end
-})
---@1 1:1,37:28479
-_G.KillAuraFull = false
---@10 1:1,37:28479
-Tab8:AddToggle({
+
+do
+	local n39 = nil
+	local n40 = nil
+
+	tbl.Prehistoric:AddToggle({
+		Name = "Auto Patch Prehistoric Event",
+		Description = "",
+		Default = false,
+		Callback = function(prehisSkills)
+			n39 = 291915262
+			n40 = 879200296
+			_G.Prehis_Skills = prehisSkills
+			PrehisUser.Skills = prehisSkills
+		end,
+	})
+end
+
+Kaura = tbl.Prehistoric:AddToggle({
 	Name = "Kill Aura",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg356)
-		if state then
-			_G.KillAuraFull = state
-		end
-	end
+	Callback = function(killAuraFull)
+		_G.KillAuraFull = killAuraFull
+	end,
 })
---@1 1:1,37:28479
-_G.Prehis_DB = false
---@10 1:1,37:28479
-Tab8:AddToggle({
+
+Vocan = tbl.Prehistoric:AddToggle({
 	Name = "Auto Collect Dino Bones",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg358)
-		if state then
-			_G.Prehis_DB = state
-		end
-	end
+	Callback = function(prehisDb)
+		_G.Prehis_DB = prehisDb
+	end,
 })
---@14 1:1,37:28479
-Tab8:AddToggle({
+
+local n39 = nil
+
+Vocan = tbl.Prehistoric:AddToggle({
 	Name = "Auto Collect Dragon Eggs",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg360)
-		if state then
-			_G.Prehis_DE = state
-			PrehisUser.DE = state
-		else
-			_G.Prehis_DE = false
-			PrehisUser.DE = false
-		end
-	end
+	Callback = function(prehisDe)
+		n39 = 663531001
+		_G.Prehis_DE = prehisDe
+		PrehisUser.DE = prehisDe
+	end,
 })
---@1 1:1,37:28479
-_G.ResetPH = false
---@10 1:1,37:28479
-Tab8:AddToggle({
+
+local n40 = nil
+
+Toggle = tbl.Prehistoric:AddToggle({
 	Name = "Auto Reset When Complete Volcano",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg362)
-		if state then
-			_G.ResetPH = state
-		end
-	end
+	Callback = function(resetPH)
+		n40 = 289674073
+		_G.ResetPH = resetPH
+	end,
 })
---@1 1:1,37:28479
-Tab6:AddSection("Sea Event / Setting Sail")
---@9 1:1,37:28479
-Tab6:AddButton({
+
+tbl.SeaEvent:AddSection("Sea Event / Setting Sail")
+
+tbl.SeaEvent:AddButton({
 	Name = "Remove Lighting Effect",
-	Callback = function(state, arg364)
-		if state then
-			local Lighting = game:GetService("Lighting")
-		end
-		Lighting.BaseAtmosphere:Destroy()
-	end
+	Callback = function()
+		game:GetService("Lighting").BaseAtmosphere:Destroy()
+	end,
 })
---@1 1:1,37:28479
-getgenv().SpeedBoat = false
---@9 1:1,37:28479
-Tab6:AddToggle({
+
+tbl.SeaEvent:AddToggle({
 	Name = "Ship Speed Modifier",
 	Default = false,
-	Callback = function(state, arg366)
-		if state then
-			getgenv().SpeedBoat = state
+	Callback = function(speedBoat)
+		getgenv().SpeedBoat = speedBoat
+	end,
+})
+
+local n41 = nil
+
+game:GetService("RunService").RenderStepped:Connect(function()
+	n41 = 455525191
+
+	if getgenv().SpeedBoat then
+		local localPlayer = game:GetService("Players").LocalPlayer
+
+		if localPlayer.Character and localPlayer.Character:FindFirstChild("Humanoid") and localPlayer.Character.Humanoid.Sit then
+			local v2, v3, v4 = pairs(game:GetService("Workspace").Boats:GetChildren())
+			local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v5, v32, v42, v52, v6, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v5, v32, v42, v52, v6, v7, v8, v9, v10) end end); co(); return co end)(v3, v4)
+
+			while true do
+				local v5 = table.pack(iter_z_1())
+
+				if not v5[1] then
+					break
+				else
+					local vehicleSeat = (v5[3]):FindFirstChildWhichIsA("VehicleSeat")
+
+					if vehicleSeat then
+						vehicleSeat.MaxSpeed = SetSpeedBoat
+					end
+				end
+			end
 		end
 	end
-})
---@2 1:1,37:28479
-RunService.RenderStepped:Connect(function(deltaTime)
 end)
---@9 1:1,37:28479
-Tab6:AddSlider({
+
+local n42 = nil
+
+tbl.SeaEvent:AddSlider({
 	Name = "Ship Speed",
-	Default = 300,
-	Increment = 1,
-	Max = 1000,
 	Min = 0,
-	Callback = function(state, arg368)
-	end
+	Max = 1000,
+	Increment = 1,
+	Default = 300,
+	Callback = function(arg)
+		n42 = 964619642
+		SetSpeedBoat = arg
+	end,
 })
---@1 1:1,37:28479
-getgenv().AutoPressW = false
---@9 1:1,37:28479
-Tab6:AddToggle({
-	Name = "Auto Press W",
-	Default = false,
-	Callback = function(state, arg370)
-		if state then
-			getgenv().AutoPressW = state
-		end
-	end
-})
---@1 1:1,37:28479
-getgenv().NoClipShip = false
---@9 1:1,37:28479
-Tab6:AddToggle({
+
+do
+	local n43 = nil
+	local n44 = nil
+
+	tbl.SeaEvent:AddToggle({
+		Name = "Auto Press W",
+		Default = false,
+		Callback = function(autoPressW)
+			n43 = 335137055
+			n44 = 685937935
+			getgenv().AutoPressW = autoPressW
+		end,
+	})
+end
+
+tbl.SeaEvent:AddToggle({
 	Name = "No Clip Ship",
 	Default = false,
-	Callback = function(state, arg372)
-		if state then
-			getgenv().NoClipShip = state
-		end
-	end
+	Callback = function(noClipShip)
+		getgenv().NoClipShip = noClipShip
+	end,
 })
---@1 1:1,37:28479
-Tab6:AddSection("Crafting Items")
---@7 1:1,37:28479
-Tab6:AddButton({
+
+tbl.SeaEvent:AddSection("Crafting Items")
+
+tbl.SeaEvent:AddButton({
 	Name = "Craft SharkTooth",
 	Description = "",
-	Callback = function(state, arg374)
-		ReplicatedStorage.Remotes.CommF_:InvokeServer("CraftItem", "Craft", "SharkTooth")
-	end
+	Callback = function()
+		game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack({ "CraftItem", "Craft", "SharkTooth" }))
+	end,
 })
---@7 1:1,37:28479
-Tab6:AddButton({
-	Name = "Craft TerrorJaw",
-	Description = "",
-	Callback = function(state, arg376)
-		ReplicatedStorage.Remotes.CommF_:InvokeServer("CraftItem", "Craft", "TerrorJaw")
-	end
-})
---@7 1:1,37:28479
-Tab6:AddButton({
+
+do
+	local n43 = nil
+	local n44 = nil
+
+	tbl.SeaEvent:AddButton({
+		Name = "Craft TerrorJaw",
+		Description = "",
+		Callback = function()
+			n43 = 583478173
+			n44 = 1059511027
+			game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack({ "CraftItem", "Craft", "TerrorJaw" }))
+		end,
+	})
+end
+
+local n43 = nil
+
+tbl.SeaEvent:AddButton({
 	Name = "Craft SharkAnchor",
 	Description = "",
-	Callback = function(state, arg378)
-		ReplicatedStorage.Remotes.CommF_:InvokeServer("CraftItem", "Craft", "SharkAnchor")
-	end
+	Callback = function()
+		n43 = 17359483
+		game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack({ "CraftItem", "Craft", "SharkAnchor" }))
+	end,
 })
---@7 1:1,37:28479
-Tab6:AddButton({
+
+tbl.SeaEvent:AddButton({
 	Name = "Craft LeviathanCrown",
 	Description = "",
-	Callback = function(state, arg380)
-		ReplicatedStorage.Remotes.CommF_:InvokeServer("CraftItem", "Craft", "LeviathanCrown")
-	end
+	Callback = function()
+		game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack({ "CraftItem", "Craft", "LeviathanCrown" }))
+	end,
 })
---@7 1:1,37:28479
-Tab6:AddButton({
+
+tbl.SeaEvent:AddButton({
 	Name = "Craft LeviathanShield",
 	Description = "",
-	Callback = function(state, arg382)
-		ReplicatedStorage.Remotes.CommF_:InvokeServer("CraftItem", "Craft", "LeviathanShield")
-	end
+	Callback = function()
+		game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack({ "CraftItem", "Craft", "LeviathanShield" }))
+	end,
 })
---@7 1:1,37:28479
-Tab6:AddButton({
-	Name = "Craft LeviathanBoat",
-	Description = "",
-	Callback = function(state, arg384)
-		ReplicatedStorage.Remotes.CommF_:InvokeServer("CraftItem", "Craft", "LeviathanBoat")
-	end
-})
---@7 1:1,37:28479
-Tab6:AddButton({
+
+do
+	local n44 = nil
+	local n45 = nil
+
+	tbl.SeaEvent:AddButton({
+		Name = "Craft LeviathanBoat",
+		Description = "",
+		Callback = function()
+			n44 = 111244305
+			n45 = 366017107
+			game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack({ "CraftItem", "Craft", "LeviathanBoat" }))
+		end,
+	})
+end
+
+tbl.SeaEvent:AddButton({
 	Name = "Craft LegendaryScroll",
 	Description = "",
-	Callback = function(state, arg386)
-		ReplicatedStorage.Remotes.CommF_:InvokeServer("CraftItem", "Craft", "LegendaryScroll")
-	end
+	Callback = function()
+		game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack({ "CraftItem", "Craft", "LegendaryScroll" }))
+	end,
 })
---@7 1:1,37:28479
-Tab6:AddButton({
+
+tbl.SeaEvent:AddButton({
 	Name = "Craft MythicalScroll",
 	Description = "",
-	Callback = function(state, arg388)
-		ReplicatedStorage.Remotes.CommF_:InvokeServer("CraftItem", "Craft", "MythicalScroll")
-	end
+	Callback = function()
+		game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack({ "CraftItem", "Craft", "MythicalScroll" }))
+	end,
 })
---@1 1:1,37:28479
-Tab6:AddSection("Choose Sea Event")
---@1 1:1,37:28479
-_G.SelectedBoat = false
---@9 1:1,37:28479
-Tab6:AddDropdown({
+
+tbl.SeaEvent:AddSection("Choose Sea Event")
+
+Q = tbl.SeaEvent:AddDropdown({
 	Name = "Select Boats",
 	Options = ListSeaBoat,
-	Callback = function(state, arg390)
-		if state then
-			_G.SelectedBoat = state
-		end
-	end
+	Callback = function(selectedBoat)
+		_G.SelectedBoat = selectedBoat
+	end,
 })
---@7 1:1,37:28479
-Tab6:AddButton({
-	Name = "Buy Boats",
-	Description = "",
-	Callback = function(state, arg392)
-		replicated.Remotes.CommF_:InvokeServer("BuyBoat", false)
-	end
-})
---@1 1:1,37:28479
-_G.DangerSc = false
---@9 1:1,37:28479
-Tab6:AddDropdown({
-	Name = "Select Sea Level",
-	Options = ListSeaZone,
-	Callback = function(state, arg394)
-		if state then
-			_G.DangerSc = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.SailBoats = false
---@10 1:1,37:28479
-Tab6:AddToggle({
+
+do
+	local n44 = nil
+	local n45 = nil
+
+	tbl.SeaEvent:AddButton({
+		Name = "Buy Boats",
+		Description = "",
+		Callback = function()
+			n44 = 275654704
+			n45 = 557400365
+			replicated.Remotes.CommF_:InvokeServer("BuyBoat", _G.SelectedBoat)
+		end,
+	})
+end
+
+do
+	local n44 = nil
+	local n45 = nil
+
+	Q = tbl.SeaEvent:AddDropdown({
+		Name = "Select Sea Level",
+		Options = ListSeaZone,
+		Callback = function(dangerSc)
+			n44 = 690181949
+			n45 = 1043216362
+			_G.DangerSc = dangerSc
+		end,
+	})
+end
+
+Q = tbl.SeaEvent:AddToggle({
 	Name = "Auto Sail Boat",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg396)
-		if state then
-			_G.SailBoats = state
-		end
-	end
+	Callback = function(sailBoats)
+		_G.SailBoats = sailBoats
+	end,
 })
---@1 1:1,37:28479
-Tab6:AddSection("Entity Sea Event")
---@1 1:1,37:28479
-_G.Shark = false
---@10 1:1,37:28479
-Tab6:AddToggle({
-	Name = "Auto Shark",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg398)
-		if state then
-			_G.Shark = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.Piranha = false
---@10 1:1,37:28479
-Tab6:AddToggle({
-	Name = "Auto Piranha",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg400)
-		if state then
-			_G.Piranha = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.TerrorShark = false
---@10 1:1,37:28479
-Tab6:AddToggle({
+
+tbl.SeaEvent:AddSection("Entity Sea Event")
+
+do
+	local n44 = nil
+	local n45 = nil
+
+	tbl.SeaEvent:AddToggle({
+		Name = "Auto Shark",
+		Description = "",
+		Default = false,
+		Callback = function(shark)
+			n44 = 694874167
+			n45 = 558302413
+			_G.Shark = shark
+		end,
+	})
+end
+
+do
+	local n44 = nil
+	local n45 = nil
+
+	tbl.SeaEvent:AddToggle({
+		Name = "Auto Piranha",
+		Description = "",
+		Default = false,
+		Callback = function(piranha)
+			n44 = 341221554
+			n45 = 490297682
+			_G.Piranha = piranha
+		end,
+	})
+end
+
+tbl.SeaEvent:AddToggle({
 	Name = "Auto Terror Shark",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg402)
-		if state then
-			_G.TerrorShark = state
-		end
-	end
+	Callback = function(terrorShark)
+		_G.TerrorShark = terrorShark
+	end,
 })
---@1 1:1,37:28479
-_G.MobCrew = false
---@10 1:1,37:28479
-Tab6:AddToggle({
+
+tbl.SeaEvent:AddToggle({
 	Name = "Auto Fish Crew Member",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg404)
-		if state then
-			_G.MobCrew = state
-		end
-	end
+	Callback = function(mobCrew)
+		_G.MobCrew = mobCrew
+	end,
 })
---@1 1:1,37:28479
-_G.HCM = false
---@10 1:1,37:28479
-Tab6:AddToggle({
+
+local n44 = nil
+
+tbl.SeaEvent:AddToggle({
 	Name = "Auto Haunted Crew Member",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg406)
-		if state then
-			_G.HCM = state
-		end
-	end
+	Callback = function(hcm)
+		n44 = 81775093
+		_G.HCM = hcm
+	end,
 })
---@1 1:1,37:28479
-_G.PGB = false
---@10 1:1,37:28479
-Tab6:AddToggle({
+
+local n45 = nil
+
+tbl.SeaEvent:AddToggle({
 	Name = "Auto Attack PirateGrandBrigade",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg408)
-		if state then
-			_G.PGB = state
-		end
-	end
+	Callback = function(pgb)
+		n45 = 180001069
+		_G.PGB = pgb
+	end,
 })
---@1 1:1,37:28479
-_G.FishBoat = false
---@10 1:1,37:28479
-Tab6:AddToggle({
+
+tbl.SeaEvent:AddToggle({
 	Name = "Auto Attack Fish Boat",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg410)
-		if state then
-			_G.FishBoat = state
-		end
-	end
+	Callback = function(fishBoat)
+		_G.FishBoat = fishBoat
+	end,
 })
---@1 1:1,37:28479
-_G.SeaBeast1 = false
---@10 1:1,37:28479
-Tab6:AddToggle({
+
+local n46 = nil
+
+tbl.SeaEvent:AddToggle({
 	Name = "Auto Attack Sea Beast",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg412)
-		if state then
-			_G.SeaBeast1 = state
+	Callback = function(seaBeast1)
+		n46 = 162098875
+		_G.SeaBeast1 = seaBeast1
+	end,
+})
+
+tbl.SeaEvent:AddSection("Kitsune Island / Event")
+local kitsuneIslandStatusParagraph = tbl.SeaEvent:AddParagraph("Kitsune Island Status", "")
+
+spawn(function()
+	if wait(0.2) then
+		local exitTo = nil
+
+		while true do
+			if workspace.Map:FindFirstChild("KitsuneIsland") then
+				kitsuneIslandStatusParagraph:SetDesc("Kitsune Island : True")
+				if wait(0.2) then
+					continue
+				end
+				break
+			else
+				exitTo = 1
+				break
+			end
+		end
+
+		if exitTo == 1 then
+			local locations = workspace._WorldOrigin.Locations
+
+			while true do
+				local map
+
+				if not locations:FindFirstChild("Kitsune Island") then
+					kitsuneIslandStatusParagraph:SetDesc("Kitsune Island : False")
+					if not wait(0.2) then
+						break
+					end
+					map = workspace.Map
+					if not map:FindFirstChild("KitsuneIsland") then
+						locations = workspace._WorldOrigin.Locations
+						continue
+					end
+				end
+
+				local exitTo2 = nil
+
+				while true do
+					kitsuneIslandStatusParagraph:SetDesc("Kitsune Island : True")
+
+					if wait(0.2) then
+						map = workspace.Map
+
+						if map:FindFirstChild("KitsuneIsland") then
+							continue
+						else
+							exitTo2 = 1
+							break
+						end
+					end
+
+					break
+				end
+
+				if exitTo2 == 1 then
+					locations = workspace._WorldOrigin.Locations
+					continue
+				end
+				break
+			end
 		end
 	end
-})
---@1 1:1,37:28479
-Tab6:AddSection("Kitsune Island / Event")
---@1 1:1,37:28479
-Tab6:AddParagraph("Kitsune Island Status", "")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 297:34057
-	wait(0.2)
 end)
---@1 1:1,37:28479
-_G.AutofindKitIs = false
---@10 1:1,37:28479
-Tab6:AddToggle({
-	Name = "Auto Find Kitsune Island",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg414)
-		if state then
-			_G.AutofindKitIs = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.tweenShrine = false
---@10 1:1,37:28479
-Tab6:AddToggle({
+
+do
+	local n47 = nil
+	local n48 = nil
+
+	tbl.SeaEvent:AddToggle({
+		Name = "Auto Find Kitsune Island",
+		Description = "",
+		Default = false,
+		Callback = function(autofindKitIs)
+			n47 = 740917077
+			n48 = 961380742
+			_G.AutofindKitIs = autofindKitIs
+		end,
+	})
+end
+
+local n47 = nil
+
+tbl.SeaEvent:AddToggle({
 	Name = "Auto Teleport to Shrine Actived",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg416)
-		if state then
-			_G.tweenShrine = state
-		end
-	end
+	Callback = function(tweenShrine)
+		n47 = 589263070
+		_G.tweenShrine = tweenShrine
+	end,
 })
---@1 1:1,37:28479
-_G.Collect_Ember = false
---@10 1:1,37:28479
-Tab6:AddToggle({
+
+tbl.SeaEvent:AddToggle({
 	Name = "Auto Collect Azure Ember",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg418)
-		if state then
-			_G.Collect_Ember = state
-		end
-	end
+	Callback = function(collectEmber)
+		_G.Collect_Ember = collectEmber
+	end,
 })
---@1 1:1,37:28479
-_G.Trade_Ember = false
---@10 1:1,37:28479
-Tab6:AddToggle({
+
+tbl.SeaEvent:AddToggle({
 	Name = "Auto Trade Azure Ember",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg420)
-		if state then
-			_G.Trade_Ember = state
-		end
-	end
+	Callback = function(tradeEmber)
+		_G.Trade_Ember = tradeEmber
+	end,
 })
---@13 1:1,37:28479
-Tab6:AddButton({
+
+tbl.SeaEvent:AddButton({
 	Name = "Trade Items Azure",
 	Description = "",
-	Callback = function(state, arg422)
-		if state then
-			local RFKitsuneStatuePray = replicated.Modules.Net:FindFirstChild("RF/KitsuneStatuePray")
-			RFKitsuneStatuePray:InvokeServer()
-		else
-			local RFKitsuneStatuePray2 = replicated.Modules.Net:FindFirstChild("RF/KitsuneStatuePray")
-			RFKitsuneStatuePray2:InvokeServer()
-		end
-	end
+	Callback = function()
+		replicated.Modules.Net:FindFirstChild("RF/KitsuneStatuePray"):InvokeServer()
+	end,
 })
---@13 1:1,37:28479
-Tab6:AddButton({
+
+tbl.SeaEvent:AddButton({
 	Name = "Talk with kitsune statue",
 	Description = "",
-	Callback = function(state, arg424)
-		if state then
-			local RETouchKitsuneStatue = replicated.Modules.Net:FindFirstChild("RE/TouchKitsuneStatue")
-			RETouchKitsuneStatue:FireServer()
-		else
-			local RETouchKitsuneStatue2 = replicated.Modules.Net:FindFirstChild("RE/TouchKitsuneStatue")
-			RETouchKitsuneStatue2:FireServer()
+	Callback = function()
+		replicated.Modules.Net:FindFirstChild("RE/TouchKitsuneStatue"):FireServer()
+	end,
+})
+
+tbl.SeaEvent:AddSection("Frozen Dimension Event")
+
+do
+	local frozenDimensionStatusParagraph = tbl.SeaEvent:AddParagraph("FrozenDimension Status", "")
+	local n48 = nil
+
+	spawn(function()
+		n48 = 910912658
+
+		pcall(function()
+			if wait(0.2) then
+				local locations = workspace._WorldOrigin.Locations
+				local locations2 = locations
+				local findFirstChild = locations.FindFirstChild
+				local str = "Frozen Dimension"
+				local exitTo = nil
+
+				while true do
+					if findFirstChild(locations2, str) then
+						exitTo = 1
+						break
+					else
+						frozenDimensionStatusParagraph:SetDesc("Frozen Dimension : False")
+
+						if wait(0.2) then
+							local locations3 = workspace._WorldOrigin.Locations
+							locations2 = locations3
+							findFirstChild = locations3.FindFirstChild
+							continue
+						end
+
+						break
+					end
+				end
+
+				if exitTo == 1 then
+					while true do
+						frozenDimensionStatusParagraph:SetDesc("Frozen Dimension : True")
+						local exitTo2 = nil
+
+						while wait(0.2) do
+							if workspace._WorldOrigin.Locations:FindFirstChild("Frozen Dimension") then
+								exitTo2 = 1
+								break
+							else
+								frozenDimensionStatusParagraph:SetDesc("Frozen Dimension : False")
+							end
+						end
+
+						if exitTo2 == 1 then
+							continue
+						end
+						break
+					end
+				end
+			end
+		end)
+	end)
+end
+
+do
+	local spyStatusParagraph = tbl.SeaEvent:AddParagraph("Spy Status", "")
+	local n48 = nil
+
+	spawn(function()
+		n48 = 164515640
+
+		if wait(0.2) then
+			repeat
+				pcall(function()
+					local match = string.match(replicated.Remotes.CommF_:InvokeServer("InfoLeviathan", "1"), "%d+")
+
+					if match then
+						spyStatusParagraph:SetDesc("Spy Leviathan : " .. tostring(match))
+
+						if tonumber(match) == 5 then
+							spyStatusParagraph:SetDesc("Spy Leviathan : Already Done!!")
+						end
+					end
+				end)
+			until not wait(0.2)
 		end
-	end
-})
---@1 1:1,37:28479
-Tab6:AddSection("Frozen Dimension Event")
---@1 1:1,37:28479
-Tab6:AddParagraph("FrozenDimension Status", "")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 304:34194,305:34202
-	wait(0.2)
-end)
---@1 1:1,37:28479
-Tab6:AddParagraph("Spy Status", "")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 306:34214
-	wait(0.2)
-end)
---@6 1:1,37:28479
-Tab6:AddButton({
+	end)
+end
+
+tbl.SeaEvent:AddButton({
 	Name = "Buy Spy",
-	Callback = function(state, arg426)
-		ReplicatedStorage.Remotes.CommF_:InvokeServer("InfoLeviathan", "2")
-	end
+	Callback = function()
+		game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("InfoLeviathan", "2")
+	end,
 })
---@1 1:1,37:28479
-_G.FrozenTP = false
---@10 1:1,37:28479
-Tab6:AddToggle({
+
+local n48 = nil
+
+tbl.SeaEvent:AddToggle({
 	Name = "Auto Teleport Frozen Dimension",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg428)
-		if state then
-			_G.FrozenTP = state
-		end
-	end
+	Callback = function(frozenTP)
+		n48 = 783598477
+		_G.FrozenTP = frozenTP
+	end,
 })
---@1 1:1,37:28479
-_G.SailBoat_Hydra = false
---@10 1:1,37:28479
-Tab6:AddToggle({
+
+tbl.SeaEvent:AddToggle({
 	Name = "Auto Drive To Hydra Island",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg430)
-		if state then
-			_G.SailBoat_Hydra = state
-		end
-	end
+	Callback = function(sailBoatHydra)
+		_G.SailBoat_Hydra = sailBoatHydra
+	end,
 })
---@1 1:1,37:28479
-_G.Leviathan1 = false
---@10 1:1,37:28479
-Tab6:AddToggle({
+
+local n49 = nil
+
+tbl.SeaEvent:AddToggle({
 	Name = "Auto Attack Leviathan",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg432)
-		if state then
-			_G.Leviathan1 = state
-		end
-	end
+	Callback = function(leviathan1)
+		n49 = 668626538
+		_G.Leviathan1 = leviathan1
+	end,
 })
---@1 1:1,37:28479
-Tab9:AddSection("Esp")
---@19 1:1,37:28479
-Tab9:AddToggle({
+
+tbl.Esp:AddSection("Esp")
+
+tbl.Esp:AddToggle({
 	Name = "Esp Berry",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg434)
-		if state then
-			task.spawn(function(...)
-				berriesEsp()
-				task.wait()
+	Callback = function(arg)
+		BerryEsp = arg
+
+		if arg then
+			local v2, v3, v4
+
+			task.spawn(function()
+				while BerryEsp do
+					berriesEsp()
+					task.wait()
+				end
 			end)
 		else
-			local children = workspace:GetChildren()
-			for i, v3 in ipairs(children) do
-				v3.Name:match("BerryEspPart_.*")
-				v3:Destroy()
+			local v2, v3, v4 = ipairs(workspace:GetChildren())
+			local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v5, v32, v42, v52, v6, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v5, v32, v42, v52, v6, v7, v8, v9, v10) end end); co(); return co end)(v3, v4)
+
+			while true do
+				local v5 = table.pack(iter_z_1())
+
+				if not v5[1] then
+					break
+				else
+					local v6 = v5[3]
+
+					if v6:IsA("Part") and v6.Name:match("BerryEspPart_.*") then
+						v6:Destroy()
+					end
+				end
 			end
 		end
-	end
+	end,
 })
---@15 1:1,37:28479
-Tab9:AddToggle({
+
+local n50 = nil
+
+tbl.Esp:AddToggle({
 	Name = "Esp Player",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg436)
-		if state then
-			task.spawn(function(...)
-				EspPly()
-				task.wait()
+	Callback = function(arg)
+		n50 = 960938136
+		PlayerEsp = arg
+		local n51 = nil
+		local n52 = nil
+		local n53 = nil
+		local v2, v3, v4
+
+		if arg then
+			task.spawn(function()
+				n51 = 981333573
+				n52 = 918321055
+
+				while PlayerEsp do
+					EspPly()
+					task.wait()
+				end
 			end)
 		else
-			game.Players:GetChildren()
+			local children
+			children, v2 = game.Players:GetChildren()
+			local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v5, v32, v42, v52, v6, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v5, v32, v42, v52, v6, v7, v8, v9, v10) end end); co(); return co end)(children, v2)
+
+			while true do
+				local v5 = table.pack(iter_z_1())
+
+				if not v5[1] then
+					break
+				else
+					local v6 = v5[3]
+
+					pcall(function()
+						n53 = 272643386
+
+						if not isnil(v6.Character) and not isnil(v6.Character.Head) and v6.Character.Head:FindFirstChild("NameEsp" .. Number) then
+							v6.Character.Head:FindFirstChild("NameEsp" .. Number):Destroy()
+						end
+					end)
+				end
+			end
 		end
-	end
+	end,
 })
---@20 1:1,37:28479
-Tab9:AddToggle({
+
+tbl.Esp:AddToggle({
 	Name = "Esp Chest",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg438)
-		if state then
-			task.spawn(function(...)
-				ChestEsp()
-				task.wait()
+	Callback = function(arg)
+		ChestESP = arg
+		local n51 = nil
+		local v2
+
+		if arg then
+			local v3, v4
+
+			task.spawn(function()
+				n51 = 36542958
+
+				while ChestESP do
+					ChestEsp()
+					task.wait()
+				end
 			end)
 		else
-			local CollectionService = game:GetService("CollectionService")
-			local tagged = CollectionService:GetTagged("_ChestTagged")
-			for i2, v4 in ipairs(tagged) do
-				local ChestEspAttachment = v4:FindFirstChild("ChestEspAttachment")
-				ChestEspAttachment:Destroy()
+			local v3, v4
+			v3, v4, v2 = ipairs(game:GetService("CollectionService"):GetTagged("_ChestTagged"))
+			local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v5, v32, v42, v52, v6, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v5, v32, v42, v52, v6, v7, v8, v9, v10) end end); co(); return co end)(v4, v2)
+
+			while true do
+				local v5 = table.pack(iter_z_1())
+
+				if not v5[1] then
+					break
+				else
+					local chestEspAttachment = (v5[3]):FindFirstChild("ChestEspAttachment")
+
+					if chestEspAttachment then
+						chestEspAttachment:Destroy()
+					end
+				end
 			end
 		end
-	end
+	end,
 })
---@15 1:1,37:28479
-Tab9:AddToggle({
+
+tbl.Esp:AddToggle({
 	Name = "Esp Fruit",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg440)
-		if state then
-			task.spawn(function(...)
-				DevEsp()
-				task.wait()
+	Callback = function(arg)
+		DevilFruitESP = arg
+		local n51 = nil
+		local n52 = nil
+		local v2, v3, v4, v5
+
+		if arg then
+			task.spawn(function()
+				if DevilFruitESP then
+					DevEsp()
+					task.wait()
+
+					while DevilFruitESP do
+						DevEsp()
+						task.wait()
+					end
+				end
 			end)
 		else
-			workspace:GetChildren()
+			local children
+			children, v2 = workspace:GetChildren()
+			local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v6, v32, v42, v52, v62, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v6, v32, v42, v52, v62, v7, v8, v9, v10) end end); co(); return co end)(children, v2)
+			local v6 = table.pack(iter_z_1())
+
+			if v6[1] then
+				local v7 = v6[3]
+
+				while true do
+					pcall(function()
+						n51 = 224251596
+						n52 = 109579123
+
+						if v7:FindFirstChild("Handle") and v7.Handle:FindFirstChild("NameEsp" .. Number) then
+							v7.Handle:FindFirstChild("NameEsp" .. Number):Destroy()
+						end
+					end)
+
+					local v8 = table.pack(iter_z_1())
+
+					if not v8[1] then
+						break
+					else
+						v7 = v8[3]
+					end
+				end
+			end
 		end
-	end
+	end,
 })
---@15 1:1,37:28479
-Tab9:AddToggle({
-	Name = "Esp Island",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg442)
-		if state then
-			task.spawn(function(...)
-				LocationEsp()
-				task.wait()
-			end)
-		else
-			workspace._WorldOrigin.Locations:GetChildren()
-		end
-	end
-})
---@17 1:1,37:28479
-Tab9:AddToggle({
+
+do
+	local n51 = nil
+	local n52 = nil
+
+	tbl.Esp:AddToggle({
+		Name = "Esp Island",
+		Description = "",
+		Default = false,
+		Callback = function(arg)
+			n51 = 256130135
+			n52 = 937608034
+			IslandESP = arg
+			local n53 = nil
+			local v2, v3
+
+			if arg then
+				task.spawn(function()
+					while IslandESP do
+						LocationEsp()
+						task.wait()
+					end
+				end)
+			else
+				local children, v4 = workspace._WorldOrigin.Locations:GetChildren()
+				local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v5, v32, v42, v52, v6, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v5, v32, v42, v52, v6, v7, v8, v9, v10) end end); co(); return co end)(children, v4)
+
+				while true do
+					local v5 = table.pack(iter_z_1())
+
+					if not v5[1] then
+						break
+					else
+						local v6 = v5[3]
+
+						pcall(function()
+							n53 = 30321953
+
+							if v6:FindFirstChild("NameEsp") then
+								v6:FindFirstChild("NameEsp"):Destroy()
+							end
+						end)
+					end
+				end
+			end
+		end,
+	})
+end
+
+tbl.Esp:AddToggle({
 	Name = "Esp Flower",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg444)
-		if state then
-			task.spawn(function(...)
-				flowerEsp()
-				task.wait()
+	Callback = function(arg)
+		FlowerESP = arg
+		local n51 = nil
+		local n52 = nil
+		local v2, v3, v4, v5
+
+		if arg then
+			task.spawn(function()
+				while FlowerESP do
+					flowerEsp()
+					task.wait()
+				end
 			end)
 		else
-			local children2 = workspace:GetChildren()
-			for k3, v5 in pairs(children2) do
+			local v6, v7, v8 = pairs(workspace:GetChildren())
+			local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v9, v32, v42, v52, v62, v72, v82, v92, v10 in f, s, var do coroutine.yield(true, k, v9, v32, v42, v52, v62, v72, v82, v92, v10) end end); co(); return co end)(v7, v8)
+
+			while true do
+				local v9 = table.pack(iter_z_1())
+
+				if not v9[1] then
+					break
+				else
+					local v10 = v9[3]
+
+					pcall(function()
+						n51 = 131353217
+						n52 = 713385975
+
+						if v10.Name == "Flower2" then
+							if v10:FindFirstChild("NameEsp" .. Number) then
+								local v11 = v10:FindFirstChild("NameEsp" .. Number)
+								v11:Destroy()
+							end
+						elseif v10.Name == "Flower1" and v10:FindFirstChild("NameEsp" .. Number) then
+							v10:FindFirstChild("NameEsp" .. Number):Destroy()
+						end
+					end)
+				end
 			end
 		end
-	end
+	end,
 })
---@17 1:1,37:28479
-Tab9:AddToggle({
+
+tbl.Esp:AddToggle({
 	Name = "Esp Legendary Sword",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg446)
-		if state then
-			task.spawn(function(...)
-				LegenSword()
-				task.wait()
+	Callback = function(arg)
+		LegenS = arg
+
+		if arg then
+			local v2, v3, v4
+
+			task.spawn(function()
+				while LegenS do
+					LegenSword()
+					task.wait()
+				end
 			end)
-		else
-			workspace:FindFirstChild("Lgd")
-			local Lgd = workspace:FindFirstChild("Lgd")
-			Lgd:Destroy()
+		elseif workspace:FindFirstChild("Lgd") then
+			workspace:FindFirstChild("Lgd"):Destroy()
 		end
-	end
+	end,
 })
---@17 1:1,37:28479
-Tab9:AddToggle({
+
+local n51 = nil
+
+tbl.Esp:AddToggle({
 	Name = "Esp Haki Color",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg448)
-		if state then
-			task.spawn(function(...)
-				HakiClorEsp()
-				task.wait()
+	Callback = function(arg)
+		n51 = 937665072
+		ColorEsp = arg
+		local n52 = nil
+
+		if arg then
+			local v2, v3
+
+			task.spawn(function()
+				n52 = 433063051
+
+				while ColorEsp do
+					HakiClorEsp()
+					task.wait()
+				end
 			end)
-		else
-			workspace:FindFirstChild("Gay")
-			local Gay = workspace:FindFirstChild("Gay")
-			Gay:Destroy()
+		elseif workspace:FindFirstChild("Gay") then
+			workspace:FindFirstChild("Gay"):Destroy()
 		end
-	end
+	end,
 })
---@21 1:1,37:28479
-Tab9:AddToggle({
+
+local n52 = nil
+
+tbl.Esp:AddToggle({
 	Name = "Esp Gear",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg450)
-		if state then
-			task.spawn(function(...)
-				gearEsp()
-				task.wait()
+	Callback = function(arg)
+		n52 = 182989401
+		ESPGear = arg
+		local n53 = nil
+		local n54 = nil
+		local v2, mysticIsland
+
+		if arg then
+			task.spawn(function()
+				n53 = 325399986
+				n54 = 957326650
+
+				while ESPGear do
+					gearEsp()
+					task.wait()
+				end
 			end)
 		else
-			local MysticIsland = workspace.Map:FindFirstChild("MysticIsland")
-			local descendants2 = MysticIsland:GetDescendants()
-			for k4, v6 in pairs(descendants2) do
-				v6:FindFirstChild("NameEsp")
-				local NameEsp = v6:FindFirstChild("NameEsp")
-				NameEsp:Destroy()
+			local mysticIsland2 = workspace.Map:FindFirstChild("MysticIsland")
+			local v3 = pairs
+			mysticIsland = mysticIsland2
+
+			if mysticIsland then
+				mysticIsland = mysticIsland2:GetDescendants()
+			end
+
+			local v4, v5, v6 = v3(mysticIsland or {})
+			local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v7, v32, v42, v52, v62, v72, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v7, v32, v42, v52, v62, v72, v8, v9, v10) end end); co(); return co end)(v5, v6)
+
+			while true do
+				local v7 = table.pack(iter_z_1())
+
+				if not v7[1] then
+					break
+				else
+					local v8 = v7[3]
+
+					pcall(function()
+						if v8:FindFirstChild("NameEsp") then
+							v8:FindFirstChild("NameEsp"):Destroy()
+						end
+					end)
+				end
 			end
 		end
-	end
+	end,
 })
---@20 1:1,37:28479
-Tab9:AddToggle({
+
+tbl.Esp:AddToggle({
 	Name = "Esp SeaEvent Island",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg452)
-		if state then
-			task.spawn(function(...)
-				EventIslandEsp()
-				task.wait()
+	Callback = function(arg)
+		EspEventIsland = arg
+		local n53 = nil
+		local v2, v3
+
+		if arg then
+			task.spawn(function()
+				while EspEventIsland do
+					EventIslandEsp()
+					task.wait()
+				end
 			end)
 		else
-			local children3 = workspace._WorldOrigin.Locations:GetChildren()
-			for k5, v7 in pairs(children3) do
-				v7:FindFirstChild("NameEsp")
-				local NameEsp2 = v7:FindFirstChild("NameEsp")
-				NameEsp2:Destroy()
+			local v4, v5, v6 = pairs(workspace._WorldOrigin.Locations:GetChildren())
+			local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v7, v32, v42, v52, v62, v72, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v7, v32, v42, v52, v62, v72, v8, v9, v10) end end); co(); return co end)(v5, v6)
+
+			while true do
+				local v7 = table.pack(iter_z_1())
+
+				if not v7[1] then
+					break
+				else
+					local v8 = v7[3]
+
+					pcall(function()
+						n53 = 1026082811
+
+						if v8:FindFirstChild("NameEsp") then
+							v8:FindFirstChild("NameEsp"):Destroy()
+						end
+					end)
+				end
 			end
 		end
-	end
+	end,
 })
---@17 1:1,37:28479
-Tab9:AddToggle({
+
+tbl.Esp:AddToggle({
 	Name = "Esp Advanced Dealer",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg454)
-		if state then
-			task.spawn(function(...)
-				AdvanFruitEsp()
-				task.wait()
+	Callback = function(arg)
+		advanEsp = arg
+
+		if arg then
+			local v2, v3
+
+			task.spawn(function()
+				while advanEsp do
+					AdvanFruitEsp()
+					task.wait()
+				end
 			end)
-		else
-			workspace:FindFirstChild("Adv")
-			local Adv = workspace:FindFirstChild("Adv")
-			Adv:Destroy()
+		elseif workspace:FindFirstChild("Adv") then
+			workspace:FindFirstChild("Adv"):Destroy()
 		end
-	end
+	end,
 })
---@1 1:1,37:28479
-Tab10:AddSection("Fruits Options")
---@1 1:1,37:28479
-local Paragraph4 = Tab10:AddParagraph("Stock Fruit", "Loading...")
---@4 1:1,37:28479
-task.spawn(function(...)
-	--@1 336:34592
-	task.wait(60)
-end)
---@1 1:1,37:28479,337:34600
-local result2 = getFruitStock()
---@1 1:1,37:28479,337:34600
-Paragraph4:SetDesc(result2)
---@13 1:1,37:28479
-Tab10:AddToggle({
+
+tbl.Raids:AddSection("Fruits Options")
+
+do
+	local stockFruitParagraph = tbl.Raids:AddParagraph("Stock Fruit", "Loading...")
+
+	task.spawn(function()
+		local v2, v3, v4
+
+		while task.wait(60) do
+			pcall(function()
+				stockFruitParagraph:SetDesc(getFruitStock())
+			end)
+		end
+	end)
+
+	local n53 = nil
+	local n54 = nil
+
+	pcall(function()
+		n53 = 388071331
+		n54 = 897874573
+		stockFruitParagraph:SetDesc(getFruitStock())
+	end)
+end
+
+RandomFF = tbl.Raids:AddToggle({
 	Name = "Auto Random Fruit",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg456)
-		if state then
-			_G.Random_Auto = state
-		else
-			_G.Random_Auto = false
-		end
+	Callback = function(randomAuto)
+		_G.Random_Auto = randomAuto
 		_G.RandomFruitCooldown = nil
-	end
+	end,
 })
---@1 1:1,37:28479
-_G.DropFruit = false
---@10 1:1,37:28479
-Tab10:AddToggle({
+
+DropF = tbl.Raids:AddToggle({
 	Name = "Auto Drop Fruit",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg458)
-		if state then
-			_G.DropFruit = state
-		end
-	end
+	Callback = function(dropFruit)
+		_G.DropFruit = dropFruit
+	end,
 })
---@1 1:1,37:28479
-_G.StoreF = false
---@10 1:1,37:28479
-Tab10:AddToggle({
+
+StoredF = tbl.Raids:AddToggle({
 	Name = "Auto Store Fruit",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg460)
-		if state then
-			_G.StoreF = state
-		end
-	end
+	Callback = function(storeF)
+		_G.StoreF = storeF
+	end,
 })
---@1 1:1,37:28479
-_G.TwFruits = false
---@10 1:1,37:28479
-Tab10:AddToggle({
-	Name = "Auto Tween to Fruit",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg462)
-		if state then
-			_G.TwFruits = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.InstanceF = false
---@10 1:1,37:28479
-Tab10:AddToggle({
-	Name = "Auto Collect Fruit",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg464)
-		if state then
-			_G.InstanceF = state
-		end
-	end
-})
---@1 1:1,37:28479
-getgenv().SelectFruit = false
---@51 1:1,37:28479
-Tab10:AddDropdown({
+
+do
+	local n53 = nil
+	local n54 = nil
+
+	TwF = tbl.Raids:AddToggle({
+		Name = "Auto Tween to Fruit",
+		Description = "",
+		Default = false,
+		Callback = function(twFruits)
+			n53 = 225819709
+			n54 = 192659979
+			_G.TwFruits = twFruits
+		end,
+	})
+end
+
+do
+	local n53 = nil
+	local n54 = nil
+
+	BringF = tbl.Raids:AddToggle({
+		Name = "Auto Collect Fruit",
+		Description = "",
+		Default = false,
+		Callback = function(instanceF)
+			n53 = 169839588
+			n54 = 783034416
+			_G.InstanceF = instanceF
+		end,
+	})
+end
+
+local n53 = nil
+
+tbl.Raids:AddDropdown({
 	Name = "Select Fruit Shop",
 	Options = {
 		"Rocket-Rocket",
@@ -3596,650 +11164,2753 @@ Tab10:AddDropdown({
 		"Leopard-Leopard",
 		"Yeti-Yeti",
 		"Kitsune-Kitsune",
-		"Dragon-Dragon"
+		"Dragon-Dragon",
 	},
-	Callback = function(state, arg466)
-		if state then
-			getgenv().SelectFruit = state
-		end
-	end
+	Callback = function(selectFruit)
+		n53 = 266066510
+		getgenv().SelectFruit = selectFruit
+	end,
 })
---@1 1:1,37:28479
-getgenv().AutoBuyFruitSniper = false
---@9 1:1,37:28479
-Tab10:AddToggle({
+
+local n54 = nil
+
+tbl.Raids:AddToggle({
 	Name = "Auto Buy Fruit Shop",
 	Default = false,
-	Callback = function(state, arg468)
-		if state then
-			getgenv().AutoBuyFruitSniper = state
-		end
-	end
+	Callback = function(autoBuyFruitSniper)
+		n54 = 351782506
+		getgenv().AutoBuyFruitSniper = autoBuyFruitSniper
+	end,
 })
---@1 1:1,37:28479
-Tab10:AddSection("Dungeon Event / Raiding")
---@1 1:1,37:28479
-_G.SelectChip = false
---@23 1:1,37:28479
-Tab10:AddDropdown({
+
+tbl.Raids:AddSection("Dungeon Event / Raiding")
+
+DungeonTables = {
+	"Flame",
+	"Ice",
+	"Quake",
+	"Light",
+	"Dark",
+	"String",
+	"Rumble",
+	"Magma",
+	"Human: Buddha",
+	"Sand",
+	"Bird: Phoenix",
+	"Dough",
+}
+
+Q = tbl.Raids:AddDropdown({
 	Name = "Select Chip",
 	Description = "",
-	Options = {
-		"Flame",
-		"Ice",
-		"Quake",
-		"Light",
-		"Dark",
-		"String",
-		"Rumble",
-		"Magma",
-		"Human: Buddha",
-		"Sand",
-		"Bird: Phoenix",
-		"Dough"
-	},
-	Callback = function(state, arg470)
-		if state then
-			_G.SelectChip = state
-		end
-	end
+	Options = DungeonTables,
+	Callback = function(selectChip)
+		_G.SelectChip = selectChip
+	end,
 })
---@1 1:1,37:28479
-_G.AutoSelectDungeon = false
---@10 1:1,37:28479
-Tab10:AddToggle({
+
+local n55 = nil
+
+Q = tbl.Raids:AddToggle({
 	Name = "Auto Select Dungeon Chip",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg472)
-		if state then
-			_G.AutoSelectDungeon = state
-		end
-	end
+	Callback = function(autoSelectDungeon)
+		n55 = 96858186
+		_G.AutoSelectDungeon = autoSelectDungeon
+	end,
 })
---@1 1:1,37:28479
-getgenv().AutoGetFruit = false
---@9 1:1,37:28479
-Tab10:AddToggle({
-	Name = "Get Fruit In Inventory Below 1M",
-	Default = false,
-	Callback = function(state, arg474)
-		if state then
-			getgenv().AutoGetFruit = state
-		end
-	end
-})
---@7 1:1,37:28479
-Tab10:AddButton({
+
+do
+	local n56 = nil
+	local n57 = nil
+
+	tbl.Raids:AddToggle({
+		Name = "Get Fruit In Inventory Below 1M",
+		Default = false,
+		Callback = function(autoGetFruit)
+			n56 = 1068927663
+			n57 = 988673409
+			getgenv().AutoGetFruit = autoGetFruit
+		end,
+	})
+end
+
+tbl.Raids:AddButton({
 	Name = "Buy Dungeon Chips [Beli]",
 	Description = "",
-	Callback = function(state, arg476)
-		GetBP("Special Microchip")
-	end
+	Callback = function()
+		if not GetBP("Special Microchip") then
+			replicated.Remotes.CommF_:InvokeServer("RaidsNpc", "Select", _G.SelectChip)
+		end
+	end,
 })
---@7 1:1,37:28479
-Tab10:AddButton({
+
+local n56 = nil
+
+tbl.Raids:AddButton({
 	Name = "Buy Dungeon Chips [Devil Fruit]",
 	Description = "",
-	Callback = function(state, arg478)
-		GetBP("Special Microchip")
-	end
+	Callback = function()
+		n56 = 716520050
+		if GetBP("Special Microchip") then
+			return
+		end
+		local names = {}
+		local response, v2 = replicated:WaitForChild("Remotes").CommF_:InvokeServer("GetFruits")
+		local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v3, v32, v4, v5, v6, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v3, v32, v4, v5, v6, v7, v8, v9, v10) end end); co(); return co end)(response, v2)
+
+		while true do
+			local v3 = table.pack(iter_z_1())
+
+			if not v3[1] then
+				break
+			else
+				local v4 = v3[3]
+
+				if v4.Price <= 490000 then
+					table.insert(names, v4.Name)
+				end
+			end
+		end
+
+		local v3, v4, v5 = pairs(names)
+		iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v6, v32, v42, v52, v62, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v6, v32, v42, v52, v62, v7, v8, v9, v10) end end); co(); return co end)(v4, v5)
+
+		while true do
+			local v6 = table.pack(iter_z_1())
+
+			if not v6[1] then
+				break
+			else
+				local v7 = v6[3]
+				local v8, v9, v10 = pairs(DungeonTables)
+				local iter_z_2 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v11, v32, v42, v52, v62, v72, v82, v92, v102 in f, s, var do coroutine.yield(true, k, v11, v32, v42, v52, v62, v72, v82, v92, v102) end end); co(); return co end)(v9, v10)
+				local exitTo = nil
+
+				while true do
+					local v11 = table.pack(iter_z_2())
+
+					if not v11[1] then
+						break
+					elseif not GetBP("Special Microchip") then
+						exitTo = 1
+						break
+					end
+				end
+
+				if exitTo == 1 then
+					replicated.Remotes.CommF_:InvokeServer("LoadFruit", tostring(v7))
+
+					while true do
+						replicated.Remotes.CommF_:InvokeServer("RaidsNpc", "Select", _G.SelectChip)
+						local exitTo2 = nil
+
+						while true do
+							local v11 = table.pack(iter_z_2())
+
+							if not v11[1] then
+								local v12 = table.pack(iter_z_1())
+
+								if v12[1] then
+									v7 = v12[3]
+									local v13, v14, v15 = pairs(DungeonTables)
+									iter_z_2 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v16, v32, v42, v52, v62, v72, v82, v92, v102 in f, s, var do coroutine.yield(true, k, v16, v32, v42, v52, v62, v72, v82, v92, v102) end end); co(); return co end)(v14, v15)
+									continue
+								end
+
+								break
+							elseif not GetBP("Special Microchip") then
+								exitTo2 = 1
+								break
+							end
+						end
+
+						if exitTo2 == 1 then
+							replicated.Remotes.CommF_:InvokeServer("LoadFruit", tostring(v7))
+							continue
+						end
+						break
+					end
+
+					return
+				end
+			end
+		end
+	end,
 })
---@1 1:1,37:28479
-_G.AutoChipBeli = false
---@10 1:1,37:28479
-Tab10:AddToggle({
+
+AutoChipBeli = tbl.Raids:AddToggle({
 	Name = "Auto Buy Chip [Beli]",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg480)
-		if state then
-			_G.AutoChipBeli = state
-		end
-	end
+	Callback = function(autoChipBeli)
+		_G.AutoChipBeli = autoChipBeli
+	end,
 })
---@1 1:1,37:28479
-_G.AutoChipFruit = false
---@10 1:1,37:28479
-Tab10:AddToggle({
-	Name = "Auto Buy Chip [Devil Fruit]",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg482)
-		if state then
-			_G.AutoChipFruit = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.Auto_StartRaid = false
---@10 1:1,37:28479
-Tab10:AddToggle({
+
+do
+	local n57 = nil
+	local n58 = nil
+
+	AutoChipFruit = tbl.Raids:AddToggle({
+		Name = "Auto Buy Chip [Devil Fruit]",
+		Description = "",
+		Default = false,
+		Callback = function(autoChipFruit)
+			n57 = 292579603
+			n58 = 945437456
+			_G.AutoChipFruit = autoChipFruit
+		end,
+	})
+end
+
+StartR = tbl.Raids:AddToggle({
 	Name = "Auto Start Raid",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg484)
-		if state then
-			_G.Auto_StartRaid = state
-		end
-	end
+	Callback = function(autoStartRaid)
+		_G.Auto_StartRaid = autoStartRaid
+	end,
 })
---@1 1:1,37:28479
-_G.Raiding = false
---@10 1:1,37:28479
-Tab10:AddToggle({
+
+Raiding = tbl.Raids:AddToggle({
 	Name = "Auto Raid + Next Island",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg486)
-		if state then
-			_G.Raiding = state
-		end
-	end
+	Callback = function(raiding)
+		_G.Raiding = raiding
+	end,
 })
---@1 1:1,37:28479
-_G.KillAuraRaid = false
---@10 1:1,37:28479
-Tab10:AddToggle({
+
+local n57 = nil
+
+KillAuraRaid = tbl.Raids:AddToggle({
 	Name = "Kill Aura (Island 4 & 5)",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg488)
-		if state then
-			_G.KillAuraRaid = state
-		end
-	end
+	Callback = function(killAuraRaid)
+		n57 = 311779206
+		_G.KillAuraRaid = killAuraRaid
+	end,
 })
---@1 1:1,37:28479
-_G.Auto_Awakener = false
---@10 1:1,37:28479
-Tab10:AddToggle({
+
+tbl.Raids:AddToggle({
 	Name = "Auto Awakening",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg490)
-		if state then
-			_G.Auto_Awakener = state
-		end
-	end
+	Callback = function(autoAwakener)
+		_G.Auto_Awakener = autoAwakener
+	end,
 })
---@1 1:1,37:28479
-_G.TpLab = false
---@10 1:1,37:28479
-Tab10:AddToggle({
+
+local n58 = nil
+
+tbl.Raids:AddToggle({
 	Name = "Auto Teleport To Lab",
 	Default = false,
-	Callback = function(state, arg492)
-		if state then
-			_G.TpLab = state
+	Callback = function(tpLab)
+		n58 = 911033741
+		_G.TpLab = tpLab
+		local exitTo10
+
+		while _G.TpLab do
 			wait()
+
+			if _G.TpLab then
+				local exitTo3, exitTo4, v2, cFrameNew, v3, cFrameNew2, exitTo5, v4, cFrameNew3, exitTo6, exitTo7, v5, cFrameNew4, exitTo9, exitTo8, exitTo12, exitTo11
+
+				if World2 then
+					if _G.TpLab then
+						local v6 = _tp
+						local cFrameNew5 = CFrame.new
+						local exitTo2 = nil
+
+						while true do
+							v6(cFrameNew5(-6438.73535, 250.645355, -4501.50684))
+							local exitTo = nil
+
+							while _G.TpLab do
+								wait()
+								if _G.TpLab then
+									exitTo = 1
+									break
+								end
+							end
+
+							if exitTo == 1 then
+								if World2 then
+									if _G.TpLab then
+										v6 = _tp
+										cFrameNew5 = CFrame.new
+										continue
+									else
+										exitTo2 = 1
+										break
+									end
+								else
+									exitTo2 = 1
+									break
+								end
+							end
+
+							break
+						end
+
+						if exitTo2 == 1 then
+							exitTo3 = nil
+
+							while true do
+								if World3 and _G.TpLab then
+									exitTo3 = 1
+									break
+								end
+								exitTo4 = nil
+
+								while _G.TpLab do
+									wait()
+
+									if _G.TpLab then
+										if World2 then
+											if _G.TpLab then
+												v2 = _tp
+												cFrameNew = CFrame.new
+												v2(cFrameNew(-6438.73535, 250.645355, -4501.50684))
+											else
+												exitTo4 = 1
+												break
+											end
+										else
+											exitTo4 = 1
+											break
+										end
+									end
+								end
+
+								if exitTo4 == 1 then
+									continue
+								end
+								break
+							end
+
+							if exitTo3 == 1 then
+								v3 = _tp
+								cFrameNew2 = CFrame.new
+
+								while true do
+									v3(cFrameNew2(-5046, 314, -2960))
+									exitTo5 = nil
+
+									while _G.TpLab do
+										wait()
+
+										if _G.TpLab then
+											if World2 then
+												if _G.TpLab then
+													v4 = _tp
+													cFrameNew3 = CFrame.new
+													v4(cFrameNew3(-6438.73535, 250.645355, -4501.50684))
+												elseif World3 and _G.TpLab then
+													exitTo5 = 1
+													break
+												end
+											elseif World3 and _G.TpLab then
+												exitTo5 = 1
+												break
+											end
+										end
+									end
+
+									if exitTo5 == 1 then
+										v3 = _tp
+										cFrameNew2 = CFrame.new
+										continue
+									end
+
+									break
+								end
+							end
+						end
+					else
+						exitTo6 = nil
+
+						while true do
+							if World3 and _G.TpLab then
+								exitTo6 = 1
+								break
+							end
+							exitTo7 = nil
+
+							while _G.TpLab do
+								wait()
+								if _G.TpLab then
+									exitTo7 = 1
+									break
+								end
+							end
+
+							if exitTo7 == 1 then
+								if World2 then
+									if _G.TpLab then
+										exitTo6 = 2
+										break
+									else
+										continue
+									end
+								else
+									continue
+								end
+							end
+
+							break
+						end
+
+						if exitTo6 == 1 then
+							v5 = _tp
+							cFrameNew4 = CFrame.new
+							exitTo9 = nil
+
+							while true do
+								v5(cFrameNew4(-5046, 314, -2960))
+								exitTo8 = nil
+
+								while _G.TpLab do
+									wait()
+
+									if _G.TpLab then
+										if World2 then
+											if _G.TpLab then
+												exitTo8 = 1
+												break
+											elseif World3 and _G.TpLab then
+												exitTo8 = 2
+												break
+											end
+										elseif World3 and _G.TpLab then
+											exitTo8 = 2
+											break
+										end
+									end
+								end
+
+								if exitTo8 == 1 then
+									exitTo9 = 1
+									break
+								elseif exitTo8 == 2 then
+									v5 = _tp
+									cFrameNew4 = CFrame.new
+									continue
+								end
+
+								break
+							end
+
+							if exitTo9 == 1 then
+								v4 = _tp
+								cFrameNew3 = CFrame.new
+
+								while true do
+									v4(cFrameNew3(-6438.73535, 250.645355, -4501.50684))
+									exitTo10 = nil
+
+									while _G.TpLab do
+										wait()
+
+										if _G.TpLab then
+											if World2 then
+												if _G.TpLab then
+													exitTo10 = 1
+													break
+												elseif World3 and _G.TpLab then
+													exitTo10 = 2
+													break
+												end
+											elseif World3 and _G.TpLab then
+												exitTo10 = 2
+												break
+											end
+										end
+									end
+
+									if exitTo10 == 1 then
+										v4 = _tp
+										cFrameNew3 = CFrame.new
+										continue
+									end
+
+									break
+								end
+
+								if exitTo10 == 2 then
+									v3 = _tp
+									cFrameNew2 = CFrame.new
+
+									while true do
+										v3(cFrameNew2(-5046, 314, -2960))
+										exitTo5 = nil
+
+										while _G.TpLab do
+											wait()
+
+											if _G.TpLab then
+												if World2 then
+													if _G.TpLab then
+														v4 = _tp
+														cFrameNew3 = CFrame.new
+														v4(cFrameNew3(-6438.73535, 250.645355, -4501.50684))
+													elseif World3 and _G.TpLab then
+														exitTo5 = 1
+														break
+													end
+												elseif World3 and _G.TpLab then
+													exitTo5 = 1
+													break
+												end
+											end
+										end
+
+										if exitTo5 == 1 then
+											v3 = _tp
+											cFrameNew2 = CFrame.new
+											continue
+										end
+
+										break
+									end
+								end
+							end
+						elseif exitTo6 == 2 then
+							v2 = _tp
+							cFrameNew = CFrame.new
+							exitTo12 = nil
+
+							while true do
+								v2(cFrameNew(-6438.73535, 250.645355, -4501.50684))
+								exitTo11 = nil
+
+								while _G.TpLab do
+									wait()
+									if _G.TpLab then
+										exitTo11 = 1
+										break
+									end
+								end
+
+								if exitTo11 == 1 then
+									if World2 then
+										if _G.TpLab then
+											v2 = _tp
+											cFrameNew = CFrame.new
+											continue
+										else
+											exitTo12 = 1
+											break
+										end
+									else
+										exitTo12 = 1
+										break
+									end
+								end
+
+								break
+							end
+
+							if exitTo12 == 1 then
+								exitTo3 = nil
+
+								while true do
+									if World3 and _G.TpLab then
+										exitTo3 = 1
+										break
+									end
+									exitTo4 = nil
+
+									while _G.TpLab do
+										wait()
+
+										if _G.TpLab then
+											if World2 then
+												if _G.TpLab then
+													v2 = _tp
+													cFrameNew = CFrame.new
+													v2(cFrameNew(-6438.73535, 250.645355, -4501.50684))
+												else
+													exitTo4 = 1
+													break
+												end
+											else
+												exitTo4 = 1
+												break
+											end
+										end
+									end
+
+									if exitTo4 == 1 then
+										continue
+									end
+									break
+								end
+
+								if exitTo3 == 1 then
+									v3 = _tp
+									cFrameNew2 = CFrame.new
+
+									while true do
+										v3(cFrameNew2(-5046, 314, -2960))
+										exitTo5 = nil
+
+										while _G.TpLab do
+											wait()
+
+											if _G.TpLab then
+												if World2 then
+													if _G.TpLab then
+														v4 = _tp
+														cFrameNew3 = CFrame.new
+														v4(cFrameNew3(-6438.73535, 250.645355, -4501.50684))
+													elseif World3 and _G.TpLab then
+														exitTo5 = 1
+														break
+													end
+												elseif World3 and _G.TpLab then
+													exitTo5 = 1
+													break
+												end
+											end
+										end
+
+										if exitTo5 == 1 then
+											v3 = _tp
+											cFrameNew2 = CFrame.new
+											continue
+										end
+
+										break
+									end
+								end
+							end
+						end
+					end
+				else
+					exitTo6 = nil
+
+					while true do
+						if World3 and _G.TpLab then
+							exitTo6 = 1
+							break
+						end
+						exitTo7 = nil
+
+						while _G.TpLab do
+							wait()
+							if _G.TpLab then
+								exitTo7 = 1
+								break
+							end
+						end
+
+						if exitTo7 == 1 then
+							if World2 then
+								if _G.TpLab then
+									exitTo6 = 2
+									break
+								else
+									continue
+								end
+							else
+								continue
+							end
+						end
+
+						break
+					end
+
+					if exitTo6 == 1 then
+						v5 = _tp
+						cFrameNew4 = CFrame.new
+						exitTo9 = nil
+
+						while true do
+							v5(cFrameNew4(-5046, 314, -2960))
+							exitTo8 = nil
+
+							while _G.TpLab do
+								wait()
+
+								if _G.TpLab then
+									if World2 then
+										if _G.TpLab then
+											exitTo8 = 1
+											break
+										elseif World3 and _G.TpLab then
+											exitTo8 = 2
+											break
+										end
+									elseif World3 and _G.TpLab then
+										exitTo8 = 2
+										break
+									end
+								end
+							end
+
+							if exitTo8 == 1 then
+								exitTo9 = 1
+								break
+							elseif exitTo8 == 2 then
+								v5 = _tp
+								cFrameNew4 = CFrame.new
+								continue
+							end
+
+							break
+						end
+
+						if exitTo9 == 1 then
+							v4 = _tp
+							cFrameNew3 = CFrame.new
+
+							while true do
+								v4(cFrameNew3(-6438.73535, 250.645355, -4501.50684))
+								exitTo10 = nil
+
+								while _G.TpLab do
+									wait()
+
+									if _G.TpLab then
+										if World2 then
+											if _G.TpLab then
+												exitTo10 = 1
+												break
+											elseif World3 and _G.TpLab then
+												exitTo10 = 2
+												break
+											end
+										elseif World3 and _G.TpLab then
+											exitTo10 = 2
+											break
+										end
+									end
+								end
+
+								if exitTo10 == 1 then
+									v4 = _tp
+									cFrameNew3 = CFrame.new
+									continue
+								end
+
+								break
+							end
+
+							if exitTo10 == 2 then
+								v3 = _tp
+								cFrameNew2 = CFrame.new
+
+								while true do
+									v3(cFrameNew2(-5046, 314, -2960))
+									exitTo5 = nil
+
+									while _G.TpLab do
+										wait()
+
+										if _G.TpLab then
+											if World2 then
+												if _G.TpLab then
+													v4 = _tp
+													cFrameNew3 = CFrame.new
+													v4(cFrameNew3(-6438.73535, 250.645355, -4501.50684))
+												elseif World3 and _G.TpLab then
+													exitTo5 = 1
+													break
+												end
+											elseif World3 and _G.TpLab then
+												exitTo5 = 1
+												break
+											end
+										end
+									end
+
+									if exitTo5 == 1 then
+										v3 = _tp
+										cFrameNew2 = CFrame.new
+										continue
+									end
+
+									break
+								end
+							end
+						end
+					elseif exitTo6 == 2 then
+						v2 = _tp
+						cFrameNew = CFrame.new
+						exitTo12 = nil
+
+						while true do
+							v2(cFrameNew(-6438.73535, 250.645355, -4501.50684))
+							exitTo11 = nil
+
+							while _G.TpLab do
+								wait()
+								if _G.TpLab then
+									exitTo11 = 1
+									break
+								end
+							end
+
+							if exitTo11 == 1 then
+								if World2 then
+									if _G.TpLab then
+										v2 = _tp
+										cFrameNew = CFrame.new
+										continue
+									else
+										exitTo12 = 1
+										break
+									end
+								else
+									exitTo12 = 1
+									break
+								end
+							end
+
+							break
+						end
+
+						if exitTo12 == 1 then
+							exitTo3 = nil
+
+							while true do
+								if World3 and _G.TpLab then
+									exitTo3 = 1
+									break
+								end
+								exitTo4 = nil
+
+								while _G.TpLab do
+									wait()
+
+									if _G.TpLab then
+										if World2 then
+											if _G.TpLab then
+												v2 = _tp
+												cFrameNew = CFrame.new
+												v2(cFrameNew(-6438.73535, 250.645355, -4501.50684))
+											else
+												exitTo4 = 1
+												break
+											end
+										else
+											exitTo4 = 1
+											break
+										end
+									end
+								end
+
+								if exitTo4 == 1 then
+									continue
+								end
+								break
+							end
+
+							if exitTo3 == 1 then
+								v3 = _tp
+								cFrameNew2 = CFrame.new
+
+								while true do
+									v3(cFrameNew2(-5046, 314, -2960))
+									exitTo5 = nil
+
+									while _G.TpLab do
+										wait()
+
+										if _G.TpLab then
+											if World2 then
+												if _G.TpLab then
+													v4 = _tp
+													cFrameNew3 = CFrame.new
+													v4(cFrameNew3(-6438.73535, 250.645355, -4501.50684))
+												elseif World3 and _G.TpLab then
+													exitTo5 = 1
+													break
+												end
+											elseif World3 and _G.TpLab then
+												exitTo5 = 1
+												break
+											end
+										end
+									end
+
+									if exitTo5 == 1 then
+										v3 = _tp
+										cFrameNew2 = CFrame.new
+										continue
+									end
+
+									break
+								end
+							end
+						end
+					end
+				end
+
+				return
+			end
 		end
-	end
+	end,
 })
---@1 1:1,37:28479
-Tab10:AddSection("Items Law/Order Sword")
---@7 1:1,37:28479
-Tab10:AddButton({
+
+tbl.Raids:AddSection("Items Law/Order Sword")
+
+tbl.Raids:AddButton({
 	Name = "Buy Microchip Law",
 	Description = "",
-	Callback = function(state, arg494)
+	Callback = function()
 		replicated.Remotes.CommF_:InvokeServer("BlackbeardReward", "Microchip", "2")
-	end
+	end,
 })
---@7 1:1,37:28479
-Tab10:AddButton({
+
+tbl.Raids:AddButton({
 	Name = "Start Law Raids",
 	Description = "",
-	Callback = function(state, arg496)
+	Callback = function()
 		fireclickdetector(workspace.Map.CircleIsland.RaidSummon.Button.Main.ClickDetector)
-	end
+	end,
 })
---@1 1:1,37:28479
-getgenv().AutoBuyMicrochipLaw = false
---@10 1:1,37:28479
-Tab10:AddToggle({
-	Name = "Auto Buy Microchip Law",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg498)
-		if state then
-			getgenv().AutoBuyMicrochipLaw = state
-		end
-	end
-})
---@1 1:1,37:28479
-getgenv().AutoStartLawRaids = false
---@10 1:1,37:28479
-Tab10:AddToggle({
-	Name = "Auto Start Law Raids",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg500)
-		if state then
-			getgenv().AutoStartLawRaids = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.AutoLawKak = false
---@10 1:1,37:28479
-Tab10:AddToggle({
-	Name = "Auto Kill Law",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg502)
-		if state then
-			_G.AutoLawKak = state
-		end
-	end
-})
---@1 1:1,37:28479
-Tab10:AddSection("Raids Dungeons")
---@1 1:1,37:28479
-_G.AutoFarmDungeon = false
---@10 1:1,37:28479
-Tab10:AddToggle({
+
+do
+	local n59 = nil
+	local n60 = nil
+
+	tbl.Raids:AddToggle({
+		Name = "Auto Buy Microchip Law",
+		Description = "",
+		Default = false,
+		Callback = function(autoBuyMicrochipLaw)
+			n59 = 111732086
+			n60 = 366170588
+			getgenv().AutoBuyMicrochipLaw = autoBuyMicrochipLaw
+		end,
+	})
+end
+
+do
+	local n59 = nil
+	local n60 = nil
+
+	tbl.Raids:AddToggle({
+		Name = "Auto Start Law Raids",
+		Description = "",
+		Default = false,
+		Callback = function(autoStartLawRaids)
+			n59 = 206642345
+			n60 = 891454801
+			getgenv().AutoStartLawRaids = autoStartLawRaids
+		end,
+	})
+end
+
+do
+	local n59 = nil
+	local n60 = nil
+
+	tbl.Raids:AddToggle({
+		Name = "Auto Kill Law",
+		Description = "",
+		Default = false,
+		Callback = function(autoLawKak)
+			n59 = 577945051
+			n60 = 312090061
+			_G.AutoLawKak = autoLawKak
+		end,
+	})
+end
+
+tbl.Raids:AddSection("Raids Dungeons")
+
+tbl.Raids:AddToggle({
 	Name = "Auto Farm Dungeon",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg504)
-		if state then
-			_G.AutoFarmDungeon = state
-		end
-	end
+	Callback = function(autoFarmDungeon)
+		_G.AutoFarmDungeon = autoFarmDungeon
+	end,
 })
---@1 1:1,37:28479
-_G.TPFloor1 = false
---@9 1:1,37:28479
-Tab10:AddToggle({
+
+tbl.Raids:AddToggle({
 	Name = "TP Exit (1)",
 	Default = false,
-	Callback = function(state, arg506)
-		if state then
-			_G.TPFloor1 = state
-		end
-	end
+	Callback = function(tpFloor1)
+		_G.TPFloor1 = tpFloor1
+	end,
 })
---@1 1:1,37:28479
-_G.TPFloor2 = false
---@9 1:1,37:28479
-Tab10:AddToggle({
-	Name = "TP Exit (2)",
-	Default = false,
-	Callback = function(state, arg508)
-		if state then
-			_G.TPFloor2 = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.TPFloor3 = false
---@9 1:1,37:28479
-Tab10:AddToggle({
-	Name = "TP Exit (3)",
-	Default = false,
-	Callback = function(state, arg510)
-		if state then
-			_G.TPFloor3 = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.TPFloor4 = false
---@9 1:1,37:28479
-Tab10:AddToggle({
+
+do
+	local n59 = nil
+	local n60 = nil
+
+	tbl.Raids:AddToggle({
+		Name = "TP Exit (2)",
+		Default = false,
+		Callback = function(tpFloor2)
+			n59 = 690924872
+			n60 = 495030611
+			_G.TPFloor2 = tpFloor2
+		end,
+	})
+end
+
+do
+	local n59 = nil
+	local n60 = nil
+
+	tbl.Raids:AddToggle({
+		Name = "TP Exit (3)",
+		Default = false,
+		Callback = function(tpFloor3)
+			n59 = 608076177
+			n60 = 701049793
+			_G.TPFloor3 = tpFloor3
+		end,
+	})
+end
+
+local n59 = nil
+
+tbl.Raids:AddToggle({
 	Name = "TP Exit (4)",
 	Default = false,
-	Callback = function(state, arg512)
-		if state then
-			_G.TPFloor4 = state
-		end
-	end
+	Callback = function(tpFloor4)
+		n59 = 153030796
+		_G.TPFloor4 = tpFloor4
+	end,
 })
---@1 1:1,37:28479
-Tab11:AddSection("Combat / AimBot")
---@1 1:1,37:28479
-Tab11:AddParagraph("All Players On Server", "")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 367:35216
-	wait(Sec)
+
+tbl.Combat:AddSection("Combat / AimBot")
+local allPlayersOnServerParagraph = tbl.Combat:AddParagraph("All Players On Server", "")
+
+spawn(function()
+	local v2, v3
+
+	while wait(Sec) do
+		pcall(function()
+			local n60 = #game:GetService("Players"):GetPlayers()
+
+			if n60 ~= 12 then
+				allPlayersOnServerParagraph:SetDesc("All Players : " .. n60 .. " / 12")
+			else
+				allPlayersOnServerParagraph:SetDesc("All Players : " .. n60 .. " / 12 [Max]")
+			end
+		end)
+	end
 end)
---@1 1:1,37:28479
-Tab11:AddParagraph("Aimbot Status", "")
---@4 1:1,37:28479
-spawn(function(...)
-	--@1 368:35226
-	wait(0.2)
-end)
---@1 1:1,37:28479
-_G.PlayersList = false
---@10 1:1,37:28479
-Tab11:AddDropdown({
+
+do
+	local aimbotStatusParagraph = tbl.Combat:AddParagraph("Aimbot Status", "")
+
+	Checking_AimStatus = function()
+		if _G.AimCam then
+			return "Aimbot Camera"
+		end
+
+		if _G.AimbotGun then
+			return "Aimbot Guns"
+		end
+		return ""
+	end
+
+	local n60 = nil
+
+	spawn(function()
+		n60 = 345692894
+
+		if wait(0.2) then
+			local v2, v3
+
+			repeat
+				pcall(function()
+					if _G.AimMethod then
+						if _G.AimCam then
+							aimbotStatusParagraph:SetDesc("Aimbot - " .. Checking_AimStatus() .. " : True")
+						elseif _G.AimbotGun then
+							aimbotStatusParagraph:SetDesc("Aimbot - " .. Checking_AimStatus() .. " : True")
+							return
+						else
+							aimbotStatusParagraph:SetDesc("Aimbot - Skills : True")
+						end
+					else
+						aimbotStatusParagraph:SetDesc("Aimbot - Skills : False")
+					end
+				end)
+			until not wait(0.2)
+		end
+	end)
+end
+
+tbl.Combat:AddDropdown({
 	Name = "Select Players",
 	Description = "",
 	Options = PlrList,
-	Callback = function(state, arg514)
-		if state then
-			_G.PlayersList = state
-		end
-	end
+	Callback = function(playersList)
+		_G.PlayersList = playersList
+	end,
 })
---@1 1:1,37:28479
-_G.TpPly = false
---@10 1:1,37:28479
-Tab11:AddToggle({
+
+tbl.Combat:AddToggle({
 	Name = "Teleport To Select Players",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg516)
-		if state then
-			_G.TpPly = state
-		end
-	end
+	Callback = function(tpPly)
+		_G.TpPly = tpPly
+	end,
 })
---@7 1:1,37:28479
-Tab11:AddToggle({
-	Name = "Spectate Select Players",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg518)
-	end
-})
---@7 1:1,37:28479
-Tab11:AddDropdown({
-	Name = "Select Aim Method",
-	Description = "",
-	Options = { "Aim Player", "Nearest Aim" },
-	Callback = function(state, arg520)
-	end
-})
---@1 1:1,37:28479
-_G.AimMethod = false
---@10 1:1,37:28479
-Tab11:AddToggle({
-	Name = "Aimbot Method Skills",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg522)
-		if state then
-			_G.AimMethod = state
-		end
-	end
-})
---@1 1:1,37:28479
-_G.AimCam = false
---@10 1:1,37:28479
-Tab11:AddToggle({
+
+do
+	local n60 = nil
+	local n61 = nil
+
+	tbl.Combat:AddToggle({
+		Name = "Spectate Select Players",
+		Description = "",
+		Default = false,
+		Callback = function(arg)
+			n60 = 47606393
+			n61 = 450667358
+			SpectatePlys = arg
+		end,
+	})
+end
+
+do
+	local n60 = nil
+	local n61 = nil
+
+	tbl.Combat:AddDropdown({
+		Name = "Select Aim Method",
+		Description = "",
+		Options = { "Aim Player", "Nearest Aim" },
+		Callback = function(arg)
+			n60 = 450289839
+			n61 = 836758616
+			ABmethod = arg
+		end,
+	})
+end
+
+do
+	local n60 = nil
+	local n61 = nil
+
+	tbl.Combat:AddToggle({
+		Name = "Aimbot Method Skills",
+		Description = "",
+		Default = false,
+		Callback = function(aimMethod)
+			n60 = 192766560
+			n61 = 349885454
+			_G.AimMethod = aimMethod
+		end,
+	})
+end
+
+tbl.Combat:AddToggle({
 	Name = "Aimbot Camera Closet Players",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg524)
-		if state then
-			_G.AimCam = state
-		end
-	end
+	Callback = function(aimCam)
+		_G.AimCam = aimCam
+	end,
 })
---@1 1:1,37:28479
-Tab11:AddSection("Quests Players")
---@7 1:1,37:28479
-Tab11:AddButton({
-	Name = "Get player quests",
-	Description = "",
-	Callback = function(state, arg526)
-		ReplicatedStorage.Remotes.CommF_:InvokeServer("PlayerHunter")
-	end
-})
---@1 1:1,37:28479
-_G.AutoReceivePlayerQuest = false
---@10 1:1,37:28479
-Tab11:AddToggle({
+
+tbl.Combat:AddSection("Quests Players")
+
+do
+	local n60 = nil
+	local n61 = nil
+
+	tbl.Combat:AddButton({
+		Name = "Get player quests",
+		Description = "",
+		Callback = function()
+			n60 = 892305827
+			n61 = 681696453
+			local n62 = nil
+			local v2, v3
+
+			pcall(function()
+				n62 = 750312018
+				game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("PlayerHunter")
+			end)
+		end,
+	})
+end
+
+tbl.Combat:AddToggle({
 	Name = "Auto Get PlayerQuest",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg528)
-		if state then
-			_G.AutoReceivePlayerQuest = state
-		end
-	end
+	Callback = function(autoReceivePlayerQuest)
+		_G.AutoReceivePlayerQuest = autoReceivePlayerQuest
+	end,
 })
---@1 1:1,37:28479
-_G.AutoPlayerHunter = false
---@9 1:1,37:28479
-Tab11:AddToggle({
+
+tbl.Combat:AddToggle({
 	Name = "Auto Kill Player Quest",
 	Default = false,
-	Callback = function(state, arg530)
-		if state then
-			_G.AutoPlayerHunter = state
+	Callback = function(autoPlayerHunter)
+		_G.AutoPlayerHunter = autoPlayerHunter
+
+		if not autoPlayerHunter then
+			Useskill = false
 		end
-	end
+	end,
 })
---@1 1:1,37:28479
-_G.AutoPvP = false
---@10 1:1,37:28479
-Tab11:AddToggle({
+
+tbl.Combat:AddToggle({
 	Name = "Auto Enable PvP",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg532)
-		if state then
-			_G.AutoPvP = state
-		end
-	end
+	Callback = function(autoPvP)
+		_G.AutoPvP = autoPvP
+	end,
 })
---@1 1:1,37:28479
-_G.SafeMode = false
---@9 1:1,37:28479
-Tab11:AddToggle({
-	Name = "Auto Safe Mode",
-	Default = false,
-	Callback = function(state, arg534)
-		if state then
-			_G.SafeMode = state
-		end
-	end
-})
---@1 1:1,37:28479
-Tab11:AddSection("LocalPlayer Settings")
---@11 1:1,37:28479
-Tab11:AddToggle({
+
+do
+	local n60 = nil
+	local n61 = nil
+
+	tbl.Combat:AddToggle({
+		Name = "Auto Safe Mode",
+		Default = false,
+		Callback = function(safeMode)
+			n60 = 995052408
+			n61 = 624771675
+			_G.SafeMode = safeMode
+		end,
+	})
+end
+
+tbl.Combat:AddSection("LocalPlayer Settings")
+
+tbl.Combat:AddToggle({
 	Name = "Enable Fly",
 	Default = false,
-	Callback = function(state, arg536)
-		if state then
-			toggleFly(state)
-		else
-			toggleFly(false)
-		end
-	end
+	Callback = function(arg)
+		toggleFly(arg)
+	end,
 })
---@13 1:1,37:28479
-Tab11:AddSlider({
+
+tbl.Combat:AddSlider({
 	Name = "Speed Fly Mode",
-	Default = 50,
-	Max = 200,
 	Min = 10,
-	Callback = function(state, arg538)
-		if state then
-			updateFlySpeed(state)
-		else
-			updateFlySpeed(false)
-		end
-	end
+	Max = 200,
+	Default = 50,
+	Callback = function(arg)
+		updateFlySpeed(arg)
+	end,
 })
---@1 1:1,37:28479
-getgenv().DodgeNoCD = false
---@9 1:1,37:28479
-Tab11:AddToggle({
+
+tbl.Combat:AddToggle({
 	Name = "Dash No Cooldown",
 	Default = false,
-	Callback = function(state, arg540)
-		if state then
-			getgenv().DodgeNoCD = state
-		end
-	end
+	Callback = function(dodgeNoCD)
+		getgenv().DodgeNoCD = dodgeNoCD
+	end,
 })
---@7 1:1,37:28479
-Tab11:AddToggle({
+
+tbl.Combat:AddToggle({
 	Name = "Instance Mink V3 [ INF ]",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg542)
-	end
+	Callback = function(arg)
+		InfAblities = arg
+	end,
 })
---@10 1:1,37:28479
-Tab11:AddToggle({
+
+local n60 = nil
+
+tbl.Combat:AddToggle({
 	Name = "Instance Energy [ INF ]",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg544)
-		if state then
-			getInfinity_Ability("Energy", state)
+	Callback = function(arg)
+		n60 = 683870474
+		infEnergy = arg
+
+		if arg then
+			getInfinity_Ability("Energy", infEnergy)
 		end
-	end
+	end,
 })
---@1 1:1,37:28479
-_G.InfSoru = false
---@11 1:1,37:28479
-Tab11:AddToggle({
+
+local n61 = nil
+
+tbl.Combat:AddToggle({
 	Name = "Instance Soru [ INF ]",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg546)
-		if state then
-			_G.InfSoru = state
-			getInfinity_Ability("Soru", state)
+	Callback = function(infSoru)
+		n61 = 744809026
+		_G.InfSoru = infSoru
+
+		if infSoru then
+			getInfinity_Ability("Soru", _G.InfSoru)
 		end
-	end
+	end,
 })
---@1 1:1,37:28479
-_G.InfiniteObRange = false
---@11 1:1,37:28479
-Tab11:AddToggle({
+
+tbl.Combat:AddToggle({
 	Name = "Instance Observation Range [ INF ]",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg548)
-		if state then
-			_G.InfiniteObRange = state
-			getInfinity_Ability("Observation", state)
+	Callback = function(infiniteObRange)
+		_G.InfiniteObRange = infiniteObRange
+
+		if infiniteObRange then
+			getInfinity_Ability("Observation", _G.InfiniteObRange)
 		end
-	end
+	end,
 })
---@1 1:1,37:28479
-_G.NoAimTeam = false
---@10 1:1,37:28479
-Tab11:AddToggle({
+
+tbl.Combat:AddToggle({
 	Name = "Ignore Same Teams",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg550)
-		if state then
-			_G.NoAimTeam = state
-		end
-	end
+	Callback = function(noAimTeam)
+		_G.NoAimTeam = noAimTeam
+	end,
 })
---@1 1:1,37:28479
-_G.AcceptAlly = false
---@10 1:1,37:28479
-Tab11:AddToggle({
-	Name = "Accept Allies",
-	Description = "",
-	Default = false,
-	Callback = function(state, arg552)
-		if state then
-			_G.AcceptAlly = state
-		end
-	end
-})
---@1 1:1,37:28479
-Tab12:AddSection("Travel - Worlds")
---@7 1:1,37:28479
-Tab12:AddButton({
-	Name = "Travel East Blue (World 1)",
-	Description = "",
-	Callback = function(state, arg554)
-		replicated.Remotes.CommF_:InvokeServer("TravelMain")
-	end
-})
---@7 1:1,37:28479
-Tab12:AddButton({
+
+do
+	local n62 = nil
+	local n63 = nil
+
+	tbl.Combat:AddToggle({
+		Name = "Accept Allies",
+		Description = "",
+		Default = false,
+		Callback = function(acceptAlly)
+			n62 = 502399689
+			n63 = 972754773
+			_G.AcceptAlly = acceptAlly
+		end,
+	})
+end
+
+tbl.Travel:AddSection("Travel - Worlds")
+
+do
+	local n62 = nil
+	local n63 = nil
+
+	tbl.Travel:AddButton({
+		Name = "Travel East Blue (World 1)",
+		Description = "",
+		Callback = function()
+			n62 = 405528124
+			n63 = 754856788
+			replicated.Remotes.CommF_:InvokeServer("TravelMain")
+		end,
+	})
+end
+
+local n62 = nil
+
+tbl.Travel:AddButton({
 	Name = "Travel Dressrosa (World 2)",
 	Description = "",
-	Callback = function(state, arg556)
+	Callback = function()
+		n62 = 550664574
 		replicated.Remotes.CommF_:InvokeServer("TravelDressrosa")
-	end
+	end,
 })
---@7 1:1,37:28479
-Tab12:AddButton({
-	Name = "Travel Zou (World 3)",
-	Description = "",
-	Callback = function(state, arg558)
-		replicated.Remotes.CommF_:InvokeServer("TravelZou")
-	end
-})
---@1 1:1,37:28479
-Tab12:AddSection("Travel - Island")
---@1 1:1,37:28479
-local children4 = workspace._WorldOrigin.Locations:GetChildren()
---@2 
-for k6, v8 in pairs(children4) do
+
+do
+	local n63 = nil
+	local n64 = nil
+
+	tbl.Travel:AddButton({
+		Name = "Travel Zou (World 3)",
+		Description = "",
+		Callback = function()
+			n63 = 175624796
+			n64 = 135981250
+			replicated.Remotes.CommF_:InvokeServer("TravelZou")
+		end,
+	})
 end
---@1 1:1,37:28479
-_G.Island = false
---@10 1:1,37:28479
-Tab12:AddDropdown({
-	Name = "Select Travelling",
-	Description = "",
-	Options = { v8.Name },
-	Callback = function(state, arg560)
-		if state then
-			_G.Island = state
-		end
+
+tbl.Travel:AddSection("Travel - Island")
+Location = {}
+local iter_z_1
+
+do
+	local v2, v3, v4 = pairs(workspace._WorldOrigin.Locations:GetChildren())
+	iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v5, v32, v42, v52, v6, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v5, v32, v42, v52, v6, v7, v8, v9, v10) end end); co(); return co end)(v3, v4)
+end
+
+while true do
+	local v2 = table.pack(iter_z_1())
+
+	if not v2[1] then
+		break
+	else
+		table.insert(Location, (v2[3]).Name)
 	end
-})
---@1 1:1,37:28479
-_G.Teleport = false
---@13 1:1,37:28479
-Tab12:AddToggle({
+end
+
+do
+	local n63 = nil
+	local n64 = nil
+
+	Travelllll = tbl.Travel:AddDropdown({
+		Name = "Select Travelling",
+		Description = "",
+		Options = Location,
+		Callback = function(island)
+			n63 = 85117405
+			n64 = 457689084
+			_G.Island = island
+		end,
+	})
+end
+
+GoIsland = tbl.Travel:AddToggle({
 	Name = "Auto Travel",
 	Description = "",
 	Default = false,
-	Callback = function(state, arg562)
-		if state then
-			_G.Teleport = state
-			local children5 = workspace._WorldOrigin.Locations:GetChildren()
-			for k7, v9 in pairs(children5) do
+	Callback = function(teleport)
+		_G.Teleport = teleport
+
+		if teleport then
+			local v2, v3, v4 = pairs(workspace._WorldOrigin.Locations:GetChildren())
+			local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v5, v32, v42, v52, v6, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v5, v32, v42, v52, v6, v7, v8, v9, v10) end end); co(); return co end)(v3, v4)
+			local exitTo = nil
+			local v5
+
+			while true do
+				local v6 = table.pack(iter_z_1())
+
+				if not v6[1] then
+					break
+				else
+					v5 = v6[3]
+					if v5.Name == _G.Island then
+						exitTo = 1
+						break
+					end
+				end
+			end
+
+			if exitTo == 1 then
+				wait()
+				local v6 = _tp
+				local cFrame = v5.CFrame
+				local cFrameNew = CFrame.new
+				local n63 = 0
+				local exitTo2 = nil
+
+				while true do
+					v6(cFrame * cFrameNew(n63, 30, 0))
+
+					if _G.Teleport then
+						exitTo2 = 1
+						break
+					else
+						local exitTo3 = nil
+
+						while true do
+							local v7 = table.pack(iter_z_1())
+
+							if not v7[1] then
+								break
+							else
+								v5 = v7[3]
+								if v5.Name == _G.Island then
+									exitTo3 = 1
+									break
+								end
+							end
+						end
+
+						if exitTo3 == 1 then
+							wait()
+							v6 = _tp
+							cFrame = v5.CFrame
+							cFrameNew = CFrame.new
+							continue
+						end
+
+						break
+					end
+				end
+
+				if exitTo2 == 1 then
+					while true do
+						if Root.CFrame ~= v5.CFrame then
+							wait()
+							_tp(v5.CFrame * CFrame.new(0, 30, 0))
+							if _G.Teleport then
+								continue
+							end
+						end
+
+						local exitTo4 = nil
+
+						while true do
+							local v7 = table.pack(iter_z_1())
+
+							if not v7[1] then
+								break
+							else
+								v5 = v7[3]
+
+								if v5.Name == _G.Island then
+									wait()
+									_tp(v5.CFrame * CFrame.new(0, 30, 0))
+									if _G.Teleport then
+										exitTo4 = 1
+										break
+									end
+								end
+							end
+						end
+
+						if exitTo4 == 1 then
+							continue
+						end
+						break
+					end
+				end
 			end
 		end
-	end
+	end,
 })
---@1 1:1,37:28479
-Tab12:AddSection("Travel - Portal")
---@1 1:1,37:28479
-_G.Island_PT = false
---@9 1:1,37:28479
-Tab12:AddDropdown({
+
+tbl.Travel:AddSection("Travel - Portal")
+
+if World1 then
+	Location_Portal = { "Sky", "UnderWater" }
+elseif World2 then
+	Location_Portal = { "SwanRoom", "Cursed Ship" }
+elseif World3 then
+	Location_Portal = { "Castle On The Sea", "Mansion Cafe", "Hydra Teleport", "Canvendish Room", "Temple of Time" }
+end
+
+PortalTP = tbl.Travel:AddDropdown({
 	Name = "Select Portal",
-	Options = { "Sky", "UnderWater" },
-	Callback = function(state, arg564)
-		if state then
-			_G.Island_PT = state
-		end
-	end
+	Options = Location_Portal,
+	Callback = function(islandPt)
+		_G.Island_PT = islandPt
+	end,
 })
---@6 1:1,37:28479
-Tab12:AddButton({
+
+tbl.Travel:AddButton({
 	Name = "requestEntrance",
 	Description = "",
-	Callback = function(state, arg566)
-	end
+	Callback = function()
+		if _G.Island_PT ~= "Sky" then
+			if _G.Island_PT ~= "UnderWater" then
+				if _G.Island_PT ~= "SwanRoom" then
+					if _G.Island_PT ~= "Cursed Ship" then
+						if _G.Island_PT ~= "Castle On The Sea" then
+							if _G.Island_PT ~= "Mansion Cafe" then
+								if _G.Island_PT ~= "Hydra Teleport" then
+									if _G.Island_PT ~= "Canvendish Room" then
+										if _G.Island_PT == "Temple of Time" then
+											replicated.Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(28310.0234, 14895.1123, 109.456741, -0.469690144, -2.85620132e-08, -0.882831335, -3.23509219e-08, 1, -1.51411736e-08, 0.882831335, 2.14487486e-08, -0.469690144))
+										end
+									else
+										replicated.Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(5314.54638671875, 22.562219619750977, -127.06755065917969))
+									end
+								else
+									replicated.Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(5643.45263671875, 1013.0858154296875, -340.51025390625))
+								end
+							else
+								replicated.Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(-12471.169921875, 374.94024658203, -7551.677734375))
+							end
+						else
+							replicated.Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(-5097.93164, 316.447021, -3142.66602, -0.405007899, -4.31682743e-08, 0.914313197, -1.90943332e-08, 1, 3.8755779e-08, -0.914313197, -1.76180437e-09, -0.405007899))
+						end
+					else
+						replicated.Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(923, 126, 32852))
+					end
+				else
+					replicated.Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(2285, 15, 905))
+				end
+			else
+				replicated.Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(61163, 11, 1819))
+			end
+		else
+			replicated.Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(-7894, 5547, -380))
+		end
+	end,
 })
---@1 1:1,37:28479
-Tab12:AddSection("Travel - NPCs")
---@1 1:1,37:28479
-local children6 = replicated.NPCs:GetChildren()
---@2 
-for k8, v10 in pairs(children6) do
+
+tbl.Travel:AddSection("Travel - NPCs")
+
+do
+	local v2, v3, v4 = pairs(replicated.NPCs:GetChildren())
+	iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v5, v32, v42, v52, v6, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v5, v32, v42, v52, v6, v7, v8, v9, v10) end end); co(); return co end)(v3, v4)
 end
+
+while true do
+	local v2 = table.pack(iter_z_1())
+
+	if not v2[1] then
+		break
+	else
+		table.insert(NPCList, (v2[3]).Name)
+	end
+end
+
+local n63 = nil
+
+NPCsPos = tbl.Travel:AddDropdown({
+	Name = "Select NPCs",
+	Options = NPCList,
+	Callback = function(arg)
+		n63 = 1051675978
+		NPClist = arg
+	end,
+})
+
+local n64
+n64 = nil
+local n65
+n65 = nil
+
+GoNPCs = tbl.Travel:AddToggle({
+	Name = "Auto Tween to NPC",
+	Description = "",
+	Default = false,
+	Callback = function(tpNpc)
+		n64 = 82226874
+		n65 = 565471458
+		_G.TPNpc = tpNpc
+	end,
+})
+
+tbl.Shop:AddSection("Shop Options")
+
+tbl.Shop:AddButton({
+	Name = "Buy Buso",
+	Description = "",
+	Callback = function()
+		replicated.Remotes.CommF_:InvokeServer("BuyHaki", "Buso")
+	end,
+})
+
+do
+	local n66 = nil
+	local n67 = nil
+
+	tbl.Shop:AddButton({
+		Name = "Buy Geppo",
+		Description = "",
+		Callback = function()
+			n66 = 738709861
+			n67 = 909547372
+			replicated.Remotes.CommF_:InvokeServer("BuyHaki", "Geppo")
+		end,
+	})
+end
+
+local n66 = nil
+
+tbl.Shop:AddButton({
+	Name = "Buy Soru",
+	Description = "",
+	Callback = function()
+		n66 = 457283242
+		replicated.Remotes.CommF_:InvokeServer("BuyHaki", "Soru")
+	end,
+})
+
+tbl.Shop:AddButton({
+	Name = "Buy Ken",
+	Description = "",
+	Callback = function()
+		replicated.Remotes.CommF_:InvokeServer("KenTalk", "Buy")
+	end,
+})
+
+tbl.Shop:AddSection("Fighting - Style")
+local n67 = nil
+
+tbl.Shop:AddButton({
+	Name = "Buy Black Leg",
+	Description = "",
+	Callback = function()
+		n67 = 345102573
+		replicated.Remotes.CommF_:InvokeServer("BuyBlackLeg")
+	end,
+})
+
+tbl.Shop:AddButton({
+	Name = "Buy Electro",
+	Description = "",
+	Callback = function()
+		replicated.Remotes.CommF_:InvokeServer("BuyElectro")
+	end,
+})
+
+local n68 = nil
+
+tbl.Shop:AddButton({
+	Name = "Buy Fishman Karate",
+	Description = "",
+	Callback = function()
+		n68 = 1065088353
+		replicated.Remotes.CommF_:InvokeServer("BuyFishmanKarate")
+	end,
+})
+
+local n69 = nil
+
+tbl.Shop:AddButton({
+	Name = "Buy DragonClaw",
+	Description = "",
+	Callback = function()
+		n69 = 355983673
+		replicated.Remotes.CommF_:InvokeServer("BlackbeardReward", "DragonClaw", "2")
+	end,
+})
+
+tbl.Shop:AddButton({
+	Name = "Buy Superhuman",
+	Description = "",
+	Callback = function()
+		replicated.Remotes.CommF_:InvokeServer("BuySuperhuman")
+	end,
+})
+
+tbl.Shop:AddButton({
+	Name = "Buy Death Step",
+	Description = "",
+	Callback = function()
+		replicated.Remotes.CommF_:InvokeServer("BuyDeathStep")
+	end,
+})
+
+do
+	local n70 = nil
+	local n71 = nil
+
+	tbl.Shop:AddButton({
+		Name = "Buy Sharkman Karate",
+		Description = "",
+		Callback = function()
+			n70 = 572595073
+			n71 = 1056466037
+			replicated.Remotes.CommF_:InvokeServer("BuySharkmanKarate")
+		end,
+	})
+end
+
+tbl.Shop:AddButton({
+	Name = "Buy ElectricClaw",
+	Description = "",
+	Callback = function()
+		replicated.Remotes.CommF_:InvokeServer("BuyElectricClaw")
+	end,
+})
+
+local n70 = nil
+
+tbl.Shop:AddButton({
+	Name = "Buy DragonTalon",
+	Description = "",
+	Callback = function()
+		n70 = 594192680
+		replicated.Remotes.CommF_:InvokeServer("BuyDragonTalon")
+	end,
+})
+
+tbl.Shop:AddButton({
+	Name = "Buy Godhuman",
+	Description = "",
+	Callback = function()
+		replicated.Remotes.CommF_:InvokeServer("BuyGodhuman")
+	end,
+})
+
+do
+	local n71 = nil
+	local n72 = nil
+
+	tbl.Shop:AddButton({
+		Name = "Buy SanguineArt",
+		Description = "",
+		Callback = function()
+			n71 = 59169610
+			n72 = 233609015
+			replicated.Remotes.CommF_:InvokeServer("BuySanguineArt")
+		end,
+	})
+end
+
+tbl.Shop:AddSection("Accessory")
+
+tbl.Shop:AddButton({
+	Name = "Buy Tomoe Ring",
+	Description = "",
+	Callback = function()
+		replicated.Remotes.CommF_:InvokeServer("BuyItem", "Tomoe Ring")
+	end,
+})
+
+tbl.Shop:AddButton({
+	Name = "Buy Black Cape",
+	Description = "",
+	Callback = function()
+		replicated.Remotes.CommF_:InvokeServer("BuyItem", "Black Cape")
+	end,
+})
+
+local n71 = nil
+
+tbl.Shop:AddButton({
+	Name = "Buy Swordsman Hat",
+	Description = "",
+	Callback = function()
+		n71 = 798772095
+		replicated.Remotes.CommF_:InvokeServer("BuyItem", "Swordsman Hat")
+	end,
+})
+
+tbl.Shop:AddButton({
+	Name = "Buy Bizarre Rifle",
+	Description = "",
+	Callback = function()
+		replicated.Remotes.CommF_:InvokeServer("Ectoplasm", "Buy", 1)
+	end,
+})
+
+local n72 = nil
+
+tbl.Shop:AddButton({
+	Name = "Buy Ghoul Mask",
+	Description = "",
+	Callback = function()
+		n72 = 1049673534
+		replicated.Remotes.CommF_:InvokeServer("Ectoplasm", "Buy", 2)
+	end,
+})
+
+tbl.Shop:AddSection("Weapon World1")
+
+tbl.Shop:AddButton({
+	Name = "Buy Cutlass",
+	Description = "",
+	Callback = function()
+		replicated.Remotes.CommF_:InvokeServer("BuyItem", "Cutlass")
+	end,
+})
+
+do
+	local n73 = nil
+	local n74 = nil
+
+	tbl.Shop:AddButton({
+		Name = "Buy Katana",
+		Description = "",
+		Callback = function()
+			n73 = 672226701
+			n74 = 287148114
+			replicated.Remotes.CommF_:InvokeServer("BuyItem", "Katana")
+		end,
+	})
+end
+
+local n73 = nil
+
+tbl.Shop:AddButton({
+	Name = "Buy Iron Mace",
+	Description = "",
+	Callback = function()
+		n73 = 755221571
+		replicated.Remotes.CommF_:InvokeServer("BuyItem", "Iron Mace")
+	end,
+})
+
+local n74 = nil
+
+tbl.Shop:AddButton({
+	Name = "Buy Duel Katana",
+	Description = "",
+	Callback = function()
+		n74 = 89842277
+		replicated.Remotes.CommF_:InvokeServer("BuyItem", "Duel Katana")
+	end,
+})
+
+tbl.Shop:AddButton({
+	Name = "Buy Triple Katana",
+	Description = "",
+	Callback = function()
+		replicated.Remotes.CommF_:InvokeServer("BuyItem", "Triple Katana")
+	end,
+})
+
+local n75 = nil
+
+tbl.Shop:AddButton({
+	Name = "Buy Pipe",
+	Description = "",
+	Callback = function()
+		n75 = 654272556
+		replicated.Remotes.CommF_:InvokeServer("BuyItem", "Pipe")
+	end,
+})
+
+tbl.Shop:AddButton({
+	Name = "Buy Dual-Headed Blade",
+	Description = "",
+	Callback = function()
+		replicated.Remotes.CommF_:InvokeServer("BuyItem", "Dual-Headed Blade")
+	end,
+})
+
+tbl.Shop:AddButton({
+	Name = "Buy Bisento",
+	Description = "",
+	Callback = function()
+		replicated.Remotes.CommF_:InvokeServer("BuyItem", "Bisento")
+	end,
+})
+
+tbl.Shop:AddButton({
+	Name = "Buy Soul Cane",
+	Description = "",
+	Callback = function()
+		replicated.Remotes.CommF_:InvokeServer("BuyItem", "Soul Cane")
+	end,
+})
+
+local n76 = nil
+
+tbl.Shop:AddButton({
+	Name = "Buy Slingshot",
+	Description = "",
+	Callback = function()
+		n76 = 1064081424
+		replicated.Remotes.CommF_:InvokeServer("BuyItem", "Slingshot")
+	end,
+})
+
+tbl.Shop:AddButton({
+	Name = "Buy Musket",
+	Description = "",
+	Callback = function()
+		replicated.Remotes.CommF_:InvokeServer("BuyItem", "Musket")
+	end,
+})
+
+tbl.Shop:AddButton({
+	Name = "Buy Dual Flintlock",
+	Description = "",
+	Callback = function()
+		replicated.Remotes.CommF_:InvokeServer("BuyItem", "Dual Flintlock")
+	end,
+})
+
+do
+	local n77 = nil
+	local n78 = nil
+
+	tbl.Shop:AddButton({
+		Name = "Buy Flintlock",
+		Description = "",
+		Callback = function()
+			n77 = 456814190
+			n78 = 149575426
+			replicated.Remotes.CommF_:InvokeServer("BuyItem", "Flintlock")
+		end,
+	})
+end
+
+tbl.Shop:AddButton({
+	Name = "Buy Refined Flintlock",
+	Description = "",
+	Callback = function()
+		replicated.Remotes.CommF_:InvokeServer("BuyItem", "Refined Flintlock")
+	end,
+})
+
+local n77 = nil
+
+tbl.Shop:AddButton({
+	Name = "Buy Cannon",
+	Description = "",
+	Callback = function()
+		n77 = 661524211
+		replicated.Remotes.CommF_:InvokeServer("BuyItem", "Cannon")
+	end,
+})
+
+tbl.Shop:AddButton({
+	Name = "Buy Kabucha",
+	Description = "",
+	Callback = function()
+		replicated.Remotes.CommF_:InvokeServer("BlackbeardReward", "Slingshot", "2")
+	end,
+})
+
+tbl.Shop:AddSection("Fragments shop")
+
+tbl.Shop:AddButton({
+	Name = "Buy Refund Stats",
+	Description = "",
+	Callback = function()
+		replicated.Remotes.CommF_:InvokeServer("BlackbeardReward", "Refund", "2")
+	end,
+})
+
+do
+	local n78 = nil
+	local n79 = nil
+
+	tbl.Shop:AddButton({
+		Name = "Buy Reroll Race",
+		Description = "",
+		Callback = function()
+			n78 = 9949170
+			n79 = 850065121
+			replicated.Remotes.CommF_:InvokeServer("BlackbeardReward", "Reroll", "2")
+		end,
+	})
+end
+
+local n78
+n78 = nil
+local n79 = nil
+
+tbl.Shop:AddButton({
+	Name = "Buy Ghoul Race",
+	Description = "",
+	Callback = function()
+		n78 = 774906485
+		n79 = 21633180
+		replicated.Remotes.CommF_:InvokeServer("Ectoplasm", " Change", 4)
+	end,
+})
+
+tbl.Shop:AddButton({
+	Name = "Buy Cyborg Race (2.5k)",
+	Description = "",
+	Callback = function()
+		replicated.Remotes.CommF_:InvokeServer("CyborgTrainer", " Buy")
+	end,
+})
+
+tbl.Shop:AddButton({
+	Name = "Buy Draco Race",
+	Callback = function()
+		_tp(CFrame.new(5814.42724609375, 1208.3267822265625, 884.57855224609375))
+		local vector = Vector3.new(5814.42724609375, 1208.3267822265625, 884.57855224609375)
+		local character = player.Character or player.CharacterAdded:Wait()
+
+		repeat
+			wait()
+		until (character.HumanoidRootPart.Position - vector).Magnitude < 1
+
+		game:GetService("ReplicatedStorage").Modules.Net:FindFirstChild("RF/InteractDragonQuest"):InvokeServer(unpack({ { NPC = "Dragon Wizard", Command = "DragonRace" } }))
+	end,
+})
+
+tbl.Misc:AddSection("Server - Function")
+local n80 = nil
+
+tbl.Misc:AddButton({
+	Name = "Redeem All Codes",
+	Description = "",
+	Callback = function()
+		n80 = 639402064
+
+		local nameList = {
+			"LIGHTNINGABUSE",
+			"1LOSTADMIN",
+			"ADMINFIGHT",
+			"GIFTING_HOURS",
+			"NOMOREHACK",
+			"BANEXPLOIT",
+			"WildDares",
+			"BossBuild",
+			"GetPranked",
+			"EARN_FRUITS",
+			"SUB2GAMERROBOT_RESET1",
+			"KITT_RESET",
+			"Bignews",
+			"CHANDLER",
+			"Fudd10",
+			"fudd10_v2",
+			"Sub2UncleKizaru",
+			"FIGHT4FRUIT",
+			"kittgaming",
+			"TRIPLEABUSE",
+			"Sub2CaptainMaui",
+			"Sub2Fer999",
+			"Enyu_is_Pro",
+			"Magicbus",
+			"JCWK",
+			"Starcodeheo",
+			"Bluxxy",
+			"SUB2GAMERROBOT_EXP1",
+			"Sub2NoobMaster123",
+			"Sub2Daigrock",
+			"Axiore",
+			"TantaiGaming",
+			"StrawHatMaine",
+			"Sub2OfficialNoobie",
+			"TheGreatAce",
+			"JULYUPDATE_RESET",
+			"ADMINHACKED",
+			"SEATROLLING",
+			"24NOADMIN",
+			"ADMIN_TROLL",
+			"NEWTROLL",
+			"SECRET_ADMIN",
+			"staffbattle",
+			"NOEXPLOIT",
+			"NOOB2ADMIN",
+			"CODESLIDE",
+			"fruitconcepts",
+			"krazydares",
+		}
+
+		local redeem = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):FindFirstChild("Redeem")
+
+		if redeem then
+			local n81 = nil
+			local n82 = nil
+			local v2, v3, v4 = ipairs(nameList)
+			local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v5, v32, v42, v52, v6, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v5, v32, v42, v52, v6, v7, v8, v9, v10) end end); co(); return co end)(v3, v4)
+			local v5, v6, v7
+
+			while true do
+				local v8 = table.pack(iter_z_1())
+
+				if not v8[1] then
+					break
+				else
+					local v9 = v8[3]
+					task.wait(0)
+
+					pcall(function()
+						n81 = 592362480
+						n82 = 295405002
+
+						if redeem.InvokeServer then
+							redeem:InvokeServer(v9)
+						else
+							redeem:FireServer(v9)
+						end
+					end)
+				end
+			end
+		end
+	end,
+})
+
+tbl.Misc:AddButton({
+	Name = "Rejoin Server",
+	Description = "",
+	Callback = function()
+		game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
+	end,
+})
+
+local n81 = nil
+
+tbl.Misc:AddButton({
+	Name = "Hop Server",
+	Description = "",
+	Callback = function()
+		n81 = 772945254
+		local n82 = nil
+		local n83 = nil
+
+		task.spawn(function()
+			n82 = 321063495
+			n83 = 775667422
+			local HttpService = game:GetService("HttpService")
+			local TeleportService = game:GetService("TeleportService")
+			local placeId = game.PlaceId
+			local Players = game:GetService("Players")
+			local v2, id, v3, v4, ok, result
+
+			ok, result = pcall(function()
+				local response = game:HttpGet("https://games.roblox.com/v1/games/" .. placeId .. "/servers/Public?sortOrder=Asc&limit=100")
+				return HttpService:JSONDecode(response).data
+			end)
+
+			if ok and result then
+				id = nil
+				local v5, v6
+				v5, v2, v6 = pairs(result)
+				local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v7, v32, v42, v52, v62, v72, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v7, v32, v42, v52, v62, v72, v8, v9, v10) end end); co(); return co end)(v2, v6)
+
+				while true do
+					local v7 = table.pack(iter_z_1())
+
+					if not v7[1] then
+						break
+					else
+						local v8 = v7[3]
+
+						if v8.playing < v8.maxPlayers then
+							id = v8.id
+						end
+					end
+				end
+
+				if id then
+					pcall(function()
+						TeleportService:TeleportToPlaceInstance(placeId, id, Players.LocalPlayer)
+						error("devirt: needs a constant that is not decoded yet (at 0:7)")
+					end)
+				end
+			end
+		end)
+	end,
+})
+
+tbl.Misc:AddButton({
+	Name = "Hop to Lowest Players",
+	Description = "",
+	Callback = function()
+		game:GetService("HttpService")
+		local TeleportService = game:GetService("TeleportService")
+		local placeId = game.PlaceId
+		local nextPageCursor = nil
+		local v2
+
+		repeat
+			local v3 = ListServers(nextPageCursor)
+			v2 = v3.data[1]
+			nextPageCursor = v3.nextPageCursor
+		until v2
+
+		TeleportService:TeleportToPlaceInstance(placeId, v2.id, plr)
+	end,
+})
+
+local n82 = nil
+
+tbl.Misc:AddButton({
+	Name = "Hop to Lowest Pings Server",
+	Description = "",
+	Callback = function()
+		n82 = 567473711
+		game:GetService("HttpService")
+		local TeleportService = game:GetService("TeleportService")
+		local Stats = game:GetService("Stats")
+		local placeId = game.PlaceId
+		local v2 = fetchServersData(placeId, 100)
+
+		if v2 then
+			local v3 = v2[1]
+			local v4, v5, v6 = pairs(v2)
+			local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v7, v32, v42, v52, v62, v72, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v7, v32, v42, v52, v62, v72, v8, v9, v10) end end); co(); return co end)(v5, v6)
+
+			while true do
+				local v7 = table.pack(iter_z_1())
+
+				if not v7[1] then
+					break
+				else
+					local v8 = v7[3]
+
+					if v8.ping < v3.ping and v8.playing < v8.maxPlayers then
+						v3 = v8
+					end
+				end
+			end
+
+			task.wait(0.5)
+
+			if tonumber(Stats.Network.ServerStatsItem["Data Ping"]:GetValueString():match("(%d+)")) >= 100 then
+				TeleportService:TeleportToPlaceInstance(placeId, v3.id)
+			end
+		end
+	end,
+})
+
+do
+	local n83 = nil
+	local n84 = nil
+
+	tbl.Misc:AddTextBox({
+		Name = "Input Job Id",
+		Placeholder = "Job ID",
+		ClearOnFocus = true,
+		Callback = function(job)
+			n83 = 212007157
+			n84 = 757624657
+			getgenv().Job = job
+		end,
+	})
+end
+
+tbl.Misc:AddButton({
+	Name = "Teleport [Job ID]",
+	Callback = function()
+		if getgenv().Job and getgenv().Job ~= "" then
+			local localPlayer = game.Players.LocalPlayer
+			game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, getgenv().Job, localPlayer)
+		end
+	end,
+})
+
+tbl.Misc:AddButton({
+	Name = "Copy JobID",
+	Description = "",
+	Callback = function()
+		setclipboard(tostring(game.JobId))
+	end,
+})
+
+tbl.Misc:AddSection("Player Gui / Others")
+
+tbl.Misc:AddButton({
+	Name = "Open Awakenings Expert",
+	Description = "",
+	Callback = function()
+		plr.PlayerGui.Main.AwakeningToggler.Visible = true
+	end,
+})
+
+tbl.Misc:AddButton({
+	Name = "Open Title Selection",
+	Description = "",
+	Callback = function()
+		replicated.Remotes.CommF_:InvokeServer("getTitles", true)
+		plr.PlayerGui.Main.Titles.Visible = true
+	end,
+})
+
+local n83
+n83 = nil
+local n84 = nil
+
+DisbleChat = tbl.Misc:AddToggle({
+	Name = "Disable Chat GUI",
+	Description = "",
+	Default = false,
+	Callback = function(rechat)
+		n83 = 834835690
+		n84 = 850505124
+		_G.Rechat = rechat
+
+		if _G.Rechat ~= true then
+			if _G.chat == false then
+				game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
+			end
+		else
+			game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.Chat, false)
+		end
+	end,
+})
+
+DisbleLeaderB = tbl.Misc:AddToggle({
+	Name = "Disable Leader Board GUI",
+	Description = "",
+	Default = false,
+	Callback = function(arg)
+		ReLeader = arg
+
+		if ReLeader ~= true then
+			if ReLeader == false then
+				game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.PlayerList, true)
+			end
+		else
+			game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.PlayerList, false)
+		end
+	end,
+})
+
+local n85 = nil
+
+tbl.Misc:AddButton({
+	Name = "Set Pirate Team",
+	Description = "",
+	Callback = function()
+		n85 = 1025483282
+		Pirates()
+	end,
+})
+
+local n86 = nil
+
+tbl.Misc:AddButton({
+	Name = "Set Marine Team",
+	Description = "",
+	Callback = function()
+		n86 = 518519970
+		Marines()
+	end,
+})
+
+UnPortal = tbl.Misc:AddToggle({
+	Name = "Unlock All Portals",
+	Description = "",
+	Default = false,
+	Callback = function(portalUnLock)
+		_G.PortalUnLock = portalUnLock
+	end,
+})
+
+tbl.Misc:AddSection("Graphics / Haki Stats")
+HakiSt = { "State 0", "State 1", "State 2", "State 3", "State 4", "State 5" }
+
+HakiStat = tbl.Misc:AddDropdown({
+	Name = "Select Haki States",
+	Options = HakiSt,
+	Callback = function(selectStateHaki)
+		_G.SelectStateHaki = selectStateHaki
+	end,
+})
+
+tbl.Misc:AddButton({
+	Name = "ChangeBusoStage",
+	Description = "",
+	Callback = function()
+		if _G.SelectStateHaki ~= "State 0" then
+			if _G.SelectStateHaki ~= "State 1" then
+				if _G.SelectStateHaki ~= "State 2" then
+					if _G.SelectStateHaki ~= "State 3" then
+						if _G.SelectStateHaki ~= "State 4" then
+							if _G.SelectStateHaki == "State 5" then
+								replicated.Remotes.CommF_:InvokeServer("ChangeBusoStage", 5)
+							end
+						else
+							replicated.Remotes.CommF_:InvokeServer("ChangeBusoStage", 4)
+						end
+					else
+						replicated.Remotes.CommF_:InvokeServer("ChangeBusoStage", 3)
+					end
+				else
+					replicated.Remotes.CommF_:InvokeServer("ChangeBusoStage", 2)
+				end
+			else
+				replicated.Remotes.CommF_:InvokeServer("ChangeBusoStage", 1)
+			end
+		else
+			replicated.Remotes.CommF_:InvokeServer("ChangeBusoStage", 0)
+		end
+	end,
+})
+
+rtxM = tbl.Misc:AddToggle({
+	Name = "Turn on RTX Mode",
+	Description = "",
+	Default = false,
+	Callback = function(rtxMode)
+		_G.RTXMode = rtxMode
+		local lighting = game.Lighting
+		local colorCorrectionEffect = Instance.new("ColorCorrectionEffect", lighting)
+		local colorCorrectionEffect2 = Instance.new("ColorCorrectionEffect", lighting)
+		OldAmbient = lighting.Ambient
+		OldBrightness = lighting.Brightness
+		OldColorShift_Top = lighting.ColorShift_Top
+		OldBrightnessc = colorCorrectionEffect.Brightness
+		OldContrastc = colorCorrectionEffect.Contrast
+		OldTintColorc = colorCorrectionEffect.TintColor
+		OldTintColore = colorCorrectionEffect2.TintColor
+
+		if _G.RTXMode then
+			while _G.RTXMode do
+				wait()
+				lighting.Ambient = Color3.fromRGB(33, 33, 33)
+				lighting.Brightness = 0.3
+				colorCorrectionEffect.Brightness = 0.176
+				colorCorrectionEffect.Contrast = 0.39
+				colorCorrectionEffect.TintColor = Color3.fromRGB(217, 145, 57)
+				game.Lighting.FogEnd = 999
+
+				if not plr.Character.HumanoidRootPart:FindFirstChild("PointLight") then
+					local pointLight = Instance.new("PointLight")
+					pointLight.Parent = plr.Character.HumanoidRootPart
+					pointLight.Range = 15
+					pointLight.Color = Color3.fromRGB(217, 145, 57)
+				end
+
+				if not _G.RTXMode then
+					lighting.Ambient = OldAmbient
+					lighting.Brightness = OldBrightness
+					lighting.ColorShift_Top = OldColorShift_Top
+					colorCorrectionEffect.Contrast = OldContrastc
+					colorCorrectionEffect.Brightness = OldBrightnessc
+					colorCorrectionEffect.TintColor = OldTintColorc
+					colorCorrectionEffect2.TintColor = OldTintColore
+					game.Lighting.FogEnd = 2500
+					plr.Character.HumanoidRootPart:FindFirstChild("PointLight"):Destroy()
+				end
+			end
+		end
+	end,
+})
+
+tbl.Misc:AddButton({
+	Name = "Turn on Fast Mode",
+	Description = "",
+	Callback = function()
+		local descendants, v2 = workspace:GetDescendants()
+		local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v3, v32, v4, v5, v6, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v3, v32, v4, v5, v6, v7, v8, v9, v10) end end); co(); return co end)(descendants, v2)
+
+		while true do
+			local v3 = table.pack(iter_z_1())
+
+			if not v3[1] then
+				break
+			else
+				local v4 = v3[3]
+
+				if table.find(Past, v4.ClassName) then
+					v4.Material = "Plastic"
+				end
+			end
+		end
+	end,
+})
+
+do
+	local n87 = nil
+	local n88 = nil
+
+	tbl.Misc:AddButton({
+		Name = "Turn on Low CPU",
+		Description = "",
+		Callback = function()
+			n87 = 852477412
+			n88 = 814277590
+			LowCpu()
+		end,
+	})
+end
+
+local n87 = nil
+
+tbl.Misc:AddButton({
+	Name = "Turn on increase Boats",
+	Description = "",
+	Callback = function()
+		n87 = 597127335
+		local v2, v3, v4 = pairs(workspace.Boats:GetDescendants())
+		local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v5, v32, v42, v52, v6, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v5, v32, v42, v52, v6, v7, v8, v9, v10) end end); co(); return co end)(v3, v4)
+		local v5 = table.pack(iter_z_1())
+
+		if v5[1] then
+			local v6 = v5[3]
+			local tableFind = table.find
+			local v7 = ListSeaBoat
+
+			while true do
+				if tableFind(v7, v6.Name) and tostring(v6.Owner.Value) == tostring(plr.Name) then
+					v6.VehicleSeat.MaxSpeed = 350
+					v6.VehicleSeat.Torque = 0.2
+					v6.VehicleSeat.TurnSpeed = 5
+					v6.VehicleSeat.HeadsUpDisplay = true
+				end
+
+				local v8 = table.pack(iter_z_1())
+
+				if v8[1] then
+					v6 = v8[3]
+					tableFind = table.find
+					v7 = ListSeaBoat
+					continue
+				end
+
+				break
+			end
+		end
+	end,
+})
+
+do
+	local n88 = nil
+	local n89 = nil
+
+	tbl.Misc:AddButton({
+		Name = "Remove Sky Fog",
+		Description = "",
+		Callback = function()
+			n88 = 340111625
+			n89 = 1012991894
+
+			if Lighting:FindFirstChild("LightingLayers") then
+				Lighting.LightingLayers:Destroy()
+			end
+
+			if Lighting:FindFirstChild("SeaTerrorCC") then
+				Lighting.SeaTerrorCC:Destroy()
+			end
+
+			if Lighting:FindFirstChild("FantasySky") then
+				Lighting.FantasySky:Destroy()
+			end
+		end,
+	})
+end
+
+tbl.Misc:AddSection("Configure - God")
+
+tbl.Misc:AddButton({
+	Name = "Rain Fruits (Client)",
+	Description = "",
+	Callback = function()
+		local n88 = nil
+		local n89 = nil
+		local v2, v3, v4 = pairs(game:GetObjects("rbxassetid://14759368201")[1]:GetChildren())
+		local iter_z_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v5, v32, v42, v52, v6, v7, v8, v9, v10 in f, s, var do coroutine.yield(true, k, v5, v32, v42, v52, v6, v7, v8, v9, v10) end end); co(); return co end)(v3, v4)
+
+		while true do
+			local v5 = table.pack(iter_z_1())
+
+			if not v5[1] then
+				break
+			else
+				local v6 = v5[3]
+				v6.Parent = game.Workspace.Map
+				local random = math.random
+				v6:MoveTo(plr.Character.PrimaryPart.Position + Vector3.new(math.random(-50, 50), 100, random(-50, 50)))
+
+				if v6.Fruit:FindFirstChild("AnimationController") then
+					while true do
+						local fruit = v6.Fruit
+						v6.Fruit:FindFirstChild("AnimationController"):LoadAnimation(fruit:FindFirstChild("Idle")):Play()
+						local exitTo = nil
+
+						while true do
+							v6.Handle.Touched:Connect(function(hit)
+								n88 = 631667604
+								n89 = 521000969
+
+								if hit.Parent == plr.Character then
+									v6.Parent = plr.Backpack
+									plr.Character.Humanoid:EquipTool(v6)
+								end
+							end)
+
+							local v7 = table.pack(iter_z_1())
+
+							if not v7[1] then
+								break
+							else
+								v6 = v7[3]
+								v6.Parent = game.Workspace.Map
+								local random2 = math.random
+								v6:MoveTo(plr.Character.PrimaryPart.Position + Vector3.new(math.random(-50, 50), 100, random2(-50, 50)))
+								if v6.Fruit:FindFirstChild("AnimationController") then
+									exitTo = 1
+									break
+								end
+							end
+						end
+
+						if exitTo == 1 then
+							continue
+						end
+						break
+					end
+
+					return
+				else
+					v6.Handle.Touched:Connect(function(hit)
+						n88 = 631667604
+						n89 = 521000969
+
+						if hit.Parent == plr.Character then
+							v6.Parent = plr.Backpack
+							plr.Character.Humanoid:EquipTool(v6)
+						end
+					end)
+				end
+			end
+		end
+	end,
+})
+
+do
+	local n88 = nil
+	local n89 = nil
+
+	briggt1 = tbl.Misc:AddToggle({
+		Name = "Turn on Full Bright",
+		Description = "",
+		Default = false,
+		Callback = function(arg)
+			n88 = 325975154
+			n89 = 891762181
+			bright = arg
+
+			if arg ~= true then
+				Lighting.Ambient = Color3.new(0, 0, 0)
+				Lighting.ColorShift_Bottom = Color3.new(0, 0, 0)
+				Lighting.ColorShift_Top = Color3.new(0, 0, 0)
+			else
+				Lighting.Ambient = Color3.new(1, 1, 1)
+				Lighting.ColorShift_Bottom = Color3.new(1, 1, 1)
+				Lighting.ColorShift_Top = Color3.new(1, 1, 1)
+			end
+		end,
+	})
+end
+
+DayN = tbl.Misc:AddDropdown({
+	Name = "Select Time",
+	Description = "",
+	Options = { "Day", "Night" },
+	Default = Day,
+	Callback = function(selectDN)
+		_G.SelectDN = selectDN
+	end,
+})
+
+dayornight = tbl.Misc:AddToggle({
+	Name = "Turn on Time",
+	Description = "",
+	Default = false,
+	Callback = function(daylightN)
+		_G.daylightN = daylightN
+	end,
+})
+
+walkWater = tbl.Misc:AddToggle({
+	Name = "Turn on Walk on Water",
+	Description = "",
+	Default = true,
+	Callback = function(walkWaterPart)
+		_G.WalkWater_Part = walkWaterPart
+
+		if _G.WalkWater_Part then
+			game:GetService("Workspace").Map["WaterBase-Plane"].Size = Vector3.new(1000, 112, 1000)
+		else
+			game:GetService("Workspace").Map["WaterBase-Plane"].Size = Vector3.new(1000, 80, 1000)
+		end
+	end,
+})
+
+do
+	local n88 = nil
+	local n89 = nil
+
+	iceWalk = tbl.Misc:AddToggle({
+		Name = "Turn on Ice Walk",
+		Description = "",
+		Default = false,
+		Callback = function(walkWater_)
+			n88 = 626286440
+			n89 = 134137993
+			_G.WalkWater = walkWater_
+		end,
+	})
+end
+
+v:Notify({
+	Title = "Gavz Hub",
+	Content = "Gavz Hub comeback",
+	Image = "rbxassetid://108267040590174",
+	Duration = 5,
+})
+print("Deobf By Zed")

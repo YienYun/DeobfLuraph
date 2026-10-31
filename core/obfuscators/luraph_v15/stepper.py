@@ -31,8 +31,8 @@ from ir import (
     fmt_const, fmt_stmt, fmt_node,
 )
 from obfuscators.luraph_v15.dump import OpaqueFn, JitFrame
-from obfuscators.luraph_v15.dataflow import BoxProxy, FrameProxy, UpList
-from obfuscators.luraph_v15.vm_model import Overlay, State, VMCrash, VMModel, iter_nodes
+from obfuscators.luraph_v15.dataflow import BoxProxy, BoxPart, FrameProxy, UpList
+from obfuscators.luraph_v15.vm_model import Overlay, PackTop, State, VMCrash, VMModel, iter_nodes
 
 class GenIterMaker:
     """coroutine.wrap(helper) of Luraph's generic-for: called once with
@@ -140,6 +140,7 @@ class Stepper:
                 self.mode_decl = mv["local"]["location"]
         self.first_inner = self.loops[0][0]
         self.gov = Overlay()
+        self.gov_ver = 0
 
         self._detect_regfile()
         self._fix_vararg_pointers()
@@ -429,6 +430,7 @@ class Stepper:
             for sc, vdict in self._init_scope_vars:
                 sc.vars = dict(vdict)
             self.gov = Overlay()
+            self.gov_ver = 0
         it = S.Interp(self.lf)
         cs, inner = self._fresh_scopes(None, it)
         for k, vreg in self.vreg_of.items():
@@ -456,35 +458,82 @@ class Stepper:
         ))
         return State(mode, pc, ks.vars[self.vm.kstack_key] if ks else None, jregs=init_jr, locs=locs)
 
+    @staticmethod
+    def _v14_carryable_expr(v, max_nodes=8):
+        if not isinstance(v, (Index, Bin, Un)):
+            return False
+        st = [v]
+        cnt = 0
+        while st:
+            x = st.pop()
+            cnt += 1
+            if cnt > max_nodes:
+                return False
+            if isinstance(x, (Reg, Pseudo, Global, Upval, BoxProxy, BoxPart, FrameProxy)):
+                continue
+            if isinstance(x, Const) and (x.v is None or isinstance(x.v, (bool, int, float, bytes, str))):
+                continue
+            if isinstance(x, TailCount) and isinstance(x.tail, VarargTail):
+                continue
+            if isinstance(x, Index):
+                st.append(x.obj)
+                st.append(x.key)
+                continue
+            if isinstance(x, Bin):
+                st.append(x.a)
+                st.append(x.b)
+                continue
+            if isinstance(x, Un):
+                st.append(x.a)
+                continue
+            return False
+        return True
+
+    def _is_carryable_val(self, v, is_v14=False):
+        if v is None or isinstance(v, (RegFile, EnvTable, LTable, Builtin, OpaqueFn, Opaque, Buf, PackTop)):
+            return True
+        if is_v14 and isinstance(v, (UpList, BoxProxy, BoxPart, UpContainer, FrameProxy, Upval)):
+            return True
+        if isinstance(v, (Reg, Pseudo, Global)):
+            return True
+        if isinstance(v, Const) and (v.v is None or isinstance(v.v, (bool, int, float, bytes, str))):
+            return True
+        if isinstance(v, (bytes, str)) or (isinstance(v, (int, float)) and not isinstance(v, complex)):
+            return True
+        if isinstance(v, TailCount) and isinstance(v.tail, VarargTail):
+            return True
+        if isinstance(v, SymList) and not v.items and isinstance(v.tail, VarargTail):
+            return True
+        if is_v14 and self._v14_carryable_expr(v):
+            return True
+        return False
+
     def _carried(self, inner):
         """State.locs: the carried locals' current values. Values the state
         cannot represent (impure/symbolic chains) are SKIPPED: the next
         handler then sees nil, the pre-carry behaviour -- raising here would
         discard the whole step's output."""
+        is_v14 = getattr(self.lf, "_is_v14", False)
+        active_packs = {r for r, _ in self.lf.state_packs()} if is_v14 else ()
         out = []
         for k in sorted(self.carry):
             v = inner.vars.get(k)
-            if v is None or isinstance(v, (RegFile, EnvTable, LTable, Builtin, OpaqueFn, Opaque, Buf)):
-                # nil before first write; a register-file alias (v14.9's
-                # `p=(b)` holding the register array between handlers); the
-                # proto table, env, and other concrete VM values
-                out.append((k, v))
+            if is_v14 and isinstance(v, Expr) and hasattr(self.lf, "_resolve_tail_bound"):
+                tb = self.lf._resolve_tail_bound(v)
+                if tb is not None and isinstance(tb[1], TempTail):
+                    if tb[0] in active_packs:
+                        out.append((k, PackTop(tb[0])))
+                    else:
+                        out.append((k, max(0, tb[0] - 1)))
+                    continue
+            if is_v14 and isinstance(v, PackTop):
+                if v.n in active_packs:
+                    out.append((k, v))
+                else:
+                    out.append((k, max(0, v.n - 1)))
                 continue
-            if isinstance(v, (Reg, Pseudo, Global)):
-                # pure register reads / pseudo vars / env reads carried
-                # between v14.9's split handlers
+            if self._is_carryable_val(v, is_v14=is_v14):
                 out.append((k, v))
-                continue
-            if isinstance(v, Const) and (v.v is None or isinstance(v.v, (bool, int, float, bytes, str))):
-                out.append((k, v))
-                continue
-            if isinstance(v, (bytes, str)) or \
-                    (isinstance(v, (int, float)) and not isinstance(v, complex)):
-                # numbers and booleans (v14.9 carries e.g. the upvalue flag)
-                out.append((k, v))
-                continue
-            # uncarryable (symbolic chain, closure, temp): skip it
-            continue
         return tuple(out)
 
     def _fresh_scopes(self, state, it):
@@ -534,9 +583,12 @@ class Stepper:
 
         lf.ov_base = self.gov
         lf.ov = None
+        lf.proto_ov_base = state.ov if (state is not None and isinstance(state.ov, Overlay)) else None
+        lf.proto_ov = None
         lf.packs = dict(state.packs) if state is not None else {}
         lf.pack_copies = {}
         lf.pack_read = set()
+        lf.pending_tail = None
         it = S.Interp(lf)
         lf.cur_it = it
         it.decisions = list(decisions)
@@ -583,6 +635,8 @@ class Stepper:
                     if k in acc.written:
                         cs.vars[k] = dict.get(acc, k)
                 outcome = ("ret", self.post_return(it, cs, r.values))
+        if hasattr(lf, "finalize_step_closures"):
+            lf.finalize_step_closures()
         if outcome[0] == "ret" and outcome is not None and len(outcome) == 2 and outcome[1] is None:
             outcome = ("ret", Multi([]))
         if outcome[0] == "ret":
@@ -603,16 +657,18 @@ class Stepper:
                 return inner.lookup(k).vars[k]
             locs = self._carried(inner)
             sb = lf.stack_base
+            is_v14 = getattr(lf, "_is_v14", False)
             if sb is not None and locs:
                 ints = [v for k, v in locs if k in self.sp_cands and isinstance(v, int) and not isinstance(v, bool)]
                 top = max(ints) if ints else -1
                 jr = tuple(sorted((k, v) for k, v in lf.jvals.items()
-                                  if (k not in lf.jread or k in lf.cff_regs or isinstance(v, LTable) or (isinstance(k, int) and sb < k <= top))
-                                  and (k in lf.cff_regs or isinstance(v, LTable) or not (isinstance(k, int) and k > top))))
+                                  if (k not in lf.jread or k in lf.cff_regs or (is_v14 and k in lf.jump_regs) or isinstance(v, (LTable, OpaqueFn)) or (isinstance(k, int) and sb < k <= top))
+                                  and (k in lf.cff_regs or (is_v14 and k in lf.jump_regs) or isinstance(v, (LTable, OpaqueFn)) or not (isinstance(k, int) and k > top))))
             else:
-                jr = tuple(sorted((k, v) for k, v in lf.jvals.items() if k not in lf.jread or k in lf.cff_regs or isinstance(v, LTable)))
+                jr = tuple(sorted((k, v) for k, v in lf.jvals.items() if k not in lf.jread or k in lf.cff_regs or (is_v14 and k in lf.jump_regs) or isinstance(v, (LTable, OpaqueFn))))
+            next_ov = (lf.proto_ov.flattened() if lf.proto_ov is not None else lf.proto_ov_base) if is_v14 else None
             nxt = State(get(self.mode_decl) if self.mode_decl else 0, get(self.pc_decl), get(self.vm.kstack_key) if self.vm.kstack_key else None,
-                        jr, None, lf.state_packs(), locs)
+                        jr, next_ov, lf.state_packs(), locs)
             return it, Next(nxt)
         return it, Ret(outcome[1])
 
@@ -621,6 +677,7 @@ class Stepper:
         carried local (see __init__) sets `new_carry`."""
         if getattr(self, "no_carry", False):
             return
+        is_v14 = getattr(self.lf, "_is_v14", False)
         for k in acc.written:
             if k not in self.vreg_of:
                 self.last_written_val[k] = dict.get(acc, k)
@@ -628,7 +685,19 @@ class Stepper:
         self.written |= acc.written
         for k in (self.read_first & self.written & self.sp_cands) - self.carry - self.not_carried - self.fixed_decls:
             v = dict.get(acc, k)
-            if k in self.lf.special or not (isinstance(v, int) and not isinstance(v, bool)):
+            lw = self.last_written_val.get(k, v)
+            if k in self.lf.special or not (isinstance(lw, int) and not isinstance(lw, bool)):
+                if is_v14 and k not in self.lf.special:
+                    if self._is_carryable_val(lw, is_v14=True) or self._is_carryable_val(v, is_v14=True):
+                        self.carry.add(k)
+                        self.new_carry = True
+                    continue
+                if not is_v14 and self.lf.stack_base is None and isinstance(lw, (Reg, Bin)):
+                    vreg = 800000 + len(self.vreg_of) + 1
+                    self.vreg_of[k] = vreg
+                    self.lf.vreg_set.add(vreg)
+                    self.new_carry = True
+                    continue
                 self.not_carried.add(k)
                 continue
             self.carry.add(k)
@@ -641,26 +710,35 @@ class Stepper:
         for k in (self.read_first & self.written) - self.sp_cands - self.carry - set(self.vreg_of) - self.not_carried - self.fixed_decls:
             v = dict.get(acc, k)
             lw = self.last_written_val.get(k, v)
-            if self.lf.stack_base is None and not (self.carry & self.sp_cands) and isinstance(lw, Reg):
+            if not is_v14 and self.lf.stack_base is None and not (self.carry & self.sp_cands) and (
+                    isinstance(lw, Reg) or (isinstance(lw, Bin) and any(isinstance(x, TailCount) for x in self._expr_nodes(lw)))):
                 vreg = 800000 + len(self.vreg_of) + 1
                 self.vreg_of[k] = vreg
                 self.lf.vreg_set.add(vreg)
                 self.new_carry = True
                 continue
-            if v is None or isinstance(v, (RegFile, EnvTable, LTable, Builtin, OpaqueFn, Opaque, Buf, bytes, str)) or \
-                    isinstance(v, (Reg, Pseudo, Global)) or \
-                    (isinstance(v, Const) and (v.v is None or isinstance(v.v, (bool, int, float, bytes, str)))):
+            if self._is_carryable_val(v, is_v14=is_v14) or (is_v14 and self._is_carryable_val(lw, is_v14=True)):
                 self.carry.add(k)
                 self.new_carry = True
-        if self.lf.stack_base is None and not (self.carry & self.sp_cands):
+        if not is_v14 and self.lf.stack_base is None and not (self.carry & self.sp_cands):
             for k in list(self.carry):
                 lw = self.last_written_val.get(k)
-                if isinstance(lw, Reg) and lw.n not in self.lf.vreg_set:
+                if (isinstance(lw, Reg) and lw.n not in self.lf.vreg_set) or (
+                        isinstance(lw, Bin) and any(isinstance(x, TailCount) for x in self._expr_nodes(lw))):
                     self.carry.discard(k)
                     vreg = 800000 + len(self.vreg_of) + 1
                     self.vreg_of[k] = vreg
                     self.lf.vreg_set.add(vreg)
                     self.new_carry = True
+
+    @staticmethod
+    def _expr_nodes(e):
+        st = [e]
+        while st:
+            x = st.pop()
+            if isinstance(x, Expr):
+                yield x
+                st.extend(v for v in x.__dict__.values() if isinstance(v, Expr))
 
     def post_return(self, it, cs, values):
         """The handler returned from the protected function: run the code after it."""
@@ -697,7 +775,6 @@ class Stepper:
                 if len(paths) == 1:
                     writes = self.lf.ov
             if writes is not None:
-
                 for k, v in writes.d.items():
                     if k[0] not in self.lf.proto_arrays or not is_sym(v):
                         self.gov.d[k] = v

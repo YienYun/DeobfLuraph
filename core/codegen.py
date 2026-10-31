@@ -289,7 +289,7 @@ def expr_key(e):
     if isinstance(e, Const):
         return "K" + repr(e.v)
     if isinstance(e, Reg):
-        return "R%d" % e.n
+        return "R%s" % e.n
     if isinstance(e, Upval):
         return "U%d" % e.idx
     if isinstance(e, Global):
@@ -1576,9 +1576,9 @@ class Renderer:
             if all(x == 1 for x in xyz):
                 return "Vector3.one"
             return "Vector3.new(%s)" % ", ".join(self.const(x) for x in xyz)
-        if type(e).__name__ == "Missing":
+        if type(e).__name__ in ("Missing", "NilIndex"):
             return "nil --[[ constant not decoded ]]"
-        return "--[[?%s]]" % type(e).__name__
+        return "nil --[[?%s]]" % type(e).__name__
 
     def prefix(self, e):
         """Expression usable before `.x`, `[k]`, `(args)`, `:m()`."""

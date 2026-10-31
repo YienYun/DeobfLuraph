@@ -303,18 +303,22 @@ def closure_entries(root):
     return [(l, c, name) for (l, c), name in seen.items()]
 
 
-def maker_info(root):
-    dispatches = find_dispatchers(root)
+def maker_info(root, disp=None):
+    dispatches = disp if disp is not None else find_dispatchers(root)
     by_node = {id(d["node"]): d for d in dispatches}
     out = {}
 
     def walk_tree(n, stack, stmts):
         if isinstance(n, dict):
             t = n.get("type")
+            pushed_fn = False
+            pushed_st = False
             if t == "AstExprFunction":
-                stack = stack + [n]
+                stack.append(n)
+                pushed_fn = True
             if t and t.startswith("AstStat"):
-                stmts = stmts + [(n, len(stack) + 1)]
+                stmts.append((n, len(stack) + 1))
+                pushed_st = True
             if t in ("AstStatWhile", "AstStatRepeat") and id(n) in by_node:
                 picked = _select_vm_factory(stack, stmts, by_node[id(n)])
                 if picked is not None:
@@ -331,11 +335,16 @@ def maker_info(root):
                                 "pf_key": args[pi]["name"],
                                 "maker": maker, "vm": clo, "stmt": st,
                                 "maker_depth": mi,
+                                "chain": list(stack[:mi]),
                                 "dispatch_pc": by_node[id(n)].get("pc"),
                                 "dispatch_arr": by_node[id(n)].get("arr"),
                             }
             for v in n.values():
                 walk_tree(v, stack, stmts)
+            if pushed_st:
+                stmts.pop()
+            if pushed_fn:
+                stack.pop()
         elif isinstance(n, list):
             for v in n:
                 walk_tree(v, stack, stmts)
@@ -343,7 +352,7 @@ def maker_info(root):
     walk_tree(root, [], [])
     for info in out.values():
         info["captures"] = _captures(info)
-        info["outer_env"] = _outer_captures(info)
+        info["outer_env"] = _outer_captures(root, info)
     return list(out.values())
 
 
@@ -394,34 +403,200 @@ def _maker_params(maker):
     return pi, ui
 
 
+def _loc_start(key):
+    a = str(key).split(" - ")[0]
+    l, c = a.split(",")
+    return int(l), int(c)
+
+
+def ctor_assignments(root):
+    """Functions assigned by index into a captured table anywhere in the
+    source: `(d)[0x36]=function(...) ...` -> {(b"d", 54): fn}."""
+    out = {}
+
+    def _fix_int(v):
+        return int(v) if isinstance(v, (int, float)) and float(v).is_integer() else v
+
+    def visit(n):
+        if isinstance(n, dict):
+            if n.get("type") == "AstStatAssign":
+                for var, val in zip(n.get("vars") or (), n.get("values") or ()):
+                    val = unwrap(val)
+                    if not isinstance(val, dict) or val.get("type") != "AstExprFunction":
+                        continue
+                    if var.get("type") == "AstExprIndexExpr":
+                        base = local_name(unwrap(var.get("expr")))
+                        idx = unwrap(var.get("index"))
+                        if not base or not isinstance(idx, dict):
+                            continue
+                        if idx.get("type") == "AstExprConstantNumber":
+                            out.setdefault((base.encode("latin-1"), _fix_int(idx["value"])), val)
+                        elif idx.get("type") == "AstExprConstantString":
+                            out.setdefault((base.encode("latin-1"), idx["value"].encode("latin-1")), val)
+                    elif var.get("type") == "AstExprIndexName":
+                        base = local_name(unwrap(var.get("expr")))
+                        idx_nm = var.get("index")
+                        if base and isinstance(idx_nm, str):
+                            out.setdefault((base.encode("latin-1"), idx_nm.encode("latin-1")), val)
+            for v in list(n.values()):
+                visit(v)
+        elif isinstance(n, list):
+            for v in n:
+                visit(v)
+    visit(root)
+    return out
+
+
+def outer_decls(root, target):
+    """{decl key: name} of every declaration outside `target` (a function
+    node) that encloses it on the root->target path."""
+    found = {}
+
+    def visit(n, stack):
+        if isinstance(n, dict):
+            t = n.get("type")
+            pushed = False
+            if t == "AstExprFunction":
+                stack.append(n)
+                pushed = True
+            if n is target:
+                for fn in stack[:-1]:
+                    for k, nm in _decls_in(fn).items():
+                        found[k] = nm
+            for v in list(n.values()):
+                visit(v, stack)
+            if pushed:
+                stack.pop()
+        elif isinstance(n, list):
+            for v in n:
+                visit(v, stack)
+    visit(root, [])
+    return found
+
+
+def plain_curried_makers(root):
+    """Curried LPH_NO_VIRTUALIZE factories in setmetatable({...}) ctor tables."""
+    disp_nodes = {id(d["node"]) for d in find_dispatchers(root)}
+    hooked_locs = set()
+    for info in maker_info(root):
+        c3 = info.get("curried3")
+        if c3:
+            hooked_locs.add(c3["f3"]["location"])
+            hooked_locs.add(c3["f2"]["location"])
+            if c3.get("f1"):
+                hooked_locs.add(c3["f1"]["location"])
+
+    def _contains_disp(fn):
+        st = [fn]
+        while st:
+            x = st.pop()
+            if isinstance(x, dict):
+                if id(x) in disp_nodes:
+                    return True
+                st.extend(x.values())
+            elif isinstance(x, list):
+                st.extend(x)
+        return False
+
+    out = []
+    seen = set()
+
+    def visit(n):
+        if isinstance(n, dict):
+            if n.get("type") == "AstExprCall" and n["func"].get("type") == "AstExprGlobal" \
+                    and n["func"]["global"] == "setmetatable" and n["args"] \
+                    and n["args"][0]["type"] == "AstExprTable":
+                for it in n["args"][0]["items"]:
+                    f3 = it.get("value")
+                    if not isinstance(f3, dict) or f3.get("type") != "AstExprFunction":
+                        continue
+                    if f3.get("vararg") or len(f3.get("args") or []) < 2:
+                        continue
+                    b3 = (f3.get("body") or {}).get("body") or []
+                    if len(b3) != 1 or b3[0].get("type") != "AstStatReturn" or len(b3[0].get("list") or []) != 1:
+                        continue
+                    f2 = b3[0]["list"][0]
+                    if not isinstance(f2, dict) or f2.get("type") != "AstExprFunction" or f2.get("vararg"):
+                        continue
+                    b2 = (f2.get("body") or {}).get("body") or []
+                    if not b2 or b2[-1].get("type") != "AstStatReturn" or len(b2[-1].get("list") or []) != 1:
+                        continue
+                    if not all(st.get("type") == "AstStatLocal" for st in b2[:-1]):
+                        continue
+                    f1 = b2[-1]["list"][0]
+                    if not isinstance(f1, dict) or f1.get("type") != "AstExprFunction":
+                        continue
+                    b1 = (f1.get("body") or {}).get("body") or []
+                    if (len(b1) == 2 and b1[0].get("type") == "AstStatLocal"
+                            and b1[1].get("type") == "AstStatWhile"
+                            and (b1[1].get("condition") or {}).get("type") == "AstExprConstantBool"
+                            and b1[1]["condition"].get("value") is True):
+                        continue
+                    if f3["location"] in hooked_locs or f2["location"] in hooked_locs or _contains_disp(f1):
+                        continue
+                    if f2["location"] in seen:
+                        continue
+                    seen.add(f2["location"])
+                    l2, c2, _, _ = loc(f2)
+                    out.append({"at": (l2, c2), "f3": f3, "f2": f2, "f1": f1})
+            for v in n.values():
+                visit(v)
+        elif isinstance(n, list):
+            for v in n:
+                visit(v)
+    visit(root)
+    return out
+
+
 def _captures(info):
     maker_decls = _decls_in(info["maker"])
-    used = {}
+    chain_decls = {}
+    if info.get("chain"):
+        mk = _loc_start(info["maker"]["location"])
+        for fn in info["chain"]:
+            for k, nm in _decls_in(fn).items():
+                if _loc_start(k) <= mk:
+                    chain_decls.setdefault(nm, []).append(k)
+
+    used_maker = {}
+    used_chain = {}
 
     def visit(n):
         if isinstance(n, dict):
             if n.get("type") == "AstExprLocal":
                 k = decl_key(n["local"])
+                nm = n["local"]["name"]
                 if k in maker_decls:
-                    used[k] = maker_decls[k]
+                    used_maker[k] = nm
+                elif nm in chain_decls and k in chain_decls[nm]:
+                    used_chain[k] = nm
             for v in n.values():
                 visit(v)
         elif isinstance(n, list):
             for v in n:
                 visit(v)
     visit(info["vm"])
-    names = {}
-    for k, name in used.items():
-        names.setdefault(name, []).append(k)
-    dup = {nm for nm, ks in names.items() if len(ks) > 1}
-    by_name = {}
+
+    def single(members, decls_by_name):
+        names = {}
+        for k, nm in members.items():
+            names.setdefault(nm, set()).add(k)
+        return {nm for nm, ks in names.items() if len(ks) == 1 and len(decls_by_name.get(nm, [])) == 1}
+
+    maker_by_name = {}
     for k, nm in maker_decls.items():
-        by_name.setdefault(nm, []).append(k)
-    return sorted(nm for nm in names if nm not in dup and len(by_name[nm]) == 1)
+        maker_by_name.setdefault(nm, []).append(k)
+    maker_names = set(maker_by_name.keys())
+    caps = single(used_maker, maker_by_name)
+    for nm in single(used_chain, chain_decls):
+        if nm not in maker_names:
+            caps.add(nm)
+    return sorted(caps)
 
 
-def _outer_captures(info):
-    own = set(_decls_in(info["maker"]))
+def _outer_captures(root, info):
+    enclosing = outer_decls(root, info["maker"])
+    maker_names = set(_decls_in(info["maker"]).values())
     found = {}
 
     def visit(n):
@@ -429,7 +604,7 @@ def _outer_captures(info):
             if n.get("type") == "AstExprLocal":
                 loc_ = n.get("local") or {}
                 key = decl_key(loc_)
-                if key not in own and loc_.get("name"):
+                if key in enclosing and loc_.get("name"):
                     found.setdefault(key, loc_["name"])
             for v in n.values():
                 visit(v)
@@ -447,7 +622,12 @@ def _outer_captures(info):
         if len(by_name[name]) != 1:
             continue
         idx += 1
-        out.append({"decl": key, "name": name, "field": "__venv%d" % idx})
+        out.append({
+            "decl": key,
+            "name": name,
+            "field": "__venv%d" % idx,
+            "shadowed": name in maker_names,
+        })
     return out
 
 

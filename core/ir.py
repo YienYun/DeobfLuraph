@@ -91,7 +91,7 @@ def _fmt_expr(e):
     if isinstance(e, Const):
         return fmt_const(e.v)
     if isinstance(e, Reg):
-        return "r%d" % e.n
+        return "r%s" % e.n
     if isinstance(e, Pseudo):
         return "%s_%d" % (e.name, e.depth)
     if isinstance(e, Global):

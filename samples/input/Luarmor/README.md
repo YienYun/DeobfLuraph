@@ -1,22 +1,24 @@
 # Luarmor samples
 
-Drop the **raw protected script text** here — the file a Luarmor customer
-downloads and runs, not a trace and not a screenshot.
+Real files from the Luarmor v4 chain, plus what the track does with them.
 
-What the Luarmor track needs to start:
-
-| Item | Why |
+| File | What it is |
 | --- | --- |
-| The protected `.lua` / `.luau` / `.txt` exactly as shipped | the engine reads its loader and encrypted payload |
-| Luarmor tier/version, if known (Free / Standard / Pro / v4 / v5) | selects the unpacker and the VM profile |
-| (optional) the same script before protection | lets the lift be diffed against ground truth |
+| `SampleV1_client_stub.lua` | a saved client stub (1.4 KB): `_bsdata0` + cache key + init URL. Carries no script — it downloads one after the licence handshake. |
+| `SampleV2_sephal_init.lua` | the sephal init (331 KB): `superflow_bytecode={...}` followed by a Luraph v15 chunk. This *is* code, and it gets devirtualized. |
 
-Things that do **not** help: executor console output, `print` traces,
-screenshots, or the `_bsdata0` blob on its own.
+A Luarmor-*served* payload (a Luraph v15 chunk that references
+`api.luarmor.net/files/v4/loaders/<id>.lua`) is filed with the Luraph samples;
+`samples/input/Luraph/SampleV3.lua` is exactly that, and both engines agree it
+lifts to 42 functions with 0 unlifted blocks.
 
-Outputs land in `samples/output/Luarmor/`, one file per input, same naming
-as the Luraph track (`SampleV1.lua` -> `SampleV1.lua`).
+```bash
+node deob.js samples/input/Luarmor            # both samples -> samples/output/Luarmor
+python3 core/obfuscators/luarmor/analyze.py samples/input/Luarmor/SampleV1_client_stub.lua
+```
 
-> Licensing loaders (`Luarmor v4` / `_bsdata0`) are refused by design:
-> this track deobfuscates the *script* the loader carries, it does not
-> bypass the licence check.
+Outputs: the devirtualized init, the annotated stub, and a `.luarmor.json`
+report (client tag, sha256 fields, build stamp, endpoints, loader ids) for each.
+
+> Licensing loaders are analysed, not bypassed: the licence check and the
+> session payload behind it are server-side steps that stay server-side.

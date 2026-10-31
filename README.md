@@ -14,12 +14,13 @@ Standalone, modular reverse-compilation and deobfuscation toolkit for Lua 5.1 an
 | **MoonSec V2 / V3** | `core/obfuscators/moonsec/` | JS Bytecode Lifter ➔ `.luac` ➔ `luadec` / Lua 5.1 Decompiler |
 | **IronBrew v2 / AztupBrew** | `core/obfuscators/ironbrew2/` | JS + Python AST VM Lifter ➔ `.luac` ➔ `luadec` |
 | **IronBrew v1** | `core/obfuscators/ironbrew1/` | Static VM Deserializer & Lifter |
+| **Luarmor v4** | `core/obfuscators/luarmor/` | Client-chain Analyzer (stub ➔ sephal init ➔ session) + Luraph v15 lift of the shipped chunk, metadata report next to the output |
 | **Prometheus** | `core/obfuscators/prometheus/` | AST Constant Array & Control-Flow Unflattener |
 | **PSU v4.x** | `core/obfuscators/psu/` | VM Bytecode Deserializer & Lifter |
 | **Hercules** | `core/obfuscators/hercules/` | Wrapper & String/State Unpacker |
 | **LuaObfuscator / Goofyscator / f77 / xHider** | `core/obfuscators/{luaobfuscator,goofyscator,f77,xhider}/` | Dedicated Unpackers & Constant Decoders |
 
-> **Note:** Client-side licensing/DRM loaders (`Luarmor v4` / `_bsdata0`) are detected and explicitly refused rather than bypassed.
+> **Note:** `Luarmor v4` files are analysed and, when they carry code (the sephal init, or a loader Luarmor served), devirtualized. The licence check itself is not bypassed: the session payload lives on Luarmor's server behind a key, and a bare `_bsdata0` client stub is reported — with its module id, hashes, build stamp and endpoints — instead of being faked into something it is not.
 
 ---
 
@@ -92,6 +93,10 @@ node deob.js samples/input/Luraph/script.lua
 # Process an entire folder recursively
 node deob.js samples/input/
 
+# Luarmor v4: static chain report (no execution) or the full track
+python3 core/obfuscators/luarmor/analyze.py samples/input/Luarmor/SampleV1_client_stub.lua
+node deob.js samples/input/Luarmor
+
 # Save a single file to a custom path
 node deob.js input.lua -o output.lua
 
@@ -114,6 +119,7 @@ When Luraph or MoonVeil ships a new build, each concern is isolated to a single 
 - **Lazy constant buffer decryption / dump format** ➔ `core/obfuscators/luraph_v15/dump.py` & `patches.py`
 - **CFG loop/branch structuring across all VM lifters** ➔ `core/structure.py` & `core/loops.py`
 - **MoonVeil 2.1+ permutation / opcode specs** ➔ `core/obfuscators/moonveil/moonveil21/` & `beautify.py`
+- **Luarmor chain layout (`_bsdata0` / `superflow_bytecode` / init URL / handshake)** ➔ `core/obfuscators/luarmor/{stub,probe}.py`
 - **Detector signatures** ➔ `src/detect.js`
 
 ---

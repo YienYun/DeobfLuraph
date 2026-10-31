@@ -76,9 +76,19 @@ const LUARMOR_SIGS = [
   /Kick\(\s*"\[Luarmor\]/,
 ];
 
+// Luarmor v4 chain markers: the sephal init blob, the client stub table, or a
+// Luarmor-served loader/payload URL. Any of these plus a Luraph chunk means the
+// file is code Luarmor shipped, which the Luarmor track lifts with metadata.
+const LUARMOR_CHAIN = [
+  /\bsuperflow_bytecode(?:_ext\d+)?\s*=\s*\{/,
+  /\b_bsdata0\s*=\s*\{/,
+  /cdn\.luarmor\.net\/v4_init_/i,
+  /api\.luarmor\.net\/files\/v\d\/(?:loaders|scripts)\//i,
+];
+
 function detectLuarmor(source) {
-  const head = source.slice(0, 2500);
-  if (/^\s*superflow_bytecode\s*=\s*\{/.test(head)) return 0.95;
+  const head = source.slice(0, 65536);
+  if (/\bsuperflow_bytecode(?:_ext\d+)?\s*=\s*\{/.test(head)) return 0.95;
   if (/\b_bsdata0\s*=\s*\{/.test(head) && (/\bsuperflow_bytecode(?:_ext\d+)?\s*=/.test(head) || /luarmor\.net\/v4_init_/i.test(source))) {
     return 0.95;
   }
@@ -86,6 +96,9 @@ function detectLuarmor(source) {
   for (const rx of LUARMOR_SIGS) {
     if (rx.test(source)) hits += 1;
   }
+  // A Luraph chunk that references the Luarmor chain is a Luarmor payload
+  // (loader or served script), not a plain Luraph file.
+  if (hits >= 1 && LUARMOR_CHAIN.some((rx) => rx.test(source))) return 1.0;
   if (hits >= 4) return 1.0;
   if (hits >= 3) return 0.9;
   if (hits >= 2) return 0.7;
@@ -222,9 +235,9 @@ function detectWynfuscate(source) {
 }
 
 const PLUGINS = [
+  { name: 'luarmor_client', label: 'Luarmor v4 (client stub / sephal init / served payload)', detect: detectLuarmor },
   { name: 'luraph_v15', label: 'Luraph v15', detect: detectLuraphV15 },
   { name: 'luraph_v14', label: 'Luraph v14 (v14.7–v14.9)', detect: detectLuraphV14 },
-  { name: 'luarmor_client', label: 'Luarmor whitelist client (loader; payload not devirtualizable)', detect: detectLuarmor },
   { name: 'moonsec', label: 'MoonSec V3 / V2', detect: detectMoonsec },
   { name: 'moonveil', label: 'MoonVeil', detect: detectMoonveil },
   { name: 'prometheus', label: 'Prometheus', detect: detectPrometheus },
@@ -256,6 +269,9 @@ const ALIASES = {
   ib2: 'ironbrew2',
   aztupbrew: 'ironbrew2',
   '77fuscator': 'f77',
+  luarmor: 'luarmor_client',
+  'luarmor-v4': 'luarmor_client',
+  luarmor_client: 'luarmor_client',
 };
 
 const ZSTD_B64_ENVELOPE_RE = /DecompressBuffer\s*\(\s*buffer\.fromstring\s*\(\s*base64\.decode\s*['"]([A-Za-z0-9+/=\s]+)['"]\s*\)\s*,\s*Enum\.CompressionAlgorithm\.Zstd\s*\)/;

@@ -285,9 +285,27 @@ async function processFile(absInput, args) {
 
     let result;
     if (plugin.name === 'luarmor_client') {
-      // Auth-gated loaders are not supported by this checkout. Do not point
-      // users at a probe tool that is not actually included in the project.
-      throw new Error('Luarmor whitelist client detected — this loader is not supported by this project.');
+      // Luarmor v4 chain: report what the file carries, then devirtualize the
+      // Luraph v15 chunk if there is one (the sephal init, or a loader Luarmor
+      // served). A bare client stub has no code to lift and stays as it is,
+      // annotated, next to a .luarmor.json report.
+      const luarmor = require('./src/luarmor');
+      const meta = luarmor.analyze(job.sourcePath);
+      job.luarmor = meta;
+      luarmor.announce(meta);
+      const reportPath = luarmor.writeReport(final, meta);
+      process.stderr.write(`[*] luarmor report: ${reportPath}\n`);
+      job.warnings.push(`Luarmor v4 ${meta.kind}: ${meta.label}`);
+      if (meta.luraph_payload) {
+        result = await driver.run(job);
+        if (result && fs.existsSync(result)) luarmor.prependHeader(result, meta);
+      } else {
+        const stubPath = job.path('.luarmor-stub.lua');
+        fs.mkdirSync(path.dirname(stubPath), { recursive: true });
+        fs.writeFileSync(stubPath, luarmor.annotateStub(fixed, meta), 'latin1');
+        job.resultType = 'luarmor-client-stub';
+        result = stubPath;
+      }
     } else if (plugin.name === 'luraph_v15') {
       result = await driver.run(job);
     } else if (plugin.name === 'generic') {

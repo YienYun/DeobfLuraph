@@ -18,7 +18,8 @@ Standalone, modular reverse-compilation and deobfuscation toolkit for Lua 5.1 an
 | **Prometheus** | `core/obfuscators/prometheus/` | AST Constant Array & Control-Flow Unflattener |
 | **PSU v4.x** | `core/obfuscators/psu/` | VM Bytecode Deserializer & Lifter |
 | **Hercules** | `core/obfuscators/hercules/` | Wrapper & String/State Unpacker |
-| **LuaObfuscator / Goofyscator / f77 / xHider** | `core/obfuscators/{luaobfuscator,goofyscator,f77,xhider}/` | Dedicated Unpackers & Constant Decoders |
+| **LuaObfuscator** | `core/obfuscators/luaobfuscator/` | Banner + XOR string decoder ➔ VM payload decoder (protos / registers / superinstruction expansion) ➔ readability cleanup. Vectors, oracle and the preset matrix live in `samples/input/LuaObfuscator/README.md` |
+| **Goofyscator / f77 / xHider** | `core/obfuscators/{goofyscator,f77,xhider}/` | Dedicated Unpackers & Constant Decoders |
 
 > **Note:** `Luarmor v4` files are analysed and, when they carry code (the sephal init, or a loader Luarmor served), devirtualized. The licence check itself is not bypassed: the session payload lives on Luarmor's server behind a key, and a bare `_bsdata0` client stub is reported — with its module id, hashes, build stamp and endpoints — instead of being faked into something it is not.
 
@@ -105,6 +106,9 @@ node deob.js input.lua --detect
 
 # Optional manual Layer-2 variable renaming & cleanup on an already-deobfuscated file
 node renamer/index.js samples/output/Luraph/script.lua -o samples/output/Luraph/script_clean.lua
+
+# Semantic oracle: run an original and its deobfuscated copy, diff the CHECK lines
+node tools/oracle/compare.js test/vectors/luaobfuscator/vector1.lua samples/output/LuaObfuscator/out.lua
 ```
 
 ---

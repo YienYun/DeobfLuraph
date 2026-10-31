@@ -81,10 +81,28 @@ async function runPrometheus(job) {
 }
 
 async function runLuaObfuscator(job) {
+  // The static transforms parse Lua with luaparse; without it every sample
+  // "fails" and the pipeline quietly hands back a behaviour trace instead.
+  try {
+    require.resolve('luaparse');
+  } catch (err) {
+    throw new Error('luaparse is not installed, run `npm install` at the repository root '
+      + '(the LuaObfuscator transforms cannot parse Lua without it)');
+  }
   const cli = path.join(OBFUSCATORS, 'luaobfuscator', 'src', 'cli.js');
   const stdout = runNodeCli([cli, job.sourcePath, '--stdout'], job.args.timeout);
   if (!stdout.trim()) throw new Error('LuaObfuscator returned empty stdout');
   const out = job.write(job.path('.luaobfuscator.lua'), stdout);
+  // The VM presets are decoded into a rehosted machine: register ops, proto
+  // tables and `::Lnn::` labels. That is the payload, decoded, but it is not
+  // source yet and goto/labels are rejected by Lua 5.1 and by Luau.
+  if (/^\s*::L\d+::/m.test(stdout)) {
+    const labels = (stdout.match(/::L\d+::/g) || []).length;
+    const gotos = (stdout.match(/\bgoto\s+L\d+/g) || []).length;
+    job.warnings.push(`LuaObfuscator VM payload decoded into a rehosted machine (${labels} labels, `
+      + `${gotos} goto jumps): it still needs structural lifting before it is runnable Luau.`);
+    process.stderr.write(`[!] decoded VM payload uses ${labels} labels / ${gotos} gotos: rehost, not source\n`);
+  }
   return finalizeStaticResult(job, out, 'LuaObfuscator');
 }
 

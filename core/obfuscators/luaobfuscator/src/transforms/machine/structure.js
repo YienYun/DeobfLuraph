@@ -457,7 +457,11 @@ class Structurer {
   }
 
   leave(target, ctx) {
-    if (ctx.stops && ctx.stops.has(target)) return [];
+    // A stop is the join of an enclosing if: falling out of the arm lands
+    // there. Once a loop stands in between, the jump leaves that loop instead,
+    // and falling through the loop's `end` would run the body again.
+    const inLoop = Boolean(ctx.loop) && Boolean(ctx.body) && !ctx.body.has(target);
+    if (!inLoop && ctx.stops && ctx.stops.has(target)) return [];
     const loop = ctx.loop;
     if (loop) {
       if (target === loop.header) return [`${ctx.indent}continue`];
@@ -556,48 +560,127 @@ function trimScaffold(prelude, bodyText) {
  */
 function dispatchProto(parsed, reach, entry) {
   const order = parsed.order.filter((block) => reach.has(block.label));
-  const ind = STEP + STEP + STEP + STEP;
-  const body = [`${STEP}${STEP}local __pc = ${entry}`, `${STEP}${STEP}while true do`];
+  const nodes = new Map();
+  const preds = new Map();
+  const bump = (label) => {
+    if (label === null || label === undefined) return;
+    preds.set(label, (preds.get(label) || 0) + 1);
+  };
+
   for (const block of order) {
-    body.push(`${ind}if __pc == ${block.label} then`);
     const term = block.stmts.length && isTerminator(block.stmts[block.stmts.length - 1])
       ? block.stmts[block.stmts.length - 1]
       : null;
     const tail = term ? tailOf(term) : null;
-    const statements = term ? block.stmts.slice(0, -1) : block.stmts;
-    if (tail && tail.prefix) {
-      for (const piece of tail.prefix.split(/;\s*/).filter(Boolean)) body.push(`${ind}${STEP}${piece.trim()}`);
-    }
-    for (const text of statements) body.push(`${ind}${STEP}${text}`);
+    const node = {
+      label: block.label,
+      stmts: term ? block.stmts.slice(0, -1) : block.stmts,
+      prefix: [],
+      flow: null,
+    };
+    if (tail && tail.prefix) node.prefix = tail.prefix.split(/;\s*/).filter(Boolean).map((piece) => piece.trim());
     if (!term) {
-      body.push(`${ind}${STEP}__pc = ${block.next !== undefined ? block.next : 'nil'}`);
+      node.flow = { kind: 'goto', label: block.next === undefined ? null : block.next };
+      bump(node.flow.label);
     } else if (/^\s*(?:do\s+)?return\b/.test(term)) {
-      body.push(`${ind}${STEP}${term.replace(/^\s*do\s+/, '').replace(/\s+end\s*$/, '')}`);
+      node.flow = { kind: 'return', text: term.replace(/^\s*do\s+/, '').replace(/\s+end\s*$/, '') };
     } else {
       const plain = /^\s*goto\s+L(\d+)\s*$/.exec(term);
       if (plain) {
-        body.push(`${ind}${STEP}__pc = ${plain[1]}`);
-      } else if (tail && tail.else !== null && tail.else !== undefined) {
-        body.push(`${ind}${STEP}if ${tail.condition} then`);
-        if (tail.thenAction) body.push(`${ind}${STEP}${STEP}${tail.thenAction}`);
-        body.push(`${ind}${STEP}${STEP}__pc = ${tail.then}`, `${ind}${STEP}else`);
-        if (tail.elseAction) body.push(`${ind}${STEP}${STEP}${tail.elseAction}`);
-        body.push(`${ind}${STEP}${STEP}__pc = ${tail.else}`, `${ind}${STEP}end`);
+        node.flow = { kind: 'goto', label: Number(plain[1]) };
+        bump(node.flow.label);
       } else if (tail) {
-        const fall = block.next !== undefined ? block.next : 'nil';
-        body.push(`${ind}${STEP}if ${tail.condition} then`);
-        if (tail.thenAction) body.push(`${ind}${STEP}${STEP}${tail.thenAction}`);
-        body.push(`${ind}${STEP}${STEP}__pc = ${tail.then}`, `${ind}${STEP}else`);
-        if (tail.elseAction) body.push(`${ind}${STEP}${STEP}${tail.elseAction}`);
-        body.push(`${ind}${STEP}${STEP}__pc = ${fall}`, `${ind}${STEP}end`);
+        const elseLabel = tail.else === null || tail.else === undefined
+          ? (block.next === undefined ? null : block.next)
+          : tail.else;
+        node.flow = {
+          kind: 'branch',
+          condition: tail.condition,
+          thenAction: tail.thenAction || null,
+          elseAction: tail.elseAction || null,
+          then: tail.then,
+          else: elseLabel,
+        };
+        bump(node.flow.then);
+        bump(node.flow.else);
       } else {
-        body.push(`${ind}${STEP}${term}`);
+        node.flow = { kind: 'plain', text: term };
       }
     }
-    body.push(`${ind}end`);
+    nodes.set(block.label, node);
   }
-  body.push(`${STEP}${STEP}end`);
-  return body;
+
+  // A block with exactly one predecessor can be executed in place of that
+  // predecessor's `__pc = N` move, which is what turns the flattened dispatch
+  // chain back into nested if/else and straight-line code.
+  const base = STEP + STEP;
+  const ind = base + STEP + STEP;
+  const lines = [`${base}local __pc = ${entry}`, `${base}while true do`];
+  const consumed = new Set();
+  const rendered = new Set();
+  const stack = new Set();
+  const LIMIT = 64;
+
+  const NO_INLINE = process.env.LUAOBF_NO_INLINE === '1';
+  const inlineable = (label, depth) => !NO_INLINE && label !== null && label !== undefined
+    && depth < LIMIT
+    && nodes.has(label)
+    && !consumed.has(label)
+    && !rendered.has(label)
+    && !stack.has(label)
+    && (preds.get(label) || 0) === 1;
+
+  const emitNode = (label, indent, depth) => {
+    const node = nodes.get(label);
+    if (!node) return;
+    stack.add(label);
+    for (const piece of node.prefix) lines.push(`${indent}${piece}`);
+    for (const text of node.stmts) lines.push(`${indent}${text}`);
+    emitFlow(node, indent, depth);
+    stack.delete(label);
+  };
+
+  const emitTarget = (label, indent, depth) => {
+    if (inlineable(label, depth)) {
+      consumed.add(label);
+      emitNode(label, indent, depth + 1);
+      return;
+    }
+    if (label === null || label === undefined) return;
+    lines.push(`${indent}__pc = ${label}`);
+  };
+
+  const emitFlow = (node, indent, depth) => {
+    const flow = node.flow;
+    if (!flow) return;
+    if (flow.kind === 'return' || flow.kind === 'plain') {
+      lines.push(`${indent}${flow.text}`);
+      return;
+    }
+    if (flow.kind === 'goto') {
+      emitTarget(flow.label, indent, depth);
+      return;
+    }
+    lines.push(`${indent}if ${flow.condition} then`);
+    if (flow.thenAction) lines.push(`${indent}${STEP}${flow.thenAction}`);
+    emitTarget(flow.then, indent + STEP, depth);
+    if (flow.else !== null && flow.else !== undefined) {
+      lines.push(`${indent}else`);
+      if (flow.elseAction) lines.push(`${indent}${STEP}${flow.elseAction}`);
+      emitTarget(flow.else, indent + STEP, depth);
+    }
+    lines.push(`${indent}end`);
+  };
+
+  for (const block of order) {
+    if (consumed.has(block.label)) continue;
+    rendered.add(block.label);
+    lines.push(`${ind}if __pc == ${block.label} then`);
+    emitNode(block.label, ind + STEP, 0);
+    lines.push(`${ind}end`);
+  }
+  lines.push(`${base}end`);
+  return lines;
 }
 
 export function structureProto(name, lines) {

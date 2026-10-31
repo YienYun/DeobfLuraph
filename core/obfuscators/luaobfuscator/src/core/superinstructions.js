@@ -891,7 +891,10 @@ function cloneExpandedProto(proto, analysis) {
       const microOp = handler.microOps[offset];
       const captures = microOp.kind === "closure" && typeof consumed.c === "number"
         ? proto.instructions.slice(index + offset + 1, index + offset + 1 + consumed.c).map((marker) => ({
-          source: marker.op === 19 ? "register" : "upvalue",
+          // Opcode 92 is the capture descriptor that takes its cell from the
+          // enclosing function's registers; the other descriptor opcode (38 in
+          // this build) forwards one of the enclosing function's own upvalues.
+          source: marker.op === 92 ? "register" : "upvalue",
           index: marker.b
         }))
         : undefined;

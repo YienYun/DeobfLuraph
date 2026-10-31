@@ -1,5 +1,6 @@
 import { readLuaQuotedString, luaQuote } from "../core/luaStrings.js";
 import { structureMachineText } from "./machine/structure.js";
+import { beautifySource } from "./machine/beautify.js";
 import {
   analyzeSuperinstructionVm,
   expandSuperinstructionProto
@@ -3508,9 +3509,10 @@ function buildDecodedOutput(proto, encodedLength, decodedLength, options = {}) {
           // Lua would have produced; a proto that will not fold keeps its blocks
           // behind a `__pc` counter, so nothing is dropped either way.
           const structure = structureMachineText(listing);
+          const tidy = process.env.LUAOBF_NO_BEAUTIFY === "1" ? (text) => text : beautifySource;
           const lifted = structure.stats.failed === 0
-            ? `${STRUCTURE_HEADER}\n${structure.code}`
-            : listing;
+            ? `${STRUCTURE_HEADER}\n${tidy(structure.code)}`
+            : tidy(listing);
           return {
             code: lifted,
             outputMode: "devirtualized",

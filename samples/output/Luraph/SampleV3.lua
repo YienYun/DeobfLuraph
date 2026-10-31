@@ -1,6 +1,9 @@
 -- Luarmor v4: Luarmor-served payload (Luraph v15)
 -- loader id : 130307ddb90b87125e0a381843ee1563
 -- The licence check itself is not bypassed: only the code in this file was lifted.
+-- The offline run stopped early (script error: Script:1: invalid argument #1 to 'band' (number expected, got userdata)), so code that
+-- never ran in this sandbox is lifted from its protos alone; the trace is partial.
+-- 5 Luraph VM runtime function(s) (LPH_ENCFUNC) are named but not lifted: they live in the VM object.
 
 -- Luraph runtime function (from the VM object, not part of the script: not lifted).
 -- LPH_ENCFUNC decrypts a function this way: (key, encrypted buffer, ...) -> function.
@@ -33,1178 +36,1178 @@ local function luraph_runtime5(...)
 end
 
 local r__R3 = {}
-local tbl = nil
-local v = nil
-local v2 = nil
-local fn = nil
-local fn2 = v
-local v22 = v2
-local v3 = task
-local cancel = v3.cancel
-local spawn = v3.spawn
-local defer = v3.defer
-local delay = v3.delay
-local wait = v3.wait
-local v4 = Instance
-local v5 = Vector3
-local v6 = Vector2
-local v7 = CFrame
-local v8 = Random
-local n = identifyexecutor
-local v9 = loadstring
-local tbl2 = { 218, 28, 16, 96, 36, 87, 244, 124, 145, 187, 228, 126 }
-local tbl3 = {}
-local n2 = 0
+local data = nil
+local value = nil
+local value2 = nil
+local callback = nil
+local callback2 = value
+local value3 = value2
+local value4 = task
+local cancel = value4.cancel
+local spawn = value4.spawn
+local defer = value4.defer
+local delay = value4.delay
+local wait = value4.wait
+local value5 = Instance
+local value6 = Vector3
+local value7 = Vector2
+local value8 = CFrame
+local value9 = Random
+local number = identifyexecutor
+local value10 = loadstring
+local data2 = { 218, 28, 16, 96, 36, 87, 244, 124, 145, 187, 228, 126 }
+local data3 = {}
+local number2 = 0
 
-local function fn3(arg)
-	n2 += 1
-	tbl3[n2] = arg % 256
+local function callback3(argument)
+	number2 += 1
+	data3[number2] = argument % 256
 end
 
-local n3 = 343609641
+local number3 = 343609641
 
-local function fn4(arg, arg2)
-	local n4, n5
+local function callback4(argument, argument2)
+	local number4, number5
 
 	if nil then
-		n4 = 1
-		n5 = 1
-		n3 = bit32.bxor(n3, 3784272397)
+		number4 = 1
+		number5 = 1
+		number3 = bit32.bxor(number3, 3784272397)
 	else
-		n4 = 1
-		n5 = 1
+		number4 = 1
+		number5 = 1
 	end
 
-	local n6 = n5 + 0
-	local tbl4 = { n4 - n6, nil, arg2 + 0, n6, nil }
+	local number6 = number5 + 0
+	local data4 = { number4 - number6, nil, argument2 + 0, number6, nil }
 
 	while true do
-		local v10 = tbl4[4]
-		local v11 = tbl4[3]
-		local n7 = tbl4[1] + v10
-		tbl4[1] = n7
+		local value11 = data4[4]
+		local value12 = data4[3]
+		local number7 = data4[1] + value11
+		data4[1] = number7
 
-		if n7 <= v11 then
-			local n8 = arg % 256
-			arg = (arg - n8) / 256
-			n2 += 1
-			tbl3[n2] = n8
+		if number7 <= value12 then
+			local number8 = argument % 256
+			argument = (argument - number8) / 256
+			number2 += 1
+			data3[number2] = number8
 		else
 			break
 		end
 	end
 end
 
-local v10 = assert(debug, "The debug library is required on Luau platforms. Please open a support ticket.")
-local info = v10.info
-local traceback = v10.traceback
-local n4 = 77215353
-n3 = 319702956
+local value11 = assert(debug, "The debug library is required on Luau platforms. Please open a support ticket.")
+local info = value11.info
+local traceback = value11.traceback
+local number4 = 77215353
+number3 = 319702956
 
-local function fn5()
-	local function fn6(arg, arg2, arg3, arg4, arg5)
-		local tbl4 = { arg2, arg3, arg4, arg5 }
-		local n5 = 54517094
-		local tbl5 = { 1, 4, nil, 0, nil }
-		local v11, n6, n7, n8, n9, v112, v113, v114, v12, v115, v122, v116
+local function callback5()
+	local function callback6(argument, argument2, argument3, argument4, argument5)
+		local data4 = { argument2, argument3, argument4, argument5 }
+		local number5 = 54517094
+		local data5 = { 1, 4, nil, 0, nil }
+		local value12, number6, number7, number8, number9, value13, value14, value15, value16, value17, value18, value19
 
 		while true do
-			local v13 = tbl5[1]
-			local v14 = tbl5[2]
-			local n10 = tbl5[4] + v13
-			local flag = v13 <= 0
-			local flag2 = not flag
-			local flag3 = n10 >= v14
-			local flag4 = n10 <= v14
-			local v15, tbl6, v16, v17, n11, n112, n52, n53, n54, v18, n12, n55, n56, n13, v19, n14, n15, v20, n16, n142, n17, n18, n19, v21, n182, v23, n20, n172, n183, n21, n184, n22, n222, n223, v24, v25, n224, n23, v26, v27, n24, n225, n226, n25, v28, n26, v29
+			local value20 = data5[1]
+			local value21 = data5[2]
+			local number10 = data5[4] + value20
+			local condition = value20 <= 0
+			local condition2 = not condition
+			local condition3 = number10 >= value21
+			local condition4 = number10 <= value21
+			local value22, data6, value23, value24, number11, number12, number13, number14, number15, value25, number16, number17, number18, number19, value26, number20, number21, value27, number22, number23, number24, number25, number26, value28, number27, value29, number28, number29, number30, number31, number32, number33, number34, number35, value30, value31, number36, number37, value32, value33, number38, number39, number40, number41, value34, number42, value35
 
-			if flag then
-				if flag2 then
-					if flag3 then
-						tbl5[4] = n10
+			if condition then
+				if condition2 then
+					if condition3 then
+						data5[4] = number10
 
-						if flag3 then
-							v15 = tbl4[n10]
-							tbl6 = { 0, #v15 + 0, nil, tbl5, 1 }
+						if condition3 then
+							value22 = data4[number10]
+							data6 = { 0, #value22 + 0, nil, data5, 1 }
 
 							while true do
-								v16 = tbl6[5]
-								v17 = tbl6[2]
-								n11 = tbl6[1] + v16
-								tbl6[1] = n11
+								value23 = data6[5]
+								value24 = data6[2]
+								number11 = data6[1] + value23
+								data6[1] = number11
 
-								if n11 <= v17 then
-									n112 = n11
-									n52 = bit32.lshift(bit32.band(n5, n112), 1)
-									n53 = bit32.band(n52, n5)
-									n54 = bit32.bnot(n53)
-									local n57 = bit32.band(n52, 4294967295)
-									local n58 = bit32.band(n54, 4294967295)
-									local n572 = bit32.band(n57, 65535)
-									local n573 = bit32.rshift(n57, 16)
-									local n582 = bit32.band(n58, 65535)
-									local v30 = bit32.band(n572 * n582 + bit32.lshift(bit32.band(n572 * bit32.rshift(n58, 16) + n573 * n582, 65535), 16), 4294967295)
-									local v302 = bit32.band(v30, 65535)
-									v18 = bit32.band(19474 * v302 + bit32.lshift(bit32.band(19474 * bit32.rshift(v30, 16) + 39469 * v302, 65535), 16), 4294967295)
-									local n59 = bit32.band(n52, 4294967295)
-									local n592 = bit32.band(n59, 65535)
-									n12 = n112 + n5 + v18 + bit32.band(23587 * n592 + bit32.lshift(bit32.band(23587 * bit32.rshift(n59, 16) + 21404 * n592, 65535), 16), 4294967295)
-									n55 = bit32.bnot(n5)
-									n56 = bit32.bor(n55, 54517094)
-									local n510 = bit32.band(n52, 4294967295)
-									local n511 = bit32.band(n56, 4294967295)
-									local n5102 = bit32.band(n510, 65535)
-									local n5103 = bit32.rshift(n510, 16)
-									local n5112 = bit32.band(n511, 65535)
-									local v31 = bit32.band(n5102 * n5112 + bit32.lshift(bit32.band(n5102 * bit32.rshift(n511, 16) + n5103 * n5112, 65535), 16), 4294967295)
-									local v312 = bit32.band(v31, 65535)
-									n13 = 1402756132 + bit32.band(46062 * v312 + bit32.lshift(bit32.band(46062 * bit32.rshift(v31, 16) + 26066 * v312, 65535), 16), 4294967295)
-									local n512 = bit32.bnot(n52)
-									local n5122 = bit32.band(n512, 65535)
-									v19 = bit32.band(23586 * n5122 + bit32.lshift(bit32.band(23586 * bit32.rshift(n512, 16) + 21404 * n5122, 65535), 16), 4294967295)
-									local v32 = bit32.bor(54517095, n55)
-									local v322 = bit32.band(v32, 65535)
-									n14 = n12 + n13 + v19 + bit32.band(2 * v322 + bit32.lshift(bit32.band(2 * bit32.rshift(v32, 16) + 0 * v322, 65535), 16), 4294967295)
-									local n143 = bit32.band(n14, 4294967295)
-									local n1432 = bit32.band(n143, 65535)
-									n15 = 327058238 + 3859571462 + bit32.band(25350 * n1432 + bit32.lshift(bit32.band(25350 * bit32.rshift(n143, 16) + 58892 * n1432, 65535), 16), 4294967295)
-									v20 = bit32.bor(2147483647, n14)
-									local v33 = bit32.band(272719449, v20)
-									local v332 = bit32.band(v33, 65535)
-									n16 = n15 + 375472684 + bit32.band(14836 * v332 + bit32.lshift(bit32.band(14836 * bit32.rshift(v33, 16) + 13287 * v332, 65535), 16), 4294967295) + 1761712016
-									n142 = bit32.bnot(n14)
-									local v34 = bit32.bor(2092966552, n142)
-									local v342 = bit32.band(v34, 65535)
-									local v35 = bit32.band(n16 - 4564062016 + 28981759 + bit32.band(50689 * v342 + bit32.lshift(bit32.band(50689 * bit32.rshift(v34, 16) + 32325 * v342, 65535), 16), 4294967295) + 1195411303, 4294967295)
-									local v352 = bit32.band(v35, 65535)
-									n17 = bit32.band(31367 * v352 + bit32.lshift(bit32.band(31367 * bit32.rshift(v35, 16) + 21986 * v352, 65535), 16), 4294967295) + 21801894718
-									v15[n112] = bit32.bxor(v15[n112], 327058238)
-									n18 = n5 + 584826193
-									local n185 = bit32.band(n18, 4294967295)
-									local n1852 = bit32.band(n185, 65535)
-									n19 = bit32.band(43296 * n1852 + bit32.lshift(bit32.band(43296 * bit32.rshift(n185, 16) + 12122 * n1852, 65535), 16), 4294967295) + 1588941376
-									local n113 = bit32.band(n112, 4294967295)
-									local n1132 = bit32.band(n113, 65535)
-									v21 = bit32.band(n1132 * 62187 + bit32.lshift(bit32.band(n1132 * 8557 + bit32.rshift(n113, 16) * 62187, 65535), 16), 4294967295)
-									n182 = bit32.band(n18, n17)
-									local v212 = bit32.band(v21, 4294967295)
-									local n186 = bit32.band(n182, 4294967295)
-									local v2122 = bit32.band(v212, 65535)
-									local v2123 = bit32.rshift(v212, 16)
-									local n1862 = bit32.band(n186, 65535)
-									local v36 = bit32.band(v2122 * n1862 + bit32.lshift(bit32.band(v2122 * bit32.rshift(n186, 16) + v2123 * n1862, 65535), 16), 4294967295)
-									local v362 = bit32.band(v36, 65535)
-									v23 = bit32.band(51485 * v362 + bit32.lshift(bit32.band(51485 * bit32.rshift(v36, 16) + 39315 * v362, 65535), 16), 4294967295)
-									local v213 = bit32.band(v21, 4294967295)
-									local v2132 = bit32.band(v213, 65535)
-									n20 = n19 + v23 + bit32.band(29245 * v2132 + bit32.lshift(bit32.band(29245 * bit32.rshift(v213, 16) + 51438 * v2132, 65535), 16), 4294967295)
-									n172 = bit32.band(n17, 272719449)
-									n183 = bit32.bnot(n182)
-									local v214 = bit32.band(v21, 4294967295)
-									local n187 = bit32.band(n183, 4294967295)
-									local v2142 = bit32.band(v214, 65535)
-									local v2143 = bit32.rshift(v214, 16)
-									local n1872 = bit32.band(n187, 65535)
-									local v37 = bit32.band(v2142 * n1872 + bit32.lshift(bit32.band(v2142 * bit32.rshift(n187, 16) + v2143 * n1872, 65535), 16), 4294967295)
-									local v372 = bit32.band(v37, 65535)
-									n21 = n172 + bit32.band(51485 * v372 + bit32.lshift(bit32.band(51485 * bit32.rshift(v37, 16) + 39315 * v372, 65535), 16), 4294967295)
-									n184 = bit32.bor(n18, v21)
-									local n188 = bit32.bnot(n184)
-									local n1882 = bit32.band(n188, 65535)
-									n22 = n20 + n21 + 3045076956 + bit32.band(21056 * n1882 + bit32.lshift(bit32.band(21056 * bit32.rshift(n188, 16) + 24245 * n1882, 65535), 16), 4294967295)
-									n222 = bit32.band(n22, 2147483647)
-									n223 = bit32.bnot(n222)
-									local n227 = bit32.band(n223, 4294967295)
-									local n2272 = bit32.band(n227, 65535)
-									v24 = bit32.band(65535 * n2272 + bit32.lshift(bit32.band(65535 * bit32.rshift(n227, 16) + 65535 * n2272, 65535), 16), 4294967295)
-									local n228 = bit32.band(n22, 4294967295)
-									local n2282 = bit32.band(n228, 65535)
-									v25 = bit32.band(46641 * n2282 + bit32.lshift(bit32.band(46641 * bit32.rshift(n228, 16) + 36583 * n2282, 65535), 16), 4294967295)
-									n224 = bit32.bnot(n22)
-									local n229 = bit32.band(n224, 4294967295)
-									local n2292 = bit32.band(n229, 65535)
-									n23 = 2397550128 + v24 + v25 + bit32.band(46641 * n2292 + bit32.lshift(bit32.band(46641 * bit32.rshift(n229, 16) + 36583 * n2292, 65535), 16), 4294967295)
-									local n2210 = bit32.band(n22, 4294967295)
-									local n22102 = bit32.band(n2210, 65535)
-									v26 = bit32.band(1004 * n22102 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2210, 16) + 49886 * n22102, 65535), 16), 4294967295)
-									local n2211 = bit32.band(n224, 4294967295)
-									local n22112 = bit32.band(n2211, 65535)
-									local v38 = bit32.band(n23 - 3269329899 + v24 + v26 + bit32.band(1004 * n22112 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2211, 16) + 49886 * n22112, 65535), 16), 4294967295), 4294967295)
-									local v382 = bit32.band(v38, 65535)
-									v27 = bit32.band(21218 * v382 + bit32.lshift(bit32.band(21218 * bit32.rshift(v38, 16) + 47856 * v382, 65535), 16), 4294967295)
-									local n2212 = bit32.band(n22, 4294967295)
-									local n2213 = bit32.band(n223, 4294967295)
-									local n22122 = bit32.band(n2212, 65535)
-									local n22123 = bit32.rshift(n2212, 16)
-									local n22132 = bit32.band(n2213, 65535)
-									local v39 = bit32.band(n22122 * n22132 + bit32.lshift(bit32.band(n22122 * bit32.rshift(n2213, 16) + n22123 * n22132, 65535), 16), 4294967295)
-									local v392 = bit32.band(v39, 65535)
-									n24 = 2669559910 + bit32.band(64492 * v392 + bit32.lshift(bit32.band(64492 * bit32.rshift(v39, 16) + 27898 * v392, 65535), 16), 4294967295)
-									local n2214 = bit32.band(n22, 4294967295)
-									local n22142 = bit32.band(n2214, 65535)
-									n225 = n223
-									n226 = bit32.bor(n22, 2147483647)
-									n25 = n24 + bit32.band(16487 * n22142 + bit32.lshift(bit32.band(16487 * bit32.rshift(n2214, 16) + 40734 * n22142, 65535), 16), 4294967295) + 0
-									local n2215 = bit32.band(n225, 4294967295)
-									local n22152 = bit32.band(n2215, 65535)
-									v28 = bit32.band(15442 * n22152 + bit32.lshift(bit32.band(15442 * bit32.rshift(n2215, 16) + 3097 * n22152, 65535), 16), 4294967295)
-									local n2216 = bit32.band(n225, 4294967295)
-									local n2217 = bit32.band(n225, 4294967295)
-									local n22162 = bit32.band(n2216, 65535)
-									local n22163 = bit32.rshift(n2216, 16)
-									local n22172 = bit32.band(n2217, 65535)
-									local v40 = bit32.band(n22162 * n22172 + bit32.lshift(bit32.band(n22162 * bit32.rshift(n2217, 16) + n22163 * n22172, 65535), 16), 4294967295)
-									local v402 = bit32.band(v40, 65535)
-									n26 = v28 + bit32.band(64492 * v402 + bit32.lshift(bit32.band(64492 * bit32.rshift(v40, 16) + 27898 * v402, 65535), 16), 4294967295)
-									local n2218 = bit32.band(n22, 4294967295)
-									local n22182 = bit32.band(n2218, 65535)
-									local v41 = bit32.band(n22182 * 0 + bit32.lshift(bit32.band(n22182 * 0 + bit32.rshift(n2218, 16) * 0, 65535), 16), 4294967295)
-									local v412 = bit32.band(v41, 65535)
-									v29 = bit32.band(64492 * v412 + bit32.lshift(bit32.band(64492 * bit32.rshift(v41, 16) + 27898 * v412, 65535), 16), 4294967295)
-									local n2219 = bit32.band(n226, 4294967295)
-									local n22192 = bit32.band(n2219, 65535)
-									local v42 = bit32.band(n22192 * 0 + bit32.lshift(bit32.band(n22192 * 0 + bit32.rshift(n2219, 16) * 0, 65535), 16), 4294967295)
-									local v422 = bit32.band(v42, 65535)
-									n5 = v27 + n25 + n26 + 0 + v29 + bit32.band(1044 * v422 + bit32.lshift(bit32.band(1044 * bit32.rshift(v42, 16) + 37637 * v422, 65535), 16), 4294967295)
+								if number11 <= value24 then
+									number12 = number11
+									number13 = bit32.lshift(bit32.band(number5, number12), 1)
+									number14 = bit32.band(number13, number5)
+									number15 = bit32.bnot(number14)
+									local number43 = bit32.band(number13, 4294967295)
+									local number44 = bit32.band(number15, 4294967295)
+									local number45 = bit32.band(number43, 65535)
+									local number46 = bit32.rshift(number43, 16)
+									local number47 = bit32.band(number44, 65535)
+									local value36 = bit32.band(number45 * number47 + bit32.lshift(bit32.band(number45 * bit32.rshift(number44, 16) + number46 * number47, 65535), 16), 4294967295)
+									local value37 = bit32.band(value36, 65535)
+									value25 = bit32.band(19474 * value37 + bit32.lshift(bit32.band(19474 * bit32.rshift(value36, 16) + 39469 * value37, 65535), 16), 4294967295)
+									local number48 = bit32.band(number13, 4294967295)
+									local number49 = bit32.band(number48, 65535)
+									number16 = number12 + number5 + value25 + bit32.band(23587 * number49 + bit32.lshift(bit32.band(23587 * bit32.rshift(number48, 16) + 21404 * number49, 65535), 16), 4294967295)
+									number17 = bit32.bnot(number5)
+									number18 = bit32.bor(number17, 54517094)
+									local number50 = bit32.band(number13, 4294967295)
+									local number51 = bit32.band(number18, 4294967295)
+									local number52 = bit32.band(number50, 65535)
+									local number53 = bit32.rshift(number50, 16)
+									local number54 = bit32.band(number51, 65535)
+									local value38 = bit32.band(number52 * number54 + bit32.lshift(bit32.band(number52 * bit32.rshift(number51, 16) + number53 * number54, 65535), 16), 4294967295)
+									local value39 = bit32.band(value38, 65535)
+									number19 = 1402756132 + bit32.band(46062 * value39 + bit32.lshift(bit32.band(46062 * bit32.rshift(value38, 16) + 26066 * value39, 65535), 16), 4294967295)
+									local number55 = bit32.bnot(number13)
+									local number56 = bit32.band(number55, 65535)
+									value26 = bit32.band(23586 * number56 + bit32.lshift(bit32.band(23586 * bit32.rshift(number55, 16) + 21404 * number56, 65535), 16), 4294967295)
+									local value40 = bit32.bor(54517095, number17)
+									local value41 = bit32.band(value40, 65535)
+									number20 = number16 + number19 + value26 + bit32.band(2 * value41 + bit32.lshift(bit32.band(2 * bit32.rshift(value40, 16) + 0 * value41, 65535), 16), 4294967295)
+									local number57 = bit32.band(number20, 4294967295)
+									local number58 = bit32.band(number57, 65535)
+									number21 = 327058238 + 3859571462 + bit32.band(25350 * number58 + bit32.lshift(bit32.band(25350 * bit32.rshift(number57, 16) + 58892 * number58, 65535), 16), 4294967295)
+									value27 = bit32.bor(2147483647, number20)
+									local value42 = bit32.band(272719449, value27)
+									local value43 = bit32.band(value42, 65535)
+									number22 = number21 + 375472684 + bit32.band(14836 * value43 + bit32.lshift(bit32.band(14836 * bit32.rshift(value42, 16) + 13287 * value43, 65535), 16), 4294967295) + 1761712016
+									number23 = bit32.bnot(number20)
+									local value44 = bit32.bor(2092966552, number23)
+									local value45 = bit32.band(value44, 65535)
+									local value46 = bit32.band(number22 - 4564062016 + 28981759 + bit32.band(50689 * value45 + bit32.lshift(bit32.band(50689 * bit32.rshift(value44, 16) + 32325 * value45, 65535), 16), 4294967295) + 1195411303, 4294967295)
+									local value47 = bit32.band(value46, 65535)
+									number24 = bit32.band(31367 * value47 + bit32.lshift(bit32.band(31367 * bit32.rshift(value46, 16) + 21986 * value47, 65535), 16), 4294967295) + 21801894718
+									value22[number12] = bit32.bxor(value22[number12], 327058238)
+									number25 = number5 + 584826193
+									local number59 = bit32.band(number25, 4294967295)
+									local number60 = bit32.band(number59, 65535)
+									number26 = bit32.band(43296 * number60 + bit32.lshift(bit32.band(43296 * bit32.rshift(number59, 16) + 12122 * number60, 65535), 16), 4294967295) + 1588941376
+									local number61 = bit32.band(number12, 4294967295)
+									local number62 = bit32.band(number61, 65535)
+									value28 = bit32.band(number62 * 62187 + bit32.lshift(bit32.band(number62 * 8557 + bit32.rshift(number61, 16) * 62187, 65535), 16), 4294967295)
+									number27 = bit32.band(number25, number24)
+									local value48 = bit32.band(value28, 4294967295)
+									local number63 = bit32.band(number27, 4294967295)
+									local value49 = bit32.band(value48, 65535)
+									local value50 = bit32.rshift(value48, 16)
+									local number64 = bit32.band(number63, 65535)
+									local value51 = bit32.band(value49 * number64 + bit32.lshift(bit32.band(value49 * bit32.rshift(number63, 16) + value50 * number64, 65535), 16), 4294967295)
+									local value52 = bit32.band(value51, 65535)
+									value29 = bit32.band(51485 * value52 + bit32.lshift(bit32.band(51485 * bit32.rshift(value51, 16) + 39315 * value52, 65535), 16), 4294967295)
+									local value53 = bit32.band(value28, 4294967295)
+									local value54 = bit32.band(value53, 65535)
+									number28 = number26 + value29 + bit32.band(29245 * value54 + bit32.lshift(bit32.band(29245 * bit32.rshift(value53, 16) + 51438 * value54, 65535), 16), 4294967295)
+									number29 = bit32.band(number24, 272719449)
+									number30 = bit32.bnot(number27)
+									local value55 = bit32.band(value28, 4294967295)
+									local number65 = bit32.band(number30, 4294967295)
+									local value56 = bit32.band(value55, 65535)
+									local value57 = bit32.rshift(value55, 16)
+									local number66 = bit32.band(number65, 65535)
+									local value58 = bit32.band(value56 * number66 + bit32.lshift(bit32.band(value56 * bit32.rshift(number65, 16) + value57 * number66, 65535), 16), 4294967295)
+									local value59 = bit32.band(value58, 65535)
+									number31 = number29 + bit32.band(51485 * value59 + bit32.lshift(bit32.band(51485 * bit32.rshift(value58, 16) + 39315 * value59, 65535), 16), 4294967295)
+									number32 = bit32.bor(number25, value28)
+									local number67 = bit32.bnot(number32)
+									local number68 = bit32.band(number67, 65535)
+									number33 = number28 + number31 + 3045076956 + bit32.band(21056 * number68 + bit32.lshift(bit32.band(21056 * bit32.rshift(number67, 16) + 24245 * number68, 65535), 16), 4294967295)
+									number34 = bit32.band(number33, 2147483647)
+									number35 = bit32.bnot(number34)
+									local number69 = bit32.band(number35, 4294967295)
+									local number70 = bit32.band(number69, 65535)
+									value30 = bit32.band(65535 * number70 + bit32.lshift(bit32.band(65535 * bit32.rshift(number69, 16) + 65535 * number70, 65535), 16), 4294967295)
+									local number71 = bit32.band(number33, 4294967295)
+									local number72 = bit32.band(number71, 65535)
+									value31 = bit32.band(46641 * number72 + bit32.lshift(bit32.band(46641 * bit32.rshift(number71, 16) + 36583 * number72, 65535), 16), 4294967295)
+									number36 = bit32.bnot(number33)
+									local number73 = bit32.band(number36, 4294967295)
+									local number74 = bit32.band(number73, 65535)
+									number37 = 2397550128 + value30 + value31 + bit32.band(46641 * number74 + bit32.lshift(bit32.band(46641 * bit32.rshift(number73, 16) + 36583 * number74, 65535), 16), 4294967295)
+									local number75 = bit32.band(number33, 4294967295)
+									local number76 = bit32.band(number75, 65535)
+									value32 = bit32.band(1004 * number76 + bit32.lshift(bit32.band(1004 * bit32.rshift(number75, 16) + 49886 * number76, 65535), 16), 4294967295)
+									local number77 = bit32.band(number36, 4294967295)
+									local number78 = bit32.band(number77, 65535)
+									local value60 = bit32.band(number37 - 3269329899 + value30 + value32 + bit32.band(1004 * number78 + bit32.lshift(bit32.band(1004 * bit32.rshift(number77, 16) + 49886 * number78, 65535), 16), 4294967295), 4294967295)
+									local value61 = bit32.band(value60, 65535)
+									value33 = bit32.band(21218 * value61 + bit32.lshift(bit32.band(21218 * bit32.rshift(value60, 16) + 47856 * value61, 65535), 16), 4294967295)
+									local number79 = bit32.band(number33, 4294967295)
+									local number80 = bit32.band(number35, 4294967295)
+									local number81 = bit32.band(number79, 65535)
+									local number82 = bit32.rshift(number79, 16)
+									local number83 = bit32.band(number80, 65535)
+									local value62 = bit32.band(number81 * number83 + bit32.lshift(bit32.band(number81 * bit32.rshift(number80, 16) + number82 * number83, 65535), 16), 4294967295)
+									local value63 = bit32.band(value62, 65535)
+									number38 = 2669559910 + bit32.band(64492 * value63 + bit32.lshift(bit32.band(64492 * bit32.rshift(value62, 16) + 27898 * value63, 65535), 16), 4294967295)
+									local number84 = bit32.band(number33, 4294967295)
+									local number85 = bit32.band(number84, 65535)
+									number39 = number35
+									number40 = bit32.bor(number33, 2147483647)
+									number41 = number38 + bit32.band(16487 * number85 + bit32.lshift(bit32.band(16487 * bit32.rshift(number84, 16) + 40734 * number85, 65535), 16), 4294967295) + 0
+									local number86 = bit32.band(number39, 4294967295)
+									local number87 = bit32.band(number86, 65535)
+									value34 = bit32.band(15442 * number87 + bit32.lshift(bit32.band(15442 * bit32.rshift(number86, 16) + 3097 * number87, 65535), 16), 4294967295)
+									local number88 = bit32.band(number39, 4294967295)
+									local number89 = bit32.band(number39, 4294967295)
+									local number90 = bit32.band(number88, 65535)
+									local number91 = bit32.rshift(number88, 16)
+									local number92 = bit32.band(number89, 65535)
+									local value64 = bit32.band(number90 * number92 + bit32.lshift(bit32.band(number90 * bit32.rshift(number89, 16) + number91 * number92, 65535), 16), 4294967295)
+									local value65 = bit32.band(value64, 65535)
+									number42 = value34 + bit32.band(64492 * value65 + bit32.lshift(bit32.band(64492 * bit32.rshift(value64, 16) + 27898 * value65, 65535), 16), 4294967295)
+									local number93 = bit32.band(number33, 4294967295)
+									local number94 = bit32.band(number93, 65535)
+									local value66 = bit32.band(number94 * 0 + bit32.lshift(bit32.band(number94 * 0 + bit32.rshift(number93, 16) * 0, 65535), 16), 4294967295)
+									local value67 = bit32.band(value66, 65535)
+									value35 = bit32.band(64492 * value67 + bit32.lshift(bit32.band(64492 * bit32.rshift(value66, 16) + 27898 * value67, 65535), 16), 4294967295)
+									local number95 = bit32.band(number40, 4294967295)
+									local number96 = bit32.band(number95, 65535)
+									local value68 = bit32.band(number96 * 0 + bit32.lshift(bit32.band(number96 * 0 + bit32.rshift(number95, 16) * 0, 65535), 16), 4294967295)
+									local value69 = bit32.band(value68, 65535)
+									number5 = value33 + number41 + number42 + 0 + value35 + bit32.band(1044 * value69 + bit32.lshift(bit32.band(1044 * bit32.rshift(value68, 16) + 37637 * value69, 65535), 16), 4294967295)
 								else
 									break
 								end
 							end
 
-							tbl5 = tbl6[4]
+							data5 = data6[4]
 							continue
 						end
 
-						v11 = arg[6]
-						n6 = buffer.len(v11) - 32 - 19
-						n7 = 32 + 888971832 % n6
-						n8 = 32
+						value12 = argument[6]
+						number6 = buffer.len(value12) - 32 - 19
+						number7 = 32 + 888971832 % number6
+						number8 = 32
 
 						while true do
-							n9 = n8 + (n7 + bit32.band(n5, 255) + 1) % n6
-							v112 = buffer.readi8(v11, n7)
-							v113 = buffer.readu8(v11, n9)
-							v114 = bit32.lshift(bit32.band(v113, 255), 3)
-							v12 = bit32.band(bit32.bxor(bit32.bxor(54517094, v112) + v114 + 584826193, n7), 2147483647)
-							v115 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(v112, v113), v12), 2147483647), 205469696)
-							buffer.writeu32(v11, n7, v115)
-							v122 = bit32.rshift(v12, 8)
-							v116 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(v113, v122), n7), 2147483647), 327527424)
-							buffer.writeu8(v11, n9, v116)
-							n5 = v12
-							n7 = n8 + (n7 + bit32.band(v12, 63) + 1) % n6
+							number9 = number8 + (number7 + bit32.band(number5, 255) + 1) % number6
+							value13 = buffer.readi8(value12, number7)
+							value14 = buffer.readu8(value12, number9)
+							value15 = bit32.lshift(bit32.band(value14, 255), 3)
+							value16 = bit32.band(bit32.bxor(bit32.bxor(54517094, value13) + value15 + 584826193, number7), 2147483647)
+							value17 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(value13, value14), value16), 2147483647), 205469696)
+							buffer.writeu32(value12, number7, value17)
+							value18 = bit32.rshift(value16, 8)
+							value19 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(value14, value18), number7), 2147483647), 327527424)
+							buffer.writeu8(value12, number9, value19)
+							number5 = value16
+							number7 = number8 + (number7 + bit32.band(value16, 63) + 1) % number6
 						end
 					else
-						flag3 = flag4
-						tbl5[4] = n10
+						condition3 = condition4
+						data5[4] = number10
 
-						if flag3 then
-							v15 = tbl4[n10]
-							tbl6 = { 0, #v15 + 0, nil, tbl5, 1 }
+						if condition3 then
+							value22 = data4[number10]
+							data6 = { 0, #value22 + 0, nil, data5, 1 }
 
 							while true do
-								v16 = tbl6[5]
-								v17 = tbl6[2]
-								n11 = tbl6[1] + v16
-								tbl6[1] = n11
+								value23 = data6[5]
+								value24 = data6[2]
+								number11 = data6[1] + value23
+								data6[1] = number11
 
-								if n11 <= v17 then
-									n112 = n11
-									n52 = bit32.lshift(bit32.band(n5, n112), 1)
-									n53 = bit32.band(n52, n5)
-									n54 = bit32.bnot(n53)
-									local v123 = bit32.band(n52, 4294967295)
-									local v124 = bit32.band(n54, 4294967295)
-									local v1232 = bit32.band(v123, 65535)
-									local v1233 = bit32.rshift(v123, 16)
-									local v1242 = bit32.band(v124, 65535)
-									local v30 = bit32.band(v1232 * v1242 + bit32.lshift(bit32.band(v1232 * bit32.rshift(v124, 16) + v1233 * v1242, 65535), 16), 4294967295)
-									local v302 = bit32.band(v30, 65535)
-									v18 = bit32.band(19474 * v302 + bit32.lshift(bit32.band(19474 * bit32.rshift(v30, 16) + 39469 * v302, 65535), 16), 4294967295)
-									local v125 = bit32.band(n52, 4294967295)
-									local v1252 = bit32.band(v125, 65535)
-									n12 = n112 + n5 + v18 + bit32.band(23587 * v1252 + bit32.lshift(bit32.band(23587 * bit32.rshift(v125, 16) + 21404 * v1252, 65535), 16), 4294967295)
-									n55 = bit32.bnot(n5)
-									n56 = bit32.bor(n55, 54517094)
-									local v126 = bit32.band(n52, 4294967295)
-									local v127 = bit32.band(n56, 4294967295)
-									local v1262 = bit32.band(v126, 65535)
-									local v1263 = bit32.rshift(v126, 16)
-									local v1272 = bit32.band(v127, 65535)
-									local v31 = bit32.band(v1262 * v1272 + bit32.lshift(bit32.band(v1262 * bit32.rshift(v127, 16) + v1263 * v1272, 65535), 16), 4294967295)
-									local v312 = bit32.band(v31, 65535)
-									n13 = 1402756132 + bit32.band(46062 * v312 + bit32.lshift(bit32.band(46062 * bit32.rshift(v31, 16) + 26066 * v312, 65535), 16), 4294967295)
-									local v128 = bit32.bnot(n52)
-									local v1282 = bit32.band(v128, 65535)
-									v19 = bit32.band(23586 * v1282 + bit32.lshift(bit32.band(23586 * bit32.rshift(v128, 16) + 21404 * v1282, 65535), 16), 4294967295)
-									local v32 = bit32.bor(54517095, n55)
-									local v322 = bit32.band(v32, 65535)
-									n14 = n12 + n13 + v19 + bit32.band(2 * v322 + bit32.lshift(bit32.band(2 * bit32.rshift(v32, 16) + 0 * v322, 65535), 16), 4294967295)
-									local n143 = bit32.band(n14, 4294967295)
-									local n1432 = bit32.band(n143, 65535)
-									n15 = 327058238 + 3859571462 + bit32.band(25350 * n1432 + bit32.lshift(bit32.band(25350 * bit32.rshift(n143, 16) + 58892 * n1432, 65535), 16), 4294967295)
-									v20 = bit32.bor(2147483647, n14)
-									local v33 = bit32.band(272719449, v20)
-									local v332 = bit32.band(v33, 65535)
-									n16 = n15 + 375472684 + bit32.band(14836 * v332 + bit32.lshift(bit32.band(14836 * bit32.rshift(v33, 16) + 13287 * v332, 65535), 16), 4294967295) + 1761712016
-									n142 = bit32.bnot(n14)
-									local v34 = bit32.bor(2092966552, n142)
-									local v342 = bit32.band(v34, 65535)
-									local v35 = bit32.band(n16 - 4564062016 + 28981759 + bit32.band(50689 * v342 + bit32.lshift(bit32.band(50689 * bit32.rshift(v34, 16) + 32325 * v342, 65535), 16), 4294967295) + 1195411303, 4294967295)
-									local v352 = bit32.band(v35, 65535)
-									n17 = bit32.band(31367 * v352 + bit32.lshift(bit32.band(31367 * bit32.rshift(v35, 16) + 21986 * v352, 65535), 16), 4294967295) + 21801894718
-									v15[n112] = bit32.bxor(v15[n112], 327058238)
-									n18 = n5 + 584826193
-									local n185 = bit32.band(n18, 4294967295)
-									local n1852 = bit32.band(n185, 65535)
-									n19 = bit32.band(43296 * n1852 + bit32.lshift(bit32.band(43296 * bit32.rshift(n185, 16) + 12122 * n1852, 65535), 16), 4294967295) + 1588941376
-									local n113 = bit32.band(n112, 4294967295)
-									local n1132 = bit32.band(n113, 65535)
-									v21 = bit32.band(n1132 * 62187 + bit32.lshift(bit32.band(n1132 * 8557 + bit32.rshift(n113, 16) * 62187, 65535), 16), 4294967295)
-									n182 = bit32.band(n18, n17)
-									local v212 = bit32.band(v21, 4294967295)
-									local n186 = bit32.band(n182, 4294967295)
-									local v2122 = bit32.band(v212, 65535)
-									local v2123 = bit32.rshift(v212, 16)
-									local n1862 = bit32.band(n186, 65535)
-									local v36 = bit32.band(v2122 * n1862 + bit32.lshift(bit32.band(v2122 * bit32.rshift(n186, 16) + v2123 * n1862, 65535), 16), 4294967295)
-									local v362 = bit32.band(v36, 65535)
-									v23 = bit32.band(51485 * v362 + bit32.lshift(bit32.band(51485 * bit32.rshift(v36, 16) + 39315 * v362, 65535), 16), 4294967295)
-									local v213 = bit32.band(v21, 4294967295)
-									local v2132 = bit32.band(v213, 65535)
-									n20 = n19 + v23 + bit32.band(29245 * v2132 + bit32.lshift(bit32.band(29245 * bit32.rshift(v213, 16) + 51438 * v2132, 65535), 16), 4294967295)
-									n172 = bit32.band(n17, 272719449)
-									n183 = bit32.bnot(n182)
-									local v214 = bit32.band(v21, 4294967295)
-									local n187 = bit32.band(n183, 4294967295)
-									local v2142 = bit32.band(v214, 65535)
-									local v2143 = bit32.rshift(v214, 16)
-									local n1872 = bit32.band(n187, 65535)
-									local v37 = bit32.band(v2142 * n1872 + bit32.lshift(bit32.band(v2142 * bit32.rshift(n187, 16) + v2143 * n1872, 65535), 16), 4294967295)
-									local v372 = bit32.band(v37, 65535)
-									n21 = n172 + bit32.band(51485 * v372 + bit32.lshift(bit32.band(51485 * bit32.rshift(v37, 16) + 39315 * v372, 65535), 16), 4294967295)
-									n184 = bit32.bor(n18, v21)
-									local n188 = bit32.bnot(n184)
-									local n1882 = bit32.band(n188, 65535)
-									n22 = n20 + n21 + 3045076956 + bit32.band(21056 * n1882 + bit32.lshift(bit32.band(21056 * bit32.rshift(n188, 16) + 24245 * n1882, 65535), 16), 4294967295)
-									n222 = bit32.band(n22, 2147483647)
-									n223 = bit32.bnot(n222)
-									local n227 = bit32.band(n223, 4294967295)
-									local n2272 = bit32.band(n227, 65535)
-									v24 = bit32.band(65535 * n2272 + bit32.lshift(bit32.band(65535 * bit32.rshift(n227, 16) + 65535 * n2272, 65535), 16), 4294967295)
-									local n228 = bit32.band(n22, 4294967295)
-									local n2282 = bit32.band(n228, 65535)
-									v25 = bit32.band(46641 * n2282 + bit32.lshift(bit32.band(46641 * bit32.rshift(n228, 16) + 36583 * n2282, 65535), 16), 4294967295)
-									n224 = bit32.bnot(n22)
-									local n229 = bit32.band(n224, 4294967295)
-									local n2292 = bit32.band(n229, 65535)
-									n23 = 2397550128 + v24 + v25 + bit32.band(46641 * n2292 + bit32.lshift(bit32.band(46641 * bit32.rshift(n229, 16) + 36583 * n2292, 65535), 16), 4294967295)
-									local n2210 = bit32.band(n22, 4294967295)
-									local n22102 = bit32.band(n2210, 65535)
-									v26 = bit32.band(1004 * n22102 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2210, 16) + 49886 * n22102, 65535), 16), 4294967295)
-									local n2211 = bit32.band(n224, 4294967295)
-									local n22112 = bit32.band(n2211, 65535)
-									local v38 = bit32.band(n23 - 3269329899 + v24 + v26 + bit32.band(1004 * n22112 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2211, 16) + 49886 * n22112, 65535), 16), 4294967295), 4294967295)
-									local v382 = bit32.band(v38, 65535)
-									v27 = bit32.band(21218 * v382 + bit32.lshift(bit32.band(21218 * bit32.rshift(v38, 16) + 47856 * v382, 65535), 16), 4294967295)
-									local n2212 = bit32.band(n22, 4294967295)
-									local n2213 = bit32.band(n223, 4294967295)
-									local n22122 = bit32.band(n2212, 65535)
-									local n22123 = bit32.rshift(n2212, 16)
-									local n22132 = bit32.band(n2213, 65535)
-									local v39 = bit32.band(n22122 * n22132 + bit32.lshift(bit32.band(n22122 * bit32.rshift(n2213, 16) + n22123 * n22132, 65535), 16), 4294967295)
-									local v392 = bit32.band(v39, 65535)
-									n24 = 2669559910 + bit32.band(64492 * v392 + bit32.lshift(bit32.band(64492 * bit32.rshift(v39, 16) + 27898 * v392, 65535), 16), 4294967295)
-									local n2214 = bit32.band(n22, 4294967295)
-									local n22142 = bit32.band(n2214, 65535)
-									n225 = n223
-									n226 = bit32.bor(n22, 2147483647)
-									n25 = n24 + bit32.band(16487 * n22142 + bit32.lshift(bit32.band(16487 * bit32.rshift(n2214, 16) + 40734 * n22142, 65535), 16), 4294967295) + 0
-									local n2215 = bit32.band(n225, 4294967295)
-									local n22152 = bit32.band(n2215, 65535)
-									v28 = bit32.band(15442 * n22152 + bit32.lshift(bit32.band(15442 * bit32.rshift(n2215, 16) + 3097 * n22152, 65535), 16), 4294967295)
-									local n2216 = bit32.band(n225, 4294967295)
-									local n2217 = bit32.band(n225, 4294967295)
-									local n22162 = bit32.band(n2216, 65535)
-									local n22163 = bit32.rshift(n2216, 16)
-									local n22172 = bit32.band(n2217, 65535)
-									local v40 = bit32.band(n22162 * n22172 + bit32.lshift(bit32.band(n22162 * bit32.rshift(n2217, 16) + n22163 * n22172, 65535), 16), 4294967295)
-									local v402 = bit32.band(v40, 65535)
-									n26 = v28 + bit32.band(64492 * v402 + bit32.lshift(bit32.band(64492 * bit32.rshift(v40, 16) + 27898 * v402, 65535), 16), 4294967295)
-									local n2218 = bit32.band(n22, 4294967295)
-									local n22182 = bit32.band(n2218, 65535)
-									local v41 = bit32.band(n22182 * 0 + bit32.lshift(bit32.band(n22182 * 0 + bit32.rshift(n2218, 16) * 0, 65535), 16), 4294967295)
-									local v412 = bit32.band(v41, 65535)
-									v29 = bit32.band(64492 * v412 + bit32.lshift(bit32.band(64492 * bit32.rshift(v41, 16) + 27898 * v412, 65535), 16), 4294967295)
-									local n2219 = bit32.band(n226, 4294967295)
-									local n22192 = bit32.band(n2219, 65535)
-									local v42 = bit32.band(n22192 * 0 + bit32.lshift(bit32.band(n22192 * 0 + bit32.rshift(n2219, 16) * 0, 65535), 16), 4294967295)
-									local v422 = bit32.band(v42, 65535)
-									n5 = v27 + n25 + n26 + 0 + v29 + bit32.band(1044 * v422 + bit32.lshift(bit32.band(1044 * bit32.rshift(v42, 16) + 37637 * v422, 65535), 16), 4294967295)
+								if number11 <= value24 then
+									number12 = number11
+									number13 = bit32.lshift(bit32.band(number5, number12), 1)
+									number14 = bit32.band(number13, number5)
+									number15 = bit32.bnot(number14)
+									local number43 = bit32.band(number13, 4294967295)
+									local number44 = bit32.band(number15, 4294967295)
+									local number45 = bit32.band(number43, 65535)
+									local number46 = bit32.rshift(number43, 16)
+									local number47 = bit32.band(number44, 65535)
+									local value36 = bit32.band(number45 * number47 + bit32.lshift(bit32.band(number45 * bit32.rshift(number44, 16) + number46 * number47, 65535), 16), 4294967295)
+									local value37 = bit32.band(value36, 65535)
+									value25 = bit32.band(19474 * value37 + bit32.lshift(bit32.band(19474 * bit32.rshift(value36, 16) + 39469 * value37, 65535), 16), 4294967295)
+									local number48 = bit32.band(number13, 4294967295)
+									local number49 = bit32.band(number48, 65535)
+									number16 = number12 + number5 + value25 + bit32.band(23587 * number49 + bit32.lshift(bit32.band(23587 * bit32.rshift(number48, 16) + 21404 * number49, 65535), 16), 4294967295)
+									number17 = bit32.bnot(number5)
+									number18 = bit32.bor(number17, 54517094)
+									local number50 = bit32.band(number13, 4294967295)
+									local number51 = bit32.band(number18, 4294967295)
+									local number52 = bit32.band(number50, 65535)
+									local number53 = bit32.rshift(number50, 16)
+									local number54 = bit32.band(number51, 65535)
+									local value38 = bit32.band(number52 * number54 + bit32.lshift(bit32.band(number52 * bit32.rshift(number51, 16) + number53 * number54, 65535), 16), 4294967295)
+									local value39 = bit32.band(value38, 65535)
+									number19 = 1402756132 + bit32.band(46062 * value39 + bit32.lshift(bit32.band(46062 * bit32.rshift(value38, 16) + 26066 * value39, 65535), 16), 4294967295)
+									local number55 = bit32.bnot(number13)
+									local number56 = bit32.band(number55, 65535)
+									value26 = bit32.band(23586 * number56 + bit32.lshift(bit32.band(23586 * bit32.rshift(number55, 16) + 21404 * number56, 65535), 16), 4294967295)
+									local value40 = bit32.bor(54517095, number17)
+									local value41 = bit32.band(value40, 65535)
+									number20 = number16 + number19 + value26 + bit32.band(2 * value41 + bit32.lshift(bit32.band(2 * bit32.rshift(value40, 16) + 0 * value41, 65535), 16), 4294967295)
+									local number57 = bit32.band(number20, 4294967295)
+									local number58 = bit32.band(number57, 65535)
+									number21 = 327058238 + 3859571462 + bit32.band(25350 * number58 + bit32.lshift(bit32.band(25350 * bit32.rshift(number57, 16) + 58892 * number58, 65535), 16), 4294967295)
+									value27 = bit32.bor(2147483647, number20)
+									local value42 = bit32.band(272719449, value27)
+									local value43 = bit32.band(value42, 65535)
+									number22 = number21 + 375472684 + bit32.band(14836 * value43 + bit32.lshift(bit32.band(14836 * bit32.rshift(value42, 16) + 13287 * value43, 65535), 16), 4294967295) + 1761712016
+									number23 = bit32.bnot(number20)
+									local value44 = bit32.bor(2092966552, number23)
+									local value45 = bit32.band(value44, 65535)
+									local value46 = bit32.band(number22 - 4564062016 + 28981759 + bit32.band(50689 * value45 + bit32.lshift(bit32.band(50689 * bit32.rshift(value44, 16) + 32325 * value45, 65535), 16), 4294967295) + 1195411303, 4294967295)
+									local value47 = bit32.band(value46, 65535)
+									number24 = bit32.band(31367 * value47 + bit32.lshift(bit32.band(31367 * bit32.rshift(value46, 16) + 21986 * value47, 65535), 16), 4294967295) + 21801894718
+									value22[number12] = bit32.bxor(value22[number12], 327058238)
+									number25 = number5 + 584826193
+									local number59 = bit32.band(number25, 4294967295)
+									local number60 = bit32.band(number59, 65535)
+									number26 = bit32.band(43296 * number60 + bit32.lshift(bit32.band(43296 * bit32.rshift(number59, 16) + 12122 * number60, 65535), 16), 4294967295) + 1588941376
+									local number61 = bit32.band(number12, 4294967295)
+									local number62 = bit32.band(number61, 65535)
+									value28 = bit32.band(number62 * 62187 + bit32.lshift(bit32.band(number62 * 8557 + bit32.rshift(number61, 16) * 62187, 65535), 16), 4294967295)
+									number27 = bit32.band(number25, number24)
+									local value48 = bit32.band(value28, 4294967295)
+									local number63 = bit32.band(number27, 4294967295)
+									local value49 = bit32.band(value48, 65535)
+									local value50 = bit32.rshift(value48, 16)
+									local number64 = bit32.band(number63, 65535)
+									local value51 = bit32.band(value49 * number64 + bit32.lshift(bit32.band(value49 * bit32.rshift(number63, 16) + value50 * number64, 65535), 16), 4294967295)
+									local value52 = bit32.band(value51, 65535)
+									value29 = bit32.band(51485 * value52 + bit32.lshift(bit32.band(51485 * bit32.rshift(value51, 16) + 39315 * value52, 65535), 16), 4294967295)
+									local value53 = bit32.band(value28, 4294967295)
+									local value54 = bit32.band(value53, 65535)
+									number28 = number26 + value29 + bit32.band(29245 * value54 + bit32.lshift(bit32.band(29245 * bit32.rshift(value53, 16) + 51438 * value54, 65535), 16), 4294967295)
+									number29 = bit32.band(number24, 272719449)
+									number30 = bit32.bnot(number27)
+									local value55 = bit32.band(value28, 4294967295)
+									local number65 = bit32.band(number30, 4294967295)
+									local value56 = bit32.band(value55, 65535)
+									local value57 = bit32.rshift(value55, 16)
+									local number66 = bit32.band(number65, 65535)
+									local value58 = bit32.band(value56 * number66 + bit32.lshift(bit32.band(value56 * bit32.rshift(number65, 16) + value57 * number66, 65535), 16), 4294967295)
+									local value59 = bit32.band(value58, 65535)
+									number31 = number29 + bit32.band(51485 * value59 + bit32.lshift(bit32.band(51485 * bit32.rshift(value58, 16) + 39315 * value59, 65535), 16), 4294967295)
+									number32 = bit32.bor(number25, value28)
+									local number67 = bit32.bnot(number32)
+									local number68 = bit32.band(number67, 65535)
+									number33 = number28 + number31 + 3045076956 + bit32.band(21056 * number68 + bit32.lshift(bit32.band(21056 * bit32.rshift(number67, 16) + 24245 * number68, 65535), 16), 4294967295)
+									number34 = bit32.band(number33, 2147483647)
+									number35 = bit32.bnot(number34)
+									local number69 = bit32.band(number35, 4294967295)
+									local number70 = bit32.band(number69, 65535)
+									value30 = bit32.band(65535 * number70 + bit32.lshift(bit32.band(65535 * bit32.rshift(number69, 16) + 65535 * number70, 65535), 16), 4294967295)
+									local number71 = bit32.band(number33, 4294967295)
+									local number72 = bit32.band(number71, 65535)
+									value31 = bit32.band(46641 * number72 + bit32.lshift(bit32.band(46641 * bit32.rshift(number71, 16) + 36583 * number72, 65535), 16), 4294967295)
+									number36 = bit32.bnot(number33)
+									local number73 = bit32.band(number36, 4294967295)
+									local number74 = bit32.band(number73, 65535)
+									number37 = 2397550128 + value30 + value31 + bit32.band(46641 * number74 + bit32.lshift(bit32.band(46641 * bit32.rshift(number73, 16) + 36583 * number74, 65535), 16), 4294967295)
+									local number75 = bit32.band(number33, 4294967295)
+									local number76 = bit32.band(number75, 65535)
+									value32 = bit32.band(1004 * number76 + bit32.lshift(bit32.band(1004 * bit32.rshift(number75, 16) + 49886 * number76, 65535), 16), 4294967295)
+									local number77 = bit32.band(number36, 4294967295)
+									local number78 = bit32.band(number77, 65535)
+									local value60 = bit32.band(number37 - 3269329899 + value30 + value32 + bit32.band(1004 * number78 + bit32.lshift(bit32.band(1004 * bit32.rshift(number77, 16) + 49886 * number78, 65535), 16), 4294967295), 4294967295)
+									local value61 = bit32.band(value60, 65535)
+									value33 = bit32.band(21218 * value61 + bit32.lshift(bit32.band(21218 * bit32.rshift(value60, 16) + 47856 * value61, 65535), 16), 4294967295)
+									local number79 = bit32.band(number33, 4294967295)
+									local number80 = bit32.band(number35, 4294967295)
+									local number81 = bit32.band(number79, 65535)
+									local number82 = bit32.rshift(number79, 16)
+									local number83 = bit32.band(number80, 65535)
+									local value62 = bit32.band(number81 * number83 + bit32.lshift(bit32.band(number81 * bit32.rshift(number80, 16) + number82 * number83, 65535), 16), 4294967295)
+									local value63 = bit32.band(value62, 65535)
+									number38 = 2669559910 + bit32.band(64492 * value63 + bit32.lshift(bit32.band(64492 * bit32.rshift(value62, 16) + 27898 * value63, 65535), 16), 4294967295)
+									local number84 = bit32.band(number33, 4294967295)
+									local number85 = bit32.band(number84, 65535)
+									number39 = number35
+									number40 = bit32.bor(number33, 2147483647)
+									number41 = number38 + bit32.band(16487 * number85 + bit32.lshift(bit32.band(16487 * bit32.rshift(number84, 16) + 40734 * number85, 65535), 16), 4294967295) + 0
+									local number86 = bit32.band(number39, 4294967295)
+									local number87 = bit32.band(number86, 65535)
+									value34 = bit32.band(15442 * number87 + bit32.lshift(bit32.band(15442 * bit32.rshift(number86, 16) + 3097 * number87, 65535), 16), 4294967295)
+									local number88 = bit32.band(number39, 4294967295)
+									local number89 = bit32.band(number39, 4294967295)
+									local number90 = bit32.band(number88, 65535)
+									local number91 = bit32.rshift(number88, 16)
+									local number92 = bit32.band(number89, 65535)
+									local value64 = bit32.band(number90 * number92 + bit32.lshift(bit32.band(number90 * bit32.rshift(number89, 16) + number91 * number92, 65535), 16), 4294967295)
+									local value65 = bit32.band(value64, 65535)
+									number42 = value34 + bit32.band(64492 * value65 + bit32.lshift(bit32.band(64492 * bit32.rshift(value64, 16) + 27898 * value65, 65535), 16), 4294967295)
+									local number93 = bit32.band(number33, 4294967295)
+									local number94 = bit32.band(number93, 65535)
+									local value66 = bit32.band(number94 * 0 + bit32.lshift(bit32.band(number94 * 0 + bit32.rshift(number93, 16) * 0, 65535), 16), 4294967295)
+									local value67 = bit32.band(value66, 65535)
+									value35 = bit32.band(64492 * value67 + bit32.lshift(bit32.band(64492 * bit32.rshift(value66, 16) + 27898 * value67, 65535), 16), 4294967295)
+									local number95 = bit32.band(number40, 4294967295)
+									local number96 = bit32.band(number95, 65535)
+									local value68 = bit32.band(number96 * 0 + bit32.lshift(bit32.band(number96 * 0 + bit32.rshift(number95, 16) * 0, 65535), 16), 4294967295)
+									local value69 = bit32.band(value68, 65535)
+									number5 = value33 + number41 + number42 + 0 + value35 + bit32.band(1044 * value69 + bit32.lshift(bit32.band(1044 * bit32.rshift(value68, 16) + 37637 * value69, 65535), 16), 4294967295)
 								else
 									break
 								end
 							end
 
-							tbl5 = tbl6[4]
+							data5 = data6[4]
 							continue
 						end
 
-						v11 = arg[6]
-						n6 = buffer.len(v11) - 32 - 19
-						n7 = 32 + 888971832 % n6
-						n8 = 32
+						value12 = argument[6]
+						number6 = buffer.len(value12) - 32 - 19
+						number7 = 32 + 888971832 % number6
+						number8 = 32
 
 						while true do
-							n9 = n8 + (n7 + bit32.band(n5, 255) + 1) % n6
-							v112 = buffer.readi8(v11, n7)
-							v113 = buffer.readu8(v11, n9)
-							v114 = bit32.lshift(bit32.band(v113, 255), 3)
-							v12 = bit32.band(bit32.bxor(bit32.bxor(54517094, v112) + v114 + 584826193, n7), 2147483647)
-							v115 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(v112, v113), v12), 2147483647), 205469696)
-							buffer.writeu32(v11, n7, v115)
-							v122 = bit32.rshift(v12, 8)
-							v116 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(v113, v122), n7), 2147483647), 327527424)
-							buffer.writeu8(v11, n9, v116)
-							n5 = v12
-							n7 = n8 + (n7 + bit32.band(v12, 63) + 1) % n6
+							number9 = number8 + (number7 + bit32.band(number5, 255) + 1) % number6
+							value13 = buffer.readi8(value12, number7)
+							value14 = buffer.readu8(value12, number9)
+							value15 = bit32.lshift(bit32.band(value14, 255), 3)
+							value16 = bit32.band(bit32.bxor(bit32.bxor(54517094, value13) + value15 + 584826193, number7), 2147483647)
+							value17 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(value13, value14), value16), 2147483647), 205469696)
+							buffer.writeu32(value12, number7, value17)
+							value18 = bit32.rshift(value16, 8)
+							value19 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(value14, value18), number7), 2147483647), 327527424)
+							buffer.writeu8(value12, number9, value19)
+							number5 = value16
+							number7 = number8 + (number7 + bit32.band(value16, 63) + 1) % number6
 						end
 					end
 				end
 			else
-				flag3 = flag
+				condition3 = condition
 
-				if flag2 then
-					if not flag3 then
-						flag3 = flag4
-						tbl5[4] = n10
+				if condition2 then
+					if not condition3 then
+						condition3 = condition4
+						data5[4] = number10
 
-						if flag3 then
-							v15 = tbl4[n10]
-							tbl6 = { 0, #v15 + 0, nil, tbl5, 1 }
+						if condition3 then
+							value22 = data4[number10]
+							data6 = { 0, #value22 + 0, nil, data5, 1 }
 
 							while true do
-								v16 = tbl6[5]
-								v17 = tbl6[2]
-								n11 = tbl6[1] + v16
-								tbl6[1] = n11
+								value23 = data6[5]
+								value24 = data6[2]
+								number11 = data6[1] + value23
+								data6[1] = number11
 
-								if n11 <= v17 then
-									n112 = n11
-									n52 = bit32.lshift(bit32.band(n5, n112), 1)
-									n53 = bit32.band(n52, n5)
-									n54 = bit32.bnot(n53)
-									local v123 = bit32.band(n52, 4294967295)
-									local v124 = bit32.band(n54, 4294967295)
-									local v1232 = bit32.band(v123, 65535)
-									local v1233 = bit32.rshift(v123, 16)
-									local v1242 = bit32.band(v124, 65535)
-									local v30 = bit32.band(v1232 * v1242 + bit32.lshift(bit32.band(v1232 * bit32.rshift(v124, 16) + v1233 * v1242, 65535), 16), 4294967295)
-									local v302 = bit32.band(v30, 65535)
-									v18 = bit32.band(19474 * v302 + bit32.lshift(bit32.band(19474 * bit32.rshift(v30, 16) + 39469 * v302, 65535), 16), 4294967295)
-									local v125 = bit32.band(n52, 4294967295)
-									local v1252 = bit32.band(v125, 65535)
-									n12 = n112 + n5 + v18 + bit32.band(23587 * v1252 + bit32.lshift(bit32.band(23587 * bit32.rshift(v125, 16) + 21404 * v1252, 65535), 16), 4294967295)
-									n55 = bit32.bnot(n5)
-									n56 = bit32.bor(n55, 54517094)
-									local v126 = bit32.band(n52, 4294967295)
-									local v127 = bit32.band(n56, 4294967295)
-									local v1262 = bit32.band(v126, 65535)
-									local v1263 = bit32.rshift(v126, 16)
-									local v1272 = bit32.band(v127, 65535)
-									local v31 = bit32.band(v1262 * v1272 + bit32.lshift(bit32.band(v1262 * bit32.rshift(v127, 16) + v1263 * v1272, 65535), 16), 4294967295)
-									local v312 = bit32.band(v31, 65535)
-									n13 = 1402756132 + bit32.band(46062 * v312 + bit32.lshift(bit32.band(46062 * bit32.rshift(v31, 16) + 26066 * v312, 65535), 16), 4294967295)
-									local v128 = bit32.bnot(n52)
-									local v1282 = bit32.band(v128, 65535)
-									v19 = bit32.band(23586 * v1282 + bit32.lshift(bit32.band(23586 * bit32.rshift(v128, 16) + 21404 * v1282, 65535), 16), 4294967295)
-									local v32 = bit32.bor(54517095, n55)
-									local v322 = bit32.band(v32, 65535)
-									n14 = n12 + n13 + v19 + bit32.band(2 * v322 + bit32.lshift(bit32.band(2 * bit32.rshift(v32, 16) + 0 * v322, 65535), 16), 4294967295)
-									local n143 = bit32.band(n14, 4294967295)
-									local n1432 = bit32.band(n143, 65535)
-									n15 = 327058238 + 3859571462 + bit32.band(25350 * n1432 + bit32.lshift(bit32.band(25350 * bit32.rshift(n143, 16) + 58892 * n1432, 65535), 16), 4294967295)
-									v20 = bit32.bor(2147483647, n14)
-									local v33 = bit32.band(272719449, v20)
-									local v332 = bit32.band(v33, 65535)
-									n16 = n15 + 375472684 + bit32.band(14836 * v332 + bit32.lshift(bit32.band(14836 * bit32.rshift(v33, 16) + 13287 * v332, 65535), 16), 4294967295) + 1761712016
-									n142 = bit32.bnot(n14)
-									local v34 = bit32.bor(2092966552, n142)
-									local v342 = bit32.band(v34, 65535)
-									local v35 = bit32.band(n16 - 4564062016 + 28981759 + bit32.band(50689 * v342 + bit32.lshift(bit32.band(50689 * bit32.rshift(v34, 16) + 32325 * v342, 65535), 16), 4294967295) + 1195411303, 4294967295)
-									local v352 = bit32.band(v35, 65535)
-									n17 = bit32.band(31367 * v352 + bit32.lshift(bit32.band(31367 * bit32.rshift(v35, 16) + 21986 * v352, 65535), 16), 4294967295) + 21801894718
-									v15[n112] = bit32.bxor(v15[n112], 327058238)
-									n18 = n5 + 584826193
-									local n185 = bit32.band(n18, 4294967295)
-									local n1852 = bit32.band(n185, 65535)
-									n19 = bit32.band(43296 * n1852 + bit32.lshift(bit32.band(43296 * bit32.rshift(n185, 16) + 12122 * n1852, 65535), 16), 4294967295) + 1588941376
-									local n113 = bit32.band(n112, 4294967295)
-									local n1132 = bit32.band(n113, 65535)
-									v21 = bit32.band(n1132 * 62187 + bit32.lshift(bit32.band(n1132 * 8557 + bit32.rshift(n113, 16) * 62187, 65535), 16), 4294967295)
-									n182 = bit32.band(n18, n17)
-									local v212 = bit32.band(v21, 4294967295)
-									local n186 = bit32.band(n182, 4294967295)
-									local v2122 = bit32.band(v212, 65535)
-									local v2123 = bit32.rshift(v212, 16)
-									local n1862 = bit32.band(n186, 65535)
-									local v36 = bit32.band(v2122 * n1862 + bit32.lshift(bit32.band(v2122 * bit32.rshift(n186, 16) + v2123 * n1862, 65535), 16), 4294967295)
-									local v362 = bit32.band(v36, 65535)
-									v23 = bit32.band(51485 * v362 + bit32.lshift(bit32.band(51485 * bit32.rshift(v36, 16) + 39315 * v362, 65535), 16), 4294967295)
-									local v213 = bit32.band(v21, 4294967295)
-									local v2132 = bit32.band(v213, 65535)
-									n20 = n19 + v23 + bit32.band(29245 * v2132 + bit32.lshift(bit32.band(29245 * bit32.rshift(v213, 16) + 51438 * v2132, 65535), 16), 4294967295)
-									n172 = bit32.band(n17, 272719449)
-									n183 = bit32.bnot(n182)
-									local v214 = bit32.band(v21, 4294967295)
-									local n187 = bit32.band(n183, 4294967295)
-									local v2142 = bit32.band(v214, 65535)
-									local v2143 = bit32.rshift(v214, 16)
-									local n1872 = bit32.band(n187, 65535)
-									local v37 = bit32.band(v2142 * n1872 + bit32.lshift(bit32.band(v2142 * bit32.rshift(n187, 16) + v2143 * n1872, 65535), 16), 4294967295)
-									local v372 = bit32.band(v37, 65535)
-									n21 = n172 + bit32.band(51485 * v372 + bit32.lshift(bit32.band(51485 * bit32.rshift(v37, 16) + 39315 * v372, 65535), 16), 4294967295)
-									n184 = bit32.bor(n18, v21)
-									local n188 = bit32.bnot(n184)
-									local n1882 = bit32.band(n188, 65535)
-									n22 = n20 + n21 + 3045076956 + bit32.band(21056 * n1882 + bit32.lshift(bit32.band(21056 * bit32.rshift(n188, 16) + 24245 * n1882, 65535), 16), 4294967295)
-									n222 = bit32.band(n22, 2147483647)
-									n223 = bit32.bnot(n222)
-									local n227 = bit32.band(n223, 4294967295)
-									local n2272 = bit32.band(n227, 65535)
-									v24 = bit32.band(65535 * n2272 + bit32.lshift(bit32.band(65535 * bit32.rshift(n227, 16) + 65535 * n2272, 65535), 16), 4294967295)
-									local n228 = bit32.band(n22, 4294967295)
-									local n2282 = bit32.band(n228, 65535)
-									v25 = bit32.band(46641 * n2282 + bit32.lshift(bit32.band(46641 * bit32.rshift(n228, 16) + 36583 * n2282, 65535), 16), 4294967295)
-									n224 = bit32.bnot(n22)
-									local n229 = bit32.band(n224, 4294967295)
-									local n2292 = bit32.band(n229, 65535)
-									n23 = 2397550128 + v24 + v25 + bit32.band(46641 * n2292 + bit32.lshift(bit32.band(46641 * bit32.rshift(n229, 16) + 36583 * n2292, 65535), 16), 4294967295)
-									local n2210 = bit32.band(n22, 4294967295)
-									local n22102 = bit32.band(n2210, 65535)
-									v26 = bit32.band(1004 * n22102 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2210, 16) + 49886 * n22102, 65535), 16), 4294967295)
-									local n2211 = bit32.band(n224, 4294967295)
-									local n22112 = bit32.band(n2211, 65535)
-									local v38 = bit32.band(n23 - 3269329899 + v24 + v26 + bit32.band(1004 * n22112 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2211, 16) + 49886 * n22112, 65535), 16), 4294967295), 4294967295)
-									local v382 = bit32.band(v38, 65535)
-									v27 = bit32.band(21218 * v382 + bit32.lshift(bit32.band(21218 * bit32.rshift(v38, 16) + 47856 * v382, 65535), 16), 4294967295)
-									local n2212 = bit32.band(n22, 4294967295)
-									local n2213 = bit32.band(n223, 4294967295)
-									local n22122 = bit32.band(n2212, 65535)
-									local n22123 = bit32.rshift(n2212, 16)
-									local n22132 = bit32.band(n2213, 65535)
-									local v39 = bit32.band(n22122 * n22132 + bit32.lshift(bit32.band(n22122 * bit32.rshift(n2213, 16) + n22123 * n22132, 65535), 16), 4294967295)
-									local v392 = bit32.band(v39, 65535)
-									n24 = 2669559910 + bit32.band(64492 * v392 + bit32.lshift(bit32.band(64492 * bit32.rshift(v39, 16) + 27898 * v392, 65535), 16), 4294967295)
-									local n2214 = bit32.band(n22, 4294967295)
-									local n22142 = bit32.band(n2214, 65535)
-									n225 = n223
-									n226 = bit32.bor(n22, 2147483647)
-									n25 = n24 + bit32.band(16487 * n22142 + bit32.lshift(bit32.band(16487 * bit32.rshift(n2214, 16) + 40734 * n22142, 65535), 16), 4294967295) + 0
-									local n2215 = bit32.band(n225, 4294967295)
-									local n22152 = bit32.band(n2215, 65535)
-									v28 = bit32.band(15442 * n22152 + bit32.lshift(bit32.band(15442 * bit32.rshift(n2215, 16) + 3097 * n22152, 65535), 16), 4294967295)
-									local n2216 = bit32.band(n225, 4294967295)
-									local n2217 = bit32.band(n225, 4294967295)
-									local n22162 = bit32.band(n2216, 65535)
-									local n22163 = bit32.rshift(n2216, 16)
-									local n22172 = bit32.band(n2217, 65535)
-									local v40 = bit32.band(n22162 * n22172 + bit32.lshift(bit32.band(n22162 * bit32.rshift(n2217, 16) + n22163 * n22172, 65535), 16), 4294967295)
-									local v402 = bit32.band(v40, 65535)
-									n26 = v28 + bit32.band(64492 * v402 + bit32.lshift(bit32.band(64492 * bit32.rshift(v40, 16) + 27898 * v402, 65535), 16), 4294967295)
-									local n2218 = bit32.band(n22, 4294967295)
-									local n22182 = bit32.band(n2218, 65535)
-									local v41 = bit32.band(n22182 * 0 + bit32.lshift(bit32.band(n22182 * 0 + bit32.rshift(n2218, 16) * 0, 65535), 16), 4294967295)
-									local v412 = bit32.band(v41, 65535)
-									v29 = bit32.band(64492 * v412 + bit32.lshift(bit32.band(64492 * bit32.rshift(v41, 16) + 27898 * v412, 65535), 16), 4294967295)
-									local n2219 = bit32.band(n226, 4294967295)
-									local n22192 = bit32.band(n2219, 65535)
-									local v42 = bit32.band(n22192 * 0 + bit32.lshift(bit32.band(n22192 * 0 + bit32.rshift(n2219, 16) * 0, 65535), 16), 4294967295)
-									local v422 = bit32.band(v42, 65535)
-									n5 = v27 + n25 + n26 + 0 + v29 + bit32.band(1044 * v422 + bit32.lshift(bit32.band(1044 * bit32.rshift(v42, 16) + 37637 * v422, 65535), 16), 4294967295)
+								if number11 <= value24 then
+									number12 = number11
+									number13 = bit32.lshift(bit32.band(number5, number12), 1)
+									number14 = bit32.band(number13, number5)
+									number15 = bit32.bnot(number14)
+									local number43 = bit32.band(number13, 4294967295)
+									local number44 = bit32.band(number15, 4294967295)
+									local number45 = bit32.band(number43, 65535)
+									local number46 = bit32.rshift(number43, 16)
+									local number47 = bit32.band(number44, 65535)
+									local value36 = bit32.band(number45 * number47 + bit32.lshift(bit32.band(number45 * bit32.rshift(number44, 16) + number46 * number47, 65535), 16), 4294967295)
+									local value37 = bit32.band(value36, 65535)
+									value25 = bit32.band(19474 * value37 + bit32.lshift(bit32.band(19474 * bit32.rshift(value36, 16) + 39469 * value37, 65535), 16), 4294967295)
+									local number48 = bit32.band(number13, 4294967295)
+									local number49 = bit32.band(number48, 65535)
+									number16 = number12 + number5 + value25 + bit32.band(23587 * number49 + bit32.lshift(bit32.band(23587 * bit32.rshift(number48, 16) + 21404 * number49, 65535), 16), 4294967295)
+									number17 = bit32.bnot(number5)
+									number18 = bit32.bor(number17, 54517094)
+									local number50 = bit32.band(number13, 4294967295)
+									local number51 = bit32.band(number18, 4294967295)
+									local number52 = bit32.band(number50, 65535)
+									local number53 = bit32.rshift(number50, 16)
+									local number54 = bit32.band(number51, 65535)
+									local value38 = bit32.band(number52 * number54 + bit32.lshift(bit32.band(number52 * bit32.rshift(number51, 16) + number53 * number54, 65535), 16), 4294967295)
+									local value39 = bit32.band(value38, 65535)
+									number19 = 1402756132 + bit32.band(46062 * value39 + bit32.lshift(bit32.band(46062 * bit32.rshift(value38, 16) + 26066 * value39, 65535), 16), 4294967295)
+									local number55 = bit32.bnot(number13)
+									local number56 = bit32.band(number55, 65535)
+									value26 = bit32.band(23586 * number56 + bit32.lshift(bit32.band(23586 * bit32.rshift(number55, 16) + 21404 * number56, 65535), 16), 4294967295)
+									local value40 = bit32.bor(54517095, number17)
+									local value41 = bit32.band(value40, 65535)
+									number20 = number16 + number19 + value26 + bit32.band(2 * value41 + bit32.lshift(bit32.band(2 * bit32.rshift(value40, 16) + 0 * value41, 65535), 16), 4294967295)
+									local number57 = bit32.band(number20, 4294967295)
+									local number58 = bit32.band(number57, 65535)
+									number21 = 327058238 + 3859571462 + bit32.band(25350 * number58 + bit32.lshift(bit32.band(25350 * bit32.rshift(number57, 16) + 58892 * number58, 65535), 16), 4294967295)
+									value27 = bit32.bor(2147483647, number20)
+									local value42 = bit32.band(272719449, value27)
+									local value43 = bit32.band(value42, 65535)
+									number22 = number21 + 375472684 + bit32.band(14836 * value43 + bit32.lshift(bit32.band(14836 * bit32.rshift(value42, 16) + 13287 * value43, 65535), 16), 4294967295) + 1761712016
+									number23 = bit32.bnot(number20)
+									local value44 = bit32.bor(2092966552, number23)
+									local value45 = bit32.band(value44, 65535)
+									local value46 = bit32.band(number22 - 4564062016 + 28981759 + bit32.band(50689 * value45 + bit32.lshift(bit32.band(50689 * bit32.rshift(value44, 16) + 32325 * value45, 65535), 16), 4294967295) + 1195411303, 4294967295)
+									local value47 = bit32.band(value46, 65535)
+									number24 = bit32.band(31367 * value47 + bit32.lshift(bit32.band(31367 * bit32.rshift(value46, 16) + 21986 * value47, 65535), 16), 4294967295) + 21801894718
+									value22[number12] = bit32.bxor(value22[number12], 327058238)
+									number25 = number5 + 584826193
+									local number59 = bit32.band(number25, 4294967295)
+									local number60 = bit32.band(number59, 65535)
+									number26 = bit32.band(43296 * number60 + bit32.lshift(bit32.band(43296 * bit32.rshift(number59, 16) + 12122 * number60, 65535), 16), 4294967295) + 1588941376
+									local number61 = bit32.band(number12, 4294967295)
+									local number62 = bit32.band(number61, 65535)
+									value28 = bit32.band(number62 * 62187 + bit32.lshift(bit32.band(number62 * 8557 + bit32.rshift(number61, 16) * 62187, 65535), 16), 4294967295)
+									number27 = bit32.band(number25, number24)
+									local value48 = bit32.band(value28, 4294967295)
+									local number63 = bit32.band(number27, 4294967295)
+									local value49 = bit32.band(value48, 65535)
+									local value50 = bit32.rshift(value48, 16)
+									local number64 = bit32.band(number63, 65535)
+									local value51 = bit32.band(value49 * number64 + bit32.lshift(bit32.band(value49 * bit32.rshift(number63, 16) + value50 * number64, 65535), 16), 4294967295)
+									local value52 = bit32.band(value51, 65535)
+									value29 = bit32.band(51485 * value52 + bit32.lshift(bit32.band(51485 * bit32.rshift(value51, 16) + 39315 * value52, 65535), 16), 4294967295)
+									local value53 = bit32.band(value28, 4294967295)
+									local value54 = bit32.band(value53, 65535)
+									number28 = number26 + value29 + bit32.band(29245 * value54 + bit32.lshift(bit32.band(29245 * bit32.rshift(value53, 16) + 51438 * value54, 65535), 16), 4294967295)
+									number29 = bit32.band(number24, 272719449)
+									number30 = bit32.bnot(number27)
+									local value55 = bit32.band(value28, 4294967295)
+									local number65 = bit32.band(number30, 4294967295)
+									local value56 = bit32.band(value55, 65535)
+									local value57 = bit32.rshift(value55, 16)
+									local number66 = bit32.band(number65, 65535)
+									local value58 = bit32.band(value56 * number66 + bit32.lshift(bit32.band(value56 * bit32.rshift(number65, 16) + value57 * number66, 65535), 16), 4294967295)
+									local value59 = bit32.band(value58, 65535)
+									number31 = number29 + bit32.band(51485 * value59 + bit32.lshift(bit32.band(51485 * bit32.rshift(value58, 16) + 39315 * value59, 65535), 16), 4294967295)
+									number32 = bit32.bor(number25, value28)
+									local number67 = bit32.bnot(number32)
+									local number68 = bit32.band(number67, 65535)
+									number33 = number28 + number31 + 3045076956 + bit32.band(21056 * number68 + bit32.lshift(bit32.band(21056 * bit32.rshift(number67, 16) + 24245 * number68, 65535), 16), 4294967295)
+									number34 = bit32.band(number33, 2147483647)
+									number35 = bit32.bnot(number34)
+									local number69 = bit32.band(number35, 4294967295)
+									local number70 = bit32.band(number69, 65535)
+									value30 = bit32.band(65535 * number70 + bit32.lshift(bit32.band(65535 * bit32.rshift(number69, 16) + 65535 * number70, 65535), 16), 4294967295)
+									local number71 = bit32.band(number33, 4294967295)
+									local number72 = bit32.band(number71, 65535)
+									value31 = bit32.band(46641 * number72 + bit32.lshift(bit32.band(46641 * bit32.rshift(number71, 16) + 36583 * number72, 65535), 16), 4294967295)
+									number36 = bit32.bnot(number33)
+									local number73 = bit32.band(number36, 4294967295)
+									local number74 = bit32.band(number73, 65535)
+									number37 = 2397550128 + value30 + value31 + bit32.band(46641 * number74 + bit32.lshift(bit32.band(46641 * bit32.rshift(number73, 16) + 36583 * number74, 65535), 16), 4294967295)
+									local number75 = bit32.band(number33, 4294967295)
+									local number76 = bit32.band(number75, 65535)
+									value32 = bit32.band(1004 * number76 + bit32.lshift(bit32.band(1004 * bit32.rshift(number75, 16) + 49886 * number76, 65535), 16), 4294967295)
+									local number77 = bit32.band(number36, 4294967295)
+									local number78 = bit32.band(number77, 65535)
+									local value60 = bit32.band(number37 - 3269329899 + value30 + value32 + bit32.band(1004 * number78 + bit32.lshift(bit32.band(1004 * bit32.rshift(number77, 16) + 49886 * number78, 65535), 16), 4294967295), 4294967295)
+									local value61 = bit32.band(value60, 65535)
+									value33 = bit32.band(21218 * value61 + bit32.lshift(bit32.band(21218 * bit32.rshift(value60, 16) + 47856 * value61, 65535), 16), 4294967295)
+									local number79 = bit32.band(number33, 4294967295)
+									local number80 = bit32.band(number35, 4294967295)
+									local number81 = bit32.band(number79, 65535)
+									local number82 = bit32.rshift(number79, 16)
+									local number83 = bit32.band(number80, 65535)
+									local value62 = bit32.band(number81 * number83 + bit32.lshift(bit32.band(number81 * bit32.rshift(number80, 16) + number82 * number83, 65535), 16), 4294967295)
+									local value63 = bit32.band(value62, 65535)
+									number38 = 2669559910 + bit32.band(64492 * value63 + bit32.lshift(bit32.band(64492 * bit32.rshift(value62, 16) + 27898 * value63, 65535), 16), 4294967295)
+									local number84 = bit32.band(number33, 4294967295)
+									local number85 = bit32.band(number84, 65535)
+									number39 = number35
+									number40 = bit32.bor(number33, 2147483647)
+									number41 = number38 + bit32.band(16487 * number85 + bit32.lshift(bit32.band(16487 * bit32.rshift(number84, 16) + 40734 * number85, 65535), 16), 4294967295) + 0
+									local number86 = bit32.band(number39, 4294967295)
+									local number87 = bit32.band(number86, 65535)
+									value34 = bit32.band(15442 * number87 + bit32.lshift(bit32.band(15442 * bit32.rshift(number86, 16) + 3097 * number87, 65535), 16), 4294967295)
+									local number88 = bit32.band(number39, 4294967295)
+									local number89 = bit32.band(number39, 4294967295)
+									local number90 = bit32.band(number88, 65535)
+									local number91 = bit32.rshift(number88, 16)
+									local number92 = bit32.band(number89, 65535)
+									local value64 = bit32.band(number90 * number92 + bit32.lshift(bit32.band(number90 * bit32.rshift(number89, 16) + number91 * number92, 65535), 16), 4294967295)
+									local value65 = bit32.band(value64, 65535)
+									number42 = value34 + bit32.band(64492 * value65 + bit32.lshift(bit32.band(64492 * bit32.rshift(value64, 16) + 27898 * value65, 65535), 16), 4294967295)
+									local number93 = bit32.band(number33, 4294967295)
+									local number94 = bit32.band(number93, 65535)
+									local value66 = bit32.band(number94 * 0 + bit32.lshift(bit32.band(number94 * 0 + bit32.rshift(number93, 16) * 0, 65535), 16), 4294967295)
+									local value67 = bit32.band(value66, 65535)
+									value35 = bit32.band(64492 * value67 + bit32.lshift(bit32.band(64492 * bit32.rshift(value66, 16) + 27898 * value67, 65535), 16), 4294967295)
+									local number95 = bit32.band(number40, 4294967295)
+									local number96 = bit32.band(number95, 65535)
+									local value68 = bit32.band(number96 * 0 + bit32.lshift(bit32.band(number96 * 0 + bit32.rshift(number95, 16) * 0, 65535), 16), 4294967295)
+									local value69 = bit32.band(value68, 65535)
+									number5 = value33 + number41 + number42 + 0 + value35 + bit32.band(1044 * value69 + bit32.lshift(bit32.band(1044 * bit32.rshift(value68, 16) + 37637 * value69, 65535), 16), 4294967295)
 								else
 									break
 								end
 							end
 
-							tbl5 = tbl6[4]
+							data5 = data6[4]
 							continue
 						end
 
 						break
 					end
 
-					tbl5[4] = n10
+					data5[4] = number10
 
-					if flag3 then
-						v15 = tbl4[n10]
-						tbl6 = { 0, #v15 + 0, nil, tbl5, 1 }
+					if condition3 then
+						value22 = data4[number10]
+						data6 = { 0, #value22 + 0, nil, data5, 1 }
 
 						while true do
-							v16 = tbl6[5]
-							v17 = tbl6[2]
-							n11 = tbl6[1] + v16
-							tbl6[1] = n11
+							value23 = data6[5]
+							value24 = data6[2]
+							number11 = data6[1] + value23
+							data6[1] = number11
 
-							if n11 <= v17 then
-								n112 = n11
-								n52 = bit32.lshift(bit32.band(n5, n112), 1)
-								n53 = bit32.band(n52, n5)
-								n54 = bit32.bnot(n53)
-								local n57 = bit32.band(n52, 4294967295)
-								local n58 = bit32.band(n54, 4294967295)
-								local n572 = bit32.band(n57, 65535)
-								local n573 = bit32.rshift(n57, 16)
-								local n582 = bit32.band(n58, 65535)
-								local v30 = bit32.band(n572 * n582 + bit32.lshift(bit32.band(n572 * bit32.rshift(n58, 16) + n573 * n582, 65535), 16), 4294967295)
-								local v302 = bit32.band(v30, 65535)
-								v18 = bit32.band(19474 * v302 + bit32.lshift(bit32.band(19474 * bit32.rshift(v30, 16) + 39469 * v302, 65535), 16), 4294967295)
-								local n59 = bit32.band(n52, 4294967295)
-								local n592 = bit32.band(n59, 65535)
-								n12 = n112 + n5 + v18 + bit32.band(23587 * n592 + bit32.lshift(bit32.band(23587 * bit32.rshift(n59, 16) + 21404 * n592, 65535), 16), 4294967295)
-								n55 = bit32.bnot(n5)
-								n56 = bit32.bor(n55, 54517094)
-								local n510 = bit32.band(n52, 4294967295)
-								local n511 = bit32.band(n56, 4294967295)
-								local n5102 = bit32.band(n510, 65535)
-								local n5103 = bit32.rshift(n510, 16)
-								local n5112 = bit32.band(n511, 65535)
-								local v31 = bit32.band(n5102 * n5112 + bit32.lshift(bit32.band(n5102 * bit32.rshift(n511, 16) + n5103 * n5112, 65535), 16), 4294967295)
-								local v312 = bit32.band(v31, 65535)
-								n13 = 1402756132 + bit32.band(46062 * v312 + bit32.lshift(bit32.band(46062 * bit32.rshift(v31, 16) + 26066 * v312, 65535), 16), 4294967295)
-								local n512 = bit32.bnot(n52)
-								local n5122 = bit32.band(n512, 65535)
-								v19 = bit32.band(23586 * n5122 + bit32.lshift(bit32.band(23586 * bit32.rshift(n512, 16) + 21404 * n5122, 65535), 16), 4294967295)
-								local v32 = bit32.bor(54517095, n55)
-								local v322 = bit32.band(v32, 65535)
-								n14 = n12 + n13 + v19 + bit32.band(2 * v322 + bit32.lshift(bit32.band(2 * bit32.rshift(v32, 16) + 0 * v322, 65535), 16), 4294967295)
-								local n143 = bit32.band(n14, 4294967295)
-								local n1432 = bit32.band(n143, 65535)
-								n15 = 327058238 + 3859571462 + bit32.band(25350 * n1432 + bit32.lshift(bit32.band(25350 * bit32.rshift(n143, 16) + 58892 * n1432, 65535), 16), 4294967295)
-								v20 = bit32.bor(2147483647, n14)
-								local v33 = bit32.band(272719449, v20)
-								local v332 = bit32.band(v33, 65535)
-								n16 = n15 + 375472684 + bit32.band(14836 * v332 + bit32.lshift(bit32.band(14836 * bit32.rshift(v33, 16) + 13287 * v332, 65535), 16), 4294967295) + 1761712016
-								n142 = bit32.bnot(n14)
-								local v34 = bit32.bor(2092966552, n142)
-								local v342 = bit32.band(v34, 65535)
-								local v35 = bit32.band(n16 - 4564062016 + 28981759 + bit32.band(50689 * v342 + bit32.lshift(bit32.band(50689 * bit32.rshift(v34, 16) + 32325 * v342, 65535), 16), 4294967295) + 1195411303, 4294967295)
-								local v352 = bit32.band(v35, 65535)
-								n17 = bit32.band(31367 * v352 + bit32.lshift(bit32.band(31367 * bit32.rshift(v35, 16) + 21986 * v352, 65535), 16), 4294967295) + 21801894718
-								v15[n112] = bit32.bxor(v15[n112], 327058238)
-								n18 = n5 + 584826193
-								local n185 = bit32.band(n18, 4294967295)
-								local n1852 = bit32.band(n185, 65535)
-								n19 = bit32.band(43296 * n1852 + bit32.lshift(bit32.band(43296 * bit32.rshift(n185, 16) + 12122 * n1852, 65535), 16), 4294967295) + 1588941376
-								local n113 = bit32.band(n112, 4294967295)
-								local n1132 = bit32.band(n113, 65535)
-								v21 = bit32.band(n1132 * 62187 + bit32.lshift(bit32.band(n1132 * 8557 + bit32.rshift(n113, 16) * 62187, 65535), 16), 4294967295)
-								n182 = bit32.band(n18, n17)
-								local v212 = bit32.band(v21, 4294967295)
-								local n186 = bit32.band(n182, 4294967295)
-								local v2122 = bit32.band(v212, 65535)
-								local v2123 = bit32.rshift(v212, 16)
-								local n1862 = bit32.band(n186, 65535)
-								local v36 = bit32.band(v2122 * n1862 + bit32.lshift(bit32.band(v2122 * bit32.rshift(n186, 16) + v2123 * n1862, 65535), 16), 4294967295)
-								local v362 = bit32.band(v36, 65535)
-								v23 = bit32.band(51485 * v362 + bit32.lshift(bit32.band(51485 * bit32.rshift(v36, 16) + 39315 * v362, 65535), 16), 4294967295)
-								local v213 = bit32.band(v21, 4294967295)
-								local v2132 = bit32.band(v213, 65535)
-								n20 = n19 + v23 + bit32.band(29245 * v2132 + bit32.lshift(bit32.band(29245 * bit32.rshift(v213, 16) + 51438 * v2132, 65535), 16), 4294967295)
-								n172 = bit32.band(n17, 272719449)
-								n183 = bit32.bnot(n182)
-								local v214 = bit32.band(v21, 4294967295)
-								local n187 = bit32.band(n183, 4294967295)
-								local v2142 = bit32.band(v214, 65535)
-								local v2143 = bit32.rshift(v214, 16)
-								local n1872 = bit32.band(n187, 65535)
-								local v37 = bit32.band(v2142 * n1872 + bit32.lshift(bit32.band(v2142 * bit32.rshift(n187, 16) + v2143 * n1872, 65535), 16), 4294967295)
-								local v372 = bit32.band(v37, 65535)
-								n21 = n172 + bit32.band(51485 * v372 + bit32.lshift(bit32.band(51485 * bit32.rshift(v37, 16) + 39315 * v372, 65535), 16), 4294967295)
-								n184 = bit32.bor(n18, v21)
-								local n188 = bit32.bnot(n184)
-								local n1882 = bit32.band(n188, 65535)
-								n22 = n20 + n21 + 3045076956 + bit32.band(21056 * n1882 + bit32.lshift(bit32.band(21056 * bit32.rshift(n188, 16) + 24245 * n1882, 65535), 16), 4294967295)
-								n222 = bit32.band(n22, 2147483647)
-								n223 = bit32.bnot(n222)
-								local n227 = bit32.band(n223, 4294967295)
-								local n2272 = bit32.band(n227, 65535)
-								v24 = bit32.band(65535 * n2272 + bit32.lshift(bit32.band(65535 * bit32.rshift(n227, 16) + 65535 * n2272, 65535), 16), 4294967295)
-								local n228 = bit32.band(n22, 4294967295)
-								local n2282 = bit32.band(n228, 65535)
-								v25 = bit32.band(46641 * n2282 + bit32.lshift(bit32.band(46641 * bit32.rshift(n228, 16) + 36583 * n2282, 65535), 16), 4294967295)
-								n224 = bit32.bnot(n22)
-								local n229 = bit32.band(n224, 4294967295)
-								local n2292 = bit32.band(n229, 65535)
-								n23 = 2397550128 + v24 + v25 + bit32.band(46641 * n2292 + bit32.lshift(bit32.band(46641 * bit32.rshift(n229, 16) + 36583 * n2292, 65535), 16), 4294967295)
-								local n2210 = bit32.band(n22, 4294967295)
-								local n22102 = bit32.band(n2210, 65535)
-								v26 = bit32.band(1004 * n22102 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2210, 16) + 49886 * n22102, 65535), 16), 4294967295)
-								local n2211 = bit32.band(n224, 4294967295)
-								local n22112 = bit32.band(n2211, 65535)
-								local v38 = bit32.band(n23 - 3269329899 + v24 + v26 + bit32.band(1004 * n22112 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2211, 16) + 49886 * n22112, 65535), 16), 4294967295), 4294967295)
-								local v382 = bit32.band(v38, 65535)
-								v27 = bit32.band(21218 * v382 + bit32.lshift(bit32.band(21218 * bit32.rshift(v38, 16) + 47856 * v382, 65535), 16), 4294967295)
-								local n2212 = bit32.band(n22, 4294967295)
-								local n2213 = bit32.band(n223, 4294967295)
-								local n22122 = bit32.band(n2212, 65535)
-								local n22123 = bit32.rshift(n2212, 16)
-								local n22132 = bit32.band(n2213, 65535)
-								local v39 = bit32.band(n22122 * n22132 + bit32.lshift(bit32.band(n22122 * bit32.rshift(n2213, 16) + n22123 * n22132, 65535), 16), 4294967295)
-								local v392 = bit32.band(v39, 65535)
-								n24 = 2669559910 + bit32.band(64492 * v392 + bit32.lshift(bit32.band(64492 * bit32.rshift(v39, 16) + 27898 * v392, 65535), 16), 4294967295)
-								local n2214 = bit32.band(n22, 4294967295)
-								local n22142 = bit32.band(n2214, 65535)
-								n225 = n223
-								n226 = bit32.bor(n22, 2147483647)
-								n25 = n24 + bit32.band(16487 * n22142 + bit32.lshift(bit32.band(16487 * bit32.rshift(n2214, 16) + 40734 * n22142, 65535), 16), 4294967295) + 0
-								local n2215 = bit32.band(n225, 4294967295)
-								local n22152 = bit32.band(n2215, 65535)
-								v28 = bit32.band(15442 * n22152 + bit32.lshift(bit32.band(15442 * bit32.rshift(n2215, 16) + 3097 * n22152, 65535), 16), 4294967295)
-								local n2216 = bit32.band(n225, 4294967295)
-								local n2217 = bit32.band(n225, 4294967295)
-								local n22162 = bit32.band(n2216, 65535)
-								local n22163 = bit32.rshift(n2216, 16)
-								local n22172 = bit32.band(n2217, 65535)
-								local v40 = bit32.band(n22162 * n22172 + bit32.lshift(bit32.band(n22162 * bit32.rshift(n2217, 16) + n22163 * n22172, 65535), 16), 4294967295)
-								local v402 = bit32.band(v40, 65535)
-								n26 = v28 + bit32.band(64492 * v402 + bit32.lshift(bit32.band(64492 * bit32.rshift(v40, 16) + 27898 * v402, 65535), 16), 4294967295)
-								local n2218 = bit32.band(n22, 4294967295)
-								local n22182 = bit32.band(n2218, 65535)
-								local v41 = bit32.band(n22182 * 0 + bit32.lshift(bit32.band(n22182 * 0 + bit32.rshift(n2218, 16) * 0, 65535), 16), 4294967295)
-								local v412 = bit32.band(v41, 65535)
-								v29 = bit32.band(64492 * v412 + bit32.lshift(bit32.band(64492 * bit32.rshift(v41, 16) + 27898 * v412, 65535), 16), 4294967295)
-								local n2219 = bit32.band(n226, 4294967295)
-								local n22192 = bit32.band(n2219, 65535)
-								local v42 = bit32.band(n22192 * 0 + bit32.lshift(bit32.band(n22192 * 0 + bit32.rshift(n2219, 16) * 0, 65535), 16), 4294967295)
-								local v422 = bit32.band(v42, 65535)
-								n5 = v27 + n25 + n26 + 0 + v29 + bit32.band(1044 * v422 + bit32.lshift(bit32.band(1044 * bit32.rshift(v42, 16) + 37637 * v422, 65535), 16), 4294967295)
+							if number11 <= value24 then
+								number12 = number11
+								number13 = bit32.lshift(bit32.band(number5, number12), 1)
+								number14 = bit32.band(number13, number5)
+								number15 = bit32.bnot(number14)
+								local number43 = bit32.band(number13, 4294967295)
+								local number44 = bit32.band(number15, 4294967295)
+								local number45 = bit32.band(number43, 65535)
+								local number46 = bit32.rshift(number43, 16)
+								local number47 = bit32.band(number44, 65535)
+								local value36 = bit32.band(number45 * number47 + bit32.lshift(bit32.band(number45 * bit32.rshift(number44, 16) + number46 * number47, 65535), 16), 4294967295)
+								local value37 = bit32.band(value36, 65535)
+								value25 = bit32.band(19474 * value37 + bit32.lshift(bit32.band(19474 * bit32.rshift(value36, 16) + 39469 * value37, 65535), 16), 4294967295)
+								local number48 = bit32.band(number13, 4294967295)
+								local number49 = bit32.band(number48, 65535)
+								number16 = number12 + number5 + value25 + bit32.band(23587 * number49 + bit32.lshift(bit32.band(23587 * bit32.rshift(number48, 16) + 21404 * number49, 65535), 16), 4294967295)
+								number17 = bit32.bnot(number5)
+								number18 = bit32.bor(number17, 54517094)
+								local number50 = bit32.band(number13, 4294967295)
+								local number51 = bit32.band(number18, 4294967295)
+								local number52 = bit32.band(number50, 65535)
+								local number53 = bit32.rshift(number50, 16)
+								local number54 = bit32.band(number51, 65535)
+								local value38 = bit32.band(number52 * number54 + bit32.lshift(bit32.band(number52 * bit32.rshift(number51, 16) + number53 * number54, 65535), 16), 4294967295)
+								local value39 = bit32.band(value38, 65535)
+								number19 = 1402756132 + bit32.band(46062 * value39 + bit32.lshift(bit32.band(46062 * bit32.rshift(value38, 16) + 26066 * value39, 65535), 16), 4294967295)
+								local number55 = bit32.bnot(number13)
+								local number56 = bit32.band(number55, 65535)
+								value26 = bit32.band(23586 * number56 + bit32.lshift(bit32.band(23586 * bit32.rshift(number55, 16) + 21404 * number56, 65535), 16), 4294967295)
+								local value40 = bit32.bor(54517095, number17)
+								local value41 = bit32.band(value40, 65535)
+								number20 = number16 + number19 + value26 + bit32.band(2 * value41 + bit32.lshift(bit32.band(2 * bit32.rshift(value40, 16) + 0 * value41, 65535), 16), 4294967295)
+								local number57 = bit32.band(number20, 4294967295)
+								local number58 = bit32.band(number57, 65535)
+								number21 = 327058238 + 3859571462 + bit32.band(25350 * number58 + bit32.lshift(bit32.band(25350 * bit32.rshift(number57, 16) + 58892 * number58, 65535), 16), 4294967295)
+								value27 = bit32.bor(2147483647, number20)
+								local value42 = bit32.band(272719449, value27)
+								local value43 = bit32.band(value42, 65535)
+								number22 = number21 + 375472684 + bit32.band(14836 * value43 + bit32.lshift(bit32.band(14836 * bit32.rshift(value42, 16) + 13287 * value43, 65535), 16), 4294967295) + 1761712016
+								number23 = bit32.bnot(number20)
+								local value44 = bit32.bor(2092966552, number23)
+								local value45 = bit32.band(value44, 65535)
+								local value46 = bit32.band(number22 - 4564062016 + 28981759 + bit32.band(50689 * value45 + bit32.lshift(bit32.band(50689 * bit32.rshift(value44, 16) + 32325 * value45, 65535), 16), 4294967295) + 1195411303, 4294967295)
+								local value47 = bit32.band(value46, 65535)
+								number24 = bit32.band(31367 * value47 + bit32.lshift(bit32.band(31367 * bit32.rshift(value46, 16) + 21986 * value47, 65535), 16), 4294967295) + 21801894718
+								value22[number12] = bit32.bxor(value22[number12], 327058238)
+								number25 = number5 + 584826193
+								local number59 = bit32.band(number25, 4294967295)
+								local number60 = bit32.band(number59, 65535)
+								number26 = bit32.band(43296 * number60 + bit32.lshift(bit32.band(43296 * bit32.rshift(number59, 16) + 12122 * number60, 65535), 16), 4294967295) + 1588941376
+								local number61 = bit32.band(number12, 4294967295)
+								local number62 = bit32.band(number61, 65535)
+								value28 = bit32.band(number62 * 62187 + bit32.lshift(bit32.band(number62 * 8557 + bit32.rshift(number61, 16) * 62187, 65535), 16), 4294967295)
+								number27 = bit32.band(number25, number24)
+								local value48 = bit32.band(value28, 4294967295)
+								local number63 = bit32.band(number27, 4294967295)
+								local value49 = bit32.band(value48, 65535)
+								local value50 = bit32.rshift(value48, 16)
+								local number64 = bit32.band(number63, 65535)
+								local value51 = bit32.band(value49 * number64 + bit32.lshift(bit32.band(value49 * bit32.rshift(number63, 16) + value50 * number64, 65535), 16), 4294967295)
+								local value52 = bit32.band(value51, 65535)
+								value29 = bit32.band(51485 * value52 + bit32.lshift(bit32.band(51485 * bit32.rshift(value51, 16) + 39315 * value52, 65535), 16), 4294967295)
+								local value53 = bit32.band(value28, 4294967295)
+								local value54 = bit32.band(value53, 65535)
+								number28 = number26 + value29 + bit32.band(29245 * value54 + bit32.lshift(bit32.band(29245 * bit32.rshift(value53, 16) + 51438 * value54, 65535), 16), 4294967295)
+								number29 = bit32.band(number24, 272719449)
+								number30 = bit32.bnot(number27)
+								local value55 = bit32.band(value28, 4294967295)
+								local number65 = bit32.band(number30, 4294967295)
+								local value56 = bit32.band(value55, 65535)
+								local value57 = bit32.rshift(value55, 16)
+								local number66 = bit32.band(number65, 65535)
+								local value58 = bit32.band(value56 * number66 + bit32.lshift(bit32.band(value56 * bit32.rshift(number65, 16) + value57 * number66, 65535), 16), 4294967295)
+								local value59 = bit32.band(value58, 65535)
+								number31 = number29 + bit32.band(51485 * value59 + bit32.lshift(bit32.band(51485 * bit32.rshift(value58, 16) + 39315 * value59, 65535), 16), 4294967295)
+								number32 = bit32.bor(number25, value28)
+								local number67 = bit32.bnot(number32)
+								local number68 = bit32.band(number67, 65535)
+								number33 = number28 + number31 + 3045076956 + bit32.band(21056 * number68 + bit32.lshift(bit32.band(21056 * bit32.rshift(number67, 16) + 24245 * number68, 65535), 16), 4294967295)
+								number34 = bit32.band(number33, 2147483647)
+								number35 = bit32.bnot(number34)
+								local number69 = bit32.band(number35, 4294967295)
+								local number70 = bit32.band(number69, 65535)
+								value30 = bit32.band(65535 * number70 + bit32.lshift(bit32.band(65535 * bit32.rshift(number69, 16) + 65535 * number70, 65535), 16), 4294967295)
+								local number71 = bit32.band(number33, 4294967295)
+								local number72 = bit32.band(number71, 65535)
+								value31 = bit32.band(46641 * number72 + bit32.lshift(bit32.band(46641 * bit32.rshift(number71, 16) + 36583 * number72, 65535), 16), 4294967295)
+								number36 = bit32.bnot(number33)
+								local number73 = bit32.band(number36, 4294967295)
+								local number74 = bit32.band(number73, 65535)
+								number37 = 2397550128 + value30 + value31 + bit32.band(46641 * number74 + bit32.lshift(bit32.band(46641 * bit32.rshift(number73, 16) + 36583 * number74, 65535), 16), 4294967295)
+								local number75 = bit32.band(number33, 4294967295)
+								local number76 = bit32.band(number75, 65535)
+								value32 = bit32.band(1004 * number76 + bit32.lshift(bit32.band(1004 * bit32.rshift(number75, 16) + 49886 * number76, 65535), 16), 4294967295)
+								local number77 = bit32.band(number36, 4294967295)
+								local number78 = bit32.band(number77, 65535)
+								local value60 = bit32.band(number37 - 3269329899 + value30 + value32 + bit32.band(1004 * number78 + bit32.lshift(bit32.band(1004 * bit32.rshift(number77, 16) + 49886 * number78, 65535), 16), 4294967295), 4294967295)
+								local value61 = bit32.band(value60, 65535)
+								value33 = bit32.band(21218 * value61 + bit32.lshift(bit32.band(21218 * bit32.rshift(value60, 16) + 47856 * value61, 65535), 16), 4294967295)
+								local number79 = bit32.band(number33, 4294967295)
+								local number80 = bit32.band(number35, 4294967295)
+								local number81 = bit32.band(number79, 65535)
+								local number82 = bit32.rshift(number79, 16)
+								local number83 = bit32.band(number80, 65535)
+								local value62 = bit32.band(number81 * number83 + bit32.lshift(bit32.band(number81 * bit32.rshift(number80, 16) + number82 * number83, 65535), 16), 4294967295)
+								local value63 = bit32.band(value62, 65535)
+								number38 = 2669559910 + bit32.band(64492 * value63 + bit32.lshift(bit32.band(64492 * bit32.rshift(value62, 16) + 27898 * value63, 65535), 16), 4294967295)
+								local number84 = bit32.band(number33, 4294967295)
+								local number85 = bit32.band(number84, 65535)
+								number39 = number35
+								number40 = bit32.bor(number33, 2147483647)
+								number41 = number38 + bit32.band(16487 * number85 + bit32.lshift(bit32.band(16487 * bit32.rshift(number84, 16) + 40734 * number85, 65535), 16), 4294967295) + 0
+								local number86 = bit32.band(number39, 4294967295)
+								local number87 = bit32.band(number86, 65535)
+								value34 = bit32.band(15442 * number87 + bit32.lshift(bit32.band(15442 * bit32.rshift(number86, 16) + 3097 * number87, 65535), 16), 4294967295)
+								local number88 = bit32.band(number39, 4294967295)
+								local number89 = bit32.band(number39, 4294967295)
+								local number90 = bit32.band(number88, 65535)
+								local number91 = bit32.rshift(number88, 16)
+								local number92 = bit32.band(number89, 65535)
+								local value64 = bit32.band(number90 * number92 + bit32.lshift(bit32.band(number90 * bit32.rshift(number89, 16) + number91 * number92, 65535), 16), 4294967295)
+								local value65 = bit32.band(value64, 65535)
+								number42 = value34 + bit32.band(64492 * value65 + bit32.lshift(bit32.band(64492 * bit32.rshift(value64, 16) + 27898 * value65, 65535), 16), 4294967295)
+								local number93 = bit32.band(number33, 4294967295)
+								local number94 = bit32.band(number93, 65535)
+								local value66 = bit32.band(number94 * 0 + bit32.lshift(bit32.band(number94 * 0 + bit32.rshift(number93, 16) * 0, 65535), 16), 4294967295)
+								local value67 = bit32.band(value66, 65535)
+								value35 = bit32.band(64492 * value67 + bit32.lshift(bit32.band(64492 * bit32.rshift(value66, 16) + 27898 * value67, 65535), 16), 4294967295)
+								local number95 = bit32.band(number40, 4294967295)
+								local number96 = bit32.band(number95, 65535)
+								local value68 = bit32.band(number96 * 0 + bit32.lshift(bit32.band(number96 * 0 + bit32.rshift(number95, 16) * 0, 65535), 16), 4294967295)
+								local value69 = bit32.band(value68, 65535)
+								number5 = value33 + number41 + number42 + 0 + value35 + bit32.band(1044 * value69 + bit32.lshift(bit32.band(1044 * bit32.rshift(value68, 16) + 37637 * value69, 65535), 16), 4294967295)
 							else
 								break
 							end
 						end
 
-						tbl5 = tbl6[4]
+						data5 = data6[4]
 						continue
 					end
 
-					v11 = arg[6]
-					n6 = buffer.len(v11) - 32 - 19
-					n7 = 32 + 888971832 % n6
-					n8 = 32
+					value12 = argument[6]
+					number6 = buffer.len(value12) - 32 - 19
+					number7 = 32 + 888971832 % number6
+					number8 = 32
 
 					while true do
-						n9 = n8 + (n7 + bit32.band(n5, 255) + 1) % n6
-						v112 = buffer.readi8(v11, n7)
-						v113 = buffer.readu8(v11, n9)
-						v114 = bit32.lshift(bit32.band(v113, 255), 3)
-						v12 = bit32.band(bit32.bxor(bit32.bxor(54517094, v112) + v114 + 584826193, n7), 2147483647)
-						v115 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(v112, v113), v12), 2147483647), 205469696)
-						buffer.writeu32(v11, n7, v115)
-						v122 = bit32.rshift(v12, 8)
-						v116 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(v113, v122), n7), 2147483647), 327527424)
-						buffer.writeu8(v11, n9, v116)
-						n5 = v12
-						n7 = n8 + (n7 + bit32.band(v12, 63) + 1) % n6
+						number9 = number8 + (number7 + bit32.band(number5, 255) + 1) % number6
+						value13 = buffer.readi8(value12, number7)
+						value14 = buffer.readu8(value12, number9)
+						value15 = bit32.lshift(bit32.band(value14, 255), 3)
+						value16 = bit32.band(bit32.bxor(bit32.bxor(54517094, value13) + value15 + 584826193, number7), 2147483647)
+						value17 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(value13, value14), value16), 2147483647), 205469696)
+						buffer.writeu32(value12, number7, value17)
+						value18 = bit32.rshift(value16, 8)
+						value19 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(value14, value18), number7), 2147483647), 327527424)
+						buffer.writeu8(value12, number9, value19)
+						number5 = value16
+						number7 = number8 + (number7 + bit32.band(value16, 63) + 1) % number6
 					end
 				end
 			end
 
-			flag4 = flag2
+			condition4 = condition2
 
-			if flag3 then
-				tbl5[4] = n10
+			if condition3 then
+				data5[4] = number10
 
-				if flag3 then
-					v15 = tbl4[n10]
-					tbl6 = { 0, #v15 + 0, nil, tbl5, 1 }
+				if condition3 then
+					value22 = data4[number10]
+					data6 = { 0, #value22 + 0, nil, data5, 1 }
 
 					while true do
-						v16 = tbl6[5]
-						v17 = tbl6[2]
-						n11 = tbl6[1] + v16
-						tbl6[1] = n11
+						value23 = data6[5]
+						value24 = data6[2]
+						number11 = data6[1] + value23
+						data6[1] = number11
 
-						if n11 <= v17 then
-							n112 = n11
-							n52 = bit32.lshift(bit32.band(n5, n112), 1)
-							n53 = bit32.band(n52, n5)
-							n54 = bit32.bnot(n53)
-							local v123 = bit32.band(n52, 4294967295)
-							local v124 = bit32.band(n54, 4294967295)
-							local v1232 = bit32.band(v123, 65535)
-							local v1233 = bit32.rshift(v123, 16)
-							local v1242 = bit32.band(v124, 65535)
-							local v30 = bit32.band(v1232 * v1242 + bit32.lshift(bit32.band(v1232 * bit32.rshift(v124, 16) + v1233 * v1242, 65535), 16), 4294967295)
-							local v302 = bit32.band(v30, 65535)
-							v18 = bit32.band(19474 * v302 + bit32.lshift(bit32.band(19474 * bit32.rshift(v30, 16) + 39469 * v302, 65535), 16), 4294967295)
-							local v125 = bit32.band(n52, 4294967295)
-							local v1252 = bit32.band(v125, 65535)
-							n12 = n112 + n5 + v18 + bit32.band(23587 * v1252 + bit32.lshift(bit32.band(23587 * bit32.rshift(v125, 16) + 21404 * v1252, 65535), 16), 4294967295)
-							n55 = bit32.bnot(n5)
-							n56 = bit32.bor(n55, 54517094)
-							local v126 = bit32.band(n52, 4294967295)
-							local v127 = bit32.band(n56, 4294967295)
-							local v1262 = bit32.band(v126, 65535)
-							local v1263 = bit32.rshift(v126, 16)
-							local v1272 = bit32.band(v127, 65535)
-							local v31 = bit32.band(v1262 * v1272 + bit32.lshift(bit32.band(v1262 * bit32.rshift(v127, 16) + v1263 * v1272, 65535), 16), 4294967295)
-							local v312 = bit32.band(v31, 65535)
-							n13 = 1402756132 + bit32.band(46062 * v312 + bit32.lshift(bit32.band(46062 * bit32.rshift(v31, 16) + 26066 * v312, 65535), 16), 4294967295)
-							local v128 = bit32.bnot(n52)
-							local v1282 = bit32.band(v128, 65535)
-							v19 = bit32.band(23586 * v1282 + bit32.lshift(bit32.band(23586 * bit32.rshift(v128, 16) + 21404 * v1282, 65535), 16), 4294967295)
-							local v32 = bit32.bor(54517095, n55)
-							local v322 = bit32.band(v32, 65535)
-							n14 = n12 + n13 + v19 + bit32.band(2 * v322 + bit32.lshift(bit32.band(2 * bit32.rshift(v32, 16) + 0 * v322, 65535), 16), 4294967295)
-							local n143 = bit32.band(n14, 4294967295)
-							local n1432 = bit32.band(n143, 65535)
-							n15 = 327058238 + 3859571462 + bit32.band(25350 * n1432 + bit32.lshift(bit32.band(25350 * bit32.rshift(n143, 16) + 58892 * n1432, 65535), 16), 4294967295)
-							v20 = bit32.bor(2147483647, n14)
-							local v33 = bit32.band(272719449, v20)
-							local v332 = bit32.band(v33, 65535)
-							n16 = n15 + 375472684 + bit32.band(14836 * v332 + bit32.lshift(bit32.band(14836 * bit32.rshift(v33, 16) + 13287 * v332, 65535), 16), 4294967295) + 1761712016
-							n142 = bit32.bnot(n14)
-							local v34 = bit32.bor(2092966552, n142)
-							local v342 = bit32.band(v34, 65535)
-							local v35 = bit32.band(n16 - 4564062016 + 28981759 + bit32.band(50689 * v342 + bit32.lshift(bit32.band(50689 * bit32.rshift(v34, 16) + 32325 * v342, 65535), 16), 4294967295) + 1195411303, 4294967295)
-							local v352 = bit32.band(v35, 65535)
-							n17 = bit32.band(31367 * v352 + bit32.lshift(bit32.band(31367 * bit32.rshift(v35, 16) + 21986 * v352, 65535), 16), 4294967295) + 21801894718
-							v15[n112] = bit32.bxor(v15[n112], 327058238)
-							n18 = n5 + 584826193
-							local n185 = bit32.band(n18, 4294967295)
-							local n1852 = bit32.band(n185, 65535)
-							n19 = bit32.band(43296 * n1852 + bit32.lshift(bit32.band(43296 * bit32.rshift(n185, 16) + 12122 * n1852, 65535), 16), 4294967295) + 1588941376
-							local n113 = bit32.band(n112, 4294967295)
-							local n1132 = bit32.band(n113, 65535)
-							v21 = bit32.band(n1132 * 62187 + bit32.lshift(bit32.band(n1132 * 8557 + bit32.rshift(n113, 16) * 62187, 65535), 16), 4294967295)
-							n182 = bit32.band(n18, n17)
-							local v212 = bit32.band(v21, 4294967295)
-							local n186 = bit32.band(n182, 4294967295)
-							local v2122 = bit32.band(v212, 65535)
-							local v2123 = bit32.rshift(v212, 16)
-							local n1862 = bit32.band(n186, 65535)
-							local v36 = bit32.band(v2122 * n1862 + bit32.lshift(bit32.band(v2122 * bit32.rshift(n186, 16) + v2123 * n1862, 65535), 16), 4294967295)
-							local v362 = bit32.band(v36, 65535)
-							v23 = bit32.band(51485 * v362 + bit32.lshift(bit32.band(51485 * bit32.rshift(v36, 16) + 39315 * v362, 65535), 16), 4294967295)
-							local v213 = bit32.band(v21, 4294967295)
-							local v2132 = bit32.band(v213, 65535)
-							n20 = n19 + v23 + bit32.band(29245 * v2132 + bit32.lshift(bit32.band(29245 * bit32.rshift(v213, 16) + 51438 * v2132, 65535), 16), 4294967295)
-							n172 = bit32.band(n17, 272719449)
-							n183 = bit32.bnot(n182)
-							local v214 = bit32.band(v21, 4294967295)
-							local n187 = bit32.band(n183, 4294967295)
-							local v2142 = bit32.band(v214, 65535)
-							local v2143 = bit32.rshift(v214, 16)
-							local n1872 = bit32.band(n187, 65535)
-							local v37 = bit32.band(v2142 * n1872 + bit32.lshift(bit32.band(v2142 * bit32.rshift(n187, 16) + v2143 * n1872, 65535), 16), 4294967295)
-							local v372 = bit32.band(v37, 65535)
-							n21 = n172 + bit32.band(51485 * v372 + bit32.lshift(bit32.band(51485 * bit32.rshift(v37, 16) + 39315 * v372, 65535), 16), 4294967295)
-							n184 = bit32.bor(n18, v21)
-							local n188 = bit32.bnot(n184)
-							local n1882 = bit32.band(n188, 65535)
-							n22 = n20 + n21 + 3045076956 + bit32.band(21056 * n1882 + bit32.lshift(bit32.band(21056 * bit32.rshift(n188, 16) + 24245 * n1882, 65535), 16), 4294967295)
-							n222 = bit32.band(n22, 2147483647)
-							n223 = bit32.bnot(n222)
-							local n227 = bit32.band(n223, 4294967295)
-							local n2272 = bit32.band(n227, 65535)
-							v24 = bit32.band(65535 * n2272 + bit32.lshift(bit32.band(65535 * bit32.rshift(n227, 16) + 65535 * n2272, 65535), 16), 4294967295)
-							local n228 = bit32.band(n22, 4294967295)
-							local n2282 = bit32.band(n228, 65535)
-							v25 = bit32.band(46641 * n2282 + bit32.lshift(bit32.band(46641 * bit32.rshift(n228, 16) + 36583 * n2282, 65535), 16), 4294967295)
-							n224 = bit32.bnot(n22)
-							local n229 = bit32.band(n224, 4294967295)
-							local n2292 = bit32.band(n229, 65535)
-							n23 = 2397550128 + v24 + v25 + bit32.band(46641 * n2292 + bit32.lshift(bit32.band(46641 * bit32.rshift(n229, 16) + 36583 * n2292, 65535), 16), 4294967295)
-							local n2210 = bit32.band(n22, 4294967295)
-							local n22102 = bit32.band(n2210, 65535)
-							v26 = bit32.band(1004 * n22102 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2210, 16) + 49886 * n22102, 65535), 16), 4294967295)
-							local n2211 = bit32.band(n224, 4294967295)
-							local n22112 = bit32.band(n2211, 65535)
-							local v38 = bit32.band(n23 - 3269329899 + v24 + v26 + bit32.band(1004 * n22112 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2211, 16) + 49886 * n22112, 65535), 16), 4294967295), 4294967295)
-							local v382 = bit32.band(v38, 65535)
-							v27 = bit32.band(21218 * v382 + bit32.lshift(bit32.band(21218 * bit32.rshift(v38, 16) + 47856 * v382, 65535), 16), 4294967295)
-							local n2212 = bit32.band(n22, 4294967295)
-							local n2213 = bit32.band(n223, 4294967295)
-							local n22122 = bit32.band(n2212, 65535)
-							local n22123 = bit32.rshift(n2212, 16)
-							local n22132 = bit32.band(n2213, 65535)
-							local v39 = bit32.band(n22122 * n22132 + bit32.lshift(bit32.band(n22122 * bit32.rshift(n2213, 16) + n22123 * n22132, 65535), 16), 4294967295)
-							local v392 = bit32.band(v39, 65535)
-							n24 = 2669559910 + bit32.band(64492 * v392 + bit32.lshift(bit32.band(64492 * bit32.rshift(v39, 16) + 27898 * v392, 65535), 16), 4294967295)
-							local n2214 = bit32.band(n22, 4294967295)
-							local n22142 = bit32.band(n2214, 65535)
-							n225 = n223
-							n226 = bit32.bor(n22, 2147483647)
-							n25 = n24 + bit32.band(16487 * n22142 + bit32.lshift(bit32.band(16487 * bit32.rshift(n2214, 16) + 40734 * n22142, 65535), 16), 4294967295) + 0
-							local n2215 = bit32.band(n225, 4294967295)
-							local n22152 = bit32.band(n2215, 65535)
-							v28 = bit32.band(15442 * n22152 + bit32.lshift(bit32.band(15442 * bit32.rshift(n2215, 16) + 3097 * n22152, 65535), 16), 4294967295)
-							local n2216 = bit32.band(n225, 4294967295)
-							local n2217 = bit32.band(n225, 4294967295)
-							local n22162 = bit32.band(n2216, 65535)
-							local n22163 = bit32.rshift(n2216, 16)
-							local n22172 = bit32.band(n2217, 65535)
-							local v40 = bit32.band(n22162 * n22172 + bit32.lshift(bit32.band(n22162 * bit32.rshift(n2217, 16) + n22163 * n22172, 65535), 16), 4294967295)
-							local v402 = bit32.band(v40, 65535)
-							n26 = v28 + bit32.band(64492 * v402 + bit32.lshift(bit32.band(64492 * bit32.rshift(v40, 16) + 27898 * v402, 65535), 16), 4294967295)
-							local n2218 = bit32.band(n22, 4294967295)
-							local n22182 = bit32.band(n2218, 65535)
-							local v41 = bit32.band(n22182 * 0 + bit32.lshift(bit32.band(n22182 * 0 + bit32.rshift(n2218, 16) * 0, 65535), 16), 4294967295)
-							local v412 = bit32.band(v41, 65535)
-							v29 = bit32.band(64492 * v412 + bit32.lshift(bit32.band(64492 * bit32.rshift(v41, 16) + 27898 * v412, 65535), 16), 4294967295)
-							local n2219 = bit32.band(n226, 4294967295)
-							local n22192 = bit32.band(n2219, 65535)
-							local v42 = bit32.band(n22192 * 0 + bit32.lshift(bit32.band(n22192 * 0 + bit32.rshift(n2219, 16) * 0, 65535), 16), 4294967295)
-							local v422 = bit32.band(v42, 65535)
-							n5 = v27 + n25 + n26 + 0 + v29 + bit32.band(1044 * v422 + bit32.lshift(bit32.band(1044 * bit32.rshift(v42, 16) + 37637 * v422, 65535), 16), 4294967295)
+						if number11 <= value24 then
+							number12 = number11
+							number13 = bit32.lshift(bit32.band(number5, number12), 1)
+							number14 = bit32.band(number13, number5)
+							number15 = bit32.bnot(number14)
+							local number43 = bit32.band(number13, 4294967295)
+							local number44 = bit32.band(number15, 4294967295)
+							local number45 = bit32.band(number43, 65535)
+							local number46 = bit32.rshift(number43, 16)
+							local number47 = bit32.band(number44, 65535)
+							local value36 = bit32.band(number45 * number47 + bit32.lshift(bit32.band(number45 * bit32.rshift(number44, 16) + number46 * number47, 65535), 16), 4294967295)
+							local value37 = bit32.band(value36, 65535)
+							value25 = bit32.band(19474 * value37 + bit32.lshift(bit32.band(19474 * bit32.rshift(value36, 16) + 39469 * value37, 65535), 16), 4294967295)
+							local number48 = bit32.band(number13, 4294967295)
+							local number49 = bit32.band(number48, 65535)
+							number16 = number12 + number5 + value25 + bit32.band(23587 * number49 + bit32.lshift(bit32.band(23587 * bit32.rshift(number48, 16) + 21404 * number49, 65535), 16), 4294967295)
+							number17 = bit32.bnot(number5)
+							number18 = bit32.bor(number17, 54517094)
+							local number50 = bit32.band(number13, 4294967295)
+							local number51 = bit32.band(number18, 4294967295)
+							local number52 = bit32.band(number50, 65535)
+							local number53 = bit32.rshift(number50, 16)
+							local number54 = bit32.band(number51, 65535)
+							local value38 = bit32.band(number52 * number54 + bit32.lshift(bit32.band(number52 * bit32.rshift(number51, 16) + number53 * number54, 65535), 16), 4294967295)
+							local value39 = bit32.band(value38, 65535)
+							number19 = 1402756132 + bit32.band(46062 * value39 + bit32.lshift(bit32.band(46062 * bit32.rshift(value38, 16) + 26066 * value39, 65535), 16), 4294967295)
+							local number55 = bit32.bnot(number13)
+							local number56 = bit32.band(number55, 65535)
+							value26 = bit32.band(23586 * number56 + bit32.lshift(bit32.band(23586 * bit32.rshift(number55, 16) + 21404 * number56, 65535), 16), 4294967295)
+							local value40 = bit32.bor(54517095, number17)
+							local value41 = bit32.band(value40, 65535)
+							number20 = number16 + number19 + value26 + bit32.band(2 * value41 + bit32.lshift(bit32.band(2 * bit32.rshift(value40, 16) + 0 * value41, 65535), 16), 4294967295)
+							local number57 = bit32.band(number20, 4294967295)
+							local number58 = bit32.band(number57, 65535)
+							number21 = 327058238 + 3859571462 + bit32.band(25350 * number58 + bit32.lshift(bit32.band(25350 * bit32.rshift(number57, 16) + 58892 * number58, 65535), 16), 4294967295)
+							value27 = bit32.bor(2147483647, number20)
+							local value42 = bit32.band(272719449, value27)
+							local value43 = bit32.band(value42, 65535)
+							number22 = number21 + 375472684 + bit32.band(14836 * value43 + bit32.lshift(bit32.band(14836 * bit32.rshift(value42, 16) + 13287 * value43, 65535), 16), 4294967295) + 1761712016
+							number23 = bit32.bnot(number20)
+							local value44 = bit32.bor(2092966552, number23)
+							local value45 = bit32.band(value44, 65535)
+							local value46 = bit32.band(number22 - 4564062016 + 28981759 + bit32.band(50689 * value45 + bit32.lshift(bit32.band(50689 * bit32.rshift(value44, 16) + 32325 * value45, 65535), 16), 4294967295) + 1195411303, 4294967295)
+							local value47 = bit32.band(value46, 65535)
+							number24 = bit32.band(31367 * value47 + bit32.lshift(bit32.band(31367 * bit32.rshift(value46, 16) + 21986 * value47, 65535), 16), 4294967295) + 21801894718
+							value22[number12] = bit32.bxor(value22[number12], 327058238)
+							number25 = number5 + 584826193
+							local number59 = bit32.band(number25, 4294967295)
+							local number60 = bit32.band(number59, 65535)
+							number26 = bit32.band(43296 * number60 + bit32.lshift(bit32.band(43296 * bit32.rshift(number59, 16) + 12122 * number60, 65535), 16), 4294967295) + 1588941376
+							local number61 = bit32.band(number12, 4294967295)
+							local number62 = bit32.band(number61, 65535)
+							value28 = bit32.band(number62 * 62187 + bit32.lshift(bit32.band(number62 * 8557 + bit32.rshift(number61, 16) * 62187, 65535), 16), 4294967295)
+							number27 = bit32.band(number25, number24)
+							local value48 = bit32.band(value28, 4294967295)
+							local number63 = bit32.band(number27, 4294967295)
+							local value49 = bit32.band(value48, 65535)
+							local value50 = bit32.rshift(value48, 16)
+							local number64 = bit32.band(number63, 65535)
+							local value51 = bit32.band(value49 * number64 + bit32.lshift(bit32.band(value49 * bit32.rshift(number63, 16) + value50 * number64, 65535), 16), 4294967295)
+							local value52 = bit32.band(value51, 65535)
+							value29 = bit32.band(51485 * value52 + bit32.lshift(bit32.band(51485 * bit32.rshift(value51, 16) + 39315 * value52, 65535), 16), 4294967295)
+							local value53 = bit32.band(value28, 4294967295)
+							local value54 = bit32.band(value53, 65535)
+							number28 = number26 + value29 + bit32.band(29245 * value54 + bit32.lshift(bit32.band(29245 * bit32.rshift(value53, 16) + 51438 * value54, 65535), 16), 4294967295)
+							number29 = bit32.band(number24, 272719449)
+							number30 = bit32.bnot(number27)
+							local value55 = bit32.band(value28, 4294967295)
+							local number65 = bit32.band(number30, 4294967295)
+							local value56 = bit32.band(value55, 65535)
+							local value57 = bit32.rshift(value55, 16)
+							local number66 = bit32.band(number65, 65535)
+							local value58 = bit32.band(value56 * number66 + bit32.lshift(bit32.band(value56 * bit32.rshift(number65, 16) + value57 * number66, 65535), 16), 4294967295)
+							local value59 = bit32.band(value58, 65535)
+							number31 = number29 + bit32.band(51485 * value59 + bit32.lshift(bit32.band(51485 * bit32.rshift(value58, 16) + 39315 * value59, 65535), 16), 4294967295)
+							number32 = bit32.bor(number25, value28)
+							local number67 = bit32.bnot(number32)
+							local number68 = bit32.band(number67, 65535)
+							number33 = number28 + number31 + 3045076956 + bit32.band(21056 * number68 + bit32.lshift(bit32.band(21056 * bit32.rshift(number67, 16) + 24245 * number68, 65535), 16), 4294967295)
+							number34 = bit32.band(number33, 2147483647)
+							number35 = bit32.bnot(number34)
+							local number69 = bit32.band(number35, 4294967295)
+							local number70 = bit32.band(number69, 65535)
+							value30 = bit32.band(65535 * number70 + bit32.lshift(bit32.band(65535 * bit32.rshift(number69, 16) + 65535 * number70, 65535), 16), 4294967295)
+							local number71 = bit32.band(number33, 4294967295)
+							local number72 = bit32.band(number71, 65535)
+							value31 = bit32.band(46641 * number72 + bit32.lshift(bit32.band(46641 * bit32.rshift(number71, 16) + 36583 * number72, 65535), 16), 4294967295)
+							number36 = bit32.bnot(number33)
+							local number73 = bit32.band(number36, 4294967295)
+							local number74 = bit32.band(number73, 65535)
+							number37 = 2397550128 + value30 + value31 + bit32.band(46641 * number74 + bit32.lshift(bit32.band(46641 * bit32.rshift(number73, 16) + 36583 * number74, 65535), 16), 4294967295)
+							local number75 = bit32.band(number33, 4294967295)
+							local number76 = bit32.band(number75, 65535)
+							value32 = bit32.band(1004 * number76 + bit32.lshift(bit32.band(1004 * bit32.rshift(number75, 16) + 49886 * number76, 65535), 16), 4294967295)
+							local number77 = bit32.band(number36, 4294967295)
+							local number78 = bit32.band(number77, 65535)
+							local value60 = bit32.band(number37 - 3269329899 + value30 + value32 + bit32.band(1004 * number78 + bit32.lshift(bit32.band(1004 * bit32.rshift(number77, 16) + 49886 * number78, 65535), 16), 4294967295), 4294967295)
+							local value61 = bit32.band(value60, 65535)
+							value33 = bit32.band(21218 * value61 + bit32.lshift(bit32.band(21218 * bit32.rshift(value60, 16) + 47856 * value61, 65535), 16), 4294967295)
+							local number79 = bit32.band(number33, 4294967295)
+							local number80 = bit32.band(number35, 4294967295)
+							local number81 = bit32.band(number79, 65535)
+							local number82 = bit32.rshift(number79, 16)
+							local number83 = bit32.band(number80, 65535)
+							local value62 = bit32.band(number81 * number83 + bit32.lshift(bit32.band(number81 * bit32.rshift(number80, 16) + number82 * number83, 65535), 16), 4294967295)
+							local value63 = bit32.band(value62, 65535)
+							number38 = 2669559910 + bit32.band(64492 * value63 + bit32.lshift(bit32.band(64492 * bit32.rshift(value62, 16) + 27898 * value63, 65535), 16), 4294967295)
+							local number84 = bit32.band(number33, 4294967295)
+							local number85 = bit32.band(number84, 65535)
+							number39 = number35
+							number40 = bit32.bor(number33, 2147483647)
+							number41 = number38 + bit32.band(16487 * number85 + bit32.lshift(bit32.band(16487 * bit32.rshift(number84, 16) + 40734 * number85, 65535), 16), 4294967295) + 0
+							local number86 = bit32.band(number39, 4294967295)
+							local number87 = bit32.band(number86, 65535)
+							value34 = bit32.band(15442 * number87 + bit32.lshift(bit32.band(15442 * bit32.rshift(number86, 16) + 3097 * number87, 65535), 16), 4294967295)
+							local number88 = bit32.band(number39, 4294967295)
+							local number89 = bit32.band(number39, 4294967295)
+							local number90 = bit32.band(number88, 65535)
+							local number91 = bit32.rshift(number88, 16)
+							local number92 = bit32.band(number89, 65535)
+							local value64 = bit32.band(number90 * number92 + bit32.lshift(bit32.band(number90 * bit32.rshift(number89, 16) + number91 * number92, 65535), 16), 4294967295)
+							local value65 = bit32.band(value64, 65535)
+							number42 = value34 + bit32.band(64492 * value65 + bit32.lshift(bit32.band(64492 * bit32.rshift(value64, 16) + 27898 * value65, 65535), 16), 4294967295)
+							local number93 = bit32.band(number33, 4294967295)
+							local number94 = bit32.band(number93, 65535)
+							local value66 = bit32.band(number94 * 0 + bit32.lshift(bit32.band(number94 * 0 + bit32.rshift(number93, 16) * 0, 65535), 16), 4294967295)
+							local value67 = bit32.band(value66, 65535)
+							value35 = bit32.band(64492 * value67 + bit32.lshift(bit32.band(64492 * bit32.rshift(value66, 16) + 27898 * value67, 65535), 16), 4294967295)
+							local number95 = bit32.band(number40, 4294967295)
+							local number96 = bit32.band(number95, 65535)
+							local value68 = bit32.band(number96 * 0 + bit32.lshift(bit32.band(number96 * 0 + bit32.rshift(number95, 16) * 0, 65535), 16), 4294967295)
+							local value69 = bit32.band(value68, 65535)
+							number5 = value33 + number41 + number42 + 0 + value35 + bit32.band(1044 * value69 + bit32.lshift(bit32.band(1044 * bit32.rshift(value68, 16) + 37637 * value69, 65535), 16), 4294967295)
 						else
 							break
 						end
 					end
 
-					tbl5 = tbl6[4]
+					data5 = data6[4]
 					continue
 				end
 
-				v11 = arg[6]
-				n6 = buffer.len(v11) - 32 - 19
-				n7 = 32 + 888971832 % n6
-				n8 = 32
+				value12 = argument[6]
+				number6 = buffer.len(value12) - 32 - 19
+				number7 = 32 + 888971832 % number6
+				number8 = 32
 
 				while true do
-					n9 = n8 + (n7 + bit32.band(n5, 255) + 1) % n6
-					v112 = buffer.readi8(v11, n7)
-					v113 = buffer.readu8(v11, n9)
-					v114 = bit32.lshift(bit32.band(v113, 255), 3)
-					v12 = bit32.band(bit32.bxor(bit32.bxor(54517094, v112) + v114 + 584826193, n7), 2147483647)
-					v115 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(v112, v113), v12), 2147483647), 205469696)
-					buffer.writeu32(v11, n7, v115)
-					v122 = bit32.rshift(v12, 8)
-					v116 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(v113, v122), n7), 2147483647), 327527424)
-					buffer.writeu8(v11, n9, v116)
-					n5 = v12
-					n7 = n8 + (n7 + bit32.band(v12, 63) + 1) % n6
+					number9 = number8 + (number7 + bit32.band(number5, 255) + 1) % number6
+					value13 = buffer.readi8(value12, number7)
+					value14 = buffer.readu8(value12, number9)
+					value15 = bit32.lshift(bit32.band(value14, 255), 3)
+					value16 = bit32.band(bit32.bxor(bit32.bxor(54517094, value13) + value15 + 584826193, number7), 2147483647)
+					value17 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(value13, value14), value16), 2147483647), 205469696)
+					buffer.writeu32(value12, number7, value17)
+					value18 = bit32.rshift(value16, 8)
+					value19 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(value14, value18), number7), 2147483647), 327527424)
+					buffer.writeu8(value12, number9, value19)
+					number5 = value16
+					number7 = number8 + (number7 + bit32.band(value16, 63) + 1) % number6
 				end
 			else
-				flag3 = flag4
-				tbl5[4] = n10
+				condition3 = condition4
+				data5[4] = number10
 
-				if flag3 then
-					v15 = tbl4[n10]
-					tbl6 = { 0, #v15 + 0, nil, tbl5, 1 }
+				if condition3 then
+					value22 = data4[number10]
+					data6 = { 0, #value22 + 0, nil, data5, 1 }
 
 					while true do
-						v16 = tbl6[5]
-						v17 = tbl6[2]
-						n11 = tbl6[1] + v16
-						tbl6[1] = n11
+						value23 = data6[5]
+						value24 = data6[2]
+						number11 = data6[1] + value23
+						data6[1] = number11
 
-						if n11 <= v17 then
-							n112 = n11
-							n52 = bit32.lshift(bit32.band(n5, n112), 1)
-							n53 = bit32.band(n52, n5)
-							n54 = bit32.bnot(n53)
-							local v123 = bit32.band(n52, 4294967295)
-							local v124 = bit32.band(n54, 4294967295)
-							local v1232 = bit32.band(v123, 65535)
-							local v1233 = bit32.rshift(v123, 16)
-							local v1242 = bit32.band(v124, 65535)
-							local v30 = bit32.band(v1232 * v1242 + bit32.lshift(bit32.band(v1232 * bit32.rshift(v124, 16) + v1233 * v1242, 65535), 16), 4294967295)
-							local v302 = bit32.band(v30, 65535)
-							v18 = bit32.band(19474 * v302 + bit32.lshift(bit32.band(19474 * bit32.rshift(v30, 16) + 39469 * v302, 65535), 16), 4294967295)
-							local v125 = bit32.band(n52, 4294967295)
-							local v1252 = bit32.band(v125, 65535)
-							n12 = n112 + n5 + v18 + bit32.band(23587 * v1252 + bit32.lshift(bit32.band(23587 * bit32.rshift(v125, 16) + 21404 * v1252, 65535), 16), 4294967295)
-							n55 = bit32.bnot(n5)
-							n56 = bit32.bor(n55, 54517094)
-							local v126 = bit32.band(n52, 4294967295)
-							local v127 = bit32.band(n56, 4294967295)
-							local v1262 = bit32.band(v126, 65535)
-							local v1263 = bit32.rshift(v126, 16)
-							local v1272 = bit32.band(v127, 65535)
-							local v31 = bit32.band(v1262 * v1272 + bit32.lshift(bit32.band(v1262 * bit32.rshift(v127, 16) + v1263 * v1272, 65535), 16), 4294967295)
-							local v312 = bit32.band(v31, 65535)
-							n13 = 1402756132 + bit32.band(46062 * v312 + bit32.lshift(bit32.band(46062 * bit32.rshift(v31, 16) + 26066 * v312, 65535), 16), 4294967295)
-							local v128 = bit32.bnot(n52)
-							local v1282 = bit32.band(v128, 65535)
-							v19 = bit32.band(23586 * v1282 + bit32.lshift(bit32.band(23586 * bit32.rshift(v128, 16) + 21404 * v1282, 65535), 16), 4294967295)
-							local v32 = bit32.bor(54517095, n55)
-							local v322 = bit32.band(v32, 65535)
-							n14 = n12 + n13 + v19 + bit32.band(2 * v322 + bit32.lshift(bit32.band(2 * bit32.rshift(v32, 16) + 0 * v322, 65535), 16), 4294967295)
-							local n143 = bit32.band(n14, 4294967295)
-							local n1432 = bit32.band(n143, 65535)
-							n15 = 327058238 + 3859571462 + bit32.band(25350 * n1432 + bit32.lshift(bit32.band(25350 * bit32.rshift(n143, 16) + 58892 * n1432, 65535), 16), 4294967295)
-							v20 = bit32.bor(2147483647, n14)
-							local v33 = bit32.band(272719449, v20)
-							local v332 = bit32.band(v33, 65535)
-							n16 = n15 + 375472684 + bit32.band(14836 * v332 + bit32.lshift(bit32.band(14836 * bit32.rshift(v33, 16) + 13287 * v332, 65535), 16), 4294967295) + 1761712016
-							n142 = bit32.bnot(n14)
-							local v34 = bit32.bor(2092966552, n142)
-							local v342 = bit32.band(v34, 65535)
-							local v35 = bit32.band(n16 - 4564062016 + 28981759 + bit32.band(50689 * v342 + bit32.lshift(bit32.band(50689 * bit32.rshift(v34, 16) + 32325 * v342, 65535), 16), 4294967295) + 1195411303, 4294967295)
-							local v352 = bit32.band(v35, 65535)
-							n17 = bit32.band(31367 * v352 + bit32.lshift(bit32.band(31367 * bit32.rshift(v35, 16) + 21986 * v352, 65535), 16), 4294967295) + 21801894718
-							v15[n112] = bit32.bxor(v15[n112], 327058238)
-							n18 = n5 + 584826193
-							local n185 = bit32.band(n18, 4294967295)
-							local n1852 = bit32.band(n185, 65535)
-							n19 = bit32.band(43296 * n1852 + bit32.lshift(bit32.band(43296 * bit32.rshift(n185, 16) + 12122 * n1852, 65535), 16), 4294967295) + 1588941376
-							local n113 = bit32.band(n112, 4294967295)
-							local n1132 = bit32.band(n113, 65535)
-							v21 = bit32.band(n1132 * 62187 + bit32.lshift(bit32.band(n1132 * 8557 + bit32.rshift(n113, 16) * 62187, 65535), 16), 4294967295)
-							n182 = bit32.band(n18, n17)
-							local v212 = bit32.band(v21, 4294967295)
-							local n186 = bit32.band(n182, 4294967295)
-							local v2122 = bit32.band(v212, 65535)
-							local v2123 = bit32.rshift(v212, 16)
-							local n1862 = bit32.band(n186, 65535)
-							local v36 = bit32.band(v2122 * n1862 + bit32.lshift(bit32.band(v2122 * bit32.rshift(n186, 16) + v2123 * n1862, 65535), 16), 4294967295)
-							local v362 = bit32.band(v36, 65535)
-							v23 = bit32.band(51485 * v362 + bit32.lshift(bit32.band(51485 * bit32.rshift(v36, 16) + 39315 * v362, 65535), 16), 4294967295)
-							local v213 = bit32.band(v21, 4294967295)
-							local v2132 = bit32.band(v213, 65535)
-							n20 = n19 + v23 + bit32.band(29245 * v2132 + bit32.lshift(bit32.band(29245 * bit32.rshift(v213, 16) + 51438 * v2132, 65535), 16), 4294967295)
-							n172 = bit32.band(n17, 272719449)
-							n183 = bit32.bnot(n182)
-							local v214 = bit32.band(v21, 4294967295)
-							local n187 = bit32.band(n183, 4294967295)
-							local v2142 = bit32.band(v214, 65535)
-							local v2143 = bit32.rshift(v214, 16)
-							local n1872 = bit32.band(n187, 65535)
-							local v37 = bit32.band(v2142 * n1872 + bit32.lshift(bit32.band(v2142 * bit32.rshift(n187, 16) + v2143 * n1872, 65535), 16), 4294967295)
-							local v372 = bit32.band(v37, 65535)
-							n21 = n172 + bit32.band(51485 * v372 + bit32.lshift(bit32.band(51485 * bit32.rshift(v37, 16) + 39315 * v372, 65535), 16), 4294967295)
-							n184 = bit32.bor(n18, v21)
-							local n188 = bit32.bnot(n184)
-							local n1882 = bit32.band(n188, 65535)
-							n22 = n20 + n21 + 3045076956 + bit32.band(21056 * n1882 + bit32.lshift(bit32.band(21056 * bit32.rshift(n188, 16) + 24245 * n1882, 65535), 16), 4294967295)
-							n222 = bit32.band(n22, 2147483647)
-							n223 = bit32.bnot(n222)
-							local n227 = bit32.band(n223, 4294967295)
-							local n2272 = bit32.band(n227, 65535)
-							v24 = bit32.band(65535 * n2272 + bit32.lshift(bit32.band(65535 * bit32.rshift(n227, 16) + 65535 * n2272, 65535), 16), 4294967295)
-							local n228 = bit32.band(n22, 4294967295)
-							local n2282 = bit32.band(n228, 65535)
-							v25 = bit32.band(46641 * n2282 + bit32.lshift(bit32.band(46641 * bit32.rshift(n228, 16) + 36583 * n2282, 65535), 16), 4294967295)
-							n224 = bit32.bnot(n22)
-							local n229 = bit32.band(n224, 4294967295)
-							local n2292 = bit32.band(n229, 65535)
-							n23 = 2397550128 + v24 + v25 + bit32.band(46641 * n2292 + bit32.lshift(bit32.band(46641 * bit32.rshift(n229, 16) + 36583 * n2292, 65535), 16), 4294967295)
-							local n2210 = bit32.band(n22, 4294967295)
-							local n22102 = bit32.band(n2210, 65535)
-							v26 = bit32.band(1004 * n22102 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2210, 16) + 49886 * n22102, 65535), 16), 4294967295)
-							local n2211 = bit32.band(n224, 4294967295)
-							local n22112 = bit32.band(n2211, 65535)
-							local v38 = bit32.band(n23 - 3269329899 + v24 + v26 + bit32.band(1004 * n22112 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2211, 16) + 49886 * n22112, 65535), 16), 4294967295), 4294967295)
-							local v382 = bit32.band(v38, 65535)
-							v27 = bit32.band(21218 * v382 + bit32.lshift(bit32.band(21218 * bit32.rshift(v38, 16) + 47856 * v382, 65535), 16), 4294967295)
-							local n2212 = bit32.band(n22, 4294967295)
-							local n2213 = bit32.band(n223, 4294967295)
-							local n22122 = bit32.band(n2212, 65535)
-							local n22123 = bit32.rshift(n2212, 16)
-							local n22132 = bit32.band(n2213, 65535)
-							local v39 = bit32.band(n22122 * n22132 + bit32.lshift(bit32.band(n22122 * bit32.rshift(n2213, 16) + n22123 * n22132, 65535), 16), 4294967295)
-							local v392 = bit32.band(v39, 65535)
-							n24 = 2669559910 + bit32.band(64492 * v392 + bit32.lshift(bit32.band(64492 * bit32.rshift(v39, 16) + 27898 * v392, 65535), 16), 4294967295)
-							local n2214 = bit32.band(n22, 4294967295)
-							local n22142 = bit32.band(n2214, 65535)
-							n225 = n223
-							n226 = bit32.bor(n22, 2147483647)
-							n25 = n24 + bit32.band(16487 * n22142 + bit32.lshift(bit32.band(16487 * bit32.rshift(n2214, 16) + 40734 * n22142, 65535), 16), 4294967295) + 0
-							local n2215 = bit32.band(n225, 4294967295)
-							local n22152 = bit32.band(n2215, 65535)
-							v28 = bit32.band(15442 * n22152 + bit32.lshift(bit32.band(15442 * bit32.rshift(n2215, 16) + 3097 * n22152, 65535), 16), 4294967295)
-							local n2216 = bit32.band(n225, 4294967295)
-							local n2217 = bit32.band(n225, 4294967295)
-							local n22162 = bit32.band(n2216, 65535)
-							local n22163 = bit32.rshift(n2216, 16)
-							local n22172 = bit32.band(n2217, 65535)
-							local v40 = bit32.band(n22162 * n22172 + bit32.lshift(bit32.band(n22162 * bit32.rshift(n2217, 16) + n22163 * n22172, 65535), 16), 4294967295)
-							local v402 = bit32.band(v40, 65535)
-							n26 = v28 + bit32.band(64492 * v402 + bit32.lshift(bit32.band(64492 * bit32.rshift(v40, 16) + 27898 * v402, 65535), 16), 4294967295)
-							local n2218 = bit32.band(n22, 4294967295)
-							local n22182 = bit32.band(n2218, 65535)
-							local v41 = bit32.band(n22182 * 0 + bit32.lshift(bit32.band(n22182 * 0 + bit32.rshift(n2218, 16) * 0, 65535), 16), 4294967295)
-							local v412 = bit32.band(v41, 65535)
-							v29 = bit32.band(64492 * v412 + bit32.lshift(bit32.band(64492 * bit32.rshift(v41, 16) + 27898 * v412, 65535), 16), 4294967295)
-							local n2219 = bit32.band(n226, 4294967295)
-							local n22192 = bit32.band(n2219, 65535)
-							local v42 = bit32.band(n22192 * 0 + bit32.lshift(bit32.band(n22192 * 0 + bit32.rshift(n2219, 16) * 0, 65535), 16), 4294967295)
-							local v422 = bit32.band(v42, 65535)
-							n5 = v27 + n25 + n26 + 0 + v29 + bit32.band(1044 * v422 + bit32.lshift(bit32.band(1044 * bit32.rshift(v42, 16) + 37637 * v422, 65535), 16), 4294967295)
+						if number11 <= value24 then
+							number12 = number11
+							number13 = bit32.lshift(bit32.band(number5, number12), 1)
+							number14 = bit32.band(number13, number5)
+							number15 = bit32.bnot(number14)
+							local number43 = bit32.band(number13, 4294967295)
+							local number44 = bit32.band(number15, 4294967295)
+							local number45 = bit32.band(number43, 65535)
+							local number46 = bit32.rshift(number43, 16)
+							local number47 = bit32.band(number44, 65535)
+							local value36 = bit32.band(number45 * number47 + bit32.lshift(bit32.band(number45 * bit32.rshift(number44, 16) + number46 * number47, 65535), 16), 4294967295)
+							local value37 = bit32.band(value36, 65535)
+							value25 = bit32.band(19474 * value37 + bit32.lshift(bit32.band(19474 * bit32.rshift(value36, 16) + 39469 * value37, 65535), 16), 4294967295)
+							local number48 = bit32.band(number13, 4294967295)
+							local number49 = bit32.band(number48, 65535)
+							number16 = number12 + number5 + value25 + bit32.band(23587 * number49 + bit32.lshift(bit32.band(23587 * bit32.rshift(number48, 16) + 21404 * number49, 65535), 16), 4294967295)
+							number17 = bit32.bnot(number5)
+							number18 = bit32.bor(number17, 54517094)
+							local number50 = bit32.band(number13, 4294967295)
+							local number51 = bit32.band(number18, 4294967295)
+							local number52 = bit32.band(number50, 65535)
+							local number53 = bit32.rshift(number50, 16)
+							local number54 = bit32.band(number51, 65535)
+							local value38 = bit32.band(number52 * number54 + bit32.lshift(bit32.band(number52 * bit32.rshift(number51, 16) + number53 * number54, 65535), 16), 4294967295)
+							local value39 = bit32.band(value38, 65535)
+							number19 = 1402756132 + bit32.band(46062 * value39 + bit32.lshift(bit32.band(46062 * bit32.rshift(value38, 16) + 26066 * value39, 65535), 16), 4294967295)
+							local number55 = bit32.bnot(number13)
+							local number56 = bit32.band(number55, 65535)
+							value26 = bit32.band(23586 * number56 + bit32.lshift(bit32.band(23586 * bit32.rshift(number55, 16) + 21404 * number56, 65535), 16), 4294967295)
+							local value40 = bit32.bor(54517095, number17)
+							local value41 = bit32.band(value40, 65535)
+							number20 = number16 + number19 + value26 + bit32.band(2 * value41 + bit32.lshift(bit32.band(2 * bit32.rshift(value40, 16) + 0 * value41, 65535), 16), 4294967295)
+							local number57 = bit32.band(number20, 4294967295)
+							local number58 = bit32.band(number57, 65535)
+							number21 = 327058238 + 3859571462 + bit32.band(25350 * number58 + bit32.lshift(bit32.band(25350 * bit32.rshift(number57, 16) + 58892 * number58, 65535), 16), 4294967295)
+							value27 = bit32.bor(2147483647, number20)
+							local value42 = bit32.band(272719449, value27)
+							local value43 = bit32.band(value42, 65535)
+							number22 = number21 + 375472684 + bit32.band(14836 * value43 + bit32.lshift(bit32.band(14836 * bit32.rshift(value42, 16) + 13287 * value43, 65535), 16), 4294967295) + 1761712016
+							number23 = bit32.bnot(number20)
+							local value44 = bit32.bor(2092966552, number23)
+							local value45 = bit32.band(value44, 65535)
+							local value46 = bit32.band(number22 - 4564062016 + 28981759 + bit32.band(50689 * value45 + bit32.lshift(bit32.band(50689 * bit32.rshift(value44, 16) + 32325 * value45, 65535), 16), 4294967295) + 1195411303, 4294967295)
+							local value47 = bit32.band(value46, 65535)
+							number24 = bit32.band(31367 * value47 + bit32.lshift(bit32.band(31367 * bit32.rshift(value46, 16) + 21986 * value47, 65535), 16), 4294967295) + 21801894718
+							value22[number12] = bit32.bxor(value22[number12], 327058238)
+							number25 = number5 + 584826193
+							local number59 = bit32.band(number25, 4294967295)
+							local number60 = bit32.band(number59, 65535)
+							number26 = bit32.band(43296 * number60 + bit32.lshift(bit32.band(43296 * bit32.rshift(number59, 16) + 12122 * number60, 65535), 16), 4294967295) + 1588941376
+							local number61 = bit32.band(number12, 4294967295)
+							local number62 = bit32.band(number61, 65535)
+							value28 = bit32.band(number62 * 62187 + bit32.lshift(bit32.band(number62 * 8557 + bit32.rshift(number61, 16) * 62187, 65535), 16), 4294967295)
+							number27 = bit32.band(number25, number24)
+							local value48 = bit32.band(value28, 4294967295)
+							local number63 = bit32.band(number27, 4294967295)
+							local value49 = bit32.band(value48, 65535)
+							local value50 = bit32.rshift(value48, 16)
+							local number64 = bit32.band(number63, 65535)
+							local value51 = bit32.band(value49 * number64 + bit32.lshift(bit32.band(value49 * bit32.rshift(number63, 16) + value50 * number64, 65535), 16), 4294967295)
+							local value52 = bit32.band(value51, 65535)
+							value29 = bit32.band(51485 * value52 + bit32.lshift(bit32.band(51485 * bit32.rshift(value51, 16) + 39315 * value52, 65535), 16), 4294967295)
+							local value53 = bit32.band(value28, 4294967295)
+							local value54 = bit32.band(value53, 65535)
+							number28 = number26 + value29 + bit32.band(29245 * value54 + bit32.lshift(bit32.band(29245 * bit32.rshift(value53, 16) + 51438 * value54, 65535), 16), 4294967295)
+							number29 = bit32.band(number24, 272719449)
+							number30 = bit32.bnot(number27)
+							local value55 = bit32.band(value28, 4294967295)
+							local number65 = bit32.band(number30, 4294967295)
+							local value56 = bit32.band(value55, 65535)
+							local value57 = bit32.rshift(value55, 16)
+							local number66 = bit32.band(number65, 65535)
+							local value58 = bit32.band(value56 * number66 + bit32.lshift(bit32.band(value56 * bit32.rshift(number65, 16) + value57 * number66, 65535), 16), 4294967295)
+							local value59 = bit32.band(value58, 65535)
+							number31 = number29 + bit32.band(51485 * value59 + bit32.lshift(bit32.band(51485 * bit32.rshift(value58, 16) + 39315 * value59, 65535), 16), 4294967295)
+							number32 = bit32.bor(number25, value28)
+							local number67 = bit32.bnot(number32)
+							local number68 = bit32.band(number67, 65535)
+							number33 = number28 + number31 + 3045076956 + bit32.band(21056 * number68 + bit32.lshift(bit32.band(21056 * bit32.rshift(number67, 16) + 24245 * number68, 65535), 16), 4294967295)
+							number34 = bit32.band(number33, 2147483647)
+							number35 = bit32.bnot(number34)
+							local number69 = bit32.band(number35, 4294967295)
+							local number70 = bit32.band(number69, 65535)
+							value30 = bit32.band(65535 * number70 + bit32.lshift(bit32.band(65535 * bit32.rshift(number69, 16) + 65535 * number70, 65535), 16), 4294967295)
+							local number71 = bit32.band(number33, 4294967295)
+							local number72 = bit32.band(number71, 65535)
+							value31 = bit32.band(46641 * number72 + bit32.lshift(bit32.band(46641 * bit32.rshift(number71, 16) + 36583 * number72, 65535), 16), 4294967295)
+							number36 = bit32.bnot(number33)
+							local number73 = bit32.band(number36, 4294967295)
+							local number74 = bit32.band(number73, 65535)
+							number37 = 2397550128 + value30 + value31 + bit32.band(46641 * number74 + bit32.lshift(bit32.band(46641 * bit32.rshift(number73, 16) + 36583 * number74, 65535), 16), 4294967295)
+							local number75 = bit32.band(number33, 4294967295)
+							local number76 = bit32.band(number75, 65535)
+							value32 = bit32.band(1004 * number76 + bit32.lshift(bit32.band(1004 * bit32.rshift(number75, 16) + 49886 * number76, 65535), 16), 4294967295)
+							local number77 = bit32.band(number36, 4294967295)
+							local number78 = bit32.band(number77, 65535)
+							local value60 = bit32.band(number37 - 3269329899 + value30 + value32 + bit32.band(1004 * number78 + bit32.lshift(bit32.band(1004 * bit32.rshift(number77, 16) + 49886 * number78, 65535), 16), 4294967295), 4294967295)
+							local value61 = bit32.band(value60, 65535)
+							value33 = bit32.band(21218 * value61 + bit32.lshift(bit32.band(21218 * bit32.rshift(value60, 16) + 47856 * value61, 65535), 16), 4294967295)
+							local number79 = bit32.band(number33, 4294967295)
+							local number80 = bit32.band(number35, 4294967295)
+							local number81 = bit32.band(number79, 65535)
+							local number82 = bit32.rshift(number79, 16)
+							local number83 = bit32.band(number80, 65535)
+							local value62 = bit32.band(number81 * number83 + bit32.lshift(bit32.band(number81 * bit32.rshift(number80, 16) + number82 * number83, 65535), 16), 4294967295)
+							local value63 = bit32.band(value62, 65535)
+							number38 = 2669559910 + bit32.band(64492 * value63 + bit32.lshift(bit32.band(64492 * bit32.rshift(value62, 16) + 27898 * value63, 65535), 16), 4294967295)
+							local number84 = bit32.band(number33, 4294967295)
+							local number85 = bit32.band(number84, 65535)
+							number39 = number35
+							number40 = bit32.bor(number33, 2147483647)
+							number41 = number38 + bit32.band(16487 * number85 + bit32.lshift(bit32.band(16487 * bit32.rshift(number84, 16) + 40734 * number85, 65535), 16), 4294967295) + 0
+							local number86 = bit32.band(number39, 4294967295)
+							local number87 = bit32.band(number86, 65535)
+							value34 = bit32.band(15442 * number87 + bit32.lshift(bit32.band(15442 * bit32.rshift(number86, 16) + 3097 * number87, 65535), 16), 4294967295)
+							local number88 = bit32.band(number39, 4294967295)
+							local number89 = bit32.band(number39, 4294967295)
+							local number90 = bit32.band(number88, 65535)
+							local number91 = bit32.rshift(number88, 16)
+							local number92 = bit32.band(number89, 65535)
+							local value64 = bit32.band(number90 * number92 + bit32.lshift(bit32.band(number90 * bit32.rshift(number89, 16) + number91 * number92, 65535), 16), 4294967295)
+							local value65 = bit32.band(value64, 65535)
+							number42 = value34 + bit32.band(64492 * value65 + bit32.lshift(bit32.band(64492 * bit32.rshift(value64, 16) + 27898 * value65, 65535), 16), 4294967295)
+							local number93 = bit32.band(number33, 4294967295)
+							local number94 = bit32.band(number93, 65535)
+							local value66 = bit32.band(number94 * 0 + bit32.lshift(bit32.band(number94 * 0 + bit32.rshift(number93, 16) * 0, 65535), 16), 4294967295)
+							local value67 = bit32.band(value66, 65535)
+							value35 = bit32.band(64492 * value67 + bit32.lshift(bit32.band(64492 * bit32.rshift(value66, 16) + 27898 * value67, 65535), 16), 4294967295)
+							local number95 = bit32.band(number40, 4294967295)
+							local number96 = bit32.band(number95, 65535)
+							local value68 = bit32.band(number96 * 0 + bit32.lshift(bit32.band(number96 * 0 + bit32.rshift(number95, 16) * 0, 65535), 16), 4294967295)
+							local value69 = bit32.band(value68, 65535)
+							number5 = value33 + number41 + number42 + 0 + value35 + bit32.band(1044 * value69 + bit32.lshift(bit32.band(1044 * bit32.rshift(value68, 16) + 37637 * value69, 65535), 16), 4294967295)
 						else
 							break
 						end
 					end
 
-					tbl5 = tbl6[4]
+					data5 = data6[4]
 					continue
 				end
 
-				v11 = arg[6]
-				n6 = buffer.len(v11) - 32 - 19
-				n7 = 32 + 888971832 % n6
-				n8 = 32
+				value12 = argument[6]
+				number6 = buffer.len(value12) - 32 - 19
+				number7 = 32 + 888971832 % number6
+				number8 = 32
 
 				while true do
-					n9 = n8 + (n7 + bit32.band(n5, 255) + 1) % n6
-					v112 = buffer.readi8(v11, n7)
-					v113 = buffer.readu8(v11, n9)
-					v114 = bit32.lshift(bit32.band(v113, 255), 3)
-					v12 = bit32.band(bit32.bxor(bit32.bxor(54517094, v112) + v114 + 584826193, n7), 2147483647)
-					v115 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(v112, v113), v12), 2147483647), 205469696)
-					buffer.writeu32(v11, n7, v115)
-					v122 = bit32.rshift(v12, 8)
-					v116 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(v113, v122), n7), 2147483647), 327527424)
-					buffer.writeu8(v11, n9, v116)
-					n5 = v12
-					n7 = n8 + (n7 + bit32.band(v12, 63) + 1) % n6
+					number9 = number8 + (number7 + bit32.band(number5, 255) + 1) % number6
+					value13 = buffer.readi8(value12, number7)
+					value14 = buffer.readu8(value12, number9)
+					value15 = bit32.lshift(bit32.band(value14, 255), 3)
+					value16 = bit32.band(bit32.bxor(bit32.bxor(54517094, value13) + value15 + 584826193, number7), 2147483647)
+					value17 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(value13, value14), value16), 2147483647), 205469696)
+					buffer.writeu32(value12, number7, value17)
+					value18 = bit32.rshift(value16, 8)
+					value19 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(value14, value18), number7), 2147483647), 327527424)
+					buffer.writeu8(value12, number9, value19)
+					number5 = value16
+					number7 = number8 + (number7 + bit32.band(value16, 63) + 1) % number6
 				end
 			end
 		end
 
-		v11 = arg[6]
-		n6 = buffer.len(v11) - 32 - 19
-		n7 = 32 + 888971832 % n6
-		n8 = 32
+		value12 = argument[6]
+		number6 = buffer.len(value12) - 32 - 19
+		number7 = 32 + 888971832 % number6
+		number8 = 32
 
 		while true do
-			n9 = n8 + (n7 + bit32.band(n5, 255) + 1) % n6
-			v112 = buffer.readi8(v11, n7)
-			v113 = buffer.readu8(v11, n9)
-			v114 = bit32.lshift(bit32.band(v113, 255), 3)
-			v12 = bit32.band(bit32.bxor(bit32.bxor(54517094, v112) + v114 + 584826193, n7), 2147483647)
-			v115 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(v112, v113), v12), 2147483647), 205469696)
-			buffer.writeu32(v11, n7, v115)
-			v122 = bit32.rshift(v12, 8)
-			v116 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(v113, v122), n7), 2147483647), 327527424)
-			buffer.writeu8(v11, n9, v116)
-			n5 = v12
-			n7 = n8 + (n7 + bit32.band(v12, 63) + 1) % n6
+			number9 = number8 + (number7 + bit32.band(number5, 255) + 1) % number6
+			value13 = buffer.readi8(value12, number7)
+			value14 = buffer.readu8(value12, number9)
+			value15 = bit32.lshift(bit32.band(value14, 255), 3)
+			value16 = bit32.band(bit32.bxor(bit32.bxor(54517094, value13) + value15 + 584826193, number7), 2147483647)
+			value17 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(value13, value14), value16), 2147483647), 205469696)
+			buffer.writeu32(value12, number7, value17)
+			value18 = bit32.rshift(value16, 8)
+			value19 = bit32.bor(bit32.band(bit32.bxor(bit32.bxor(value14, value18), number7), 2147483647), 327527424)
+			buffer.writeu8(value12, number9, value19)
+			number5 = value16
+			number7 = number8 + (number7 + bit32.band(value16, 63) + 1) % number6
 		end
 	end
 
-	fn6(nil, nil, nil, nil, nil)
-	local n5 = 132035500
-	local n6 = 779964
+	callback6(nil, nil, nil, nil, nil)
+	local number5 = 132035500
+	local number6 = 779964
 
 	while true do
-		n5 += n6
+		number5 += number6
 	end
 end
 
-local function fn6()
-	fn4(372868618, 4)
-	n4 = 43031001
-	fn5()
+local function callback6()
+	callback4(372868618, 4)
+	number4 = 43031001
+	callback5()
 end
 
-local tbl4 = { [false] = true }
-tbl4[true] = false
-local tbl5 = {}
+local data4 = { [false] = true }
+data4[true] = false
+local data5 = {}
 
-local function fn7(arg, arg2)
+local function callback7(argument, argument2)
 	if not nil and nil then
 		if not nil and nil then
 			return true
@@ -1212,51 +1215,51 @@ local function fn7(arg, arg2)
 		return false
 	end
 
-	tbl5[arg] = true
-	local v11 = tbl5[arg2]
-	tbl5[arg] = nil
-	return v11
+	data5[argument] = true
+	local value12 = data5[argument2]
+	data5[argument] = nil
+	return value12
 end
 
-local function fn8(arg)
+local function callback8(argument)
 	if not nil then
-		fn4(372868618, 4)
-		n4 = 43031001
-		fn5()
+		callback4(372868618, 4)
+		number4 = 43031001
+		callback5()
 	end
 
-	local kind = type(arg)
-	fn7("table", kind)
+	local valueType = type(argument)
+	callback7("table", valueType)
 
 	if not nil then
-		fn4(372868618, 4)
-		n4 = 43031001
-		fn5()
+		callback4(372868618, 4)
+		number4 = 43031001
+		callback5()
 	end
 
-	local v11 = getmetatable(arg)
-	fn7(nil, v11)
+	local value12 = getmetatable(argument)
+	callback7(nil, value12)
 
 	if not nil then
-		fn4(372868618, 4)
-		n4 = 43031001
-		fn5()
+		callback4(372868618, 4)
+		number4 = 43031001
+		callback5()
 	end
 
-	pcall(setmetatable, arg, nil)
+	pcall(setmetatable, argument, nil)
 end
 
-local function fn9(arg, ...)
-	table.pack(string.byte(arg, 1, -1))
-	local tbl6 = { nil, 1, 0, select("#", table.unpack(t183_23_1, 1, t183_23_1.n)) + 0, nil }
+local function callback9(argument, ...)
+	table.pack(string.byte(argument, 1, -1))
+	local data6 = { nil, 1, 0, select("#", table.unpack(t183_23_1, 1, t183_23_1.n)) + 0, nil }
 
 	while true do
-		local v11 = tbl6[2]
-		local v12 = tbl6[4]
-		local n5 = tbl6[3] + v11
-		tbl6[3] = n5
+		local value12 = data6[2]
+		local value13 = data6[4]
+		local number5 = data6[3] + value12
+		data6[3] = number5
 
-		if n5 <= v12 then
+		if number5 <= value13 then
 		else
 			break
 		end
@@ -1265,133 +1268,133 @@ local function fn9(arg, ...)
 	return 3926377405
 end
 
-local function fn10(arg, arg2, arg3)
-	for k in arg, nil, nil do
-		arg3[fn9(k, 51052561)] = nil
+local function callback10(argument, argument2, argument3)
+	for k in argument, nil, nil do
+		argument3[callback9(k, 51052561)] = nil
 	end
 
-	for k in arg3, nil, nil do
-		fn4(372868618, 4)
-		n4 = 43031001
-		fn5()
+	for k in argument3, nil, nil do
+		callback4(372868618, 4)
+		number4 = 43031001
+		callback5()
 	end
 end
 
-local new = v4.new
-local new2 = v5.new
-local new3 = v6.new
+local new = value5.new
+local new2 = value6.new
+local new3 = value7.new
 local color3New = Color3.new
 local rectNew = Rect.new
 local uDim2New = UDim2.new
 local uDimNew = UDim.new
 local new4 = Path2DControlPoint.new
-local tbl6 = { what = "C", currentline = -1, short_src = "[C]" }
-local str = "linedefined"
-local fn82 = fn8
-local fn102 = fn10
-tbl6[str] = -1
-tbl6.isvararg = true
-tbl6.namewhat = ""
-tbl6.nparams = 0
-tbl6.lastlinedefined = -1
-tbl6.source = "=[C]"
+local data6 = { what = "C", currentline = -1, short_src = "[C]" }
+local text = "linedefined"
+local callback11 = callback8
+local callback12 = callback10
+data6[text] = -1
+data6.isvararg = true
+data6.namewhat = ""
+data6.nparams = 0
+data6.lastlinedefined = -1
+data6.source = "=[C]"
 
-local function fn11()
+local function callback13()
 end
 
-fn11(getmetatable, "getmetatable")
-fn11(setmetatable, "setmetatable")
-fn11(tonumber, "tonumber")
-fn11(tostring, "tostring")
-fn11(rawset, "rawset")
-fn11(rawget, "rawget")
-fn11(select, "select")
-fn11(xpcall, "xpcall")
-fn11(assert, "assert")
-fn11(error, "error")
-fn11(pcall, "pcall")
-fn11(type, "type")
-fn11(next, "next")
-fn11(getfenv, "getfenv")
-fn11(setfenv, "setfenv")
-fn11(typeof, "typeof")
-fn11(string.gmatch, "gmatch")
-fn11(string.format, "format")
-fn11(string.match, "match")
-fn11(string.find, "find")
-fn11(string.char, "char")
-fn11(string.byte, "byte")
-fn11(string.gsub, "gsub")
-fn11(string.sub, "sub")
-fn11(string.rep, "rep")
-fn11(string.unpack, "unpack")
-fn11(string.pack, "pack")
-fn11(table.concat, "concat")
-fn11(table.insert, "insert")
-fn11(table.pack, "pack")
-fn11(table.clear, "clear")
-fn11(table.create, "create")
-fn11(table.move, "move")
-fn11(bit32.bor, "bor")
-fn11(bit32.bnot, "bnot")
-fn11(bit32.bxor, "bxor")
-fn11(bit32.band, "band")
-fn11(bit32.lshift, "lshift")
-fn11(bit32.rshift, "rshift")
-fn11(bit32.rrotate, "rrotate")
-fn11(bit32.lrotate, "lrotate")
-fn11(bit32.countlz, "countlz")
-fn11(bit32.countrz, "countrz")
-fn11(buffer.len, "len")
-fn11(buffer.fill, "fill")
-fn11(buffer.copy, "copy")
-fn11(buffer.create, "create")
-fn11(buffer.tostring, "tostring")
-fn11(buffer.fromstring, "fromstring")
-fn11(buffer.readstring, "readstring")
-fn11(buffer.writestring, "writestring")
-fn11(buffer.readi8, "readi8")
-fn11(buffer.readu8, "readu8")
-fn11(buffer.readi16, "readi16")
-fn11(buffer.readu16, "readu16")
-fn11(buffer.readi32, "readi32")
-fn11(buffer.readu32, "readu32")
-fn11(buffer.readf32, "readf32")
-fn11(buffer.readf64, "readf64")
-fn11(buffer.writei8, "writei8")
-fn11(buffer.writeu8, "writeu8")
-local n5 = 3848217230
-fn11(buffer.writei16, "writei16")
-fn11(buffer.writeu16, "writeu16")
-fn11(buffer.writei32, "writei32")
-fn11(buffer.writeu32, "writeu32")
-fn11(buffer.writef32, "writef32")
-fn11(buffer.writef64, "writef64")
-fn11(buffer.readbits, "readbits")
-fn11(buffer.writebits, "writebits")
-fn11(coroutine.isyieldable, "isyieldable")
-fn11(coroutine.running, "running")
-fn11(coroutine.create, "create")
-fn11(coroutine.status, "status")
-fn11(coroutine.yield, "yield")
-fn11(coroutine.close, "close")
-fn11(coroutine.resume, "resume")
-fn11(coroutine.wrap, "wrap")
-fn11(cancel, "cancel")
-fn11(spawn, "spawn")
-fn11(defer, "defer")
-fn11(delay, "delay")
-fn11(wait, "wait")
-fn11(unpack, "unpack")
-fn11(info, "info")
-fn11(traceback, "traceback")
-fn11(v9)
-local v11 = pcall
-local v12 = xpcall
-local n6 = 147701733
-local n7 = 109385640
+callback13(getmetatable, "getmetatable")
+callback13(setmetatable, "setmetatable")
+callback13(tonumber, "tonumber")
+callback13(tostring, "tostring")
+callback13(rawset, "rawset")
+callback13(rawget, "rawget")
+callback13(select, "select")
+callback13(xpcall, "xpcall")
+callback13(assert, "assert")
+callback13(error, "error")
+callback13(pcall, "pcall")
+callback13(type, "type")
+callback13(next, "next")
+callback13(getfenv, "getfenv")
+callback13(setfenv, "setfenv")
+callback13(typeof, "typeof")
+callback13(string.gmatch, "gmatch")
+callback13(string.format, "format")
+callback13(string.match, "match")
+callback13(string.find, "find")
+callback13(string.char, "char")
+callback13(string.byte, "byte")
+callback13(string.gsub, "gsub")
+callback13(string.sub, "sub")
+callback13(string.rep, "rep")
+callback13(string.unpack, "unpack")
+callback13(string.pack, "pack")
+callback13(table.concat, "concat")
+callback13(table.insert, "insert")
+callback13(table.pack, "pack")
+callback13(table.clear, "clear")
+callback13(table.create, "create")
+callback13(table.move, "move")
+callback13(bit32.bor, "bor")
+callback13(bit32.bnot, "bnot")
+callback13(bit32.bxor, "bxor")
+callback13(bit32.band, "band")
+callback13(bit32.lshift, "lshift")
+callback13(bit32.rshift, "rshift")
+callback13(bit32.rrotate, "rrotate")
+callback13(bit32.lrotate, "lrotate")
+callback13(bit32.countlz, "countlz")
+callback13(bit32.countrz, "countrz")
+callback13(buffer.len, "len")
+callback13(buffer.fill, "fill")
+callback13(buffer.copy, "copy")
+callback13(buffer.create, "create")
+callback13(buffer.tostring, "tostring")
+callback13(buffer.fromstring, "fromstring")
+callback13(buffer.readstring, "readstring")
+callback13(buffer.writestring, "writestring")
+callback13(buffer.readi8, "readi8")
+callback13(buffer.readu8, "readu8")
+callback13(buffer.readi16, "readi16")
+callback13(buffer.readu16, "readu16")
+callback13(buffer.readi32, "readi32")
+callback13(buffer.readu32, "readu32")
+callback13(buffer.readf32, "readf32")
+callback13(buffer.readf64, "readf64")
+callback13(buffer.writei8, "writei8")
+callback13(buffer.writeu8, "writeu8")
+local number5 = 3848217230
+callback13(buffer.writei16, "writei16")
+callback13(buffer.writeu16, "writeu16")
+callback13(buffer.writei32, "writei32")
+callback13(buffer.writeu32, "writeu32")
+callback13(buffer.writef32, "writef32")
+callback13(buffer.writef64, "writef64")
+callback13(buffer.readbits, "readbits")
+callback13(buffer.writebits, "writebits")
+callback13(coroutine.isyieldable, "isyieldable")
+callback13(coroutine.running, "running")
+callback13(coroutine.create, "create")
+callback13(coroutine.status, "status")
+callback13(coroutine.yield, "yield")
+callback13(coroutine.close, "close")
+callback13(coroutine.resume, "resume")
+callback13(coroutine.wrap, "wrap")
+callback13(cancel, "cancel")
+callback13(spawn, "spawn")
+callback13(defer, "defer")
+callback13(delay, "delay")
+callback13(wait, "wait")
+callback13(unpack, "unpack")
+callback13(info, "info")
+callback13(traceback, "traceback")
+callback13(value10)
+local value12 = pcall
+local value13 = xpcall
+local number6 = 147701733
+local number7 = 109385640
 new3(0.56970392783537138, 0.7177542450144142, 0.50622845078979106)
-local n8 = 472605665
+local number8 = 472605665
 new("Folder")
 local ScreenGui = new("ScreenGui")
 local Frame = new("Frame")
@@ -1400,21 +1403,21 @@ Frame.Parent = ScreenGui
 Path2D.Parent = Frame
 vector.create(0.07370192571826828, 0.34066822994289736, 0.14330319227652777)
 
-local function fn12()
+local function callback14()
 	assert(0.86649202372180822)
 	getfenv(0)
 	tostring(0.55580137640567118)
 	rawequal(scratch, scratch)
-	local tbl7 = {}
-	next(tbl7)
-	pairs(tbl7)(tbl7)
-	ipairs(tbl7)(tbl7, 1)
-	rawlen(tbl7)
-	rawget(tbl7, 0.83036873334365979)
-	rawset(tbl7, 0.23222585532335926, 0.20233684500220273)
-	getmetatable(tbl7)
-	setmetatable(tbl7, tbl7)
-	setmetatable(tbl7, nil)
+	local data7 = {}
+	next(data7)
+	pairs(data7)(data7)
+	ipairs(data7)(data7, 1)
+	rawlen(data7)
+	rawget(data7, 0.83036873334365979)
+	rawset(data7, 0.23222585532335926, 0.20233684500220273)
+	getmetatable(data7)
+	setmetatable(data7, data7)
+	setmetatable(data7, nil)
 	info(2291, "slnaf")
 	local buf = buffer.create(93)
 	buffer.len(buf)
@@ -1442,56 +1445,56 @@ local function fn12()
 	buffer.writebits(buf, 166, 2, 21014419)
 	buffer.copy(buf, 32, buf, 0, 16)
 	buffer.fill(buf, 23, 70, 10)
-	local v13 = v8.new()
-	v13:NextInteger(45, 248)
-	v13:NextNumber(35, 980)
-	v13:NextUnitVector()
-	v13:NextNumber()
-	v13:Shuffle({})
-	v13:Clone()
-	local n9 = Vector3.new(0.8674313, 0.86681885, 0.26933977) + Vector3.new(0.38818195, 0.7251892, 0.52870774)
+	local value14 = value9.new()
+	value14:NextInteger(45, 248)
+	value14:NextNumber(35, 980)
+	value14:NextUnitVector()
+	value14:NextNumber()
+	value14:Shuffle({})
+	value14:Clone()
+	local number9 = Vector3.new(0.8674313, 0.86681885, 0.26933977) + Vector3.new(0.38818195, 0.7251892, 0.52870774)
 	local vector_ = Vector3.new(0.8674313, 0.86681885, 0.26933977)
 	local vector_2 = Vector3.new(0.38818195, 0.7251892, 0.52870774)
 	local vector_3 = Vector3.new(1, 0, 0)
 	local vector_4 = Vector3.new(0, 1, 0)
-	local v14 = v7.new()
-	local vector_5 = v7.new(vector_)
-	v7.Angles(0.79328950042823942, 0.38704401201925887, 0.96996322323574924)
+	local value15 = value8.new()
+	local vector_5 = value8.new(vector_)
+	value8.Angles(0.79328950042823942, 0.38704401201925887, 0.96996322323574924)
 	local xyz = Enum.RotationOrder.XYZ
-	v7.new(vector_, n9)
-	v7.new(vector_.X, vector_.Y, vector_.Z)
-	v7.new(vector_.X, vector_.Y, vector_.Z, 0, 0, 0, 1)
-	v7.new(vector_.X, vector_.Y, vector_.Z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
-	v7.lookAt(vector_, n9, vector_4)
-	v7.lookAlong(vector_, vector_2, vector_4)
-	v7.fromEulerAnglesXYZ(0.79328950042823942, 0.38704401201925887, 0.96996322323574924)
-	v7.fromEulerAnglesYXZ(0.79328950042823942, 0.38704401201925887, 0.96996322323574924)
-	v7.fromOrientation(0.79328950042823942, 0.38704401201925887, 0.96996322323574924)
-	v7.fromAxisAngle(vector_2.Unit, 0.79328950042823942)
-	v7.fromRotationBetweenVectors(vector_3, vector_4)
-	v7.fromMatrix(vector_, vector_3, vector_4, Vector3.new(0, 0, 1))
-	v7.fromEulerAngles(0.79328950042823942, 0.38704401201925887, 0.96996322323574924, xyz)
-	v14:Inverse()
-	v14:Orthonormalize()
-	v14:Lerp(vector_5, 0.33319114787106874)
-	v14:ToWorldSpace(vector_5)
-	v14:ToObjectSpace(vector_5)
-	v14:ToEulerAnglesXYZ()
-	v14:ToEulerAnglesYXZ()
-	v14:PointToWorldSpace(vector_)
-	v14:PointToObjectSpace(vector_)
-	v14:VectorToWorldSpace(vector_2)
-	v14:VectorToObjectSpace(vector_2)
-	v14:ToEulerAngles(xyz)
-	v14:GetComponents()
-	v14:ToOrientation()
-	v14:ToAxisAngle()
-	v14:FuzzyEq(vector_5)
-	v14:AngleBetween(vector_5)
+	value8.new(vector_, number9)
+	value8.new(vector_.X, vector_.Y, vector_.Z)
+	value8.new(vector_.X, vector_.Y, vector_.Z, 0, 0, 0, 1)
+	value8.new(vector_.X, vector_.Y, vector_.Z, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+	value8.lookAt(vector_, number9, vector_4)
+	value8.lookAlong(vector_, vector_2, vector_4)
+	value8.fromEulerAnglesXYZ(0.79328950042823942, 0.38704401201925887, 0.96996322323574924)
+	value8.fromEulerAnglesYXZ(0.79328950042823942, 0.38704401201925887, 0.96996322323574924)
+	value8.fromOrientation(0.79328950042823942, 0.38704401201925887, 0.96996322323574924)
+	value8.fromAxisAngle(vector_2.Unit, 0.79328950042823942)
+	value8.fromRotationBetweenVectors(vector_3, vector_4)
+	value8.fromMatrix(vector_, vector_3, vector_4, Vector3.new(0, 0, 1))
+	value8.fromEulerAngles(0.79328950042823942, 0.38704401201925887, 0.96996322323574924, xyz)
+	value15:Inverse()
+	value15:Orthonormalize()
+	value15:Lerp(vector_5, 0.33319114787106874)
+	value15:ToWorldSpace(vector_5)
+	value15:ToObjectSpace(vector_5)
+	value15:ToEulerAnglesXYZ()
+	value15:ToEulerAnglesYXZ()
+	value15:PointToWorldSpace(vector_)
+	value15:PointToObjectSpace(vector_)
+	value15:VectorToWorldSpace(vector_2)
+	value15:VectorToObjectSpace(vector_2)
+	value15:ToEulerAngles(xyz)
+	value15:GetComponents()
+	value15:ToOrientation()
+	value15:ToAxisAngle()
+	value15:FuzzyEq(vector_5)
+	value15:AngleBetween(vector_5)
 	local vector_6 = Vector3.new(0.49828404, 0.9437861, 0.78076863)
 	local vector_7 = Vector3.new(0.31593144, 0.20840542, 0.2626367)
-	v5.FromAxis(Enum.Axis.X)
-	v5.FromNormalId(Enum.NormalId.Top)
+	value6.FromAxis(Enum.Axis.X)
+	value6.FromNormalId(Enum.NormalId.Top)
 	vector_6:Abs()
 	vector_6:Ceil()
 	vector_6:Floor()
@@ -1524,543 +1527,527 @@ local function fn12()
 	enumType:GetEnumItems()
 	enumType:FromName(Allow.Name)
 	enumType:FromValue(Allow.Value)
-	local v15 = uDim2New(0.07719390615672328, 3, 0.21000489770270028, 59)
-	local v16 = uDim2New(0.017163361164568458, 24, 0.059917917968274143, 29)
-	local v17 = uDim2New(0.81556951795012611, 185, 0.81958095395152064, 178)
-	local v18 = new4(v15, v16, v16)
-	new4(v15:Lerp(v17, 0.55103166017453975))
-	local ctx = {}
-	local v19 = new4(v17)
-	ctx.v18 = v18
-	ctx.v19 = v19
-	local v20 = utf8.char(46, 766, 83725)
-	utf8.codepoint(v20, 1, #v20)
-	utf8.len(v20)
-	utf8.offset(v20, 2)
-	utf8.offset(v20, -3)
-	local v202, v21, v23 = utf8.codes(v20)
-	v202(v21, v23)
-	v202(v21, utf8.offset(v20, 2))
-	local v24 = utf8.char(119, 816)
-	utf8.nfcnormalize(v24)
-	utf8.nfdnormalize(v20)
-	utf8.graphemes(v24, 1, #v24)()
-	n7 = (1 * n7 + 39391802) % 268435456
-	n6 = (287503 * n6 + 111439069) % 268435456
+	local value16 = uDim2New(0.07719390615672328, 3, 0.21000489770270028, 59)
+	local value17 = uDim2New(0.017163361164568458, 24, 0.059917917968274143, 29)
+	local value18 = uDim2New(0.81556951795012611, 185, 0.81958095395152064, 178)
+	local value19 = new4(value16, value17, value17)
+	new4(value16:Lerp(value18, 0.55103166017453975))
+	local context = {}
+	local value20 = new4(value18)
+	context.value = value19
+	context.value2 = value20
+	local value21 = utf8.char(46, 766, 83725)
+	utf8.codepoint(value21, 1, #value21)
+	utf8.len(value21)
+	utf8.offset(value21, 2)
+	utf8.offset(value21, -3)
+	local value22, value23, value24 = utf8.codes(value21)
+	value22(value23, value24)
+	value22(value23, utf8.offset(value21, 2))
+	local value25 = utf8.char(119, 816)
+	utf8.nfcnormalize(value25)
+	utf8.nfdnormalize(value21)
+	utf8.graphemes(value25, 1, #value25)()
+	number7 = (1 * number7 + 39391802) % 268435456
+	number6 = (287503 * number6 + 111439069) % 268435456
 end
 
-local fn122 = coroutine.wrap(fn12)
-local tbl7 = {}
-local n9 = 0
+local callback15 = coroutine.wrap(callback14)
+local data7 = {}
+local number9 = 0
 
-local function fn13()
-	n9 += 1
+local function callback16()
+	number9 += 1
 
 	if nil then
-		setmetatable({}, { __index = fn6 })
-		fn4(372868618, 4)
-		n4 = 43031001
-		fn5()
+		setmetatable({}, { __index = callback6 })
+		callback4(372868618, 4)
+		number4 = 43031001
+		callback5()
 		return
 	end
 
 	if nil then
-		fn122()
+		callback15()
 	end
 
-	n7 = (1 * n7 + 11083120) % 268435456
-	n6 = (327527 * n6 + 64474745) % 268435456
+	number7 = (1 * number7 + 11083120) % 268435456
+	number6 = (327527 * number6 + 64474745) % 268435456
 end
 
-setmetatable(tbl7, { __index = fn13, __newindex = fn13 })
-local ok, result = pcall(fn13)
-local v13 = result
+setmetatable(data7, { __index = callback16, __newindex = callback16 })
+local ok, response = pcall(callback16)
+local response2 = response
 
-if tbl4[not ok] then
-	fn3(12, n5 + 595343517)
+if data4[not ok] then
+	callback3(12, number5 + 595343517)
 else
-	fn4(372868618, 4)
-	n4 = 43031001
-	fn5()
+	callback4(372868618, 4)
+	number4 = 43031001
+	callback5()
 end
 
-if tbl4[not v13] then
-	fn4(372868618, 4)
-	n4 = 43031001
-	fn5()
+if data4[not response2] then
+	callback4(372868618, 4)
+	number4 = 43031001
+	callback5()
 else
-	fn3(81, 148593451)
+	callback3(81, 148593451)
 end
 
-local v14 = luraph_runtime1(table.pack(n6, n7), nil)
-local flag = false
-local v15
-local v16 = luraph_runtime3(table.pack(v11, v15), nil)
+local value14 = luraph_runtime1(table.pack(number6, number7), nil)
+local condition = false
+local value15
+local value16 = luraph_runtime3(table.pack(value12, value15), nil)
 
-local function fn14()
-	n6 = (960585 * n6 + 108601139) % 268435456
-	n7 = (1 * n7 + 129196086) % 268435456
+local function callback17()
+	number6 = (960585 * number6 + 108601139) % 268435456
+	number7 = (1 * number7 + 129196086) % 268435456
 end
 
-local v17 = luraph_runtime4(table.pack(n7, n6), nil)
+local value17 = luraph_runtime4(table.pack(number7, number6), nil)
 
-local function fn15()
-	n7 = n7 - n7 % 2 + 1
-	n6 = (502183 * n6 + 4932131) % 268435456
-	n6 = (381055 * n6 + 150663887) % 268435456
+local function callback18()
+	number7 = number7 - number7 % 2 + 1
+	number6 = (502183 * number6 + 4932131) % 268435456
+	number6 = (381055 * number6 + 150663887) % 268435456
 end
 
-local n10 = 0
+local number10 = 0
 
-fn = function()
-	n10 += 1
+callback = function()
+	number10 += 1
 
-	if n10 ~= 2499 then
-		if n10 == 2498 then
-			fn14()
+	if number10 ~= 2499 then
+		if number10 == 2498 then
+			callback17()
 		end
 
-		n6 = (825767 * n6 + 76028495) % 268435456
-		n7 = (1 * n7 + 199303012) % 268435456
-		fn()
+		number6 = (825767 * number6 + 76028495) % 268435456
+		number7 = (1 * number7 + 199303012) % 268435456
+		callback()
 		return
 	end
 
-	v14()
-	n6 = (633301 * n6 + 118839319) % 268435456
-	n7 = (1 * n7 + 227384412) % 268435456
+	value14()
+	number6 = (633301 * number6 + 118839319) % 268435456
+	number7 = (1 * number7 + 227384412) % 268435456
 end
 
-fn2 = function(arg)
-	if arg ~= 19998 then
-		if arg ~= 19997 then
-			if arg == 13996 then
-				fn12(arg)
+callback2 = function(argument)
+	if argument ~= 19998 then
+		if argument ~= 19997 then
+			if argument == 13996 then
+				callback14(argument)
 			end
 		else
-			fn12(arg)
+			callback14(argument)
 		end
 
-		fn2(arg + 1)
+		callback2(argument + 1)
 
-		if arg == 19997 then
-			if not v12(v14, v17) then
-				n7 = n7 - n7 % 2 + 1
-				n6 = (109841 * n6 + 221830637) % 268435456
+		if argument == 19997 then
+			if not value13(value14, value17) then
+				number7 = number7 - number7 % 2 + 1
+				number6 = (109841 * number6 + 221830637) % 268435456
 				return
 			end
 
-			fn14()
+			callback17()
 
-			if not v11(v14) then
-				n7 = n7 - n7 % 2 + 1
-				n6 = (966177 * n6 + 48847249) % 268435456
+			if not value12(value14) then
+				number7 = number7 - number7 % 2 + 1
+				number6 = (966177 * number6 + 48847249) % 268435456
 				return
 			end
 
-			if v12(fn15, fn) then
-				n7 = n7 - n7 % 2 + 1
-				n6 = (661433 * n6 + 251353109) % 268435456
+			if value13(callback18, callback) then
+				number7 = number7 - number7 % 2 + 1
+				number6 = (661433 * number6 + 251353109) % 268435456
 				return
 			end
 
-			v16()
+			value16()
 
-			if flag then
-				n7 = n7 - n7 % 2 + 1
-				n6 = (82419 * n6 + 130934173) % 268435456
-				n6 = (993143 * n6 + 258571403) % 268435456
+			if condition then
+				number7 = number7 - number7 % 2 + 1
+				number6 = (82419 * number6 + 130934173) % 268435456
+				number6 = (993143 * number6 + 258571403) % 268435456
 				return
 			end
 
-			n7 = (1 * n7 + 182108670) % 268435456
-			n6 = (661321 * n6 + 188621803) % 268435456
+			number7 = (1 * number7 + 182108670) % 268435456
+			number6 = (661321 * number6 + 188621803) % 268435456
 		end
 
-		n7 = (1 * n7 + 39749792) % 268435456
-		n6 = (573121 * n6 + 248614455) % 268435456
+		number7 = (1 * number7 + 39749792) % 268435456
+		number6 = (573121 * number6 + 248614455) % 268435456
 		return
 	end
 
-	v14()
-	n6 = (96561 * n6 + 140826197) % 268435456
-	n7 = (1 * n7 + 2468882) % 268435456
+	value14()
+	number6 = (96561 * number6 + 140826197) % 268435456
+	number7 = (1 * number7 + 2468882) % 268435456
 end
 
-local n11 = n5 // 248
-coroutine.resume(coroutine.create(fn2), 1)
+local number11 = number5 // 248
+coroutine.resume(coroutine.create(callback2), 1)
 ScreenGui:Destroy()
-local n12 = n8 + 415518735
-fn4(n6, 4)
-fn4(n7, 4)
-local n42 = n4
-local n13 = 481860382
-local n14 = 1863024894
+local number12 = number8 + 415518735
+callback4(number6, 4)
+callback4(number7, 4)
+local number13 = number4
+local number14 = 481860382
+local number15 = 1863024894
 
-local v18 = coroutine.wrap(function()
-	coroutine.yield(n13)
-	coroutine.yield(n14)
-	fn4(372868618, 4)
-	n4 = 43031001
-	fn5()
+local value18 = coroutine.wrap(function()
+	coroutine.yield(number14)
+	coroutine.yield(number15)
+	callback4(372868618, 4)
+	number4 = 43031001
+	callback5()
 end)
 
-if fn7(v18(), n13) then
-	fn3(1, 148593451)
-	n4 = n42
+if callback7(value18(), number14) then
+	callback3(1, 148593451)
+	number4 = number13
 else
-	fn4(372868618, 4)
-	n4 = 43031001
-	fn5()
+	callback4(372868618, 4)
+	number4 = 43031001
+	callback5()
 end
 
-if fn7(v18(), n14) then
-	fn3(37, n11 + 133076447)
+if callback7(value18(), number15) then
+	callback3(37, number11 + 133076447)
 else
-	fn4(372868618, 4)
-	n4 = 43031001
-	fn5()
+	callback4(372868618, 4)
+	number4 = 43031001
+	callback5()
 end
 
 local thread = coroutine.create(wait)
 coroutine.resume(thread, 0)
-local n15 = 2681509769
+local number16 = 2681509769
 local thread2 = coroutine.status(thread)
-fn7("suspended", thread2)
+callback7("suspended", thread2)
 
 if nil then
 	pcall(coroutine.close, thread)
-	local v19 = nil
-	local flag2 = false
+	local value19 = nil
+	local condition2 = false
 
 	spawn(function()
-		v19 = coroutine.running()
+		value19 = coroutine.running()
 		wait(0)
-		flag2 = true
-		fn4(372868618, 4)
-		n4 = 43031001
-		fn5()
+		condition2 = true
+		callback4(372868618, 4)
+		number4 = 43031001
+		callback5()
 	end)
 
-	local flag3 = not pcall(coroutine.close, v19)
+	local condition3 = not pcall(coroutine.close, value19)
 
 	if not nil then
-		fn4(372868618, 4)
-		n4 = 43031001
-		fn5()
+		callback4(372868618, 4)
+		number4 = 43031001
+		callback5()
 	end
 
 	local close = coroutine.close
 
-	local v20 = spawn(function()
+	local value20 = spawn(function()
 		coroutine.yield()
-		fn4(372868618, 4)
-		n4 = 43031001
-		fn5()
+		callback4(372868618, 4)
+		number4 = 43031001
+		callback5()
 	end)
 
-	close(v20)
+	close(value20)
 	local close2 = coroutine.close
-	local v21 = defer(fn6)
-	close2(v21)
+	local value21 = defer(callback6)
+	close2(value21)
 	local close3 = coroutine.close
-	local v23 = delay(616, fn6)
-	close3(v23)
+	local value22 = delay(616, callback6)
+	close3(value22)
 
-	local function fn16()
+	local function callback19()
 	end
 
-	fn16(getfenv, -4747)
-	fn16(setfenv, -31460)
-	fn16(getmetatable)
-	fn16(setmetatable)
-	fn16(tonumber)
-	fn16(tostring)
-	fn16(rawset)
-	local n112 = bit32.band(n11, n15)
-	fn16(rawget)
-	fn16(assert)
-	fn16(type)
-	fn16(next)
-	fn16(typeof)
-	fn16(string.gmatch)
-	fn16(string.format)
-	local n16 = n12 + n112
-	fn16(string.match)
-	fn16(string.find)
-	fn16(string.byte)
-	fn16(string.gsub)
-	fn16(string.sub)
-	fn16(string.rep)
-	fn16(string.char, nil)
-	fn16(string.unpack)
-	fn16(string.pack)
-	fn16(table.concat)
-	fn16(table.insert)
-	fn16(table.clear)
-	fn16(table.create, nil)
-	fn16(table.move)
-	fn16(bit32.bor, nil)
-	fn16(bit32.bxor, nil)
-	fn16(bit32.band, nil)
-	fn16(bit32.bnot)
-	fn16(bit32.lshift)
-	fn16(bit32.rshift)
-	fn16(bit32.rrotate)
-	fn16(bit32.lrotate)
-	fn16(bit32.countlz)
-	fn16(bit32.countrz)
-	fn16(buffer.len)
-	fn16(buffer.fill)
-	local n17 = n112 - n15
-	fn16(buffer.copy)
-	fn16(buffer.create, nil)
-	fn16(buffer.tostring)
-	fn16(buffer.fromstring)
-	fn16(buffer.readstring)
-	fn16(buffer.writestring)
-	fn16(buffer.readi8)
-	fn16(buffer.readu8)
-	fn16(buffer.readi16)
-	fn16(buffer.readu16)
-	fn16(buffer.readi32)
-	fn16(buffer.readu32)
-	fn16(buffer.readf32)
-	fn16(buffer.readf64)
-	fn16(buffer.writei8)
-	fn16(buffer.writeu8)
-	fn16(buffer.writei16)
-	fn16(buffer.writeu16)
-	fn16(buffer.writei32)
-	fn16(buffer.writeu32)
-	fn16(buffer.writef32)
-	fn16(buffer.writef64)
-	fn16(buffer.readbits)
-	fn16(buffer.writebits)
-	fn16(coroutine.create)
-	fn16(coroutine.status)
-	fn16(coroutine.close)
-	fn16(coroutine.resume)
-	fn16(coroutine.wrap)
-	fn16(cancel)
-	fn16(spawn)
-	fn16(defer)
-	fn16(delay)
-	fn16(wait, {})
-	fn16(unpack)
-	fn16(info)
-	fn16(v9)
-	fn11(new, "new")
-	fn16(new, nil)
-	fn11(new2, "new")
-	fn11(new3, "new")
-	fn11(color3New, "new")
-	fn11(rectNew, "new")
-	local fromAxis = v5.FromAxis
-	local n18 = 2899954607
-	fn11(fromAxis, "FromAxis")
-	fn16(fromAxis, nil)
+	callback19(getfenv, -4747)
+	callback19(setfenv, -31460)
+	callback19(getmetatable)
+	callback19(setmetatable)
+	callback19(tonumber)
+	callback19(tostring)
+	callback19(rawset)
+	local number17 = bit32.band(number11, number16)
+	callback19(rawget)
+	callback19(assert)
+	callback19(type)
+	callback19(next)
+	callback19(typeof)
+	callback19(string.gmatch)
+	callback19(string.format)
+	local number18 = number12 + number17
+	callback19(string.match)
+	callback19(string.find)
+	callback19(string.byte)
+	callback19(string.gsub)
+	callback19(string.sub)
+	callback19(string.rep)
+	callback19(string.char, nil)
+	callback19(string.unpack)
+	callback19(string.pack)
+	callback19(table.concat)
+	callback19(table.insert)
+	callback19(table.clear)
+	callback19(table.create, nil)
+	callback19(table.move)
+	callback19(bit32.bor, nil)
+	callback19(bit32.bxor, nil)
+	callback19(bit32.band, nil)
+	callback19(bit32.bnot)
+	callback19(bit32.lshift)
+	callback19(bit32.rshift)
+	callback19(bit32.rrotate)
+	callback19(bit32.lrotate)
+	callback19(bit32.countlz)
+	callback19(bit32.countrz)
+	callback19(buffer.len)
+	callback19(buffer.fill)
+	local number19 = number17 - number16
+	callback19(buffer.copy)
+	callback19(buffer.create, nil)
+	callback19(buffer.tostring)
+	callback19(buffer.fromstring)
+	callback19(buffer.readstring)
+	callback19(buffer.writestring)
+	callback19(buffer.readi8)
+	callback19(buffer.readu8)
+	callback19(buffer.readi16)
+	callback19(buffer.readu16)
+	callback19(buffer.readi32)
+	callback19(buffer.readu32)
+	callback19(buffer.readf32)
+	callback19(buffer.readf64)
+	callback19(buffer.writei8)
+	callback19(buffer.writeu8)
+	callback19(buffer.writei16)
+	callback19(buffer.writeu16)
+	callback19(buffer.writei32)
+	callback19(buffer.writeu32)
+	callback19(buffer.writef32)
+	callback19(buffer.writef64)
+	callback19(buffer.readbits)
+	callback19(buffer.writebits)
+	callback19(coroutine.create)
+	callback19(coroutine.status)
+	callback19(coroutine.close)
+	callback19(coroutine.resume)
+	callback19(coroutine.wrap)
+	callback19(cancel)
+	callback19(spawn)
+	callback19(defer)
+	callback19(delay)
+	callback19(wait, {})
+	callback19(unpack)
+	callback19(info)
+	callback19(value10)
+	callback13(new, "new")
+	callback19(new, nil)
+	callback13(new2, "new")
+	callback13(new3, "new")
+	callback13(color3New, "new")
+	callback13(rectNew, "new")
+	local fromAxis = value6.FromAxis
+	local number20 = 2899954607
+	callback13(fromAxis, "FromAxis")
+	callback19(fromAxis, nil)
 	local vector_ = fromAxis(Enum.Axis.Y)
-	local bottom = v5.FromNormalId(Enum.NormalId.Bottom)
-	local kind = type(vector_)
-	local kind2 = type(bottom)
+	local bottom = value6.FromNormalId(Enum.NormalId.Bottom)
+	local valueType = type(vector_)
+	local valueType2 = type(bottom)
 
-	if kind == "vector" then
-		fn3(222, 148593451)
-		local n19 = kind2 == "vector" and 111 or 129
-		fn3(n19, 148593451)
+	if valueType == "vector" then
+		callback3(222, 148593451)
+		local number21 = valueType2 == "vector" and 111 or 129
+		callback3(number21, 148593451)
 		local y = bottom.Y
-		fn4(vector_.Y * 953604573, 4)
-		local n20 = n16 + n18
-		fn4(y * -1 * 741150457, 4)
+		callback4(vector_.Y * 953604573, 4)
+		local number22 = number18 + number20
+		callback4(y * -1 * 741150457, 4)
 
-		if fn7("vector", kind) then
-			fn3(229, n17 - 1477743188)
-			n4 = n42
+		if callback7("vector", valueType) then
+			callback3(229, number19 - 1477743188)
+			number4 = number13
 
-			if fn7("vector", kind2) then
-				fn3(243, 148593451)
+			if callback7("vector", valueType2) then
+				callback3(243, 148593451)
 			else
-				fn4(372868618, 4)
-				n4 = 43031001
-				fn5()
+				callback4(372868618, 4)
+				number4 = 43031001
+				callback5()
 			end
 
-			fn3(vector_.X == 0 and 15 or 161, 148593451)
-			fn3(vector_.Y == 1 and 129 or 72, n17 - 1477743188)
-			fn3(vector_.Z == 0 and 184 or 200, n18 - 2751361156)
-			fn3(bottom.X == 0 and 165 or 240, 148593451)
-			fn3(bottom.Y == -1 and 168 or 210, n17 + 2817224108)
-			local n21
-			n21 = bottom.Z == 0 and 13 or 156
-			fn3(n21, n18 + 1543606140)
-			local n172
-			n172 = bit32.bor(n17, n18)
-			fn11(uDim2New, "new")
-			fn11(uDimNew, "new")
-			fn102(utf8, 218723579, { [1986724197] = 1631743329, [3912424273] = 733687465, [2204466326] = 1503519080 })
-			local tbl8
-			tbl8 = {}
-			local v24 = utf8.nfcnormalize("뫂춥퉐릻켙냖")
+			callback3(vector_.X == 0 and 15 or 161, 148593451)
+			callback3(vector_.Y == 1 and 129 or 72, number19 - 1477743188)
+			callback3(vector_.Z == 0 and 184 or 200, number20 - 2751361156)
+			callback3(bottom.X == 0 and 165 or 240, 148593451)
+			callback3(bottom.Y == -1 and 168 or 210, number19 + 2817224108)
+						local number23 = bottom.Z == 0 and 13 or 156
+			callback3(number23, number20 + 1543606140)
+						local number24 = bit32.bor(number19, number20)
+			callback13(uDim2New, "new")
+			callback13(uDimNew, "new")
+			callback12(utf8, 218723579, { [1986724197] = 1631743329, [3912424273] = 733687465, [2204466326] = 1503519080 })
+						local data8 = {}
+			local value23 = utf8.nfcnormalize("뫂춥퉐릻켙냖")
 
 			do
-				local values = table.pack(v24:byte(1, -1))
-				table.move(values, 1, values.n, 1, tbl8)
+				local values = table.pack(value23:byte(1, -1))
+				table.move(values, 1, values.n, 1, data8)
 			end
 
-			local tbl9
-			tbl9 = {}
-			local n22
-			local v25 = utf8.nfdnormalize("뿇듧죝떠ō뵗덑")
-			n22 = n18 - n20
+						local data9 = {}
+			local number25
+			local value24 = utf8.nfdnormalize("뿇듧죝떠ō뵗덑")
+			number25 = number20 - number22
 
 			do
-				local values = table.pack(v25:byte(1, -1))
-				table.move(values, 1, values.n, 1, tbl9)
+				local values = table.pack(value24:byte(1, -1))
+				table.move(values, 1, values.n, 1, data9)
 			end
 
-			local v26, v27, v28, v29, v30, v31, v32, v33, v34, v35
-			local v36, n23, v37, tbl10, v38
+			local value25, value26, value27, value28, value29, value30, value31, value32, value33, value34
+			local value35, number26, value36, data10, value37
 
 			do
-				local v39 = tbl9[22]
-				fn3(v39, 148593451)
-				local v40 = tbl8[16]
-				fn3(v40, n172 + 467364652)
-				v26 = tbl9[12]
-				fn3(v26, 148593451)
-				v27 = tbl8[17]
-				fn3(v27, 148593451)
-				v28 = tbl9[16]
-				fn3(v28, n172 + 467364652)
-				v29 = tbl9[35]
-				fn3(v29, n22 + 1049596963)
-				v30 = tbl9[39]
-				fn3(v30, 148593451)
-				v31 = tbl9[18]
-				fn3(v31, n172 - 3827602644)
-				fn3(tbl8[10], 148593451)
-				v32 = tbl9[17]
-				fn3(v32, 148593451)
-				fn3(tbl9[33], n172 - 3827602644)
-				v33 = tbl9[8]
-				fn3(v33, n22 - 3245370333)
-				fn3(tbl8[15], 148593451)
-				fn3(tbl9[15], n172 - 3827602644)
-				v34 = tbl9[23]
-				fn3(v34, 148593451)
-				fn3(tbl8[18], 148593451)
-				v35 = tbl9[24]
-				v36 = v39
-				fn3(v35, v36 - 4146374070)
-				fn3(tbl9[13], n22 + 1049596963)
-				fn3(tbl8[1], 148593451)
-				local v41 = tbl9[2]
-				n23 = n20 + v40
-				fn3(v41, 148593451)
-				local v42 = tbl8[11]
-				fn3(v42, n22 + 1049596963)
-				fn3(tbl9[38], 148593451)
-				v37 = tbl9[5]
-				fn3(v37, v36 + 148593226)
-				local v43 = tbl8[6]
-				tbl10 = v41
-				v38 = v42
-				fn3(v43, n22 + 1049596963)
+				local value38 = data9[22]
+				callback3(value38, 148593451)
+				local value39 = data8[16]
+				callback3(value39, number24 + 467364652)
+				value25 = data9[12]
+				callback3(value25, 148593451)
+				value26 = data8[17]
+				callback3(value26, 148593451)
+				value27 = data9[16]
+				callback3(value27, number24 + 467364652)
+				value28 = data9[35]
+				callback3(value28, number25 + 1049596963)
+				value29 = data9[39]
+				callback3(value29, 148593451)
+				value30 = data9[18]
+				callback3(value30, number24 - 3827602644)
+				callback3(data8[10], 148593451)
+				value31 = data9[17]
+				callback3(value31, 148593451)
+				callback3(data9[33], number24 - 3827602644)
+				value32 = data9[8]
+				callback3(value32, number25 - 3245370333)
+				callback3(data8[15], 148593451)
+				callback3(data9[15], number24 - 3827602644)
+				value33 = data9[23]
+				callback3(value33, 148593451)
+				callback3(data8[18], 148593451)
+				value34 = data9[24]
+				value35 = value38
+				callback3(value34, value35 - 4146374070)
+				callback3(data9[13], number25 + 1049596963)
+				callback3(data8[1], 148593451)
+				local value40 = data9[2]
+				number26 = number22 + value39
+				callback3(value40, 148593451)
+				local value41 = data8[11]
+				callback3(value41, number25 + 1049596963)
+				callback3(data9[38], 148593451)
+				value36 = data9[5]
+				callback3(value36, value35 + 148593226)
+				local value42 = data8[6]
+				data10 = value40
+				value37 = value41
+				callback3(value42, number25 + 1049596963)
 			end
 
-			local v39
-			v39 = tbl9[29]
-			fn3(v39, 148593451)
-			fn3(tbl8[3], v36 - 4146374070)
-			fn3(tbl9[36], n22 + 1049596963)
-			fn3(tbl9[32], 148593451)
-			local v40
-			v40 = tbl9[4]
-			fn3(v40, v36 - 4146374070)
-			fn3(tbl9[52], n22 + 1049596963)
-			fn3(tbl9[40], 148593451)
-			local v41
-			v41 = tbl8[8]
-			fn3(v41, v36 + 148593226)
-			local n222, v42, v43, n24
-			local v44 = tbl9[49]
-			fn3(v44, n22 - 3245370333)
-			n222 = bit32.bor(n22, v26)
-			fn3(tbl9[37], 148593451)
-			v42 = tbl9[30]
-			fn3(v42, v36 + 148593226)
-			v43 = tbl9[54]
-			fn3(v43, n222 - 3245370464)
-			n24 = v44
-			local v45
-			v45 = tbl9[19]
-			fn3(v45, 148593451)
-			local v46
-			v46 = tbl8[5]
-			fn3(v46, v36 - 4146374070)
-			fn3(tbl9[34], n222 - 3245370464)
-			fn3(tbl8[2], 148593451)
-			local v47
-			v47 = tbl9[43]
-			fn3(v47, v36 + 148593226)
-			local v48
-			v48 = tbl9[45]
-			fn3(v48, 148593451)
-			fn3(tbl9[27], 148593451)
-			local v49
-			v49 = tbl9[21]
-			fn3(v49, v36 + 148593226)
-			local v50
-			v50 = tbl8[7]
-			fn3(v50, 148593451)
-			local v51
-			v51 = tbl9[1]
-			fn3(v51, 148593451)
-			fn3(tbl9[20], 148593451)
-			fn3(tbl9[11], n222 + 1049596832)
-			local v52
-			v52 = tbl8[4]
-			fn3(v52, 148593451)
-			fn3(tbl9[9], v36 + 148593226)
-			local n25, v53, v54
+						local value38 = data9[29]
+			callback3(value38, 148593451)
+			callback3(data8[3], value35 - 4146374070)
+			callback3(data9[36], number25 + 1049596963)
+			callback3(data9[32], 148593451)
+						local value39 = data9[4]
+			callback3(value39, value35 - 4146374070)
+			callback3(data9[52], number25 + 1049596963)
+			callback3(data9[40], 148593451)
+						local value40 = data8[8]
+			callback3(value40, value35 + 148593226)
+			local number27, value41, value42, number28
+			local value43 = data9[49]
+			callback3(value43, number25 - 3245370333)
+			number27 = bit32.bor(number25, value25)
+			callback3(data9[37], 148593451)
+			value41 = data9[30]
+			callback3(value41, value35 + 148593226)
+			value42 = data9[54]
+			callback3(value42, number27 - 3245370464)
+			number28 = value43
+						local value44 = data9[19]
+			callback3(value44, 148593451)
+						local value45 = data8[5]
+			callback3(value45, value35 - 4146374070)
+			callback3(data9[34], number27 - 3245370464)
+			callback3(data8[2], 148593451)
+						local value46 = data9[43]
+			callback3(value46, value35 + 148593226)
+						local value47 = data9[45]
+			callback3(value47, 148593451)
+			callback3(data9[27], 148593451)
+						local value48 = data9[21]
+			callback3(value48, value35 + 148593226)
+						local value49 = data8[7]
+			callback3(value49, 148593451)
+						local value50 = data9[1]
+			callback3(value50, 148593451)
+			callback3(data9[20], 148593451)
+			callback3(data9[11], number27 + 1049596832)
+						local value51 = data8[4]
+			callback3(value51, 148593451)
+			callback3(data9[9], value35 + 148593226)
+			local number29, value52, value53
 
 			do
-				local v55 = tbl9[26]
-				local v392 = bit32.band(v36, v27)
-				fn3(v55, n222 - 3245370464)
-				fn3(tbl9[7], 148593451)
-				fn3(tbl8[13], 148593451)
-				fn3(tbl9[25], n222 + 1049596832)
-				fn3(tbl9[10], 148593451)
-				fn3(tbl9[44], v392 + 148593322)
-				n25 = n23 + v28
-				fn3(tbl9[42], n222 + 1049596832)
-				fn3(tbl9[48], 148593451)
-				fn3(tbl9[51], 148593451)
-				fn3(tbl9[41], n222 + 1049596832)
-				fn3(tbl8[9], 148593451)
-				fn3(tbl8[14], v392 + 148593322)
-				local v56 = tbl9[53]
-				local n26 = v392 // v29
-				fn3(v56, n222 + 1049596832)
-				fn3(tbl9[50], 148593451)
-				v53 = tbl9[3]
-				fn3(v53, n26 - 4146373845)
-				fn3(tbl9[28], n222 - 3245370464)
-				v54 = tbl9[14]
-				fn3(v54, 148593451)
-				fn3(tbl9[31], n26 + 148593451)
-				fn3(tbl9[6], 148593451)
-				fn3(tbl9[47], 148593451)
-				fn3(tbl8[12], n26 - 4146373845)
+				local value54 = data9[26]
+				local value55 = bit32.band(value35, value26)
+				callback3(value54, number27 - 3245370464)
+				callback3(data9[7], 148593451)
+				callback3(data8[13], 148593451)
+				callback3(data9[25], number27 + 1049596832)
+				callback3(data9[10], 148593451)
+				callback3(data9[44], value55 + 148593322)
+				number29 = number26 + value27
+				callback3(data9[42], number27 + 1049596832)
+				callback3(data9[48], 148593451)
+				callback3(data9[51], 148593451)
+				callback3(data9[41], number27 + 1049596832)
+				callback3(data8[9], 148593451)
+				callback3(data8[14], value55 + 148593322)
+				local value56 = data9[53]
+				local number30 = value55 // value28
+				callback3(value56, number27 + 1049596832)
+				callback3(data9[50], 148593451)
+				value52 = data9[3]
+				callback3(value52, number30 - 4146373845)
+				callback3(data9[28], number27 - 3245370464)
+				value53 = data9[14]
+				callback3(value53, 148593451)
+				callback3(data9[31], number30 + 148593451)
+				callback3(data9[6], 148593451)
+				callback3(data9[47], 148593451)
+				callback3(data8[12], number30 - 4146373845)
 			end
 
-			fn3(tbl9[46], 148593451)
-			fn11(new4, "new")
-			fn16(new4, nil)
-			local ScreenGui2
-			ScreenGui2 = new("ScreenGui")
+			callback3(data9[46], 148593451)
+			callback13(new4, "new")
+			callback19(new4, nil)
+						local ScreenGui2 = new("ScreenGui")
 			local Path2D2
 
 			do
@@ -2075,62 +2062,62 @@ if nil then
 
 			do
 				local setControlPoints = Path2D2.SetControlPoints
-				local tbl11 = {}
-				local v55 = new4(uDim2New(0, -4, 0, -6), uDim2New(0, -1, 0, 7), uDim2New(0, 6, 0, -1))
-				local v56 = new4(uDim2New(0, -10, 0.25, -9), uDim2New(0.0625, -4, -0.125, 6), uDim2New(0, 5, 0, -8))
-				local v57 = uDim2New(0.5, -8, 0.25, 2)
-				local v58 = uDim2New(0.125, 7, -0.0625, -1)
-				tbl11[1] = v55
-				tbl11[2] = v56
+				local data11 = {}
+				local value54 = new4(uDim2New(0, -4, 0, -6), uDim2New(0, -1, 0, 7), uDim2New(0, 6, 0, -1))
+				local value55 = new4(uDim2New(0, -10, 0.25, -9), uDim2New(0.0625, -4, -0.125, 6), uDim2New(0, 5, 0, -8))
+				local value56 = uDim2New(0.5, -8, 0.25, 2)
+				local value57 = uDim2New(0.125, 7, -0.0625, -1)
+				data11[1] = value54
+				data11[2] = value55
 
 				do
-					local values = table.pack(new4(v57, v58, uDim2New(0, 0, 0, 0)))
-					table.move(values, 1, values.n, 3, tbl11)
+					local values = table.pack(new4(value56, value57, uDim2New(0, 0, 0, 0)))
+					table.move(values, 1, values.n, 3, data11)
 				end
 
-				setControlPoints(Path2D2, tbl11)
+				setControlPoints(Path2D2, data11)
 			end
 
 			do
-				local n26 = n25 + v30
+				local number30 = number29 + value29
 				local length = Path2D2:GetLength()
-				fn4(string.unpack(">I4", string.pack(">f", length)), 4)
+				callback4(string.unpack(">I4", string.pack(">f", length)), 4)
 				local positionOnCurve = Path2D2:GetPositionOnCurve(0.5)
-				fn4(string.unpack(">I4", string.pack(">f", positionOnCurve.X.Scale)), 4)
+				callback4(string.unpack(">I4", string.pack(">f", positionOnCurve.X.Scale)), 4)
 				local unpack_ = string.unpack
-				fn4(unpack_(">I4", string.pack(">f", positionOnCurve.Y.Scale)), 4)
+				callback4(unpack_(">I4", string.pack(">f", positionOnCurve.Y.Scale)), 4)
 				local positionOnCurve2 = Path2D2:GetPositionOnCurve(0.46666666865348816)
-				fn4(string.unpack(">I4", string.pack(">f", positionOnCurve2.X.Scale)), 4)
-				fn4(string.unpack(">I4", string.pack(">f", positionOnCurve2.Y.Scale)), 4)
+				callback4(string.unpack(">I4", string.pack(">f", positionOnCurve2.X.Scale)), 4)
+				callback4(string.unpack(">I4", string.pack(">f", positionOnCurve2.Y.Scale)), 4)
 				local tangentOnCurve = Path2D2:GetTangentOnCurve(0.25)
-				fn4(string.unpack("<I4", string.pack(">f", tangentOnCurve.X)), 4)
-				fn4(string.unpack("<I4", string.pack(">f", tangentOnCurve.Y)), 4)
+				callback4(string.unpack("<I4", string.pack(">f", tangentOnCurve.X)), 4)
+				callback4(string.unpack("<I4", string.pack(">f", tangentOnCurve.Y)), 4)
 				local tangentOnCurve2 = Path2D2:GetTangentOnCurve(0.75)
-				fn4(string.unpack("<I4", string.pack("<f", tangentOnCurve2.X)), 4)
-				fn4(string.unpack(">I4", string.pack("<f", tangentOnCurve2.Y)), 4)
+				callback4(string.unpack("<I4", string.pack("<f", tangentOnCurve2.X)), 4)
+				callback4(string.unpack(">I4", string.pack("<f", tangentOnCurve2.Y)), 4)
 				local positionOnCurveArcLength = Path2D2:GetPositionOnCurveArcLength(0.625)
-				fn4(string.unpack(">I4", string.pack("<f", positionOnCurveArcLength.X.Scale)), 4)
-				fn4(string.unpack("<I4", string.pack(">f", positionOnCurveArcLength.Y.Scale)), 4)
+				callback4(string.unpack(">I4", string.pack("<f", positionOnCurveArcLength.X.Scale)), 4)
+				callback4(string.unpack("<I4", string.pack(">f", positionOnCurveArcLength.Y.Scale)), 4)
 				local positionOnCurveArcLength2 = Path2D2:GetPositionOnCurveArcLength(0.5)
-				fn4(string.unpack(">I4", string.pack(">f", positionOnCurveArcLength2.X.Scale)), 4)
-				fn4(string.unpack("<I4", string.pack(">f", positionOnCurveArcLength2.Y.Scale)), 4)
+				callback4(string.unpack(">I4", string.pack(">f", positionOnCurveArcLength2.X.Scale)), 4)
+				callback4(string.unpack("<I4", string.pack(">f", positionOnCurveArcLength2.Y.Scale)), 4)
 				local positionOnCurveArcLength3 = Path2D2:GetPositionOnCurveArcLength(0.083333335816860199)
-				fn4(string.unpack("<I4", string.pack("<f", positionOnCurveArcLength3.X.Scale)), 4)
-				local n27 = n26 + v33
-				fn4(string.unpack("<I4", string.pack("<f", positionOnCurveArcLength3.Y.Scale)), 4)
+				callback4(string.unpack("<I4", string.pack("<f", positionOnCurveArcLength3.X.Scale)), 4)
+				local number31 = number30 + value32
+				callback4(string.unpack("<I4", string.pack("<f", positionOnCurveArcLength3.Y.Scale)), 4)
 				local tangentOnCurveArcLength = Path2D2:GetTangentOnCurveArcLength(0.15384615957736969)
-				fn4(string.unpack("<I4", string.pack("<f", tangentOnCurveArcLength.X)), 4)
-				fn4(string.unpack("<I4", string.pack(">f", tangentOnCurveArcLength.Y)), 4)
+				callback4(string.unpack("<I4", string.pack("<f", tangentOnCurveArcLength.X)), 4)
+				callback4(string.unpack("<I4", string.pack(">f", tangentOnCurveArcLength.Y)), 4)
 				local tangentOnCurveArcLength2 = Path2D2:GetTangentOnCurveArcLength(0.375)
-				fn4(string.unpack(">I4", string.pack(">f", tangentOnCurveArcLength2.X)), 4)
-				fn4(string.unpack(">I4", string.pack(">f", tangentOnCurveArcLength2.Y)), 4)
+				callback4(string.unpack(">I4", string.pack(">f", tangentOnCurveArcLength2.X)), 4)
+				callback4(string.unpack(">I4", string.pack(">f", tangentOnCurveArcLength2.Y)), 4)
 				local tangentOnCurveArcLength3 = Path2D2:GetTangentOnCurveArcLength(0.53846156597137451)
-				fn4(string.unpack(">I4", string.pack("<f", tangentOnCurveArcLength3.X)), 4)
-				fn4(string.unpack("<I4", string.pack(">f", tangentOnCurveArcLength3.Y)), 4)
+				callback4(string.unpack(">I4", string.pack("<f", tangentOnCurveArcLength3.X)), 4)
+				callback4(string.unpack("<I4", string.pack(">f", tangentOnCurveArcLength3.Y)), 4)
 				ScreenGui2:Destroy()
-				fn102(math, 218723579, { [3668483602] = 331635280, [1303859104] = 1381494275, [1292485390] = 1059621379 })
+				callback12(math, 218723579, { [3668483602] = 331635280, [1303859104] = 1381494275, [1292485390] = 1059621379 })
 
-				fn102(v10, 218723579, {
+				callback12(value11, 218723579, {
 					[1420216976] = 752316410,
 					[194463251] = 1377272538,
 					[4280857151] = 1916921198,
@@ -2138,29 +2125,29 @@ if nil then
 					[1618608716] = 1869670192,
 				})
 
-				fn102(v3, 218723579, { [2759041104] = 1297627627, [356266053] = 2063474335 })
+				callback12(value4, 218723579, { [2759041104] = 1297627627, [356266053] = 2063474335 })
 				local gameRef = game
 				local workspaceRef = workspace
 
-				local function fn17(arg, arg2, arg3)
+				local function callback20(argument, argument2, argument3)
 					local state = 1
-					local n28, n29, n30, arg22, arg32, parent, parent2, name, name2, ancestryChanged, resume, parent3, parent4, v55, parent5, fn42, flag4, resume2, flag5, v56, flag6, flag7, parent6, parent7, v57, fn43, flag8, flag82, v58, v59, flag9
+					local number32, number33, argument4, argument5, argument6, parent, parent2, name, name2, ancestryChanged, resume, parent3, parent4, value54, parent5, callback21, condition4, resume2, condition5, value55, condition6, condition7, parent6, parent7, value56, callback22, condition8, condition9, value57, value58, condition10
 
 					while true do
-						local n31
+						local number34
 
 						if state <= 112 then
 							if state <= 56 then
 								if state <= 28 then
 									if state <= 14 then
 										if state == 1 then
-											n28 = 1983948755
-											n29 = 1107289406
-											n30 = arg
-											arg22 = arg2
-											arg32 = arg3
-											local kind3 = type(arg22)
-											fn7("userdata", kind3)
+											number32 = 1983948755
+											number33 = 1107289406
+											argument4 = argument
+											argument5 = argument2
+											argument6 = argument3
+											local valueType3 = type(argument5)
+											callback7("userdata", valueType3)
 
 											if nil then
 												state = 3
@@ -2168,13 +2155,13 @@ if nil then
 												state = 2
 											end
 										elseif state == 2 then
-											fn4(372868618, 4)
-											n4 = 43031001
-											fn5()
+											callback4(372868618, 4)
+											number4 = 43031001
+											callback5()
 											state = 3
 										elseif state == 3 then
-											local kind3 = typeof(arg22)
-											fn7("Instance", kind3)
+											local valueType3 = typeof(argument5)
+											callback7("Instance", valueType3)
 
 											if nil then
 												state = 5
@@ -2182,21 +2169,21 @@ if nil then
 												state = 4
 											end
 										elseif state == 4 then
-											fn4(372868618, 4)
-											n4 = 43031001
-											fn5()
+											callback4(372868618, 4)
+											number4 = 43031001
+											callback5()
 											state = 5
 										elseif state == 5 then
-											parent = arg22.Parent
-											parent2 = arg22.Parent
+											parent = argument5.Parent
+											parent2 = argument5.Parent
 
-											if tbl4[not parent] then
+											if data4[not parent] then
 												state = 6
 											else
 												state = 9
 											end
 										elseif state == 6 then
-											fn7(parent, parent2)
+											callback7(parent, parent2)
 
 											if nil then
 												state = 8
@@ -2204,17 +2191,17 @@ if nil then
 												state = 7
 											end
 										elseif state == 7 then
-											fn4(372868618, 4)
-											n4 = 43031001
-											fn5()
+											callback4(372868618, 4)
+											number4 = 43031001
+											callback5()
 											state = 8
 										elseif state == 8 then
 											state = 9
 										elseif state == 9 then
-											name = arg22.Name
-											name2 = arg22.Name
-											local kind3 = type(name)
-											fn7("string", kind3)
+											name = argument5.Name
+											name2 = argument5.Name
+											local valueType3 = type(name)
+											callback7("string", valueType3)
 
 											if nil then
 												state = 11
@@ -2222,12 +2209,12 @@ if nil then
 												state = 10
 											end
 										elseif state == 10 then
-											fn4(372868618, 4)
-											n4 = 43031001
-											fn5()
+											callback4(372868618, 4)
+											number4 = 43031001
+											callback5()
 											state = 11
 										elseif state == 11 then
-											fn7(name, name2)
+											callback7(name, name2)
 
 											if nil then
 												state = 13
@@ -2235,21 +2222,21 @@ if nil then
 												state = 12
 											end
 										elseif state == 12 then
-											fn4(372868618, 4)
-											n4 = 43031001
-											fn5()
+											callback4(372868618, 4)
+											number4 = 43031001
+											callback5()
 											state = 13
 										elseif state == 13 then
-											local n32 = #name
-											local n33 = #name2
-											local fn72 = fn7
-											local n332 = bit32.band(n33, 4294967295)
-											local n3322 = bit32.band(n332, 65535)
-											local v60 = bit32.band(54259 * n3322 + bit32.lshift(bit32.band(54259 * bit32.rshift(n332, 16) + 37619 * n3322, 65535), 16), 4294967295)
-											local n333 = bit32.bnot(n33)
-											local n3332 = bit32.band(n333, 65535)
-											n30 = 2629977780 + n30 + v60 + bit32.band(54259 * n3332 + bit32.lshift(bit32.band(54259 * bit32.rshift(n333, 16) + 37619 * n3332, 65535), 16), 4294967295)
-											fn72(n32, n33)
+											local number35 = #name
+											local number36 = #name2
+											local callback23 = callback7
+											local number37 = bit32.band(number36, 4294967295)
+											local number38 = bit32.band(number37, 65535)
+											local value59 = bit32.band(54259 * number38 + bit32.lshift(bit32.band(54259 * bit32.rshift(number37, 16) + 37619 * number38, 65535), 16), 4294967295)
+											local number39 = bit32.bnot(number36)
+											local number40 = bit32.band(number39, 65535)
+											argument4 = 2629977780 + argument4 + value59 + bit32.band(54259 * number40 + bit32.lshift(bit32.band(54259 * bit32.rshift(number39, 16) + 37619 * number40, 65535), 16), 4294967295)
+											callback23(number35, number36)
 
 											if nil then
 												state = 15
@@ -2257,13 +2244,13 @@ if nil then
 												state = 14
 											end
 										elseif state == 14 then
-											fn4(372868618, 4)
-											n4 = 43031001
-											fn5()
+											callback4(372868618, 4)
+											number4 = 43031001
+											callback5()
 											state = 15
 										end
 									elseif state == 15 then
-										fn7(tostring(arg22), name)
+										callback7(tostring(argument5), name)
 
 										if nil then
 											state = 17
@@ -2273,7 +2260,7 @@ if nil then
 									elseif state == 16 then
 										state = 35
 									elseif state == 17 then
-										fn7(arg32, arg22.ClassName)
+										callback7(argument6, argument5.ClassName)
 
 										if nil then
 											state = 19
@@ -2281,15 +2268,15 @@ if nil then
 											state = 18
 										end
 									elseif state == 18 then
-										fn4(372868618, 4)
-										n4 = 43031001
-										fn5()
+										callback4(372868618, 4)
+										number4 = 43031001
+										callback5()
 										state = 19
 									elseif state == 19 then
-										ancestryChanged = arg22.AncestryChanged
-										arg32 = arg22.AncestryChanged
-										n29 = bit32.band(n29, n30)
-										fn7(ancestryChanged, arg32)
+										ancestryChanged = argument5.AncestryChanged
+										argument6 = argument5.AncestryChanged
+										number33 = bit32.band(number33, argument4)
+										callback7(ancestryChanged, argument6)
 
 										if nil then
 											state = 222
@@ -2303,16 +2290,16 @@ if nil then
 											state = 21
 										end
 									elseif state == 21 then
-										fn4(372868618, 4)
-										n4 = 43031001
-										fn5()
+										callback4(372868618, 4)
+										number4 = 43031001
+										callback5()
 										state = 22
 									elseif state == 22 then
 										local connect = ancestryChanged.Connect
 										local connect2 = ancestryChanged.Connect
-										fn11(connect, "Connect")
-										fn11(connect2, "Connect")
-										fn7(connect, connect2)
+										callback13(connect, "Connect")
+										callback13(connect2, "Connect")
+										callback7(connect, connect2)
 
 										if nil then
 											state = 23
@@ -2320,27 +2307,27 @@ if nil then
 											state = 24
 										end
 									elseif state == 23 then
-										fn4(372868618, 4)
-										n4 = 43031001
-										fn5()
+										callback4(372868618, 4)
+										number4 = 43031001
+										callback5()
 										state = 24
 									elseif state == 24 then
-										local flag10 = false
-										local destroying = arg22.Destroying
+										local condition11 = false
+										local destroying = argument5.Destroying
 										local destroying2 = destroying
 										local connect = destroying.Connect
-										local n302 = bit32.bxor(n30, 280525953)
+										local argument7 = bit32.bxor(argument4, 280525953)
 
-										local function fn18()
-											flag10 = true
+										local function callback23()
+											condition11 = true
 
 											if nil then
-												n302 = bit32.bxor(n302, 3235034115)
+												argument7 = bit32.bxor(argument7, 3235034115)
 											end
 										end
 
-										n302 = bit32.bxor(n302, 148119644)
-										arg32 = connect(destroying2, fn18)
+										argument7 = bit32.bxor(argument7, 148119644)
+										argument6 = connect(destroying2, callback23)
 
 										if nil then
 											state = 26
@@ -2350,9 +2337,9 @@ if nil then
 									elseif state == 25 then
 										state = 27
 									elseif state == 26 then
-										fn4(372868618, 4)
-										n4 = 43031001
-										fn5()
+										callback4(372868618, 4)
+										number4 = 43031001
+										callback5()
 										state = 27
 									elseif state == 27 then
 										if nil then
@@ -2361,13 +2348,13 @@ if nil then
 											state = 42
 										end
 									elseif state == 28 then
-										local disconnect = arg32.Disconnect
-										fn11(disconnect, "Disconnect")
-										fn16(disconnect, nil)
-										disconnect(arg32)
-										n29 = bit32.bxor(n29, n30)
+										local disconnect = argument6.Disconnect
+										callback13(disconnect, "Disconnect")
+										callback19(disconnect, nil)
+										disconnect(argument6)
+										number33 = bit32.bxor(number33, argument4)
 
-										if n30 + 1906447 == 365670673 then
+										if argument4 + 1906447 == 365670673 then
 											state = 30
 										else
 											state = 29
@@ -2405,18 +2392,18 @@ if nil then
 											state = 34
 										end
 									elseif state == 34 then
-										fn4(372868618, 4)
-										n4 = 43031001
-										fn5()
+										callback4(372868618, 4)
+										number4 = 43031001
+										callback5()
 										state = 48
 									elseif state == 35 then
-										fn4(372868618, 4)
-										n4 = 43031001
-										fn5()
+										callback4(372868618, 4)
+										number4 = 43031001
+										callback5()
 										state = 17
 									elseif state == 36 then
-										local v60 = getmetatable(arg22)
-										fn7("The metatable is locked", v60)
+										local value59 = getmetatable(argument5)
+										callback7("The metatable is locked", value59)
 
 										if nil then
 											state = 38
@@ -2424,12 +2411,12 @@ if nil then
 											state = 37
 										end
 									elseif state == 37 then
-										fn4(372868618, 4)
-										n4 = 43031001
-										fn5()
+										callback4(372868618, 4)
+										number4 = 43031001
+										callback5()
 										state = 38
 									elseif state == 38 then
-										if n30 + 501065228 ~= 361643982 then
+										if argument4 + 501065228 ~= 361643982 then
 											state = 221
 										else
 											state = 39
@@ -2449,9 +2436,9 @@ if nil then
 											state = 9
 										end
 									elseif state == 42 then
-										fn4(372868618, 4)
-										n4 = 43031001
-										fn5()
+										callback4(372868618, 4)
+										number4 = 43031001
+										callback5()
 										state = 28
 									end
 								elseif state == 43 then
@@ -2473,33 +2460,33 @@ if nil then
 										state = 46
 									end
 								elseif state == 46 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 47
 								elseif state == 47 then
 									local wait2 = ancestryChanged.Wait
-									n30 += 76178503
-									fn11(wait2, "Wait")
-									n31 = 12478618
+									argument4 += 76178503
+									callback13(wait2, "Wait")
+									number34 = 12478618
 
-									local function fn18()
+									local function callback23()
 										local wait3 = wait2
 
 										if nil then
-											n31 = bit32.bxor(n31, 1430127237)
+											number34 = bit32.bxor(number34, 1430127237)
 										end
 
 										return (wait3(ancestryChanged))
 									end
 
-									n31 = bit32.bxor(12478618, n29 - 4246385089)
-									arg32 = coroutine.create(fn18)
+									number34 = bit32.bxor(12478618, number33 - 4246385089)
+									argument6 = coroutine.create(callback23)
 									resume = coroutine.resume
 									state = 145
 								elseif state == 48 then
-									local kind3 = typeof(arg22)
-									fn7("Instance", kind3)
+									local valueType3 = typeof(argument5)
+									callback7("Instance", valueType3)
 
 									if nil then
 										state = 50
@@ -2507,24 +2494,24 @@ if nil then
 										state = 49
 									end
 								elseif state == 49 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 50
 								elseif state == 50 then
-									parent3 = arg22.Parent
-									parent4 = arg22.Parent
-									v55 = tbl4[not parent3]
+									parent3 = argument5.Parent
+									parent4 = argument5.Parent
+									value54 = data4[not parent3]
 									state = 51
 								elseif state == 51 then
-									if v55 then
+									if value54 then
 										state = 52
 									else
 										state = 59
 									end
 								elseif state == 52 then
 									parent5 = parent3
-									fn7(parent5, parent4)
+									callback7(parent5, parent4)
 
 									if nil then
 										state = 58
@@ -2532,33 +2519,33 @@ if nil then
 										state = 53
 									end
 								elseif state == 53 then
-									fn42 = fn4
+									callback21 = callback4
 
-									if n28 == 369465669 then
+									if number32 == 369465669 then
 										state = 55
 									else
 										state = 54
 									end
 								elseif state == 54 then
-									fn42(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback21(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 58
 								elseif state == 55 then
-									local n292 = bit32.band(n29, 3464781827)
-									local thread3 = coroutine.status(arg32)
-									flag4 = not fn7("dead", thread3)
-									n29 = n292 - 4294960640
+									local number35 = bit32.band(number33, 3464781827)
+									local thread3 = coroutine.status(argument6)
+									condition4 = not callback7("dead", thread3)
+									number33 = number35 - 4294960640
 
-									if flag4 then
+									if condition4 then
 										state = 56
 									else
 										state = 85
 									end
 								elseif state == 56 then
-									fn4(372868618, 4)
+									callback4(372868618, 4)
 
-									if n28 == 282554691 then
+									if number32 == 282554691 then
 										state = 76
 									else
 										state = 57
@@ -2567,16 +2554,16 @@ if nil then
 							elseif state <= 84 then
 								if state <= 70 then
 									if state == 57 then
-										n4 = 43031001
-										fn5()
+										number4 = 43031001
+										callback5()
 										state = 85
 									elseif state == 58 then
 										state = 59
 									elseif state == 59 then
-										flag4 = arg22.Name
-										parent5 = arg22.Name
-										local kind3 = type(flag4)
-										fn7("string", kind3)
+										condition4 = argument5.Name
+										parent5 = argument5.Name
+										local valueType3 = type(condition4)
+										callback7("string", valueType3)
 
 										if nil then
 											state = 61
@@ -2584,12 +2571,12 @@ if nil then
 											state = 60
 										end
 									elseif state == 60 then
-										fn4(372868618, 4)
-										n4 = 43031001
-										fn5()
+										callback4(372868618, 4)
+										number4 = 43031001
+										callback5()
 										state = 61
 									elseif state == 61 then
-										fn7(flag4, parent5)
+										callback7(condition4, parent5)
 
 										if nil then
 											state = 63
@@ -2597,21 +2584,21 @@ if nil then
 											state = 62
 										end
 									elseif state == 62 then
-										fn4(372868618, 4)
-										n4 = 43031001
-										fn5()
+										callback4(372868618, 4)
+										number4 = 43031001
+										callback5()
 										state = 63
 									elseif state == 63 then
-										local n32 = #flag4
-										local n33 = #parent5
-										local fn72 = fn7
-										local n332 = bit32.band(n33, 4294967295)
-										local n3322 = bit32.band(n332, 65535)
-										local v60 = bit32.band(54259 * n3322 + bit32.lshift(bit32.band(54259 * bit32.rshift(n332, 16) + 37619 * n3322, 65535), 16), 4294967295)
-										local n333 = bit32.bnot(n33)
-										local n3332 = bit32.band(n333, 65535)
-										n30 = 2629977780 + n30 + v60 + bit32.band(54259 * n3332 + bit32.lshift(bit32.band(54259 * bit32.rshift(n333, 16) + 37619 * n3332, 65535), 16), 4294967295)
-										fn72(n32, n33)
+										local number35 = #condition4
+										local number36 = #parent5
+										local callback23 = callback7
+										local number37 = bit32.band(number36, 4294967295)
+										local number38 = bit32.band(number37, 65535)
+										local value59 = bit32.band(54259 * number38 + bit32.lshift(bit32.band(54259 * bit32.rshift(number37, 16) + 37619 * number38, 65535), 16), 4294967295)
+										local number39 = bit32.bnot(number36)
+										local number40 = bit32.band(number39, 65535)
+										argument4 = 2629977780 + argument4 + value59 + bit32.band(54259 * number40 + bit32.lshift(bit32.band(54259 * bit32.rshift(number39, 16) + 37619 * number40, 65535), 16), 4294967295)
+										callback23(number35, number36)
 
 										if nil then
 											state = 65
@@ -2619,12 +2606,12 @@ if nil then
 											state = 64
 										end
 									elseif state == 64 then
-										fn4(372868618, 4)
-										n4 = 43031001
-										fn5()
+										callback4(372868618, 4)
+										number4 = 43031001
+										callback5()
 										state = 65
 									elseif state == 65 then
-										fn7(tostring(arg22), flag4)
+										callback7(tostring(argument5), condition4)
 
 										if nil then
 											state = 66
@@ -2632,7 +2619,7 @@ if nil then
 											state = 84
 										end
 									elseif state == 66 then
-										fn7(arg32, arg22.ClassName)
+										callback7(argument6, argument5.ClassName)
 
 										if nil then
 											state = 68
@@ -2640,15 +2627,15 @@ if nil then
 											state = 67
 										end
 									elseif state == 67 then
-										fn4(372868618, 4)
-										n4 = 43031001
-										fn5()
+										callback4(372868618, 4)
+										number4 = 43031001
+										callback5()
 										state = 68
 									elseif state == 68 then
-										ancestryChanged = arg22.AncestryChanged
-										arg32 = arg22.AncestryChanged
-										n29 = bit32.band(n29, n30)
-										fn7(ancestryChanged, arg32)
+										ancestryChanged = argument5.AncestryChanged
+										argument6 = argument5.AncestryChanged
+										number33 = bit32.band(number33, argument4)
+										callback7(ancestryChanged, argument6)
 
 										if nil then
 											state = 220
@@ -2662,17 +2649,17 @@ if nil then
 											state = 70
 										end
 									elseif state == 70 then
-										fn4(372868618, 4)
-										n4 = 43031001
-										fn5()
+										callback4(372868618, 4)
+										number4 = 43031001
+										callback5()
 										state = 71
 									end
 								elseif state == 71 then
 									local connect = ancestryChanged.Connect
 									local connect2 = ancestryChanged.Connect
-									fn11(connect, "Connect")
-									fn11(connect2, "Connect")
-									fn7(connect, connect2)
+									callback13(connect, "Connect")
+									callback13(connect2, "Connect")
+									callback7(connect, connect2)
 
 									if nil then
 										state = 72
@@ -2680,26 +2667,26 @@ if nil then
 										state = 73
 									end
 								elseif state == 72 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 73
 								elseif state == 73 then
-									local flag10 = false
-									local destroying = arg22.Destroying
+									local condition11 = false
+									local destroying = argument5.Destroying
 									local connect = destroying.Connect
-									local n302 = bit32.bxor(n30, 280525953)
+									local argument7 = bit32.bxor(argument4, 280525953)
 
-									local function fn18()
-										flag10 = true
+									local function callback23()
+										condition11 = true
 
 										if nil then
-											n302 = bit32.bxor(n302, 3235034115)
+											argument7 = bit32.bxor(argument7, 3235034115)
 										end
 									end
 
-									n302 = bit32.bxor(n302, n28 - 787161745)
-									arg32 = connect(destroying, fn18)
+									argument7 = bit32.bxor(argument7, number32 - 787161745)
+									argument6 = connect(destroying, callback23)
 
 									if nil then
 										state = 75
@@ -2709,9 +2696,9 @@ if nil then
 								elseif state == 74 then
 									state = 76
 								elseif state == 75 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 76
 								elseif state == 76 then
 									if nil then
@@ -2720,13 +2707,13 @@ if nil then
 										state = 90
 									end
 								elseif state == 77 then
-									local disconnect = arg32.Disconnect
-									fn11(disconnect, "Disconnect")
-									fn16(disconnect, nil)
-									disconnect(arg32)
-									n29 = bit32.bxor(n29, n30)
+									local disconnect = argument6.Disconnect
+									callback13(disconnect, "Disconnect")
+									callback19(disconnect, nil)
+									disconnect(argument6)
+									number33 = bit32.bxor(number33, argument4)
 
-									if n30 + 1906447 == 365670673 then
+									if argument4 + 1906447 == 365670673 then
 										state = 79
 									else
 										state = 78
@@ -2762,20 +2749,20 @@ if nil then
 										state = 83
 									end
 								elseif state == 83 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 97
 								elseif state == 84 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 66
 								end
 							elseif state <= 98 then
 								if state == 85 then
-									local v60 = getmetatable(arg22)
-									fn7("The metatable is locked", v60)
+									local value59 = getmetatable(argument5)
+									callback7("The metatable is locked", value59)
 
 									if nil then
 										state = 87
@@ -2783,12 +2770,12 @@ if nil then
 										state = 86
 									end
 								elseif state == 86 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 87
 								elseif state == 87 then
-									if n30 + 501065228 ~= 361643982 then
+									if argument4 + 501065228 ~= 361643982 then
 										state = 221
 									else
 										state = 68
@@ -2806,9 +2793,9 @@ if nil then
 										state = 59
 									end
 								elseif state == 90 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 77
 								elseif state == 91 then
 									if nil <= 1 then
@@ -2829,31 +2816,31 @@ if nil then
 										state = 94
 									end
 								elseif state == 94 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 95
 								elseif state == 95 then
 									local wait2 = ancestryChanged.Wait
-									n30 += 76178503
-									fn11(wait2, "Wait")
-									n31 = bit32.bxor(n28, 922823287)
+									argument4 += 76178503
+									callback13(wait2, "Wait")
+									number34 = bit32.bxor(number32, 922823287)
 
-									local function fn18()
+									local function callback23()
 										local wait3 = wait2
 
 										if nil then
-											n31 = bit32.bxor(n31, 1430127237)
+											number34 = bit32.bxor(number34, 1430127237)
 										end
 
 										return (wait3(ancestryChanged))
 									end
 
-									n31 = bit32.bxor(n31, n29 - 4246385089)
-									arg32 = coroutine.create(fn18)
+									number34 = bit32.bxor(number34, number33 - 4246385089)
+									argument6 = coroutine.create(callback23)
 									resume2 = coroutine.resume
 
-									if n28 + 535532559 == 397500711 then
+									if number32 + 535532559 == 397500711 then
 										state = 96
 									else
 										state = 195
@@ -2861,8 +2848,8 @@ if nil then
 								elseif state == 96 then
 									state = 195
 								elseif state == 97 then
-									local kind3 = typeof(arg22)
-									fn7("Instance", kind3)
+									local valueType3 = typeof(argument5)
+									callback7("Instance", valueType3)
 
 									if nil then
 										state = 99
@@ -2870,15 +2857,15 @@ if nil then
 										state = 98
 									end
 								elseif state == 98 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 99
 								end
 							elseif state == 99 then
-								parent3 = arg22.Parent
-								parent4 = arg22.Parent
-								v55 = tbl4[not parent3]
+								parent3 = argument5.Parent
+								parent4 = argument5.Parent
+								value54 = data4[not parent3]
 								state = 51
 							elseif state == 100 then
 								if nil <= 0 then
@@ -2893,45 +2880,45 @@ if nil then
 									state = 102
 								end
 							elseif state == 102 then
-								flag5 = tbl4[not name]
+								condition5 = data4[not name]
 								state = 103
 							elseif state == 103 then
-								if flag5 then
+								if condition5 then
 									state = 105
 								else
 									state = 104
 								end
 							elseif state == 104 then
-								local thread3 = coroutine.status(arg32)
-								flag5 = not fn7("suspended", thread3)
+								local thread3 = coroutine.status(argument6)
+								condition5 = not callback7("suspended", thread3)
 								state = 105
 							elseif state == 105 then
-								if flag5 then
+								if condition5 then
 									state = 106
 								else
 									state = 107
 								end
 							elseif state == 106 then
-								fn4(372868618, 4)
-								n4 = 43031001
-								fn5()
+								callback4(372868618, 4)
+								number4 = 43031001
+								callback5()
 								state = 107
 							elseif state == 107 then
-								local ok2, result2 = pcall(coroutine.close, arg32)
-								v56 = result2
-								local v60 = tbl4[not ok2]
-								flag6 = not v60
+								local ok2, response3 = pcall(coroutine.close, argument6)
+								value55 = response3
+								local value59 = data4[not ok2]
+								condition6 = not value59
 
-								if v60 then
+								if value59 then
 									state = 109
 								else
 									state = 108
 								end
 							elseif state == 108 then
-								name = flag6
+								name = condition6
 								state = 110
 							elseif state == 109 then
-								name = not tbl4[not v56]
+								name = not data4[not value55]
 								state = 110
 							elseif state == 110 then
 								if name then
@@ -2940,10 +2927,10 @@ if nil then
 									state = 111
 								end
 							elseif state == 111 then
-								local n292 = bit32.band(n29, 3464781827)
-								local thread3 = coroutine.status(arg32)
-								name = not fn7("dead", thread3)
-								n29 = n292 - 4294960640
+								local number35 = bit32.band(number33, 3464781827)
+								local thread3 = coroutine.status(argument6)
+								name = not callback7("dead", thread3)
+								number33 = number35 - 4294960640
 								state = 112
 							elseif state == 112 then
 								if name then
@@ -2956,13 +2943,13 @@ if nil then
 							if state <= 140 then
 								if state <= 126 then
 									if state == 113 then
-										fn4(372868618, 4)
-										n4 = 43031001
-										fn5()
+										callback4(372868618, 4)
+										number4 = 43031001
+										callback5()
 										state = 114
 									elseif state == 114 then
-										local v60 = getmetatable(arg22)
-										fn7("The metatable is locked", v60)
+										local value59 = getmetatable(argument5)
+										callback7("The metatable is locked", value59)
 
 										if nil then
 											state = 116
@@ -2970,21 +2957,21 @@ if nil then
 											state = 115
 										end
 									elseif state == 115 then
-										fn4(372868618, 4)
-										n4 = 43031001
-										fn5()
+										callback4(372868618, 4)
+										number4 = 43031001
+										callback5()
 										state = 116
 									elseif state == 116 then
-										if n30 + 501065228 ~= 361643982 then
+										if argument4 + 501065228 ~= 361643982 then
 											state = 221
 										else
 											state = 117
 										end
 									elseif state == 117 then
-										ancestryChanged = arg22.AncestryChanged
-										arg32 = arg22.AncestryChanged
-										n29 = bit32.band(n29, n30)
-										fn7(ancestryChanged, arg32)
+										ancestryChanged = argument5.AncestryChanged
+										argument6 = argument5.AncestryChanged
+										number33 = bit32.band(number33, argument4)
+										callback7(ancestryChanged, argument6)
 
 										if nil then
 											state = 220
@@ -2998,16 +2985,16 @@ if nil then
 											state = 119
 										end
 									elseif state == 119 then
-										fn4(372868618, 4)
-										n4 = 43031001
-										fn5()
+										callback4(372868618, 4)
+										number4 = 43031001
+										callback5()
 										state = 120
 									elseif state == 120 then
 										local connect = ancestryChanged.Connect
 										local connect2 = ancestryChanged.Connect
-										fn11(connect, "Connect")
-										fn11(connect2, "Connect")
-										fn7(connect, connect2)
+										callback13(connect, "Connect")
+										callback13(connect2, "Connect")
+										callback7(connect, connect2)
 
 										if nil then
 											state = 121
@@ -3015,27 +3002,27 @@ if nil then
 											state = 122
 										end
 									elseif state == 121 then
-										fn4(372868618, 4)
-										n4 = 43031001
-										fn5()
+										callback4(372868618, 4)
+										number4 = 43031001
+										callback5()
 										state = 122
 									elseif state == 122 then
-										local flag10 = false
-										local destroying = arg22.Destroying
+										local condition11 = false
+										local destroying = argument5.Destroying
 										local destroying2 = destroying
 										local connect = destroying.Connect
-										local n302 = bit32.bxor(n30, 280525953)
+										local argument7 = bit32.bxor(argument4, 280525953)
 
-										local function fn18()
-											flag10 = true
+										local function callback23()
+											condition11 = true
 
 											if nil then
-												n302 = bit32.bxor(n302, 3235034115)
+												argument7 = bit32.bxor(argument7, 3235034115)
 											end
 										end
 
-										n302 = bit32.bxor(n302, 148119644)
-										arg32 = connect(destroying2, fn18)
+										argument7 = bit32.bxor(argument7, 148119644)
+										argument6 = connect(destroying2, callback23)
 
 										if nil then
 											state = 124
@@ -3045,9 +3032,9 @@ if nil then
 									elseif state == 123 then
 										state = 125
 									elseif state == 124 then
-										fn4(372868618, 4)
-										n4 = 43031001
-										fn5()
+										callback4(372868618, 4)
+										number4 = 43031001
+										callback5()
 										state = 125
 									elseif state == 125 then
 										if nil then
@@ -3056,13 +3043,13 @@ if nil then
 											state = 139
 										end
 									elseif state == 126 then
-										local disconnect = arg32.Disconnect
-										fn11(disconnect, "Disconnect")
-										fn16(disconnect, nil)
-										disconnect(arg32)
-										n29 = bit32.bxor(n29, n30)
+										local disconnect = argument6.Disconnect
+										callback13(disconnect, "Disconnect")
+										callback19(disconnect, nil)
+										disconnect(argument6)
+										number33 = bit32.bxor(number33, argument4)
 
-										if n30 + 1906447 == 365670673 then
+										if argument4 + 1906447 == 365670673 then
 											state = 128
 										else
 											state = 127
@@ -3099,9 +3086,9 @@ if nil then
 										state = 132
 									end
 								elseif state == 132 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 153
 								elseif state == 133 then
 									if nil <= 5 then
@@ -3116,10 +3103,10 @@ if nil then
 										state = 135
 									end
 								elseif state == 135 then
-									name = arg22.Name
-									name2 = arg22.Name
-									local kind3 = type(name)
-									fn7("string", kind3)
+									name = argument5.Name
+									name2 = argument5.Name
+									local valueType3 = type(name)
+									callback7("string", valueType3)
 
 									if nil then
 										state = 137
@@ -3127,12 +3114,12 @@ if nil then
 										state = 136
 									end
 								elseif state == 136 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 137
 								elseif state == 137 then
-									fn7(name, name2)
+									callback7(name, name2)
 
 									if nil then
 										state = 147
@@ -3140,14 +3127,14 @@ if nil then
 										state = 138
 									end
 								elseif state == 138 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 147
 								elseif state == 139 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 126
 								elseif state == 140 then
 									if nil <= 1 then
@@ -3170,55 +3157,55 @@ if nil then
 										state = 143
 									end
 								elseif state == 143 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 144
 								elseif state == 144 then
 									local wait2 = ancestryChanged.Wait
-									n30 += 76178503
-									fn11(wait2, "Wait")
-									n31 = 12478618
+									argument4 += 76178503
+									callback13(wait2, "Wait")
+									number34 = 12478618
 
-									local function fn18()
+									local function callback23()
 										local wait3 = wait2
 
 										if nil then
-											n31 = bit32.bxor(n31, 1430127237)
+											number34 = bit32.bxor(number34, 1430127237)
 										end
 
 										return (wait3(ancestryChanged))
 									end
 
-									n31 = bit32.bxor(12478618, n29 - 4246385089)
-									arg32 = coroutine.create(fn18)
+									number34 = bit32.bxor(12478618, number33 - 4246385089)
+									argument6 = coroutine.create(callback23)
 									resume = coroutine.resume
 									state = 145
 								elseif state == 145 then
-									local v60, v61 = resume(arg32)
-									name = v61
-									local v62 = tbl4[not v60]
-									flag7 = not v62
+									local value59, value60 = resume(argument6)
+									name = value60
+									local value61 = data4[not value59]
+									condition7 = not value61
 
-									if v62 then
+									if value61 then
 										state = 102
 									else
 										state = 146
 									end
 								elseif state == 146 then
-									flag5 = flag7
+									condition5 = condition7
 									state = 103
 								elseif state == 147 then
-									local n32 = #name
-									local n33 = #name2
-									local fn72 = fn7
-									local n332 = bit32.band(n33, 4294967295)
-									local n3322 = bit32.band(n332, 65535)
-									local v60 = bit32.band(54259 * n3322 + bit32.lshift(bit32.band(54259 * bit32.rshift(n332, 16) + 37619 * n3322, 65535), 16), 4294967295)
-									local n333 = bit32.bnot(n33)
-									local n3332 = bit32.band(n333, 65535)
-									n30 = 2629977780 + n30 + v60 + bit32.band(54259 * n3332 + bit32.lshift(bit32.band(54259 * bit32.rshift(n333, 16) + 37619 * n3332, 65535), 16), 4294967295)
-									fn72(n32, n33)
+									local number35 = #name
+									local number36 = #name2
+									local callback23 = callback7
+									local number37 = bit32.band(number36, 4294967295)
+									local number38 = bit32.band(number37, 65535)
+									local value59 = bit32.band(54259 * number38 + bit32.lshift(bit32.band(54259 * bit32.rshift(number37, 16) + 37619 * number38, 65535), 16), 4294967295)
+									local number39 = bit32.bnot(number36)
+									local number40 = bit32.band(number39, 65535)
+									argument4 = 2629977780 + argument4 + value59 + bit32.band(54259 * number40 + bit32.lshift(bit32.band(54259 * bit32.rshift(number39, 16) + 37619 * number40, 65535), 16), 4294967295)
+									callback23(number35, number36)
 
 									if nil then
 										state = 149
@@ -3226,12 +3213,12 @@ if nil then
 										state = 148
 									end
 								elseif state == 148 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 149
 								elseif state == 149 then
-									fn7(tostring(arg22), name)
+									callback7(tostring(argument5), name)
 
 									if nil then
 										state = 151
@@ -3239,12 +3226,12 @@ if nil then
 										state = 150
 									end
 								elseif state == 150 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 151
 								elseif state == 151 then
-									fn7(arg32, arg22.ClassName)
+									callback7(argument6, argument5.ClassName)
 
 									if nil then
 										state = 117
@@ -3252,13 +3239,13 @@ if nil then
 										state = 152
 									end
 								elseif state == 152 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 117
 								elseif state == 153 then
-									local kind3 = typeof(arg22)
-									fn7("Instance", kind3)
+									local valueType3 = typeof(argument5)
+									callback7("Instance", valueType3)
 
 									if nil then
 										state = 155
@@ -3266,25 +3253,25 @@ if nil then
 										state = 154
 									end
 								elseif state == 154 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 155
 								end
 							elseif state == 155 then
-								parent6 = arg22.Parent
-								parent7 = arg22.Parent
-								v57 = tbl4[not parent6]
+								parent6 = argument5.Parent
+								parent7 = argument5.Parent
+								value56 = data4[not parent6]
 								state = 156
 							elseif state == 156 then
-								if v57 then
+								if value56 then
 									state = 157
 								else
 									state = 161
 								end
 							elseif state == 157 then
 								parent5 = parent6
-								fn7(parent5, parent7)
+								callback7(parent5, parent7)
 
 								if nil then
 									state = 160
@@ -3292,25 +3279,25 @@ if nil then
 									state = 158
 								end
 							elseif state == 158 then
-								fn43 = fn4
+								callback22 = callback4
 
-								if n28 == 369465669 then
+								if number32 == 369465669 then
 									state = 212
 								else
 									state = 159
 								end
 							elseif state == 159 then
-								fn43(372868618, 4)
-								n4 = 43031001
-								fn5()
+								callback22(372868618, 4)
+								number4 = 43031001
+								callback5()
 								state = 160
 							elseif state == 160 then
 								state = 161
 							elseif state == 161 then
-								flag4 = arg22.Name
-								parent5 = arg22.Name
-								local kind3 = type(flag4)
-								fn7("string", kind3)
+								condition4 = argument5.Name
+								parent5 = argument5.Name
+								local valueType3 = type(condition4)
+								callback7("string", valueType3)
 
 								if nil then
 									state = 163
@@ -3318,12 +3305,12 @@ if nil then
 									state = 162
 								end
 							elseif state == 162 then
-								fn4(372868618, 4)
-								n4 = 43031001
-								fn5()
+								callback4(372868618, 4)
+								number4 = 43031001
+								callback5()
 								state = 163
 							elseif state == 163 then
-								fn7(flag4, parent5)
+								callback7(condition4, parent5)
 
 								if nil then
 									state = 165
@@ -3331,21 +3318,21 @@ if nil then
 									state = 164
 								end
 							elseif state == 164 then
-								fn4(372868618, 4)
-								n4 = 43031001
-								fn5()
+								callback4(372868618, 4)
+								number4 = 43031001
+								callback5()
 								state = 165
 							elseif state == 165 then
-								local n32 = #flag4
-								local n33 = #parent5
-								local fn72 = fn7
-								local n332 = bit32.band(n33, 4294967295)
-								local n3322 = bit32.band(n332, 65535)
-								local v60 = bit32.band(54259 * n3322 + bit32.lshift(bit32.band(54259 * bit32.rshift(n332, 16) + 37619 * n3322, 65535), 16), 4294967295)
-								local n333 = bit32.bnot(n33)
-								local n3332 = bit32.band(n333, 65535)
-								n30 = 2629977780 + n30 + v60 + bit32.band(54259 * n3332 + bit32.lshift(bit32.band(54259 * bit32.rshift(n333, 16) + 37619 * n3332, 65535), 16), 4294967295)
-								fn72(n32, n33)
+								local number35 = #condition4
+								local number36 = #parent5
+								local callback23 = callback7
+								local number37 = bit32.band(number36, 4294967295)
+								local number38 = bit32.band(number37, 65535)
+								local value59 = bit32.band(54259 * number38 + bit32.lshift(bit32.band(54259 * bit32.rshift(number37, 16) + 37619 * number38, 65535), 16), 4294967295)
+								local number39 = bit32.bnot(number36)
+								local number40 = bit32.band(number39, 65535)
+								argument4 = 2629977780 + argument4 + value59 + bit32.band(54259 * number40 + bit32.lshift(bit32.band(54259 * bit32.rshift(number39, 16) + 37619 * number40, 65535), 16), 4294967295)
+								callback23(number35, number36)
 
 								if nil then
 									state = 167
@@ -3353,12 +3340,12 @@ if nil then
 									state = 166
 								end
 							elseif state == 166 then
-								fn4(372868618, 4)
-								n4 = 43031001
-								fn5()
+								callback4(372868618, 4)
+								number4 = 43031001
+								callback5()
 								state = 167
 							elseif state == 167 then
-								fn7(tostring(arg22), flag4)
+								callback7(tostring(argument5), condition4)
 
 								if nil then
 									state = 168
@@ -3366,7 +3353,7 @@ if nil then
 									state = 186
 								end
 							elseif state == 168 then
-								fn7(arg32, arg22.ClassName)
+								callback7(argument6, argument5.ClassName)
 
 								if nil then
 									state = 170
@@ -3377,15 +3364,15 @@ if nil then
 						elseif state <= 196 then
 							if state <= 182 then
 								if state == 169 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 170
 								elseif state == 170 then
-									ancestryChanged = arg22.AncestryChanged
-									arg32 = arg22.AncestryChanged
-									n29 = bit32.band(n29, n30)
-									fn7(ancestryChanged, arg32)
+									ancestryChanged = argument5.AncestryChanged
+									argument6 = argument5.AncestryChanged
+									number33 = bit32.band(number33, argument4)
+									callback7(ancestryChanged, argument6)
 
 									if nil then
 										state = 220
@@ -3399,16 +3386,16 @@ if nil then
 										state = 172
 									end
 								elseif state == 172 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 173
 								elseif state == 173 then
 									local connect = ancestryChanged.Connect
 									local connect2 = ancestryChanged.Connect
-									fn11(connect, "Connect")
-									fn11(connect2, "Connect")
-									fn7(connect, connect2)
+									callback13(connect, "Connect")
+									callback13(connect2, "Connect")
+									callback7(connect, connect2)
 
 									if nil then
 										state = 174
@@ -3416,26 +3403,26 @@ if nil then
 										state = 175
 									end
 								elseif state == 174 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 175
 								elseif state == 175 then
-									local flag10 = false
-									local destroying = arg22.Destroying
+									local condition11 = false
+									local destroying = argument5.Destroying
 									local connect = destroying.Connect
-									local n302 = bit32.bxor(n30, 280525953)
+									local argument7 = bit32.bxor(argument4, 280525953)
 
-									local function fn18()
-										flag10 = true
+									local function callback23()
+										condition11 = true
 
 										if nil then
-											n302 = bit32.bxor(n302, 3235034115)
+											argument7 = bit32.bxor(argument7, 3235034115)
 										end
 									end
 
-									n302 = bit32.bxor(n302, n28 - 787161745)
-									arg32 = connect(destroying, fn18)
+									argument7 = bit32.bxor(argument7, number32 - 787161745)
+									argument6 = connect(destroying, callback23)
 
 									if nil then
 										state = 177
@@ -3445,9 +3432,9 @@ if nil then
 								elseif state == 176 then
 									state = 178
 								elseif state == 177 then
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 									state = 178
 								elseif state == 178 then
 									if nil then
@@ -3456,13 +3443,13 @@ if nil then
 										state = 189
 									end
 								elseif state == 179 then
-									local disconnect = arg32.Disconnect
-									fn11(disconnect, "Disconnect")
-									fn16(disconnect, nil)
-									disconnect(arg32)
-									n29 = bit32.bxor(n29, n30)
+									local disconnect = argument6.Disconnect
+									callback13(disconnect, "Disconnect")
+									callback19(disconnect, nil)
+									disconnect(argument6)
+									number33 = bit32.bxor(number33, argument4)
 
-									if n30 + 1906447 == 365670673 then
+									if argument4 + 1906447 == 365670673 then
 										state = 181
 									else
 										state = 180
@@ -3499,14 +3486,14 @@ if nil then
 									state = 185
 								end
 							elseif state == 185 then
-								fn4(372868618, 4)
-								n4 = 43031001
-								fn5()
+								callback4(372868618, 4)
+								number4 = 43031001
+								callback5()
 								state = 197
 							elseif state == 186 then
-								fn4(372868618, 4)
-								n4 = 43031001
-								fn5()
+								callback4(372868618, 4)
+								number4 = 43031001
+								callback5()
 								state = 168
 							elseif state == 187 then
 								if nil <= 5 then
@@ -3521,9 +3508,9 @@ if nil then
 									state = 161
 								end
 							elseif state == 189 then
-								fn4(372868618, 4)
-								n4 = 43031001
-								fn5()
+								callback4(372868618, 4)
+								number4 = 43031001
+								callback5()
 								state = 179
 							elseif state == 190 then
 								if nil <= 1 then
@@ -3544,49 +3531,49 @@ if nil then
 									state = 193
 								end
 							elseif state == 193 then
-								fn4(372868618, 4)
-								n4 = 43031001
-								fn5()
+								callback4(372868618, 4)
+								number4 = 43031001
+								callback5()
 								state = 194
 							elseif state == 194 then
 								local wait2 = ancestryChanged.Wait
-								n30 += 76178503
-								fn11(wait2, "Wait")
-								n31 = bit32.bxor(n28, 922823287)
+								argument4 += 76178503
+								callback13(wait2, "Wait")
+								number34 = bit32.bxor(number32, 922823287)
 
-								local function fn18()
+								local function callback23()
 									local wait3 = wait2
 
 									if nil then
-										n31 = bit32.bxor(n31, 1430127237)
+										number34 = bit32.bxor(number34, 1430127237)
 									end
 
 									return (wait3(ancestryChanged))
 								end
 
-								n31 = bit32.bxor(n31, n29 - 4246385089)
-								arg32 = coroutine.create(fn18)
+								number34 = bit32.bxor(number34, number33 - 4246385089)
+								argument6 = coroutine.create(callback23)
 								resume2 = coroutine.resume
 								state = 195
 							elseif state == 195 then
-								local v60, v61 = resume2(arg32)
-								flag4 = v61
-								local v62 = tbl4[not v60]
-								flag8 = not v62
+								local value59, value60 = resume2(argument6)
+								condition4 = value60
+								local value61 = data4[not value59]
+								condition8 = not value61
 
-								if v62 then
+								if value61 then
 									state = 201
 								else
 									state = 196
 								end
 							elseif state == 196 then
-								flag82 = flag8
+								condition9 = condition8
 								state = 202
 							end
 						elseif state <= 210 then
 							if state == 197 then
-								local kind3 = typeof(arg22)
-								fn7("Instance", kind3)
+								local valueType3 = typeof(argument5)
+								callback7("Instance", valueType3)
 
 								if nil then
 									state = 199
@@ -3594,14 +3581,14 @@ if nil then
 									state = 198
 								end
 							elseif state == 198 then
-								fn4(372868618, 4)
-								n4 = 43031001
-								fn5()
+								callback4(372868618, 4)
+								number4 = 43031001
+								callback5()
 								state = 199
 							elseif state == 199 then
-								parent6 = arg22.Parent
-								parent7 = arg22.Parent
-								v57 = tbl4[not parent6]
+								parent6 = argument5.Parent
+								parent7 = argument5.Parent
+								value56 = data4[not parent6]
 								state = 156
 							elseif state == 200 then
 								if nil <= 0 then
@@ -3610,36 +3597,36 @@ if nil then
 									state = 201
 								end
 							elseif state == 201 then
-								flag82 = tbl4[not flag4]
+								condition9 = data4[not condition4]
 								state = 202
 							elseif state == 202 then
-								if flag82 then
+								if condition9 then
 									state = 204
 								else
 									state = 203
 								end
 							elseif state == 203 then
-								local thread3 = coroutine.status(arg32)
-								flag82 = not fn7("suspended", thread3)
+								local thread3 = coroutine.status(argument6)
+								condition9 = not callback7("suspended", thread3)
 								state = 204
 							elseif state == 204 then
-								if flag82 then
+								if condition9 then
 									state = 205
 								else
 									state = 206
 								end
 							elseif state == 205 then
-								fn4(372868618, 4)
-								n4 = 43031001
-								fn5()
+								callback4(372868618, 4)
+								number4 = 43031001
+								callback5()
 								state = 206
 							elseif state == 206 then
-								local ok2, result2 = pcall(coroutine.close, arg32)
-								v58 = result2
-								v59 = tbl4[not ok2]
-								flag9 = n28 ~= 195444195
+								local ok2, response3 = pcall(coroutine.close, argument6)
+								value57 = response3
+								value58 = data4[not ok2]
+								condition10 = number32 ~= 195444195
 
-								if flag9 then
+								if condition10 then
 									state = 208
 								else
 									state = 207
@@ -3647,51 +3634,51 @@ if nil then
 							elseif state == 207 then
 								state = 208
 							elseif state == 208 then
-								if v59 then
+								if value58 then
 									state = 210
 								else
 									state = 209
 								end
 							elseif state == 209 then
-								flag4 = flag9
+								condition4 = condition10
 								state = 211
 							elseif state == 210 then
-								flag4 = not tbl4[not v58]
+								condition4 = not data4[not value57]
 								state = 211
 							end
 						elseif state == 211 then
-							if flag4 then
+							if condition4 then
 								state = 213
 							else
 								state = 212
 							end
 						elseif state == 212 then
-							local n292 = bit32.band(n29, 3464781827)
-							local thread3 = coroutine.status(arg32)
-							flag4 = not fn7("dead", thread3)
-							n29 = n292 - 4294960640
+							local number35 = bit32.band(number33, 3464781827)
+							local thread3 = coroutine.status(argument6)
+							condition4 = not callback7("dead", thread3)
+							number33 = number35 - 4294960640
 							state = 213
 						elseif state == 213 then
-							if flag4 then
+							if condition4 then
 								state = 214
 							else
 								state = 216
 							end
 						elseif state == 214 then
-							fn4(372868618, 4)
+							callback4(372868618, 4)
 
-							if n28 == 282554691 then
+							if number32 == 282554691 then
 								state = 178
 							else
 								state = 215
 							end
 						elseif state == 215 then
-							n4 = 43031001
-							fn5()
+							number4 = 43031001
+							callback5()
 							state = 216
 						elseif state == 216 then
-							local v60 = getmetatable(arg22)
-							fn7("The metatable is locked", v60)
+							local value59 = getmetatable(argument5)
+							callback7("The metatable is locked", value59)
 
 							if nil then
 								state = 218
@@ -3699,32 +3686,31 @@ if nil then
 								state = 217
 							end
 						elseif state == 217 then
-							fn4(372868618, 4)
-							n4 = 43031001
-							fn5()
+							callback4(372868618, 4)
+							number4 = 43031001
+							callback5()
 							state = 218
 						elseif state == 218 then
-							if n30 + 501065228 ~= 361643982 then
+							if argument4 + 501065228 ~= 361643982 then
 								state = 221
 							else
 								state = 170
 							end
 						elseif state == 219 then
 							if nil <= 0 then
-								-- This Source Was Generated by discord.gg/c3xVMnUUBv
 								state = 118
 							else
 								state = 102
 							end
 						elseif state == 220 then
-							fn4(372868618, 4)
+							callback4(372868618, 4)
 							state = 225
 						elseif state == 221 then
 							return
 						elseif state == 222 then
-							fn4(372868618, 4)
+							callback4(372868618, 4)
 
-							if n29 + 37915839 == 12018273 then
+							if number33 + 37915839 == 12018273 then
 								state = 224
 							else
 								state = 223
@@ -3740,110 +3726,110 @@ if nil then
 					end
 				end
 
-				fn17(12486496, gameRef, "DataModel")
-				fn17(12486496, workspaceRef, "Workspace")
+				callback20(12486496, gameRef, "DataModel")
+				callback20(12486496, workspaceRef, "Workspace")
 
-				if fn7(gameRef, workspaceRef.Parent) then
-					fn3(150, 148593451)
-					n4 = n42
+				if callback7(gameRef, workspaceRef.Parent) then
+					callback3(150, 148593451)
+					number4 = number13
 				else
-					fn4(372868618, 4)
-					n4 = 43031001
-					fn5()
+					callback4(372868618, 4)
+					number4 = 43031001
+					callback5()
 				end
 
 				local Folder = new("Folder")
-				fn17(12486496, Folder, "Folder")
-				local n28 = n27 + v34
-				local ok2, result2 = pcall(Folder.GetChildren, Vector3.new(-66.08093, -84.9317, 763.03735), 1824775727)
-				local flag4 = not ok2
+				callback20(12486496, Folder, "Folder")
+				local number32 = number31 + value33
+				local ok2, response3 = pcall(Folder.GetChildren, Vector3.new(-66.08093, -84.9317, 763.03735), 1824775727)
+				local condition4 = not ok2
 
-				if tbl4[flag4] then
+				if data4[condition4] then
 					while true do
 					end
 				else
-					local iter_f_1, Folder2, Folder3, n43
+					local iter_f_1, Folder2, Folder3, number33
 
 					do
 						do
 							do
-								fn4(fn9(result2, 51052561), 4)
+								callback4(callback9(response3, 51052561), 4)
 
 								do
-									local n44 = n4
+									local number34 = number4
 
-									if tbl4[flag4] then
-										fn4(372868618, 4)
-										n4 = 43031001
-										fn5()
+									if data4[condition4] then
+										callback4(372868618, 4)
+										number4 = 43031001
+										callback5()
 									else
-										fn3(126, 148593451)
-										n4 = n44
+										callback3(126, 148593451)
+										number4 = number34
 									end
 								end
 							end
 
 							do
-								local children, v55, v56 = Folder:GetChildren()
-								iter_f_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v57, v310, v410, v58, v62, v72, v82, v92, v102 in f, s, var do coroutine.yield(true, k, v57, v310, v410, v58, v62, v72, v82, v92, v102) end end); co(); return co end)(children, v55, v56)
+								local children, value54, value55 = Folder:GetChildren()
+								iter_f_1 = (function(iteratorFn, state, control) local co = coroutine.wrap(function() coroutine.yield(); for key, item, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth in iteratorFn, state, control do coroutine.yield(true, key, item, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth) end end); co(); return co end)(children, value54, value55)
 							end
 						end
 
 						do
-							local v55 = table.pack(iter_f_1())
+							local value54 = table.pack(iter_f_1())
 
-							if v55[1] then
+							if value54[1] then
 								repeat
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
-									local v56 = table.pack(iter_f_1())
-								until not v56[1]
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
+									local value55 = table.pack(iter_f_1())
+								until not value55[1]
 							end
 
 							Folder:Destroy()
 
 							do
-								local n44 = n4
+								local number34 = number4
 								Folder2 = Folder
 								Folder3 = new("Folder", Folder2)
-								fn17(12486496, Folder3, "Folder")
+								callback20(12486496, Folder3, "Folder")
 
-								if fn7(Folder2, Folder3.Parent) then
-									n43 = n44
-									fn3(77, 148593451)
-									n4 = n43
+								if callback7(Folder2, Folder3.Parent) then
+									number33 = number34
+									callback3(77, 148593451)
+									number4 = number33
 								else
-									n43 = n44
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									number33 = number34
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 								end
 							end
 						end
 
-						if fn7(Folder3.Parent, Folder3.Parent) then
-							fn3(194, 148593451)
+						if callback7(Folder3.Parent, Folder3.Parent) then
+							callback3(194, 148593451)
 						else
-							fn4(372868618, 4)
-							n4 = 43031001
-							fn5()
+							callback4(372868618, 4)
+							number4 = 43031001
+							callback5()
 						end
 
 						do
 							local waitForChild = Folder2.WaitForChild
-							fn11(waitForChild, "WaitForChild")
-							fn16(waitForChild, nil)
+							callback13(waitForChild, "WaitForChild")
+							callback19(waitForChild, nil)
 							local name = tostring(1264550249)
 							Folder3.Name = name
-							local v55 = waitForChild(Folder2, name)
+							local value54 = waitForChild(Folder2, name)
 
-							if fn7(Folder3, v55) then
-								fn3(121, 148593451)
+							if callback7(Folder3, value54) then
+								callback3(121, 148593451)
 							else
-								fn4(372868618, 4)
-								n4 = 43031001
-								fn5()
+								callback4(372868618, 4)
+								number4 = 43031001
+								callback5()
 							end
 						end
 					end
@@ -3852,493 +3838,493 @@ if nil then
 					Folder3:Destroy()
 
 					do
-						local n29 = n28 + v35
-						local n30 = 4062162997
-						local n212 = n21
-						local str2 = "Parent"
-						local n31 = 4062162997
-						local flag5
+						local number34 = number32 + value34
+						local number35 = 4062162997
+						local number36 = number23
+						local text2 = "Parent"
+						local number37 = 4062162997
+						local condition5
 
 						while true do
-							local n32
+							local number38
 
 							do
 								do
-									local n312 = bit32.band(n31, 4294967295)
-									local n213 = bit32.band(n212, 4294967295)
-									local n3122 = bit32.band(n312, 65535)
-									local n3123 = bit32.rshift(n312, 16)
-									local n2132 = bit32.band(n213, 65535)
+									local number39 = bit32.band(number37, 4294967295)
+									local number40 = bit32.band(number36, 4294967295)
+									local number41 = bit32.band(number39, 65535)
+									local number42 = bit32.rshift(number39, 16)
+									local number43 = bit32.band(number40, 65535)
 
 									do
-										local v55 = bit32.band(n3122 * n2132 + bit32.lshift(bit32.band(n3122 * bit32.rshift(n213, 16) + n3123 * n2132, 65535), 16), 4294967295)
-										local n214 = bit32.bnot(n212)
-										local n2142 = bit32.band(n214, 65535)
-										n32 = n29 + n30 + v55 + bit32.band(45109 * n2142 + bit32.lshift(bit32.band(45109 * bit32.rshift(n214, 16) + 61983 * n2142, 65535), 16), 4294967295)
+										local value54 = bit32.band(number41 * number43 + bit32.lshift(bit32.band(number41 * bit32.rshift(number40, 16) + number42 * number43, 65535), 16), 4294967295)
+										local number44 = bit32.bnot(number36)
+										local number45 = bit32.band(number44, 65535)
+										number38 = number34 + number35 + value54 + bit32.band(45109 * number45 + bit32.lshift(bit32.band(45109 * bit32.rshift(number44, 16) + 61983 * number45, 65535), 16), 4294967295)
 									end
 								end
 
 								do
-									local n44
+									local number39
 
 									do
-										if tbl4[not Folder3[str2]] then
-											fn4(372868618, 4)
-											n4 = 43031001
-											fn5()
+										if data4[not Folder3[text2]] then
+											callback4(372868618, 4)
+											number4 = 43031001
+											callback5()
 										else
-											fn3(32, 148593451)
+											callback3(32, 148593451)
 										end
 
-										if tbl4[not pcall(function()
+										if data4[not pcall(function()
 											Folder3.Parent = Folder2
 										end)] then
-											fn4(372868618, 4)
-											n4 = 43031001
-											fn5()
+											callback4(372868618, 4)
+											number4 = 43031001
+											callback5()
 										else
-											fn3(141, 148593451)
+											callback3(141, 148593451)
 										end
 
-										n4 = n43
+										number4 = number33
 
 										do
 											local HttpService = gameRef:GetService("HttpService")
-											fn17(12486496, HttpService, "HttpService")
-											local fn72 = fn7
-											local n442 = n4
+											callback20(12486496, HttpService, "HttpService")
+											local callback21 = callback7
+											local number40 = number4
 
-											if fn72(gameRef, HttpService.Parent) then
-												n43 = n442
-												fn3(66, 148593451)
-												n4 = n43
-												n44 = n43
+											if callback21(gameRef, HttpService.Parent) then
+												number33 = number40
+												callback3(66, 148593451)
+												number4 = number33
+												number39 = number33
 											else
-												n44 = n442
-												fn4(372868618, 4)
-												n4 = 43031001
-												fn5()
+												number39 = number40
+												callback4(372868618, 4)
+												number4 = 43031001
+												callback5()
 											end
 
-											if not n then
-												fn11(HttpService.GetAsync, "GetAsync")
-												fn11(HttpService.PostAsync, "PostAsync")
-												fn11(HttpService.RequestAsync, "RequestAsync")
+											if not number then
+												callback13(HttpService.GetAsync, "GetAsync")
+												callback13(HttpService.PostAsync, "PostAsync")
+												callback13(HttpService.RequestAsync, "RequestAsync")
 											end
 										end
 									end
 
 									do
 										local RunService = gameRef:GetService("RunService")
-										fn17(12486496, RunService, "RunService")
+										callback20(12486496, RunService, "RunService")
 
-										if fn7(gameRef, RunService.Parent) then
-											n = 161
-											fn3(n, 148593451)
-											n4 = n44
+										if callback7(gameRef, RunService.Parent) then
+											number = 161
+											callback3(number, 148593451)
+											number4 = number39
 										else
-											fn4(372868618, 4)
-											n4 = 43031001
-											fn5()
+											callback4(372868618, 4)
+											number4 = 43031001
+											callback5()
 										end
 
-										fn11(RunService.IsStudio, "IsStudio")
-										fn11(RunService.IsClient, "IsClient")
-										fn11(RunService.IsServer, "IsServer")
-										fn16(RunService.IsStudio)
-										fn16(RunService.IsClient)
-										fn16(RunService.IsServer)
+										callback13(RunService.IsStudio, "IsStudio")
+										callback13(RunService.IsClient, "IsClient")
+										callback13(RunService.IsServer, "IsServer")
+										callback19(RunService.IsStudio)
+										callback19(RunService.IsClient)
+										callback19(RunService.IsServer)
 										RunService:IsServer()
 									end
 
 									if nil then
 										do
 											local StarterPlayer = gameRef:GetService("StarterPlayer")
-											fn17(12486496, StarterPlayer, "StarterPlayer")
-											fn7(gameRef, StarterPlayer.Parent)
+											callback20(12486496, StarterPlayer, "StarterPlayer")
+											callback7(gameRef, StarterPlayer.Parent)
 											if not nil then
 												break
 											end
-											local children, v55, v56 = StarterPlayer:GetChildren()
-											iter_f_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v57, v310, v410, v58, v62, v72, v82, v92, v102 in f, s, var do coroutine.yield(true, k, v57, v310, v410, v58, v62, v72, v82, v92, v102) end end); co(); return co end)(children, v55, v56)
+											local children, value54, value55 = StarterPlayer:GetChildren()
+											iter_f_1 = (function(iteratorFn, state, control) local co = coroutine.wrap(function() coroutine.yield(); for key, item, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth in iteratorFn, state, control do coroutine.yield(true, key, item, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth) end end); co(); return co end)(children, value54, value55)
 										end
 
-										local v55 = table.pack(iter_f_1())
+										local value54 = table.pack(iter_f_1())
 
-										if v55[1] then
+										if value54[1] then
 											repeat
-												local v56 = table.pack(iter_f_1())
-											until not v56[1]
+												local value55 = table.pack(iter_f_1())
+											until not value55[1]
 										end
 
 										if nil then
-											fn4(372868618, 4)
-											n4 = 43031001
-											fn5()
+											callback4(372868618, 4)
+											number4 = 43031001
+											callback5()
 										end
 									end
 
-									if tbl4[not pcall(gameRef.GetChildren)] then
-										fn4(372868618, 4)
-										n4 = 43031001
-										fn5()
+									if data4[not pcall(gameRef.GetChildren)] then
+										callback4(372868618, 4)
+										number4 = 43031001
+										callback5()
 									else
-										fn3(217, 148593451)
-										n4 = n44
+										callback3(217, 148593451)
+										number4 = number39
 									end
 								end
 							end
 
-							local n33, tbl11, tbl12, v55, tbl13, v56, n34, v57, n35, tbl14
-							local n36, v58, v59, n37, v60, v61, tbl15, v62, tbl16, v63
-							local v64, v65, v66, n38, v67, v68, v69, n39, tbl17, tbl18
-							local n40, n342, n41, n402, v70, tbl11Map, v71, n44, n45
+							local number39, data11, data12, value54, data13, value55, number40, value56, number41, data14
+							local number42, value57, value58, number43, value59, value60, data15, value61, data16, value62
+							local value63, value64, value65, number44, value66, value67, value68, number45, data17, data18
+							local number46, number47, number48, number49, value69, dataMap, value70, number50, number51
 
 							do
-								n33 = Enum
+								number39 = Enum
 
 								do
-									local fn72 = fn7
-									local n442 = n4
+									local callback21 = callback7
+									local number52 = number4
 
-									if fn72(type(n33), "userdata") then
-										fn3(205, 148593451)
-										n4 = n442
-										str2 = n442
+									if callback21(type(number39), "userdata") then
+										callback3(205, 148593451)
+										number4 = number52
+										text2 = number52
 									else
-										str2 = n442
-										fn4(372868618, 4)
+										text2 = number52
+										callback4(372868618, 4)
 
-										if v47 == 225.0000000000241 then
-											n36 = (n33 + tbl10[1]) % 16777216
-											tbl16 = { nil, 1, 6, 0, tbl[3] }
+										if value46 == 225.0000000000241 then
+											number42 = (number39 + data10[1]) % 16777216
+											data16 = { nil, 1, 6, 0, data[3] }
 
 											while true do
-												v62 = tbl16[2]
-												v69 = tbl16[3]
-												n34 = tbl16[4] + v62
-												tbl16[4] = n34
+												value61 = data16[2]
+												value68 = data16[3]
+												number40 = data16[4] + value61
+												data16[4] = number40
 
-												if n34 <= v69 then
-													n342 = n34
-													n45 = (n36 * (tbl10[2] * 2 + 1) + tbl10[3]) % 16777216
-													n24 = n45 % 4096
-													n36 = ((n24 * 4096 + (n45 - n45 % 4096) // 4096 + tbl10[4]) % 16777216 + n342 * tbl10[5]) % 16777216
+												if number40 <= value68 then
+													number47 = number40
+													number51 = (number42 * (data10[2] * 2 + 1) + data10[3]) % 16777216
+													number28 = number51 % 4096
+													number42 = ((number28 * 4096 + (number51 - number51 % 4096) // 4096 + data10[4]) % 16777216 + number47 * data10[5]) % 16777216
 
 													if nil then
-														n36 = (n36 + tbl10[6]) % 16777216
+														number42 = (number42 + data10[6]) % 16777216
 													end
 												else
 													break
 												end
 											end
 
-											v55 = tbl16[5]
-											fn4((math_floor_precision(n33) - n36) % 16777216, 8)
-											tbl11Map = {}
+											value54 = data16[5]
+											callback4((math_floor_precision(number39) - number42) % 16777216, 8)
+											dataMap = {}
 											gameRef = 16705
-											tbl12 = { 16, 1, -1, v55, nil }
+											data12 = { 16, 1, -1, value54, nil }
 
 											while true do
-												v57 = tbl12[2]
-												v70 = tbl12[1]
-												n41 = tbl12[3] + v57
-												tbl12[3] = n41
+												value56 = data12[2]
+												value69 = data12[1]
+												number48 = data12[3] + value56
+												data12[3] = number48
 
-												if n41 <= v70 then
-													v61 = n41
-													tbl11 = {}
-													tbl11Map[tbl11] = v61 + 1
+												if number48 <= value69 then
+													value60 = number48
+													data11 = {}
+													dataMap[data11] = value60 + 1
 												else
 													break
 												end
 											end
 
-											v67 = tbl12[4]
-											iter_f_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v72, v310, v410, v510, v610, v73, v82, v92, v102 in f, s, var do coroutine.yield(true, k, v72, v310, v410, v510, v610, v73, v82, v92, v102) end end); co(); return co end)(tbl11Map, nil, nil)
-											local v72 = table.pack(iter_f_1())
+											value66 = data12[4]
+											iter_f_1 = (function(iteratorFn, state, control) local co = coroutine.wrap(function() coroutine.yield(); for key, item, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth in iteratorFn, state, control do coroutine.yield(true, key, item, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth) end end); co(); return co end)(dataMap, nil, nil)
+											local value71 = table.pack(iter_f_1())
 
-											if v72[1] then
-												v65 = v72[3]
+											if value71[1] then
+												value64 = value71[3]
 
 												while true do
-													gameRef = (gameRef * v65 + v65 * 411) % 16776960 + 1
-													local v73 = table.pack(iter_f_1())
+													gameRef = (gameRef * value64 + value64 * 411) % 16776960 + 1
+													local value72 = table.pack(iter_f_1())
 
-													if v73[1] then
-														v65 = v73[3]
+													if value72[1] then
+														value64 = value72[3]
 													else
 														break
 													end
 												end
 											end
 
-											n38 = n32 + v52
-											n30 = 20084442667
-											local n302 = bit32.band(n30, 4294967295)
-											local n3022 = bit32.band(n302, 65535)
-											n31 = 1595630789 + bit32.band(31223 * n3022 + bit32.lshift(bit32.band(31223 * bit32.rshift(n302, 16) + 5879 * n3022, 65535), 16), 4294967295)
-											n212 = 3524332562
-											v56 = bit32.bor(2931427363, n30)
-											local n2122 = bit32.band(n212, 4294967295)
-											local v562 = bit32.band(v56, 4294967295)
-											local n21222 = bit32.band(n2122, 65535)
-											local n21223 = bit32.rshift(n2122, 16)
-											local v5622 = bit32.band(v562, 65535)
-											n29 = 12884901888
-											n44 = (-8589934591 * (1 + ((n31 + bit32.band(n21222 * v5622 + bit32.lshift(bit32.band(n21222 * bit32.rshift(v562, 16) + n21223 * v5622, 65535), 16), 4294967295) + 1712676800) * 67108864 + n29) / 4503599627370496) * 2 ^ 12884901911 + 1) % 16777216
-											tbl10 = {}
-											tbl13 = { 0, 6, 1, nil, v67 }
+											number44 = number38 + value51
+											number35 = 20084442667
+											local number53 = bit32.band(number35, 4294967295)
+											local number54 = bit32.band(number53, 65535)
+											number37 = 1595630789 + bit32.band(31223 * number54 + bit32.lshift(bit32.band(31223 * bit32.rshift(number53, 16) + 5879 * number54, 65535), 16), 4294967295)
+											number36 = 3524332562
+											value55 = bit32.bor(2931427363, number35)
+											local number55 = bit32.band(number36, 4294967295)
+											local value72 = bit32.band(value55, 4294967295)
+											local number56 = bit32.band(number55, 65535)
+											local number57 = bit32.rshift(number55, 16)
+											local value73 = bit32.band(value72, 65535)
+											number34 = 12884901888
+											number50 = (-8589934591 * (1 + ((number37 + bit32.band(number56 * value73 + bit32.lshift(bit32.band(number56 * bit32.rshift(value72, 16) + number57 * value73, 65535), 16), 4294967295) + 1712676800) * 67108864 + number34) / 4503599627370496) * 2 ^ 12884901911 + 1) % 16777216
+											data10 = {}
+											data13 = { 0, 6, 1, nil, value66 }
 
 											while true do
-												v64 = tbl13[3]
-												v60 = tbl13[2]
-												n35 = tbl13[1] + v64
-												tbl13[1] = n35
+												value63 = data13[3]
+												value59 = data13[2]
+												number41 = data13[1] + value63
+												data13[1] = number41
 
-												if n35 <= v60 then
-													n44 = (n44 * 1103515245 + 12345) % 16777216
-													tbl10[n35] = n44
+												if number41 <= value59 then
+													number50 = (number50 * 1103515245 + 12345) % 16777216
+													data10[number41] = number50
 												else
 													break
 												end
 											end
 
-											fn82 = (gameRef + tbl10[1]) % 16777216
-											tbl15 = { tbl13[5], 1, nil, 6, 0 }
+											callback11 = (gameRef + data10[1]) % 16777216
+											data15 = { data13[5], 1, nil, 6, 0 }
 
 											while true do
-												v71 = tbl15[2]
-												v68 = tbl15[4]
-												n39 = tbl15[5] + v71
-												tbl15[5] = n39
+												value70 = data15[2]
+												value67 = data15[4]
+												number45 = data15[5] + value70
+												data15[5] = number45
 
-												if n39 <= v68 then
-													v63 = n39
-													n37 = (fn82 * (tbl10[2] * 2 + 1) + tbl10[3]) % 16777216
-													n24 = n37 % 4096
-													fn82 = ((n24 * 4096 + (n37 - n37 % 4096) // 4096 + tbl10[4]) % 16777216 + v63 * tbl10[5]) % 16777216
+												if number45 <= value67 then
+													value62 = number45
+													number43 = (callback11 * (data10[2] * 2 + 1) + data10[3]) % 16777216
+													number28 = number43 % 4096
+													callback11 = ((number28 * 4096 + (number43 - number43 % 4096) // 4096 + data10[4]) % 16777216 + value62 * data10[5]) % 16777216
 
 													if nil then
-														fn82 = (fn82 + tbl10[6]) % 16777216
+														callback11 = (callback11 + data10[6]) % 16777216
 													end
 												else
 													break
 												end
 											end
 
-											tbl = tbl15[1]
-											v58 = math_floor_precision
+											data = data15[1]
+											value57 = math_floor_precision
 
-											if v32 ~= 134.00000000001432 then
-												fn4((v58(gameRef) - fn82) % 16777216, 8)
-												tbl17 = {}
-												tbl14 = { tbl, 1, nil, -1, 16 }
+											if value31 ~= 134.00000000001432 then
+												callback4((value57(gameRef) - callback11) % 16777216, 8)
+												data17 = {}
+												data14 = { data, 1, nil, -1, 16 }
 
 												while true do
-													v66 = tbl14[2]
-													v59 = tbl14[5]
-													n40 = tbl14[4] + v66
-													tbl14[4] = n40
+													value65 = data14[2]
+													value58 = data14[5]
+													number46 = data14[4] + value65
+													data14[4] = number46
 
-													if n40 <= v59 then
-														n402 = n40
-														tbl18 = {}
-														tbl17[tbl18] = n402 + 1
+													if number46 <= value58 then
+														number49 = number46
+														data18 = {}
+														data17[data18] = number49 + 1
 													else
 														break
 													end
 												end
 
-												iter_f_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v73, v310, v410, v510, v610, v74, v82, v92, v102 in f, s, var do coroutine.yield(true, k, v73, v310, v410, v510, v610, v74, v82, v92, v102) end end); co(); return co end)(tbl17, nil, nil)
-												local v73 = table.pack(iter_f_1())
+												iter_f_1 = (function(iteratorFn, state, control) local co = coroutine.wrap(function() coroutine.yield(); for key, item, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth in iteratorFn, state, control do coroutine.yield(true, key, item, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth) end end); co(); return co end)(data17, nil, nil)
+												local value74 = table.pack(iter_f_1())
 
-												if v73[1] then
+												if value74[1] then
 													while true do
-														local v74 = table.pack(iter_f_1())
+														local value75 = table.pack(iter_f_1())
 
-														if v74[1] then
+														if value75[1] then
 														else
 															break
 														end
 													end
 												end
 
-												if v54 ~= 133 then
+												if value53 ~= 133 then
 												end
 
-												return tbl2()
+												return data2()
 											end
 
 											continue
 										end
 
-										if v53 == 136.00000000002433 then
+										if value52 == 136.00000000002433 then
 										end
 
-										n4 = 43031001
-										fn5()
+										number4 = 43031001
+										callback5()
 									end
 								end
 							end
 
-							local n46
+							local number52
 
 							do
-								if fn7(typeof(n33), "Enums") then
-									fn3(65, 148593451)
+								if callback7(typeof(number39), "Enums") then
+									callback3(65, 148593451)
 								else
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 								end
 
-								n46 = n32 + v38
+								number52 = number38 + value37
 
 								do
-									local v72 = getmetatable(n33)
+									local value71 = getmetatable(number39)
 
-									if fn7("The metatable is locked", v72) then
-										fn3(191, 148593451)
+									if callback7("The metatable is locked", value71) then
+										callback3(191, 148593451)
 									else
-										fn4(372868618, 4)
-										n4 = 43031001
-										fn5()
+										callback4(372868618, 4)
+										number4 = 43031001
+										callback5()
 									end
 								end
 							end
 
-							local wedge = n33.PartType.Wedge
+							local wedge = number39.PartType.Wedge
 
-							if fn7(type(wedge), "userdata") then
-								fn3(197, 148593451)
+							if callback7(type(wedge), "userdata") then
+								callback3(197, 148593451)
 							else
-								fn4(372868618, 4)
-								n4 = 43031001
-								fn5()
+								callback4(372868618, 4)
+								number4 = 43031001
+								callback5()
 							end
 
-							if fn7(typeof(wedge), "EnumItem") then
+							if callback7(typeof(wedge), "EnumItem") then
 								do
-									fn3(53, 148593451)
+									callback3(53, 148593451)
 
 									do
-										local v72 = getmetatable(wedge)
+										local value71 = getmetatable(wedge)
 
-										if fn7("The metatable is locked", v72) then
-											fn3(243, 148593451)
+										if callback7("The metatable is locked", value71) then
+											callback3(243, 148593451)
 										else
-											fn4(372868618, 4)
-											n4 = 43031001
-											fn5()
+											callback4(372868618, 4)
+											number4 = 43031001
+											callback5()
 										end
 									end
 								end
 
-								local v372 = v37
-								fn11(wedge.IsA, "IsA")
-								fn16(wedge.IsA)
+								local value71 = value36
+								callback13(wedge.IsA, "IsA")
+								callback19(wedge.IsA)
 								local name = wedge.Name
-								local value = wedge.Value
+								local value72 = wedge.Value
 
-								if fn7(type(name), "string") then
-									fn3(136, 148593451)
+								if callback7(type(name), "string") then
+									callback3(136, 148593451)
 								else
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 								end
 
-								if fn7(type(value), "number") then
-									fn3(154, 148593451)
+								if callback7(type(value72), "number") then
+									callback3(154, 148593451)
 								else
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 								end
 
 								local enumType = wedge.EnumType
 
-								if fn7(wedge, enumType[name]) then
-									fn3(201, 148593451)
+								if callback7(wedge, enumType[name]) then
+									callback3(201, 148593451)
 								else
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 								end
 
-								if fn7(type(enumType), "userdata") then
+								if callback7(type(enumType), "userdata") then
 									do
 										do
-											fn3(96, 148593451)
+											callback3(96, 148593451)
 
-											if fn7(typeof(enumType), "Enum") then
-												fn3(231, 148593451)
+											if callback7(typeof(enumType), "Enum") then
+												callback3(231, 148593451)
 											else
-												fn4(372868618, 4)
-												n4 = 43031001
-												fn5()
-												n46 = n46 + v39 - 132
+												callback4(372868618, 4)
+												number4 = 43031001
+												callback5()
+												number52 = number52 + value38 - 132
 											end
 
 											do
-												local v72 = getmetatable(enumType)
+												local value73 = getmetatable(enumType)
 
-												if fn7("The metatable is locked", v72) then
-													fn3(147, 148593451)
+												if callback7("The metatable is locked", value73) then
+													callback3(147, 148593451)
 												else
-													fn4(372868618, 4)
-													n4 = 43031001
-													fn5()
+													callback4(372868618, 4)
+													number4 = 43031001
+													callback5()
 												end
 											end
 										end
 
-										fn11(enumType.FromName, "FromName")
-										fn11(enumType.FromValue, "FromValue")
-										fn16(enumType.FromName)
-										fn16(enumType.FromValue)
+										callback13(enumType.FromName, "FromName")
+										callback13(enumType.FromValue, "FromValue")
+										callback19(enumType.FromName)
+										callback19(enumType.FromValue)
 
 										do
-											local v72 = enumType:FromName(name)
+											local value73 = enumType:FromName(name)
 
-											if fn7(wedge, v72) then
-												fn3(170, 148593451)
+											if callback7(wedge, value73) then
+												callback3(170, 148593451)
 											else
-												fn4(372868618, 4)
-												n4 = 43031001
-												fn5()
+												callback4(372868618, 4)
+												number4 = 43031001
+												callback5()
 											end
 										end
 									end
 
 									do
-										local v72 = enumType:FromValue(value)
+										local value73 = enumType:FromValue(value72)
 
-										if fn7(wedge, v72) then
-											fn3(70, 148593451)
+										if callback7(wedge, value73) then
+											callback3(70, 148593451)
 										else
-											fn4(372868618, 4)
-											n4 = 43031001
-											fn5()
+											callback4(372868618, 4)
+											number4 = 43031001
+											callback5()
 										end
 									end
 
-									local new5 = v8.new
-									fn11(new5, "new")
-									fn16(new5, {})
-									local v72 = new5(1902607061)
+									local new5 = value9.new
+									callback13(new5, "new")
+									callback19(new5, {})
+									local value73 = new5(1902607061)
 
-									if fn7(type(v72), "userdata") then
-										fn3(177, 148593451)
-										n4 = str2
+									if callback7(type(value73), "userdata") then
+										callback3(177, 148593451)
+										number4 = text2
 									else
-										fn4(372868618, 4)
-										n4 = 43031001
-										fn5()
+										callback4(372868618, 4)
+										number4 = 43031001
+										callback5()
 									end
 
-									if fn7(typeof(v72), "Random") then
+									if callback7(typeof(value73), "Random") then
 										local clone, clone2, clone3
 
 										do
@@ -4346,44 +4332,44 @@ if nil then
 
 											do
 												do
-													local v73
+													local value74
 
 													do
-														fn3(61, 148593451)
-														fn11(v72.NextUnitVector, "NextUnitVector")
-														fn11(v72.NextInteger, "NextInteger")
-														fn11(v72.NextNumber, "NextNumber")
-														fn11(v72.Shuffle, "Shuffle")
-														fn11(v72.Clone, "Clone")
-														v73 = new5(1542707265)
+														callback3(61, 148593451)
+														callback13(value73.NextUnitVector, "NextUnitVector")
+														callback13(value73.NextInteger, "NextInteger")
+														callback13(value73.NextNumber, "NextNumber")
+														callback13(value73.Shuffle, "Shuffle")
+														callback13(value73.Clone, "Clone")
+														value74 = new5(1542707265)
 
 														do
 															local unpack_2 = string.unpack
 															local pack = string.pack
-															local randNum = v73:NextNumber()
-															fn4(unpack_2("<I4", pack("<f", randNum)), 4)
+															local randNum = value74:NextNumber()
+															callback4(unpack_2("<I4", pack("<f", randNum)), 4)
 														end
 													end
 
 													do
-														local clone6 = v73:Clone()
-														fn4(v73:NextInteger(379, 733), 4)
-														clone4 = v73:Clone()
-														n = v73:NextInteger(6, 885)
-														fn4(n, 4)
-														clone = v73:Clone()
+														local clone6 = value74:Clone()
+														callback4(value74:NextInteger(379, 733), 4)
+														clone4 = value74:Clone()
+														number = value74:NextInteger(6, 885)
+														callback4(number, 4)
+														clone = value74:Clone()
 														clone5 = clone6
 													end
 												end
 
-												n43 = clone:NextInteger(667, 1468)
-												fn4(n43, 4)
+												number33 = clone:NextInteger(667, 1468)
+												callback4(number33, 4)
 
 												do
 													local unpack_2 = string.unpack
 													local pack = string.pack
 													local randNum = clone:NextNumber()
-													fn4(unpack_2(">I4", pack(">f", randNum)), 4)
+													callback4(unpack_2(">I4", pack(">f", randNum)), 4)
 												end
 											end
 
@@ -4394,14 +4380,14 @@ if nil then
 
 												do
 													local randInt = clone4:NextInteger(345, 719)
-													fn4(randInt, 4)
+													callback4(randInt, 4)
 													clone6 = clone2:Clone()
-													fn4(clone:NextInteger(996, 1063), 4)
+													callback4(clone:NextInteger(996, 1063), 4)
 													local unpack_2 = string.unpack
 													local pack = string.pack
 													local randNum = clone4:NextNumber()
-													fn4(unpack_2(">I4", pack(">f", randNum)), 4)
-													fn17 = randInt
+													callback4(unpack_2(">I4", pack(">f", randNum)), 4)
+													callback20 = randInt
 												end
 											end
 
@@ -4411,31 +4397,31 @@ if nil then
 												local unpack_2 = string.unpack
 												local pack = string.pack
 												local randNum = clone2:NextNumber()
-												fn4(unpack_2("<I4", pack(">f", randNum)), 4)
+												callback4(unpack_2("<I4", pack(">f", randNum)), 4)
 											end
 
-											fn4(clone6:NextInteger(417, 1147), 4)
-											fn4(clone5:NextInteger(760, 1646), 4)
+											callback4(clone6:NextInteger(417, 1147), 4)
+											callback4(clone5:NextInteger(760, 1646), 4)
 										end
 
 										do
 											local unpack_2 = string.unpack
 											local pack = string.pack
 											local randNum = clone3:NextNumber()
-											fn4(unpack_2("<I4", pack("<f", randNum)), 4)
+											callback4(unpack_2("<I4", pack("<f", randNum)), 4)
 										end
 
-										local n47, n48, n49, n50, tbl19
+										local number53, number54, number55, number56, data19
 
 										do
-											fn4(clone2:NextInteger(978, 1747), 4)
-											fn4(clone:NextInteger(385, 609), 4)
-											n47 = 316
-											n48 = v372 + v40 + v41
-											n49 = n46 + n24
+											callback4(clone2:NextInteger(978, 1747), 4)
+											callback4(clone:NextInteger(385, 609), 4)
+											number53 = 316
+											number54 = value71 + value39 + value40
+											number55 = number52 + number28
 
 											do
-												local tbl20 = {
+												local data20 = {
 													[3527019990] = 316,
 													[1402984568] = 79,
 													[997645922] = 316,
@@ -4447,75 +4433,75 @@ if nil then
 													[3655592466] = 316,
 													[638414791] = 79,
 													[3621177636] = 316,
-													[2303840004] = n47,
-													[3630343396] = n47,
+													[2303840004] = number53,
+													[3630343396] = number53,
 													[4280663915] = 79,
 													[183578560] = 158,
 													[3675778740] = 79,
-													[703510772] = n47,
+													[703510772] = number53,
 													[2829995296] = 79,
 													[2369744814] = 79,
 													[1793178485] = 79,
-													[1805206170] = n47,
-													[2309351533] = n47,
-													[1081002712] = n47,
-													[3900348838] = n47,
+													[1805206170] = number53,
+													[2309351533] = number53,
+													[1081002712] = number53,
+													[3900348838] = number53,
 													[1980836295] = 79,
 													[2616090782] = 79,
-													[547114585] = n47,
-													[1778055736] = n47,
+													[547114585] = number53,
+													[1778055736] = number53,
 													[1146902328] = 158,
-													[855780562] = n47,
+													[855780562] = number53,
 													[2901047036] = 79,
-													[2137590078] = n47,
+													[2137590078] = number53,
 												}
 
 												local env = getfenv()
 												local envMap = {}
-												local tbl21 = {}
-												n50 = 0
-												tbl19 = { nil, 0, 1, 3, tbl }
+												local data21 = {}
+												number56 = 0
+												data19 = { nil, 0, 1, 3, data }
 
 												while true do
-													local v73 = tbl19[3]
-													local v74 = tbl19[4]
-													local n51 = tbl19[2] + v73
-													tbl19[2] = n51
+													local value74 = data19[3]
+													local value75 = data19[4]
+													local number57 = data19[2] + value74
+													data19[2] = number57
 
-													if n51 <= v74 then
+													if number57 <= value75 then
 														if not nil and not nil then
 															do
 																envMap[env] = true
 
 																do
-																	local n52 = 0
-																	iter_f_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v75, v310, v410, v510, v610, v76, v82, v92, v102 in f, s, var do coroutine.yield(true, k, v75, v310, v410, v510, v610, v76, v82, v92, v102) end end); co(); return co end)(env, nil, nil)
+																	local number58 = 0
+																	iter_f_1 = (function(iteratorFn, state, control) local co = coroutine.wrap(function() coroutine.yield(); for key, item, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth in iteratorFn, state, control do coroutine.yield(true, key, item, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth) end end); co(); return co end)(env, nil, nil)
 
 																	for k in env, nil, nil do
-																		n52 += 1
+																		number58 += 1
 
 																		do
-																			local kind3 = type(k)
+																			local valueType3 = type(k)
 
-																			if fn7("string", kind3) then
+																			if callback7("string", valueType3) then
 																				if #k < 20 then
-																					local v75 = fn9(k, 51052561)
+																					local value76 = callback9(k, 51052561)
 
-																					if tbl21[v75] then
-																						if n52 > 50 then
+																					if data21[value76] then
+																						if number58 > 50 then
 																							break
 																						end
 																					else
-																						n50 += tbl20[v75] or 0
-																						tbl21[v75] = true
-																						if n52 > 50 then
+																						number56 += data20[value76] or 0
+																						data21[value76] = true
+																						if number58 > 50 then
 																							break
 																						end
 																					end
-																				elseif n52 > 50 then
+																				elseif number58 > 50 then
 																					break
 																				end
-																			elseif n52 > 50 then
+																			elseif number58 > 50 then
 																				break
 																			end
 																		end
@@ -4524,30 +4510,30 @@ if nil then
 															end
 
 															do
-																local n502 = n50
-																local v75 = getmetatable(env)
-																local flag6 = type(v75) == "table"
-																local n5022, value2
+																local number58 = number56
+																local value76 = getmetatable(env)
+																local condition6 = type(value76) == "table"
+																local number59, value77
 
-																if flag6 then
-																	n5022 = n502
-																	value2 = rawget(v75, "__index")
+																if condition6 then
+																	number59 = number58
+																	value77 = rawget(value76, "__index")
 																else
-																	n5022 = n502
-																	value2 = flag6
+																	number59 = number58
+																	value77 = condition6
 																end
 
-																if value2 then
+																if value77 then
 																	do
-																		local n5023 = n5022
-																		env = value2
-																		n50 = n5023
+																		local number60 = number59
+																		env = value77
+																		number56 = number60
 																	end
 
 																	continue
 																end
 
-																n50 = n5022
+																number56 = number59
 															end
 
 															env = nil
@@ -4563,208 +4549,208 @@ if nil then
 										end
 
 										do
-											local v73 = tbl19[5]
-											local n51 = n50 < n47 and 219 or 243
-											fn3(n51, 148593451)
+											local value74 = data19[5]
+											local number57 = number56 < number53 and 219 or 243
+											callback3(number57, 148593451)
 
 											if not nil then
-												local n52, n53, v74
+												local number58, number59, value75
 
 												do
 													do
-														local result3, result4, v75
+														local response4, response5, value76
 
 														do
 															do
-																local ok3, v76
+																local ok3, value77
 
 																do
-																	local result5
-																	ok3, result5 = pcall(assert, false)
-																	v76 = result5
+																	local response6
+																	ok3, response6 = pcall(assert, false)
+																	value77 = response6
 																end
 
-																local ok4 = ok3 or not v76 or type(v76) ~= "string"
+																local ok4 = ok3 or not value77 or type(value77) ~= "string"
 
 																if ok4 then
-																	fn4(372868618, 4)
-																	n4 = 43031001
-																	fn5()
+																	callback4(372868618, 4)
+																	number4 = 43031001
+																	callback5()
 																end
 															end
 
 															do
-																local ok3, v76
+																local ok3, value77
 
 																do
-																	local ok4, result5 = pcall(function(w, ...)
+																	local ok4, response6 = pcall(function(w, ...)
 	(...)[...] = nil
 end)
 
 																	ok3 = ok4
-																	v76 = result5
+																	value77 = response6
 																end
 
 																do
 																	local ok4
 
-																	ok4, result3 = pcall(function(w, ...)
+																	ok4, response4 = pcall(function(w, ...)
 	return (...)[...]
 end)
 
 																	local ok5
 
-																	ok5, result4 = pcall(function(w, ...)
+																	ok5, response5 = pcall(function(w, ...)
 	return (...)()
 end)
 
 																	if ok3 or ok4 or ok5 then
-																		fn4(372868618, 4)
-																		n4 = 43031001
-																		fn5()
+																		callback4(372868618, 4)
+																		number4 = 43031001
+																		callback5()
 																	end
 																end
 
 																do
-																	local function fn18(arg, arg2)
-																		local pos, v77, n54 = string.find(arg, ":[^%a%A]-([0-9][0-9]*)[\n:\r]")
-																		local flag6 = not pos
-																		local flag7
+																	local function callback21(argument, argument2)
+																		local pos, value78, number60 = string.find(argument, ":[^%a%A]-([0-9][0-9]*)[\n:\r]")
+																		local condition6 = not pos
+																		local condition7
 
 																		if pos then
-																			flag7 = not v77
+																			condition7 = not value78
 																		else
-																			flag7 = flag6
+																			condition7 = condition6
 																		end
 
-																		if flag7 then
-																			fn4(372868618, 4)
-																			n4 = 43031001
-																			fn5()
+																		if condition7 then
+																			callback4(372868618, 4)
+																			number4 = 43031001
+																			callback5()
 																		end
 
-																		fn4(pos, 2)
-																		fn4(v77, 2)
-																		local match = string.match(arg, ":([%d]%d*)[^%l%L]-[\n\r%:]")
-																		local fn42 = fn4
+																		callback4(pos, 2)
+																		callback4(value78, 2)
+																		local match = string.match(argument, ":([%d]%d*)[^%l%L]-[\n\r%:]")
+																		local callback22 = callback4
 																		local match2
 
-																		if n54 then
+																		if number60 then
 																			match2 = match
 																		else
 																			match2 = match
-																			n54 = 0
+																			number60 = 0
 																		end
 
-																		fn42(n54 + 0, 2)
-																		fn4((match2 or 0) + 0, 2)
-																		local v78 = string.gmatch(arg, "%:([%d]%d*)[^%p%P]*[\r:\n]")
-																		local n55 = v78()
-																		local fn72 = fn7
+																		callback22(number60 + 0, 2)
+																		callback4((match2 or 0) + 0, 2)
+																		local argument3 = string.gmatch(argument, "%:([%d]%d*)[^%p%P]*[\r:\n]")
+																		local number61 = argument3()
+																		local callback23 = callback7
 
-																		if not fn7(v78(), nil) then
-																			fn4(372868618, 4)
-																			n4 = 43031001
-																			fn5()
+																		if not callback7(argument3(), nil) then
+																			callback4(372868618, 4)
+																			number4 = 43031001
+																			callback5()
 
-																			if type(fn72) == "userdata" then
-																				fn4(372868618, 4)
+																			if type(callback23) == "userdata" then
+																				callback4(372868618, 4)
 
-																				n4 = 43031001
+																				number4 = 43031001
 																				;(nil)[">f"] = 100
 
 																				while true do
 																					while not (nil <= nil) do
 																					end
 
-																					fn4(372868618, 4)
+																					callback4(372868618, 4)
 
-																					n4 = 43031001
+																					number4 = 43031001
 																					;(nil)[">f"] = 100
 																				end
 																			end
 																		end
 
-																		local fn43 = fn4
-																		local fn432
+																		local callback24 = callback4
+																		local callback25
 
-																		if n55 then
-																			fn432 = fn43
+																		if number61 then
+																			callback25 = callback24
 																		else
-																			fn432 = fn43
-																			n55 = 0
+																			callback25 = callback24
+																			number61 = 0
 																		end
 
-																		fn432(n55 + 0, 2)
-																		local str3 = string.sub(arg, pos + 1, v77 - 1)
-																		local v79 = string.char(string.byte(arg, pos + 1, v77 - 1))
-																		local v80 = string.byte(arg, pos + 1, pos + 1)
-																		fn4(str3 + 0, 2)
-																		fn4(v79 + 0, 2)
-																		fn3(v80, 148593451)
-																		local tbl20 = { v77 - 1 + 0, nil, pos + 1 - 1, 1, nil }
-																		local n56 = 0
-																		local tbl202 = tbl20
+																		callback25(number61 + 0, 2)
+																		local text3 = string.sub(argument, pos + 1, value78 - 1)
+																		local argument4 = string.char(string.byte(argument, pos + 1, value78 - 1))
+																		local argument5 = string.byte(argument, pos + 1, pos + 1)
+																		callback4(text3 + 0, 2)
+																		callback4(argument4 + 0, 2)
+																		callback3(argument5, 148593451)
+																		local data20 = { value78 - 1 + 0, nil, pos + 1 - 1, 1, nil }
+																		local number62 = 0
+																		local data21 = data20
 
 																		while true do
-																			local v81 = tbl202[4]
-																			local v82 = tbl202[1]
-																			local n57 = tbl202[3] + v81
-																			tbl202[3] = n57
+																			local value79 = data21[4]
+																			local value80 = data21[1]
+																			local number63 = data21[3] + value79
+																			data21[3] = number63
 
-																			if n57 <= v82 then
-																				n56 = n56 * 10 + string.byte(arg, n57, n57) - 48
+																			if number63 <= value80 then
+																				number62 = number62 * 10 + string.byte(argument, number63, number63) - 48
 																			else
 																				break
 																			end
 																		end
 
-																		fn4(n56, 2)
-																		local v81 = nil
-																		local n57 = 0
-																		local n58 = 99901787
+																		callback4(number62, 2)
+																		local value79 = nil
+																		local number63 = 0
+																		local number64 = 99901787
 
-																		local function fn19(arg3)
-																			v81 = arg3
-																			local n572 = n57
+																		local function callback26(argument6)
+																			value79 = argument6
+																			local number65 = number63
 
 																			if nil then
-																				n58 = bit32.bxor(n58, 2666527995)
+																				number64 = bit32.bxor(number64, 2666527995)
 																			end
 
-																			n57 = n572 + 1
+																			number63 = number65 + 1
 																		end
 
-																		n58 = 264577875
-																		local str4, v82 = string.gsub(arg, "[%:][^%d%D]?([%d]+)[%:\n\r][^%u%U]*", fn19, 1)
-																		fn7(n57, 1)
+																		number64 = 264577875
+																		local text4, value80 = string.gsub(argument, "[%:][^%d%D]?([%d]+)[%:\n\r][^%u%U]*", callback26, 1)
+																		callback7(number63, 1)
 
 																		if nil then
 																		else
-																			fn4(372868618, 4)
-																			n4 = 43031001
-																			fn5()
+																			callback4(372868618, 4)
+																			number4 = 43031001
+																			callback5()
 																		end
 
-																		fn7(v82, 1)
+																		callback7(value80, 1)
 
 																		if not nil then
-																			fn4(372868618, 4)
-																			n4 = 43031001
-																			fn5()
+																			callback4(372868618, 4)
+																			number4 = 43031001
+																			callback5()
 																		end
 
-																		fn4((v81 or 0) + 0, 2)
-																		fn7(string.sub(arg, 2, 2), arg2)
+																		callback4((value79 or 0) + 0, 2)
+																		callback7(string.sub(argument, 2, 2), argument2)
 																		if nil then
-																			fn3(string.byte(arg, 2, 2), 148593451)
+																			callback3(string.byte(argument, 2, 2), 148593451)
 																			return
 																		end
 
 																		while true do
-																			fn4(372868618, 4)
+																			callback4(372868618, 4)
 
-																			n4 = 43031001
+																			number4 = 43031001
 																			;(nil)[">f"] = 100
 
 																			while not (nil <= nil) do
@@ -4772,30 +4758,30 @@ end)
 																		end
 																	end
 
-																	fn18("xisbLUyDc:111: attempt to call a userdata value", "i", 413312038)
-																	fn18("LocalScript:101: attempt to index string with function", "o", 413312038)
-																	fn18("LocalScript:132: attempt to index nil with string", "o", 413312038)
-																	fn18("source.lua:110: attempt to index userdata with boolean", "o", 413312038)
+																	callback21("xisbLUyDc:111: attempt to call a userdata value", "i", 413312038)
+																	callback21("LocalScript:101: attempt to index string with function", "o", 413312038)
+																	callback21("LocalScript:132: attempt to index nil with string", "o", 413312038)
+																	callback21("source.lua:110: attempt to index userdata with boolean", "o", 413312038)
 																end
 
-																v22 = function(arg)
+																value3 = function(argument)
 																	local state = 1
-																	local flag6, fn18, match, v77, pos, flag62, flag7, flag72, v78, n54, n55, gsub, n56, flag8, n57, n58, n59, n60, fn72
+																	local argument2, callback21, match, value78, pos, argument3, condition6, condition7, value79, number60, number61, gsub, number62, condition8, number63, number64, number65, number66, callback22
 
 																	while true do
 																		if state <= 40 then
 																			if state <= 20 then
 																				if state == 1 then
-																					flag6 = arg
-																					fn18 = nil
+																					argument2 = argument
+																					callback21 = nil
 																					state = 2
 																				elseif state == 2 then
-																					match = string.match(flag6, "%:([0-9][0-9]*)[\n:\r]")
-																					v77 = string.gmatch(flag6, "[%:](%d%d*)[^%w%W]*[\r%:\n]")()
-																					local v79
-																					pos, v79 = string.find(flag6, "[:][^%w%W]?(%d+)[%:\r\n]")
-																					flag62 = v79
-																					flag7 = not pos
+																					match = string.match(argument2, "%:([0-9][0-9]*)[\n:\r]")
+																					value78 = string.gmatch(argument2, "[%:](%d%d*)[^%w%W]*[\r%:\n]")()
+																					local value80
+																					pos, value80 = string.find(argument2, "[:][^%w%W]?(%d+)[%:\r\n]")
+																					argument3 = value80
+																					condition6 = not pos
 
 																					if pos then
 																						state = 4
@@ -4803,80 +4789,81 @@ end)
 																						state = 3
 																					end
 																				elseif state == 3 then
-																					flag72 = flag7
+																					condition7 = condition6
 																					state = 5
 																				elseif state == 4 then
-																					flag72 = not flag62
+																					condition7 = not argument3
 																					state = 5
 																				elseif state == 5 then
-																					if flag72 then
+																					if condition7 then
 																						state = 6
 																					else
 																						state = 7
 																					end
 																				elseif state == 6 then
-																					fn4(372868618, 4)
-																					n4 = 43031001
-																					fn5()
+																					callback4(372868618, 4)
+																					number4 = 43031001
+																					callback5()
 																					state = 7
 																				elseif state == 7 then
-																					local str3 = string.sub(flag6, pos + 1, flag62 - 1)
-																					flag62 = string.char(string.byte(flag6, pos + 1, flag62 - 1))
-																					v78 = nil
-																					n54 = 0
-																					n55 = 515348854
-																					pos = str3
+																					local text3 = string.sub(argument2, pos + 1, argument3 - 1)
+																					argument3 = string.char(string.byte(argument2, pos + 1, argument3 - 1))
+																					value79 = nil
+																					number60 = 0
+																					number61 = 515348854
+																					pos = text3
 
-																					fn18 = function(arg2)
+																					callback21 = function(argument4)
 																						local info2 = info
-																						local n61
+																						local number67
 
 																						if nil then
-																							n61 = 1
-																							n55 = bit32.bxor(n55, 2255202949)
+																							number67 = 1
+																							number61 = bit32.bxor(number61, 2255202949)
 																						else
-																							n61 = 1
+																							-- This Source Was Generated by discord.gg/c3xVMnUUBv
+																							number67 = 1
 																						end
 
-																						local v79 = info2(n61, "f")
-																						fn7(v79, fn18)
+																						local value80 = info2(number67, "f")
+																						callback7(value80, callback21)
 
 																						if not nil then
-																							fn4(372868618, 4)
-																							n4 = 43031001
-																							fn5()
+																							callback4(372868618, 4)
+																							number4 = 43031001
+																							callback5()
 																						end
 
-																						local v80 = info(2, "f")
-																						fn7(v80, string.gsub)
+																						local value81 = info(2, "f")
+																						callback7(value81, string.gsub)
 
 																						if not nil then
-																							fn4(372868618, 4)
-																							n4 = 43031001
-																							fn5()
+																							callback4(372868618, 4)
+																							number4 = 43031001
+																							callback5()
 																						end
 
-																						local v81 = info(3, "f")
-																						fn7(v81, v22)
+																						local value82 = info(3, "f")
+																						callback7(value82, value3)
 
 																						if not nil then
-																							fn4(372868618, 4)
-																							n4 = 43031001
-																							fn5()
+																							callback4(372868618, 4)
+																							number4 = 43031001
+																							callback5()
 																						end
 
-																						v78 = arg2
-																						n54 = (n55 == 480569521) + 1
+																						value79 = argument4
+																						number60 = (number61 == 480569521) + 1
 																					end
 
 																					gsub = string.gsub
-																					n56 = 480569521
+																					number62 = 480569521
 																					state = 8
 																				elseif state == 8 then
-																					n55 = n56
-																					local v79
-																					v79, flag6 = gsub(flag6, "%:([%d]%d*)[^%s%S]-[:\n\r][^%u%U]*", fn18, 1)
-																					fn7(n54, 1)
+																					number61 = number62
+																					local value80
+																					value80, argument2 = gsub(argument2, "%:([%d]%d*)[^%s%S]-[:\n\r][^%u%U]*", callback21, 1)
+																					callback7(number60, 1)
 
 																					if nil then
 																						state = 10
@@ -4888,7 +4875,7 @@ end)
 																				elseif state == 10 then
 																					state = 11
 																				elseif state == 11 then
-																					fn7(flag6, 1)
+																					callback7(argument2, 1)
 
 																					if nil then
 																						state = 12
@@ -4896,7 +4883,7 @@ end)
 																						state = 67
 																					end
 																				elseif state == 12 then
-																					flag8 = not match
+																					condition8 = not match
 
 																					if match then
 																						state = 14
@@ -4904,48 +4891,48 @@ end)
 																						state = 13
 																					end
 																				elseif state == 13 then
-																					flag6 = flag8
+																					argument2 = condition8
 																					state = 15
 																				elseif state == 14 then
-																					flag6 = not v77
+																					argument2 = not value78
 																					state = 15
 																				elseif state == 15 then
-																					if flag6 then
+																					if argument2 then
 																						state = 16
 																					else
 																						state = 74
 																					end
 																				elseif state == 16 then
-																					if flag6 then
+																					if argument2 then
 																						state = 17
 																					else
 																						state = 46
 																					end
 																				elseif state == 17 then
-																					if flag6 then
+																					if argument2 then
 																						state = 18
 																					else
 																						state = 72
 																					end
 																				elseif state == 18 then
-																					if flag6 then
+																					if argument2 then
 																						state = 19
 																					else
 																						state = 20
 																					end
 																				elseif state == 19 then
-																					fn4(372868618, 4)
-																					n4 = 43031001
-																					fn5()
+																					callback4(372868618, 4)
+																					number4 = 43031001
+																					callback5()
 																					state = 20
 																				elseif state == 20 then
-																					flag6 = match + 0
-																					n57 = v77 + 0
-																					n58 = pos + 0
-																					n59 = flag62 + 0
-																					n60 = v78 + 0
-																					fn72 = fn7
-																					fn7(match, v77)
+																					argument2 = match + 0
+																					number63 = value78 + 0
+																					number64 = pos + 0
+																					number65 = argument3 + 0
+																					number66 = value79 + 0
+																					callback22 = callback7
+																					callback7(match, value78)
 
 																					if nil then
 																						state = 22
@@ -4954,13 +4941,13 @@ end)
 																					end
 																				end
 																			elseif state == 21 then
-																				match = n57
+																				match = number63
 																				state = 58
 																			elseif state == 22 then
-																				match = n57
+																				match = number63
 																				state = 23
 																			elseif state == 23 then
-																				fn7(v77, pos)
+																				callback7(value78, pos)
 
 																				if nil then
 																					state = 24
@@ -4968,7 +4955,7 @@ end)
 																					state = 69
 																				end
 																			elseif state == 24 then
-																				fn7(pos, flag62)
+																				callback7(pos, argument3)
 
 																				if nil then
 																					state = 25
@@ -4976,7 +4963,7 @@ end)
 																					state = 41
 																				end
 																			elseif state == 25 then
-																				fn7(flag62, v78)
+																				callback7(argument3, value79)
 
 																				if nil then
 																					state = 26
@@ -4984,7 +4971,7 @@ end)
 																					state = 38
 																				end
 																			elseif state == 26 then
-																				fn7(flag6, match)
+																				callback7(argument2, match)
 
 																				if nil then
 																					state = 75
@@ -4992,11 +4979,11 @@ end)
 																					state = 27
 																				end
 																			elseif state == 27 then
-																				fn4(372868618, 4)
-																				n4 = 43031001
-																				fn5()
+																				callback4(372868618, 4)
+																				number4 = 43031001
+																				callback5()
 
-																				if fn72 then
+																				if callback22 then
 																					state = 75
 																				else
 																					state = 28
@@ -5062,14 +5049,14 @@ end)
 																					state = 38
 																				end
 																			elseif state == 38 then
-																				fn4(372868618, 4)
-																				n4 = 43031001
-																				fn5()
+																				callback4(372868618, 4)
+																				number4 = 43031001
+																				callback5()
 																				state = 26
 																			elseif state == 39 then
-																				fn4(372868618, 4)
-																				n4 = 43031001
-																				fn5()
+																				callback4(372868618, 4)
+																				number4 = 43031001
+																				callback5()
 																				state = 11
 																			elseif state == 40 then
 																				if nil <= 27 then
@@ -5080,9 +5067,9 @@ end)
 																			end
 																		elseif state <= 60 then
 																			if state == 41 then
-																				fn4(372868618, 4)
-																				n4 = 43031001
-																				fn5()
+																				callback4(372868618, 4)
+																				number4 = 43031001
+																				callback5()
 																				state = 25
 																			elseif state == 42 then
 																				if nil <= 21 then
@@ -5109,7 +5096,7 @@ end)
 																					state = 6
 																				end
 																			elseif state == 46 then
-																				flag6 = not flag62
+																				argument2 = not argument3
 																				state = 17
 																			elseif state == 47 then
 																				if nil <= 22 then
@@ -5130,50 +5117,50 @@ end)
 																					state = 50
 																				end
 																			elseif state == 50 then
-																				fn18 = function(arg2)
+																				callback21 = function(argument4)
 																					local info2 = info
-																					local n61
+																					local number67
 
 																					if nil then
-																						n61 = 1
-																						n55 = bit32.bxor(n55, 2255202949)
+																						number67 = 1
+																						number61 = bit32.bxor(number61, 2255202949)
 																					else
-																						n61 = 1
+																						number67 = 1
 																					end
 
-																					local v79 = info2(n61, "f")
-																					fn7(v79, fn18)
+																					local value80 = info2(number67, "f")
+																					callback7(value80, callback21)
 
 																					if not nil then
-																						fn4(372868618, 4)
-																						n4 = 43031001
-																						fn5()
+																						callback4(372868618, 4)
+																						number4 = 43031001
+																						callback5()
 																					end
 
-																					local v80 = info(2, "f")
-																					fn7(v80, string.gsub)
+																					local value81 = info(2, "f")
+																					callback7(value81, string.gsub)
 
 																					if not nil then
-																						fn4(372868618, 4)
-																						n4 = 43031001
-																						fn5()
+																						callback4(372868618, 4)
+																						number4 = 43031001
+																						callback5()
 																					end
 
-																					local v81 = info(3, "f")
-																					fn7(v81, v22)
+																					local value82 = info(3, "f")
+																					callback7(value82, value3)
 
 																					if not nil then
-																						fn4(372868618, 4)
-																						n4 = 43031001
-																						fn5()
+																						callback4(372868618, 4)
+																						number4 = 43031001
+																						callback5()
 																					end
 
-																					v78 = arg2
-																					n54 = (n55 == 480569521) + 1
+																					value79 = argument4
+																					number60 = (number61 == 480569521) + 1
 																				end
 
 																				gsub = string.gsub
-																				n56 = bit32.bxor(n55, 34828743)
+																				number62 = bit32.bxor(number61, 34828743)
 																				state = 8
 																			elseif state == 51 then
 																				if nil <= 18 then
@@ -5214,9 +5201,9 @@ end)
 																					state = 58
 																				end
 																			elseif state == 58 then
-																				fn4(372868618, 4)
-																				n4 = 43031001
-																				fn5()
+																				callback4(372868618, 4)
+																				number4 = 43031001
+																				callback5()
 																				state = 23
 																			elseif state == 59 then
 																				if nil <= 13 then
@@ -5268,9 +5255,9 @@ end)
 																				state = 20
 																			end
 																		elseif state == 67 then
-																			fn4(372868618, 4)
-																			n4 = 43031001
-																			fn5()
+																			callback4(372868618, 4)
+																			number4 = 43031001
+																			callback5()
 																			state = 12
 																		elseif state == 68 then
 																			if nil <= 4 then
@@ -5279,9 +5266,9 @@ end)
 																				state = 69
 																			end
 																		elseif state == 69 then
-																			fn4(372868618, 4)
-																			n4 = 43031001
-																			fn5()
+																			callback4(372868618, 4)
+																			number4 = 43031001
+																			callback5()
 																			state = 24
 																		elseif state == 70 then
 																			if nil <= 1 then
@@ -5296,7 +5283,7 @@ end)
 																				state = 81
 																			end
 																		elseif state == 72 then
-																			flag6 = not v78
+																			argument2 = not value79
 																			state = 18
 																		elseif state == 73 then
 																			if nil <= 0 then
@@ -5305,10 +5292,10 @@ end)
 																				state = 74
 																			end
 																		elseif state == 74 then
-																			flag6 = not pos
+																			argument2 = not pos
 																			state = 16
 																		elseif state == 75 then
-																			fn7(match, n58)
+																			callback7(match, number64)
 
 																			if nil then
 																				state = 77
@@ -5316,12 +5303,12 @@ end)
 																				state = 76
 																			end
 																		elseif state == 76 then
-																			fn4(372868618, 4)
-																			n4 = 43031001
-																			fn5()
+																			callback4(372868618, 4)
+																			number4 = 43031001
+																			callback5()
 																			state = 77
 																		elseif state == 77 then
-																			fn7(n58, n59)
+																			callback7(number64, number65)
 
 																			if nil then
 																				state = 79
@@ -5329,12 +5316,12 @@ end)
 																				state = 78
 																			end
 																		elseif state == 78 then
-																			fn4(372868618, 4)
-																			n4 = 43031001
-																			fn5()
+																			callback4(372868618, 4)
+																			number4 = 43031001
+																			callback5()
 																			state = 79
 																		elseif state == 79 then
-																			fn7(n59, n60)
+																			callback7(number65, number66)
 
 																			if nil then
 																				state = 81
@@ -5342,73 +5329,73 @@ end)
 																				state = 80
 																			end
 																		elseif state == 80 then
-																			fn4(372868618, 4)
-																			n4 = 43031001
-																			fn5()
+																			callback4(372868618, 4)
+																			number4 = 43031001
+																			callback5()
 																			state = 81
 																		elseif state == 81 then
-																			return flag6
+																			return argument2
 																		end
 																	end
 																end
 
-																v75 = v22(v76)
+																value76 = value3(value77)
 															end
 														end
 
 														do
 															do
 																do
-																	local v76 = v22(result3)
-																	local v77 = v22(result4)
+																	local value77 = value3(response4)
+																	local value78 = value3(response5)
 
-																	if fn7(v75, v76) then
-																		fn3(165, 148593451)
-																		n4 = str2
+																	if callback7(value76, value77) then
+																		callback3(165, 148593451)
+																		number4 = text2
 																	else
-																		fn4(372868618, 4)
-																		n4 = 43031001
-																		fn5()
+																		callback4(372868618, 4)
+																		number4 = 43031001
+																		callback5()
 																	end
 
-																	if fn7(v76, v77) then
-																		fn3(183, 148593451)
+																	if callback7(value77, value78) then
+																		callback3(183, 148593451)
 																	else
-																		fn4(372868618, 4)
-																		n4 = 43031001
-																		fn5()
+																		callback4(372868618, 4)
+																		number4 = 43031001
+																		callback5()
 																	end
 
-																	n52 = n49 + v42
+																	number58 = number55 + value41
 
-																	if fn7(v77, v75) then
-																		fn3(114, 148593451)
+																	if callback7(value78, value76) then
+																		callback3(114, 148593451)
 																	else
-																		fn4(372868618, 4)
-																		n4 = 43031001
-																		fn5()
+																		callback4(372868618, 4)
+																		number4 = 43031001
+																		callback5()
 																	end
 																end
 
-																n53 = n48 + v43
+																number59 = number54 + value42
 
 																do
-																	local tbl20 = {}
-																	iter_f_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v76, v310, v410, v510, v610, v77, v82, v92, v102 in f, s, var do coroutine.yield(true, k, v76, v310, v410, v510, v610, v77, v82, v92, v102) end end); co(); return co end)(tbl20, nil, nil)
+																	local data20 = {}
+																	iter_f_1 = (function(iteratorFn, state, control) local co = coroutine.wrap(function() coroutine.yield(); for key, item, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth in iteratorFn, state, control do coroutine.yield(true, key, item, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth) end end); co(); return co end)(data20, nil, nil)
 
-																	for _, v76 in tbl20, nil, nil do
+																	for _, value77 in data20, nil, nil do
 																		do
 																			local exitTo2 = nil
 
 																			while true do
-																				local kind3 = type(v76)
+																				local valueType3 = type(value77)
 
-																				if fn7("function", kind3) then
-																					info(v76, "sl")
-																					local v77 = table.pack(iter_f_1())
+																				if callback7("function", valueType3) then
+																					info(value77, "sl")
+																					local value78 = table.pack(iter_f_1())
 
-																					if v77[1] then
-																						v76 = v77[3]
+																					if value78[1] then
+																						value77 = value78[3]
 																					else
 																						exitTo2 = 1
 																						break
@@ -5426,36 +5413,36 @@ end)
 																end
 															end
 
-															fn82(nil --[[ the caller's registers ]], 505483899)
+															callback11(nil --[[ the caller's registers ]], 505483899)
 															setmetatable(nil --[[ the caller's registers ]], nil)
 
 															do
-																local tbl20 = {}
-																local tbl21 = {}
-																local n54 = 73
-																local n55 = 71
-																local tbl22 = { v73, 1, 255, nil, -1 }
+																local data20 = {}
+																local data21 = {}
+																local number60 = 73
+																local number61 = 71
+																local data22 = { value74, 1, 255, nil, -1 }
 
 																while true do
-																	local v76 = tbl22[2]
-																	local v77 = tbl22[3]
-																	local n56 = tbl22[5] + v76
-																	tbl22[5] = n56
+																	local value77 = data22[2]
+																	local value78 = data22[3]
+																	local number62 = data22[5] + value77
+																	data22[5] = number62
 
-																	if n56 <= v77 then
-																		local n562 = n56
-																		local n57 = (n54 * n562 + n55) % 256
-																		local n58 = (n54 * n57 + n55) % 256
-																		local n59 = (n54 * n58 + n55) % 256
-																		local n60 = (n54 * n59 + n55) % 256
-																		tbl20[n562] = n57 + n58 * 256 + n59 * 65536 + n60 * 16777216
-																		tbl21[n562] = n60
+																	if number62 <= value78 then
+																		local number63 = number62
+																		local number64 = (number60 * number63 + number61) % 256
+																		local number65 = (number60 * number64 + number61) % 256
+																		local number66 = (number60 * number65 + number61) % 256
+																		local number67 = (number60 * number66 + number61) % 256
+																		data20[number63] = number64 + number65 * 256 + number66 * 65536 + number67 * 16777216
+																		data21[number63] = number67
 																	else
 																		break
 																	end
 																end
 
-																v74 = tbl22[1]
+																value75 = data22[1]
 															end
 														end
 													end
@@ -5463,134 +5450,134 @@ end)
 													buffer.create(16)
 
 													do
-														local n54 = 5
-														local n55 = 6
-														local n56 = 7
-														local n57 = 8
-														r__R3[n54] = 2
-														r__R3[n55] = 6
-														r__R3[n56] = 10
-														r__R3[n57] = 14
+														local number60 = 5
+														local number61 = 6
+														local number62 = 7
+														local number63 = 8
+														r__R3[number60] = 2
+														r__R3[number61] = 6
+														r__R3[number62] = 10
+														r__R3[number63] = 14
 													end
 												end
 
-												local n54, v75, n55, n56
+												local number60, value76, number61, number62
 
 												do
-													local n57
+													local number63
 
 													do
 														do
 															do
-																local n58 = 15
-																local n59 = 16
-																r__R3[n58] = 12
-																r__R3[n59] = 16
+																local number64 = 15
+																local number65 = 16
+																r__R3[number64] = 12
+																r__R3[number65] = 16
 															end
 														end
 
-														n57 = n53 // v45
+														number63 = number59 // value44
 
 														do
-															local n58 = 21
-															local n59 = 22
-															local n60 = 23
-															local n61 = 24
-															r__R3[n58] = 2
-															r__R3[n59] = 7
-															r__R3[n60] = 12
-															r__R3[n61] = 13
+															local number64 = 21
+															local number65 = 22
+															local number66 = 23
+															local number67 = 24
+															r__R3[number64] = 2
+															r__R3[number65] = 7
+															r__R3[number66] = 12
+															r__R3[number67] = 13
 														end
 													end
 
 													r__R3[32] = 15
 
 													do
-														local tbl20 = {}
-														local n58 = n52 + v46
-														n54 = 16705
-														local tbl21 = { nil, v74, 16, -1, 1 }
+														local data20 = {}
+														local number64 = number58 + value45
+														number60 = 16705
+														local data21 = { nil, value75, 16, -1, 1 }
 
 														while true do
-															local v76 = tbl21[5]
-															local v77 = tbl21[3]
-															local n59 = tbl21[4] + v76
-															tbl21[4] = n59
+															local value77 = data21[5]
+															local value78 = data21[3]
+															local number65 = data21[4] + value77
+															data21[4] = number65
 
-															if n59 <= v77 then
-																local n592 = n59
-																tbl20[{}] = n592 + 1
+															if number65 <= value78 then
+																local number66 = number65
+																data20[{}] = number66 + 1
 															else
 																break
 															end
 														end
 
-														v75 = tbl21[2]
-														iter_f_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v76, v310, v410, v510, v610, v77, v82, v92, v102 in f, s, var do coroutine.yield(true, k, v76, v310, v410, v510, v610, v77, v82, v92, v102) end end); co(); return co end)(tbl20, nil, nil)
-														local v76 = table.pack(iter_f_1())
+														value76 = data21[2]
+														iter_f_1 = (function(iteratorFn, state, control) local co = coroutine.wrap(function() coroutine.yield(); for key, item, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth in iteratorFn, state, control do coroutine.yield(true, key, item, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth) end end); co(); return co end)(data20, nil, nil)
+														local value77 = table.pack(iter_f_1())
 
-														if v76[1] then
-															local v77 = v76[3]
+														if value77[1] then
+															local value78 = value77[3]
 
 															while true do
-																n54 = (n54 * v77 + v77 * 411) % 16776960 + 1
-																local v78 = table.pack(iter_f_1())
+																number60 = (number60 * value78 + value78 * 411) % 16776960 + 1
+																local value79 = table.pack(iter_f_1())
 
-																if v78[1] then
-																	v77 = v78[3]
+																if value79[1] then
+																	value78 = value79[3]
 																else
 																	break
 																end
 															end
 														end
 
-														n55 = n58 + v47
+														number61 = number64 + value46
 													end
 
-													n56 = n57 - v48
+													number62 = number63 - value47
 												end
 
-												local v76, n57, tbl20
+												local value77, number63, data20
 
 												do
-													local n58 = (-8589934591 * (1 + (8636599760 * 67108864 + 4294967296) / 4503599627370496) * 2 ^ 8589934615 + 1) % 16777216
-													local tbl21 = {}
-													local tbl22 = { 1, v75, 6, nil, 0 }
+													local number64 = (-8589934591 * (1 + (8636599760 * 67108864 + 4294967296) / 4503599627370496) * 2 ^ 8589934615 + 1) % 16777216
+													local data21 = {}
+													local data22 = { 1, value76, 6, nil, 0 }
 
 													while true do
-														local v77 = tbl22[1]
-														local v78 = tbl22[3]
-														local n59 = tbl22[5] + v77
-														tbl22[5] = n59
+														local value78 = data22[1]
+														local value79 = data22[3]
+														local number65 = data22[5] + value78
+														data22[5] = number65
 
-														if n59 <= v78 then
-															n58 = (n58 * 1103515245 + 12345) % 16777216
-															tbl21[n59] = n58
+														if number65 <= value79 then
+															number64 = (number64 * 1103515245 + 12345) % 16777216
+															data21[number65] = number64
 														else
 															break
 														end
 													end
 
-													v76 = tbl22[2]
-													n57 = (n54 + tbl21[1]) % 16777216
-													tbl20 = { nil, 6, 0, 1, v76 }
+													value77 = data22[2]
+													number63 = (number60 + data21[1]) % 16777216
+													data20 = { nil, 6, 0, 1, value77 }
 
 													while true do
-														local v77 = tbl20[4]
-														local v78 = tbl20[2]
-														local n59 = tbl20[3] + v77
-														flag5 = not (v77 <= 0)
-														tbl20[3] = n59
+														local value78 = data20[4]
+														local value79 = data20[2]
+														local number65 = data20[3] + value78
+														condition5 = not (value78 <= 0)
+														data20[3] = number65
 
-														if n59 <= v78 then
+														if number65 <= value79 then
 															do
-																local n592 = n59
-																local n60 = (n57 * (tbl21[2] * 2 + 1) + tbl21[3]) % 16777216
-																n57 = ((n60 % 4096 * 4096 + (n60 - n60 % 4096) // 4096 + tbl21[4]) % 16777216 + n592 * tbl21[5]) % 16777216
+																local number66 = number65
+																local number67 = (number63 * (data21[2] * 2 + 1) + data21[3]) % 16777216
+																number63 = ((number67 % 4096 * 4096 + (number67 - number67 % 4096) // 4096 + data21[4]) % 16777216 + number66 * data21[5]) % 16777216
 															end
 
 															if nil then
-																n57 = (n57 + tbl21[6]) % 16777216
+																number63 = (number63 + data21[6]) % 16777216
 															end
 														else
 															break
@@ -5598,66 +5585,66 @@ end)
 													end
 												end
 
-												local tbl21
+												local data21
 
 												do
-													local v77 = tbl20[5]
+													local value78 = data20[5]
 
 													while true do
-														fn4((math_floor_precision(n54) - n57) % 16777216, 8)
+														callback4((math_floor_precision(number60) - number63) % 16777216, 8)
 
-														if n56 == 339374311 then
+														if number62 == 339374311 then
 														end
 
-														if not (fn17 >= "function") then
+														if not (callback20 >= "function") then
 															continue
 														end
 														break
 													end
 
 													Folder3 = "f"
-													n33 = 16705
-													tbl21 = { nil, 16, flag5, v77, v76 }
+													number39 = 16705
+													data21 = { nil, 16, condition5, value78, value77 }
 												end
 
 												while true do
-													local v77, n58, flag6
+													local value78, number64, condition6
 
 													do
-														local v78 = tbl21[5]
-														v77 = tbl21[2]
-														n58 = tbl21[3] + v78
-														flag6 = v78 <= 0
+														local value79 = data21[5]
+														value78 = data21[2]
+														number64 = data21[3] + value79
+														condition6 = value79 <= 0
 													end
 
 													do
-														local flag7 = not flag6
-														local flag8 = n58 >= v77
-														local flag9 = n58 <= v77
+														local condition7 = not condition6
+														local condition8 = number64 >= value78
+														local condition9 = number64 <= value78
 
-														if flag6 then
-															if flag7 then
-																flag8 = flag8 or flag9
+														if condition6 then
+															if condition7 then
+																condition8 = condition8 or condition9
 															else
-																flag9 = flag7
-																flag8 = flag8 or flag9
+																condition9 = condition7
+																condition8 = condition8 or condition9
 															end
 														else
-															flag8 = flag6
+															condition8 = condition6
 
-															if flag7 then
-																flag8 = flag8 or flag9
+															if condition7 then
+																condition8 = condition8 or condition9
 															else
-																flag8 = flag8 or flag7
+																condition8 = condition8 or condition7
 															end
 														end
 
-														tbl21[3] = n58
+														data21[3] = number64
 
-														if flag8 then
+														if condition8 then
 															do
-																local n582 = n58
-																n57[{}] = n582 + 1
+																local number65 = number64
+																number63[{}] = number65 + 1
 															end
 
 															continue
@@ -5668,204 +5655,204 @@ end)
 												end
 
 												do
-													local v77 = tbl21[4]
-													iter_f_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v78, v310, v410, v510, v610, v79, v82, v92, v102 in f, s, var do coroutine.yield(true, k, v78, v310, v410, v510, v610, v79, v82, v92, v102) end end); co(); return co end)(n57, nil, nil)
-													local v78 = table.pack(iter_f_1())
+													local value78 = data21[4]
+													iter_f_1 = (function(iteratorFn, state, control) local co = coroutine.wrap(function() coroutine.yield(); for key, item, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth in iteratorFn, state, control do coroutine.yield(true, key, item, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth) end end); co(); return co end)(number63, nil, nil)
+													local value79 = table.pack(iter_f_1())
 
-													if v78[1] then
-														local v79 = v78[3]
+													if value79[1] then
+														local value80 = value79[3]
 
 														while true do
-															n33 = (n33 * v79 + v79 * 411) % 16776960 + 1
-															local v80 = table.pack(iter_f_1())
+															number39 = (number39 * value80 + value80 * 411) % 16776960 + 1
+															local value81 = table.pack(iter_f_1())
 
-															if v80[1] then
-																v79 = v80[3]
+															if value81[1] then
+																value80 = value81[3]
 															else
 																break
 															end
 														end
 													end
 
-													n24 = 8589934592
-													local n58 = (-17179869183 * (1 + (8627448832 * 67108864 + n24) / 4503599627370496) * 2 ^ 4294967319 + 1) % 16777216
-													n32 = n55 + v49 + v51
-													tbl10 = {}
-													tbl = { nil, 1, v77, 0, 6 }
+													number28 = 8589934592
+													local number64 = (-17179869183 * (1 + (8627448832 * 67108864 + number28) / 4503599627370496) * 2 ^ 4294967319 + 1) % 16777216
+													number38 = number61 + value48 + value50
+													data10 = {}
+													data = { nil, 1, value78, 0, 6 }
 
 													while true do
-														local v79 = tbl[2]
-														local v80 = tbl[5]
-														local n59 = tbl[4] + v79
-														tbl[4] = n59
+														local value80 = data[2]
+														local value81 = data[5]
+														local number65 = data[4] + value80
+														data[4] = number65
 
-														if n59 <= v80 then
-															n58 = (n58 * 1103515245 + 12345) % 16777216
-															tbl10[n59] = n58
+														if number65 <= value81 then
+															number64 = (number64 * 1103515245 + 12345) % 16777216
+															data10[number65] = number64
 														else
 															break
 														end
 													end
 												end
 
-												n36 = (n33 + tbl10[1]) % 16777216
-												tbl16 = { nil, 1, 6, 0, tbl[3] }
+												number42 = (number39 + data10[1]) % 16777216
+												data16 = { nil, 1, 6, 0, data[3] }
 
 												while true do
-													v62 = tbl16[2]
-													v69 = tbl16[3]
-													n34 = tbl16[4] + v62
-													tbl16[4] = n34
+													value61 = data16[2]
+													value68 = data16[3]
+													number40 = data16[4] + value61
+													data16[4] = number40
 
-													if n34 <= v69 then
-														n342 = n34
-														n45 = (n36 * (tbl10[2] * 2 + 1) + tbl10[3]) % 16777216
-														n24 = n45 % 4096
-														n36 = ((n24 * 4096 + (n45 - n45 % 4096) // 4096 + tbl10[4]) % 16777216 + n342 * tbl10[5]) % 16777216
+													if number40 <= value68 then
+														number47 = number40
+														number51 = (number42 * (data10[2] * 2 + 1) + data10[3]) % 16777216
+														number28 = number51 % 4096
+														number42 = ((number28 * 4096 + (number51 - number51 % 4096) // 4096 + data10[4]) % 16777216 + number47 * data10[5]) % 16777216
 
 														if nil then
-															n36 = (n36 + tbl10[6]) % 16777216
+															number42 = (number42 + data10[6]) % 16777216
 														end
 													else
 														break
 													end
 												end
 
-												v55 = tbl16[5]
-												fn4((math_floor_precision(n33) - n36) % 16777216, 8)
-												tbl11Map = {}
+												value54 = data16[5]
+												callback4((math_floor_precision(number39) - number42) % 16777216, 8)
+												dataMap = {}
 												gameRef = 16705
-												tbl12 = { 16, 1, -1, v55, nil }
+												data12 = { 16, 1, -1, value54, nil }
 
 												while true do
-													v57 = tbl12[2]
-													v70 = tbl12[1]
-													n41 = tbl12[3] + v57
-													tbl12[3] = n41
+													value56 = data12[2]
+													value69 = data12[1]
+													number48 = data12[3] + value56
+													data12[3] = number48
 
-													if n41 <= v70 then
-														v61 = n41
-														tbl11 = {}
-														tbl11Map[tbl11] = v61 + 1
+													if number48 <= value69 then
+														value60 = number48
+														data11 = {}
+														dataMap[data11] = value60 + 1
 													else
 														break
 													end
 												end
 
-												v67 = tbl12[4]
-												iter_f_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v77, v310, v410, v510, v610, v78, v82, v92, v102 in f, s, var do coroutine.yield(true, k, v77, v310, v410, v510, v610, v78, v82, v92, v102) end end); co(); return co end)(tbl11Map, nil, nil)
-												local v77 = table.pack(iter_f_1())
+												value66 = data12[4]
+												iter_f_1 = (function(iteratorFn, state, control) local co = coroutine.wrap(function() coroutine.yield(); for key, item, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth in iteratorFn, state, control do coroutine.yield(true, key, item, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth) end end); co(); return co end)(dataMap, nil, nil)
+												local value78 = table.pack(iter_f_1())
 
-												if v77[1] then
-													v65 = v77[3]
+												if value78[1] then
+													value64 = value78[3]
 
 													while true do
-														gameRef = (gameRef * v65 + v65 * 411) % 16776960 + 1
-														local v78 = table.pack(iter_f_1())
+														gameRef = (gameRef * value64 + value64 * 411) % 16776960 + 1
+														local value79 = table.pack(iter_f_1())
 
-														if v78[1] then
-															v65 = v78[3]
+														if value79[1] then
+															value64 = value79[3]
 														else
 															break
 														end
 													end
 												end
 
-												n38 = n32 + v52
-												n30 = 20084442667
-												local n302 = bit32.band(n30, 4294967295)
-												local n3022 = bit32.band(n302, 65535)
-												n31 = 1595630789 + bit32.band(31223 * n3022 + bit32.lshift(bit32.band(31223 * bit32.rshift(n302, 16) + 5879 * n3022, 65535), 16), 4294967295)
-												n212 = 3524332562
-												v56 = bit32.bor(2931427363, n30)
-												local n2122 = bit32.band(n212, 4294967295)
-												local v562 = bit32.band(v56, 4294967295)
-												local n21222 = bit32.band(n2122, 65535)
-												local n21223 = bit32.rshift(n2122, 16)
-												local v5622 = bit32.band(v562, 65535)
-												n29 = 12884901888
-												n44 = (-8589934591 * (1 + ((n31 + bit32.band(n21222 * v5622 + bit32.lshift(bit32.band(n21222 * bit32.rshift(v562, 16) + n21223 * v5622, 65535), 16), 4294967295) + 1712676800) * 67108864 + n29) / 4503599627370496) * 2 ^ 12884901911 + 1) % 16777216
-												tbl10 = {}
-												tbl13 = { 0, 6, 1, nil, v67 }
+												number44 = number38 + value51
+												number35 = 20084442667
+												local number64 = bit32.band(number35, 4294967295)
+												local number65 = bit32.band(number64, 65535)
+												number37 = 1595630789 + bit32.band(31223 * number65 + bit32.lshift(bit32.band(31223 * bit32.rshift(number64, 16) + 5879 * number65, 65535), 16), 4294967295)
+												number36 = 3524332562
+												value55 = bit32.bor(2931427363, number35)
+												local number66 = bit32.band(number36, 4294967295)
+												local value79 = bit32.band(value55, 4294967295)
+												local number67 = bit32.band(number66, 65535)
+												local number68 = bit32.rshift(number66, 16)
+												local value80 = bit32.band(value79, 65535)
+												number34 = 12884901888
+												number50 = (-8589934591 * (1 + ((number37 + bit32.band(number67 * value80 + bit32.lshift(bit32.band(number67 * bit32.rshift(value79, 16) + number68 * value80, 65535), 16), 4294967295) + 1712676800) * 67108864 + number34) / 4503599627370496) * 2 ^ 12884901911 + 1) % 16777216
+												data10 = {}
+												data13 = { 0, 6, 1, nil, value66 }
 
 												while true do
-													v64 = tbl13[3]
-													v60 = tbl13[2]
-													n35 = tbl13[1] + v64
-													tbl13[1] = n35
+													value63 = data13[3]
+													value59 = data13[2]
+													number41 = data13[1] + value63
+													data13[1] = number41
 
-													if n35 <= v60 then
-														n44 = (n44 * 1103515245 + 12345) % 16777216
-														tbl10[n35] = n44
+													if number41 <= value59 then
+														number50 = (number50 * 1103515245 + 12345) % 16777216
+														data10[number41] = number50
 													else
 														break
 													end
 												end
 
-												fn82 = (gameRef + tbl10[1]) % 16777216
-												tbl15 = { tbl13[5], 1, nil, 6, 0 }
+												callback11 = (gameRef + data10[1]) % 16777216
+												data15 = { data13[5], 1, nil, 6, 0 }
 
 												while true do
-													v71 = tbl15[2]
-													v68 = tbl15[4]
-													n39 = tbl15[5] + v71
-													tbl15[5] = n39
+													value70 = data15[2]
+													value67 = data15[4]
+													number45 = data15[5] + value70
+													data15[5] = number45
 
-													if n39 <= v68 then
-														v63 = n39
-														n37 = (fn82 * (tbl10[2] * 2 + 1) + tbl10[3]) % 16777216
-														n24 = n37 % 4096
-														fn82 = ((n24 * 4096 + (n37 - n37 % 4096) // 4096 + tbl10[4]) % 16777216 + v63 * tbl10[5]) % 16777216
+													if number45 <= value67 then
+														value62 = number45
+														number43 = (callback11 * (data10[2] * 2 + 1) + data10[3]) % 16777216
+														number28 = number43 % 4096
+														callback11 = ((number28 * 4096 + (number43 - number43 % 4096) // 4096 + data10[4]) % 16777216 + value62 * data10[5]) % 16777216
 
 														if nil then
-															fn82 = (fn82 + tbl10[6]) % 16777216
+															callback11 = (callback11 + data10[6]) % 16777216
 														end
 													else
 														break
 													end
 												end
 
-												tbl = tbl15[1]
-												v58 = math_floor_precision
+												data = data15[1]
+												value57 = math_floor_precision
 
-												if v32 ~= 134.00000000001432 then
-													fn4((v58(gameRef) - fn82) % 16777216, 8)
-													tbl17 = {}
-													tbl14 = { tbl, 1, nil, -1, 16 }
+												if value31 ~= 134.00000000001432 then
+													callback4((value57(gameRef) - callback11) % 16777216, 8)
+													data17 = {}
+													data14 = { data, 1, nil, -1, 16 }
 
 													while true do
-														v66 = tbl14[2]
-														v59 = tbl14[5]
-														n40 = tbl14[4] + v66
-														tbl14[4] = n40
+														value65 = data14[2]
+														value58 = data14[5]
+														number46 = data14[4] + value65
+														data14[4] = number46
 
-														if n40 <= v59 then
-															n402 = n40
-															tbl18 = {}
-															tbl17[tbl18] = n402 + 1
+														if number46 <= value58 then
+															number49 = number46
+															data18 = {}
+															data17[data18] = number49 + 1
 														else
 															break
 														end
 													end
 
-													iter_f_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v78, v310, v410, v510, v610, v79, v82, v92, v102 in f, s, var do coroutine.yield(true, k, v78, v310, v410, v510, v610, v79, v82, v92, v102) end end); co(); return co end)(tbl17, nil, nil)
-													local v78 = table.pack(iter_f_1())
+													iter_f_1 = (function(iteratorFn, state, control) local co = coroutine.wrap(function() coroutine.yield(); for key, item, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth in iteratorFn, state, control do coroutine.yield(true, key, item, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth) end end); co(); return co end)(data17, nil, nil)
+													local value81 = table.pack(iter_f_1())
 
-													if v78[1] then
+													if value81[1] then
 														while true do
-															local v79 = table.pack(iter_f_1())
+															local value82 = table.pack(iter_f_1())
 
-															if v79[1] then
+															if value82[1] then
 															else
 																break
 															end
 														end
 													end
 
-													if v54 ~= 133 then
+													if value53 ~= 133 then
 													end
 
-													return tbl2()
+													return data2()
 												end
 
 												continue
@@ -5879,9 +5866,9 @@ end)
 										end
 									end
 								else
-									fn4(372868618, 4)
-									n4 = 43031001
-									fn5()
+									callback4(372868618, 4)
+									number4 = 43031001
+									callback5()
 
 									while true do
 									end
@@ -5893,18 +5880,18 @@ end)
 						end
 					end
 
-					fn4(372868618, 4)
-					n4 = 43031001
-					fn5()
+					callback4(372868618, 4)
+					number4 = 43031001
+					callback5()
 
 					while true do
 					end
 				end
 			end
 		else
-			fn4(372868618, 4)
-			n4 = 43031001
-			fn5()
+			callback4(372868618, 4)
+			number4 = 43031001
+			callback5()
 
 			while true do
 			end

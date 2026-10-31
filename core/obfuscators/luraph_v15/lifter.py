@@ -42,6 +42,44 @@ from obfuscators.luraph_v15.stepper import (
     GenIterMaker, JIT_BOTTOM, JIT_TMP, JitModel, JitProto, _declared_in, _jit_nested_model,
 )
 
+def _walk_any(x, pred):
+    """True if any value inside x (recursively: lists, tuples, IR nodes)
+    matches pred."""
+    if pred(x):
+        return True
+    if isinstance(x, (list, tuple)):
+        return any(_walk_any(y, pred) for y in x)
+    if isinstance(x, Expr):
+        return any(_walk_any(v, pred) for v in x.__dict__.values())
+    return False
+
+
+def _undecoded(x):
+    """A constant of Luraph's anti-tamper check that no decoder produced."""
+    return isinstance(x, Missing)
+
+
+def _unknown(x):
+    """Undecoded, or a value the walk never assigned (`None`)."""
+    return isinstance(x, Missing) or x is None or (isinstance(x, Const) and x.v is None)
+
+
+def _poison_stmt(st):
+    """A statement carrying a value that is not knowable: writing it would be
+    guessing a value, calling it would be calling nil, and passing it on would
+    make the call meaningless."""
+    if isinstance(st, Assign):
+        # only a genuinely undecoded constant poisons a write: `None` is the
+        # walk's "no value yet" and is a normal part of lifting
+        return _walk_any(st.value, _undecoded)
+    if isinstance(st, CallStmt):
+        return _walk_any(st.fn, _unknown) or _walk_any(st.args.items, _undecoded) \
+            or _walk_any(st.args.tail, _undecoded)
+    if isinstance(st, SetList):
+        return _walk_any(st.values.items, _undecoded)
+    return False
+
+
 class ProtoLifter:
     """Steps the instructions of one proto."""
     walk_only = False   
@@ -326,6 +364,19 @@ class ProtoLifter:
                 g = self.reg_gen.get(st.target.n, 0)
                 self.reg_def_idx[(st.target.n, g)] = len(self.out)
                 self.reg_gen[st.target.n] = g + 1
+        if _poison_stmt(st):
+            # The value (or the callee) is derived from a constant of Luraph's
+            # anti-tamper check that no decoder ever produced. Writing it would
+            # be guessing a value and calling it would be calling nil, so the
+            # statement is left out; a poisoned register keeps the poison, so
+            # everything read from it collapses too instead of turning into a
+            # `nil` call.
+            if isinstance(st, Assign) and isinstance(st.target, Reg):
+                self.packs.pop(st.target.n, None)
+                self.jvals[st.target.n] = Missing(None)
+            if os.environ.get("DEVIRT_JUNK"):
+                print("[junk] dropped %s" % fmt_stmt(st), file=sys.stderr)
+            return
         self.out.append(st)
 
     def new_temp(self):
@@ -866,6 +917,8 @@ class ProtoLifter:
             obj = obj.first()
         if isinstance(key, Multi):
             key = key.first()
+        if _walk_any(obj, _undecoded) or _walk_any(key, _undecoded):
+            return Missing(None)
         if isinstance(obj, RegFile):
             if isinstance(key, SymList):
                 raise Unsupported("symbolic register index")
@@ -1188,6 +1241,18 @@ class ProtoLifter:
                 raise Unsupported("symbolic key store into a concrete VM table")
             if id(obj) in self.proto_arrays:
                 if is_sym(v):
+                    # a register value written into an instruction array (the
+                    # payload patching its own code): keep it in the path
+                    # overlay instead of stopping the walk, exactly like the
+                    # v14 path below. The slot stays symbolic, so a later read
+                    # that needs a concrete handler still stops there.
+                    if obj.tid is not None and self.ov_base is not None:
+                        self.mutated = True
+                        if getattr(self, "_is_v14", False):
+                            self.write_proto_ov((id(obj), S.norm_key(key)), v, obj.get(key))
+                        else:
+                            self.write_ov((id(obj), S.norm_key(key)), v, obj.get(key))
+                        return
                     self.out.clear()
                     raise Unsupported("symbolic value store into proto array")
                 self.mutated = True
@@ -1344,6 +1409,9 @@ class ProtoLifter:
             r = self.buffer_op(name, a.items)
             if r is not NotImplemented:
                 return r
+        if _walk_any(a.items, _undecoded) or _walk_any(a.tail, _undecoded):
+            # derived from a poisoned (junk-branch) value: stay poisoned
+            return Missing(None)
         if name in S.CONCRETE:
             vset = getattr(self, "vreg_set", ())
             cfacts = getattr(self, "cur_facts", {})
@@ -1370,7 +1438,16 @@ class ProtoLifter:
             try:
                 r = S.CONCRETE[name](*vals)
             except (struct.error, IndexError, ValueError, TypeError, OverflowError) as ex:
-                raise Unsupported("%s failed: %s" % (name, ex))
+                # Every operand was concrete and the fold still raised, so the
+                # expression cannot have a value at run time either (bit32.band
+                # of a string, ...). It belongs to a junk branch of Luraph's
+                # decoder, so poison the value: whatever is derived from it
+                # collapses to `Missing` and the real code after it still
+                # lifts. Nothing is guessed for the value itself.
+                if os.environ.get("DEVIRT_JUNK"):
+                    print("[junk] %s(%s): %s" % (name, ", ".join(fmt_expr(x) for x in a.items), ex),
+                          file=sys.stderr)
+                return Missing(None)
             return r
         t = self.new_temp()
         self.emit(CallStmt(t, Global(name), Multi([self.value_of(x) if not isinstance(x, SymList) else x
@@ -1622,6 +1699,11 @@ class ProtoLifter:
             raise Unsupported("move into %r" % (dst,))
 
     def call_symbolic(self, fn, args, it, stat):
+        # A callee or an argument derived from a poisoned (junk-branch) value:
+        # the call has no knowable effect (calling values that do not exist is
+        # never valid Lua), so stay poisoned instead of emitting `(nil)(...)`.
+        if _walk_any(fn, _unknown) or _walk_any(args.items, _undecoded) or _walk_any(args.tail, _undecoded):
+            return Multi([Missing(None)])
         if isinstance(fn, GenIterMaker):
             fn.args = args
             return Multi([])

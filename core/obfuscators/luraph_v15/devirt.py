@@ -1005,6 +1005,28 @@ def program_roots(prog):
     loaders = bool(os.environ.get("DEVIRT_LOADERS"))
     return [(tag, lst[0][1], lst[0][2]) for tag, lst in vms if tag == payload or loaders]
 
+def _drop_dead_upvalue_writes(lines):
+    """A VM upvalue that is written exactly once, with a constant, is scratch
+    of Luraph's anti-tamper check (the decoy `upv84 = "items"` next to a hash
+    that no decoder can reproduce): nothing can read it, so the assignment
+    carries no behaviour. Only names that occur once in the whole chunk are
+    dropped, so no value the payload can observe is touched."""
+    pat = re.compile(r"^\s*(upv\d+)\s*=\s*-?[\w.\"']+\s*$")
+    used = {}
+    for l in lines:
+        for m in re.finditer(r"\bupv\d+\b", l):
+            used[m.group(0)] = used.get(m.group(0), 0) + 1
+    keep = []
+    dropped = 0
+    for l in lines:
+        m = pat.match(l)
+        if m is not None and used.get(m.group(1)) == 1:
+            dropped += 1
+            continue
+        keep.append(l)
+    return keep, dropped
+
+
 def lift_program(source, protos_path, chunk_paths=(), fetch=None):
     """The root proto of every VM -> Luau text (plus stats and constant requests)."""
     prog = Program(source, protos_path, chunk_paths)
@@ -1084,6 +1106,9 @@ def lift_program(source, protos_path, chunk_paths=(), fetch=None):
     import structure as _ST
     fl.stats["guards"] = sum(_ST.GUARD_DROPS)
     _ST.GUARD_DROPS[:] = []
+    out, dead = _drop_dead_upvalue_writes(out)
+    if dead:
+        fl.stats["dead_upvalue_writes"] = fl.stats.get("dead_upvalue_writes", 0) + dead
     text = backend.polish("\n".join(out))
     if os.environ.get("DEVIRT_MISS"):
         print("[miss] %r" % (dict(prog.dump.misses),), file=sys.stderr)

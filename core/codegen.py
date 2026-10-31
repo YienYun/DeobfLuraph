@@ -1690,6 +1690,12 @@ class Renderer:
                 return [ind + "%s %s= %s" % (tg, op, self.expr(v.b))]
             return [ind + "%s = %s" % (tg, vals)]
         if isinstance(st, CallS):
+            if type(getattr(st.call, "fn", None)).__name__ == "Const" \
+                    and getattr(st.call.fn, "v", "?") is None:
+                # The callee is a constant no decoder produced: `(nil)(...)` is
+                # a call that can only raise, left over from a branch of
+                # Luraph's anti-tamper check. Emitting it would be a lie.
+                return []
             return [ind + self.expr(st.call)]
         if isinstance(st, TempDef):
             return [ind + "local t%s = table.pack(%s)" % (st.t, self.expr(st.call))]

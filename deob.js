@@ -326,9 +326,9 @@ async function processFile(absInput, args) {
         }
         writeAtomically(stringsFinal, fs.readFileSync(stringsPath, 'utf8'));
       }
-      if (job.resultType === 'devirtualized') {
-        content = injectWatermark(content);
-      }
+      // Attribution goes on every result, whatever produced it (a behaviour
+      // trace is just as much a deobfuscated script as a lifted one).
+      content = injectWatermark(content);
       writeAtomically(final, content);
       const report = {
         input: path.resolve(absInput),

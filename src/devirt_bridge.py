@@ -68,6 +68,7 @@ def _run_luraph_pipeline(config_file, v14=False):
     job = Job(c["input"], c["source"], args, c["trace_path"], c["debug"], c["obfuscator"])
     job.source_path = c["source_path"]
     job.trace_status = c.get("trace_status")
+    job.run_status = c.get("run_status") or ""
     job.credit_header = lambda: ""
 
     runner = harness.Runner(job)

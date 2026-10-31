@@ -89,12 +89,26 @@ function headerLines(meta, stats) {
   if (iocs.loader_id) out.push(`-- loader id : ${iocs.loader_id.join(', ')}`);
   if (iocs.get_key_link) out.push(`-- key link  : ads.luarmor.net/get_key?for=${iocs.get_key_link[0]}`);
   const states = blockedStates(stats);
-  if (states.length) {
+  if (states.length && stats && stats.functions === 0) {
+    out.push(`-- Luarmor blocked the offline run (${states.join(', ')}): the payload this file runs is`);
+    out.push('-- decrypted by the live session, so nothing in its own bytes executes without it.');
+  } else if (states.length) {
     out.push(`-- Luarmor blocked the offline run (${states.join(', ')}): the session payload was never`);
     out.push('-- decrypted, so only the loader in this file was recovered. Capture the loader\'s');
     out.push('-- loadstring/HttpGet output from a real executor to get the payload itself.');
   } else {
     out.push('-- The licence check itself is not bypassed: only the code in this file was lifted.');
+  }
+  // A run that died early still lifts every proto it reached, but the trace
+  // covers only what executed: say which one this is.
+  const status = (stats && stats.run_status) || '';
+  if (/^script error/.test(status)) {
+    out.push(`-- The offline run stopped early (${status.replace(/^script status: /, '')}), so code that`);
+    out.push('-- never ran in this sandbox is lifted from its protos alone; the trace is partial.');
+  }
+  if (stats && stats.runtime_stubs) {
+    out.push(`-- ${stats.runtime_stubs} Luraph VM runtime function(s) (LPH_ENCFUNC) are named but not lifted:`
+      + ' they live in the VM object.');
   }
   return out.join('\n');
 }
@@ -134,4 +148,4 @@ function writeReport(finalPath, meta) {
   return p;
 }
 
-module.exports = { analyze, announce, prependHeader, annotateStub, writeReport, reportPath, blockedStates };
+module.exports = { analyze, announce, prependHeader, annotateStub, writeReport, reportPath, blockedStates, headerLines };

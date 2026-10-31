@@ -1103,6 +1103,7 @@ def lift_program(source, protos_path, chunk_paths=(), fetch=None):
     if shared:
         at = next((i for i, l in enumerate(out) if l and not l.startswith("--")), len(out))
         out[at:at] = shared
+    fl.stats["runtime_stubs"] = len(prog.dump.shared)
     import structure as _ST
     fl.stats["guards"] = sum(_ST.GUARD_DROPS)
     _ST.GUARD_DROPS[:] = []

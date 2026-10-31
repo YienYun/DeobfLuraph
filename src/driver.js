@@ -181,6 +181,10 @@ async function run(job) {
         // outputs must never be mistaken for a result from the current run.
         const statsDir = fs.mkdtempSync(path.join(require('os').tmpdir(), 'deobf-stats-'));
         const statsPath = path.join(statsDir, 'stats.json');
+        // `-- run status: ...` from the behaviour trace: an early error means
+        // the trace covers only the part of the script that managed to run.
+        const statusMatch = /^-- run status: (.*)$/m.exec(body || '');
+        const runStatus = statusMatch ? statusMatch[1].trim() : '';
         const cfgData = {
           input: job.input,
           source: job.source,
@@ -193,6 +197,7 @@ async function run(job) {
           cfg: cfg,
           chunks: chunks,
           run_text: runText,
+          run_status: runStatus,
           ppath: ppath,
           dpath: dpath,
           stats_path: statsPath,

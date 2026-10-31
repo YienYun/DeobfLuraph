@@ -226,6 +226,9 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None):
     states = getattr(job, "luarmor_states", None)
     if states:
         out_stats["luarmor_states"] = states
+    run_status = getattr(job, "run_status", None)
+    if run_status and not run_status.endswith("finished"):
+        out_stats["run_status"] = run_status
     return out_stats
 
 def run(job):
@@ -339,6 +342,11 @@ def run(job):
         write_trace()
     if strings is not None:
         job.write(job.path(".strings.txt"), strings)
+    # the first line of the run is `-- run status: ...`: whether the script ran
+    # to the end or died early (a thin sandbox diverges from a real session,
+    # and code that never ran is code that cannot be traced)
+    first = (body.splitlines() or [""])[0]
+    job.run_status = first.lstrip("- ").strip() if first else ""
     dpath = job.path(".devirt.luau")
     if protos_json is not None:
         ppath = job.path(".protos.json")

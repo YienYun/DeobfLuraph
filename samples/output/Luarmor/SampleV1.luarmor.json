@@ -93,6 +93,7 @@
     "has_vm_chunk": true
   },
   "result_type": "luarmor-blocked",
+  "run_status": "stopped in an endless loop (truncated)",
   "blocked": {
     "states": [
       "the loader checks did not pass"

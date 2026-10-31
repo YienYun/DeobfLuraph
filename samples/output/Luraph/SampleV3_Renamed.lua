@@ -134,135 +134,134 @@ local function fn5()
 									n52 = bit32.lshift(bit32.band(n5, n112), 1)
 									n53 = bit32.band(n52, n5)
 									n54 = bit32.bnot(n53)
-									local packedValues = table.pack(bit32.band(n52, 4294967295))
-									local packedValues2 = table.pack(bit32.band(n54, 4294967295))
-									local packedValues3 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues4 = table.pack(bit32.rshift(packedValues[1], 16))
-									local packedValues5 = table.pack(bit32.band(packedValues2[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues3[1] * packedValues5[1] + bit32.lshift(bit32.band(packedValues3[1] * bit32.rshift(packedValues2[1], 16) + packedValues4[1] * packedValues5[1], 65535), 16), 4294967295), 4294967295))
-									local packedValues6 = table.pack(bit32.band(packedValues[1], 65535))
-									v18 = bit32.band(19474 * packedValues6[1] + bit32.lshift(bit32.band(19474 * bit32.rshift(packedValues[1], 16) + 39469 * packedValues6[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n52, 4294967295))
-									local packedValues7 = table.pack(bit32.band(packedValues[1], 65535))
-									n12 = n112 + n5 + v18 + bit32.band(23587 * packedValues7[1] + bit32.lshift(bit32.band(23587 * bit32.rshift(packedValues[1], 16) + 21404 * packedValues7[1], 65535), 16), 4294967295)
+									local n57 = bit32.band(n52, 4294967295)
+									local n58 = bit32.band(n54, 4294967295)
+									local n572 = bit32.band(n57, 65535)
+									local n573 = bit32.rshift(n57, 16)
+									local n582 = bit32.band(n58, 65535)
+									local v30 = bit32.band(bit32.band(n572 * n582 + bit32.lshift(bit32.band(n572 * bit32.rshift(n58, 16) + n573 * n582, 65535), 16), 4294967295), 4294967295)
+									local v302 = bit32.band(v30, 65535)
+									v18 = bit32.band(19474 * v302 + bit32.lshift(bit32.band(19474 * bit32.rshift(v30, 16) + 39469 * v302, 65535), 16), 4294967295)
+									local n59 = bit32.band(n52, 4294967295)
+									local n592 = bit32.band(n59, 65535)
+									n12 = n112 + n5 + v18 + bit32.band(23587 * n592 + bit32.lshift(bit32.band(23587 * bit32.rshift(n59, 16) + 21404 * n592, 65535), 16), 4294967295)
 									n55 = bit32.bnot(n5)
 									n56 = bit32.bor(n55, 54517094)
-									local packedValues = table.pack(bit32.band(n52, 4294967295))
-									local packedValues8 = table.pack(bit32.band(n56, 4294967295))
-									local packedValues9 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues10 = table.pack(bit32.rshift(packedValues[1], 16))
-									local packedValues11 = table.pack(bit32.band(packedValues8[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues9[1] * packedValues11[1] + bit32.lshift(bit32.band(packedValues9[1] * bit32.rshift(packedValues8[1], 16) + packedValues10[1] * packedValues11[1], 65535), 16), 4294967295), 4294967295))
-									local packedValues12 = table.pack(bit32.band(packedValues[1], 65535))
-									n13 = 1402756132 + bit32.band(46062 * packedValues12[1] + bit32.lshift(bit32.band(46062 * bit32.rshift(packedValues[1], 16) + 26066 * packedValues12[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(bit32.bnot(n52), 4294967295))
-									local packedValues13 = table.pack(bit32.band(packedValues[1], 65535))
-									v19 = bit32.band(23586 * packedValues13[1] + bit32.lshift(bit32.band(23586 * bit32.rshift(packedValues[1], 16) + 21404 * packedValues13[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(bit32.bor(54517095, n55), 4294967295))
-									local packedValues14 = table.pack(bit32.band(packedValues[1], 65535))
-									n14 = n12 + n13 + v19 + bit32.band(2 * packedValues14[1] + bit32.lshift(bit32.band(2 * bit32.rshift(packedValues[1], 16) + 0 * packedValues14[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n14, 4294967295))
-									local packedValues15 = table.pack(bit32.band(packedValues[1], 65535))
-									n15 = 327058238 + 3859571462 + bit32.band(25350 * packedValues15[1] + bit32.lshift(bit32.band(25350 * bit32.rshift(packedValues[1], 16) + 58892 * packedValues15[1], 65535), 16), 4294967295)
+									local n510 = bit32.band(n52, 4294967295)
+									local n511 = bit32.band(n56, 4294967295)
+									local n5102 = bit32.band(n510, 65535)
+									local n5103 = bit32.rshift(n510, 16)
+									local n5112 = bit32.band(n511, 65535)
+									local v31 = bit32.band(bit32.band(n5102 * n5112 + bit32.lshift(bit32.band(n5102 * bit32.rshift(n511, 16) + n5103 * n5112, 65535), 16), 4294967295), 4294967295)
+									local v312 = bit32.band(v31, 65535)
+									n13 = 1402756132 + bit32.band(46062 * v312 + bit32.lshift(bit32.band(46062 * bit32.rshift(v31, 16) + 26066 * v312, 65535), 16), 4294967295)
+									local n512 = bit32.band(bit32.bnot(n52), 4294967295)
+									local n5122 = bit32.band(n512, 65535)
+									v19 = bit32.band(23586 * n5122 + bit32.lshift(bit32.band(23586 * bit32.rshift(n512, 16) + 21404 * n5122, 65535), 16), 4294967295)
+									local v32 = bit32.band(bit32.bor(54517095, n55), 4294967295)
+									local v322 = bit32.band(v32, 65535)
+									n14 = n12 + n13 + v19 + bit32.band(2 * v322 + bit32.lshift(bit32.band(2 * bit32.rshift(v32, 16) + 0 * v322, 65535), 16), 4294967295)
+									local n143 = bit32.band(n14, 4294967295)
+									local n1432 = bit32.band(n143, 65535)
+									n15 = 327058238 + 3859571462 + bit32.band(25350 * n1432 + bit32.lshift(bit32.band(25350 * bit32.rshift(n143, 16) + 58892 * n1432, 65535), 16), 4294967295)
 									v20 = bit32.bor(2147483647, n14)
-									local packedValues = table.pack(bit32.band(bit32.band(272719449, v20), 4294967295))
-									local packedValues16 = table.pack(bit32.band(packedValues[1], 65535))
-									n16 = n15 + 375472684 + bit32.band(14836 * packedValues16[1] + bit32.lshift(bit32.band(14836 * bit32.rshift(packedValues[1], 16) + 13287 * packedValues16[1], 65535), 16), 4294967295) + 1761712016
+									local v33 = bit32.band(bit32.band(272719449, v20), 4294967295)
+									local v332 = bit32.band(v33, 65535)
+									n16 = n15 + 375472684 + bit32.band(14836 * v332 + bit32.lshift(bit32.band(14836 * bit32.rshift(v33, 16) + 13287 * v332, 65535), 16), 4294967295) + 1761712016
 									n142 = bit32.bnot(n14)
-									local packedValues = table.pack(bit32.band(bit32.bor(2092966552, n142), 4294967295))
-									local packedValues17 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues = table.pack(bit32.band(n16 - 4564062016 + 28981759 + bit32.band(50689 * packedValues17[1] + bit32.lshift(bit32.band(50689 * bit32.rshift(packedValues[1], 16) + 32325 * packedValues17[1], 65535), 16), 4294967295) + 1195411303, 4294967295))
-									local packedValues18 = table.pack(bit32.band(packedValues[1], 65535))
-									n17 = bit32.band(31367 * packedValues18[1] + bit32.lshift(bit32.band(31367 * bit32.rshift(packedValues[1], 16) + 21986 * packedValues18[1], 65535), 16), 4294967295) + 21801894718
+									local v34 = bit32.band(bit32.bor(2092966552, n142), 4294967295)
+									local v342 = bit32.band(v34, 65535)
+									local v35 = bit32.band(n16 - 4564062016 + 28981759 + bit32.band(50689 * v342 + bit32.lshift(bit32.band(50689 * bit32.rshift(v34, 16) + 32325 * v342, 65535), 16), 4294967295) + 1195411303, 4294967295)
+									local v352 = bit32.band(v35, 65535)
+									n17 = bit32.band(31367 * v352 + bit32.lshift(bit32.band(31367 * bit32.rshift(v35, 16) + 21986 * v352, 65535), 16), 4294967295) + 21801894718
 									v15[n112] = bit32.bxor(v15[n112], 327058238)
 									n18 = n5 + 584826193
-									local packedValues = table.pack(bit32.band(n18, 4294967295))
-									local packedValues19 = table.pack(bit32.band(packedValues[1], 65535))
-									n19 = bit32.band(43296 * packedValues19[1] + bit32.lshift(bit32.band(43296 * bit32.rshift(packedValues[1], 16) + 12122 * packedValues19[1], 65535), 16), 4294967295) + 1588941376
-									local packedValues = table.pack(bit32.band(n112, 4294967295))
-									local packedValues20 = table.pack(bit32.band(packedValues[1], 65535))
-									v21 = bit32.band(packedValues20[1] * 62187 + bit32.lshift(bit32.band(packedValues20[1] * 8557 + bit32.rshift(packedValues[1], 16) * 62187, 65535), 16), 4294967295)
+									local n185 = bit32.band(n18, 4294967295)
+									local n1852 = bit32.band(n185, 65535)
+									n19 = bit32.band(43296 * n1852 + bit32.lshift(bit32.band(43296 * bit32.rshift(n185, 16) + 12122 * n1852, 65535), 16), 4294967295) + 1588941376
+									local n113 = bit32.band(n112, 4294967295)
+									local n1132 = bit32.band(n113, 65535)
+									v21 = bit32.band(n1132 * 62187 + bit32.lshift(bit32.band(n1132 * 8557 + bit32.rshift(n113, 16) * 62187, 65535), 16), 4294967295)
 									n182 = bit32.band(n18, n17)
-									local packedValues = table.pack(bit32.band(v21, 4294967295))
-									local packedValues21 = table.pack(bit32.band(n182, 4294967295))
-									local packedValues22 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues23 = table.pack(bit32.rshift(packedValues[1], 16))
-									local packedValues24 = table.pack(bit32.band(packedValues21[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues22[1] * packedValues24[1] + bit32.lshift(bit32.band(packedValues22[1] * bit32.rshift(packedValues21[1], 16) + packedValues23[1] * packedValues24[1], 65535), 16), 4294967295), 4294967295))
-									local packedValues25 = table.pack(bit32.band(packedValues[1], 65535))
-									v23 = bit32.band(51485 * packedValues25[1] + bit32.lshift(bit32.band(51485 * bit32.rshift(packedValues[1], 16) + 39315 * packedValues25[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(v21, 4294967295))
-									local packedValues26 = table.pack(bit32.band(packedValues[1], 65535))
-									n20 = n19 + v23 + bit32.band(29245 * packedValues26[1] + bit32.lshift(bit32.band(29245 * bit32.rshift(packedValues[1], 16) + 51438 * packedValues26[1], 65535), 16), 4294967295)
+									local v212 = bit32.band(v21, 4294967295)
+									local n186 = bit32.band(n182, 4294967295)
+									local v2122 = bit32.band(v212, 65535)
+									local v2123 = bit32.rshift(v212, 16)
+									local n1862 = bit32.band(n186, 65535)
+									local v36 = bit32.band(bit32.band(v2122 * n1862 + bit32.lshift(bit32.band(v2122 * bit32.rshift(n186, 16) + v2123 * n1862, 65535), 16), 4294967295), 4294967295)
+									local v362 = bit32.band(v36, 65535)
+									v23 = bit32.band(51485 * v362 + bit32.lshift(bit32.band(51485 * bit32.rshift(v36, 16) + 39315 * v362, 65535), 16), 4294967295)
+									local v213 = bit32.band(v21, 4294967295)
+									local v2132 = bit32.band(v213, 65535)
+									n20 = n19 + v23 + bit32.band(29245 * v2132 + bit32.lshift(bit32.band(29245 * bit32.rshift(v213, 16) + 51438 * v2132, 65535), 16), 4294967295)
 									n172 = bit32.band(n17, 272719449)
 									n183 = bit32.bnot(n182)
-									local packedValues = table.pack(bit32.band(v21, 4294967295))
-									local packedValues27 = table.pack(bit32.band(n183, 4294967295))
-									local packedValues28 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues29 = table.pack(bit32.rshift(packedValues[1], 16))
-									local packedValues30 = table.pack(bit32.band(packedValues27[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues28[1] * packedValues30[1] + bit32.lshift(bit32.band(packedValues28[1] * bit32.rshift(packedValues27[1], 16) + packedValues29[1] * packedValues30[1], 65535), 16), 4294967295), 4294967295))
-									local packedValues31 = table.pack(bit32.band(packedValues[1], 65535))
-									n21 = n172 + bit32.band(51485 * packedValues31[1] + bit32.lshift(bit32.band(51485 * bit32.rshift(packedValues[1], 16) + 39315 * packedValues31[1], 65535), 16), 4294967295)
+									local v214 = bit32.band(v21, 4294967295)
+									local n187 = bit32.band(n183, 4294967295)
+									local v2142 = bit32.band(v214, 65535)
+									local v2143 = bit32.rshift(v214, 16)
+									local n1872 = bit32.band(n187, 65535)
+									local v37 = bit32.band(bit32.band(v2142 * n1872 + bit32.lshift(bit32.band(v2142 * bit32.rshift(n187, 16) + v2143 * n1872, 65535), 16), 4294967295), 4294967295)
+									local v372 = bit32.band(v37, 65535)
+									n21 = n172 + bit32.band(51485 * v372 + bit32.lshift(bit32.band(51485 * bit32.rshift(v37, 16) + 39315 * v372, 65535), 16), 4294967295)
 									n184 = bit32.bor(n18, v21)
-									local packedValues = table.pack(bit32.band(bit32.bnot(n184), 4294967295))
-									local packedValues32 = table.pack(bit32.band(packedValues[1], 65535))
-									n22 = n20 + n21 + 3045076956 + bit32.band(21056 * packedValues32[1] + bit32.lshift(bit32.band(21056 * bit32.rshift(packedValues[1], 16) + 24245 * packedValues32[1], 65535), 16), 4294967295)
+									local n188 = bit32.band(bit32.bnot(n184), 4294967295)
+									local n1882 = bit32.band(n188, 65535)
+									n22 = n20 + n21 + 3045076956 + bit32.band(21056 * n1882 + bit32.lshift(bit32.band(21056 * bit32.rshift(n188, 16) + 24245 * n1882, 65535), 16), 4294967295)
 									n222 = bit32.band(n22, 2147483647)
 									n223 = bit32.bnot(n222)
-									local packedValues = table.pack(bit32.band(n223, 4294967295))
-									local packedValues33 = table.pack(bit32.band(packedValues[1], 65535))
-									v24 = bit32.band(65535 * packedValues33[1] + bit32.lshift(bit32.band(65535 * bit32.rshift(packedValues[1], 16) + 65535 * packedValues33[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n22, 4294967295))
-									local packedValues34 = table.pack(bit32.band(packedValues[1], 65535))
-									v25 = bit32.band(46641 * packedValues34[1] + bit32.lshift(bit32.band(46641 * bit32.rshift(packedValues[1], 16) + 36583 * packedValues34[1], 65535), 16), 4294967295)
+									local n227 = bit32.band(n223, 4294967295)
+									local n2272 = bit32.band(n227, 65535)
+									v24 = bit32.band(65535 * n2272 + bit32.lshift(bit32.band(65535 * bit32.rshift(n227, 16) + 65535 * n2272, 65535), 16), 4294967295)
+									local n228 = bit32.band(n22, 4294967295)
+									local n2282 = bit32.band(n228, 65535)
+									v25 = bit32.band(46641 * n2282 + bit32.lshift(bit32.band(46641 * bit32.rshift(n228, 16) + 36583 * n2282, 65535), 16), 4294967295)
 									n224 = bit32.bnot(n22)
-									local packedValues = table.pack(bit32.band(n224, 4294967295))
-									local packedValues35 = table.pack(bit32.band(packedValues[1], 65535))
-									n23 = 2397550128 + v24 + v25 + bit32.band(46641 * packedValues35[1] + bit32.lshift(bit32.band(46641 * bit32.rshift(packedValues[1], 16) + 36583 * packedValues35[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n22, 4294967295))
-									local packedValues36 = table.pack(bit32.band(packedValues[1], 65535))
-									v26 = bit32.band(1004 * packedValues36[1] + bit32.lshift(bit32.band(1004 * bit32.rshift(packedValues[1], 16) + 49886 * packedValues36[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n224, 4294967295))
-									local packedValues37 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues = table.pack(bit32.band(n23 - 3269329899 + v24 + v26 + bit32.band(1004 * packedValues37[1] + bit32.lshift(bit32.band(1004 * bit32.rshift(packedValues[1], 16) + 49886 * packedValues37[1], 65535), 16), 4294967295), 4294967295))
-									local packedValues38 = table.pack(bit32.band(packedValues[1], 65535))
-									v27 = bit32.band(21218 * packedValues38[1] + bit32.lshift(bit32.band(21218 * bit32.rshift(packedValues[1], 16) + 47856 * packedValues38[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n22, 4294967295))
-									local packedValues39 = table.pack(bit32.band(n223, 4294967295))
-									local packedValues40 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues41 = table.pack(bit32.rshift(packedValues[1], 16))
-									local packedValues42 = table.pack(bit32.band(packedValues39[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues40[1] * packedValues42[1] + bit32.lshift(bit32.band(packedValues40[1] * bit32.rshift(packedValues39[1], 16) + packedValues41[1] * packedValues42[1], 65535), 16), 4294967295), 4294967295))
-									local packedValues43 = table.pack(bit32.band(packedValues[1], 65535))
-									n24 = 2669559910 + bit32.band(64492 * packedValues43[1] + bit32.lshift(bit32.band(64492 * bit32.rshift(packedValues[1], 16) + 27898 * packedValues43[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n22, 4294967295))
-									local packedValues44 = table.pack(bit32.band(packedValues[1], 65535))
+									local n229 = bit32.band(n224, 4294967295)
+									local n2292 = bit32.band(n229, 65535)
+									n23 = 2397550128 + v24 + v25 + bit32.band(46641 * n2292 + bit32.lshift(bit32.band(46641 * bit32.rshift(n229, 16) + 36583 * n2292, 65535), 16), 4294967295)
+									local n2210 = bit32.band(n22, 4294967295)
+									local n22102 = bit32.band(n2210, 65535)
+									v26 = bit32.band(1004 * n22102 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2210, 16) + 49886 * n22102, 65535), 16), 4294967295)
+									local n2211 = bit32.band(n224, 4294967295)
+									local n22112 = bit32.band(n2211, 65535)
+									local v38 = bit32.band(n23 - 3269329899 + v24 + v26 + bit32.band(1004 * n22112 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2211, 16) + 49886 * n22112, 65535), 16), 4294967295), 4294967295)
+									local v382 = bit32.band(v38, 65535)
+									v27 = bit32.band(21218 * v382 + bit32.lshift(bit32.band(21218 * bit32.rshift(v38, 16) + 47856 * v382, 65535), 16), 4294967295)
+									local n2212 = bit32.band(n22, 4294967295)
+									local n2213 = bit32.band(n223, 4294967295)
+									local n22122 = bit32.band(n2212, 65535)
+									local n22123 = bit32.rshift(n2212, 16)
+									local n22132 = bit32.band(n2213, 65535)
+									local v39 = bit32.band(bit32.band(n22122 * n22132 + bit32.lshift(bit32.band(n22122 * bit32.rshift(n2213, 16) + n22123 * n22132, 65535), 16), 4294967295), 4294967295)
+									local v392 = bit32.band(v39, 65535)
+									n24 = 2669559910 + bit32.band(64492 * v392 + bit32.lshift(bit32.band(64492 * bit32.rshift(v39, 16) + 27898 * v392, 65535), 16), 4294967295)
+									local n2214 = bit32.band(n22, 4294967295)
+									local n22142 = bit32.band(n2214, 65535)
 									n225 = n223
 									n226 = bit32.bor(n22, 2147483647)
-									n25 = n24 + bit32.band(16487 * packedValues44[1] + bit32.lshift(bit32.band(16487 * bit32.rshift(packedValues[1], 16) + 40734 * packedValues44[1], 65535), 16), 4294967295) + 0
-									-- This Source Was Generated by discord.gg/c3xVMnUUBv
-									local packedValues = table.pack(bit32.band(n225, 4294967295))
-									local packedValues45 = table.pack(bit32.band(packedValues[1], 65535))
-									v28 = bit32.band(15442 * packedValues45[1] + bit32.lshift(bit32.band(15442 * bit32.rshift(packedValues[1], 16) + 3097 * packedValues45[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n225, 4294967295))
-									local packedValues46 = table.pack(bit32.band(n225, 4294967295))
-									local packedValues47 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues48 = table.pack(bit32.rshift(packedValues[1], 16))
-									local packedValues49 = table.pack(bit32.band(packedValues46[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues47[1] * packedValues49[1] + bit32.lshift(bit32.band(packedValues47[1] * bit32.rshift(packedValues46[1], 16) + packedValues48[1] * packedValues49[1], 65535), 16), 4294967295), 4294967295))
-									local packedValues50 = table.pack(bit32.band(packedValues[1], 65535))
-									n26 = v28 + bit32.band(64492 * packedValues50[1] + bit32.lshift(bit32.band(64492 * bit32.rshift(packedValues[1], 16) + 27898 * packedValues50[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n22, 4294967295))
-									local packedValues51 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues51[1] * 0 + bit32.lshift(bit32.band(packedValues51[1] * 0 + bit32.rshift(packedValues[1], 16) * 0, 65535), 16), 4294967295), 4294967295))
-									local packedValues52 = table.pack(bit32.band(packedValues[1], 65535))
-									v29 = bit32.band(64492 * packedValues52[1] + bit32.lshift(bit32.band(64492 * bit32.rshift(packedValues[1], 16) + 27898 * packedValues52[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n226, 4294967295))
-									local packedValues53 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues53[1] * 0 + bit32.lshift(bit32.band(packedValues53[1] * 0 + bit32.rshift(packedValues[1], 16) * 0, 65535), 16), 4294967295), 4294967295))
-									local packedValues54 = table.pack(bit32.band(packedValues[1], 65535))
-									n5 = v27 + n25 + n26 + 0 + v29 + bit32.band(1044 * packedValues54[1] + bit32.lshift(bit32.band(1044 * bit32.rshift(packedValues[1], 16) + 37637 * packedValues54[1], 65535), 16), 4294967295)
+									n25 = n24 + bit32.band(16487 * n22142 + bit32.lshift(bit32.band(16487 * bit32.rshift(n2214, 16) + 40734 * n22142, 65535), 16), 4294967295) + 0
+									local n2215 = bit32.band(n225, 4294967295)
+									local n22152 = bit32.band(n2215, 65535)
+									v28 = bit32.band(15442 * n22152 + bit32.lshift(bit32.band(15442 * bit32.rshift(n2215, 16) + 3097 * n22152, 65535), 16), 4294967295)
+									local n2216 = bit32.band(n225, 4294967295)
+									local n2217 = bit32.band(n225, 4294967295)
+									local n22162 = bit32.band(n2216, 65535)
+									local n22163 = bit32.rshift(n2216, 16)
+									local n22172 = bit32.band(n2217, 65535)
+									local v40 = bit32.band(bit32.band(n22162 * n22172 + bit32.lshift(bit32.band(n22162 * bit32.rshift(n2217, 16) + n22163 * n22172, 65535), 16), 4294967295), 4294967295)
+									local v402 = bit32.band(v40, 65535)
+									n26 = v28 + bit32.band(64492 * v402 + bit32.lshift(bit32.band(64492 * bit32.rshift(v40, 16) + 27898 * v402, 65535), 16), 4294967295)
+									local n2218 = bit32.band(n22, 4294967295)
+									local n22182 = bit32.band(n2218, 65535)
+									local v41 = bit32.band(bit32.band(n22182 * 0 + bit32.lshift(bit32.band(n22182 * 0 + bit32.rshift(n2218, 16) * 0, 65535), 16), 4294967295), 4294967295)
+									local v412 = bit32.band(v41, 65535)
+									v29 = bit32.band(64492 * v412 + bit32.lshift(bit32.band(64492 * bit32.rshift(v41, 16) + 27898 * v412, 65535), 16), 4294967295)
+									local n2219 = bit32.band(n226, 4294967295)
+									local n22192 = bit32.band(n2219, 65535)
+									local v42 = bit32.band(bit32.band(n22192 * 0 + bit32.lshift(bit32.band(n22192 * 0 + bit32.rshift(n2219, 16) * 0, 65535), 16), 4294967295), 4294967295)
+									local v422 = bit32.band(v42, 65535)
+									n5 = v27 + n25 + n26 + 0 + v29 + bit32.band(1044 * v422 + bit32.lshift(bit32.band(1044 * bit32.rshift(v42, 16) + 37637 * v422, 65535), 16), 4294967295)
 								else
 									break
 								end
@@ -310,134 +309,134 @@ local function fn5()
 									n52 = bit32.lshift(bit32.band(n5, n112), 1)
 									n53 = bit32.band(n52, n5)
 									n54 = bit32.bnot(n53)
-									local packedValues = table.pack(bit32.band(n52, 4294967295))
-									local packedValues55 = table.pack(bit32.band(n54, 4294967295))
-									local packedValues56 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues57 = table.pack(bit32.rshift(packedValues[1], 16))
-									local packedValues58 = table.pack(bit32.band(packedValues55[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues56[1] * packedValues58[1] + bit32.lshift(bit32.band(packedValues56[1] * bit32.rshift(packedValues55[1], 16) + packedValues57[1] * packedValues58[1], 65535), 16), 4294967295), 4294967295))
-									local packedValues59 = table.pack(bit32.band(packedValues[1], 65535))
-									v18 = bit32.band(19474 * packedValues59[1] + bit32.lshift(bit32.band(19474 * bit32.rshift(packedValues[1], 16) + 39469 * packedValues59[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n52, 4294967295))
-									local packedValues60 = table.pack(bit32.band(packedValues[1], 65535))
-									n12 = n112 + n5 + v18 + bit32.band(23587 * packedValues60[1] + bit32.lshift(bit32.band(23587 * bit32.rshift(packedValues[1], 16) + 21404 * packedValues60[1], 65535), 16), 4294967295)
+									local v123 = bit32.band(n52, 4294967295)
+									local v124 = bit32.band(n54, 4294967295)
+									local v1232 = bit32.band(v123, 65535)
+									local v1233 = bit32.rshift(v123, 16)
+									local v1242 = bit32.band(v124, 65535)
+									local v30 = bit32.band(bit32.band(v1232 * v1242 + bit32.lshift(bit32.band(v1232 * bit32.rshift(v124, 16) + v1233 * v1242, 65535), 16), 4294967295), 4294967295)
+									local v302 = bit32.band(v30, 65535)
+									v18 = bit32.band(19474 * v302 + bit32.lshift(bit32.band(19474 * bit32.rshift(v30, 16) + 39469 * v302, 65535), 16), 4294967295)
+									local v125 = bit32.band(n52, 4294967295)
+									local v1252 = bit32.band(v125, 65535)
+									n12 = n112 + n5 + v18 + bit32.band(23587 * v1252 + bit32.lshift(bit32.band(23587 * bit32.rshift(v125, 16) + 21404 * v1252, 65535), 16), 4294967295)
 									n55 = bit32.bnot(n5)
 									n56 = bit32.bor(n55, 54517094)
-									local packedValues = table.pack(bit32.band(n52, 4294967295))
-									local packedValues61 = table.pack(bit32.band(n56, 4294967295))
-									local packedValues62 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues63 = table.pack(bit32.rshift(packedValues[1], 16))
-									local packedValues64 = table.pack(bit32.band(packedValues61[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues62[1] * packedValues64[1] + bit32.lshift(bit32.band(packedValues62[1] * bit32.rshift(packedValues61[1], 16) + packedValues63[1] * packedValues64[1], 65535), 16), 4294967295), 4294967295))
-									local packedValues65 = table.pack(bit32.band(packedValues[1], 65535))
-									n13 = 1402756132 + bit32.band(46062 * packedValues65[1] + bit32.lshift(bit32.band(46062 * bit32.rshift(packedValues[1], 16) + 26066 * packedValues65[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(bit32.bnot(n52), 4294967295))
-									local packedValues66 = table.pack(bit32.band(packedValues[1], 65535))
-									v19 = bit32.band(23586 * packedValues66[1] + bit32.lshift(bit32.band(23586 * bit32.rshift(packedValues[1], 16) + 21404 * packedValues66[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(bit32.bor(54517095, n55), 4294967295))
-									local packedValues67 = table.pack(bit32.band(packedValues[1], 65535))
-									n14 = n12 + n13 + v19 + bit32.band(2 * packedValues67[1] + bit32.lshift(bit32.band(2 * bit32.rshift(packedValues[1], 16) + 0 * packedValues67[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n14, 4294967295))
-									local packedValues68 = table.pack(bit32.band(packedValues[1], 65535))
-									n15 = 327058238 + 3859571462 + bit32.band(25350 * packedValues68[1] + bit32.lshift(bit32.band(25350 * bit32.rshift(packedValues[1], 16) + 58892 * packedValues68[1], 65535), 16), 4294967295)
+									local v126 = bit32.band(n52, 4294967295)
+									local v127 = bit32.band(n56, 4294967295)
+									local v1262 = bit32.band(v126, 65535)
+									local v1263 = bit32.rshift(v126, 16)
+									local v1272 = bit32.band(v127, 65535)
+									local v31 = bit32.band(bit32.band(v1262 * v1272 + bit32.lshift(bit32.band(v1262 * bit32.rshift(v127, 16) + v1263 * v1272, 65535), 16), 4294967295), 4294967295)
+									local v312 = bit32.band(v31, 65535)
+									n13 = 1402756132 + bit32.band(46062 * v312 + bit32.lshift(bit32.band(46062 * bit32.rshift(v31, 16) + 26066 * v312, 65535), 16), 4294967295)
+									local v128 = bit32.band(bit32.bnot(n52), 4294967295)
+									local v1282 = bit32.band(v128, 65535)
+									v19 = bit32.band(23586 * v1282 + bit32.lshift(bit32.band(23586 * bit32.rshift(v128, 16) + 21404 * v1282, 65535), 16), 4294967295)
+									local v32 = bit32.band(bit32.bor(54517095, n55), 4294967295)
+									local v322 = bit32.band(v32, 65535)
+									n14 = n12 + n13 + v19 + bit32.band(2 * v322 + bit32.lshift(bit32.band(2 * bit32.rshift(v32, 16) + 0 * v322, 65535), 16), 4294967295)
+									local n143 = bit32.band(n14, 4294967295)
+									local n1432 = bit32.band(n143, 65535)
+									n15 = 327058238 + 3859571462 + bit32.band(25350 * n1432 + bit32.lshift(bit32.band(25350 * bit32.rshift(n143, 16) + 58892 * n1432, 65535), 16), 4294967295)
 									v20 = bit32.bor(2147483647, n14)
-									local packedValues = table.pack(bit32.band(bit32.band(272719449, v20), 4294967295))
-									local packedValues69 = table.pack(bit32.band(packedValues[1], 65535))
-									n16 = n15 + 375472684 + bit32.band(14836 * packedValues69[1] + bit32.lshift(bit32.band(14836 * bit32.rshift(packedValues[1], 16) + 13287 * packedValues69[1], 65535), 16), 4294967295) + 1761712016
+									local v33 = bit32.band(bit32.band(272719449, v20), 4294967295)
+									local v332 = bit32.band(v33, 65535)
+									n16 = n15 + 375472684 + bit32.band(14836 * v332 + bit32.lshift(bit32.band(14836 * bit32.rshift(v33, 16) + 13287 * v332, 65535), 16), 4294967295) + 1761712016
 									n142 = bit32.bnot(n14)
-									local packedValues = table.pack(bit32.band(bit32.bor(2092966552, n142), 4294967295))
-									local packedValues70 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues = table.pack(bit32.band(n16 - 4564062016 + 28981759 + bit32.band(50689 * packedValues70[1] + bit32.lshift(bit32.band(50689 * bit32.rshift(packedValues[1], 16) + 32325 * packedValues70[1], 65535), 16), 4294967295) + 1195411303, 4294967295))
-									local packedValues71 = table.pack(bit32.band(packedValues[1], 65535))
-									n17 = bit32.band(31367 * packedValues71[1] + bit32.lshift(bit32.band(31367 * bit32.rshift(packedValues[1], 16) + 21986 * packedValues71[1], 65535), 16), 4294967295) + 21801894718
+									local v34 = bit32.band(bit32.bor(2092966552, n142), 4294967295)
+									local v342 = bit32.band(v34, 65535)
+									local v35 = bit32.band(n16 - 4564062016 + 28981759 + bit32.band(50689 * v342 + bit32.lshift(bit32.band(50689 * bit32.rshift(v34, 16) + 32325 * v342, 65535), 16), 4294967295) + 1195411303, 4294967295)
+									local v352 = bit32.band(v35, 65535)
+									n17 = bit32.band(31367 * v352 + bit32.lshift(bit32.band(31367 * bit32.rshift(v35, 16) + 21986 * v352, 65535), 16), 4294967295) + 21801894718
 									v15[n112] = bit32.bxor(v15[n112], 327058238)
 									n18 = n5 + 584826193
-									local packedValues = table.pack(bit32.band(n18, 4294967295))
-									local packedValues72 = table.pack(bit32.band(packedValues[1], 65535))
-									n19 = bit32.band(43296 * packedValues72[1] + bit32.lshift(bit32.band(43296 * bit32.rshift(packedValues[1], 16) + 12122 * packedValues72[1], 65535), 16), 4294967295) + 1588941376
-									local packedValues = table.pack(bit32.band(n112, 4294967295))
-									local packedValues73 = table.pack(bit32.band(packedValues[1], 65535))
-									v21 = bit32.band(packedValues73[1] * 62187 + bit32.lshift(bit32.band(packedValues73[1] * 8557 + bit32.rshift(packedValues[1], 16) * 62187, 65535), 16), 4294967295)
+									local n185 = bit32.band(n18, 4294967295)
+									local n1852 = bit32.band(n185, 65535)
+									n19 = bit32.band(43296 * n1852 + bit32.lshift(bit32.band(43296 * bit32.rshift(n185, 16) + 12122 * n1852, 65535), 16), 4294967295) + 1588941376
+									local n113 = bit32.band(n112, 4294967295)
+									local n1132 = bit32.band(n113, 65535)
+									v21 = bit32.band(n1132 * 62187 + bit32.lshift(bit32.band(n1132 * 8557 + bit32.rshift(n113, 16) * 62187, 65535), 16), 4294967295)
 									n182 = bit32.band(n18, n17)
-									local packedValues = table.pack(bit32.band(v21, 4294967295))
-									local packedValues74 = table.pack(bit32.band(n182, 4294967295))
-									local packedValues75 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues76 = table.pack(bit32.rshift(packedValues[1], 16))
-									local packedValues77 = table.pack(bit32.band(packedValues74[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues75[1] * packedValues77[1] + bit32.lshift(bit32.band(packedValues75[1] * bit32.rshift(packedValues74[1], 16) + packedValues76[1] * packedValues77[1], 65535), 16), 4294967295), 4294967295))
-									local packedValues78 = table.pack(bit32.band(packedValues[1], 65535))
-									v23 = bit32.band(51485 * packedValues78[1] + bit32.lshift(bit32.band(51485 * bit32.rshift(packedValues[1], 16) + 39315 * packedValues78[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(v21, 4294967295))
-									local packedValues79 = table.pack(bit32.band(packedValues[1], 65535))
-									n20 = n19 + v23 + bit32.band(29245 * packedValues79[1] + bit32.lshift(bit32.band(29245 * bit32.rshift(packedValues[1], 16) + 51438 * packedValues79[1], 65535), 16), 4294967295)
+									local v212 = bit32.band(v21, 4294967295)
+									local n186 = bit32.band(n182, 4294967295)
+									local v2122 = bit32.band(v212, 65535)
+									local v2123 = bit32.rshift(v212, 16)
+									local n1862 = bit32.band(n186, 65535)
+									local v36 = bit32.band(bit32.band(v2122 * n1862 + bit32.lshift(bit32.band(v2122 * bit32.rshift(n186, 16) + v2123 * n1862, 65535), 16), 4294967295), 4294967295)
+									local v362 = bit32.band(v36, 65535)
+									v23 = bit32.band(51485 * v362 + bit32.lshift(bit32.band(51485 * bit32.rshift(v36, 16) + 39315 * v362, 65535), 16), 4294967295)
+									local v213 = bit32.band(v21, 4294967295)
+									local v2132 = bit32.band(v213, 65535)
+									n20 = n19 + v23 + bit32.band(29245 * v2132 + bit32.lshift(bit32.band(29245 * bit32.rshift(v213, 16) + 51438 * v2132, 65535), 16), 4294967295)
 									n172 = bit32.band(n17, 272719449)
 									n183 = bit32.bnot(n182)
-									local packedValues = table.pack(bit32.band(v21, 4294967295))
-									local packedValues80 = table.pack(bit32.band(n183, 4294967295))
-									local packedValues81 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues82 = table.pack(bit32.rshift(packedValues[1], 16))
-									local packedValues83 = table.pack(bit32.band(packedValues80[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues81[1] * packedValues83[1] + bit32.lshift(bit32.band(packedValues81[1] * bit32.rshift(packedValues80[1], 16) + packedValues82[1] * packedValues83[1], 65535), 16), 4294967295), 4294967295))
-									local packedValues84 = table.pack(bit32.band(packedValues[1], 65535))
-									n21 = n172 + bit32.band(51485 * packedValues84[1] + bit32.lshift(bit32.band(51485 * bit32.rshift(packedValues[1], 16) + 39315 * packedValues84[1], 65535), 16), 4294967295)
+									local v214 = bit32.band(v21, 4294967295)
+									local n187 = bit32.band(n183, 4294967295)
+									local v2142 = bit32.band(v214, 65535)
+									local v2143 = bit32.rshift(v214, 16)
+									local n1872 = bit32.band(n187, 65535)
+									local v37 = bit32.band(bit32.band(v2142 * n1872 + bit32.lshift(bit32.band(v2142 * bit32.rshift(n187, 16) + v2143 * n1872, 65535), 16), 4294967295), 4294967295)
+									local v372 = bit32.band(v37, 65535)
+									n21 = n172 + bit32.band(51485 * v372 + bit32.lshift(bit32.band(51485 * bit32.rshift(v37, 16) + 39315 * v372, 65535), 16), 4294967295)
 									n184 = bit32.bor(n18, v21)
-									local packedValues = table.pack(bit32.band(bit32.bnot(n184), 4294967295))
-									local packedValues85 = table.pack(bit32.band(packedValues[1], 65535))
-									n22 = n20 + n21 + 3045076956 + bit32.band(21056 * packedValues85[1] + bit32.lshift(bit32.band(21056 * bit32.rshift(packedValues[1], 16) + 24245 * packedValues85[1], 65535), 16), 4294967295)
+									local n188 = bit32.band(bit32.bnot(n184), 4294967295)
+									local n1882 = bit32.band(n188, 65535)
+									n22 = n20 + n21 + 3045076956 + bit32.band(21056 * n1882 + bit32.lshift(bit32.band(21056 * bit32.rshift(n188, 16) + 24245 * n1882, 65535), 16), 4294967295)
 									n222 = bit32.band(n22, 2147483647)
 									n223 = bit32.bnot(n222)
-									local packedValues = table.pack(bit32.band(n223, 4294967295))
-									local packedValues86 = table.pack(bit32.band(packedValues[1], 65535))
-									v24 = bit32.band(65535 * packedValues86[1] + bit32.lshift(bit32.band(65535 * bit32.rshift(packedValues[1], 16) + 65535 * packedValues86[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n22, 4294967295))
-									local packedValues87 = table.pack(bit32.band(packedValues[1], 65535))
-									v25 = bit32.band(46641 * packedValues87[1] + bit32.lshift(bit32.band(46641 * bit32.rshift(packedValues[1], 16) + 36583 * packedValues87[1], 65535), 16), 4294967295)
+									local n227 = bit32.band(n223, 4294967295)
+									local n2272 = bit32.band(n227, 65535)
+									v24 = bit32.band(65535 * n2272 + bit32.lshift(bit32.band(65535 * bit32.rshift(n227, 16) + 65535 * n2272, 65535), 16), 4294967295)
+									local n228 = bit32.band(n22, 4294967295)
+									local n2282 = bit32.band(n228, 65535)
+									v25 = bit32.band(46641 * n2282 + bit32.lshift(bit32.band(46641 * bit32.rshift(n228, 16) + 36583 * n2282, 65535), 16), 4294967295)
 									n224 = bit32.bnot(n22)
-									local packedValues = table.pack(bit32.band(n224, 4294967295))
-									local packedValues88 = table.pack(bit32.band(packedValues[1], 65535))
-									n23 = 2397550128 + v24 + v25 + bit32.band(46641 * packedValues88[1] + bit32.lshift(bit32.band(46641 * bit32.rshift(packedValues[1], 16) + 36583 * packedValues88[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n22, 4294967295))
-									local packedValues89 = table.pack(bit32.band(packedValues[1], 65535))
-									v26 = bit32.band(1004 * packedValues89[1] + bit32.lshift(bit32.band(1004 * bit32.rshift(packedValues[1], 16) + 49886 * packedValues89[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n224, 4294967295))
-									local packedValues90 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues = table.pack(bit32.band(n23 - 3269329899 + v24 + v26 + bit32.band(1004 * packedValues90[1] + bit32.lshift(bit32.band(1004 * bit32.rshift(packedValues[1], 16) + 49886 * packedValues90[1], 65535), 16), 4294967295), 4294967295))
-									local packedValues91 = table.pack(bit32.band(packedValues[1], 65535))
-									v27 = bit32.band(21218 * packedValues91[1] + bit32.lshift(bit32.band(21218 * bit32.rshift(packedValues[1], 16) + 47856 * packedValues91[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n22, 4294967295))
-									local packedValues92 = table.pack(bit32.band(n223, 4294967295))
-									local packedValues93 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues94 = table.pack(bit32.rshift(packedValues[1], 16))
-									local packedValues95 = table.pack(bit32.band(packedValues92[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues93[1] * packedValues95[1] + bit32.lshift(bit32.band(packedValues93[1] * bit32.rshift(packedValues92[1], 16) + packedValues94[1] * packedValues95[1], 65535), 16), 4294967295), 4294967295))
-									local packedValues96 = table.pack(bit32.band(packedValues[1], 65535))
-									n24 = 2669559910 + bit32.band(64492 * packedValues96[1] + bit32.lshift(bit32.band(64492 * bit32.rshift(packedValues[1], 16) + 27898 * packedValues96[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n22, 4294967295))
-									local packedValues97 = table.pack(bit32.band(packedValues[1], 65535))
+									local n229 = bit32.band(n224, 4294967295)
+									local n2292 = bit32.band(n229, 65535)
+									n23 = 2397550128 + v24 + v25 + bit32.band(46641 * n2292 + bit32.lshift(bit32.band(46641 * bit32.rshift(n229, 16) + 36583 * n2292, 65535), 16), 4294967295)
+									local n2210 = bit32.band(n22, 4294967295)
+									local n22102 = bit32.band(n2210, 65535)
+									v26 = bit32.band(1004 * n22102 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2210, 16) + 49886 * n22102, 65535), 16), 4294967295)
+									local n2211 = bit32.band(n224, 4294967295)
+									local n22112 = bit32.band(n2211, 65535)
+									local v38 = bit32.band(n23 - 3269329899 + v24 + v26 + bit32.band(1004 * n22112 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2211, 16) + 49886 * n22112, 65535), 16), 4294967295), 4294967295)
+									local v382 = bit32.band(v38, 65535)
+									v27 = bit32.band(21218 * v382 + bit32.lshift(bit32.band(21218 * bit32.rshift(v38, 16) + 47856 * v382, 65535), 16), 4294967295)
+									local n2212 = bit32.band(n22, 4294967295)
+									local n2213 = bit32.band(n223, 4294967295)
+									local n22122 = bit32.band(n2212, 65535)
+									local n22123 = bit32.rshift(n2212, 16)
+									local n22132 = bit32.band(n2213, 65535)
+									local v39 = bit32.band(bit32.band(n22122 * n22132 + bit32.lshift(bit32.band(n22122 * bit32.rshift(n2213, 16) + n22123 * n22132, 65535), 16), 4294967295), 4294967295)
+									local v392 = bit32.band(v39, 65535)
+									n24 = 2669559910 + bit32.band(64492 * v392 + bit32.lshift(bit32.band(64492 * bit32.rshift(v39, 16) + 27898 * v392, 65535), 16), 4294967295)
+									local n2214 = bit32.band(n22, 4294967295)
+									local n22142 = bit32.band(n2214, 65535)
 									n225 = n223
 									n226 = bit32.bor(n22, 2147483647)
-									n25 = n24 + bit32.band(16487 * packedValues97[1] + bit32.lshift(bit32.band(16487 * bit32.rshift(packedValues[1], 16) + 40734 * packedValues97[1], 65535), 16), 4294967295) + 0
-									local packedValues = table.pack(bit32.band(n225, 4294967295))
-									local packedValues98 = table.pack(bit32.band(packedValues[1], 65535))
-									v28 = bit32.band(15442 * packedValues98[1] + bit32.lshift(bit32.band(15442 * bit32.rshift(packedValues[1], 16) + 3097 * packedValues98[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n225, 4294967295))
-									local packedValues99 = table.pack(bit32.band(n225, 4294967295))
-									local packedValues100 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues101 = table.pack(bit32.rshift(packedValues[1], 16))
-									local packedValues102 = table.pack(bit32.band(packedValues99[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues100[1] * packedValues102[1] + bit32.lshift(bit32.band(packedValues100[1] * bit32.rshift(packedValues99[1], 16) + packedValues101[1] * packedValues102[1], 65535), 16), 4294967295), 4294967295))
-									local packedValues103 = table.pack(bit32.band(packedValues[1], 65535))
-									n26 = v28 + bit32.band(64492 * packedValues103[1] + bit32.lshift(bit32.band(64492 * bit32.rshift(packedValues[1], 16) + 27898 * packedValues103[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n22, 4294967295))
-									local packedValues104 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues104[1] * 0 + bit32.lshift(bit32.band(packedValues104[1] * 0 + bit32.rshift(packedValues[1], 16) * 0, 65535), 16), 4294967295), 4294967295))
-									local packedValues105 = table.pack(bit32.band(packedValues[1], 65535))
-									v29 = bit32.band(64492 * packedValues105[1] + bit32.lshift(bit32.band(64492 * bit32.rshift(packedValues[1], 16) + 27898 * packedValues105[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n226, 4294967295))
-									local packedValues106 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues106[1] * 0 + bit32.lshift(bit32.band(packedValues106[1] * 0 + bit32.rshift(packedValues[1], 16) * 0, 65535), 16), 4294967295), 4294967295))
-									local packedValues107 = table.pack(bit32.band(packedValues[1], 65535))
-									n5 = v27 + n25 + n26 + 0 + v29 + bit32.band(1044 * packedValues107[1] + bit32.lshift(bit32.band(1044 * bit32.rshift(packedValues[1], 16) + 37637 * packedValues107[1], 65535), 16), 4294967295)
+									n25 = n24 + bit32.band(16487 * n22142 + bit32.lshift(bit32.band(16487 * bit32.rshift(n2214, 16) + 40734 * n22142, 65535), 16), 4294967295) + 0
+									local n2215 = bit32.band(n225, 4294967295)
+									local n22152 = bit32.band(n2215, 65535)
+									v28 = bit32.band(15442 * n22152 + bit32.lshift(bit32.band(15442 * bit32.rshift(n2215, 16) + 3097 * n22152, 65535), 16), 4294967295)
+									local n2216 = bit32.band(n225, 4294967295)
+									local n2217 = bit32.band(n225, 4294967295)
+									local n22162 = bit32.band(n2216, 65535)
+									local n22163 = bit32.rshift(n2216, 16)
+									local n22172 = bit32.band(n2217, 65535)
+									local v40 = bit32.band(bit32.band(n22162 * n22172 + bit32.lshift(bit32.band(n22162 * bit32.rshift(n2217, 16) + n22163 * n22172, 65535), 16), 4294967295), 4294967295)
+									local v402 = bit32.band(v40, 65535)
+									n26 = v28 + bit32.band(64492 * v402 + bit32.lshift(bit32.band(64492 * bit32.rshift(v40, 16) + 27898 * v402, 65535), 16), 4294967295)
+									local n2218 = bit32.band(n22, 4294967295)
+									local n22182 = bit32.band(n2218, 65535)
+									local v41 = bit32.band(bit32.band(n22182 * 0 + bit32.lshift(bit32.band(n22182 * 0 + bit32.rshift(n2218, 16) * 0, 65535), 16), 4294967295), 4294967295)
+									local v412 = bit32.band(v41, 65535)
+									v29 = bit32.band(64492 * v412 + bit32.lshift(bit32.band(64492 * bit32.rshift(v41, 16) + 27898 * v412, 65535), 16), 4294967295)
+									local n2219 = bit32.band(n226, 4294967295)
+									local n22192 = bit32.band(n2219, 65535)
+									local v42 = bit32.band(bit32.band(n22192 * 0 + bit32.lshift(bit32.band(n22192 * 0 + bit32.rshift(n2219, 16) * 0, 65535), 16), 4294967295), 4294967295)
+									local v422 = bit32.band(v42, 65535)
+									n5 = v27 + n25 + n26 + 0 + v29 + bit32.band(1044 * v422 + bit32.lshift(bit32.band(1044 * bit32.rshift(v42, 16) + 37637 * v422, 65535), 16), 4294967295)
 								else
 									break
 								end
@@ -491,134 +490,134 @@ local function fn5()
 									n52 = bit32.lshift(bit32.band(n5, n112), 1)
 									n53 = bit32.band(n52, n5)
 									n54 = bit32.bnot(n53)
-									local packedValues = table.pack(bit32.band(n52, 4294967295))
-									local packedValues108 = table.pack(bit32.band(n54, 4294967295))
-									local packedValues109 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues110 = table.pack(bit32.rshift(packedValues[1], 16))
-									local packedValues111 = table.pack(bit32.band(packedValues108[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues109[1] * packedValues111[1] + bit32.lshift(bit32.band(packedValues109[1] * bit32.rshift(packedValues108[1], 16) + packedValues110[1] * packedValues111[1], 65535), 16), 4294967295), 4294967295))
-									local packedValues112 = table.pack(bit32.band(packedValues[1], 65535))
-									v18 = bit32.band(19474 * packedValues112[1] + bit32.lshift(bit32.band(19474 * bit32.rshift(packedValues[1], 16) + 39469 * packedValues112[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n52, 4294967295))
-									local packedValues113 = table.pack(bit32.band(packedValues[1], 65535))
-									n12 = n112 + n5 + v18 + bit32.band(23587 * packedValues113[1] + bit32.lshift(bit32.band(23587 * bit32.rshift(packedValues[1], 16) + 21404 * packedValues113[1], 65535), 16), 4294967295)
+									local v123 = bit32.band(n52, 4294967295)
+									local v124 = bit32.band(n54, 4294967295)
+									local v1232 = bit32.band(v123, 65535)
+									local v1233 = bit32.rshift(v123, 16)
+									local v1242 = bit32.band(v124, 65535)
+									local v30 = bit32.band(bit32.band(v1232 * v1242 + bit32.lshift(bit32.band(v1232 * bit32.rshift(v124, 16) + v1233 * v1242, 65535), 16), 4294967295), 4294967295)
+									local v302 = bit32.band(v30, 65535)
+									v18 = bit32.band(19474 * v302 + bit32.lshift(bit32.band(19474 * bit32.rshift(v30, 16) + 39469 * v302, 65535), 16), 4294967295)
+									local v125 = bit32.band(n52, 4294967295)
+									local v1252 = bit32.band(v125, 65535)
+									n12 = n112 + n5 + v18 + bit32.band(23587 * v1252 + bit32.lshift(bit32.band(23587 * bit32.rshift(v125, 16) + 21404 * v1252, 65535), 16), 4294967295)
 									n55 = bit32.bnot(n5)
 									n56 = bit32.bor(n55, 54517094)
-									local packedValues = table.pack(bit32.band(n52, 4294967295))
-									local packedValues114 = table.pack(bit32.band(n56, 4294967295))
-									local packedValues115 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues116 = table.pack(bit32.rshift(packedValues[1], 16))
-									local packedValues117 = table.pack(bit32.band(packedValues114[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues115[1] * packedValues117[1] + bit32.lshift(bit32.band(packedValues115[1] * bit32.rshift(packedValues114[1], 16) + packedValues116[1] * packedValues117[1], 65535), 16), 4294967295), 4294967295))
-									local packedValues118 = table.pack(bit32.band(packedValues[1], 65535))
-									n13 = 1402756132 + bit32.band(46062 * packedValues118[1] + bit32.lshift(bit32.band(46062 * bit32.rshift(packedValues[1], 16) + 26066 * packedValues118[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(bit32.bnot(n52), 4294967295))
-									local packedValues119 = table.pack(bit32.band(packedValues[1], 65535))
-									v19 = bit32.band(23586 * packedValues119[1] + bit32.lshift(bit32.band(23586 * bit32.rshift(packedValues[1], 16) + 21404 * packedValues119[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(bit32.bor(54517095, n55), 4294967295))
-									local packedValues120 = table.pack(bit32.band(packedValues[1], 65535))
-									n14 = n12 + n13 + v19 + bit32.band(2 * packedValues120[1] + bit32.lshift(bit32.band(2 * bit32.rshift(packedValues[1], 16) + 0 * packedValues120[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n14, 4294967295))
-									local packedValues121 = table.pack(bit32.band(packedValues[1], 65535))
-									n15 = 327058238 + 3859571462 + bit32.band(25350 * packedValues121[1] + bit32.lshift(bit32.band(25350 * bit32.rshift(packedValues[1], 16) + 58892 * packedValues121[1], 65535), 16), 4294967295)
+									local v126 = bit32.band(n52, 4294967295)
+									local v127 = bit32.band(n56, 4294967295)
+									local v1262 = bit32.band(v126, 65535)
+									local v1263 = bit32.rshift(v126, 16)
+									local v1272 = bit32.band(v127, 65535)
+									local v31 = bit32.band(bit32.band(v1262 * v1272 + bit32.lshift(bit32.band(v1262 * bit32.rshift(v127, 16) + v1263 * v1272, 65535), 16), 4294967295), 4294967295)
+									local v312 = bit32.band(v31, 65535)
+									n13 = 1402756132 + bit32.band(46062 * v312 + bit32.lshift(bit32.band(46062 * bit32.rshift(v31, 16) + 26066 * v312, 65535), 16), 4294967295)
+									local v128 = bit32.band(bit32.bnot(n52), 4294967295)
+									local v1282 = bit32.band(v128, 65535)
+									v19 = bit32.band(23586 * v1282 + bit32.lshift(bit32.band(23586 * bit32.rshift(v128, 16) + 21404 * v1282, 65535), 16), 4294967295)
+									local v32 = bit32.band(bit32.bor(54517095, n55), 4294967295)
+									local v322 = bit32.band(v32, 65535)
+									n14 = n12 + n13 + v19 + bit32.band(2 * v322 + bit32.lshift(bit32.band(2 * bit32.rshift(v32, 16) + 0 * v322, 65535), 16), 4294967295)
+									local n143 = bit32.band(n14, 4294967295)
+									local n1432 = bit32.band(n143, 65535)
+									n15 = 327058238 + 3859571462 + bit32.band(25350 * n1432 + bit32.lshift(bit32.band(25350 * bit32.rshift(n143, 16) + 58892 * n1432, 65535), 16), 4294967295)
 									v20 = bit32.bor(2147483647, n14)
-									local packedValues = table.pack(bit32.band(bit32.band(272719449, v20), 4294967295))
-									local packedValues122 = table.pack(bit32.band(packedValues[1], 65535))
-									n16 = n15 + 375472684 + bit32.band(14836 * packedValues122[1] + bit32.lshift(bit32.band(14836 * bit32.rshift(packedValues[1], 16) + 13287 * packedValues122[1], 65535), 16), 4294967295) + 1761712016
+									local v33 = bit32.band(bit32.band(272719449, v20), 4294967295)
+									local v332 = bit32.band(v33, 65535)
+									n16 = n15 + 375472684 + bit32.band(14836 * v332 + bit32.lshift(bit32.band(14836 * bit32.rshift(v33, 16) + 13287 * v332, 65535), 16), 4294967295) + 1761712016
 									n142 = bit32.bnot(n14)
-									local packedValues = table.pack(bit32.band(bit32.bor(2092966552, n142), 4294967295))
-									local packedValues123 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues = table.pack(bit32.band(n16 - 4564062016 + 28981759 + bit32.band(50689 * packedValues123[1] + bit32.lshift(bit32.band(50689 * bit32.rshift(packedValues[1], 16) + 32325 * packedValues123[1], 65535), 16), 4294967295) + 1195411303, 4294967295))
-									local packedValues124 = table.pack(bit32.band(packedValues[1], 65535))
-									n17 = bit32.band(31367 * packedValues124[1] + bit32.lshift(bit32.band(31367 * bit32.rshift(packedValues[1], 16) + 21986 * packedValues124[1], 65535), 16), 4294967295) + 21801894718
+									local v34 = bit32.band(bit32.bor(2092966552, n142), 4294967295)
+									local v342 = bit32.band(v34, 65535)
+									local v35 = bit32.band(n16 - 4564062016 + 28981759 + bit32.band(50689 * v342 + bit32.lshift(bit32.band(50689 * bit32.rshift(v34, 16) + 32325 * v342, 65535), 16), 4294967295) + 1195411303, 4294967295)
+									local v352 = bit32.band(v35, 65535)
+									n17 = bit32.band(31367 * v352 + bit32.lshift(bit32.band(31367 * bit32.rshift(v35, 16) + 21986 * v352, 65535), 16), 4294967295) + 21801894718
 									v15[n112] = bit32.bxor(v15[n112], 327058238)
 									n18 = n5 + 584826193
-									local packedValues = table.pack(bit32.band(n18, 4294967295))
-									local packedValues125 = table.pack(bit32.band(packedValues[1], 65535))
-									n19 = bit32.band(43296 * packedValues125[1] + bit32.lshift(bit32.band(43296 * bit32.rshift(packedValues[1], 16) + 12122 * packedValues125[1], 65535), 16), 4294967295) + 1588941376
-									local packedValues = table.pack(bit32.band(n112, 4294967295))
-									local packedValues126 = table.pack(bit32.band(packedValues[1], 65535))
-									v21 = bit32.band(packedValues126[1] * 62187 + bit32.lshift(bit32.band(packedValues126[1] * 8557 + bit32.rshift(packedValues[1], 16) * 62187, 65535), 16), 4294967295)
+									local n185 = bit32.band(n18, 4294967295)
+									local n1852 = bit32.band(n185, 65535)
+									n19 = bit32.band(43296 * n1852 + bit32.lshift(bit32.band(43296 * bit32.rshift(n185, 16) + 12122 * n1852, 65535), 16), 4294967295) + 1588941376
+									local n113 = bit32.band(n112, 4294967295)
+									local n1132 = bit32.band(n113, 65535)
+									v21 = bit32.band(n1132 * 62187 + bit32.lshift(bit32.band(n1132 * 8557 + bit32.rshift(n113, 16) * 62187, 65535), 16), 4294967295)
 									n182 = bit32.band(n18, n17)
-									local packedValues = table.pack(bit32.band(v21, 4294967295))
-									local packedValues127 = table.pack(bit32.band(n182, 4294967295))
-									local packedValues128 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues129 = table.pack(bit32.rshift(packedValues[1], 16))
-									local packedValues130 = table.pack(bit32.band(packedValues127[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues128[1] * packedValues130[1] + bit32.lshift(bit32.band(packedValues128[1] * bit32.rshift(packedValues127[1], 16) + packedValues129[1] * packedValues130[1], 65535), 16), 4294967295), 4294967295))
-									local packedValues131 = table.pack(bit32.band(packedValues[1], 65535))
-									v23 = bit32.band(51485 * packedValues131[1] + bit32.lshift(bit32.band(51485 * bit32.rshift(packedValues[1], 16) + 39315 * packedValues131[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(v21, 4294967295))
-									local packedValues132 = table.pack(bit32.band(packedValues[1], 65535))
-									n20 = n19 + v23 + bit32.band(29245 * packedValues132[1] + bit32.lshift(bit32.band(29245 * bit32.rshift(packedValues[1], 16) + 51438 * packedValues132[1], 65535), 16), 4294967295)
+									local v212 = bit32.band(v21, 4294967295)
+									local n186 = bit32.band(n182, 4294967295)
+									local v2122 = bit32.band(v212, 65535)
+									local v2123 = bit32.rshift(v212, 16)
+									local n1862 = bit32.band(n186, 65535)
+									local v36 = bit32.band(bit32.band(v2122 * n1862 + bit32.lshift(bit32.band(v2122 * bit32.rshift(n186, 16) + v2123 * n1862, 65535), 16), 4294967295), 4294967295)
+									local v362 = bit32.band(v36, 65535)
+									v23 = bit32.band(51485 * v362 + bit32.lshift(bit32.band(51485 * bit32.rshift(v36, 16) + 39315 * v362, 65535), 16), 4294967295)
+									local v213 = bit32.band(v21, 4294967295)
+									local v2132 = bit32.band(v213, 65535)
+									n20 = n19 + v23 + bit32.band(29245 * v2132 + bit32.lshift(bit32.band(29245 * bit32.rshift(v213, 16) + 51438 * v2132, 65535), 16), 4294967295)
 									n172 = bit32.band(n17, 272719449)
 									n183 = bit32.bnot(n182)
-									local packedValues = table.pack(bit32.band(v21, 4294967295))
-									local packedValues133 = table.pack(bit32.band(n183, 4294967295))
-									local packedValues134 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues135 = table.pack(bit32.rshift(packedValues[1], 16))
-									local packedValues136 = table.pack(bit32.band(packedValues133[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues134[1] * packedValues136[1] + bit32.lshift(bit32.band(packedValues134[1] * bit32.rshift(packedValues133[1], 16) + packedValues135[1] * packedValues136[1], 65535), 16), 4294967295), 4294967295))
-									local packedValues137 = table.pack(bit32.band(packedValues[1], 65535))
-									n21 = n172 + bit32.band(51485 * packedValues137[1] + bit32.lshift(bit32.band(51485 * bit32.rshift(packedValues[1], 16) + 39315 * packedValues137[1], 65535), 16), 4294967295)
+									local v214 = bit32.band(v21, 4294967295)
+									local n187 = bit32.band(n183, 4294967295)
+									local v2142 = bit32.band(v214, 65535)
+									local v2143 = bit32.rshift(v214, 16)
+									local n1872 = bit32.band(n187, 65535)
+									local v37 = bit32.band(bit32.band(v2142 * n1872 + bit32.lshift(bit32.band(v2142 * bit32.rshift(n187, 16) + v2143 * n1872, 65535), 16), 4294967295), 4294967295)
+									local v372 = bit32.band(v37, 65535)
+									n21 = n172 + bit32.band(51485 * v372 + bit32.lshift(bit32.band(51485 * bit32.rshift(v37, 16) + 39315 * v372, 65535), 16), 4294967295)
 									n184 = bit32.bor(n18, v21)
-									local packedValues = table.pack(bit32.band(bit32.bnot(n184), 4294967295))
-									local packedValues138 = table.pack(bit32.band(packedValues[1], 65535))
-									n22 = n20 + n21 + 3045076956 + bit32.band(21056 * packedValues138[1] + bit32.lshift(bit32.band(21056 * bit32.rshift(packedValues[1], 16) + 24245 * packedValues138[1], 65535), 16), 4294967295)
+									local n188 = bit32.band(bit32.bnot(n184), 4294967295)
+									local n1882 = bit32.band(n188, 65535)
+									n22 = n20 + n21 + 3045076956 + bit32.band(21056 * n1882 + bit32.lshift(bit32.band(21056 * bit32.rshift(n188, 16) + 24245 * n1882, 65535), 16), 4294967295)
 									n222 = bit32.band(n22, 2147483647)
 									n223 = bit32.bnot(n222)
-									local packedValues = table.pack(bit32.band(n223, 4294967295))
-									local packedValues139 = table.pack(bit32.band(packedValues[1], 65535))
-									v24 = bit32.band(65535 * packedValues139[1] + bit32.lshift(bit32.band(65535 * bit32.rshift(packedValues[1], 16) + 65535 * packedValues139[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n22, 4294967295))
-									local packedValues140 = table.pack(bit32.band(packedValues[1], 65535))
-									v25 = bit32.band(46641 * packedValues140[1] + bit32.lshift(bit32.band(46641 * bit32.rshift(packedValues[1], 16) + 36583 * packedValues140[1], 65535), 16), 4294967295)
+									local n227 = bit32.band(n223, 4294967295)
+									local n2272 = bit32.band(n227, 65535)
+									v24 = bit32.band(65535 * n2272 + bit32.lshift(bit32.band(65535 * bit32.rshift(n227, 16) + 65535 * n2272, 65535), 16), 4294967295)
+									local n228 = bit32.band(n22, 4294967295)
+									local n2282 = bit32.band(n228, 65535)
+									v25 = bit32.band(46641 * n2282 + bit32.lshift(bit32.band(46641 * bit32.rshift(n228, 16) + 36583 * n2282, 65535), 16), 4294967295)
 									n224 = bit32.bnot(n22)
-									local packedValues = table.pack(bit32.band(n224, 4294967295))
-									local packedValues141 = table.pack(bit32.band(packedValues[1], 65535))
-									n23 = 2397550128 + v24 + v25 + bit32.band(46641 * packedValues141[1] + bit32.lshift(bit32.band(46641 * bit32.rshift(packedValues[1], 16) + 36583 * packedValues141[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n22, 4294967295))
-									local packedValues142 = table.pack(bit32.band(packedValues[1], 65535))
-									v26 = bit32.band(1004 * packedValues142[1] + bit32.lshift(bit32.band(1004 * bit32.rshift(packedValues[1], 16) + 49886 * packedValues142[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n224, 4294967295))
-									local packedValues143 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues = table.pack(bit32.band(n23 - 3269329899 + v24 + v26 + bit32.band(1004 * packedValues143[1] + bit32.lshift(bit32.band(1004 * bit32.rshift(packedValues[1], 16) + 49886 * packedValues143[1], 65535), 16), 4294967295), 4294967295))
-									local packedValues144 = table.pack(bit32.band(packedValues[1], 65535))
-									v27 = bit32.band(21218 * packedValues144[1] + bit32.lshift(bit32.band(21218 * bit32.rshift(packedValues[1], 16) + 47856 * packedValues144[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n22, 4294967295))
-									local packedValues145 = table.pack(bit32.band(n223, 4294967295))
-									local packedValues146 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues147 = table.pack(bit32.rshift(packedValues[1], 16))
-									local packedValues148 = table.pack(bit32.band(packedValues145[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues146[1] * packedValues148[1] + bit32.lshift(bit32.band(packedValues146[1] * bit32.rshift(packedValues145[1], 16) + packedValues147[1] * packedValues148[1], 65535), 16), 4294967295), 4294967295))
-									local packedValues149 = table.pack(bit32.band(packedValues[1], 65535))
-									n24 = 2669559910 + bit32.band(64492 * packedValues149[1] + bit32.lshift(bit32.band(64492 * bit32.rshift(packedValues[1], 16) + 27898 * packedValues149[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n22, 4294967295))
-									local packedValues150 = table.pack(bit32.band(packedValues[1], 65535))
+									local n229 = bit32.band(n224, 4294967295)
+									local n2292 = bit32.band(n229, 65535)
+									n23 = 2397550128 + v24 + v25 + bit32.band(46641 * n2292 + bit32.lshift(bit32.band(46641 * bit32.rshift(n229, 16) + 36583 * n2292, 65535), 16), 4294967295)
+									local n2210 = bit32.band(n22, 4294967295)
+									local n22102 = bit32.band(n2210, 65535)
+									v26 = bit32.band(1004 * n22102 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2210, 16) + 49886 * n22102, 65535), 16), 4294967295)
+									local n2211 = bit32.band(n224, 4294967295)
+									local n22112 = bit32.band(n2211, 65535)
+									local v38 = bit32.band(n23 - 3269329899 + v24 + v26 + bit32.band(1004 * n22112 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2211, 16) + 49886 * n22112, 65535), 16), 4294967295), 4294967295)
+									local v382 = bit32.band(v38, 65535)
+									v27 = bit32.band(21218 * v382 + bit32.lshift(bit32.band(21218 * bit32.rshift(v38, 16) + 47856 * v382, 65535), 16), 4294967295)
+									local n2212 = bit32.band(n22, 4294967295)
+									local n2213 = bit32.band(n223, 4294967295)
+									local n22122 = bit32.band(n2212, 65535)
+									local n22123 = bit32.rshift(n2212, 16)
+									local n22132 = bit32.band(n2213, 65535)
+									local v39 = bit32.band(bit32.band(n22122 * n22132 + bit32.lshift(bit32.band(n22122 * bit32.rshift(n2213, 16) + n22123 * n22132, 65535), 16), 4294967295), 4294967295)
+									local v392 = bit32.band(v39, 65535)
+									n24 = 2669559910 + bit32.band(64492 * v392 + bit32.lshift(bit32.band(64492 * bit32.rshift(v39, 16) + 27898 * v392, 65535), 16), 4294967295)
+									local n2214 = bit32.band(n22, 4294967295)
+									local n22142 = bit32.band(n2214, 65535)
 									n225 = n223
 									n226 = bit32.bor(n22, 2147483647)
-									n25 = n24 + bit32.band(16487 * packedValues150[1] + bit32.lshift(bit32.band(16487 * bit32.rshift(packedValues[1], 16) + 40734 * packedValues150[1], 65535), 16), 4294967295) + 0
-									local packedValues = table.pack(bit32.band(n225, 4294967295))
-									local packedValues151 = table.pack(bit32.band(packedValues[1], 65535))
-									v28 = bit32.band(15442 * packedValues151[1] + bit32.lshift(bit32.band(15442 * bit32.rshift(packedValues[1], 16) + 3097 * packedValues151[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n225, 4294967295))
-									local packedValues152 = table.pack(bit32.band(n225, 4294967295))
-									local packedValues153 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues154 = table.pack(bit32.rshift(packedValues[1], 16))
-									local packedValues155 = table.pack(bit32.band(packedValues152[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues153[1] * packedValues155[1] + bit32.lshift(bit32.band(packedValues153[1] * bit32.rshift(packedValues152[1], 16) + packedValues154[1] * packedValues155[1], 65535), 16), 4294967295), 4294967295))
-									local packedValues156 = table.pack(bit32.band(packedValues[1], 65535))
-									n26 = v28 + bit32.band(64492 * packedValues156[1] + bit32.lshift(bit32.band(64492 * bit32.rshift(packedValues[1], 16) + 27898 * packedValues156[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n22, 4294967295))
-									local packedValues157 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues157[1] * 0 + bit32.lshift(bit32.band(packedValues157[1] * 0 + bit32.rshift(packedValues[1], 16) * 0, 65535), 16), 4294967295), 4294967295))
-									local packedValues158 = table.pack(bit32.band(packedValues[1], 65535))
-									v29 = bit32.band(64492 * packedValues158[1] + bit32.lshift(bit32.band(64492 * bit32.rshift(packedValues[1], 16) + 27898 * packedValues158[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(n226, 4294967295))
-									local packedValues159 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues = table.pack(bit32.band(bit32.band(packedValues159[1] * 0 + bit32.lshift(bit32.band(packedValues159[1] * 0 + bit32.rshift(packedValues[1], 16) * 0, 65535), 16), 4294967295), 4294967295))
-									local packedValues160 = table.pack(bit32.band(packedValues[1], 65535))
-									n5 = v27 + n25 + n26 + 0 + v29 + bit32.band(1044 * packedValues160[1] + bit32.lshift(bit32.band(1044 * bit32.rshift(packedValues[1], 16) + 37637 * packedValues160[1], 65535), 16), 4294967295)
+									n25 = n24 + bit32.band(16487 * n22142 + bit32.lshift(bit32.band(16487 * bit32.rshift(n2214, 16) + 40734 * n22142, 65535), 16), 4294967295) + 0
+									local n2215 = bit32.band(n225, 4294967295)
+									local n22152 = bit32.band(n2215, 65535)
+									v28 = bit32.band(15442 * n22152 + bit32.lshift(bit32.band(15442 * bit32.rshift(n2215, 16) + 3097 * n22152, 65535), 16), 4294967295)
+									local n2216 = bit32.band(n225, 4294967295)
+									local n2217 = bit32.band(n225, 4294967295)
+									local n22162 = bit32.band(n2216, 65535)
+									local n22163 = bit32.rshift(n2216, 16)
+									local n22172 = bit32.band(n2217, 65535)
+									local v40 = bit32.band(bit32.band(n22162 * n22172 + bit32.lshift(bit32.band(n22162 * bit32.rshift(n2217, 16) + n22163 * n22172, 65535), 16), 4294967295), 4294967295)
+									local v402 = bit32.band(v40, 65535)
+									n26 = v28 + bit32.band(64492 * v402 + bit32.lshift(bit32.band(64492 * bit32.rshift(v40, 16) + 27898 * v402, 65535), 16), 4294967295)
+									local n2218 = bit32.band(n22, 4294967295)
+									local n22182 = bit32.band(n2218, 65535)
+									local v41 = bit32.band(bit32.band(n22182 * 0 + bit32.lshift(bit32.band(n22182 * 0 + bit32.rshift(n2218, 16) * 0, 65535), 16), 4294967295), 4294967295)
+									local v412 = bit32.band(v41, 65535)
+									v29 = bit32.band(64492 * v412 + bit32.lshift(bit32.band(64492 * bit32.rshift(v41, 16) + 27898 * v412, 65535), 16), 4294967295)
+									local n2219 = bit32.band(n226, 4294967295)
+									local n22192 = bit32.band(n2219, 65535)
+									local v42 = bit32.band(bit32.band(n22192 * 0 + bit32.lshift(bit32.band(n22192 * 0 + bit32.rshift(n2219, 16) * 0, 65535), 16), 4294967295), 4294967295)
+									local v422 = bit32.band(v42, 65535)
+									n5 = v27 + n25 + n26 + 0 + v29 + bit32.band(1044 * v422 + bit32.lshift(bit32.band(1044 * bit32.rshift(v42, 16) + 37637 * v422, 65535), 16), 4294967295)
 								else
 									break
 								end
@@ -648,134 +647,134 @@ local function fn5()
 								n52 = bit32.lshift(bit32.band(n5, n112), 1)
 								n53 = bit32.band(n52, n5)
 								n54 = bit32.bnot(n53)
-								local packedValues = table.pack(bit32.band(n52, 4294967295))
-								local packedValues161 = table.pack(bit32.band(n54, 4294967295))
-								local packedValues162 = table.pack(bit32.band(packedValues[1], 65535))
-								local packedValues163 = table.pack(bit32.rshift(packedValues[1], 16))
-								local packedValues164 = table.pack(bit32.band(packedValues161[1], 65535))
-								local packedValues = table.pack(bit32.band(bit32.band(packedValues162[1] * packedValues164[1] + bit32.lshift(bit32.band(packedValues162[1] * bit32.rshift(packedValues161[1], 16) + packedValues163[1] * packedValues164[1], 65535), 16), 4294967295), 4294967295))
-								local packedValues165 = table.pack(bit32.band(packedValues[1], 65535))
-								v18 = bit32.band(19474 * packedValues165[1] + bit32.lshift(bit32.band(19474 * bit32.rshift(packedValues[1], 16) + 39469 * packedValues165[1], 65535), 16), 4294967295)
-								local packedValues = table.pack(bit32.band(n52, 4294967295))
-								local packedValues166 = table.pack(bit32.band(packedValues[1], 65535))
-								n12 = n112 + n5 + v18 + bit32.band(23587 * packedValues166[1] + bit32.lshift(bit32.band(23587 * bit32.rshift(packedValues[1], 16) + 21404 * packedValues166[1], 65535), 16), 4294967295)
+								local n57 = bit32.band(n52, 4294967295)
+								local n58 = bit32.band(n54, 4294967295)
+								local n572 = bit32.band(n57, 65535)
+								local n573 = bit32.rshift(n57, 16)
+								local n582 = bit32.band(n58, 65535)
+								local v30 = bit32.band(bit32.band(n572 * n582 + bit32.lshift(bit32.band(n572 * bit32.rshift(n58, 16) + n573 * n582, 65535), 16), 4294967295), 4294967295)
+								local v302 = bit32.band(v30, 65535)
+								v18 = bit32.band(19474 * v302 + bit32.lshift(bit32.band(19474 * bit32.rshift(v30, 16) + 39469 * v302, 65535), 16), 4294967295)
+								local n59 = bit32.band(n52, 4294967295)
+								local n592 = bit32.band(n59, 65535)
+								n12 = n112 + n5 + v18 + bit32.band(23587 * n592 + bit32.lshift(bit32.band(23587 * bit32.rshift(n59, 16) + 21404 * n592, 65535), 16), 4294967295)
 								n55 = bit32.bnot(n5)
 								n56 = bit32.bor(n55, 54517094)
-								local packedValues = table.pack(bit32.band(n52, 4294967295))
-								local packedValues167 = table.pack(bit32.band(n56, 4294967295))
-								local packedValues168 = table.pack(bit32.band(packedValues[1], 65535))
-								local packedValues169 = table.pack(bit32.rshift(packedValues[1], 16))
-								local packedValues170 = table.pack(bit32.band(packedValues167[1], 65535))
-								local packedValues = table.pack(bit32.band(bit32.band(packedValues168[1] * packedValues170[1] + bit32.lshift(bit32.band(packedValues168[1] * bit32.rshift(packedValues167[1], 16) + packedValues169[1] * packedValues170[1], 65535), 16), 4294967295), 4294967295))
-								local packedValues171 = table.pack(bit32.band(packedValues[1], 65535))
-								n13 = 1402756132 + bit32.band(46062 * packedValues171[1] + bit32.lshift(bit32.band(46062 * bit32.rshift(packedValues[1], 16) + 26066 * packedValues171[1], 65535), 16), 4294967295)
-								local packedValues = table.pack(bit32.band(bit32.bnot(n52), 4294967295))
-								local packedValues172 = table.pack(bit32.band(packedValues[1], 65535))
-								v19 = bit32.band(23586 * packedValues172[1] + bit32.lshift(bit32.band(23586 * bit32.rshift(packedValues[1], 16) + 21404 * packedValues172[1], 65535), 16), 4294967295)
-								local packedValues = table.pack(bit32.band(bit32.bor(54517095, n55), 4294967295))
-								local packedValues173 = table.pack(bit32.band(packedValues[1], 65535))
-								n14 = n12 + n13 + v19 + bit32.band(2 * packedValues173[1] + bit32.lshift(bit32.band(2 * bit32.rshift(packedValues[1], 16) + 0 * packedValues173[1], 65535), 16), 4294967295)
-								local packedValues = table.pack(bit32.band(n14, 4294967295))
-								local packedValues174 = table.pack(bit32.band(packedValues[1], 65535))
-								n15 = 327058238 + 3859571462 + bit32.band(25350 * packedValues174[1] + bit32.lshift(bit32.band(25350 * bit32.rshift(packedValues[1], 16) + 58892 * packedValues174[1], 65535), 16), 4294967295)
+								local n510 = bit32.band(n52, 4294967295)
+								local n511 = bit32.band(n56, 4294967295)
+								local n5102 = bit32.band(n510, 65535)
+								local n5103 = bit32.rshift(n510, 16)
+								local n5112 = bit32.band(n511, 65535)
+								local v31 = bit32.band(bit32.band(n5102 * n5112 + bit32.lshift(bit32.band(n5102 * bit32.rshift(n511, 16) + n5103 * n5112, 65535), 16), 4294967295), 4294967295)
+								local v312 = bit32.band(v31, 65535)
+								n13 = 1402756132 + bit32.band(46062 * v312 + bit32.lshift(bit32.band(46062 * bit32.rshift(v31, 16) + 26066 * v312, 65535), 16), 4294967295)
+								local n512 = bit32.band(bit32.bnot(n52), 4294967295)
+								local n5122 = bit32.band(n512, 65535)
+								v19 = bit32.band(23586 * n5122 + bit32.lshift(bit32.band(23586 * bit32.rshift(n512, 16) + 21404 * n5122, 65535), 16), 4294967295)
+								local v32 = bit32.band(bit32.bor(54517095, n55), 4294967295)
+								local v322 = bit32.band(v32, 65535)
+								n14 = n12 + n13 + v19 + bit32.band(2 * v322 + bit32.lshift(bit32.band(2 * bit32.rshift(v32, 16) + 0 * v322, 65535), 16), 4294967295)
+								local n143 = bit32.band(n14, 4294967295)
+								local n1432 = bit32.band(n143, 65535)
+								n15 = 327058238 + 3859571462 + bit32.band(25350 * n1432 + bit32.lshift(bit32.band(25350 * bit32.rshift(n143, 16) + 58892 * n1432, 65535), 16), 4294967295)
 								v20 = bit32.bor(2147483647, n14)
-								local packedValues = table.pack(bit32.band(bit32.band(272719449, v20), 4294967295))
-								local packedValues175 = table.pack(bit32.band(packedValues[1], 65535))
-								n16 = n15 + 375472684 + bit32.band(14836 * packedValues175[1] + bit32.lshift(bit32.band(14836 * bit32.rshift(packedValues[1], 16) + 13287 * packedValues175[1], 65535), 16), 4294967295) + 1761712016
+								local v33 = bit32.band(bit32.band(272719449, v20), 4294967295)
+								local v332 = bit32.band(v33, 65535)
+								n16 = n15 + 375472684 + bit32.band(14836 * v332 + bit32.lshift(bit32.band(14836 * bit32.rshift(v33, 16) + 13287 * v332, 65535), 16), 4294967295) + 1761712016
 								n142 = bit32.bnot(n14)
-								local packedValues = table.pack(bit32.band(bit32.bor(2092966552, n142), 4294967295))
-								local packedValues176 = table.pack(bit32.band(packedValues[1], 65535))
-								local packedValues = table.pack(bit32.band(n16 - 4564062016 + 28981759 + bit32.band(50689 * packedValues176[1] + bit32.lshift(bit32.band(50689 * bit32.rshift(packedValues[1], 16) + 32325 * packedValues176[1], 65535), 16), 4294967295) + 1195411303, 4294967295))
-								local packedValues177 = table.pack(bit32.band(packedValues[1], 65535))
-								n17 = bit32.band(31367 * packedValues177[1] + bit32.lshift(bit32.band(31367 * bit32.rshift(packedValues[1], 16) + 21986 * packedValues177[1], 65535), 16), 4294967295) + 21801894718
+								local v34 = bit32.band(bit32.bor(2092966552, n142), 4294967295)
+								local v342 = bit32.band(v34, 65535)
+								local v35 = bit32.band(n16 - 4564062016 + 28981759 + bit32.band(50689 * v342 + bit32.lshift(bit32.band(50689 * bit32.rshift(v34, 16) + 32325 * v342, 65535), 16), 4294967295) + 1195411303, 4294967295)
+								local v352 = bit32.band(v35, 65535)
+								n17 = bit32.band(31367 * v352 + bit32.lshift(bit32.band(31367 * bit32.rshift(v35, 16) + 21986 * v352, 65535), 16), 4294967295) + 21801894718
 								v15[n112] = bit32.bxor(v15[n112], 327058238)
 								n18 = n5 + 584826193
-								local packedValues = table.pack(bit32.band(n18, 4294967295))
-								local packedValues178 = table.pack(bit32.band(packedValues[1], 65535))
-								n19 = bit32.band(43296 * packedValues178[1] + bit32.lshift(bit32.band(43296 * bit32.rshift(packedValues[1], 16) + 12122 * packedValues178[1], 65535), 16), 4294967295) + 1588941376
-								local packedValues = table.pack(bit32.band(n112, 4294967295))
-								local packedValues179 = table.pack(bit32.band(packedValues[1], 65535))
-								v21 = bit32.band(packedValues179[1] * 62187 + bit32.lshift(bit32.band(packedValues179[1] * 8557 + bit32.rshift(packedValues[1], 16) * 62187, 65535), 16), 4294967295)
+								local n185 = bit32.band(n18, 4294967295)
+								local n1852 = bit32.band(n185, 65535)
+								n19 = bit32.band(43296 * n1852 + bit32.lshift(bit32.band(43296 * bit32.rshift(n185, 16) + 12122 * n1852, 65535), 16), 4294967295) + 1588941376
+								local n113 = bit32.band(n112, 4294967295)
+								local n1132 = bit32.band(n113, 65535)
+								v21 = bit32.band(n1132 * 62187 + bit32.lshift(bit32.band(n1132 * 8557 + bit32.rshift(n113, 16) * 62187, 65535), 16), 4294967295)
 								n182 = bit32.band(n18, n17)
-								local packedValues = table.pack(bit32.band(v21, 4294967295))
-								local packedValues180 = table.pack(bit32.band(n182, 4294967295))
-								local packedValues181 = table.pack(bit32.band(packedValues[1], 65535))
-								local packedValues182 = table.pack(bit32.rshift(packedValues[1], 16))
-								local packedValues183 = table.pack(bit32.band(packedValues180[1], 65535))
-								local packedValues = table.pack(bit32.band(bit32.band(packedValues181[1] * packedValues183[1] + bit32.lshift(bit32.band(packedValues181[1] * bit32.rshift(packedValues180[1], 16) + packedValues182[1] * packedValues183[1], 65535), 16), 4294967295), 4294967295))
-								local packedValues184 = table.pack(bit32.band(packedValues[1], 65535))
-								v23 = bit32.band(51485 * packedValues184[1] + bit32.lshift(bit32.band(51485 * bit32.rshift(packedValues[1], 16) + 39315 * packedValues184[1], 65535), 16), 4294967295)
-								local packedValues = table.pack(bit32.band(v21, 4294967295))
-								local packedValues185 = table.pack(bit32.band(packedValues[1], 65535))
-								n20 = n19 + v23 + bit32.band(29245 * packedValues185[1] + bit32.lshift(bit32.band(29245 * bit32.rshift(packedValues[1], 16) + 51438 * packedValues185[1], 65535), 16), 4294967295)
+								local v212 = bit32.band(v21, 4294967295)
+								local n186 = bit32.band(n182, 4294967295)
+								local v2122 = bit32.band(v212, 65535)
+								local v2123 = bit32.rshift(v212, 16)
+								local n1862 = bit32.band(n186, 65535)
+								local v36 = bit32.band(bit32.band(v2122 * n1862 + bit32.lshift(bit32.band(v2122 * bit32.rshift(n186, 16) + v2123 * n1862, 65535), 16), 4294967295), 4294967295)
+								local v362 = bit32.band(v36, 65535)
+								v23 = bit32.band(51485 * v362 + bit32.lshift(bit32.band(51485 * bit32.rshift(v36, 16) + 39315 * v362, 65535), 16), 4294967295)
+								local v213 = bit32.band(v21, 4294967295)
+								local v2132 = bit32.band(v213, 65535)
+								n20 = n19 + v23 + bit32.band(29245 * v2132 + bit32.lshift(bit32.band(29245 * bit32.rshift(v213, 16) + 51438 * v2132, 65535), 16), 4294967295)
 								n172 = bit32.band(n17, 272719449)
 								n183 = bit32.bnot(n182)
-								local packedValues = table.pack(bit32.band(v21, 4294967295))
-								local packedValues186 = table.pack(bit32.band(n183, 4294967295))
-								local packedValues187 = table.pack(bit32.band(packedValues[1], 65535))
-								local packedValues188 = table.pack(bit32.rshift(packedValues[1], 16))
-								local packedValues189 = table.pack(bit32.band(packedValues186[1], 65535))
-								local packedValues = table.pack(bit32.band(bit32.band(packedValues187[1] * packedValues189[1] + bit32.lshift(bit32.band(packedValues187[1] * bit32.rshift(packedValues186[1], 16) + packedValues188[1] * packedValues189[1], 65535), 16), 4294967295), 4294967295))
-								local packedValues190 = table.pack(bit32.band(packedValues[1], 65535))
-								n21 = n172 + bit32.band(51485 * packedValues190[1] + bit32.lshift(bit32.band(51485 * bit32.rshift(packedValues[1], 16) + 39315 * packedValues190[1], 65535), 16), 4294967295)
+								local v214 = bit32.band(v21, 4294967295)
+								local n187 = bit32.band(n183, 4294967295)
+								local v2142 = bit32.band(v214, 65535)
+								local v2143 = bit32.rshift(v214, 16)
+								local n1872 = bit32.band(n187, 65535)
+								local v37 = bit32.band(bit32.band(v2142 * n1872 + bit32.lshift(bit32.band(v2142 * bit32.rshift(n187, 16) + v2143 * n1872, 65535), 16), 4294967295), 4294967295)
+								local v372 = bit32.band(v37, 65535)
+								n21 = n172 + bit32.band(51485 * v372 + bit32.lshift(bit32.band(51485 * bit32.rshift(v37, 16) + 39315 * v372, 65535), 16), 4294967295)
 								n184 = bit32.bor(n18, v21)
-								local packedValues = table.pack(bit32.band(bit32.bnot(n184), 4294967295))
-								local packedValues191 = table.pack(bit32.band(packedValues[1], 65535))
-								n22 = n20 + n21 + 3045076956 + bit32.band(21056 * packedValues191[1] + bit32.lshift(bit32.band(21056 * bit32.rshift(packedValues[1], 16) + 24245 * packedValues191[1], 65535), 16), 4294967295)
+								local n188 = bit32.band(bit32.bnot(n184), 4294967295)
+								local n1882 = bit32.band(n188, 65535)
+								n22 = n20 + n21 + 3045076956 + bit32.band(21056 * n1882 + bit32.lshift(bit32.band(21056 * bit32.rshift(n188, 16) + 24245 * n1882, 65535), 16), 4294967295)
 								n222 = bit32.band(n22, 2147483647)
 								n223 = bit32.bnot(n222)
-								local packedValues = table.pack(bit32.band(n223, 4294967295))
-								local packedValues192 = table.pack(bit32.band(packedValues[1], 65535))
-								v24 = bit32.band(65535 * packedValues192[1] + bit32.lshift(bit32.band(65535 * bit32.rshift(packedValues[1], 16) + 65535 * packedValues192[1], 65535), 16), 4294967295)
-								local packedValues = table.pack(bit32.band(n22, 4294967295))
-								local packedValues193 = table.pack(bit32.band(packedValues[1], 65535))
-								v25 = bit32.band(46641 * packedValues193[1] + bit32.lshift(bit32.band(46641 * bit32.rshift(packedValues[1], 16) + 36583 * packedValues193[1], 65535), 16), 4294967295)
+								local n227 = bit32.band(n223, 4294967295)
+								local n2272 = bit32.band(n227, 65535)
+								v24 = bit32.band(65535 * n2272 + bit32.lshift(bit32.band(65535 * bit32.rshift(n227, 16) + 65535 * n2272, 65535), 16), 4294967295)
+								local n228 = bit32.band(n22, 4294967295)
+								local n2282 = bit32.band(n228, 65535)
+								v25 = bit32.band(46641 * n2282 + bit32.lshift(bit32.band(46641 * bit32.rshift(n228, 16) + 36583 * n2282, 65535), 16), 4294967295)
 								n224 = bit32.bnot(n22)
-								local packedValues = table.pack(bit32.band(n224, 4294967295))
-								local packedValues194 = table.pack(bit32.band(packedValues[1], 65535))
-								n23 = 2397550128 + v24 + v25 + bit32.band(46641 * packedValues194[1] + bit32.lshift(bit32.band(46641 * bit32.rshift(packedValues[1], 16) + 36583 * packedValues194[1], 65535), 16), 4294967295)
-								local packedValues = table.pack(bit32.band(n22, 4294967295))
-								local packedValues195 = table.pack(bit32.band(packedValues[1], 65535))
-								v26 = bit32.band(1004 * packedValues195[1] + bit32.lshift(bit32.band(1004 * bit32.rshift(packedValues[1], 16) + 49886 * packedValues195[1], 65535), 16), 4294967295)
-								local packedValues = table.pack(bit32.band(n224, 4294967295))
-								local packedValues196 = table.pack(bit32.band(packedValues[1], 65535))
-								local packedValues = table.pack(bit32.band(n23 - 3269329899 + v24 + v26 + bit32.band(1004 * packedValues196[1] + bit32.lshift(bit32.band(1004 * bit32.rshift(packedValues[1], 16) + 49886 * packedValues196[1], 65535), 16), 4294967295), 4294967295))
-								local packedValues197 = table.pack(bit32.band(packedValues[1], 65535))
-								v27 = bit32.band(21218 * packedValues197[1] + bit32.lshift(bit32.band(21218 * bit32.rshift(packedValues[1], 16) + 47856 * packedValues197[1], 65535), 16), 4294967295)
-								local packedValues = table.pack(bit32.band(n22, 4294967295))
-								local packedValues198 = table.pack(bit32.band(n223, 4294967295))
-								local packedValues199 = table.pack(bit32.band(packedValues[1], 65535))
-								local packedValues200 = table.pack(bit32.rshift(packedValues[1], 16))
-								local packedValues201 = table.pack(bit32.band(packedValues198[1], 65535))
-								local packedValues = table.pack(bit32.band(bit32.band(packedValues199[1] * packedValues201[1] + bit32.lshift(bit32.band(packedValues199[1] * bit32.rshift(packedValues198[1], 16) + packedValues200[1] * packedValues201[1], 65535), 16), 4294967295), 4294967295))
-								local packedValues202 = table.pack(bit32.band(packedValues[1], 65535))
-								n24 = 2669559910 + bit32.band(64492 * packedValues202[1] + bit32.lshift(bit32.band(64492 * bit32.rshift(packedValues[1], 16) + 27898 * packedValues202[1], 65535), 16), 4294967295)
-								local packedValues = table.pack(bit32.band(n22, 4294967295))
-								local packedValues203 = table.pack(bit32.band(packedValues[1], 65535))
+								local n229 = bit32.band(n224, 4294967295)
+								local n2292 = bit32.band(n229, 65535)
+								n23 = 2397550128 + v24 + v25 + bit32.band(46641 * n2292 + bit32.lshift(bit32.band(46641 * bit32.rshift(n229, 16) + 36583 * n2292, 65535), 16), 4294967295)
+								local n2210 = bit32.band(n22, 4294967295)
+								local n22102 = bit32.band(n2210, 65535)
+								v26 = bit32.band(1004 * n22102 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2210, 16) + 49886 * n22102, 65535), 16), 4294967295)
+								local n2211 = bit32.band(n224, 4294967295)
+								local n22112 = bit32.band(n2211, 65535)
+								local v38 = bit32.band(n23 - 3269329899 + v24 + v26 + bit32.band(1004 * n22112 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2211, 16) + 49886 * n22112, 65535), 16), 4294967295), 4294967295)
+								local v382 = bit32.band(v38, 65535)
+								v27 = bit32.band(21218 * v382 + bit32.lshift(bit32.band(21218 * bit32.rshift(v38, 16) + 47856 * v382, 65535), 16), 4294967295)
+								local n2212 = bit32.band(n22, 4294967295)
+								local n2213 = bit32.band(n223, 4294967295)
+								local n22122 = bit32.band(n2212, 65535)
+								local n22123 = bit32.rshift(n2212, 16)
+								local n22132 = bit32.band(n2213, 65535)
+								local v39 = bit32.band(bit32.band(n22122 * n22132 + bit32.lshift(bit32.band(n22122 * bit32.rshift(n2213, 16) + n22123 * n22132, 65535), 16), 4294967295), 4294967295)
+								local v392 = bit32.band(v39, 65535)
+								n24 = 2669559910 + bit32.band(64492 * v392 + bit32.lshift(bit32.band(64492 * bit32.rshift(v39, 16) + 27898 * v392, 65535), 16), 4294967295)
+								local n2214 = bit32.band(n22, 4294967295)
+								local n22142 = bit32.band(n2214, 65535)
 								n225 = n223
 								n226 = bit32.bor(n22, 2147483647)
-								n25 = n24 + bit32.band(16487 * packedValues203[1] + bit32.lshift(bit32.band(16487 * bit32.rshift(packedValues[1], 16) + 40734 * packedValues203[1], 65535), 16), 4294967295) + 0
-								local packedValues = table.pack(bit32.band(n225, 4294967295))
-								local packedValues204 = table.pack(bit32.band(packedValues[1], 65535))
-								v28 = bit32.band(15442 * packedValues204[1] + bit32.lshift(bit32.band(15442 * bit32.rshift(packedValues[1], 16) + 3097 * packedValues204[1], 65535), 16), 4294967295)
-								local packedValues = table.pack(bit32.band(n225, 4294967295))
-								local packedValues205 = table.pack(bit32.band(n225, 4294967295))
-								local packedValues206 = table.pack(bit32.band(packedValues[1], 65535))
-								local packedValues207 = table.pack(bit32.rshift(packedValues[1], 16))
-								local packedValues208 = table.pack(bit32.band(packedValues205[1], 65535))
-								local packedValues = table.pack(bit32.band(bit32.band(packedValues206[1] * packedValues208[1] + bit32.lshift(bit32.band(packedValues206[1] * bit32.rshift(packedValues205[1], 16) + packedValues207[1] * packedValues208[1], 65535), 16), 4294967295), 4294967295))
-								local packedValues209 = table.pack(bit32.band(packedValues[1], 65535))
-								n26 = v28 + bit32.band(64492 * packedValues209[1] + bit32.lshift(bit32.band(64492 * bit32.rshift(packedValues[1], 16) + 27898 * packedValues209[1], 65535), 16), 4294967295)
-								local packedValues = table.pack(bit32.band(n22, 4294967295))
-								local packedValues210 = table.pack(bit32.band(packedValues[1], 65535))
-								local packedValues = table.pack(bit32.band(bit32.band(packedValues210[1] * 0 + bit32.lshift(bit32.band(packedValues210[1] * 0 + bit32.rshift(packedValues[1], 16) * 0, 65535), 16), 4294967295), 4294967295))
-								local packedValues211 = table.pack(bit32.band(packedValues[1], 65535))
-								v29 = bit32.band(64492 * packedValues211[1] + bit32.lshift(bit32.band(64492 * bit32.rshift(packedValues[1], 16) + 27898 * packedValues211[1], 65535), 16), 4294967295)
-								local packedValues = table.pack(bit32.band(n226, 4294967295))
-								local packedValues212 = table.pack(bit32.band(packedValues[1], 65535))
-								local packedValues = table.pack(bit32.band(bit32.band(packedValues212[1] * 0 + bit32.lshift(bit32.band(packedValues212[1] * 0 + bit32.rshift(packedValues[1], 16) * 0, 65535), 16), 4294967295), 4294967295))
-								local packedValues213 = table.pack(bit32.band(packedValues[1], 65535))
-								n5 = v27 + n25 + n26 + 0 + v29 + bit32.band(1044 * packedValues213[1] + bit32.lshift(bit32.band(1044 * bit32.rshift(packedValues[1], 16) + 37637 * packedValues213[1], 65535), 16), 4294967295)
+								n25 = n24 + bit32.band(16487 * n22142 + bit32.lshift(bit32.band(16487 * bit32.rshift(n2214, 16) + 40734 * n22142, 65535), 16), 4294967295) + 0
+								local n2215 = bit32.band(n225, 4294967295)
+								local n22152 = bit32.band(n2215, 65535)
+								v28 = bit32.band(15442 * n22152 + bit32.lshift(bit32.band(15442 * bit32.rshift(n2215, 16) + 3097 * n22152, 65535), 16), 4294967295)
+								local n2216 = bit32.band(n225, 4294967295)
+								local n2217 = bit32.band(n225, 4294967295)
+								local n22162 = bit32.band(n2216, 65535)
+								local n22163 = bit32.rshift(n2216, 16)
+								local n22172 = bit32.band(n2217, 65535)
+								local v40 = bit32.band(bit32.band(n22162 * n22172 + bit32.lshift(bit32.band(n22162 * bit32.rshift(n2217, 16) + n22163 * n22172, 65535), 16), 4294967295), 4294967295)
+								local v402 = bit32.band(v40, 65535)
+								n26 = v28 + bit32.band(64492 * v402 + bit32.lshift(bit32.band(64492 * bit32.rshift(v40, 16) + 27898 * v402, 65535), 16), 4294967295)
+								local n2218 = bit32.band(n22, 4294967295)
+								local n22182 = bit32.band(n2218, 65535)
+								local v41 = bit32.band(bit32.band(n22182 * 0 + bit32.lshift(bit32.band(n22182 * 0 + bit32.rshift(n2218, 16) * 0, 65535), 16), 4294967295), 4294967295)
+								local v412 = bit32.band(v41, 65535)
+								v29 = bit32.band(64492 * v412 + bit32.lshift(bit32.band(64492 * bit32.rshift(v41, 16) + 27898 * v412, 65535), 16), 4294967295)
+								local n2219 = bit32.band(n226, 4294967295)
+								local n22192 = bit32.band(n2219, 65535)
+								local v42 = bit32.band(bit32.band(n22192 * 0 + bit32.lshift(bit32.band(n22192 * 0 + bit32.rshift(n2219, 16) * 0, 65535), 16), 4294967295), 4294967295)
+								local v422 = bit32.band(v42, 65535)
+								n5 = v27 + n25 + n26 + 0 + v29 + bit32.band(1044 * v422 + bit32.lshift(bit32.band(1044 * bit32.rshift(v42, 16) + 37637 * v422, 65535), 16), 4294967295)
 							else
 								break
 							end
@@ -827,134 +826,134 @@ local function fn5()
 							n52 = bit32.lshift(bit32.band(n5, n112), 1)
 							n53 = bit32.band(n52, n5)
 							n54 = bit32.bnot(n53)
-							local packedValues = table.pack(bit32.band(n52, 4294967295))
-							local packedValues214 = table.pack(bit32.band(n54, 4294967295))
-							local packedValues215 = table.pack(bit32.band(packedValues[1], 65535))
-							local packedValues216 = table.pack(bit32.rshift(packedValues[1], 16))
-							local packedValues217 = table.pack(bit32.band(packedValues214[1], 65535))
-							local packedValues = table.pack(bit32.band(bit32.band(packedValues215[1] * packedValues217[1] + bit32.lshift(bit32.band(packedValues215[1] * bit32.rshift(packedValues214[1], 16) + packedValues216[1] * packedValues217[1], 65535), 16), 4294967295), 4294967295))
-							local packedValues218 = table.pack(bit32.band(packedValues[1], 65535))
-							v18 = bit32.band(19474 * packedValues218[1] + bit32.lshift(bit32.band(19474 * bit32.rshift(packedValues[1], 16) + 39469 * packedValues218[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(n52, 4294967295))
-							local packedValues219 = table.pack(bit32.band(packedValues[1], 65535))
-							n12 = n112 + n5 + v18 + bit32.band(23587 * packedValues219[1] + bit32.lshift(bit32.band(23587 * bit32.rshift(packedValues[1], 16) + 21404 * packedValues219[1], 65535), 16), 4294967295)
+							local v123 = bit32.band(n52, 4294967295)
+							local v124 = bit32.band(n54, 4294967295)
+							local v1232 = bit32.band(v123, 65535)
+							local v1233 = bit32.rshift(v123, 16)
+							local v1242 = bit32.band(v124, 65535)
+							local v30 = bit32.band(bit32.band(v1232 * v1242 + bit32.lshift(bit32.band(v1232 * bit32.rshift(v124, 16) + v1233 * v1242, 65535), 16), 4294967295), 4294967295)
+							local v302 = bit32.band(v30, 65535)
+							v18 = bit32.band(19474 * v302 + bit32.lshift(bit32.band(19474 * bit32.rshift(v30, 16) + 39469 * v302, 65535), 16), 4294967295)
+							local v125 = bit32.band(n52, 4294967295)
+							local v1252 = bit32.band(v125, 65535)
+							n12 = n112 + n5 + v18 + bit32.band(23587 * v1252 + bit32.lshift(bit32.band(23587 * bit32.rshift(v125, 16) + 21404 * v1252, 65535), 16), 4294967295)
 							n55 = bit32.bnot(n5)
 							n56 = bit32.bor(n55, 54517094)
-							local packedValues = table.pack(bit32.band(n52, 4294967295))
-							local packedValues220 = table.pack(bit32.band(n56, 4294967295))
-							local packedValues221 = table.pack(bit32.band(packedValues[1], 65535))
-							local packedValues222 = table.pack(bit32.rshift(packedValues[1], 16))
-							local packedValues223 = table.pack(bit32.band(packedValues220[1], 65535))
-							local packedValues = table.pack(bit32.band(bit32.band(packedValues221[1] * packedValues223[1] + bit32.lshift(bit32.band(packedValues221[1] * bit32.rshift(packedValues220[1], 16) + packedValues222[1] * packedValues223[1], 65535), 16), 4294967295), 4294967295))
-							local packedValues224 = table.pack(bit32.band(packedValues[1], 65535))
-							n13 = 1402756132 + bit32.band(46062 * packedValues224[1] + bit32.lshift(bit32.band(46062 * bit32.rshift(packedValues[1], 16) + 26066 * packedValues224[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(bit32.bnot(n52), 4294967295))
-							local packedValues225 = table.pack(bit32.band(packedValues[1], 65535))
-							v19 = bit32.band(23586 * packedValues225[1] + bit32.lshift(bit32.band(23586 * bit32.rshift(packedValues[1], 16) + 21404 * packedValues225[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(bit32.bor(54517095, n55), 4294967295))
-							local packedValues226 = table.pack(bit32.band(packedValues[1], 65535))
-							n14 = n12 + n13 + v19 + bit32.band(2 * packedValues226[1] + bit32.lshift(bit32.band(2 * bit32.rshift(packedValues[1], 16) + 0 * packedValues226[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(n14, 4294967295))
-							local packedValues227 = table.pack(bit32.band(packedValues[1], 65535))
-							n15 = 327058238 + 3859571462 + bit32.band(25350 * packedValues227[1] + bit32.lshift(bit32.band(25350 * bit32.rshift(packedValues[1], 16) + 58892 * packedValues227[1], 65535), 16), 4294967295)
+							local v126 = bit32.band(n52, 4294967295)
+							local v127 = bit32.band(n56, 4294967295)
+							local v1262 = bit32.band(v126, 65535)
+							local v1263 = bit32.rshift(v126, 16)
+							local v1272 = bit32.band(v127, 65535)
+							local v31 = bit32.band(bit32.band(v1262 * v1272 + bit32.lshift(bit32.band(v1262 * bit32.rshift(v127, 16) + v1263 * v1272, 65535), 16), 4294967295), 4294967295)
+							local v312 = bit32.band(v31, 65535)
+							n13 = 1402756132 + bit32.band(46062 * v312 + bit32.lshift(bit32.band(46062 * bit32.rshift(v31, 16) + 26066 * v312, 65535), 16), 4294967295)
+							local v128 = bit32.band(bit32.bnot(n52), 4294967295)
+							local v1282 = bit32.band(v128, 65535)
+							v19 = bit32.band(23586 * v1282 + bit32.lshift(bit32.band(23586 * bit32.rshift(v128, 16) + 21404 * v1282, 65535), 16), 4294967295)
+							local v32 = bit32.band(bit32.bor(54517095, n55), 4294967295)
+							local v322 = bit32.band(v32, 65535)
+							n14 = n12 + n13 + v19 + bit32.band(2 * v322 + bit32.lshift(bit32.band(2 * bit32.rshift(v32, 16) + 0 * v322, 65535), 16), 4294967295)
+							local n143 = bit32.band(n14, 4294967295)
+							local n1432 = bit32.band(n143, 65535)
+							n15 = 327058238 + 3859571462 + bit32.band(25350 * n1432 + bit32.lshift(bit32.band(25350 * bit32.rshift(n143, 16) + 58892 * n1432, 65535), 16), 4294967295)
 							v20 = bit32.bor(2147483647, n14)
-							local packedValues = table.pack(bit32.band(bit32.band(272719449, v20), 4294967295))
-							local packedValues228 = table.pack(bit32.band(packedValues[1], 65535))
-							n16 = n15 + 375472684 + bit32.band(14836 * packedValues228[1] + bit32.lshift(bit32.band(14836 * bit32.rshift(packedValues[1], 16) + 13287 * packedValues228[1], 65535), 16), 4294967295) + 1761712016
+							local v33 = bit32.band(bit32.band(272719449, v20), 4294967295)
+							local v332 = bit32.band(v33, 65535)
+							n16 = n15 + 375472684 + bit32.band(14836 * v332 + bit32.lshift(bit32.band(14836 * bit32.rshift(v33, 16) + 13287 * v332, 65535), 16), 4294967295) + 1761712016
 							n142 = bit32.bnot(n14)
-							local packedValues = table.pack(bit32.band(bit32.bor(2092966552, n142), 4294967295))
-							local packedValues229 = table.pack(bit32.band(packedValues[1], 65535))
-							local packedValues = table.pack(bit32.band(n16 - 4564062016 + 28981759 + bit32.band(50689 * packedValues229[1] + bit32.lshift(bit32.band(50689 * bit32.rshift(packedValues[1], 16) + 32325 * packedValues229[1], 65535), 16), 4294967295) + 1195411303, 4294967295))
-							local packedValues230 = table.pack(bit32.band(packedValues[1], 65535))
-							n17 = bit32.band(31367 * packedValues230[1] + bit32.lshift(bit32.band(31367 * bit32.rshift(packedValues[1], 16) + 21986 * packedValues230[1], 65535), 16), 4294967295) + 21801894718
+							local v34 = bit32.band(bit32.bor(2092966552, n142), 4294967295)
+							local v342 = bit32.band(v34, 65535)
+							local v35 = bit32.band(n16 - 4564062016 + 28981759 + bit32.band(50689 * v342 + bit32.lshift(bit32.band(50689 * bit32.rshift(v34, 16) + 32325 * v342, 65535), 16), 4294967295) + 1195411303, 4294967295)
+							local v352 = bit32.band(v35, 65535)
+							n17 = bit32.band(31367 * v352 + bit32.lshift(bit32.band(31367 * bit32.rshift(v35, 16) + 21986 * v352, 65535), 16), 4294967295) + 21801894718
 							v15[n112] = bit32.bxor(v15[n112], 327058238)
 							n18 = n5 + 584826193
-							local packedValues = table.pack(bit32.band(n18, 4294967295))
-							local packedValues231 = table.pack(bit32.band(packedValues[1], 65535))
-							n19 = bit32.band(43296 * packedValues231[1] + bit32.lshift(bit32.band(43296 * bit32.rshift(packedValues[1], 16) + 12122 * packedValues231[1], 65535), 16), 4294967295) + 1588941376
-							local packedValues = table.pack(bit32.band(n112, 4294967295))
-							local packedValues232 = table.pack(bit32.band(packedValues[1], 65535))
-							v21 = bit32.band(packedValues232[1] * 62187 + bit32.lshift(bit32.band(packedValues232[1] * 8557 + bit32.rshift(packedValues[1], 16) * 62187, 65535), 16), 4294967295)
+							local n185 = bit32.band(n18, 4294967295)
+							local n1852 = bit32.band(n185, 65535)
+							n19 = bit32.band(43296 * n1852 + bit32.lshift(bit32.band(43296 * bit32.rshift(n185, 16) + 12122 * n1852, 65535), 16), 4294967295) + 1588941376
+							local n113 = bit32.band(n112, 4294967295)
+							local n1132 = bit32.band(n113, 65535)
+							v21 = bit32.band(n1132 * 62187 + bit32.lshift(bit32.band(n1132 * 8557 + bit32.rshift(n113, 16) * 62187, 65535), 16), 4294967295)
 							n182 = bit32.band(n18, n17)
-							local packedValues = table.pack(bit32.band(v21, 4294967295))
-							local packedValues233 = table.pack(bit32.band(n182, 4294967295))
-							local packedValues234 = table.pack(bit32.band(packedValues[1], 65535))
-							local packedValues235 = table.pack(bit32.rshift(packedValues[1], 16))
-							local packedValues236 = table.pack(bit32.band(packedValues233[1], 65535))
-							local packedValues = table.pack(bit32.band(bit32.band(packedValues234[1] * packedValues236[1] + bit32.lshift(bit32.band(packedValues234[1] * bit32.rshift(packedValues233[1], 16) + packedValues235[1] * packedValues236[1], 65535), 16), 4294967295), 4294967295))
-							local packedValues237 = table.pack(bit32.band(packedValues[1], 65535))
-							v23 = bit32.band(51485 * packedValues237[1] + bit32.lshift(bit32.band(51485 * bit32.rshift(packedValues[1], 16) + 39315 * packedValues237[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(v21, 4294967295))
-							local packedValues238 = table.pack(bit32.band(packedValues[1], 65535))
-							n20 = n19 + v23 + bit32.band(29245 * packedValues238[1] + bit32.lshift(bit32.band(29245 * bit32.rshift(packedValues[1], 16) + 51438 * packedValues238[1], 65535), 16), 4294967295)
+							local v212 = bit32.band(v21, 4294967295)
+							local n186 = bit32.band(n182, 4294967295)
+							local v2122 = bit32.band(v212, 65535)
+							local v2123 = bit32.rshift(v212, 16)
+							local n1862 = bit32.band(n186, 65535)
+							local v36 = bit32.band(bit32.band(v2122 * n1862 + bit32.lshift(bit32.band(v2122 * bit32.rshift(n186, 16) + v2123 * n1862, 65535), 16), 4294967295), 4294967295)
+							local v362 = bit32.band(v36, 65535)
+							v23 = bit32.band(51485 * v362 + bit32.lshift(bit32.band(51485 * bit32.rshift(v36, 16) + 39315 * v362, 65535), 16), 4294967295)
+							local v213 = bit32.band(v21, 4294967295)
+							local v2132 = bit32.band(v213, 65535)
+							n20 = n19 + v23 + bit32.band(29245 * v2132 + bit32.lshift(bit32.band(29245 * bit32.rshift(v213, 16) + 51438 * v2132, 65535), 16), 4294967295)
 							n172 = bit32.band(n17, 272719449)
 							n183 = bit32.bnot(n182)
-							local packedValues = table.pack(bit32.band(v21, 4294967295))
-							local packedValues239 = table.pack(bit32.band(n183, 4294967295))
-							local packedValues240 = table.pack(bit32.band(packedValues[1], 65535))
-							local packedValues241 = table.pack(bit32.rshift(packedValues[1], 16))
-							local packedValues242 = table.pack(bit32.band(packedValues239[1], 65535))
-							local packedValues = table.pack(bit32.band(bit32.band(packedValues240[1] * packedValues242[1] + bit32.lshift(bit32.band(packedValues240[1] * bit32.rshift(packedValues239[1], 16) + packedValues241[1] * packedValues242[1], 65535), 16), 4294967295), 4294967295))
-							local packedValues243 = table.pack(bit32.band(packedValues[1], 65535))
-							n21 = n172 + bit32.band(51485 * packedValues243[1] + bit32.lshift(bit32.band(51485 * bit32.rshift(packedValues[1], 16) + 39315 * packedValues243[1], 65535), 16), 4294967295)
+							local v214 = bit32.band(v21, 4294967295)
+							local n187 = bit32.band(n183, 4294967295)
+							local v2142 = bit32.band(v214, 65535)
+							local v2143 = bit32.rshift(v214, 16)
+							local n1872 = bit32.band(n187, 65535)
+							local v37 = bit32.band(bit32.band(v2142 * n1872 + bit32.lshift(bit32.band(v2142 * bit32.rshift(n187, 16) + v2143 * n1872, 65535), 16), 4294967295), 4294967295)
+							local v372 = bit32.band(v37, 65535)
+							n21 = n172 + bit32.band(51485 * v372 + bit32.lshift(bit32.band(51485 * bit32.rshift(v37, 16) + 39315 * v372, 65535), 16), 4294967295)
 							n184 = bit32.bor(n18, v21)
-							local packedValues = table.pack(bit32.band(bit32.bnot(n184), 4294967295))
-							local packedValues244 = table.pack(bit32.band(packedValues[1], 65535))
-							n22 = n20 + n21 + 3045076956 + bit32.band(21056 * packedValues244[1] + bit32.lshift(bit32.band(21056 * bit32.rshift(packedValues[1], 16) + 24245 * packedValues244[1], 65535), 16), 4294967295)
+							local n188 = bit32.band(bit32.bnot(n184), 4294967295)
+							local n1882 = bit32.band(n188, 65535)
+							n22 = n20 + n21 + 3045076956 + bit32.band(21056 * n1882 + bit32.lshift(bit32.band(21056 * bit32.rshift(n188, 16) + 24245 * n1882, 65535), 16), 4294967295)
 							n222 = bit32.band(n22, 2147483647)
 							n223 = bit32.bnot(n222)
-							local packedValues = table.pack(bit32.band(n223, 4294967295))
-							local packedValues245 = table.pack(bit32.band(packedValues[1], 65535))
-							v24 = bit32.band(65535 * packedValues245[1] + bit32.lshift(bit32.band(65535 * bit32.rshift(packedValues[1], 16) + 65535 * packedValues245[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(n22, 4294967295))
-							local packedValues246 = table.pack(bit32.band(packedValues[1], 65535))
-							v25 = bit32.band(46641 * packedValues246[1] + bit32.lshift(bit32.band(46641 * bit32.rshift(packedValues[1], 16) + 36583 * packedValues246[1], 65535), 16), 4294967295)
+							local n227 = bit32.band(n223, 4294967295)
+							local n2272 = bit32.band(n227, 65535)
+							v24 = bit32.band(65535 * n2272 + bit32.lshift(bit32.band(65535 * bit32.rshift(n227, 16) + 65535 * n2272, 65535), 16), 4294967295)
+							local n228 = bit32.band(n22, 4294967295)
+							local n2282 = bit32.band(n228, 65535)
+							v25 = bit32.band(46641 * n2282 + bit32.lshift(bit32.band(46641 * bit32.rshift(n228, 16) + 36583 * n2282, 65535), 16), 4294967295)
 							n224 = bit32.bnot(n22)
-							local packedValues = table.pack(bit32.band(n224, 4294967295))
-							local packedValues247 = table.pack(bit32.band(packedValues[1], 65535))
-							n23 = 2397550128 + v24 + v25 + bit32.band(46641 * packedValues247[1] + bit32.lshift(bit32.band(46641 * bit32.rshift(packedValues[1], 16) + 36583 * packedValues247[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(n22, 4294967295))
-							local packedValues248 = table.pack(bit32.band(packedValues[1], 65535))
-							v26 = bit32.band(1004 * packedValues248[1] + bit32.lshift(bit32.band(1004 * bit32.rshift(packedValues[1], 16) + 49886 * packedValues248[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(n224, 4294967295))
-							local packedValues249 = table.pack(bit32.band(packedValues[1], 65535))
-							local packedValues = table.pack(bit32.band(n23 - 3269329899 + v24 + v26 + bit32.band(1004 * packedValues249[1] + bit32.lshift(bit32.band(1004 * bit32.rshift(packedValues[1], 16) + 49886 * packedValues249[1], 65535), 16), 4294967295), 4294967295))
-							local packedValues250 = table.pack(bit32.band(packedValues[1], 65535))
-							v27 = bit32.band(21218 * packedValues250[1] + bit32.lshift(bit32.band(21218 * bit32.rshift(packedValues[1], 16) + 47856 * packedValues250[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(n22, 4294967295))
-							local packedValues251 = table.pack(bit32.band(n223, 4294967295))
-							local packedValues252 = table.pack(bit32.band(packedValues[1], 65535))
-							local packedValues253 = table.pack(bit32.rshift(packedValues[1], 16))
-							local packedValues254 = table.pack(bit32.band(packedValues251[1], 65535))
-							local packedValues = table.pack(bit32.band(bit32.band(packedValues252[1] * packedValues254[1] + bit32.lshift(bit32.band(packedValues252[1] * bit32.rshift(packedValues251[1], 16) + packedValues253[1] * packedValues254[1], 65535), 16), 4294967295), 4294967295))
-							local packedValues255 = table.pack(bit32.band(packedValues[1], 65535))
-							n24 = 2669559910 + bit32.band(64492 * packedValues255[1] + bit32.lshift(bit32.band(64492 * bit32.rshift(packedValues[1], 16) + 27898 * packedValues255[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(n22, 4294967295))
-							local packedValues256 = table.pack(bit32.band(packedValues[1], 65535))
+							local n229 = bit32.band(n224, 4294967295)
+							local n2292 = bit32.band(n229, 65535)
+							n23 = 2397550128 + v24 + v25 + bit32.band(46641 * n2292 + bit32.lshift(bit32.band(46641 * bit32.rshift(n229, 16) + 36583 * n2292, 65535), 16), 4294967295)
+							local n2210 = bit32.band(n22, 4294967295)
+							local n22102 = bit32.band(n2210, 65535)
+							v26 = bit32.band(1004 * n22102 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2210, 16) + 49886 * n22102, 65535), 16), 4294967295)
+							local n2211 = bit32.band(n224, 4294967295)
+							local n22112 = bit32.band(n2211, 65535)
+							local v38 = bit32.band(n23 - 3269329899 + v24 + v26 + bit32.band(1004 * n22112 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2211, 16) + 49886 * n22112, 65535), 16), 4294967295), 4294967295)
+							local v382 = bit32.band(v38, 65535)
+							v27 = bit32.band(21218 * v382 + bit32.lshift(bit32.band(21218 * bit32.rshift(v38, 16) + 47856 * v382, 65535), 16), 4294967295)
+							local n2212 = bit32.band(n22, 4294967295)
+							local n2213 = bit32.band(n223, 4294967295)
+							local n22122 = bit32.band(n2212, 65535)
+							local n22123 = bit32.rshift(n2212, 16)
+							local n22132 = bit32.band(n2213, 65535)
+							local v39 = bit32.band(bit32.band(n22122 * n22132 + bit32.lshift(bit32.band(n22122 * bit32.rshift(n2213, 16) + n22123 * n22132, 65535), 16), 4294967295), 4294967295)
+							local v392 = bit32.band(v39, 65535)
+							n24 = 2669559910 + bit32.band(64492 * v392 + bit32.lshift(bit32.band(64492 * bit32.rshift(v39, 16) + 27898 * v392, 65535), 16), 4294967295)
+							local n2214 = bit32.band(n22, 4294967295)
+							local n22142 = bit32.band(n2214, 65535)
 							n225 = n223
 							n226 = bit32.bor(n22, 2147483647)
-							n25 = n24 + bit32.band(16487 * packedValues256[1] + bit32.lshift(bit32.band(16487 * bit32.rshift(packedValues[1], 16) + 40734 * packedValues256[1], 65535), 16), 4294967295) + 0
-							local packedValues = table.pack(bit32.band(n225, 4294967295))
-							local packedValues257 = table.pack(bit32.band(packedValues[1], 65535))
-							v28 = bit32.band(15442 * packedValues257[1] + bit32.lshift(bit32.band(15442 * bit32.rshift(packedValues[1], 16) + 3097 * packedValues257[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(n225, 4294967295))
-							local packedValues258 = table.pack(bit32.band(n225, 4294967295))
-							local packedValues259 = table.pack(bit32.band(packedValues[1], 65535))
-							local packedValues260 = table.pack(bit32.rshift(packedValues[1], 16))
-							local packedValues261 = table.pack(bit32.band(packedValues258[1], 65535))
-							local packedValues = table.pack(bit32.band(bit32.band(packedValues259[1] * packedValues261[1] + bit32.lshift(bit32.band(packedValues259[1] * bit32.rshift(packedValues258[1], 16) + packedValues260[1] * packedValues261[1], 65535), 16), 4294967295), 4294967295))
-							local packedValues262 = table.pack(bit32.band(packedValues[1], 65535))
-							n26 = v28 + bit32.band(64492 * packedValues262[1] + bit32.lshift(bit32.band(64492 * bit32.rshift(packedValues[1], 16) + 27898 * packedValues262[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(n22, 4294967295))
-							local packedValues263 = table.pack(bit32.band(packedValues[1], 65535))
-							local packedValues = table.pack(bit32.band(bit32.band(packedValues263[1] * 0 + bit32.lshift(bit32.band(packedValues263[1] * 0 + bit32.rshift(packedValues[1], 16) * 0, 65535), 16), 4294967295), 4294967295))
-							local packedValues264 = table.pack(bit32.band(packedValues[1], 65535))
-							v29 = bit32.band(64492 * packedValues264[1] + bit32.lshift(bit32.band(64492 * bit32.rshift(packedValues[1], 16) + 27898 * packedValues264[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(n226, 4294967295))
-							local packedValues265 = table.pack(bit32.band(packedValues[1], 65535))
-							local packedValues = table.pack(bit32.band(bit32.band(packedValues265[1] * 0 + bit32.lshift(bit32.band(packedValues265[1] * 0 + bit32.rshift(packedValues[1], 16) * 0, 65535), 16), 4294967295), 4294967295))
-							local packedValues266 = table.pack(bit32.band(packedValues[1], 65535))
-							n5 = v27 + n25 + n26 + 0 + v29 + bit32.band(1044 * packedValues266[1] + bit32.lshift(bit32.band(1044 * bit32.rshift(packedValues[1], 16) + 37637 * packedValues266[1], 65535), 16), 4294967295)
+							n25 = n24 + bit32.band(16487 * n22142 + bit32.lshift(bit32.band(16487 * bit32.rshift(n2214, 16) + 40734 * n22142, 65535), 16), 4294967295) + 0
+							local n2215 = bit32.band(n225, 4294967295)
+							local n22152 = bit32.band(n2215, 65535)
+							v28 = bit32.band(15442 * n22152 + bit32.lshift(bit32.band(15442 * bit32.rshift(n2215, 16) + 3097 * n22152, 65535), 16), 4294967295)
+							local n2216 = bit32.band(n225, 4294967295)
+							local n2217 = bit32.band(n225, 4294967295)
+							local n22162 = bit32.band(n2216, 65535)
+							local n22163 = bit32.rshift(n2216, 16)
+							local n22172 = bit32.band(n2217, 65535)
+							local v40 = bit32.band(bit32.band(n22162 * n22172 + bit32.lshift(bit32.band(n22162 * bit32.rshift(n2217, 16) + n22163 * n22172, 65535), 16), 4294967295), 4294967295)
+							local v402 = bit32.band(v40, 65535)
+							n26 = v28 + bit32.band(64492 * v402 + bit32.lshift(bit32.band(64492 * bit32.rshift(v40, 16) + 27898 * v402, 65535), 16), 4294967295)
+							local n2218 = bit32.band(n22, 4294967295)
+							local n22182 = bit32.band(n2218, 65535)
+							local v41 = bit32.band(bit32.band(n22182 * 0 + bit32.lshift(bit32.band(n22182 * 0 + bit32.rshift(n2218, 16) * 0, 65535), 16), 4294967295), 4294967295)
+							local v412 = bit32.band(v41, 65535)
+							v29 = bit32.band(64492 * v412 + bit32.lshift(bit32.band(64492 * bit32.rshift(v41, 16) + 27898 * v412, 65535), 16), 4294967295)
+							local n2219 = bit32.band(n226, 4294967295)
+							local n22192 = bit32.band(n2219, 65535)
+							local v42 = bit32.band(bit32.band(n22192 * 0 + bit32.lshift(bit32.band(n22192 * 0 + bit32.rshift(n2219, 16) * 0, 65535), 16), 4294967295), 4294967295)
+							local v422 = bit32.band(v42, 65535)
+							n5 = v27 + n25 + n26 + 0 + v29 + bit32.band(1044 * v422 + bit32.lshift(bit32.band(1044 * bit32.rshift(v42, 16) + 37637 * v422, 65535), 16), 4294967295)
 						else
 							break
 						end
@@ -1002,134 +1001,134 @@ local function fn5()
 							n52 = bit32.lshift(bit32.band(n5, n112), 1)
 							n53 = bit32.band(n52, n5)
 							n54 = bit32.bnot(n53)
-							local packedValues = table.pack(bit32.band(n52, 4294967295))
-							local packedValues267 = table.pack(bit32.band(n54, 4294967295))
-							local packedValues268 = table.pack(bit32.band(packedValues[1], 65535))
-							local packedValues269 = table.pack(bit32.rshift(packedValues[1], 16))
-							local packedValues270 = table.pack(bit32.band(packedValues267[1], 65535))
-							local packedValues = table.pack(bit32.band(bit32.band(packedValues268[1] * packedValues270[1] + bit32.lshift(bit32.band(packedValues268[1] * bit32.rshift(packedValues267[1], 16) + packedValues269[1] * packedValues270[1], 65535), 16), 4294967295), 4294967295))
-							local packedValues271 = table.pack(bit32.band(packedValues[1], 65535))
-							v18 = bit32.band(19474 * packedValues271[1] + bit32.lshift(bit32.band(19474 * bit32.rshift(packedValues[1], 16) + 39469 * packedValues271[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(n52, 4294967295))
-							local packedValues272 = table.pack(bit32.band(packedValues[1], 65535))
-							n12 = n112 + n5 + v18 + bit32.band(23587 * packedValues272[1] + bit32.lshift(bit32.band(23587 * bit32.rshift(packedValues[1], 16) + 21404 * packedValues272[1], 65535), 16), 4294967295)
+							local v123 = bit32.band(n52, 4294967295)
+							local v124 = bit32.band(n54, 4294967295)
+							local v1232 = bit32.band(v123, 65535)
+							local v1233 = bit32.rshift(v123, 16)
+							local v1242 = bit32.band(v124, 65535)
+							local v30 = bit32.band(bit32.band(v1232 * v1242 + bit32.lshift(bit32.band(v1232 * bit32.rshift(v124, 16) + v1233 * v1242, 65535), 16), 4294967295), 4294967295)
+							local v302 = bit32.band(v30, 65535)
+							v18 = bit32.band(19474 * v302 + bit32.lshift(bit32.band(19474 * bit32.rshift(v30, 16) + 39469 * v302, 65535), 16), 4294967295)
+							local v125 = bit32.band(n52, 4294967295)
+							local v1252 = bit32.band(v125, 65535)
+							n12 = n112 + n5 + v18 + bit32.band(23587 * v1252 + bit32.lshift(bit32.band(23587 * bit32.rshift(v125, 16) + 21404 * v1252, 65535), 16), 4294967295)
 							n55 = bit32.bnot(n5)
 							n56 = bit32.bor(n55, 54517094)
-							local packedValues = table.pack(bit32.band(n52, 4294967295))
-							local packedValues273 = table.pack(bit32.band(n56, 4294967295))
-							local packedValues274 = table.pack(bit32.band(packedValues[1], 65535))
-							local packedValues275 = table.pack(bit32.rshift(packedValues[1], 16))
-							local packedValues276 = table.pack(bit32.band(packedValues273[1], 65535))
-							local packedValues = table.pack(bit32.band(bit32.band(packedValues274[1] * packedValues276[1] + bit32.lshift(bit32.band(packedValues274[1] * bit32.rshift(packedValues273[1], 16) + packedValues275[1] * packedValues276[1], 65535), 16), 4294967295), 4294967295))
-							local packedValues277 = table.pack(bit32.band(packedValues[1], 65535))
-							n13 = 1402756132 + bit32.band(46062 * packedValues277[1] + bit32.lshift(bit32.band(46062 * bit32.rshift(packedValues[1], 16) + 26066 * packedValues277[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(bit32.bnot(n52), 4294967295))
-							local packedValues278 = table.pack(bit32.band(packedValues[1], 65535))
-							v19 = bit32.band(23586 * packedValues278[1] + bit32.lshift(bit32.band(23586 * bit32.rshift(packedValues[1], 16) + 21404 * packedValues278[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(bit32.bor(54517095, n55), 4294967295))
-							local packedValues279 = table.pack(bit32.band(packedValues[1], 65535))
-							n14 = n12 + n13 + v19 + bit32.band(2 * packedValues279[1] + bit32.lshift(bit32.band(2 * bit32.rshift(packedValues[1], 16) + 0 * packedValues279[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(n14, 4294967295))
-							local packedValues280 = table.pack(bit32.band(packedValues[1], 65535))
-							n15 = 327058238 + 3859571462 + bit32.band(25350 * packedValues280[1] + bit32.lshift(bit32.band(25350 * bit32.rshift(packedValues[1], 16) + 58892 * packedValues280[1], 65535), 16), 4294967295)
+							local v126 = bit32.band(n52, 4294967295)
+							local v127 = bit32.band(n56, 4294967295)
+							local v1262 = bit32.band(v126, 65535)
+							local v1263 = bit32.rshift(v126, 16)
+							local v1272 = bit32.band(v127, 65535)
+							local v31 = bit32.band(bit32.band(v1262 * v1272 + bit32.lshift(bit32.band(v1262 * bit32.rshift(v127, 16) + v1263 * v1272, 65535), 16), 4294967295), 4294967295)
+							local v312 = bit32.band(v31, 65535)
+							n13 = 1402756132 + bit32.band(46062 * v312 + bit32.lshift(bit32.band(46062 * bit32.rshift(v31, 16) + 26066 * v312, 65535), 16), 4294967295)
+							local v128 = bit32.band(bit32.bnot(n52), 4294967295)
+							local v1282 = bit32.band(v128, 65535)
+							v19 = bit32.band(23586 * v1282 + bit32.lshift(bit32.band(23586 * bit32.rshift(v128, 16) + 21404 * v1282, 65535), 16), 4294967295)
+							local v32 = bit32.band(bit32.bor(54517095, n55), 4294967295)
+							local v322 = bit32.band(v32, 65535)
+							n14 = n12 + n13 + v19 + bit32.band(2 * v322 + bit32.lshift(bit32.band(2 * bit32.rshift(v32, 16) + 0 * v322, 65535), 16), 4294967295)
+							local n143 = bit32.band(n14, 4294967295)
+							local n1432 = bit32.band(n143, 65535)
+							n15 = 327058238 + 3859571462 + bit32.band(25350 * n1432 + bit32.lshift(bit32.band(25350 * bit32.rshift(n143, 16) + 58892 * n1432, 65535), 16), 4294967295)
 							v20 = bit32.bor(2147483647, n14)
-							local packedValues = table.pack(bit32.band(bit32.band(272719449, v20), 4294967295))
-							local packedValues281 = table.pack(bit32.band(packedValues[1], 65535))
-							n16 = n15 + 375472684 + bit32.band(14836 * packedValues281[1] + bit32.lshift(bit32.band(14836 * bit32.rshift(packedValues[1], 16) + 13287 * packedValues281[1], 65535), 16), 4294967295) + 1761712016
+							local v33 = bit32.band(bit32.band(272719449, v20), 4294967295)
+							local v332 = bit32.band(v33, 65535)
+							n16 = n15 + 375472684 + bit32.band(14836 * v332 + bit32.lshift(bit32.band(14836 * bit32.rshift(v33, 16) + 13287 * v332, 65535), 16), 4294967295) + 1761712016
 							n142 = bit32.bnot(n14)
-							local packedValues = table.pack(bit32.band(bit32.bor(2092966552, n142), 4294967295))
-							local packedValues282 = table.pack(bit32.band(packedValues[1], 65535))
-							local packedValues = table.pack(bit32.band(n16 - 4564062016 + 28981759 + bit32.band(50689 * packedValues282[1] + bit32.lshift(bit32.band(50689 * bit32.rshift(packedValues[1], 16) + 32325 * packedValues282[1], 65535), 16), 4294967295) + 1195411303, 4294967295))
-							local packedValues283 = table.pack(bit32.band(packedValues[1], 65535))
-							n17 = bit32.band(31367 * packedValues283[1] + bit32.lshift(bit32.band(31367 * bit32.rshift(packedValues[1], 16) + 21986 * packedValues283[1], 65535), 16), 4294967295) + 21801894718
+							local v34 = bit32.band(bit32.bor(2092966552, n142), 4294967295)
+							local v342 = bit32.band(v34, 65535)
+							local v35 = bit32.band(n16 - 4564062016 + 28981759 + bit32.band(50689 * v342 + bit32.lshift(bit32.band(50689 * bit32.rshift(v34, 16) + 32325 * v342, 65535), 16), 4294967295) + 1195411303, 4294967295)
+							local v352 = bit32.band(v35, 65535)
+							n17 = bit32.band(31367 * v352 + bit32.lshift(bit32.band(31367 * bit32.rshift(v35, 16) + 21986 * v352, 65535), 16), 4294967295) + 21801894718
 							v15[n112] = bit32.bxor(v15[n112], 327058238)
 							n18 = n5 + 584826193
-							local packedValues = table.pack(bit32.band(n18, 4294967295))
-							local packedValues284 = table.pack(bit32.band(packedValues[1], 65535))
-							n19 = bit32.band(43296 * packedValues284[1] + bit32.lshift(bit32.band(43296 * bit32.rshift(packedValues[1], 16) + 12122 * packedValues284[1], 65535), 16), 4294967295) + 1588941376
-							local packedValues = table.pack(bit32.band(n112, 4294967295))
-							local packedValues285 = table.pack(bit32.band(packedValues[1], 65535))
-							v21 = bit32.band(packedValues285[1] * 62187 + bit32.lshift(bit32.band(packedValues285[1] * 8557 + bit32.rshift(packedValues[1], 16) * 62187, 65535), 16), 4294967295)
+							local n185 = bit32.band(n18, 4294967295)
+							local n1852 = bit32.band(n185, 65535)
+							n19 = bit32.band(43296 * n1852 + bit32.lshift(bit32.band(43296 * bit32.rshift(n185, 16) + 12122 * n1852, 65535), 16), 4294967295) + 1588941376
+							local n113 = bit32.band(n112, 4294967295)
+							local n1132 = bit32.band(n113, 65535)
+							v21 = bit32.band(n1132 * 62187 + bit32.lshift(bit32.band(n1132 * 8557 + bit32.rshift(n113, 16) * 62187, 65535), 16), 4294967295)
 							n182 = bit32.band(n18, n17)
-							local packedValues = table.pack(bit32.band(v21, 4294967295))
-							local packedValues286 = table.pack(bit32.band(n182, 4294967295))
-							local packedValues287 = table.pack(bit32.band(packedValues[1], 65535))
-							local packedValues288 = table.pack(bit32.rshift(packedValues[1], 16))
-							local packedValues289 = table.pack(bit32.band(packedValues286[1], 65535))
-							local packedValues = table.pack(bit32.band(bit32.band(packedValues287[1] * packedValues289[1] + bit32.lshift(bit32.band(packedValues287[1] * bit32.rshift(packedValues286[1], 16) + packedValues288[1] * packedValues289[1], 65535), 16), 4294967295), 4294967295))
-							local packedValues290 = table.pack(bit32.band(packedValues[1], 65535))
-							v23 = bit32.band(51485 * packedValues290[1] + bit32.lshift(bit32.band(51485 * bit32.rshift(packedValues[1], 16) + 39315 * packedValues290[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(v21, 4294967295))
-							local packedValues291 = table.pack(bit32.band(packedValues[1], 65535))
-							n20 = n19 + v23 + bit32.band(29245 * packedValues291[1] + bit32.lshift(bit32.band(29245 * bit32.rshift(packedValues[1], 16) + 51438 * packedValues291[1], 65535), 16), 4294967295)
+							local v212 = bit32.band(v21, 4294967295)
+							local n186 = bit32.band(n182, 4294967295)
+							local v2122 = bit32.band(v212, 65535)
+							local v2123 = bit32.rshift(v212, 16)
+							local n1862 = bit32.band(n186, 65535)
+							local v36 = bit32.band(bit32.band(v2122 * n1862 + bit32.lshift(bit32.band(v2122 * bit32.rshift(n186, 16) + v2123 * n1862, 65535), 16), 4294967295), 4294967295)
+							local v362 = bit32.band(v36, 65535)
+							v23 = bit32.band(51485 * v362 + bit32.lshift(bit32.band(51485 * bit32.rshift(v36, 16) + 39315 * v362, 65535), 16), 4294967295)
+							local v213 = bit32.band(v21, 4294967295)
+							local v2132 = bit32.band(v213, 65535)
+							n20 = n19 + v23 + bit32.band(29245 * v2132 + bit32.lshift(bit32.band(29245 * bit32.rshift(v213, 16) + 51438 * v2132, 65535), 16), 4294967295)
 							n172 = bit32.band(n17, 272719449)
 							n183 = bit32.bnot(n182)
-							local packedValues = table.pack(bit32.band(v21, 4294967295))
-							local packedValues292 = table.pack(bit32.band(n183, 4294967295))
-							local packedValues293 = table.pack(bit32.band(packedValues[1], 65535))
-							local packedValues294 = table.pack(bit32.rshift(packedValues[1], 16))
-							local packedValues295 = table.pack(bit32.band(packedValues292[1], 65535))
-							local packedValues = table.pack(bit32.band(bit32.band(packedValues293[1] * packedValues295[1] + bit32.lshift(bit32.band(packedValues293[1] * bit32.rshift(packedValues292[1], 16) + packedValues294[1] * packedValues295[1], 65535), 16), 4294967295), 4294967295))
-							local packedValues296 = table.pack(bit32.band(packedValues[1], 65535))
-							n21 = n172 + bit32.band(51485 * packedValues296[1] + bit32.lshift(bit32.band(51485 * bit32.rshift(packedValues[1], 16) + 39315 * packedValues296[1], 65535), 16), 4294967295)
+							local v214 = bit32.band(v21, 4294967295)
+							local n187 = bit32.band(n183, 4294967295)
+							local v2142 = bit32.band(v214, 65535)
+							local v2143 = bit32.rshift(v214, 16)
+							local n1872 = bit32.band(n187, 65535)
+							local v37 = bit32.band(bit32.band(v2142 * n1872 + bit32.lshift(bit32.band(v2142 * bit32.rshift(n187, 16) + v2143 * n1872, 65535), 16), 4294967295), 4294967295)
+							local v372 = bit32.band(v37, 65535)
+							n21 = n172 + bit32.band(51485 * v372 + bit32.lshift(bit32.band(51485 * bit32.rshift(v37, 16) + 39315 * v372, 65535), 16), 4294967295)
 							n184 = bit32.bor(n18, v21)
-							local packedValues = table.pack(bit32.band(bit32.bnot(n184), 4294967295))
-							local packedValues297 = table.pack(bit32.band(packedValues[1], 65535))
-							n22 = n20 + n21 + 3045076956 + bit32.band(21056 * packedValues297[1] + bit32.lshift(bit32.band(21056 * bit32.rshift(packedValues[1], 16) + 24245 * packedValues297[1], 65535), 16), 4294967295)
+							local n188 = bit32.band(bit32.bnot(n184), 4294967295)
+							local n1882 = bit32.band(n188, 65535)
+							n22 = n20 + n21 + 3045076956 + bit32.band(21056 * n1882 + bit32.lshift(bit32.band(21056 * bit32.rshift(n188, 16) + 24245 * n1882, 65535), 16), 4294967295)
 							n222 = bit32.band(n22, 2147483647)
 							n223 = bit32.bnot(n222)
-							local packedValues = table.pack(bit32.band(n223, 4294967295))
-							local packedValues298 = table.pack(bit32.band(packedValues[1], 65535))
-							v24 = bit32.band(65535 * packedValues298[1] + bit32.lshift(bit32.band(65535 * bit32.rshift(packedValues[1], 16) + 65535 * packedValues298[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(n22, 4294967295))
-							local packedValues299 = table.pack(bit32.band(packedValues[1], 65535))
-							v25 = bit32.band(46641 * packedValues299[1] + bit32.lshift(bit32.band(46641 * bit32.rshift(packedValues[1], 16) + 36583 * packedValues299[1], 65535), 16), 4294967295)
+							local n227 = bit32.band(n223, 4294967295)
+							local n2272 = bit32.band(n227, 65535)
+							v24 = bit32.band(65535 * n2272 + bit32.lshift(bit32.band(65535 * bit32.rshift(n227, 16) + 65535 * n2272, 65535), 16), 4294967295)
+							local n228 = bit32.band(n22, 4294967295)
+							local n2282 = bit32.band(n228, 65535)
+							v25 = bit32.band(46641 * n2282 + bit32.lshift(bit32.band(46641 * bit32.rshift(n228, 16) + 36583 * n2282, 65535), 16), 4294967295)
 							n224 = bit32.bnot(n22)
-							local packedValues = table.pack(bit32.band(n224, 4294967295))
-							local packedValues300 = table.pack(bit32.band(packedValues[1], 65535))
-							n23 = 2397550128 + v24 + v25 + bit32.band(46641 * packedValues300[1] + bit32.lshift(bit32.band(46641 * bit32.rshift(packedValues[1], 16) + 36583 * packedValues300[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(n22, 4294967295))
-							local packedValues301 = table.pack(bit32.band(packedValues[1], 65535))
-							v26 = bit32.band(1004 * packedValues301[1] + bit32.lshift(bit32.band(1004 * bit32.rshift(packedValues[1], 16) + 49886 * packedValues301[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(n224, 4294967295))
-							local packedValues302 = table.pack(bit32.band(packedValues[1], 65535))
-							local packedValues = table.pack(bit32.band(n23 - 3269329899 + v24 + v26 + bit32.band(1004 * packedValues302[1] + bit32.lshift(bit32.band(1004 * bit32.rshift(packedValues[1], 16) + 49886 * packedValues302[1], 65535), 16), 4294967295), 4294967295))
-							local packedValues303 = table.pack(bit32.band(packedValues[1], 65535))
-							v27 = bit32.band(21218 * packedValues303[1] + bit32.lshift(bit32.band(21218 * bit32.rshift(packedValues[1], 16) + 47856 * packedValues303[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(n22, 4294967295))
-							local packedValues304 = table.pack(bit32.band(n223, 4294967295))
-							local packedValues305 = table.pack(bit32.band(packedValues[1], 65535))
-							local packedValues306 = table.pack(bit32.rshift(packedValues[1], 16))
-							local packedValues307 = table.pack(bit32.band(packedValues304[1], 65535))
-							local packedValues = table.pack(bit32.band(bit32.band(packedValues305[1] * packedValues307[1] + bit32.lshift(bit32.band(packedValues305[1] * bit32.rshift(packedValues304[1], 16) + packedValues306[1] * packedValues307[1], 65535), 16), 4294967295), 4294967295))
-							local packedValues308 = table.pack(bit32.band(packedValues[1], 65535))
-							n24 = 2669559910 + bit32.band(64492 * packedValues308[1] + bit32.lshift(bit32.band(64492 * bit32.rshift(packedValues[1], 16) + 27898 * packedValues308[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(n22, 4294967295))
-							local packedValues309 = table.pack(bit32.band(packedValues[1], 65535))
+							local n229 = bit32.band(n224, 4294967295)
+							local n2292 = bit32.band(n229, 65535)
+							n23 = 2397550128 + v24 + v25 + bit32.band(46641 * n2292 + bit32.lshift(bit32.band(46641 * bit32.rshift(n229, 16) + 36583 * n2292, 65535), 16), 4294967295)
+							local n2210 = bit32.band(n22, 4294967295)
+							local n22102 = bit32.band(n2210, 65535)
+							v26 = bit32.band(1004 * n22102 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2210, 16) + 49886 * n22102, 65535), 16), 4294967295)
+							local n2211 = bit32.band(n224, 4294967295)
+							local n22112 = bit32.band(n2211, 65535)
+							local v38 = bit32.band(n23 - 3269329899 + v24 + v26 + bit32.band(1004 * n22112 + bit32.lshift(bit32.band(1004 * bit32.rshift(n2211, 16) + 49886 * n22112, 65535), 16), 4294967295), 4294967295)
+							local v382 = bit32.band(v38, 65535)
+							v27 = bit32.band(21218 * v382 + bit32.lshift(bit32.band(21218 * bit32.rshift(v38, 16) + 47856 * v382, 65535), 16), 4294967295)
+							local n2212 = bit32.band(n22, 4294967295)
+							local n2213 = bit32.band(n223, 4294967295)
+							local n22122 = bit32.band(n2212, 65535)
+							local n22123 = bit32.rshift(n2212, 16)
+							local n22132 = bit32.band(n2213, 65535)
+							local v39 = bit32.band(bit32.band(n22122 * n22132 + bit32.lshift(bit32.band(n22122 * bit32.rshift(n2213, 16) + n22123 * n22132, 65535), 16), 4294967295), 4294967295)
+							local v392 = bit32.band(v39, 65535)
+							n24 = 2669559910 + bit32.band(64492 * v392 + bit32.lshift(bit32.band(64492 * bit32.rshift(v39, 16) + 27898 * v392, 65535), 16), 4294967295)
+							local n2214 = bit32.band(n22, 4294967295)
+							local n22142 = bit32.band(n2214, 65535)
 							n225 = n223
 							n226 = bit32.bor(n22, 2147483647)
-							n25 = n24 + bit32.band(16487 * packedValues309[1] + bit32.lshift(bit32.band(16487 * bit32.rshift(packedValues[1], 16) + 40734 * packedValues309[1], 65535), 16), 4294967295) + 0
-							local packedValues = table.pack(bit32.band(n225, 4294967295))
-							local packedValues310 = table.pack(bit32.band(packedValues[1], 65535))
-							v28 = bit32.band(15442 * packedValues310[1] + bit32.lshift(bit32.band(15442 * bit32.rshift(packedValues[1], 16) + 3097 * packedValues310[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(n225, 4294967295))
-							local packedValues311 = table.pack(bit32.band(n225, 4294967295))
-							local packedValues312 = table.pack(bit32.band(packedValues[1], 65535))
-							local packedValues313 = table.pack(bit32.rshift(packedValues[1], 16))
-							local packedValues314 = table.pack(bit32.band(packedValues311[1], 65535))
-							local packedValues = table.pack(bit32.band(bit32.band(packedValues312[1] * packedValues314[1] + bit32.lshift(bit32.band(packedValues312[1] * bit32.rshift(packedValues311[1], 16) + packedValues313[1] * packedValues314[1], 65535), 16), 4294967295), 4294967295))
-							local packedValues315 = table.pack(bit32.band(packedValues[1], 65535))
-							n26 = v28 + bit32.band(64492 * packedValues315[1] + bit32.lshift(bit32.band(64492 * bit32.rshift(packedValues[1], 16) + 27898 * packedValues315[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(n22, 4294967295))
-							local packedValues316 = table.pack(bit32.band(packedValues[1], 65535))
-							local packedValues = table.pack(bit32.band(bit32.band(packedValues316[1] * 0 + bit32.lshift(bit32.band(packedValues316[1] * 0 + bit32.rshift(packedValues[1], 16) * 0, 65535), 16), 4294967295), 4294967295))
-							local packedValues317 = table.pack(bit32.band(packedValues[1], 65535))
-							v29 = bit32.band(64492 * packedValues317[1] + bit32.lshift(bit32.band(64492 * bit32.rshift(packedValues[1], 16) + 27898 * packedValues317[1], 65535), 16), 4294967295)
-							local packedValues = table.pack(bit32.band(n226, 4294967295))
-							local packedValues318 = table.pack(bit32.band(packedValues[1], 65535))
-							local packedValues = table.pack(bit32.band(bit32.band(packedValues318[1] * 0 + bit32.lshift(bit32.band(packedValues318[1] * 0 + bit32.rshift(packedValues[1], 16) * 0, 65535), 16), 4294967295), 4294967295))
-							local packedValues319 = table.pack(bit32.band(packedValues[1], 65535))
-							n5 = v27 + n25 + n26 + 0 + v29 + bit32.band(1044 * packedValues319[1] + bit32.lshift(bit32.band(1044 * bit32.rshift(packedValues[1], 16) + 37637 * packedValues319[1], 65535), 16), 4294967295)
+							n25 = n24 + bit32.band(16487 * n22142 + bit32.lshift(bit32.band(16487 * bit32.rshift(n2214, 16) + 40734 * n22142, 65535), 16), 4294967295) + 0
+							local n2215 = bit32.band(n225, 4294967295)
+							local n22152 = bit32.band(n2215, 65535)
+							v28 = bit32.band(15442 * n22152 + bit32.lshift(bit32.band(15442 * bit32.rshift(n2215, 16) + 3097 * n22152, 65535), 16), 4294967295)
+							local n2216 = bit32.band(n225, 4294967295)
+							local n2217 = bit32.band(n225, 4294967295)
+							local n22162 = bit32.band(n2216, 65535)
+							local n22163 = bit32.rshift(n2216, 16)
+							local n22172 = bit32.band(n2217, 65535)
+							local v40 = bit32.band(bit32.band(n22162 * n22172 + bit32.lshift(bit32.band(n22162 * bit32.rshift(n2217, 16) + n22163 * n22172, 65535), 16), 4294967295), 4294967295)
+							local v402 = bit32.band(v40, 65535)
+							n26 = v28 + bit32.band(64492 * v402 + bit32.lshift(bit32.band(64492 * bit32.rshift(v40, 16) + 27898 * v402, 65535), 16), 4294967295)
+							local n2218 = bit32.band(n22, 4294967295)
+							local n22182 = bit32.band(n2218, 65535)
+							local v41 = bit32.band(bit32.band(n22182 * 0 + bit32.lshift(bit32.band(n22182 * 0 + bit32.rshift(n2218, 16) * 0, 65535), 16), 4294967295), 4294967295)
+							local v412 = bit32.band(v41, 65535)
+							v29 = bit32.band(64492 * v412 + bit32.lshift(bit32.band(64492 * bit32.rshift(v41, 16) + 27898 * v412, 65535), 16), 4294967295)
+							local n2219 = bit32.band(n226, 4294967295)
+							local n22192 = bit32.band(n2219, 65535)
+							local v42 = bit32.band(bit32.band(n22192 * 0 + bit32.lshift(bit32.band(n22192 * 0 + bit32.rshift(n2219, 16) * 0, 65535), 16), 4294967295), 4294967295)
+							local v422 = bit32.band(v42, 65535)
+							n5 = v27 + n25 + n26 + 0 + v29 + bit32.band(1044 * v422 + bit32.lshift(bit32.band(1044 * bit32.rshift(v42, 16) + 37637 * v422, 65535), 16), 4294967295)
 						else
 							break
 						end
@@ -2240,12 +2239,12 @@ if nil then
 											local n32 = #name
 											local n33 = #name2
 											local fn72 = fn7
-											local packedValues = table.pack(bit32.band(n33, 4294967295))
-											local packedValues320 = table.pack(bit32.band(packedValues[1], 65535))
-											local v61 = bit32.band(54259 * packedValues320[1] + bit32.lshift(bit32.band(54259 * bit32.rshift(packedValues[1], 16) + 37619 * packedValues320[1], 65535), 16), 4294967295)
-											local packedValues = table.pack(bit32.band(bit32.bnot(n33), 4294967295))
-											local packedValues321 = table.pack(bit32.band(packedValues[1], 65535))
-											n30 = 2629977780 + n30 + v61 + bit32.band(54259 * packedValues321[1] + bit32.lshift(bit32.band(54259 * bit32.rshift(packedValues[1], 16) + 37619 * packedValues321[1], 65535), 16), 4294967295)
+											local n332 = bit32.band(n33, 4294967295)
+											local n3322 = bit32.band(n332, 65535)
+											local v60 = bit32.band(54259 * n3322 + bit32.lshift(bit32.band(54259 * bit32.rshift(n332, 16) + 37619 * n3322, 65535), 16), 4294967295)
+											local n333 = bit32.band(bit32.bnot(n33), 4294967295)
+											local n3332 = bit32.band(n333, 65535)
+											n30 = 2629977780 + n30 + v60 + bit32.band(54259 * n3332 + bit32.lshift(bit32.band(54259 * bit32.rshift(n333, 16) + 37619 * n3332, 65535), 16), 4294967295)
 											fn72(n32, n33)
 
 											if nil then
@@ -2602,12 +2601,12 @@ if nil then
 										local n32 = #flag4
 										local n33 = #parent5
 										local fn72 = fn7
-										local packedValues = table.pack(bit32.band(n33, 4294967295))
-										local packedValues322 = table.pack(bit32.band(packedValues[1], 65535))
-										local v61 = bit32.band(54259 * packedValues322[1] + bit32.lshift(bit32.band(54259 * bit32.rshift(packedValues[1], 16) + 37619 * packedValues322[1], 65535), 16), 4294967295)
-										local packedValues = table.pack(bit32.band(bit32.bnot(n33), 4294967295))
-										local packedValues323 = table.pack(bit32.band(packedValues[1], 65535))
-										n30 = 2629977780 + n30 + v61 + bit32.band(54259 * packedValues323[1] + bit32.lshift(bit32.band(54259 * bit32.rshift(packedValues[1], 16) + 37619 * packedValues323[1], 65535), 16), 4294967295)
+										local n332 = bit32.band(n33, 4294967295)
+										local n3322 = bit32.band(n332, 65535)
+										local v60 = bit32.band(54259 * n3322 + bit32.lshift(bit32.band(54259 * bit32.rshift(n332, 16) + 37619 * n3322, 65535), 16), 4294967295)
+										local n333 = bit32.band(bit32.bnot(n33), 4294967295)
+										local n3332 = bit32.band(n333, 65535)
+										n30 = 2629977780 + n30 + v60 + bit32.band(54259 * n3332 + bit32.lshift(bit32.band(54259 * bit32.rshift(n333, 16) + 37619 * n3332, 65535), 16), 4294967295)
 										fn72(n32, n33)
 
 										if nil then
@@ -3209,12 +3208,12 @@ if nil then
 									local n32 = #name
 									local n33 = #name2
 									local fn72 = fn7
-									local packedValues = table.pack(bit32.band(n33, 4294967295))
-									local packedValues324 = table.pack(bit32.band(packedValues[1], 65535))
-									local v61 = bit32.band(54259 * packedValues324[1] + bit32.lshift(bit32.band(54259 * bit32.rshift(packedValues[1], 16) + 37619 * packedValues324[1], 65535), 16), 4294967295)
-									local packedValues = table.pack(bit32.band(bit32.bnot(n33), 4294967295))
-									local packedValues325 = table.pack(bit32.band(packedValues[1], 65535))
-									n30 = 2629977780 + n30 + v61 + bit32.band(54259 * packedValues325[1] + bit32.lshift(bit32.band(54259 * bit32.rshift(packedValues[1], 16) + 37619 * packedValues325[1], 65535), 16), 4294967295)
+									local n332 = bit32.band(n33, 4294967295)
+									local n3322 = bit32.band(n332, 65535)
+									local v60 = bit32.band(54259 * n3322 + bit32.lshift(bit32.band(54259 * bit32.rshift(n332, 16) + 37619 * n3322, 65535), 16), 4294967295)
+									local n333 = bit32.band(bit32.bnot(n33), 4294967295)
+									local n3332 = bit32.band(n333, 65535)
+									n30 = 2629977780 + n30 + v60 + bit32.band(54259 * n3332 + bit32.lshift(bit32.band(54259 * bit32.rshift(n333, 16) + 37619 * n3332, 65535), 16), 4294967295)
 									fn72(n32, n33)
 
 									if nil then
@@ -3336,12 +3335,12 @@ if nil then
 								local n32 = #flag4
 								local n33 = #parent5
 								local fn72 = fn7
-								local packedValues = table.pack(bit32.band(n33, 4294967295))
-								local packedValues326 = table.pack(bit32.band(packedValues[1], 65535))
-								local v61 = bit32.band(54259 * packedValues326[1] + bit32.lshift(bit32.band(54259 * bit32.rshift(packedValues[1], 16) + 37619 * packedValues326[1], 65535), 16), 4294967295)
-								local packedValues = table.pack(bit32.band(bit32.bnot(n33), 4294967295))
-								local packedValues327 = table.pack(bit32.band(packedValues[1], 65535))
-								n30 = 2629977780 + n30 + v61 + bit32.band(54259 * packedValues327[1] + bit32.lshift(bit32.band(54259 * bit32.rshift(packedValues[1], 16) + 37619 * packedValues327[1], 65535), 16), 4294967295)
+								local n332 = bit32.band(n33, 4294967295)
+								local n3322 = bit32.band(n332, 65535)
+								local v60 = bit32.band(54259 * n3322 + bit32.lshift(bit32.band(54259 * bit32.rshift(n332, 16) + 37619 * n3322, 65535), 16), 4294967295)
+								local n333 = bit32.band(bit32.bnot(n33), 4294967295)
+								local n3332 = bit32.band(n333, 65535)
+								n30 = 2629977780 + n30 + v60 + bit32.band(54259 * n3332 + bit32.lshift(bit32.band(54259 * bit32.rshift(n333, 16) + 37619 * n3332, 65535), 16), 4294967295)
 								fn72(n32, n33)
 
 								if nil then
@@ -3572,6 +3571,7 @@ if nil then
 								flag8 = not v62
 
 								if v62 then
+									-- This Source Was Generated by discord.gg/c3xVMnUUBv
 									state = 201
 								else
 									state = 196
@@ -3860,17 +3860,17 @@ if nil then
 
 							do
 								do
-									local packedValues = table.pack(bit32.band(n31, 4294967295))
-									local packedValues328 = table.pack(bit32.band(n212, 4294967295))
-									local packedValues329 = table.pack(bit32.band(packedValues[1], 65535))
-									local packedValues330 = table.pack(bit32.rshift(packedValues[1], 16))
-									local packedValues331 = table.pack(bit32.band(packedValues328[1], 65535))
+									local n312 = bit32.band(n31, 4294967295)
+									local n213 = bit32.band(n212, 4294967295)
+									local n3122 = bit32.band(n312, 65535)
+									local n3123 = bit32.rshift(n312, 16)
+									local n2132 = bit32.band(n213, 65535)
 
 									do
-										local v58 = bit32.band(packedValues329[1] * packedValues331[1] + bit32.lshift(bit32.band(packedValues329[1] * bit32.rshift(packedValues328[1], 16) + packedValues330[1] * packedValues331[1], 65535), 16), 4294967295)
-										local packedValues = table.pack(bit32.band(bit32.bnot(n212), 4294967295))
-										local packedValues332 = table.pack(bit32.band(packedValues[1], 65535))
-										n32 = n29 + n30 + v58 + bit32.band(45109 * packedValues332[1] + bit32.lshift(bit32.band(45109 * bit32.rshift(packedValues[1], 16) + 61983 * packedValues332[1], 65535), 16), 4294967295)
+										local v55 = bit32.band(n3122 * n2132 + bit32.lshift(bit32.band(n3122 * bit32.rshift(n213, 16) + n3123 * n2132, 65535), 16), 4294967295)
+										local n214 = bit32.band(bit32.bnot(n212), 4294967295)
+										local n2142 = bit32.band(n214, 65535)
+										n32 = n29 + n30 + v55 + bit32.band(45109 * n2142 + bit32.lshift(bit32.band(45109 * bit32.rshift(n214, 16) + 61983 * n2142, 65535), 16), 4294967295)
 									end
 								end
 
@@ -3985,10 +3985,10 @@ if nil then
 								end
 							end
 
-							local n33, v55, n34, v56, n35, n36, tbl11, n37, v57, v58
-							local tbl12, v59, v60, n38, v61, n39, v62, v63, tbl13, v64
-							local tbl14, v65, n40, v66, v67, tbl15, v68, n362, tbl16, tbl17
-							local n41, v69, n44, v70, n352, n45, v71, tbl16Map, tbl18
+							local n33, tbl11, tbl12, v55, tbl13, v56, n34, v57, n35, tbl14
+							local n36, v58, v59, n37, v60, v61, tbl15, v62, tbl16, v63
+							local v64, v65, v66, n38, v67, v68, v69, n39, tbl17, tbl18
+							local n40, n342, n41, n402, v70, tbl11Map, v71, n44, n45
 
 							do
 								n33 = Enum
@@ -4006,114 +4006,114 @@ if nil then
 										fn4(372868618, 4)
 
 										if v47 == 225.0000000000241 then
-											n45 = (n33 + tbl10[1]) % 16777216
-											tbl15 = { nil, 1, 6, 0, tbl[3] }
+											n36 = (n33 + tbl10[1]) % 16777216
+											tbl16 = { nil, 1, 6, 0, tbl[3] }
 
 											while true do
-												v68 = tbl15[2]
-												v64 = tbl15[3]
-												n35 = tbl15[4] + v68
-												tbl15[4] = n35
+												v62 = tbl16[2]
+												v69 = tbl16[3]
+												n34 = tbl16[4] + v62
+												tbl16[4] = n34
 
-												if n35 <= v64 then
-													n352 = n35
-													n39 = (n45 * (tbl10[2] * 2 + 1) + tbl10[3]) % 16777216
-													n24 = n39 % 4096
-													n45 = ((n24 * 4096 + (n39 - n39 % 4096) // 4096 + tbl10[4]) % 16777216 + n352 * tbl10[5]) % 16777216
+												if n34 <= v69 then
+													n342 = n34
+													n45 = (n36 * (tbl10[2] * 2 + 1) + tbl10[3]) % 16777216
+													n24 = n45 % 4096
+													n36 = ((n24 * 4096 + (n45 - n45 % 4096) // 4096 + tbl10[4]) % 16777216 + n342 * tbl10[5]) % 16777216
 
 													if nil then
-														n45 = (n45 + tbl10[6]) % 16777216
+														n36 = (n36 + tbl10[6]) % 16777216
 													end
 												else
 													break
 												end
 											end
 
-											v58 = tbl15[5]
-											fn4((math_floor_precision(n33) - n45) % 16777216, 8)
-											tbl12 = {}
+											v55 = tbl16[5]
+											fn4((math_floor_precision(n33) - n36) % 16777216, 8)
+											tbl11Map = {}
 											gameRef = 16705
-											tbl18 = { 16, 1, -1, v58, nil }
+											tbl12 = { 16, 1, -1, v55, nil }
 
 											while true do
-												v67 = tbl18[2]
-												v66 = tbl18[1]
-												n41 = tbl18[3] + v67
-												tbl18[3] = n41
+												v57 = tbl12[2]
+												v70 = tbl12[1]
+												n41 = tbl12[3] + v57
+												tbl12[3] = n41
 
-												if n41 <= v66 then
-													v57 = n41
-													tbl17 = {}
-													tbl12[tbl17] = v57 + 1
+												if n41 <= v70 then
+													v61 = n41
+													tbl11 = {}
+													tbl11Map[tbl11] = v61 + 1
 												else
 													break
 												end
 											end
 
-											v69 = tbl18[4]
-											iter_f_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v72, v310, v410, v510, v610, v73, v82, v92, v102 in f, s, var do coroutine.yield(true, k, v72, v310, v410, v510, v610, v73, v82, v92, v102) end end); co(); return co end)(tbl12, nil, nil)
+											v67 = tbl12[4]
+											iter_f_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v72, v310, v410, v510, v610, v73, v82, v92, v102 in f, s, var do coroutine.yield(true, k, v72, v310, v410, v510, v610, v73, v82, v92, v102) end end); co(); return co end)(tbl11Map, nil, nil)
 											local packedValues = table.pack(iter_f_1())
 
 											if packedValues[1] then
-												v71 = packedValues[3]
+												v65 = packedValues[3]
 
 												while true do
-													gameRef = (gameRef * v71 + v71 * 411) % 16776960 + 1
+													gameRef = (gameRef * v65 + v65 * 411) % 16776960 + 1
 													local packedValues = table.pack(iter_f_1())
 
 													if packedValues[1] then
-														v71 = packedValues[3]
+														v65 = packedValues[3]
 													else
 														break
 													end
 												end
 											end
 
-											n40 = n32 + v52
+											n38 = n32 + v52
 											n30 = 20084442667
-											local packedValues = table.pack(bit32.band(n30, 4294967295))
-											local packedValues333 = table.pack(bit32.band(packedValues[1], 65535))
-											n31 = 1595630789 + bit32.band(31223 * packedValues333[1] + bit32.lshift(bit32.band(31223 * bit32.rshift(packedValues[1], 16) + 5879 * packedValues333[1], 65535), 16), 4294967295)
+											local n302 = bit32.band(n30, 4294967295)
+											local n3022 = bit32.band(n302, 65535)
+											n31 = 1595630789 + bit32.band(31223 * n3022 + bit32.lshift(bit32.band(31223 * bit32.rshift(n302, 16) + 5879 * n3022, 65535), 16), 4294967295)
 											n212 = 3524332562
-											v61 = bit32.bor(2931427363, n30)
-											local packedValues = table.pack(bit32.band(n212, 4294967295))
-											local packedValues334 = table.pack(bit32.band(v61, 4294967295))
-											local packedValues335 = table.pack(bit32.band(packedValues[1], 65535))
-											local packedValues336 = table.pack(bit32.rshift(packedValues[1], 16))
-											local packedValues337 = table.pack(bit32.band(packedValues334[1], 65535))
+											v56 = bit32.bor(2931427363, n30)
+											local n2122 = bit32.band(n212, 4294967295)
+											local v562 = bit32.band(v56, 4294967295)
+											local n21222 = bit32.band(n2122, 65535)
+											local n21223 = bit32.rshift(n2122, 16)
+											local v5622 = bit32.band(v562, 65535)
 											n29 = 12884901888
-											n34 = (-8589934591 * (1 + ((n31 + bit32.band(packedValues335[1] * packedValues337[1] + bit32.lshift(bit32.band(packedValues335[1] * bit32.rshift(packedValues334[1], 16) + packedValues336[1] * packedValues337[1], 65535), 16), 4294967295) + 1712676800) * 67108864 + n29) / 4503599627370496) * 2 ^ 12884901911 + 1) % 16777216
+											n44 = (-8589934591 * (1 + ((n31 + bit32.band(n21222 * v5622 + bit32.lshift(bit32.band(n21222 * bit32.rshift(v562, 16) + n21223 * v5622, 65535), 16), 4294967295) + 1712676800) * 67108864 + n29) / 4503599627370496) * 2 ^ 12884901911 + 1) % 16777216
 											tbl10 = {}
-											tbl13 = { 0, 6, 1, nil, v69 }
+											tbl13 = { 0, 6, 1, nil, v67 }
 
 											while true do
-												v56 = tbl13[3]
-												v62 = tbl13[2]
-												n38 = tbl13[1] + v56
-												tbl13[1] = n38
+												v64 = tbl13[3]
+												v60 = tbl13[2]
+												n35 = tbl13[1] + v64
+												tbl13[1] = n35
 
-												if n38 <= v62 then
-													n34 = (n34 * 1103515245 + 12345) % 16777216
-													tbl10[n38] = n34
+												if n35 <= v60 then
+													n44 = (n44 * 1103515245 + 12345) % 16777216
+													tbl10[n35] = n44
 												else
 													break
 												end
 											end
 
 											fn82 = (gameRef + tbl10[1]) % 16777216
-											tbl11 = { tbl13[5], 1, nil, 6, 0 }
+											tbl15 = { tbl13[5], 1, nil, 6, 0 }
 
 											while true do
-												v63 = tbl11[2]
-												v59 = tbl11[4]
-												n37 = tbl11[5] + v63
-												tbl11[5] = n37
+												v71 = tbl15[2]
+												v68 = tbl15[4]
+												n39 = tbl15[5] + v71
+												tbl15[5] = n39
 
-												if n37 <= v59 then
-													v55 = n37
-													n44 = (fn82 * (tbl10[2] * 2 + 1) + tbl10[3]) % 16777216
-													n24 = n44 % 4096
-													fn82 = ((n24 * 4096 + (n44 - n44 % 4096) // 4096 + tbl10[4]) % 16777216 + v55 * tbl10[5]) % 16777216
+												if n39 <= v68 then
+													v63 = n39
+													n37 = (fn82 * (tbl10[2] * 2 + 1) + tbl10[3]) % 16777216
+													n24 = n37 % 4096
+													fn82 = ((n24 * 4096 + (n37 - n37 % 4096) // 4096 + tbl10[4]) % 16777216 + v63 * tbl10[5]) % 16777216
 
 													if nil then
 														fn82 = (fn82 + tbl10[6]) % 16777216
@@ -4123,30 +4123,30 @@ if nil then
 												end
 											end
 
-											tbl = tbl11[1]
-											v60 = math_floor_precision
+											tbl = tbl15[1]
+											v58 = math_floor_precision
 
 											if v32 ~= 134.00000000001432 then
-												fn4((v60(gameRef) - fn82) % 16777216, 8)
-												tbl16Map = {}
+												fn4((v58(gameRef) - fn82) % 16777216, 8)
+												tbl17 = {}
 												tbl14 = { tbl, 1, nil, -1, 16 }
 
 												while true do
-													v70 = tbl14[2]
-													v65 = tbl14[5]
-													n36 = tbl14[4] + v70
-													tbl14[4] = n36
+													v66 = tbl14[2]
+													v59 = tbl14[5]
+													n40 = tbl14[4] + v66
+													tbl14[4] = n40
 
-													if n36 <= v65 then
-														n362 = n36
-														tbl16 = {}
-														tbl16Map[tbl16] = n362 + 1
+													if n40 <= v59 then
+														n402 = n40
+														tbl18 = {}
+														tbl17[tbl18] = n402 + 1
 													else
 														break
 													end
 												end
 
-												iter_f_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v77, v310, v410, v510, v610, v78, v82, v92, v102 in f, s, var do coroutine.yield(true, k, v77, v310, v410, v510, v610, v78, v82, v92, v102) end end); co(); return co end)(tbl16Map, nil, nil)
+												iter_f_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v73, v310, v410, v510, v610, v74, v82, v92, v102 in f, s, var do coroutine.yield(true, k, v73, v310, v410, v510, v610, v74, v82, v92, v102) end end); co(); return co end)(tbl17, nil, nil)
 												local packedValues = table.pack(iter_f_1())
 
 												if packedValues[1] then
@@ -5704,114 +5704,114 @@ end)
 													end
 												end
 
-												n45 = (n33 + tbl10[1]) % 16777216
-												tbl15 = { nil, 1, 6, 0, tbl[3] }
+												n36 = (n33 + tbl10[1]) % 16777216
+												tbl16 = { nil, 1, 6, 0, tbl[3] }
 
 												while true do
-													v68 = tbl15[2]
-													v64 = tbl15[3]
-													n35 = tbl15[4] + v68
-													tbl15[4] = n35
+													v62 = tbl16[2]
+													v69 = tbl16[3]
+													n34 = tbl16[4] + v62
+													tbl16[4] = n34
 
-													if n35 <= v64 then
-														n352 = n35
-														n39 = (n45 * (tbl10[2] * 2 + 1) + tbl10[3]) % 16777216
-														n24 = n39 % 4096
-														n45 = ((n24 * 4096 + (n39 - n39 % 4096) // 4096 + tbl10[4]) % 16777216 + n352 * tbl10[5]) % 16777216
+													if n34 <= v69 then
+														n342 = n34
+														n45 = (n36 * (tbl10[2] * 2 + 1) + tbl10[3]) % 16777216
+														n24 = n45 % 4096
+														n36 = ((n24 * 4096 + (n45 - n45 % 4096) // 4096 + tbl10[4]) % 16777216 + n342 * tbl10[5]) % 16777216
 
 														if nil then
-															n45 = (n45 + tbl10[6]) % 16777216
+															n36 = (n36 + tbl10[6]) % 16777216
 														end
 													else
 														break
 													end
 												end
 
-												v58 = tbl15[5]
-												fn4((math_floor_precision(n33) - n45) % 16777216, 8)
-												tbl12 = {}
+												v55 = tbl16[5]
+												fn4((math_floor_precision(n33) - n36) % 16777216, 8)
+												tbl11Map = {}
 												gameRef = 16705
-												tbl18 = { 16, 1, -1, v58, nil }
+												tbl12 = { 16, 1, -1, v55, nil }
 
 												while true do
-													v67 = tbl18[2]
-													v66 = tbl18[1]
-													n41 = tbl18[3] + v67
-													tbl18[3] = n41
+													v57 = tbl12[2]
+													v70 = tbl12[1]
+													n41 = tbl12[3] + v57
+													tbl12[3] = n41
 
-													if n41 <= v66 then
-														v57 = n41
-														tbl17 = {}
-														tbl12[tbl17] = v57 + 1
+													if n41 <= v70 then
+														v61 = n41
+														tbl11 = {}
+														tbl11Map[tbl11] = v61 + 1
 													else
 														break
 													end
 												end
 
-												v69 = tbl18[4]
-												iter_f_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v77, v310, v410, v510, v610, v78, v82, v92, v102 in f, s, var do coroutine.yield(true, k, v77, v310, v410, v510, v610, v78, v82, v92, v102) end end); co(); return co end)(tbl12, nil, nil)
+												v67 = tbl12[4]
+												iter_f_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v77, v310, v410, v510, v610, v78, v82, v92, v102 in f, s, var do coroutine.yield(true, k, v77, v310, v410, v510, v610, v78, v82, v92, v102) end end); co(); return co end)(tbl11Map, nil, nil)
 												local packedValues = table.pack(iter_f_1())
 
 												if packedValues[1] then
-													v71 = packedValues[3]
+													v65 = packedValues[3]
 
 													while true do
-														gameRef = (gameRef * v71 + v71 * 411) % 16776960 + 1
+														gameRef = (gameRef * v65 + v65 * 411) % 16776960 + 1
 														local packedValues = table.pack(iter_f_1())
 
 														if packedValues[1] then
-															v71 = packedValues[3]
+															v65 = packedValues[3]
 														else
 															break
 														end
 													end
 												end
 
-												n40 = n32 + v52
+												n38 = n32 + v52
 												n30 = 20084442667
-												local packedValues = table.pack(bit32.band(n30, 4294967295))
-												local packedValues338 = table.pack(bit32.band(packedValues[1], 65535))
-												n31 = 1595630789 + bit32.band(31223 * packedValues338[1] + bit32.lshift(bit32.band(31223 * bit32.rshift(packedValues[1], 16) + 5879 * packedValues338[1], 65535), 16), 4294967295)
+												local n302 = bit32.band(n30, 4294967295)
+												local n3022 = bit32.band(n302, 65535)
+												n31 = 1595630789 + bit32.band(31223 * n3022 + bit32.lshift(bit32.band(31223 * bit32.rshift(n302, 16) + 5879 * n3022, 65535), 16), 4294967295)
 												n212 = 3524332562
-												v61 = bit32.bor(2931427363, n30)
-												local packedValues = table.pack(bit32.band(n212, 4294967295))
-												local packedValues339 = table.pack(bit32.band(v61, 4294967295))
-												local packedValues340 = table.pack(bit32.band(packedValues[1], 65535))
-												local packedValues341 = table.pack(bit32.rshift(packedValues[1], 16))
-												local packedValues342 = table.pack(bit32.band(packedValues339[1], 65535))
+												v56 = bit32.bor(2931427363, n30)
+												local n2122 = bit32.band(n212, 4294967295)
+												local v562 = bit32.band(v56, 4294967295)
+												local n21222 = bit32.band(n2122, 65535)
+												local n21223 = bit32.rshift(n2122, 16)
+												local v5622 = bit32.band(v562, 65535)
 												n29 = 12884901888
-												n34 = (-8589934591 * (1 + ((n31 + bit32.band(packedValues340[1] * packedValues342[1] + bit32.lshift(bit32.band(packedValues340[1] * bit32.rshift(packedValues339[1], 16) + packedValues341[1] * packedValues342[1], 65535), 16), 4294967295) + 1712676800) * 67108864 + n29) / 4503599627370496) * 2 ^ 12884901911 + 1) % 16777216
+												n44 = (-8589934591 * (1 + ((n31 + bit32.band(n21222 * v5622 + bit32.lshift(bit32.band(n21222 * bit32.rshift(v562, 16) + n21223 * v5622, 65535), 16), 4294967295) + 1712676800) * 67108864 + n29) / 4503599627370496) * 2 ^ 12884901911 + 1) % 16777216
 												tbl10 = {}
-												tbl13 = { 0, 6, 1, nil, v69 }
+												tbl13 = { 0, 6, 1, nil, v67 }
 
 												while true do
-													v56 = tbl13[3]
-													v62 = tbl13[2]
-													n38 = tbl13[1] + v56
-													tbl13[1] = n38
+													v64 = tbl13[3]
+													v60 = tbl13[2]
+													n35 = tbl13[1] + v64
+													tbl13[1] = n35
 
-													if n38 <= v62 then
-														n34 = (n34 * 1103515245 + 12345) % 16777216
-														tbl10[n38] = n34
+													if n35 <= v60 then
+														n44 = (n44 * 1103515245 + 12345) % 16777216
+														tbl10[n35] = n44
 													else
 														break
 													end
 												end
 
 												fn82 = (gameRef + tbl10[1]) % 16777216
-												tbl11 = { tbl13[5], 1, nil, 6, 0 }
+												tbl15 = { tbl13[5], 1, nil, 6, 0 }
 
 												while true do
-													v63 = tbl11[2]
-													v59 = tbl11[4]
-													n37 = tbl11[5] + v63
-													tbl11[5] = n37
+													v71 = tbl15[2]
+													v68 = tbl15[4]
+													n39 = tbl15[5] + v71
+													tbl15[5] = n39
 
-													if n37 <= v59 then
-														v55 = n37
-														n44 = (fn82 * (tbl10[2] * 2 + 1) + tbl10[3]) % 16777216
-														n24 = n44 % 4096
-														fn82 = ((n24 * 4096 + (n44 - n44 % 4096) // 4096 + tbl10[4]) % 16777216 + v55 * tbl10[5]) % 16777216
+													if n39 <= v68 then
+														v63 = n39
+														n37 = (fn82 * (tbl10[2] * 2 + 1) + tbl10[3]) % 16777216
+														n24 = n37 % 4096
+														fn82 = ((n24 * 4096 + (n37 - n37 % 4096) // 4096 + tbl10[4]) % 16777216 + v63 * tbl10[5]) % 16777216
 
 														if nil then
 															fn82 = (fn82 + tbl10[6]) % 16777216
@@ -5821,30 +5821,30 @@ end)
 													end
 												end
 
-												tbl = tbl11[1]
-												v60 = math_floor_precision
+												tbl = tbl15[1]
+												v58 = math_floor_precision
 
 												if v32 ~= 134.00000000001432 then
-													fn4((v60(gameRef) - fn82) % 16777216, 8)
-													tbl16Map = {}
+													fn4((v58(gameRef) - fn82) % 16777216, 8)
+													tbl17 = {}
 													tbl14 = { tbl, 1, nil, -1, 16 }
 
 													while true do
-														v70 = tbl14[2]
-														v65 = tbl14[5]
-														n36 = tbl14[4] + v70
-														tbl14[4] = n36
+														v66 = tbl14[2]
+														v59 = tbl14[5]
+														n40 = tbl14[4] + v66
+														tbl14[4] = n40
 
-														if n36 <= v65 then
-															n362 = n36
-															tbl16 = {}
-															tbl16Map[tbl16] = n362 + 1
+														if n40 <= v59 then
+															n402 = n40
+															tbl18 = {}
+															tbl17[tbl18] = n402 + 1
 														else
 															break
 														end
 													end
 
-													iter_f_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v82, v310, v410, v510, v610, v710, v83, v92, v102 in f, s, var do coroutine.yield(true, k, v82, v310, v410, v510, v610, v710, v83, v92, v102) end end); co(); return co end)(tbl16Map, nil, nil)
+													iter_f_1 = (function(f, s, var) local co = coroutine.wrap(function() coroutine.yield(); for k, v78, v310, v410, v510, v610, v79, v82, v92, v102 in f, s, var do coroutine.yield(true, k, v78, v310, v410, v510, v610, v79, v82, v92, v102) end end); co(); return co end)(tbl17, nil, nil)
 													local packedValues = table.pack(iter_f_1())
 
 													if packedValues[1] then

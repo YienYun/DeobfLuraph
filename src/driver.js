@@ -211,12 +211,12 @@ async function run(job) {
         try {
           fs.writeFileSync(cfgPath, JSON.stringify(cfgData), 'utf8');
           const { execFileSync } = require('child_process');
-          const { getPythonBin } = require('./pyenv');
+          const { getPythonBin, pythonEnv } = require('./pyenv');
           const pythonBin = getPythonBin();
           const bridgePy = path.join(__dirname, 'devirt_bridge.py');
           const coreDir = path.join(__dirname, '..', 'core');
           execFileSync(pythonBin, [bridgePy, 'pipeline', cfgPath], {
-            env: Object.assign({}, process.env, { PYTHONPATH: coreDir }),
+            env: pythonEnv({ PYTHONPATH: coreDir }),
             stdio: 'inherit',
           });
           if (fs.existsSync(statsPath)) {

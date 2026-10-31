@@ -24,4 +24,17 @@ function getPythonBin() {
   throw new Error('Python not found. Please install Python 3.10+ or set the PYTHON_BIN environment variable.');
 }
 
-module.exports = { getPythonBin };
+/**
+ * Environment for every Python child we spawn.
+ *
+ * The lifters walk many `set`/`dict` collections keyed by strings, so Python's
+ * per-process hash randomisation used to shuffle local declaration order and
+ * make two runs of the same sample produce different text. Pinning the seed
+ * keeps the whole pipeline reproducible; the only thing that still moves is
+ * the watermark comment, which is intentionally random.
+ */
+function pythonEnv(extra) {
+  return Object.assign({}, process.env, { PYTHONHASHSEED: '0' }, extra || {});
+}
+
+module.exports = { getPythonBin, pythonEnv };

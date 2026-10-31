@@ -8,7 +8,7 @@ const driver = require('./driver');
 const harness = require('./harness');
 const trace = require('./traceout');
 const tidy = require('./tidy');
-const { getPythonBin } = require('./pyenv');
+const { getPythonBin, pythonEnv } = require('./pyenv');
 const { isValidLuaSyntax } = require('./luac_decompile');
 
 const ROOT = path.resolve(__dirname, '..');
@@ -46,7 +46,7 @@ function runNodeCli(scriptArgs, timeoutSec, opts = {}) {
     timeout: (timeoutSec || 90) * 1000,
     maxBuffer: 64 * 1024 * 1024,
     windowsHide: true,
-    env: { ...process.env, ...(opts.env || {}) },
+    env: Object.assign({}, process.env, opts.env || {}),
   });
   if (r.error) throw r.error;
   if (r.status !== 0) {
@@ -63,7 +63,7 @@ function runPythonCli(pyArgs, timeoutSec, opts = {}) {
     timeout: (timeoutSec || 90) * 1000,
     maxBuffer: 64 * 1024 * 1024,
     windowsHide: true,
-    env: { ...process.env, ...(opts.env || {}) },
+    env: pythonEnv(opts.env),
   });
   if (r.error) throw r.error;
   if (r.status !== 0) {
@@ -159,7 +159,7 @@ async function runMoonveil(job) {
       timeout: (mvTimeout + 30) * 1000,
       maxBuffer: 64 * 1024 * 1024,
       windowsHide: true,
-      env: { ...process.env, PYTHONPATH: mvDir },
+      env: { PYTHONPATH: mvDir },
     }
   );
   if (!r.error && r.status === 0 && fs.existsSync(out) && fs.statSync(out).size > 0) {
@@ -175,7 +175,7 @@ async function runIronbrew1(job) {
   let patched = null;
   try {
     const r = spawnSync(getPythonBin(), [bridgePy, 'ironbrew1-instrument', job.sourcePath], {
-      env: { ...process.env, PYTHONPATH: CORE },
+      env: { PYTHONPATH: CORE },
       maxBuffer: 64 * 1024 * 1024,
       timeout: 60000,
       windowsHide: true,
@@ -247,7 +247,7 @@ async function runIronbrew1(job) {
       'utf8'
     );
     execFileSync(getPythonBin(), [bridgePy, 'ironbrew1-lift', cfgPath], {
-      env: { ...process.env, PYTHONPATH: CORE },
+      env: { PYTHONPATH: CORE },
       stdio: 'inherit',
     });
     if (fs.existsSync(statsPath)) {
@@ -275,7 +275,7 @@ async function runLuraphV14(job) {
   let patched = job.source;
   if (!args.noHooks) {
     const r = spawnSync(getPythonBin(), [bridgePy, 'patch-entries-v14', job.sourcePath], {
-      env: { ...process.env, PYTHONPATH: CORE },
+      env: { PYTHONPATH: CORE },
       maxBuffer: 64 * 1024 * 1024,
       timeout: 60000,
       windowsHide: true,
@@ -364,7 +364,7 @@ async function runLuraphV14(job) {
         'utf8'
       );
       execFileSync(getPythonBin(), [bridgePy, 'pipeline-v14', cfgPath], {
-        env: { ...process.env, PYTHONPATH: CORE },
+        env: { PYTHONPATH: CORE },
         stdio: 'inherit',
       });
       if (fs.existsSync(statsPath)) {

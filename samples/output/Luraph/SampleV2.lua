@@ -1,8 +1,9 @@
-local number = 1494280530
-local number2 = 93860970
-local TweenService, UserInputService, RunService, MarketplaceService, HttpService, httpRequest, localPlayer
+local number, TweenService, UserInputService, RunService, MarketplaceService, HttpService, httpRequest, localPlayer, hui, home
+local vrzg9YaNPjUrl, data, data2, number2, number3, data3
 
 do
+	local number4 = 1494280530
+	number = 93860970
 	local Players = game:GetService("Players")
 	TweenService = game:GetService("TweenService")
 	UserInputService = game:GetService("UserInputService")
@@ -54,21 +55,16 @@ do
 	end
 
 	localPlayer = Players.LocalPlayer
-end
+	hui = nil
 
-local hui = nil
+	pcall(function()
+		if typeof(gethui) ~= "function" then
+			return
+		end
+		hui = gethui()
+	end)
 
-pcall(function()
-	if typeof(gethui) ~= "function" then
-		return
-	end
-	hui = gethui()
-end)
-
-local home, vrzg9YaNPjUrl, data, data2, number3, number4, data3
-
-do
-	local number5 = number - 2783575027
+	local number5 = number4 - 2783575027
 
 	if not hui then
 		pcall(function()
@@ -83,27 +79,27 @@ do
 
 	if not hui then
 		hui = localPlayer:WaitForChild("PlayerGui")
-		number2 = number2 + number5 + 1289294497
+		number = number + number5 + 1289294497
 	end
 
 	home = "Free Script Loader"
 	vrzg9YaNPjUrl = "https://discord.gg/vrzg9YaNPj"
 	data = { items = { "Violent District", "Break and Steal", "Anime Dice" } }
 	data2 = {}
-	local number6 = number2 + 95095349
+	local number6 = number + 95095349
 	local number7 = number5 // number6 - 3670288205 + number6
 	local number8 = number6 + number7 + number7
 	local number9 = (number7 + 1217751808) // number8
-	number3 = number8 + number9 + number9
-	number4 = number9 - number3
+	number2 = number8 + number9 + number9
+	number3 = number9 - number2
 	data3 = {}
 end
 
-local number5 = bit32.band(number3, 4294967295)
+local number4 = bit32.band(number2, 4294967295)
 local value = bit32.band(t1926_545_1[1], 65535)
 local value2 = bit32.rshift(t1926_545_1[1], 16)
-local number6 = bit32.band(number5, 65535)
-local value3 = bit32.band(value * number6 + bit32.lshift(bit32.band(value * bit32.rshift(number5, 16) + value2 * number6, 65535), 16), 4294967295)
+local number5 = bit32.band(number4, 65535)
+local value3 = bit32.band(value * number5 + bit32.lshift(bit32.band(value * bit32.rshift(number4, 16) + value2 * number5, 65535), 16), 4294967295)
 data3.name = "Evomon Gold V4"
 data3.desc = "Auto hunt / evolve / VIP farm"
 data3.icon = "rbxassetid://112510549708715"
@@ -262,11 +258,13 @@ data2[18] = data3
 local callback
 
 callback = function(argument)
-	for _, value4 in ipairs(data2) do
-		if value4.name ~= argument then
+	local value4, value5, value6 = ipairs(data2)
+
+	for _, value7 in value5, value6 do
+		if value7.name ~= argument then
 			continue
 		end
-		return value4
+		return value7
 	end
 
 	return nil
@@ -308,7 +306,7 @@ end
 local readJsonFile, saveFile
 
 do
-	local number7 = 86400
+	local number6 = 86400
 
 	readJsonFile = function()
 		local ok, response = pcall(readfile, "nr_loader_autoexec.json")
@@ -332,7 +330,7 @@ do
 
 	saveFile = function(argument)
 		if argument then
-			pcall(writefile, "nr_loader_autoexec.json", HttpService:JSONEncode({ gameName = argument, enabledAt = os.time(), expiresAt = os.time() + number7, durationHours = 24 }))
+			pcall(writefile, "nr_loader_autoexec.json", HttpService:JSONEncode({ gameName = argument, enabledAt = os.time(), expiresAt = os.time() + number6, durationHours = 24 }))
 			pcall(writefile, "autoexec/nr_loader.lua", "loadstring(game:HttpGet(\"https://raw.githubusercontent.com/JualNasiRendang/loader/refs/heads/main/main.lua\"))()")
 			pcall(writefile, "autoexecute/nr_loader.lua", "loadstring(game:HttpGet(\"https://raw.githubusercontent.com/JualNasiRendang/loader/refs/heads/main/main.lua\"))()")
 			if queueOnTeleport then
@@ -348,12 +346,12 @@ do
 	end
 end
 
-local data4, backgroundTransparency, tweenInfo, number7, tweenInfo2, tweenInfo3, tweenInfo4, callback2, getUICorner, number8
-local callback3, number9, ScreenGui, number10, Frame, UIScale
+local data4, backgroundTransparency, tweenInfo, number6, tweenInfo2, tweenInfo3, tweenInfo4, callback2, getUICorner, number7
+local callback3, number8, ScreenGui, number9, Frame, UIScale
 
 do
-	local number11 = number3 + number4
-	local number12 = bit32.rshift(number4, 23)
+	local number10 = number2 + number3
+	local number11 = bit32.rshift(number3, 23)
 
 	data4 = {
 		Window = Color3.new(0.054901961237192154, 0.062745101749897, 0.058823529630899429),
@@ -370,25 +368,23 @@ do
 
 	backgroundTransparency = 0.2
 	tweenInfo = TweenInfo.new(0.16, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-	number7 = bit32.lshift(number12, 9)
+	number6 = bit32.lshift(number11, 9)
 	tweenInfo2 = TweenInfo.new(0.26, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
 	tweenInfo3 = TweenInfo.new(0.18, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
 	tweenInfo4 = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 
 	callback2 = function(argument, argument2, argument3)
 		local instance = Instance.new(argument)
-		local value4 = pairs
-		argument2 = argument2 or {}
+		local value4, value5, value6 = pairs(argument2 or {})
 
-		for k, value5 in value4(argument2) do
-			instance[k] = value5
+		for k, value7 in value5, value6 do
+			instance[k] = value7
 		end
 
-		local value5 = ipairs
-		argument3 = argument3 or {}
+		local value7, value8, value9 = ipairs(argument3 or {})
 
-		for _, value6 in value5(argument3) do
-			value6.Parent = instance
+		for _, value10 in value8, value9 do
+			value10.Parent = instance
 		end
 
 		return instance
@@ -398,13 +394,13 @@ do
 		return callback2("UICorner", { CornerRadius = UDim.new(0, argument or 8) })
 	end
 
-	number8 = 325043278
+	number7 = 325043278
 
 	callback3 = function(argument, thickness, transparency)
 		local uiStroke = { Color = argument or data4.Border }
 
-		if number8 + 117422833 == 132803028 then
-			number8 = bit32.bxor(number8, 3545652547)
+		if number7 + 117422833 == 132803028 then
+			number7 = bit32.bxor(number7, 3545652547)
 		end
 
 		uiStroke.Thickness = thickness
@@ -414,14 +410,14 @@ do
 	end
 
 	local data5 = {}
-	number9 = number11 + 494365338
+	number8 = number10 + 494365338
 	local huis = { hui, localPlayer:FindFirstChildOfClass("PlayerGui") }
 	local value4 = value3
-	local number13 = bit32.band(number9, 4294967295)
+	local number12 = bit32.band(number8, 4294967295)
 	local value5 = bit32.band(value4, 65535)
 	local value6 = bit32.rshift(value4, 16)
-	local number14 = bit32.band(number13, 65535)
-	local value7 = bit32.band(value5 * number14 + bit32.lshift(bit32.band(value5 * bit32.rshift(number13, 16) + value6 * number14, 65535), 16), 4294967295)
+	local number13 = bit32.band(number12, 65535)
+	local value7 = bit32.band(value5 * number13 + bit32.lshift(bit32.band(value5 * bit32.rshift(number12, 16) + value6 * number13, 65535), 16), 4294967295)
 
 	pcall(function()
 		if gethui then
@@ -434,14 +430,17 @@ do
 		huis[#huis + 1] = game:GetService("CoreGui")
 	end)
 
-	for _, hui2 in ipairs(huis) do
-		if hui2 and not data5[hui2] then
-			data5[hui2] = true
+	local value8, value9, value10 = ipairs(huis)
 
-			for _, child in ipairs(hui2:GetChildren()) do
-				if child.Name == "NR_Loader" then
+	for _, value11 in value9, value10 do
+		if value11 and not data5[value11] then
+			data5[value11] = true
+			local value12, value13, value14 = ipairs(value11:GetChildren())
+
+			for _, value15 in value13, value14 do
+				if value15.Name == "NR_Loader" then
 					pcall(function()
-						child:Destroy()
+						value15:Destroy()
 					end)
 				end
 			end
@@ -457,11 +456,11 @@ do
 		DisplayOrder = 1000,
 	})
 
-	local number15 = 420
-	local number16 = 330
-	number8 = bit32.bxor(number8, 202264007)
-	local number17 = value7 // number7
-	number10 = number9 + number7
+	local number14 = 420
+	local number15 = 330
+	number7 = bit32.bxor(number7, 202264007)
+	local number16 = value7 // number6
+	number9 = number8 + number6
 
 	Frame = callback2("Frame", {
 		Name = "Window",
@@ -488,13 +487,13 @@ do
 			viewportSize = Vector2.new(800, 600)
 		end
 
-		local number18 = math.min((viewportSize.X - 20) / number15, (viewportSize.Y - 20) / number16)
+		local number17 = math.min((viewportSize.X - 20) / number14, (viewportSize.Y - 20) / number15)
 
 		if UserInputService.TouchEnabled then
-			number18 *= 0.78
+			number17 *= 0.78
 		end
 
-		UIScale.Scale = math.clamp(number18, 0.34, 1)
+		UIScale.Scale = math.clamp(number17, 0.34, 1)
 	end
 
 	clampValue()
@@ -512,18 +511,18 @@ do
 	end
 
 	callback4()
-	local number18 = number17 + 523800463
+	local number17 = number16 + 523800463
 
 	local function callback5()
-		if number18 + 142506498 ~= 403438049 then
-			number18 = bit32.bxor(number18, 2796132829)
+		if number17 + 142506498 ~= 403438049 then
+			number17 = bit32.bxor(number17, 2796132829)
 		end
 
 		clampValue()
 		callback4()
 	end
 
-	number18 = 260931551
+	number17 = 260931551
 	workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(callback5)
 end
 
@@ -599,17 +598,17 @@ callback4 = function(argument, argument2, argument3)
 	TweenService:Create(callback2("UIScale", { Parent = Frame3, Scale = 0.85 }), tweenInfo3, { Scale = 1 }):Play()
 	local delay = task.delay
 	argument3 = argument3 or 5
-	local number11 = 47489607
+	local number10 = 47489607
 
 	local function callback5()
 		local Frame4 = Frame3
 
-		if number11 + 171137026 == 305624577 then
-			local number12 = number11
-			if number11 ~= 490807331 then
+		if number10 + 171137026 == 305624577 then
+			local number11 = number10
+			if number10 ~= 490807331 then
 				return
 			end
-			number11 = bit32.bxor(number12, 2293314731)
+			number10 = bit32.bxor(number11, 2293314731)
 		end
 
 		if Frame4.Parent then
@@ -625,15 +624,15 @@ callback4 = function(argument, argument2, argument3)
 		end
 	end
 
-	number11 = 490807331
+	number10 = 490807331
 	delay(argument3, callback5)
 end
 
-local Frame3, TextButton, ImageLabel, TextLabel, TextLabel2, TextButton2, number11, number12, TextButton3, callback5
+local Frame3, TextButton, ImageLabel, TextLabel, TextLabel2, TextButton2, number10, number11, TextButton3, callback5
 local value4
 
 do
-	local value5 = bit32.band(3920625664, number10)
+	local value5 = bit32.band(3920625664, number9)
 
 	Frame3 = callback2("Frame", {
 		Name = "TopBar",
@@ -644,7 +643,7 @@ do
 		BorderSizePixel = 0,
 	}, { getUICorner(14) })
 
-	local number13 = number10 + value5
+	local number12 = number9 + value5
 
 	callback2("Frame", {
 		Parent = Frame3,
@@ -655,7 +654,7 @@ do
 		BorderSizePixel = 0,
 	})
 
-	local number14 = value5 // number13
+	local number13 = value5 // number12
 
 	TextButton = callback2("TextButton", {
 		Parent = Frame3,
@@ -680,7 +679,7 @@ do
 		Image = "rbxassetid://124947058155926",
 	}, { getUICorner(8) })
 
-	local number15 = number13 - 441651735
+	local number14 = number12 - 441651735
 
 	TextLabel = callback2("TextLabel", {
 		Parent = Frame3,
@@ -695,7 +694,7 @@ do
 		TextTruncate = Enum.TextTruncate.AtEnd,
 	})
 
-	local number16 = bit32.bor(number14, number15)
+	local number15 = bit32.bor(number13, number14)
 
 	TextLabel2 = callback2("TextLabel", {
 		Parent = Frame3,
@@ -710,7 +709,7 @@ do
 		TextTruncate = Enum.TextTruncate.AtEnd,
 	})
 
-	local number17 = number16
+	local number16 = number15
 
 	TextButton2 = callback2("TextButton", {
 		Parent = Frame3,
@@ -725,8 +724,8 @@ do
 		AutoButtonColor = false,
 	}, { getUICorner(8) })
 
-	number11 = number16 - number17
-	number12 = number15 + 80861551 - 68467876
+	number10 = number15 - number16
+	number11 = number14 + 80861551 - 68467876
 	local border = data4.Border
 
 	TextButton3 = callback2("TextButton", {
@@ -769,7 +768,7 @@ do
 	end
 
 	local danger = data4.Danger
-	local value6 = bit32.band(number17 - number11, 4294967295)
+	local value6 = bit32.band(number16 - number10, 4294967295)
 	local value7 = bit32.band(value6, 65535)
 	value4 = bit32.band(value7 * 35151 + bit32.lshift(bit32.band(value7 * 0 + bit32.rshift(value6, 16) * 35151, 65535), 16), 4294967295)
 	callback5(TextButton2, danger)
@@ -800,7 +799,7 @@ do
 				return
 			end
 			condition = false
-			TextButton:Disconnect()
+			r3_1:Disconnect()
 		end)
 	end)
 
@@ -818,8 +817,8 @@ do
 
 	UserInputService.InputChanged:Connect(function(input2)
 		if condition and input2 == input then
-			local number13 = input2.Position - position
-			Frame.Position = UDim2.new(position2.X.Scale, position2.X.Offset + number13.X, position2.Y.Scale, position2.Y.Offset + number13.Y)
+			local number12 = input2.Position - position
+			Frame.Position = UDim2.new(position2.X.Scale, position2.X.Offset + number12.X, position2.Y.Scale, position2.Y.Offset + number12.Y)
 			return
 		end
 	end)
@@ -887,10 +886,11 @@ do
 			if data8[argument] then
 				text = argument
 				local value5 = data7[argument]
+				local value6, value7, value8 = pairs(data8)
 
-				for k, value6 in pairs(data8) do
-					value6.Visible = true
-					TweenService:Create(value6, tweenInfo2, { Position = UDim2.fromScale(data7[k] - value5, 0) }):Play()
+				for k, value9 in value7, value8 do
+					value9.Visible = true
+					TweenService:Create(value9, tweenInfo2, { Position = UDim2.fromScale(data7[k] - value5, 0) }):Play()
 				end
 
 				local condition2 = argument == "home"
@@ -899,44 +899,46 @@ do
 				local create = TweenService.Create
 				local data9 = {}
 				local uDim2New = UDim2.new
+				local number12
+
+				if condition2 then
+					number12 = 14
+				else
+					number12 = 44
+				end
+
+				data9.Position = uDim2New(0, number12, 0.5, -16)
+				create(TweenService2, ImageLabel, tweenInfo2, data9):Play()
 				local number13
 
 				if condition2 then
-					number13 = 14
+					number13 = 56
 				else
-					number13 = 44
+					number13 = 86
 				end
 
-				data9.Position = uDim2New(0, number13, 0.5, -16)
-				create(TweenService2, ImageLabel, tweenInfo2, data9):Play()
-				local number14
-
-				if condition2 then
-					number14 = 56
-				else
-					number14 = 86
-				end
-
-				TweenService:Create(TextLabel, tweenInfo2, { Position = UDim2.new(0, number14, 0, 10) }):Play()
-				TweenService:Create(TextLabel2, tweenInfo2, { Position = UDim2.new(0, number14, 0, 27) }):Play()
+				TweenService:Create(TextLabel, tweenInfo2, { Position = UDim2.new(0, number13, 0, 10) }):Play()
+				TweenService:Create(TextLabel2, tweenInfo2, { Position = UDim2.new(0, number13, 0, 27) }):Play()
 				TextLabel2.Text = data5[argument]
-				local number15 = 376740006
+				local number14 = 376740006
 
 				local function callback7()
-					local value6 = pairs
+					local value9 = pairs
 
-					if bit32.bxor(number15, 111691750) == 300206944 then
-						number15 = bit32.bxor(number15, 3591534891)
+					if bit32.bxor(number14, 111691750) == 300206944 then
+						number14 = bit32.bxor(number14, 3591534891)
 					end
 
-					for k, value7 in value6(data8) do
+					local value10, value11, value12 = value9(data8)
+
+					for k, value13 in value11, value12 do
 						if k ~= text then
-							value7.Visible = false
+							value13.Visible = false
 						end
 					end
 				end
 
-				number15 = 375570629
+				number14 = 375570629
 				task.delay(0.28, callback7)
 				return
 			end
@@ -948,26 +950,26 @@ do
 	local mouseButton1Click = TextButton.MouseButton1Click
 	local mouseButton1Click2 = mouseButton1Click
 	local connect = mouseButton1Click.Connect
-	local number13 = 440146619
+	local number12 = 440146619
 
 	local function callback7()
-		if bit32.bxor(number13, 99430202) == 23217081 then
-			number13 = bit32.bxor(number13, 1348751597)
+		if bit32.bxor(number12, 99430202) == 23217081 then
+			number12 = bit32.bxor(number12, 1348751597)
 		end
 
 		callback6("home")
 	end
 
-	number13 = 165499731
+	number12 = 165499731
 	connect(mouseButton1Click2, callback7)
 end
 
 local UIStroke, TextLabel3, keyUrl, callback7, callback8, condition2, callback9, callback10, Frame7, TextBox
-local callback11, color, TextButton4, TextButton5, TextButton6, TextButton7, configMap, Frame8, TextLabel4, number13
-local callback12, TextLabel5, number14, Frame9, TextBox2, TextButton8, number15, number16
+local callback11, color, TextButton4, TextButton5, TextButton6, TextButton7, configMap, Frame8, TextLabel4, number12
+local callback12, TextLabel5, number13, Frame9, TextBox2, TextButton8, number14, number15
 
 do
-	local number17 = number12 + value4 + 1954270278
+	local number16 = number11 + value4 + 1954270278
 
 	UIStroke = callback2("UIStroke", {
 		Parent = callback2("ImageLabel", {
@@ -1071,33 +1073,34 @@ do
 		local ok, response = pcall(readfile, "nr_loader_key.txt")
 
 		if ok and type(response) == "string" and response ~= "" then
-			local matchs = {}
+			local ks = {}
+			local value5, value6, value7 = (response .. "|"):gmatch("([^|]*)|")
 
-			for match in (response .. "|"):gmatch("([^|]*)|") do
-				matchs[#matchs + 1] = match
+			for k in value6, value7 do
+				ks[#ks + 1] = k
 			end
 
-			local text2 = (matchs[1] or ""):gsub("%s+", "")
+			local text2 = (ks[1] or ""):gsub("%s+", "")
 
 			if text2 ~= "" then
-				local number18 = tonumber(matchs[2])
-				local match
+				local number17 = tonumber(ks[2])
+				local value8
 
-				if matchs[3] then
-					if matchs[3] ~= "" then
-						match = matchs[3] or nil
+				if ks[3] then
+					if ks[3] ~= "" then
+						value8 = ks[3] or nil
 					else
-						match = nil
+						value8 = nil
 					end
 				else
-					match = nil
+					value8 = nil
 				end
 
-				local number19 = tonumber(matchs[4])
-				if number18 then
-					return text2, os.time() - number18, match, number19
+				local number18 = tonumber(ks[4])
+				if number17 then
+					return text2, os.time() - number17, value8, number18
 				end
-				return text2, math.huge, match, number19
+				return text2, math.huge, value8, number18
 			end
 
 			return nil
@@ -1119,20 +1122,20 @@ do
 		return "uid-" .. tostring(localPlayer.UserId)
 	end
 
-	local number18 = number17 + 2579646458
+	local number17 = number16 + 2579646458
 	local value5, value6, value7, value8, value9
 
 	local function callback14(argument)
 		if httpRequest then
 			local text2 = ("%s?key=%s&hwid=%s"):format("https://www.nrlscript.com/api/verify", HttpService:UrlEncode(argument), HttpService:UrlEncode(callback13()))
-			local number19 = 503905154
+			local number18 = 503905154
 
 			local function callback15()
 				local requestData = {}
 				local text3 = text2
 
-				if number19 == 302681685 then
-					number19 = bit32.bxor(number19, 2632809597)
+				if number18 == 302681685 then
+					number18 = bit32.bxor(number18, 2632809597)
 				end
 
 				requestData.Url = text3
@@ -1141,7 +1144,7 @@ do
 				return httpRequest(requestData)
 			end
 
-			number19 = 488185262
+			number18 = 488185262
 			local ok, response = pcall(callback15)
 
 			if ok and type(response) == "table" then
@@ -1209,7 +1212,7 @@ do
 		if argument then
 			if argument ~= "" then
 				local scriptKey = argument:gsub("%s", ""):upper()
-				local value11, value12, number19
+				local value11, value12, number18
 
 				if argument2 ~= "gold" then
 					local value13
@@ -1219,13 +1222,13 @@ do
 						getgenv().SCRIPT_KEY = scriptKey
 
 						if value12 then
-							number19 = os.time() + value12
+							number18 = os.time() + value12
 						else
-							number19 = nil
+							number18 = nil
 						end
 
-						callback7(scriptKey, value11, number19)
-						return true, value11, number19
+						callback7(scriptKey, value11, number18)
+						return true, value11, number18
 					end
 				else
 					local value13
@@ -1236,13 +1239,13 @@ do
 						getgenv().SCRIPT_KEY = scriptKey
 
 						if value12 then
-							number19 = os.time() + value12
+							number18 = os.time() + value12
 						else
-							number19 = nil
+							number18 = nil
 						end
 
-						callback7(scriptKey, value11, number19)
-						return true, value11, number19
+						callback7(scriptKey, value11, number18)
+						return true, value11, number18
 					end
 				end
 
@@ -1288,7 +1291,7 @@ do
 		BorderSizePixel = 0,
 	}, { getUICorner(9), callback3(border, 1) })
 
-	local number19 = number18 + 3448942451 + 3448942451
+	local number18 = number17 + 3448942451 + 3448942451
 
 	TextBox = callback2("TextBox", {
 		Parent = Frame7,
@@ -1422,7 +1425,7 @@ do
 	}, { getUICorner(10), callback3(border2, 1) })
 
 	callback11(TextButton4, 0.2, 0.05)
-	local number20 = 0 - number19
+	local number19 = 0 - number18
 	local accent = data4.Accent
 
 	TextButton5 = callback2("TextButton", {
@@ -1440,9 +1443,9 @@ do
 	}, { getUICorner(10), callback3(accent, 1, 0.15) })
 
 	callback11(TextButton5)
-	local number21 = number19 + number20
-	local number22 = number20 - 312862738
-	local number23 = number21 + number22
+	local number20 = number18 + number19
+	local number21 = number19 - 312862738
+	local number22 = number20 + number21
 
 	TextButton6 = callback2("TextButton", {
 		Parent = Frame4,
@@ -1460,7 +1463,7 @@ do
 	}, { getUICorner(10), callback3(Color3.new(1, 0.84705883264541626, 0.36078432202339172), 1, 0.2) })
 
 	callback11(TextButton6, 0.2, 0.05)
-	local value11 = bit32.band(2804890629 // number22, number23)
+	local value11 = bit32.band(2804890629 // number21, number22)
 	local accent2 = data4.Accent
 
 	TextButton7 = callback2("TextButton", {
@@ -1487,8 +1490,8 @@ do
 		end
 	end)
 
-	local number24 = number23 + 1944484691
-	local value12 = bit32.band(value11, number24)
+	local number23 = number22 + 1944484691
+	local value12 = bit32.band(value11, number23)
 
 	configMap = {
 		lifetime = {
@@ -1506,7 +1509,7 @@ do
 	}
 
 	local border3 = data4.Border
-	local number25 = bit32.bor(number24, value12)
+	local number24 = bit32.bor(number23, value12)
 
 	Frame8 = callback2("Frame", {
 		Parent = Frame4,
@@ -1523,7 +1526,7 @@ do
 
 	callback2("UIPadding", { Parent = Frame8, PaddingLeft = UDim.new(0, 16), PaddingRight = UDim.new(0, 16) })
 	local value13 = bit32.band(value12, 858646822)
-	local number26 = number24 - 327345407
+	local number25 = number23 - 327345407
 
 	TextLabel4 = callback2("TextLabel", {
 		Parent = Frame8,
@@ -1537,12 +1540,12 @@ do
 		TextYAlignment = Enum.TextYAlignment.Center,
 	})
 
-	number13 = 3888000
+	number12 = 3888000
 
 	callback12 = function(argument)
-		local number27 = math.floor(argument / 86400)
-		local number28 = math.floor(argument % 86400 / 3600)
-		local number29 = math.floor(argument % 3600 / 60)
+		local number26 = math.floor(argument / 86400)
+		local number27 = math.floor(argument % 86400 / 3600)
+		local number28 = math.floor(argument % 3600 / 60)
 
 		local function callback17(argument2, argument3)
 			local text2
@@ -1556,27 +1559,27 @@ do
 			return argument2 .. " " .. argument3 .. text2
 		end
 
-		if not (number27 > 0) then
-			if not (number28 > 0) then
+		if not (number26 > 0) then
+			if not (number27 > 0) then
 				local format = ("Key expires in %s").format
-				local value14 = callback17(math.max(number29, 1), "minute")
+				local value14 = callback17(math.max(number28, 1), "minute")
 				return format("Key expires in %s", value14)
 			end
 
 			local format = ("Key expires in %s %s").format
-			local value14 = callback17(number28, "hour")
-			local value15 = callback17(number29, "minute")
+			local value14 = callback17(number27, "hour")
+			local value15 = callback17(number28, "minute")
 			return format("Key expires in %s %s", value14, value15)
 		end
 
 		local format = ("Key expires in %s %s").format
-		local value14 = callback17(number27, "day")
-		local value15 = callback17(number28, "hour")
+		local value14 = callback17(number26, "day")
+		local value15 = callback17(number27, "hour")
 		return format("Key expires in %s %s", value14, value15)
 	end
 
-	local number27 = number25 // 15
-	local value14 = bit32.band(value13, number26)
+	local number26 = number24 // 15
+	local value14 = bit32.band(value13, number25)
 
 	TextLabel5 = callback2("TextLabel", {
 		Parent = Frame4,
@@ -1594,7 +1597,7 @@ do
 		Visible = false,
 	})
 
-	number14 = number26 + number27
+	number13 = number25 + number26
 
 	callback2("TextLabel", {
 		Parent = Frame5,
@@ -1617,7 +1620,7 @@ do
 		BorderSizePixel = 0,
 	}, { getUICorner(9), callback3(Color3.new(1, 0.84705883264541626, 0.36078432202339172), 1, 0.2) })
 
-	local number28 = value14 // 85
+	local number27 = value14 // 85
 
 	TextBox2 = callback2("TextBox", {
 		Parent = Frame9,
@@ -1642,15 +1645,15 @@ do
 	data8.BackgroundTransparency = backgroundTransparency
 	data8.BorderSizePixel = 0
 	data8.AutoButtonColor = false
-	local number29 = number28
+	local number28 = number27
 	data8.Font = Enum.Font.GothamBold
 	data8.Text = "GET GOLD KEY"
 	data8.TextSize = 11
 	data8.TextColor3 = color
 	TextButton8 = callback2("TextButton", data8, { getUICorner(10), callback3(Color3.new(1, 0.84705883264541626, 0.36078432202339172), 1, 0.2) })
-	number15 = number28 * 34579
+	number14 = number27 * 34579
 	callback11(TextButton8, 0.2, 0.05)
-	number16 = number29 * 43225
+	number15 = number28 * 43225
 end
 
 do
@@ -1694,28 +1697,31 @@ do
 		local genv = getgenv()
 		genv.NR_GOLD = argument3 == "gold" or argument3 == "lifetime"
 		local data7 = { Frame7, TextButton4, TextButton5, TextButton6, Frame9, TextButton8, TextButton9 }
+		local value5, value6, value7 = ipairs(data7)
 
-		for _, value5 in ipairs(data7) do
-			TweenService:Create(value5, configEntry, { BackgroundTransparency = 1 }):Play()
-			local uiStroke = value5:FindFirstChildOfClass("UIStroke")
+		for _, value8 in value6, value7 do
+			TweenService:Create(value8, configEntry, { BackgroundTransparency = 1 }):Play()
+			local uiStroke = value8:FindFirstChildOfClass("UIStroke")
 
 			if uiStroke then
 				TweenService:Create(uiStroke, configEntry, { Transparency = 1 }):Play()
 			end
 
-			if value5:IsA("TextButton") then
-				TweenService:Create(value5, configEntry, { TextTransparency = 1 }):Play()
+			if value8:IsA("TextButton") then
+				TweenService:Create(value8, configEntry, { TextTransparency = 1 }):Play()
 			end
 		end
 
 		TweenService:Create(TextBox, configEntry, { TextTransparency = 1 }):Play()
 		TweenService:Create(TextBox2, configEntry, { TextTransparency = 1 }):Play()
-		local value5, value6
+		local value8, value9
 
 		local function callback14()
-			for _, value7 in ipairs(data7) do
-				if value7.Parent then
-					value7.Visible = false
+			local value10, value11, value12 = ipairs(data7)
+
+			for _, value13 in value11, value12 do
+				if value13.Parent then
+					value13.Visible = false
 				end
 			end
 
@@ -1764,20 +1770,20 @@ do
 			argument.Text = configEntry.label
 			TweenService:Create(argument, configEntry, { TextColor3 = configEntry.color }):Play()
 
-			if argument2 and argument2 - os.time() < number13 then
+			if argument2 and argument2 - os.time() < number12 then
 				TextLabel5.Visible = true
 
 				task.spawn(function()
 					while TextLabel5.Visible do
 						if TextLabel5.Parent then
-							local number17 = argument2 - os.time()
+							local number16 = argument2 - os.time()
 
-							if not (number17 <= 0) then
-								TextLabel5.Text = callback12(number17)
+							if not (number16 <= 0) then
+								TextLabel5.Text = callback12(number16)
 								local TextLabel6 = TextLabel5
 								local danger
 
-								if number17 < 3600 then
+								if number16 < 3600 then
 									danger = data4.Danger or data4.SubText
 								else
 									danger = data4.SubText
@@ -1800,20 +1806,20 @@ do
 					end
 				end)
 			end
-		elseif argument2 and argument2 - os.time() < number13 then
+		elseif argument2 and argument2 - os.time() < number12 then
 			TextLabel5.Visible = true
 
 			task.spawn(function()
 				while TextLabel5.Visible do
 					if TextLabel5.Parent then
-						local number17 = argument2 - os.time()
+						local number16 = argument2 - os.time()
 
-						if not (number17 <= 0) then
-							TextLabel5.Text = callback12(number17)
+						if not (number16 <= 0) then
+							TextLabel5.Text = callback12(number16)
 							local TextLabel6 = TextLabel5
 							local danger
 
-							if number17 < 3600 then
+							if number16 < 3600 then
 								danger = data4.Danger or data4.SubText
 							else
 								danger = data4.SubText
@@ -1847,7 +1853,7 @@ do
 	local condition3 = false
 
 	local function callback14(argument, argument2, argument3, argument4, argument5, text2, argument6)
-		local number17 = 165333668
+		local number16 = 165333668
 
 		local function callback15(...)
 			if not condition2 and not condition3 then
@@ -1876,31 +1882,31 @@ do
 						for i = 1, 4 do
 							local argument8 = argument2
 							local uDim2FromOffset = UDim2.fromOffset
-							local number18
+							local number17
 
 							if i % 2 == 0 then
-								number18 = 5
+								number17 = 5
 							else
-								number18 = -5
+								number17 = -5
 							end
 
-							argument8.Position = position + uDim2FromOffset(number18, 0)
+							argument8.Position = position + uDim2FromOffset(number17, 0)
 							task.wait(0.04)
 						end
 
 						argument2.Position = position
 						TweenService:Create(argument2.UIStroke, response3, { Color = data4.Danger, Transparency = 0.1 }):Play()
-						local number18 = 102754315
+						local number17 = 102754315
 
 						local function callback16()
-							if number18 ~= 276785316 then
-								number18 = bit32.bxor(number18, 1428776417)
+							if number17 ~= 276785316 then
+								number17 = bit32.bxor(number17, 1428776417)
 							end
 
 							TweenService:Create(argument2.UIStroke, response3, { Color = argument6, Transparency = 0.2 }):Play()
 						end
 
-						number18 = 276785316
+						number17 = 276785316
 						task.delay(0.8, callback16)
 						callback4(response2 or "Invalid key.", true, 4)
 						return
@@ -1914,11 +1920,11 @@ do
 			end
 		end
 
-		number17 = 301607340
+		number16 = 301607340
 		return callback15
 	end
 
-	local value5 = callback14(TextBox, Frame7, TextButton5, number15 + 54569172, "free", "CHECK KEY", data4.Border)
+	local value5 = callback14(TextBox, Frame7, TextButton5, number14 + 54569172, "free", "CHECK KEY", data4.Border)
 	local value6 = callback14(TextBox2, Frame9, TextButton9, 54569172, "gold", "CHECK KEY", Color3.new(1, 0.84705883264541626, 0.36078432202339172))
 	TextButton5.MouseButton1Click:Connect(value5)
 
@@ -1997,15 +2003,15 @@ do
 	end)
 
 	TextButton3.MouseButton1Click:Connect(function()
-		local number17 = 913867998
-		local number18 = 3190641505
+		local number16 = 913867998
+		local number17 = 3190641505
 
 		if condition2 then
 			pcall(delfile, "nr_loader_key.txt")
 			getgenv().SCRIPT_KEY = nil
 			getgenv().NR_TIER = nil
 			getgenv().NR_GOLD = nil
-			local number19 = number17 // number18
+			local number18 = number16 // number17
 			condition2 = false
 			data6.v = false
 
@@ -2018,13 +2024,13 @@ do
 			TextLabel5.Visible = false
 			TweenService:Create(TextButton7, tweenInfo, { BackgroundTransparency = 1, TextTransparency = 1 }):Play()
 			TweenService:Create(TextButton7.UIStroke, tweenInfo, { Transparency = 1 }):Play()
-			local number20 = number19 - 4068920330
+			local number19 = number18 - 4068920330
 
 			local function callback15()
 				local TextButton10 = TextButton7
 
-				if bit32.bxor(number20, 366569084) ~= 78120299 then
-					number20 = bit32.bxor(number20, 3139527465)
+				if bit32.bxor(number19, 366569084) ~= 78120299 then
+					number19 = bit32.bxor(number19, 3139527465)
 				end
 
 				if TextButton10.Parent then
@@ -2033,7 +2039,7 @@ do
 				end
 			end
 
-			number20 = 292643607
+			number19 = 292643607
 			task.delay(0.18, callback15)
 			data5.home = home
 			data5.games = "Choose a game"
@@ -2042,7 +2048,7 @@ do
 			TextBox.Text = ""
 			TextBox2.Text = ""
 
-			for _, value7 in ipairs({
+			local value7, value8, value9 = ipairs({
 				{ o = Frame7, bg = backgroundTransparency, stroke = 0.2 },
 				{ o = TextButton4, bg = backgroundTransparency, stroke = 0.2, text = true },
 				{ o = TextButton5, bg = 0.1, stroke = 0.15, text = true },
@@ -2050,17 +2056,19 @@ do
 				{ o = Frame9, bg = backgroundTransparency, stroke = 0.2 },
 				{ o = TextButton8, bg = backgroundTransparency, stroke = 0.2, text = true },
 				{ o = TextButton9, bg = 0.1, stroke = 0.15, text = true },
-			}) do
-				value7.o.Visible = value7.o ~= TextButton6 or false
-				TweenService:Create(value7.o, tweenInfo, { BackgroundTransparency = value7.bg }):Play()
-				local uiStroke = value7.o:FindFirstChildOfClass("UIStroke")
+			})
+
+			for _, value10 in value8, value9 do
+				value10.o.Visible = value10.o ~= TextButton6 or false
+				TweenService:Create(value10.o, tweenInfo, { BackgroundTransparency = value10.bg }):Play()
+				local uiStroke = value10.o:FindFirstChildOfClass("UIStroke")
 
 				if uiStroke then
-					TweenService:Create(uiStroke, tweenInfo, { Transparency = value7.stroke }):Play()
+					TweenService:Create(uiStroke, tweenInfo, { Transparency = value10.stroke }):Play()
 				end
 
-				if value7.text and value7.o:IsA("TextButton") then
-					TweenService:Create(value7.o, tweenInfo, { TextTransparency = 0 }):Play()
+				if value10.text and value10.o:IsA("TextButton") then
+					TweenService:Create(value10.o, tweenInfo, { TextTransparency = 0 }):Play()
 				end
 			end
 
@@ -2072,11 +2080,11 @@ do
 	end)
 end
 
-local condition3, number17, ScrollingFrame, text2, text3, condition4
+local condition3, number16, ScrollingFrame, text2, text3, condition4, callback13
 
 do
-	local number18 = bit32.band(number15, number16)
-	local number19 = number16 + number18
+	local number17 = bit32.band(number14, number15)
+	local number18 = number15 + number17
 
 	local data7 = {
 		Parent = Frame4,
@@ -2114,27 +2122,27 @@ do
 
 	local format = ("%d scripts available  |  %s").format
 
-	local function callback13()
-		local number20 = 152732062
+	local function callback14()
+		local number19 = 152732062
 
-		local function callback14()
+		local function callback15()
 			local value5 = identifyexecutor
-			if bit32.bxor(number20, 114914498) ~= 314880253 then
-				number20 = bit32.bxor(number20, 888543741)
+			if bit32.bxor(number19, 114914498) ~= 314880253 then
+				number19 = bit32.bxor(number19, 888543741)
 				return value5()
 			end
 			return value5()
 		end
 
-		number20 = 337495103
-		local ok, response = pcall(callback14)
+		number19 = 337495103
+		local ok, response = pcall(callback15)
 		if ok and response then
 			return response
 		end
 		return "Volt"
 	end
 
-	local value5 = callback13(number19 - 3810238358)
+	local value5 = callback14(number18 - 3810238358)
 	textLabel.Text = format("%d scripts available  |  %s", #data2, value5)
 	textLabel.TextColor3 = data4.SubText
 	textLabel.TextSize = 10
@@ -2157,7 +2165,7 @@ do
 		end
 	end)
 
-	number17 = number18 * number19 - number19
+	number16 = number17 * number18 - number18
 
 	ScrollingFrame = callback2("ScrollingFrame", {
 		Parent = Frame6,
@@ -2173,7 +2181,7 @@ do
 		ScrollBarImageTransparency = 0.3,
 	})
 
-	local number20 = bit32.band(number19, number14)
+	local number19 = bit32.band(number18, number13)
 	callback2("UIListLayout", { Parent = ScrollingFrame, Padding = UDim.new(0, 8), SortOrder = Enum.SortOrder.LayoutOrder })
 
 	callback2("UIPadding", {
@@ -2189,13 +2197,15 @@ do
 	condition4 = false
 	local data8 = {}
 
-	local function callback14()
-		for _, value6 in ipairs(data8) do
-			task.spawn(value6, text2, text3)
+	local function callback15()
+		local value6, value7, value8 = ipairs(data8)
+
+		for _, value9 in value7, value8 do
+			task.spawn(value9, text2, text3)
 		end
 	end
 
-	local function callback15(argument)
+	local function callback16(argument)
 		if condition4 then
 			task.spawn(argument, text2, text3)
 		end
@@ -2204,28 +2214,27 @@ do
 		insert(data8, argument)
 	end
 
-	local number21 = number20 + 254071946
+	local number20 = number19 + 254071946
 
-	local function callback16(argument, argument2, argument3)
+	callback13 = function(argument, argument2, argument3)
 		if argument and argument.match and #argument.match ~= 0 then
 			local text4 = (argument2 or ""):lower()
 			local text5 = (argument3 or ""):lower()
 			local value6 = ipairs
-			local number22, condition5, value7
+			local value7, condition5, value8
 
-			if number21 ~= 382946598 then
-				number22, condition5, value7 = value6(argument.match)
+			if number20 ~= 382946598 then
+				value7, condition5, value8 = value6(argument.match)
 			else
-				number22 = bit32.bxor(number21, 3282889763)
-				condition5 = number21 + 67944929 ~= 270464497
+				condition5 = number20 + 67944929 ~= 270464497
 
 				if nil <= nil then
-					number22, condition5, value7 = value6(argument.match)
+					value7, condition5, value8 = value6(argument.match)
 				end
 			end
 
-			for _, value8 in number22, condition5, value7 do
-				local text6 = value8:lower()
+			for _, value9 in condition5, value8 do
+				local text6 = value9:lower()
 				if text4 ~= "" and text4:find(text6, 1, true) then
 					return true
 				end
@@ -2241,17 +2250,17 @@ do
 
 	task.spawn(function()
 		for i = 1, 5 do
-			local number22 = 225940537
+			local number21 = 225940537
 
 			local function callback17()
-				if number22 ~= 451973260 then
-					number22 = bit32.bxor(number22, 2287805977)
+				if number21 ~= 451973260 then
+					number21 = bit32.bxor(number21, 2287805977)
 				end
 
 				return MarketplaceService:GetProductInfo(game.PlaceId)
 			end
 
-			number22 = 451973260
+			number21 = 451973260
 			local ok, response = pcall(callback17)
 
 			if ok then
@@ -2272,7 +2281,7 @@ do
 			end
 		end
 
-		local number22 = 100655444
+		local number21 = 100655444
 
 		local function callback17()
 			local function callback18(argument)
@@ -2318,8 +2327,8 @@ do
 				return response.Body
 			end
 
-			if bit32.bxor(number22, 477423004) ~= 304635019 then
-				number22 = bit32.bxor(number22, 1521049049)
+			if bit32.bxor(number21, 477423004) ~= 304635019 then
+				number21 = bit32.bxor(number21, 1521049049)
 			end
 
 			if game.GameId and game.GameId ~= 0 then
@@ -2335,7 +2344,7 @@ do
 			end
 		end
 
-		number22 = 240957719
+		number21 = 240957719
 		pcall(callback17)
 
 		if text2 == "" and type(game.Name) == "string" and game.Name ~= "" and game.Name ~= "Game" then
@@ -2369,12 +2378,12 @@ do
 		else
 			text4 = "Game not identified"
 			TextLabel6.Text = text4
-			callback14()
+			callback15()
 			return
 		end
 
 		TextLabel6.Text = text4
-		callback14()
+		callback15()
 	end)
 
 	local condition5 = false
@@ -2418,7 +2427,7 @@ do
 
 	local function callback18(argument, argument2, argument3)
 		task.spawn(function()
-			local number22 = 2922779251
+			local number21 = 2922779251
 			if argument.delayed then
 				argument3(false, "Delayed", "This script is currently under maintenance / repair.")
 				return
@@ -2429,23 +2438,23 @@ do
 					argument3(false, "Premium Only", argument.name .. " khusus member Premium / Gold / Lifetime!")
 					return
 				end
-				number22 = 2922779251
+				number21 = 2922779251
 			end
 
 			argument2("Fetching...")
-			local number23 = 21514261
+			local number22 = 21514261
 
 			local function callback19()
 				local gameRef = game
 
-				if bit32.bxor(number23, 406709984) == 159080375 then
-					number23 = bit32.bxor(number23, 4107919673)
+				if bit32.bxor(number22, 406709984) == 159080375 then
+					number22 = bit32.bxor(number22, 4107919673)
 				end
 
 				return gameRef:HttpGet(argument.url, true)
 			end
 
-			number23 = 522309152
+			number22 = 522309152
 			local ok, response = pcall(callback19)
 
 			if ok and type(response) == "string" and response ~= "" then
@@ -2454,12 +2463,13 @@ do
 
 					if argument.genv then
 						local genv = getgenv()
+						local value6, value7, value8 = pairs(argument.genv)
 
-						for k, value6 in pairs(argument.genv) do
+						for k, value9 in value7, value8 do
 							if k ~= "SCRIPT_KEY" then
-								genv[k] = value6
+								genv[k] = value9
 							elseif not condition2 then
-								genv[k] = value6
+								genv[k] = value9
 							end
 						end
 					end
@@ -2481,17 +2491,17 @@ do
 						pcall(queueOnTeleport, "loadstring(game:HttpGet(\"https://raw.githubusercontent.com/JualNasiRendang/loader/refs/heads/main/main.lua\"))()")
 					end
 
-					local number24 = 235668477
+					local number23 = 235668477
 
 					local function callback20()
 						local ok2, response2 = pcall(chunk)
 
-						if number24 + 155233870 ~= 187571276 then
+						if number23 + 155233870 ~= 187571276 then
 							if ok2 then
 								return
 							end
 						else
-							number24 = bit32.bxor(number24, 2767411019)
+							number23 = bit32.bxor(number23, 2767411019)
 							if ok2 then
 								return
 							end
@@ -2500,7 +2510,7 @@ do
 						warn(("[NRL] %s runtime error: %s"):format(argument.name, tostring(response2)))
 					end
 
-					number24 = 267790901
+					number23 = 267790901
 					task.spawn(callback20)
 					return
 				end
@@ -2599,44 +2609,46 @@ do
 	local list = {}
 
 	local function callback20()
-		for _, value6 in ipairs(list) do
-			pcall(value6)
+		local value6, value7, value8 = ipairs(list)
+
+		for _, value9 in value7, value8 do
+			pcall(value9)
 		end
 	end
 
-	number21 = bit32.bxor(number21, 286808282)
+	number20 = bit32.bxor(number20, 286808282)
 
 	local function callback21(argument, argument2, argument3)
-		local number22 = 178670851
-		local number23 = 1134156754
+		local number21 = 178670851
+		local number22 = 1134156754
 		local condition6 = argument.premiumOnly == true
-		local color2, number24
+		local color2, number23
 
 		if condition6 then
 			color2 = Color3.new(1, 0.84705883264541626, 0.36078432202339172)
 
 			if color then
-				number24 = 0.35
+				number23 = 0.35
 			else
 				color2 = data4.Border
 
 				if condition6 then
-					number24 = 0.35
+					number23 = 0.35
 				else
-					number24 = 0.2
+					number23 = 0.2
 				end
 			end
 		else
 			color2 = data4.Border
 
 			if condition6 then
-				number24 = 0.35
+				number23 = 0.35
 			else
-				number24 = 0.2
+				number23 = 0.2
 			end
 		end
 
-		local number25 = number22 // number23
+		local number24 = number21 // number22
 
 		local TextButton9 = callback2("TextButton", {
 			Parent = ScrollingFrame,
@@ -2647,7 +2659,7 @@ do
 			BorderSizePixel = 0,
 			AutoButtonColor = false,
 			Text = "",
-		}, { getUICorner(10), callback3(color2, 1, number24) })
+		}, { getUICorner(10), callback3(color2, 1, number23) })
 
 		callback2("ImageLabel", {
 			Parent = TextButton9,
@@ -2684,7 +2696,7 @@ do
 		data9.TextXAlignment = Enum.TextXAlignment.Left
 		data9.TextTruncate = Enum.TextTruncate.AtEnd
 		callback2("TextLabel", data9)
-		local number26 = 447444964
+		local number25 = 447444964
 
 		local data10 = {
 			Parent = TextButton9,
@@ -2733,11 +2745,11 @@ do
 
 					if not color then
 						danger = data4.SubText
-						number25 = number25 - number26 - 3847522332
+						number24 = number24 - number25 - 3847522332
 					end
 				else
 					danger = data4.SubText
-					number25 = number25 - number26 - 3847522332
+					number24 = number24 - number25 - 3847522332
 				end
 			end
 		elseif condition6 then
@@ -2745,11 +2757,11 @@ do
 
 			if not color then
 				danger = data4.SubText
-				number25 = number25 - number26 - 3847522332
+				number24 = number24 - number25 - 3847522332
 			end
 		else
 			danger = data4.SubText
-			number25 = number25 - number26 - 3847522332
+			number24 = number24 - number25 - 3847522332
 		end
 
 		textLabel2.TextColor3 = danger
@@ -2768,7 +2780,7 @@ do
 			ImageColor3 = data4.Accent,
 		})
 
-		local number27 = number25 + number26
+		local number26 = number24 + number25
 
 		local TextLabel7 = callback2("TextLabel", {
 			Parent = TextButton9,
@@ -2803,10 +2815,10 @@ do
 			local jsonFile = readJsonFile()
 
 			if jsonFile and jsonFile.gameName == argument.name then
-				local number28 = math.max(1, math.ceil((jsonFile.expiresAt - os.time()) / 3600))
+				local number27 = math.max(1, math.ceil((jsonFile.expiresAt - os.time()) / 3600))
 				TextButton10.BackgroundColor3 = data4.AccentDim
 				TextButton10.BackgroundTransparency = 0.1
-				TextButton10.Text = ("⚡ Auto Execute: %dh"):format(number28)
+				TextButton10.Text = ("⚡ Auto Execute: %dh"):format(number27)
 				TextButton10.TextColor3 = Color3.new(1, 1, 1)
 				local TextButton11 = TextButton10
 				local font = Enum.Font
@@ -2827,23 +2839,23 @@ do
 
 		callback22()
 		table.insert(list, callback22)
-		local number28 = 0
+		local number27 = 0
 		local mouseButton1Down = TextButton10.MouseButton1Down
 		local mouseButton1Down2 = mouseButton1Down
 		local connect = mouseButton1Down.Connect
-		local number29 = number27 + 84920319
+		local number28 = number26 + 84920319
 
 		local function callback23()
 			local now = os.clock()
 
-			if number29 ~= 30169862 then
-				number29 = bit32.bxor(number29, 591718409)
+			if number28 ~= 30169862 then
+				number28 = bit32.bxor(number28, 591718409)
 			end
 
-			number28 = now + 0.4
+			number27 = now + 0.4
 		end
 
-		number29 = 30169862
+		number28 = 30169862
 		connect(mouseButton1Down2, callback23)
 
 		TextButton10.MouseButton1Click:Connect(function()
@@ -2869,10 +2881,10 @@ do
 			callback4(("[Auto Exec: 24h] %s aktif! Link dicopy ke clipboard."):format(argument.name))
 		end)
 
-		local number30 = 179420946
+		local number29 = 179420946
 
 		local function callback24(argument4, argument5)
-			if TextButton9.Parent and callback16(argument, argument4, argument5) then
+			if TextButton9.Parent and callback13(argument, argument4, argument5) then
 				local TextLabel8 = TextLabel6
 				local text5
 
@@ -2884,7 +2896,7 @@ do
 
 				TextLabel8.Text = text5
 				local TextLabel9 = TextLabel6
-				local uiScale, TweenService2, create, uiStroke, allowedProps, color4, value6, number31
+				local uiScale, TweenService2, create, uiStroke, allowedProps, color4, value6, number30
 
 				if condition6 then
 					local color5 = Color3.new(1, 0.84705883264541626, 0.36078432202339172)
@@ -2911,8 +2923,8 @@ do
 							if color then
 								allowedProps.Color = color4
 								allowedProps.Transparency = 0.1
-								value6 = create(TweenService2, uiStroke, number29, allowedProps)
-								number31 = number30
+								value6 = create(TweenService2, uiStroke, number28, allowedProps)
+								number30 = number29
 								value6:Play()
 
 								while true do
@@ -2923,8 +2935,8 @@ do
 						color4 = data4.AccentDim
 						allowedProps.Color = color4
 						allowedProps.Transparency = 0.1
-						value6 = create(TweenService2, uiStroke, number29, allowedProps)
-						number31 = number30
+						value6 = create(TweenService2, uiStroke, number28, allowedProps)
+						number30 = number29
 						value6:Play()
 
 						while true do
@@ -2952,8 +2964,8 @@ do
 					if color then
 						allowedProps.Color = color4
 						allowedProps.Transparency = 0.1
-						value6 = create(TweenService2, uiStroke, number29, allowedProps)
-						number31 = number30
+						value6 = create(TweenService2, uiStroke, number28, allowedProps)
+						number30 = number29
 						value6:Play()
 
 						while true do
@@ -2963,8 +2975,8 @@ do
 
 				allowedProps.Color = data4.AccentDim
 				allowedProps.Transparency = 0.1
-				value6 = create(TweenService2, uiStroke, number29, allowedProps)
-				number31 = number30
+				value6 = create(TweenService2, uiStroke, number28, allowedProps)
+				number30 = number29
 				value6:Play()
 
 				while true do
@@ -2972,23 +2984,22 @@ do
 			end
 		end
 
-		number30 = 377145784
-		callback15(callback24)
+		number29 = 377145784
+		callback16(callback24)
 		local UIScale2 = callback2("UIScale", { Parent = TextButton9 })
 		local mouseEnter = TextButton9.MouseEnter
 		local mouseEnter2 = mouseEnter
 		local connect2 = mouseEnter.Connect
-		local number31 = number27 - 4258339010
+		local number30 = number26 - 4258339010
 
 		local function callback25()
-			TweenService:Create(TextButton9, number29, { BackgroundTransparency = 0.05 }):Play()
+			TweenService:Create(TextButton9, number28, { BackgroundTransparency = 0.05 }):Play()
 
-			if number31 + 220569372 == 279743517 then
-				number31 = bit32.bxor(number31, 3556695743)
+			if number30 + 220569372 == 279743517 then
+				number30 = bit32.bxor(number30, 3556695743)
 			end
 
-			-- This Source Was Generated by discord.gg/c3xVMnUUBv
-			TweenService:Create(UIScale2, number29, { Scale = 1.015 }):Play()
+			TweenService:Create(UIScale2, number28, { Scale = 1.015 }):Play()
 			local TweenService2 = TweenService
 			local create = TweenService.Create
 			local data11 = {}
@@ -3003,37 +3014,37 @@ do
 			else
 				color4 = data4.Accent
 				data11.TextColor3 = color4
-				local value6 = create(TweenService2, TextLabel7, number29, data11)
+				local value6 = create(TweenService2, TextLabel7, number28, data11)
 				value6:Play()
 				return
 			end
 
 			data11.TextColor3 = color4
-			create(TweenService2, TextLabel7, number29, data11):Play()
+			create(TweenService2, TextLabel7, number28, data11):Play()
 		end
 
-		number31 = 352978003
+		number30 = 352978003
 		connect2(mouseEnter2, callback25)
 		local mouseLeave = TextButton9.MouseLeave
 		local mouseLeave2 = mouseLeave
 		local connect3 = mouseLeave.Connect
-		local number32 = number27 - 339996067
+		local number31 = number26 - 339996067
 
 		local function callback26()
-			if bit32.bxor(number32, 283816386) ~= 462702415 then
-				number32 = bit32.bxor(number32, 3452637031)
+			if bit32.bxor(number31, 283816386) ~= 462702415 then
+				number31 = bit32.bxor(number31, 3452637031)
 			end
 
-			TweenService:Create(TextButton9, number29, { BackgroundTransparency = backgroundTransparency }):Play()
-			TweenService:Create(UIScale2, number29, { Scale = 1 }):Play()
-			TweenService:Create(TextLabel7, number29, { TextColor3 = data4.SubText }):Play()
+			TweenService:Create(TextButton9, number28, { BackgroundTransparency = backgroundTransparency }):Play()
+			TweenService:Create(UIScale2, number28, { Scale = 1 }):Play()
+			TweenService:Create(TextLabel7, number28, { TextColor3 = data4.SubText }):Play()
 		end
 
-		number32 = 192870029
+		number31 = 192870029
 		connect3(mouseLeave2, callback26)
 
 		TextButton9.MouseButton1Click:Connect(function()
-			if not (os.clock() < number28) then
+			if not (os.clock() < number27) then
 				if argument.delayed then
 					callback4("This script is currently under maintenance / repair.", true, 5)
 					return
@@ -3059,7 +3070,7 @@ do
 
 		task.delay(0.04 * argument3, function()
 			if TextButton9.Parent then
-				TweenService:Create(TextButton9, number29, { BackgroundTransparency = backgroundTransparency }):Play()
+				TweenService:Create(TextButton9, number28, { BackgroundTransparency = backgroundTransparency }):Play()
 				TweenService:Create(UIScale2, condition6, { Scale = 1 }):Play()
 				return
 			end
@@ -3068,23 +3079,26 @@ do
 		return TextButton9
 	end
 
-	for i, value6 in ipairs(data2) do
-		callback21(value6, number17 + 269302503, i)
+	local value6, value7, value8 = ipairs(data2)
+
+	for k, value9 in value7, value8 do
+		callback21(value9, number16 + 269302503, k)
 	end
 
 	local function callback22()
-		local number22 = 2961806243
-		local number23 = 1208887655
+		local number21 = 2961806243
+		local number22 = 1208887655
 		if not Frame.Visible then
 			return
 		end
 		local list2 = {}
+		local value9, value10, value11 = ipairs(data.items)
 
-		for _, entry in ipairs(data.items) do
-			local value6 = callback(entry)
+		for _, value12 in value10, value11 do
+			local value13 = callback(value12)
 
-			if value6 then
-				list2[#list2 + 1] = value6
+			if value13 then
+				list2[#list2 + 1] = value13
 			end
 		end
 
@@ -3092,8 +3106,8 @@ do
 			print(("[NRL] whats-new: no catalog match for {%s} — check the names in WHATS_NEW.items"):format(table.concat(data.items, ", ")))
 			return
 		end
-		local number24 = 46 + #list2 * 34 + 8 + 32
-		local number25 = number24 + 14
+		local number23 = 46 + #list2 * 34 + 8 + 32
+		local number24 = number23 + 14
 
 		local TextButton9 = callback2("TextButton", {
 			Name = "WhatsNew",
@@ -3112,7 +3126,7 @@ do
 			Active = true,
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			Position = UDim2.new(0.5, 0, 0.5, 0),
-			Size = UDim2.fromOffset(300, number25),
+			Size = UDim2.fromOffset(300, number24),
 			BackgroundColor3 = data4.Window,
 			BackgroundTransparency = 0.02,
 			BorderSizePixel = 0,
@@ -3187,12 +3201,13 @@ do
 		data11.ZIndex = 52
 		local TextButton10 = data9("TextButton", data11, { getUICorner(6) })
 		callback5(TextButton10, data4.Danger)
+		local value12, value13, value14 = ipairs(list2)
 		local tween, callback23
 
-		for i, value6 in ipairs(list2) do
+		for k, value15 in value13, value14 do
 			local Frame11 = data9("Frame", {
 				Parent = Frame10,
-				Position = UDim2.fromOffset(14, 46 + (i - 1) * 34),
+				Position = UDim2.fromOffset(14, 46 + (k - 1) * 34),
 				Size = UDim2.new(1, -28, 0, 30),
 				BackgroundColor3 = data4.Control,
 				BackgroundTransparency = 1,
@@ -3206,7 +3221,7 @@ do
 				Position = UDim2.new(0, 8, 0.5, -12),
 				BackgroundColor3 = data4.Panel,
 				BackgroundTransparency = 0.3,
-				Image = value6.icon,
+				Image = value15.icon,
 				ZIndex = 53,
 			}, { getUICorner(6) })
 
@@ -3216,7 +3231,7 @@ do
 				Size = UDim2.new(1, -50, 0, 13),
 				BackgroundTransparency = 1,
 				Font = Enum.Font.GothamBold,
-				Text = value6.name,
+				Text = value15.name,
 				TextColor3 = data4.Text,
 				TextSize = 12,
 				ZIndex = 53,
@@ -3230,7 +3245,7 @@ do
 				Size = UDim2.new(1, -50, 0, 12),
 				BackgroundTransparency = 1,
 				Font = Enum.Font.Gotham,
-				Text = value6.desc,
+				Text = value15.desc,
 				TextColor3 = data4.SubText,
 				TextSize = 10,
 				ZIndex = 53,
@@ -3238,13 +3253,13 @@ do
 				TextTruncate = Enum.TextTruncate.AtEnd,
 			})
 
-			local number26 = number22 + 234209498
+			local number25 = number21 + 234209498
 
 			callback23 = function()
 				local Frame12 = Frame11
 
-				if number26 + 41790811 ~= 398591706 then
-					number26 = bit32.bxor(number26, 2983333227)
+				if number25 + 41790811 ~= 398591706 then
+					number25 = bit32.bxor(number25, 2983333227)
 				end
 
 				if Frame12.Parent then
@@ -3253,8 +3268,8 @@ do
 				end
 			end
 
-			number26 = 356800895
-			task.delay(0.05 * i, callback23)
+			number25 = 356800895
+			task.delay(0.05 * k, callback23)
 		end
 
 		local data13 = {
@@ -3273,35 +3288,36 @@ do
 
 		local data14 = data4
 
-		if number22 + 62417772 ~= 62417772 then
-			local number26 = bit32.band(bit32.rshift(number22, 29), 7)
-			local number27 = bit32.band(bit32.bxor(number22, number26), 536870911)
-			local value6 = bit32.bxor(208594413, number27)
-			local value7 = bit32.lshift(value6, 13)
-			local value8 = bit32.band(bit32.bxor(value6, value7), 536870911)
-			local value9 = bit32.rshift(value8, 13)
-			local value10 = bit32.bxor(value8, value9)
-			local value11 = bit32.lshift(value10, 14)
-			local value12 = bit32.band(bit32.bxor(value10, value11), 536870911)
-			local value13 = bit32.lshift(value12, 13)
-			local value14 = bit32.band(bit32.bxor(value12, value13), 536870911)
-			local value15 = bit32.rshift(value14, 13)
-			local value16 = bit32.bxor(value14, value15)
-			local value17 = bit32.lshift(value16, 14)
-			local value18 = bit32.band(bit32.bxor(value16, value17), 536870911)
-			local value19 = bit32.lshift(value18, 13)
-			local value20 = bit32.band(bit32.bxor(value18, value19), 536870911)
-			local value21 = bit32.rshift(value20, 13)
-			local value22 = bit32.bxor(value20, value21)
-			local value23 = bit32.lshift(value22, 14)
-			local value24 = bit32.band(bit32.bxor(value22, value23), 536870911)
-			local value25 = bit32.lshift(value24, 13)
-			local value26 = bit32.band(bit32.bxor(value24, value25), 536870911)
-			local value27 = bit32.rshift(value26, 13)
-			local value28 = bit32.bxor(value26, value27)
-			local value29 = bit32.lshift(value28, 14)
-			local value30 = bit32.band(bit32.bxor(value28, value29), 536870911)
-			local value31 = table.pack(bit32.lshift(value30, 13))
+		-- This Source Was Generated by discord.gg/c3xVMnUUBv
+		if number21 + 62417772 ~= 62417772 then
+			local number25 = bit32.band(bit32.rshift(number21, 29), 7)
+			local number26 = bit32.band(bit32.bxor(number21, number25), 536870911)
+			local value15 = bit32.bxor(208594413, number26)
+			local value16 = bit32.lshift(value15, 13)
+			local value17 = bit32.band(bit32.bxor(value15, value16), 536870911)
+			local value18 = bit32.rshift(value17, 13)
+			local value19 = bit32.bxor(value17, value18)
+			local value20 = bit32.lshift(value19, 14)
+			local value21 = bit32.band(bit32.bxor(value19, value20), 536870911)
+			local value22 = bit32.lshift(value21, 13)
+			local value23 = bit32.band(bit32.bxor(value21, value22), 536870911)
+			local value24 = bit32.rshift(value23, 13)
+			local value25 = bit32.bxor(value23, value24)
+			local value26 = bit32.lshift(value25, 14)
+			local value27 = bit32.band(bit32.bxor(value25, value26), 536870911)
+			local value28 = bit32.lshift(value27, 13)
+			local value29 = bit32.band(bit32.bxor(value27, value28), 536870911)
+			local value30 = bit32.rshift(value29, 13)
+			local value31 = bit32.bxor(value29, value30)
+			local value32 = bit32.lshift(value31, 14)
+			local value33 = bit32.band(bit32.bxor(value31, value32), 536870911)
+			local value34 = bit32.lshift(value33, 13)
+			local value35 = bit32.band(bit32.bxor(value33, value34), 536870911)
+			local value36 = bit32.rshift(value35, 13)
+			local value37 = bit32.bxor(value35, value36)
+			local value38 = bit32.lshift(value37, 14)
+			local value39 = bit32.band(bit32.bxor(value37, value38), 536870911)
+			local value40 = table.pack(bit32.lshift(value39, 13))
 		end
 
 		data13.TextColor3 = data14.Text
@@ -3309,11 +3325,11 @@ do
 		local accent3 = data4.Accent
 		local TextButton11 = data9("TextButton", data13, { getUICorner(9), callback3(accent3, 1, 0.2) })
 
-		if number23 + 358666450 == 358666456 then
+		if number22 + 358666450 == 358666456 then
 			callback11(TextButton11)
 			local UIScale2 = data9("UIScale", { Parent = Frame10, Scale = 0.9 })
 
-			if number23 ~= 70470227 then
+			if number22 ~= 70470227 then
 				Frame10.BackgroundTransparency = 1
 				Frame10.UIStroke.Transparency = 1
 				TweenService:Create(TextButton9, callback23, { BackgroundTransparency = 0.45 }):Play()
@@ -3332,44 +3348,45 @@ do
 					TweenService:Create(UIScale2, callback23, { Scale = 0.92 }):Play()
 					TweenService:Create(Frame10, callback23, { BackgroundTransparency = 1 }):Play()
 					TweenService:Create(Frame10.UIStroke, callback23, { Transparency = 1 }):Play()
+					local value15, value16, value17 = ipairs(Frame10:GetDescendants())
 
-					for _, descendant in ipairs(Frame10:GetDescendants()) do
+					for _, value18 in value16, value17 do
 						local tween2
 
-						if descendant:IsA("TextLabel") then
-							tween2 = TweenService:Create(descendant, callback23, { TextTransparency = 1 })
+						if value18:IsA("TextLabel") then
+							tween2 = TweenService:Create(value18, callback23, { TextTransparency = 1 })
 							tween2:Play()
-						elseif descendant:IsA("TextButton") then
-							tween2 = TweenService:Create(descendant, callback23, { TextTransparency = 1 })
+						elseif value18:IsA("TextButton") then
+							tween2 = TweenService:Create(value18, callback23, { TextTransparency = 1 })
 							tween2:Play()
 						end
 
 						local tween3
 
-						if descendant:IsA("Frame") then
-							tween3 = TweenService:Create(descendant, callback23, { BackgroundTransparency = 1 })
+						if value18:IsA("Frame") then
+							tween3 = TweenService:Create(value18, callback23, { BackgroundTransparency = 1 })
 							tween3:Play()
-						elseif descendant:IsA("ImageLabel") then
-							tween3 = TweenService:Create(descendant, callback23, { BackgroundTransparency = 1 })
+						elseif value18:IsA("ImageLabel") then
+							tween3 = TweenService:Create(value18, callback23, { BackgroundTransparency = 1 })
 							tween3:Play()
 						end
 
-						if descendant:IsA("ImageLabel") then
-							TweenService:Create(descendant, callback23, { ImageTransparency = 1 }):Play()
+						if value18:IsA("ImageLabel") then
+							TweenService:Create(value18, callback23, { ImageTransparency = 1 }):Play()
 						end
 
-						if descendant:IsA("UIStroke") then
-							TweenService:Create(descendant, callback23, { Transparency = 1 }):Play()
+						if value18:IsA("UIStroke") then
+							TweenService:Create(value18, callback23, { Transparency = 1 }):Play()
 						end
 					end
 
-					local number26 = 25351274
+					local number25 = 25351274
 
 					local function destroyAll()
 						local TextButton12 = TextButton9
 
-						if number26 == 18717777 then
-							number26 = bit32.bxor(number26, 3473670903)
+						if number25 == 18717777 then
+							number25 = bit32.bxor(number25, 3473670903)
 						end
 
 						if TextButton12.Parent then
@@ -3378,7 +3395,7 @@ do
 						end
 					end
 
-					number26 = 394384446
+					number25 = 394384446
 					task.delay(0.34, destroyAll)
 				end
 
@@ -3387,10 +3404,10 @@ do
 				return
 			end
 
-			local number26 = bit32.band(bit32.rshift(number23, 29), 7)
-			local number27 = bit32.band(bit32.bxor(number23, number26), 536870911)
-			local value6 = bit32.bxor(120745192, number27)
-			local value7 = table.pack(bit32.lshift(value6, 13))
+			local number25 = bit32.band(bit32.rshift(number22, 29), 7)
+			local number26 = bit32.band(bit32.bxor(number22, number25), 536870911)
+			local value15 = bit32.bxor(120745192, number26)
+			local value16 = table.pack(bit32.lshift(value15, 13))
 
 			while true do
 			end
@@ -3401,27 +3418,27 @@ do
 	end
 
 	print(("[NRL] whats-new: showing %d item(s)"):format(#data.items))
-	local number22 = 20
+	local number21 = 20
 
 	local function callback23(argument)
 		local jsonFile = readJsonFile()
 
 		if jsonFile and jsonFile.gameName then
-			local value6 = callback(jsonFile.gameName)
+			local value9 = callback(jsonFile.gameName)
 
-			if value6 then
+			if value9 then
 				math.max(1, math.ceil((jsonFile.expiresAt - os.time()) / 3600))
-				local number23 = 204307130
+				local number22 = 204307130
 
 				local function callback24()
 					local now = os.clock()
 
 					while true do
-						if callback16(value6, text2, text3) then
-							if value6.premiumOnly and not callback17() then
+						if callback13(value9, text2, text3) then
+							if value9.premiumOnly and not callback17() then
 								saveFile(nil)
 								Frame.Visible = true
-								callback4("Auto Execute dibatalkan: " .. value6.name .. " khusus member Premium / Gold / Lifetime!", true, 6)
+								callback4("Auto Execute dibatalkan: " .. value9.name .. " khusus member Premium / Gold / Lifetime!", true, 6)
 								argument()
 								return
 							end
@@ -3434,7 +3451,7 @@ do
 
 							Frame.Visible = false
 							local data9 = {}
-							if number23 == 98192377 then
+							if number22 == 98192377 then
 								continue
 							end
 							data9.Parent = ScreenGui
@@ -3450,7 +3467,7 @@ do
 								break
 							end
 
-							if not (number22 < os.clock() - now) then
+							if not (number21 < os.clock() - now) then
 								task.wait(0.1)
 								continue
 							end
@@ -3458,11 +3475,11 @@ do
 						end
 					end
 
-					print(("[NRL] auto-exec: %s tidak cocok dengan place=%q universe=%q"):format(value6.name, text2, text3))
+					print(("[NRL] auto-exec: %s tidak cocok dengan place=%q universe=%q"):format(value9.name, text2, text3))
 					argument()
 				end
 
-				number23 = 191084961
+				number22 = 191084961
 				task.spawn(callback24)
 				return true
 			end

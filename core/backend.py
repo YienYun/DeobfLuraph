@@ -37,13 +37,18 @@ def lower(entry_key, order, D, link, prefix, upnames, closure):
     # Convert any rare surviving loop Pseudo variables (irreducible state-machine loops)
     # into real declared locals with flat-yielding GenIterE so zero globals ever leak.
     pseudo_map = {}
+    pseudo_seq = [0]
 
     def _conv_pseudo(x):
         if isinstance(x, Pseudo):
             key = (x.name, x.depth)
             nm = pseudo_map.get(key)
             if nm is None:
-                nm = "iter_%s_%d" % (x.name, x.depth)
+                # These hold the coroutine-wrapped generator of a loop the
+                # structurer could not rebuild as a `for`. `iter_z_1` was a
+                # register name wearing a prefix; call the thing what it is.
+                pseudo_seq[0] += 1
+                nm = "iterator" if pseudo_seq[0] == 1 else "iterator%d" % pseudo_seq[0]
                 while nm in own:
                     nm += "_"
                 own.add(nm)

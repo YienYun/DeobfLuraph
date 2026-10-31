@@ -381,7 +381,9 @@ class TempDef:
 
 def conv(e, D):
     if isinstance(e, D.GenIter):
-        return GenIterE([conv(x, D) for x in e.args.items[1:]] if e.args is not None else [])
+        # The lifter already removed the VM receiver where the build passes one,
+        # so every remaining argument is a real generator argument.
+        return GenIterE([conv(x, D) for x in e.args.items] if e.args is not None else [])
     if isinstance(e, S.NewTable):
 
         return NewTableE([(conv(k, D) if k is not None else None, conv(v, D)) for k, v in e.items])

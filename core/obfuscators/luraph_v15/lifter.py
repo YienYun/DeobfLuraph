@@ -1312,7 +1312,10 @@ class ProtoLifter:
         if isinstance(v, Multi):
             v = v.first()
         if isinstance(v, GenIterMaker):
-            return GenIter(v.args)
+            args = v.args
+            if args is not None and getattr(v, "drop_self", False):
+                args = Multi(list(args.items[1:]), args.tail)
+            return GenIter(args)
         if isinstance(v, (ClosureExpr, GenIter)):
             return v
         if isinstance(v, LuaFunc) and isinstance(self.vm, JitModel):
@@ -1705,7 +1708,13 @@ class ProtoLifter:
         if _walk_any(fn, _unknown) or _walk_any(args.items, _undecoded) or _walk_any(args.tail, _undecoded):
             return Multi([Missing(None)])
         if isinstance(fn, GenIterMaker):
+            # Some builds call the maker as `helper(self, f, s, ctl)`, others as
+            # `helper(f, s, ctl)`. Dropping the first argument unconditionally
+            # (as the code generator used to) threw away the iterator function
+            # in the second case, which turned every generic `for` into a
+            # coroutine that was handed a table where it expected a function.
             fn.args = args
+            fn.drop_self = bool(args.items) and args.items[0] is self.vmobj
             return Multi([])
         if isinstance(fn, RuntimeMaker):
             vals = args.items

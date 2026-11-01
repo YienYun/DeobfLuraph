@@ -39,6 +39,18 @@ test('detects Luraph v15, unsupported v14 and generic sources without execution'
   assert.match(result.stdout, /luraph_v15\s+1\.00/);
 });
 
+test('detects the other two shipped families and names the unshipped ones without claiming them', () => {
+  const moonveil = '-- This script was generated using MoonVeil 2.0.26 [https://moonveil.cc]\nreturn(function(...)end)(...)';
+  assert.equal(detect.detect(moonveil).plugin.name, 'moonveil');
+
+  // Signature recognition for engines this build does not ship: the file still
+  // gets named correctly, and the run refuses it instead of faking a result.
+  assert.equal(detect.detect('--[[ This file was protected with MoonSec V3 ]] return 1').plugin.name, 'moonsec');
+  assert.equal(detect.detect('-- Obfuscated using Prometheus Obfuscator\nreturn 1').plugin.name, 'prometheus');
+  assert.equal(detect.byName('moonsec_v3').name, 'moonsec');
+  assert.equal(detect.byName('luraph_v14_8').name, 'luraph_v14');
+});
+
 test('only restores a lost newline at the beginning, without altering a complete header', () => {
   const header = '-- This file was protected using Luraph Obfuscator v15.1 [https://lura.ph/]';
   assert.equal(detect.restoreHeaderNewline(header + '  return 1'), header + '\nreturn 1');

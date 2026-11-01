@@ -1,135 +1,141 @@
-# DeobfLuraph — Modular Multi-Obfuscator Lua / Luau Deobfuscator
+# DeobfLuraph — Luraph Lua / Luau Deobfuscator
 
-Standalone, modular reverse-compilation and deobfuscation toolkit for Lua 5.1 and Roblox Luau scripts.
+Turns a Luraph-protected script back into readable Luau: it runs the file in an
+offline Roblox environment, records what the VM actually does, then rebuilds
+source from the recorded instructions.
 
----
+This build ships **Luraph** as the engine it is built for. **MoonVeil** and
+**Luarmor** are kept alongside it; every other obfuscator has been removed from
+the tree.
 
-## Supported Obfuscators
-
-| Engine | Module Path | Pipeline |
+| Family | Module | What it does |
 |---|---|---|
-| **Luraph v15.0 / v15.1+** | `core/obfuscators/luraph_v15/` | AST Hooking ➔ Luau Sandbox REPL ➔ Symbolic CFG / SSA Lifter ➔ Plain-Luau `LPH_NO_VIRTUALIZE` Recovery |
-| **Luraph v14.7 – v14.9** | `core/obfuscators/luraph_v14/` | Layered v14 VM Mapper & Symbolic Lifter atop `luraph_v15` |
-| **MoonVeil v2.0.x & v2.1+** | `core/obfuscators/moonveil/` | Base64+Zstd Unpacker (`deob.js`) + Universal `v2.0.x` / `v2.1+` VM Lifter & AST Beautifier |
-| **MoonSec V2 / V3** | `core/obfuscators/moonsec/` | JS Bytecode Lifter ➔ `.luac` ➔ `luadec` / Lua 5.1 Decompiler |
-| **IronBrew v2 / AztupBrew** | `core/obfuscators/ironbrew2/` | JS + Python AST VM Lifter ➔ `.luac` ➔ `luadec` |
-| **IronBrew v1** | `core/obfuscators/ironbrew1/` | Static VM Deserializer & Lifter |
-| **Luarmor v4** | `core/obfuscators/luarmor/` | Client-chain Analyzer (stub ➔ sephal init ➔ session) + Luraph v15 lift of the shipped chunk, metadata report next to the output |
-| **Prometheus** | `core/obfuscators/prometheus/` | AST Constant Array & Control-Flow Unflattener |
-| **PSU v4.x** | `core/obfuscators/psu/` | VM Bytecode Deserializer & Lifter |
-| **Hercules** | `core/obfuscators/hercules/` | Wrapper & String/State Unpacker |
-| **LuaObfuscator** | `core/obfuscators/luaobfuscator/` | Banner + XOR string decoder ➔ VM payload decoder (protos / registers / superinstruction expansion) ➔ readability cleanup. Vectors, oracle and the preset matrix live in `samples/input/LuaObfuscator/README.md` |
-| **Goofyscator / f77 / xHider** | `core/obfuscators/{goofyscator,f77,xhider}/` | Dedicated Unpackers & Constant Decoders |
+| **Luraph v15.0 / v15.1+** | `core/obfuscators/luraph_v15/` | Sandbox run ➔ symbolic CFG / SSA lift ➔ Luau source |
+| **Luraph v14.7 – v14.9** | `core/obfuscators/luraph_v14/` | v14 VM mapper + symbolic lift on the same backend |
+| **MoonVeil 2.0.x / 2.1+** | `core/obfuscators/moonveil/` | Base64 + zstd unpack ➔ VM lift ➔ beautify |
+| **Luarmor v4** | `core/obfuscators/luarmor/`, `src/luarmor.js` | Client-chain analysis; when the file carries a Luraph chunk, that chunk is lifted by the v15 engine |
 
-> **Note:** `Luarmor v4` files are analysed and, when they carry code (the sephal init, or a loader Luarmor served), devirtualized. The licence check itself is not bypassed: the session payload lives on Luarmor's server behind a key, and a bare `_bsdata0` client stub is reported — with its module id, hashes, build stamp and endpoints — instead of being faked into something it is not.
+About Luarmor: the licence check is **not** bypassed. The session payload lives
+on Luarmor's server behind a key, so a bare `_bsdata0` client stub is reported —
+module id, hashes, build stamp, endpoints — instead of being faked into code.
+
+`src/detect.js` still recognises the signatures of the removed obfuscators, so a
+file can be named correctly. It cannot be deobfuscated here: the run stops with
+`<engine> is not part of this build` and writes no output.
 
 ---
 
-## Project Architecture
+## Layout
 
 ```text
 DeobfLuraph/
-├── deob.js                          # Main CLI entry point (single file & recursive batch routing)
-├── src/                             # Node.js orchestration & post-processing
-│   ├── detect.js                    # Signature & structural detector (20+ obfuscator profiles)
-│   ├── driver.js                    # Luraph v14/v15 sandbox + Python devirt bridge runner
-│   ├── multi_driver.js              # Dispatcher for MoonVeil, MoonSec, IronBrew, Prometheus, PSU, etc.
-│   ├── devirt_bridge.py             # JSON/IPC bridge between Node driver and Python lifters
-│   ├── luac_decompile.js            # 32-to-64-bit Lua 5.1 bytecode converter + luadec wrapper
-│   ├── harness.js                   # Offline Roblox sandbox harness builder
-│   ├── watermark.js                 # Syntax-safe post-deobfuscation attribution injector
-│   ├── vmmap.js / traceout.js       # Fast trace helpers & AST utilities
-│   └── pyenv.js / tidy.js           # Python resolver & code formatter
-├── core/                            # Shared compiler backend (Python)
-│   ├── luasym.py / ir.py            # Symbolic expressions, Lua tables, and intermediate representation
-│   ├── structure.py / loops.py      # Dominator-tree CFG structuring (if/elseif/else, while, for, repeat)
-│   ├── idioms.py / ast_polish.py    # Idiom folding (table.move, SETLIST, logical chains) & AST cleanup
-│   ├── variables.py / names.py      # SSA web coalescing & context-aware Roblox identifier naming
-│   ├── codegen.py / backend.py      # Final Luau code emitter & verification passes
-│   ├── luauast.py                   # Native `bin/luau-ast` JSON parser & printer
-│   └── obfuscators/                 # Modular per-obfuscator engines
-│       ├── luraph_v15/              # Modular Luraph v15.0 / v15.1+ engine:
-│       │   ├── dump.py              #   Runtime dump reader, constant/buffer patch log & path resolver
-│       │   ├── dataflow.py          #   SCCP abstract interpretation, upvalue/box & tuple propagation
-│       │   ├── vm_model.py          #   Dispatcher/constructor model & LPH_NO_VIRTUALIZE plain printer
-│       │   ├── stepper.py           #   Handler symbolic stepper, inline JIT loop lifter & decision tree
-│       │   ├── lifter.py            #   ProtoLifter bytecode-to-IR symbolic walker
-│       │   ├── patches.py           #   Multi-round lazy constant request collector & walk cache
-│       │   ├── vmmap.py             #   Luau AST dispatcher & closure-maker mapper
-│       │   ├── devirt.py            #   Program/FunctionLifter orchestrator & public facade
-│       │   └── driver.py            #   End-to-end instrumentation & multi-round lift driver
-│       ├── luraph_v14/              # Luraph v14.7–v14.9 adapter (`vmmap.py`, `devirt.py`, `driver.py`)
-│       ├── moonveil/                # MoonVeil 2.0.x (`moonveil/`) & 2.1+ (`moonveil21/`, `beautify.py`)
-│       └── ...                      # moonsec, ironbrew1, ironbrew2, prometheus, psu, hercules, etc.
-├── renamer/                         # Optional Layer-2 Luau cleaner & scope-verified renamer (`--rename`)
-├── runtime/envlog.luau              # Offline Roblox VM & environment emulator
-├── bin/                             # Bundled native binaries (`luau`, `luau-ast`, `lua5.1`, `luadec`)
-├── samples/                         # Clean workspace folders for local scripts
-│   ├── input/
-│   │   ├── Luraph/                  # Drop Luraph scripts here
-│   │   └── MoonVeil/                # Drop MoonVeil scripts here
-│   └── output/                      # Deobfuscated outputs automatically mirror input subfolders here
-└── test/                            # Automated test suite (`npm test`)
+├── deob.js                 # CLI: single file, or a folder processed recursively
+├── src/                    # Node orchestration around the Python core
+│   ├── detect.js           # Signature / structural detector
+│   ├── driver.js           # Luraph v15: sandbox run + devirt bridge
+│   ├── engines.js          # Luraph v14 and MoonVeil runners
+│   ├── luarmor.js          # Luarmor chain analysis + report
+│   ├── harness.js          # Offline Roblox sandbox builder
+│   ├── devirt_bridge.py    # JSON bridge between Node and the Python lifters
+│   ├── watermark.js        # Attribution comment + `print("Deobf By Zed")`
+│   ├── luau_check.js       # Syntax gate on `bin/luau-ast`
+│   ├── vmmap.js / traceout.js
+│   └── pyenv.js / tidy.js
+├── core/                   # Python compiler backend
+│   ├── ir.py / luasym.py   # IR values and symbolic expressions
+│   ├── structure.py        # CFG structuring, guard/trap pruning, poisoning
+│   ├── loops.py            # Loop recognition
+│   ├── variables.py        # SSA webs, frame propagation, naming input
+│   ├── names.py            # Context-aware identifier naming
+│   ├── idioms.py           # Idiom folding (table.move, SETLIST, chains)
+│   ├── ast_polish.py       # Source cleanup after printing
+│   ├── codegen.py          # Luau emitter
+│   ├── backend.py          # The lowering pipeline, in order
+│   └── obfuscators/        # luraph_v15/ luraph_v14/ moonveil/ luarmor/
+├── renamer/                # Optional `--rename` pass (scope-verified renamer)
+├── runtime/envlog.luau     # Offline Roblox VM + environment
+├── bin/                    # luau, luau-ast (native; .exe for Windows)
+├── docs/                   # Audit notes that back the technical claims
+├── samples/                # input/ (local only) and output/ (committed)
+├── tools/                  # Luraph dumper cross-check, Luarmor capture, oracle
+├── scripts/metrics.py      # The metrics table every report quotes
+├── TECHNICAL.md            # How each pass works, and what is still missing
+└── test/                   # `npm test`
 ```
 
 ---
 
-## Quick Start
+## Install and run
 
-### Prerequisites
-- **Node.js** `18+`
-- **Python** `3.10+`
+Needs **Node.js 18+** and **Python 3.10+**.
 
-### Installation
 ```bash
 npm install
-```
 
-### Usage
-```bash
-# Process a single script inside samples/input/<Subfolder>/
-# Automatically writes to samples/output/<Subfolder>/<filename>.lua
+# one file, output next to the samples tree
 node deob.js samples/input/Luraph/script.lua
 
-# Process an entire folder recursively
+# a whole folder, recursively
 node deob.js samples/input/
 
-# Luarmor v4: static chain report (no execution) or the full track
-python3 core/obfuscators/luarmor/analyze.py samples/input/Luarmor/SampleV1_client_stub.lua
-node deob.js samples/input/Luarmor
+# explicit output path
+node deob.js protected.lua -o out.lua
 
-# Save a single file to a custom path
-node deob.js input.lua -o output.lua
+# identify the obfuscator without running anything
+node deob.js protected.lua --detect
 
-# Detect obfuscator type without deobfuscating
-node deob.js input.lua --detect
-
-# Optional manual Layer-2 variable renaming & cleanup on an already-deobfuscated file
-node renamer/index.js samples/output/Luraph/script.lua -o samples/output/Luraph/script_clean.lua
-
-# Semantic oracle: run an original and its deobfuscated copy, diff the CHECK lines
-node tools/oracle/compare.js test/vectors/luaobfuscator/vector1.lua samples/output/LuaObfuscator/out.lua
+# run an original and its deobfuscated copy, compare what they print
+node tools/oracle/compare.js original.lua out.lua
 ```
 
----
+Useful flags: `--plugin luraph_v14` (force an engine), `--no-devirt` (behaviour
+trace only), `--debug` (keep the sandbox trace in the output folder), `--strings`
+(dump captured strings), `--budget`, `--timeout`, `--report report.json`,
+`--rename` (extra readability pass).
 
-## Maintenance Guide (Updating Obfuscator Versions)
-
-When Luraph or MoonVeil ships a new build, each concern is isolated to a single module:
-- **New Luraph outer VM wrapper or `LPH_NO_VIRTUALIZE` layout** ➔ `core/obfuscators/luraph_v15/vmmap.py` & `vm_model.py`
-- **New Luraph handler pattern or inline `LPH_JIT` loop** ➔ `core/obfuscators/luraph_v15/stepper.py`
-- **New Luraph instruction / stack dispatch semantics** ➔ `core/obfuscators/luraph_v15/lifter.py`
-- **Closure capture / upvalue unboxing edge cases** ➔ `core/obfuscators/luraph_v15/dataflow.py`
-- **Lazy constant buffer decryption / dump format** ➔ `core/obfuscators/luraph_v15/dump.py` & `patches.py`
-- **CFG loop/branch structuring across all VM lifters** ➔ `core/structure.py` & `core/loops.py`
-- **MoonVeil 2.1+ permutation / opcode specs** ➔ `core/obfuscators/moonveil/moonveil21/` & `beautify.py`
-- **Luarmor chain layout (`_bsdata0` / `superflow_bytecode` / init URL / handshake)** ➔ `core/obfuscators/luarmor/{stub,probe}.py`
-- **Detector signatures** ➔ `src/detect.js`
+A Luraph run takes about two minutes for a 1 MB file; the sandbox has to execute
+the VM once per lifting round.
 
 ---
 
-## Running Tests
+## Output
+
+Every result carries the author's `-- This Source Was Generated by ...` comment
+and one `print("Deobf By Zed")`, and is checked to parse as Luau. What a run
+cannot recover stays visible instead of being invented: `nil --[[ constant not
+decoded ]]`, `-- devirt: ...` notes, and a `-- unresolved:` header when names are
+missing. `TECHNICAL.md` §13–§14 explain the two remaining holes in the reference
+sample.
+
+`scripts/metrics.py` prints the numbers used in every report:
 
 ```bash
-npm test
+python3 scripts/metrics.py samples/output/Luraph/SampleV1.lua
 ```
+
+---
+
+## Tests
+
+```bash
+npm test              # node --test test/*.test.js
+```
+
+`node --test test/*.test.js` runs 55 cases: detection, argument parsing, the CFG
+passes, naming, the renamer, Luarmor analysis, and one end-to-end lift. 49 pass,
+5 are skipped because their sample is not in the working tree, and 1 is a known
+failure (`renamer prevents variable shadowing ...`, which pins a comment layout
+the renamer no longer produces).
+
+---
+
+## Where to look next
+
+| Question | File |
+|---|---|
+| How does a lift actually work? | `TECHNICAL.md` |
+| Why is this line still `nil`? | `TECHNICAL.md` §13–§14 |
+| Audit of the callee-slot fix | `docs/audit-callee-slot.md` |
+| Are the fixtures still matching? | `samples/differential/README.md` |
+
+License: MIT.

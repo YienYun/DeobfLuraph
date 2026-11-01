@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const detectModule = require('./src/detect');
 const driver = require('./src/driver');
-const multiDriver = require('./src/multi_driver');
+const engines = require('./src/engines');
 const { injectWatermark } = require('./src/watermark');
 
 const DIRECTORY_EXTENSIONS = ['.lua', '.luau'];
@@ -350,7 +350,7 @@ async function processFile(absInput, args) {
     } else if (plugin.name === 'generic') {
       result = await driver.runGeneric(job);
     } else {
-      result = await multiDriver.runPlugin(plugin.name, job);
+      result = await engines.runPlugin(plugin.name, job);
     }
 
     if (final && result && fs.existsSync(result)) {
@@ -477,4 +477,6 @@ if (require.main === module) {
   });
 }
 
-module.exports = { parseArgs, collectInputFiles, processFile, sameExistingFile, writeAtomically };
+module.exports = {
+  parseArgs, collectInputFiles, processFile, sameExistingFile, writeAtomically, resolveDefaultOutdir,
+};

@@ -129,20 +129,32 @@ harness file, the Node driver parses its output, and the Luau runtime
 
 `runtime/envlog.luau` carries the same values baked into its `local PROTO = {...}`
 line (standalone Studio runs depend on them). Both harness builders overwrite
-that line from `protocol.json` on every run, and `test/protocol_test.py` fails
-CI when any copy drifts. If you change a protocol value, change it in
-`protocol.json` only.
+that line from `protocol.json` on every run (and both builders refuse to run if
+the line is gone), so the file in `runtime/` is only a fallback for standalone
+Studio runs. If you change a protocol value, change it in `protocol.json` only.
 
-## 6. Testing & CI
+## 6. Tests
 
-- `npm test` (or `python test/run_all.py`) runs the fast suite: unit tests for the Python core (chunk-key vectors, Luau pow semantics, config parsing, protocol nonce forging regression) plus the cross-language protocol consistency checks (spawns `node`, no Luau binaries needed).
-- `python test/run_all.py --golden` additionally re-runs the full pipeline on the benchmark samples and compares byte-for-byte with the committed reference outputs in `sample/output/` (needs `bin/luau` + `bin/luau-ast` from `python build_luau.py`). If a run differs, the reference file is restored and the test fails.
-- `.github/workflows/ci.yml` runs the fast suite on Ubuntu and Windows, syntax-checks every Python/JS file, and builds the patched Luau runtime (cached) for the golden regression.
-- `samples/differential/` holds two real samples (`RideAPet`, `StealAnEgg`) as
-  committed input/output pairs plus the `diff-from-v0.4.diff` each milestone's
-  behavioural claim was made against, so a differential can be re-checked without
-  the machine it was measured on. `samples/input/` stays local-only; this is a
-  fixed, small audit corpus. See its `README.md`.
+`npm test` runs `node --test test/*.test.js` -- 55 cases over detection,
+argument parsing, the CFG passes (`structure.py`, `bitfold.py`, `namesplit.py`),
+the renamer, Luarmor analysis and one end-to-end lift. 49 pass, 5 are skipped
+because the sample they need is not in the working tree (`samples/input/` is
+local-only), and 1 is a known failure that is marked rather than deleted:
+
+* `renamer prevents variable shadowing, preserves executor guards, and comments
+  idempotently` -- it pins a comment layout the renamer no longer produces.
+
+Test names are the stable identifier; the `ok N` numbers shift whenever a case is
+added or removed.
+
+There is no CI workflow in this tree, and no Python test runner: everything is
+driven from `npm test`.
+
+`samples/differential/` holds two real samples (`RideAPet`, `StealAnEgg`) as
+committed input/output pairs, and the `diff-from-baseline.diff` of each against
+its oldest recorded output. Rebuilding either input must give a byte-identical
+file -- that is the regression check for anything in this document. See its
+`README.md`.
 
 ## 7. Known Gap: `nil` Operands and the Shared Register Frame
 

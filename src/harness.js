@@ -190,7 +190,7 @@ function buildHarness(source, cfg, chunks = {}) {
 
   // PROTO constants: always inject the current protocol.json values so the
   // runtime can never drift from the drivers (the baked-in defaults are a
-  // fallback for standalone Studio runs; protocol_test.py keeps them equal).
+  // fallback for standalone Studio runs; this overwrite keeps them equal).
   if (!PROTO_LINE_RE.test(runtime)) {
     throw new Error("runtime/envlog.luau lost its `local PROTO = {...}` line; restore it (see protocol.json)");
   }

@@ -129,34 +129,5 @@ elif cmd == "pipeline":
 elif cmd == "pipeline-v14":
     _run_luraph_pipeline(sys.argv[2], v14=True)
 
-elif cmd == "ironbrew1-instrument":
-    source_path = sys.argv[2]
-    with open(source_path, "rb") as f:
-        source = f.read().decode("latin-1")
-    import backend
-    from obfuscators.ironbrew1 import instrument
-    patched, _ = backend.run_big_stack(instrument.instrument, source)
-    sys.stdout.buffer.write(patched.encode("latin-1"))
-
-elif cmd == "ironbrew1-lift":
-    config_file = sys.argv[2]
-    with open(config_file, "r", encoding="utf-8") as f:
-        c = json.load(f)
-    import backend
-    from obfuscators.ironbrew1 import devirt
-    with open(c["source_path"], "rb") as f:
-        source = f.read().decode("latin-1")
-    with open(c["dump_path"], "r", encoding="utf-8") as f:
-        dump = json.load(f)
-    text, prog = backend.run_big_stack(devirt.lift_program, source, dump)
-    text = backend.run_big_stack(lambda: backend.finish_text(backend.polish(text)))
-    with open(c["dpath"], "w", encoding="utf-8", newline="\n") as f:
-        f.write(text.strip() + "\n")
-    if c.get("stats_path"):
-        st = dict(prog.stats)
-        st["converged"] = True
-        with open(c["stats_path"], "w", encoding="utf-8", newline="\n") as f:
-            json.dump(st, f)
-
 else:
     sys.exit("Unknown command: %s" % cmd)

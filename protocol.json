@@ -1,5 +1,5 @@
 {
-  "_comment": "Single source of truth for constants shared by the Python core, the Node driver and the Luau runtime. The harness builders (core/harness.py, src/harness.js) inject the chunk-hash values into runtime/envlog.luau's `local PROTO = {...}` line at build time, and test/protocol_test.py fails CI when any copy drifts. Do not hardcode these values anywhere else.",
+  "_comment": "Single source of truth for constants shared by the Python core, the Node driver and the Luau runtime. The harness builders (core/harness.py, src/harness.js) inject the chunk-hash values into runtime/envlog.luau's `local PROTO = {...}` line at build time, and both harness builders rewrite that line on every run, so a drifted copy cannot survive a build. Do not hardcode these values anywhere else.",
   "chunk_hash": {
     "multiplier": 31,
     "modulus": 2147483648,

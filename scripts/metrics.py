@@ -34,6 +34,11 @@ def parses(path):
     return r.returncode == 0
 
 
+# `local bxor = bit32.bxor` is a name for an operation, not a step of a chain:
+# counting it as one made a pair of aliases look like an unrolled cipher.
+ALIAS = re.compile(r"^\s*(?:local\s+)?[\w\s,]+=\s*bit32\.\w+(?:\s*,\s*(?:bit32\.\w+|\d+))*\s*$")
+
+
 def bit32_chain(lines):
     """bit32 calls that sit in an unrolled chain rather than in one named helper.
 
@@ -44,7 +49,7 @@ def bit32_chain(lines):
     consecutive statement lines that each hold one. Single calls inside a small
     helper do not count -- those are already hidden behind a name.
     """
-    hits = [bool(BIT32.search(l)) for l in lines]
+    hits = [bool(BIT32.search(l)) and not ALIAS.match(l) for l in lines]
     n = len(lines)
     chain_lines = chain_calls = 0
     i = 0

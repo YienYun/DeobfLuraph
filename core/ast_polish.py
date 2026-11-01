@@ -1524,4 +1524,12 @@ def polish_ast(text):
         text = _collapse_single_packs(text)
     except Exception as ex:                        # never lose a working output
         print("[!] single-slot pack pass failed: %s" % ex, file=sys.stderr)
+    if not os.environ.get("DEVIRT_NO_BITFOLD"):
+        try:
+            # an unrolled checksum is one operation written out N times; fold it
+            # back into a loop so the reader sees the operation, not the unrolling
+            import bitfold
+            text = bitfold.fold_chains(text)
+        except Exception as ex:                    # never lose a working output
+            print("[!] bit32 chain fold pass failed: %s" % ex, file=sys.stderr)
     return text

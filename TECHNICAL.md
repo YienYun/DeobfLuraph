@@ -470,7 +470,8 @@ Conclusion: every one of the 55 is the hard boundary the plan called case 3 -- a
 value the trace never produced. The one visible consequence left in the output is
 `return (nil)(nil, nil)` in `callback11`. The shared-frame propagation is therefore
 closed as **measured, not implemented**: `frame_propagation: bound=0
-residual_unknown=55` is the permanent evidence line, and writing cases 1 and 2
+residual_unknown=55` is the permanent evidence line for `SampleV1`
+(`bound=0 residual_unknown=116` for `StealAnEgg`), and writing cases 1 and 2
 would add a mechanism with no instance and no test on this corpus. If a future
 sample shows a read that *does* go through a frame upvalue with a missing name,
 the two cases become testable and can be built then.

@@ -17,7 +17,14 @@
 local CFG = __CONFIG or {}
 local MAX_STMTS = CFG.max_stmts or 250000
 local MAX_BLOCK = CFG.max_block or 25000
-local MAX_WAITS = CFG.max_waits or 50
+local MAX_WAITS = CFG.max_waits or 4096
+-- Loop fuel (see repeatVerdict). A loop that repeats its own body is not
+-- automatically a spin: a precompute loop over a big table repeats thousands of
+-- times before it exits, and cutting the run at the second repetition loses
+-- every statement after the loop. The trace keeps the iterations it ran; once a
+-- body passes its fuel the run stops there and the output says why. (The budget
+-- lives on CFG: this chunk is at Luau's 200-local limit, so no new top-level
+-- locals here.)
 local MAX_DEPTH = CFG.max_depth or 24
 local TIME_BUDGET = CFG.time_budget or 30
 
@@ -349,8 +356,15 @@ local function emit(stmt)
         checkBudget()
         if CHAIN.syncGenv and not CHAIN.syncing then CHAIN.syncGenv() end
         local b = curBlock()
+        if b.cut then
+                -- recording this block is over (see fuel above); the script itself
+                -- keeps running, so the statements after it still get traced
+                stmtCount += 1
+                return stmt
+        end
         if b.stopped then
                 b.stopped += 1
+                CFG.why = CFG.why or ("script ran on inside a block that was cut (" .. b.stopped .. " statements)")
                 if b.stopped > 200 then
                         ABORT_REASON = "a stopped loop kept running (its error was caught by the script)"
                         R.error(ABORT, 0)
@@ -371,9 +385,14 @@ local function emit(stmt)
                 end
         end
         if #b.lines > MAX_BLOCK then
-                R.insert(b.lines, { text = "-- [envlog] block truncated after " .. MAX_BLOCK .. " statements" })
-                b.stopped = 0
-                R.error(LOOP, 0)
+                -- Fuel, not a failure: the block is as big as the output can
+                -- carry. Stop recording *this block* and let the script run on,
+                -- so whatever comes after the loop it was unrolling is still in
+                -- the trace instead of being cut off with the run.
+                CFG.why = CFG.why or ("one block reached " .. MAX_BLOCK .. " statements (fuel)")
+                R.insert(b.lines, { text = "-- devirt: stopped recording this block after " .. MAX_BLOCK ..
+                        " statements (fuel); later iterations are not in the trace" })
+                b.cut = true
         end
         return stmt
 end
@@ -1065,6 +1084,29 @@ end
 ---------------------------------------------------------------------------
 -- loop detection for wait()
 ---------------------------------------------------------------------------
+-- Per-body repetition counter (fingerprint -> {n, idle}). `idle` counts the
+-- repetitions that created nothing new: an unchanged body that keeps making
+-- new objects is progress, an unchanged body that makes nothing is a spin.
+CFG.rep = CFG.rep or {}
+function repeatVerdict(fp, progressed)
+        local fuel, spin_fuel = CFG.loop_fuel or 65536, CFG.spin_fuel or 64
+        local all = CFG.rep
+        local r = all[fp]
+        if r == nil then
+                r = { n = 0, idle = 0 }
+                all[fp] = r
+        end
+        r.n += 1
+        if progressed then r.idle = 0 else r.idle += 1 end
+        if r.n > fuel then
+                return false, "loop stopped after " .. r.n .. " iterations (fuel)"
+        end
+        if r.idle > spin_fuel then
+                return false, "loop body repeats identically after " .. r.n .. " iterations (spin)"
+        end
+        return true, nil
+end
+
 local function normalize(block, from, to, baseId, baseFid)
         local parts = {}
         for i = from, to do
@@ -1097,9 +1139,18 @@ local function onWait()
                                 for _ = m.line + 1, c.line do
                                         R.remove(b.lines)
                                 end
-                                R.insert(b.lines, { text = "-- [envlog] the statements above repeat forever (loop)" })
-                                b.stopped = 0
-                                R.error(LOOP, 0)
+                                local ok, why = repeatVerdict(s1, c.id > a.id)
+                                if ok then
+                                        -- the body is recorded once; keep running, so
+                                        -- whatever the loop does after it exits is still
+                                        -- in the trace (a spin stops when its fuel runs out)
+                                        R.insert(b.lines, { text = "-- [envlog] the statements above repeat (loop iteration " .. CFG.rep[s1].n .. ")" })
+                                else
+                                        CFG.why = CFG.why or why
+                                        R.insert(b.lines, { text = "-- devirt: " .. why })
+                                        b.stopped = 0
+                                        R.error(LOOP, 0)
+                                end
                         end
                 end
         end
@@ -1166,14 +1217,21 @@ local function onWait()
                                         R.remove(w.block.lines)
                                         R.insert(home.lines, w.stmt)
                                 end
-                                R.insert(home.lines, { text = "-- [envlog] the statements above repeat forever (loop)" })
-                                home.stopped = 0
-                                R.error(LOOP, 0)
+                                local ok, why = repeatVerdict(sA, m3.id > m1.id)
+                                if ok then
+                                        R.insert(home.lines, { text = "-- [envlog] the statements above repeat (loop iteration " .. CFG.rep[sA].n .. ")" })
+                                else
+                                        CFG.why = CFG.why or why
+                                        R.insert(home.lines, { text = "-- devirt: " .. why })
+                                        home.stopped = 0
+                                        R.error(LOOP, 0)
+                                end
                         end
                 end
         end
         if n > MAX_WAITS then
-                R.insert(b.lines, { text = "-- [envlog] stopped after " .. MAX_WAITS .. " waits" })
+                CFG.why = CFG.why or ("loop still running after " .. MAX_WAITS .. " waits")
+                R.insert(b.lines, { text = "-- devirt: loop still running after " .. MAX_WAITS .. " waits (fuel)" })
                 b.stopped = 0
                 R.error(LOOP, 0)
         end
@@ -6693,7 +6751,7 @@ if not fetchwait then
         if ok then
                 status = "finished"
         elseif err == LOOP then
-                status = "stopped in an endless loop (truncated)"
+                status = "stopped in an endless loop (truncated)" .. (CFG.why and (": " .. CFG.why) or "")
         elseif err == ABORT then
                 status = "aborted: " .. R.tostring(ABORT_REASON)
         elseif err == TAMPER then

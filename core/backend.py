@@ -31,8 +31,11 @@ def lower(entry_key, order, D, link, prefix, upnames, closure):
 
     entry = ST.thread_empty(entry, blocks)
     CG.simplify_blocks(blocks, D)
-    own = set(VR.rename(entry, blocks, prefix, set()).values())
     names = {("up", i): nm for i, nm in (upnames or {}).items()}
+    # The parent's names are fixed text; this function's own registers must step
+    # around them, or a local hides a capture the closure body reads.
+    up_taken = {nm for nm in names.values() if isinstance(nm, str) and nm != "nil"}
+    own = set(VR.rename(entry, blocks, prefix, set(), avoid=up_taken).values())
 
     # Convert any rare surviving loop Pseudo variables (irreducible state-machine loops)
     # into real declared locals with flat-yielding GenIterE so zero globals ever leak.

@@ -143,11 +143,15 @@ test('full Luraph v15.1 StealAnEggg devirtualizes with zero nil bitwise/arithmet
   assert.doesNotMatch(text, /bit32\.\w+\([^)\n]*\bnil\b/);
   assert.doesNotMatch(text, /(?<![\w.])nil\s*[+\-*/%^]|[+\-*/%^]\s*nil(?![\w])/);
   assert.doesNotMatch(text, /(?<![\w.])nil\s*(?:<=|>=|<|>|\.\.)|(?:<=|>=|<|>|\.\.)\s*nil(?![\w])/);
-  assert.match(text, /return Color3\.new\(num, num2, num3\)/);
+  // the three numbers the source built the Color3 from; which words the naming
+  // pass picked for them is not what this test is about
+  assert.match(text, /return Color3\.new\(\w+, \w+, \w+\)/);
   assert.match(text, /local function parseColor3\(/);
   assert.match(text, /local function disconnectAll\(/);
   assert.match(text, /local function saveSeenChat\(/);
-  assert.match(text, /raycastGround = function\(/);
+  // named either way the lift spells a local function: `local function f(` or
+  // `f = function(`
+  assert.match(text, /(?:function raycastGround\(|raycastGround = function\()/);
   assert.match(text, /runUntilTimeout = function\(/);
   assert.match(text, /local eggPresets = \{/);
   assert.match(text, /if syn then/);

@@ -10,7 +10,8 @@
   "scripts": {
     "start": "node deob.js",
     "rename": "node renamer/index.js",
-    "test": "node --test"
+    "test": "node --test",
+    "metrics": "python3 scripts/metrics.py"
   },
   "engines": {
     "node": ">=18"

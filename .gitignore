@@ -19,6 +19,7 @@ coverage/
 samples/output/**/*.protos.json
 samples/output/**/*.devirt.luau
 samples/output/**/*.deobf.luau
+samples/output/**/*.chunk_*.luau
 
 # Source material stays local (big, and re-uploaded often); results are tracked,
 # because a deobfuscation nobody can open is not a result.

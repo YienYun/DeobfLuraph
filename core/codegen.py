@@ -1,5 +1,7 @@
 import math
+import os
 import re
+import sys
 import unicodedata
 
 import luasym as S
@@ -1511,8 +1513,12 @@ class Renderer:
 
             return "getfenv()" if e.name == "_ENV" else e.name
         if isinstance(e, Upval):
-            return self.names.get(("up", e.idx), "upv%d" % e.idx if isinstance(e.idx, int)
-                                  else "upv%d_%d" % e.idx)
+            nm = self.names.get(("up", e.idx))
+            if nm is None and os.environ.get("DEVIRT_UP_DEBUG"):
+                print("[up] codegen miss idx=%r known=%r" % (e.idx, sorted(self.names, key=repr)[:10]),
+                      file=sys.stderr)
+            return nm if nm is not None else ("upv%d" % e.idx if isinstance(e.idx, int)
+                                              else "upv%d_%d" % e.idx)
         if isinstance(e, Vararg):
             return "..." if e.i == 1 else "select(%d, ...)" % e.i
         if isinstance(e, Index):

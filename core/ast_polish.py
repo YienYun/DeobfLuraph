@@ -2,6 +2,9 @@ import json
 import sys
 import os
 import re
+
+# `upv<slot>`: the name the lifter invents for a capture it could not follow.
+UNRESOLVED_CAPTURE = re.compile(r"\bupv(\d+)(?:_(\d+))?\b")
 import tempfile
 
 import harness
@@ -996,6 +999,26 @@ def _marker_shaped(node):
     return False
 
 
+# What `_trim_dead_stub_bodies` removes, as (where, lines) pairs, so it can be
+# written next to the result instead of disappearing. Set TRIM_PATH to a file
+# path and the pass appends to it; the output itself stays clean.
+TRIMMED = []
+TRIM_PATH = None
+
+
+def _record_trim(where, chunk):
+    TRIMMED.append((where, chunk))
+    if not TRIM_PATH:
+        return
+    try:
+        with open(TRIM_PATH, "a", encoding="utf-8", newline="\n") as fh:
+            fh.write("-- %s\n" % where)
+            fh.write(chunk if chunk.endswith("\n") else chunk + "\n")
+            fh.write("\n")
+    except OSError:
+        pass
+
+
 def _trim_dead_stub_bodies(text):
     """Drop the bookkeeping a function does before it reaches its own marker.
 
@@ -1026,6 +1049,21 @@ def _trim_dead_stub_bodies(text):
                 and all(_is_inert_expr(v) for v in st.get("values") or [])
         return False
 
+    # A region is only dead if nothing unresolved reads out of it: a capture the
+    # walk could not follow may hold a value this "inert" run produced, in which
+    # case the run is the only way that value ever reaches the script.
+    unresolved = [m.group(0).encode() for m in UNRESOLVED_CAPTURE.finditer(text)]
+
+    def mentions_unresolved(node):
+        if not unresolved:
+            return False
+        try:
+            a, b = rng(node)
+        except Exception:
+            return True                     # cannot prove it dead: keep it
+        chunk = btext[a:b]
+        return any(re.search(rb"\b" + re.escape(nm) + rb"\b", chunk) for nm in unresolved)
+
     def visit(node):
         if not isinstance(node, dict):
             return
@@ -1039,6 +1077,9 @@ def _trim_dead_stub_bodies(text):
                 start = first_marker
                 while start > 0 and inert_stmt(body[start - 1]):
                     start -= 1
+                if start < first_marker and any(mentions_unresolved(st) for st in body[start:first_marker]):
+                    # the run feeds a value the trace lost: keep it, it is not dead
+                    start = first_marker
                 if start < first_marker:
                     s0, _ = rng(body[start])
                     ms, _ = rng(body[first_marker])
@@ -1046,6 +1087,9 @@ def _trim_dead_stub_bodies(text):
                     ml = btext.rfind(b"\n", 0, ms) + 1
                     if btext[ls:s0].strip(b" \t") == b"" and btext[ml:ms].strip(b" \t") == b"":
                         edits.append((ls, ml, b""))
+                        _record_trim("inert run before a devirt marker (lines %d-%d of the lift)"
+                                     % (btext.count(b"\n", 0, ls) + 1, btext.count(b"\n", 0, ml)),
+                                     btext[ls:ml].decode("utf-8", "surrogateescape"))
                 for st in body[first_marker + 1:]:
                     if _marker_shaped(st):
                         continue
@@ -1066,14 +1110,50 @@ def _trim_dead_stub_bodies(text):
     return _apply_edits(btext, edits).decode("utf-8", "surrogateescape")
 
 
+def _replace_error_markers(text):
+    """A marker is a note in the output, not a landmine in it.
+
+    `error("devirt: ...")` stops the whole script at the first place the walk
+    could not follow -- including the hundreds of statements after it that were
+    lifted fine. The same sentence as a `-- devirt: ...` comment keeps the hole
+    visible (and countable, which is what this engine's gate measures) while
+    letting the rest of the script run. Nothing is invented: the statements that
+    could not be lifted are still missing, and still say so.
+    """
+    def repl(m):
+        msg = m.group(1)
+        indent = m.group("indent")
+        return "%s-- %s" % (indent, msg)
+    pat = re.compile(r'^(?P<indent>[ \t]*)error\("(devirt:[^"]*)"\)\s*$', re.M)
+    return pat.sub(repl, text)
+
+
+DEGENERATE_WRITE = re.compile(
+    r"^[ \t]*;?[ \t]*\(nil\)(?:\.\w+|\[[^\]]*\])(?:\s*=\s*[^\n]*)?\s*$", re.M)
+
+
+def _drop_degenerate_writes(text):
+    """`(nil).reason = nil` is what an undecoded register index leaves behind.
+
+    It parses, it is not the script, and running it raises. Drop the write and
+    leave one comment where it was: the value that should have been written is
+    the same value the marker above it says is missing.
+    """
+    def repl(m):
+        indent = re.match(r"[ \t]*", m.group(0)).group(0)
+        return indent + "-- devirt: dropped a write through an undecoded register"
+    return DEGENERATE_WRITE.sub(repl, text)
+
+
 def _mark_truncated_loops(text):
-    """An empty `while true do end` is not source: it spins forever.
+    """An empty `while true do` is not source: it spins forever.
 
     It appears when the walk stops before the loop body (the run report calls
-    that "stopped in an endless loop"). Runnable output that hangs the client is
-    worse than an obvious failure, and every other unresolved point in this
-    output already says so with an `error("devirt: ...")` marker, so this one
-    does the same.
+    that "stopped in an endless loop"). The honest replacement is a hole that
+    says what it is and does not run: the body is unknown, so inventing one
+    would be worse than admitting it, and raising would take the whole script
+    down at the first such point. A `-- devirt: ...` comment is also countable,
+    which is what the gate for this engine is.
     """
     try:
         root = _parse_ast(text)
@@ -1082,7 +1162,7 @@ def _mark_truncated_loops(text):
     btext = text.encode("utf-8")
     starts = _line_starts(btext)
     edits = []
-    marker = b'error("devirt: loop body truncated (the walk stopped before it)")'
+    marker = b'-- devirt: loop body not recovered (the trace stopped before it ran)'
 
     def visit(node):
         if not isinstance(node, dict):
@@ -1108,9 +1188,6 @@ def _mark_truncated_loops(text):
     if not edits:
         return text
     return _apply_edits(btext, edits).decode("utf-8", "surrogateescape")
-
-
-UNRESOLVED_CAPTURE = re.compile(r"\bupv(\d+)(?:_(\d+))?\b")
 
 
 def _declare_unresolved_captures(text):
@@ -1148,8 +1225,10 @@ def _declare_unresolved_captures(text):
             continue
         body = re.sub(r"\b%s\b" % re.escape(nm), "unresolvedCapture%d" % (i + 1), body)
 
-    decl = ["-- Captured values the walk could not follow across scopes. They are nil",
-            "-- here, so a function that needs one stops where the original had a value."]
+    decl = ["-- unresolved: %d captured values the walk could not follow across scopes."
+            % len(free),
+            "-- They are nil here, so a function that needs one stops where the",
+            "-- original had a value; each use below says what shape it expected."]
     for i in range(0, len(free), 6):
         # one `local` per line: a bare newline inside a name list is not a
         # continuation in Lua, and repeating `local` with disjoint names is valid
@@ -1160,6 +1239,80 @@ def _declare_unresolved_captures(text):
     while at < len(lines) and (lines[at].startswith("--") or not lines[at].strip()):
         at += 1
     return "\n".join(lines[:at] + header.rstrip("\n").split("\n") + [""] + lines[at:])
+
+
+UNRESOLVED_USE = re.compile(r"\b(unresolvedCapture\d+)\b")
+
+
+def _use_hint(line, name):
+    """What the code does with `name` on this line -- the closest thing to a
+    type the trace still has. Never a guess at the value, only at its shape."""
+    rest = line
+    kind = []
+    if re.search(r"\b%s\s*\(" % re.escape(name), rest):
+        kind.append("callable")
+    if re.search(r"\b%s\s*[.\[]" % re.escape(name), rest):
+        kind.append("table")
+    if re.search(r"\b%s\s*(\.\.|[-+*/%%^])" % re.escape(name), rest) or \
+            re.search(r"(\.\.|[-+*/%%^])\s*\b%s\b" % re.escape(name), rest):
+        kind.append("number")
+    if re.search(r"\b(?:tostring|format)\s*\([^)]*\b%s\b" % re.escape(name), rest):
+        kind.append("string")
+    if re.search(r"\b%s\s*==\s*[\"']" % re.escape(name), rest) or \
+            re.search(r"[\"']\s*==\s*\b%s\b" % re.escape(name), rest):
+        kind.append("string")
+    if re.search(r"\b(?:typeof|type)\s*\(\s*%s\s*\)" % re.escape(name), rest):
+        kind.append("checked")
+    return "? ".join(kind) if kind else "unknown"
+
+
+def _hint_unresolved_captures(text):
+    """Say, at every use, what the code expects the lost value to be.
+
+    `unresolvedCapture7()` with nothing else told the reader it was a global
+    that happens to be nil. The call tells us it was a function; the index tells
+    us it was a table. Those hints come from the line itself, so they are a fact
+    about the script, not an invented value.
+    """
+    out = []
+    decl_only = re.compile(r"^\s*local\s+[A-Za-z_0-9\s,]+$")
+    for line in text.split("\n"):
+        m = UNRESOLVED_USE.search(line)
+        if not m or line.lstrip().startswith("--") or decl_only.match(line.split("--", 1)[0].rstrip()):
+            out.append(line)
+            continue
+        code = line.split("--", 1)[0]
+        names = []
+        for mm in UNRESOLVED_USE.finditer(code):
+            if mm.group(1) not in names:
+                names.append(mm.group(1))
+        hints = ", ".join("#%s %s" % (nm.replace("unresolvedCapture", ""), _use_hint(code, nm))
+                          for nm in names)
+        note = "  -- unresolved: " + hints
+        if _line_can_take_comment(code):
+            out.append(line.rstrip() + note)
+        else:
+            # the statement runs on: put the hint above it, at the same indent
+            indent = line[:len(line) - len(line.lstrip())]
+            out.append(indent + "-- unresolved: " + hints)
+            out.append(line)
+    return "\n".join(out)
+
+
+def _line_can_take_comment(code):
+    """A trailing `-- ...` is only safe where the statement ends on this line."""
+    code = code.rstrip()
+    if not code:
+        return False
+    if re.search(r"(?:[-+*/%^=<>~.,]|\band|\bor\b|\bnot\b|\bthen|\bdo|\belse|\bin\b)\s*$", code):
+        return False
+    depth = 0
+    for ch in code:
+        if ch in "([{":
+            depth += 1
+        elif ch in ")]}":
+            depth -= 1
+    return depth == 0
 
 
 def _split_single_value_locals(text):
@@ -1351,6 +1504,18 @@ def polish_ast(text):
         text = _declare_unresolved_captures(text)
     except Exception as ex:                        # never lose a working output
         print("[!] unresolved capture pass failed: %s" % ex, file=sys.stderr)
+    try:
+        text = _hint_unresolved_captures(text)
+    except Exception as ex:                        # never lose a working output
+        print("[!] unresolved hint pass failed: %s" % ex, file=sys.stderr)
+    try:
+        text = _replace_error_markers(text)
+    except Exception as ex:                        # never lose a working output
+        print("[!] marker comment pass failed: %s" % ex, file=sys.stderr)
+    try:
+        text = _drop_degenerate_writes(text)
+    except Exception as ex:                        # never lose a working output
+        print("[!] degenerate write pass failed: %s" % ex, file=sys.stderr)
     try:
         text = _mark_truncated_loops(text)
     except Exception as ex:                        # never lose a working output

@@ -786,6 +786,14 @@ class FunctionLifter:
         nm = parent_names.get(("up", idx))
         if nm is not None:
             return nm
+        # A plain (by-value or boxed) upvalue keeps its index across a closure
+        # boundary: the parent's upvalue `i` is what the child receives as its
+        # upvalue `i`, and the parent names its own under the plain index. This
+        # is the lookup that was missing -- without it every non-frame capture
+        # fell through to `upv%d` and the output read an undeclared global.
+        nm = parent_names.get(idx)
+        if nm is not None:
+            return nm
         for k, v in parent_names.items():
             if isinstance(k, tuple) and len(k) == 2 and k[0] == "up" \
                     and isinstance(k[1], tuple) and k[1] and k[1][0] == idx:
@@ -808,6 +816,17 @@ class FunctionLifter:
             return f
         if id(proto) in self.lifted:
             return CG.FuncE(["function(...) --[[ recursive proto ]] end"])
+        if not c.upvals:
+            # The step that would have filled these in never ran (the walk left
+            # the closure before it finalised), so read the captured table we
+            # already hold: without names every upvalue read printed as `upvN`.
+            ups_tbl = getattr(c, "_ups_tbl", None)
+            if isinstance(ups_tbl, LTable) and ups_tbl.h:
+                from obfuscators.luraph_v15.lifter import extract_upvals_table
+                entries, base = extract_upvals_table(ups_tbl, False)
+                if entries:
+                    c.upvals[:] = entries
+                    c.upval_base = base
         capnames = getattr(c, "capnames", {})
         upnames = {}
         fmap = getattr(c, "frame_map", {})
@@ -837,9 +856,26 @@ class FunctionLifter:
                 upnames[i] = capnames.get(e.reg, "nil")
             elif isinstance(e, (BoxProxy, Upval)):
                 got = self._parent_up(parent_names, e.idx)
+                if got is None and os.environ.get("DEVIRT_UP_DEBUG"):
+                    print("[up] miss %s idx=%s proto=%s parent_keys=%r"
+                          % (type(e).__name__, e.idx,
+                             self.prog.dump.pid_of_table.get(proto.tid),
+                             sorted(parent_names.items(), key=repr)[:12]),
+                          file=sys.stderr)
                 upnames[i] = got if got is not None else "upv%d" % e.idx
             else:
                 upnames[i] = "nil"
+        if not upnames and parent_names:
+            # No capture table for this closure at all (the walk reached it from a
+            # path that never recorded one), yet its body reads upvalues. The
+            # indices it reads are the ones the parent holds, so take the parent's
+            # names instead of inventing `upvN` -- an invented name is a global
+            # that does not exist, while the parent's name is the real capture.
+            upnames.update({k: v for k, v in parent_names.items() if v and v != "nil"})
+        if os.environ.get("DEVIRT_UP_DEBUG") and not upnames:
+            print("[up] no names proto=%s upvals=%r ups_tbl=%r base=%r"
+                  % (self.prog.dump.pid_of_table.get(proto.tid), c.upvals,
+                     getattr(c, "_ups_tbl", None), ub), file=sys.stderr)
         params = ["..."]
         fidx = [i for i, e in enumerate(c.upvals, ub) if isinstance(e, (RegFile, FrameProxy))]
         cvm = getattr(c, "vm", None) or vm

@@ -2008,21 +2008,7 @@ class ProtoLifter:
         return c
 
     def _extract_upvals_table(self, ups):
-        if not isinstance(ups, LTable) or not ups.h:
-            return [], 1
-        int_keys = [k for k in ups.h if isinstance(k, int) and not isinstance(k, bool)]
-        if getattr(self, "_is_v14", False):
-            # Luraph v14 upvalue tables are 0-based; key 0 is simply absent
-            # when that upvalue was nil at closure creation, so the
-            # presence test below would shift every index by one.
-            if int_keys:
-                m = max(int_keys)
-                return [ups.get(i) for i in range(0, m + 1)], 0
-            return [], 0
-        if int_keys and 0 in ups.h:
-            m = max(int_keys)
-            return [ups.get(i) for i in range(0, m + 1)], 0
-        return [ups.get(i) for i in range(1, ups.length() + 1)], 1
+        return extract_upvals_table(ups, getattr(self, "_is_v14", False))
 
     def _note_captured_upvals(self, entries):
         for e in entries:
@@ -2041,6 +2027,32 @@ class ProtoLifter:
                 c.upvals[:] = entries
                 c.upval_base = upval_base
                 self._note_captured_upvals(entries)
+
+def extract_upvals_table(ups, is_v14=False):
+    """(entries, base) of a closure's upvalue table: index order and origin.
+
+    Luraph v14 tables are 0-based; key 0 is simply absent when that upvalue was
+    nil at closure creation, which is why v14 cannot use the presence test the
+    v15 tables are read with.
+
+    Kept as a module function so the devirtualizer can materialise a closure's
+    upvalues even when the step that would have finalised them never ran -- an
+    empty upvalue list used to be indistinguishable from "no captures", and
+    every upvalue read then printed as `upv4`, a name nothing declares.
+    """
+    if not isinstance(ups, LTable) or not ups.h:
+        return [], 1
+    int_keys = [k for k in ups.h if isinstance(k, int) and not isinstance(k, bool)]
+    if is_v14:
+        if int_keys:
+            m = max(int_keys)
+            return [ups.get(i) for i in range(0, m + 1)], 0
+        return [], 0
+    if int_keys and 0 in ups.h:
+        m = max(int_keys)
+        return [ups.get(i) for i in range(0, m + 1)], 0
+    return [ups.get(i) for i in range(1, ups.length() + 1)], 1
+
 
 def lst_nkey(lst):
     return lst.nkey if lst.nkey is not None else b"n"

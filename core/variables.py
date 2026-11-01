@@ -248,9 +248,16 @@ def webs(entry, blocks):
         def_web[k] = uf.find(k)
     return use_web, def_web
 
-def rename(entry, blocks, prefix, captured):
+def rename(entry, blocks, prefix, captured, avoid=()):
     """Replace registers by LocalName variables. Returns {web: name}.
-    `captured`: registers captured by closures (never split: one variable)."""
+    `captured`: registers captured by closures (never split: one variable).
+    `avoid`: names this function must not declare. A closure reads its parent's
+    variables under the parent's names, and those names are fixed; the closure's
+    own registers are numbered from the same prefix, so `r46` of the child and
+    the parent's captured `r46` land on the same word and the child's local
+    silently hides the capture (`isTool(callback)` calling the tool predicate).
+    Skip the taken words here, where the name is actually chosen."""
+    avoid = frozenset(avoid)
     use_web, def_web = webs(entry, blocks)
     names = {}
     counter = {}
@@ -272,8 +279,13 @@ def rename(entry, blocks, prefix, captured):
         n = names.get(web)
         if n is None:
             k = counter.get(reg, 0)
-            counter[reg] = k + 1
-            n = names[web] = "%s%s" % (prefix, reg) + ("" if k == 0 else "_%d" % k)
+            while True:
+                cand = "%s%s" % (prefix, reg) + ("" if k == 0 else "_%d" % k)
+                k += 1
+                if cand not in avoid:
+                    break
+            counter[reg] = k
+            n = names[web] = cand
         return n
 
     def ren_use(bid, i):

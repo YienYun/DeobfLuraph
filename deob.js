@@ -26,6 +26,8 @@ function parseArgs(argv) {
     keepPreamble: false,
     timeout: 90,
     budget: 30,
+    loopFuel: 65536,
+    spinFuel: 64,
     maxRuns: 12,
     devirtRounds: 200,
     executor: 'Wave',
@@ -63,6 +65,8 @@ function parseArgs(argv) {
     else if (a === '--timeout') { args.timeout = Number(valueAt(++i, a)); }
     else if (a === '--prelude-file') { args.preludeFile = valueAt(++i, a); }
     else if (a === '--budget') { args.budget = Number(valueAt(++i, a)); }
+    else if (a === '--loop-fuel') { args.loopFuel = Number(valueAt(++i, a)); }
+    else if (a === '--spin-fuel') { args.spinFuel = Number(valueAt(++i, a)); }
     else if (a === '--max-runs') { args.maxRuns = Number(valueAt(++i, a)); }
     else if (a === '--devirt-rounds') { args.devirtRounds = Number(valueAt(++i, a)); }
     else if (a === '--executor') { args.executor = valueAt(++i, a); }
@@ -91,6 +95,7 @@ function parseArgs(argv) {
   }
 
   for (const [name, value] of [['--timeout', args.timeout], ['--budget', args.budget],
+    ['--loop-fuel', args.loopFuel], ['--spin-fuel', args.spinFuel],
     ['--max-runs', args.maxRuns], ['--devirt-rounds', args.devirtRounds]]) {
     if (!Number.isSafeInteger(value) || value <= 0) throw new Error(`${name} must be a positive integer`);
   }

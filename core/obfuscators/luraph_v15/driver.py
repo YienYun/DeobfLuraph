@@ -134,6 +134,16 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None):
     of one round per link)."""
     from obfuscators.luraph_v15 import devirt
     args = job.args
+    try:
+        # Whatever the polish trims goes next to the result instead of away:
+        # a reader can check what was cut and why, and the result stays clean.
+        import ast_polish
+        ast_polish.TRIMMED = []
+        ast_polish.TRIM_PATH = (dpath[:-4] if dpath.endswith(".lua") else dpath) + ".trimmed.lua"
+        if os.path.exists(ast_polish.TRIM_PATH):
+            os.remove(ast_polish.TRIM_PATH)
+    except Exception:
+        pass
     requested = set()
     ordered_reqs = []
     last_bufs = ""
@@ -258,7 +268,11 @@ def run(job):
     for attempt in range(1, args.max_runs + 1):
 
         cfg = {"time_budget": args.budget, "dump_strings": args.strings, "executor": args.executor,
-               "skip_protos": skip}
+               "skip_protos": skip,
+               # how long a loop may repeat before the trace stops it, and how
+               # many identical repetitions count as a spin (see envlog)
+               "loop_fuel": getattr(args, "loop_fuel", None) or 65536,
+               "spin_fuel": getattr(args, "spin_fuel", None) or 64}
         if args.input_text is not None:
             cfg["input_text"] = args.input_text
         if args.no_fold:

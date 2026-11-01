@@ -206,6 +206,8 @@ async function run(job) {
             budget: args.budget,
             timeout: args.timeout,
             devirt_rounds: args.devirtRounds || 200,
+            loop_fuel: args.loopFuel || 65536,
+            spin_fuel: args.spinFuel || 64,
             studio: false,
             no_fold: args.noFold || false,
             strings: args.strings || false,

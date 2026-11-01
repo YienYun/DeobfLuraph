@@ -654,7 +654,7 @@ A site that fails any check is counted by reason and left untouched; the table i
 |---|---|---|---|---|---|---|
 | `samples/differential/RideAPet/output.lua` | 13 | 13 | none | 4 + 9 inline | 96 | 10,223 |
 | `samples/differential/StealAnEgg/output.lua` | 38 | 38 | none | 16 + 22 inline | 173 | 50,418 |
-| `samples/output/Luraph/SampleV1.lua` | 43 | 43 | none | 16 + 27 inline | 186 | 43,853 |
+| `samples/output/Luraph/SampleV1.lua` | 43 | 43 | none | 16 + 27 inline | 186 | 43,771 |
 
 "4 + 9 inline" means four sites got a declaration line of their own and nine got
 a `local ` prefix on the reuse statement.
@@ -727,49 +727,49 @@ into, and every line in the shipped file that uses the new name:
 
 | binding | declared | split into | declared at | renamed reads and writes |
 |---|---|---|---|---|
-| `S` | 4228 | `S_2` | 4244 | 4244, 4245, 4246, 4263, 4265 |
-| `EM` | 7892 | `EM_2` | 7919 | 7919, 7921, 8535, 8536 |
-| `FM` | 7943 | `FM_2` | 7953 | 7953, 7959 |
-| `TM` | 7954 | `TM_2` | 8432 | 8432, 8433 |
-| `IM` | 10833 | `IM_2` | 10839 | 10840, 10877, 10877, 10884, 10884, 10885, 10907, 10910, 10912, 10915 |
-| `HM` | 11718 | `HM_2` | 11737 | 11737, 11738, 11739, 11741, 11741, 11741 |
-| `gg` | 12524 | `gg_2` | 12528 | 12529, 12532, 12533, 12536, 12537, 12540 |
-| `yF` | 12851 | `yF_2` | 12914 | 12915, 12919 |
-| `oF` | 13637 | `oF_2` | 13641 | 13641, 13642, 13643, 13647, 13666, 13667 |
-| `EM` | 13644 | `EM_3` | 13657 | 13657, 13658, 13659, 13660, 13661, 13662, 13663 |
-| `EM` | 13760 | `EM_4` | 13813 | 13813, 13814, 13815 |
-| `HM` | 15778 | `HM_3` | 15801 | 15801, 15802 |
-| `fM` | 16557 | `fM_2` | 16713 | 16713, 16714 |
-| `TM` | 16569 | `TM_3` | 16575 | 16576, 16578, 16581, 16588, 16593, 16597 |
-| `I` | 16746 | `I_2` | 16761 | 16761, 16762 |
-| `QM` | 18677 | `QM_2` | 18820 | 18820, 18821 |
-| `lM` | 20235 | `lM_2` | 20248 | 20249, 20252, 20254, 20256, 20260 |
-| `lM` | 21693 | `lM_3` | 21724 | 21725, 21783 |
-| `CM` | 27666 | `CM_2` | 27760 | 27760, 27761 |
-| `HM` | 29277 | `HM_4` | 29290 | 29291, 29295 |
-| `uM` | 29303 | `uM_2` | 29384 | 29384, 29385, 29386, 29387, 29403, 29412, 29417, 29419, 29661 |
-| `AM` | 29976 | `AM_2` | 30012 | 30012, 30013, 30014, 30015, 30020 |
-| `FM` | 30595 | `FM_3` | 30632 | 30634, 30636, 30654, 30656, 30656, 30679, 30680 |
-| `EM` | 31855 | `EM_5` | 31879 | 31879, 31880, 31881 |
-| `H` | 33213 | `H_2` | 33390 | 33390, 33391, 33392, 33393, 33394 |
-| `e` | 35110 | `e_2` | 35270 | 35270, 35271 |
-| `B` | 35450 | `B_2` | 35459 | 35459, 35461, 35461, 35461, 35461, 35463 |
-| `A` | 36246 | `A_2` | 36360 | 36360, 36401, 36401 |
-| `Y` | 37283 | `Y_2` | 37441 | 37441, 37442 |
-| `FM` | 38042 | `FM_4` | 38125 | 38125, 38126, 38126 |
-| `IM` | 38877 | `IM_3` | 38904 | 38905, 38907 |
-| `Zg` | 39187 | `Zg_2` | 39344 | 39345, 39348, 39580, 39581, 39594, 40309, 40310, 40310, 40310, 40310, 40310, 40311, 40404, 40405 |
-| `fg` | 39687 | `fg_2` | 39740 | 39740, 39741, 40331, 40332, 40332, 40332, 40332, 40332, 40332, 40333, 40334, 40335, 40336, 40340, 40386 |
-| `eg` | 39696 | `eg_2` | 39982 | 40006, 40007, 40008, 40009, 40328, 40329, 40387, 40390, 40414, 40415 |
-| `Lg` | 39717 | `Lg_2` | 39867 | 39867, 39869, 40004, 40005, 40005, 40272, 40274, 40282, 40282, 40283, 40283, 40288, 40289, 40296, 40300, 40301 |
-| `m` | 39920 | `m_2` | 40269 | 40292, 40293, 40328, 40330, 40387, 40393 |
-| `t` | 40258 | `t_2` | 40305 | 40305, 40306, 40351, 40352 |
-| `V` | 40342 | `V_2` | 40395 | 40396, 40398 |
-| `a` | 40899 | `a_2` | 40928 | 40929, 40930 |
-| `v` | 41220 | `v_2` | 41242 | 41242, 41243, 41243, 41243 |
-| `AM` | 41369 | `AM_3` | 41435 | 41435, 41436, 41437, 41438, 41439, 41440, 41441, 41444, 41445, 41446 |
-| `mM` | 41380 | `mM_2` | 41421 | 41423, 41425, 41442, 41443, 41444 |
-| `jM` | 41403 | `jM_2` | 41421 | 41423, 41425 |
+| `clampValue2` | 4221 | `clampValue2_2` | 4237 | 4237, 4238, 4239, 4256, 4258 |
+| `RunService2` | 7885 | `RunService2_2` | 7912 | 7912, 7914, 8527, 8528 |
+| `callback38` | 7936 | `callback38_2` | 7946 | 7946, 7952 |
+| `callback39` | 7947 | `callback39_2` | 8424 | 8424, 8425 |
+| `callback60` | 10754 | `callback60_2` | 10760 | 10761, 10798, 10798, 10805, 10805, 10806, 10828, 10831, 10833, 10836 |
+| `callback39` | 11639 | `callback39_3` | 11658 | 11658, 11659, 11660, 11662, 11662, 11662 |
+| `callback58` | 12445 | `callback58_2` | 12449 | 12450, 12453, 12454, 12457, 12458, 12461 |
+| `callback66` | 12772 | `callback66_2` | 12835 | 12836, 12840 |
+| `callback79` | 13558 | `callback79_2` | 13562 | 13562, 13563, 13564, 13568, 13587, 13588 |
+| `listLayout` | 13565 | `listLayout_2` | 13578 | 13578, 13579, 13580, 13581, 13582, 13583, 13584 |
+| `callback78` | 13681 | `callback78_2` | 13734 | 13734, 13735, 13736 |
+| `callback42` | 15699 | `callback42_2` | 15722 | 15722, 15723 |
+| `callback42` | 16478 | `callback42_3` | 16634 | 16634, 16635 |
+| `callback43` | 16490 | `callback43_2` | 16496 | 16497, 16499, 16502, 16509, 16514, 16518 |
+| `callback43` | 16667 | `callback43_3` | 16682 | 16682, 16683 |
+| `colorizeText` | 18598 | `colorizeText_2` | 18741 | 18741, 18742 |
+| `callback57` | 20156 | `callback57_2` | 20169 | 20170, 20173, 20175, 20177, 20181 |
+| `callback53` | 21614 | `callback53_2` | 21645 | 21646, 21704 |
+| `callback124` | 27587 | `callback124_2` | 27681 | 27681, 27682 |
+| `callback48` | 29198 | `callback48_2` | 29211 | 29212, 29216 |
+| `callback49` | 29224 | `callback49_2` | 29305 | 29305, 29306, 29307, 29308, 29324, 29333, 29338, 29340, 29582 |
+| `createTextLabel` | 29897 | `createTextLabel_2` | 29933 | 29933, 29934, 29935, 29936, 29941 |
+| `callback59` | 30516 | `callback59_2` | 30553 | 30555, 30557, 30575, 30577, 30577, 30600, 30601 |
+| `callback53` | 31776 | `callback53_3` | 31800 | 31800, 31801, 31802 |
+| `callback50` | 33134 | `callback50_2` | 33311 | 33311, 33312, 33313, 33314, 33315 |
+| `callback48` | 35031 | `callback48_3` | 35191 | 35191, 35192 |
+| `callback48` | 35371 | `callback48_4` | 35380 | 35380, 35382, 35382, 35382, 35382, 35384 |
+| `callback58` | 36167 | `callback58_3` | 36281 | 36281, 36322, 36322 |
+| `readJsonFile` | 37204 | `readJsonFile_2` | 37362 | 37362, 37363 |
+| `callback68` | 37963 | `callback68_2` | 38046 | 38046, 38047, 38047 |
+| `callback90` | 38798 | `callback90_2` | 38825 | 38826, 38828 |
+| `listLayout` | 39108 | `listLayout_3` | 39265 | 39266, 39269, 39501, 39502, 39515, 40228, 40229, 40229, 40229, 40229, 40229, 40230, 40323, 40324 |
+| `parent4` | 39608 | `parent4_2` | 39661 | 39661, 39662, 40250, 40251, 40251, 40251, 40251, 40251, 40251, 40252, 40253, 40254, 40255, 40259, 40305 |
+| `callback98` | 39617 | `callback98_2` | 39901 | 39925, 39926, 39927, 39928, 40247, 40248, 40306, 40309, 40333, 40334 |
+| `uiPadding` | 39638 | `uiPadding_2` | 39786 | 39786, 39788, 39923, 39924, 39924, 40191, 40193, 40201, 40201, 40202, 40202, 40207, 40208, 40215, 40219, 40220 |
+| `rsH` | 39839 | `rsH_2` | 40188 | 40211, 40212, 40247, 40249, 40306, 40312 |
+| `callback101` | 40177 | `callback101_2` | 40224 | 40224, 40225, 40270, 40271 |
+| `home` | 40261 | `home_2` | 40314 | 40315, 40317 |
+| `callback95` | 40818 | `callback95_2` | 40847 | 40848, 40849 |
+| `callback98` | 41139 | `callback98_3` | 41161 | 41161, 41162, 41162, 41162 |
+| `parent2` | 41288 | `parent2_2` | 41354 | 41354, 41355, 41356, 41357, 41358, 41359, 41360, 41363, 41364, 41365 |
+| `uiCorner` | 41299 | `uiCorner_2` | 41340 | 41342, 41344, 41361, 41362, 41363 |
+| `callback102` | 41322 | `callback102_2` | 41340 | 41342, 41344 |
 
 Each refreshed output was compared against the previous committed one, and every
 added line is a renamed copy of a removed line, a declaration line, the
@@ -798,6 +798,11 @@ Every output still parses (`bin/luau-ast`), and the set of globals each file
 touches is byte-for-byte the same as before the pass (68 / 93 / 91 names, nothing
 added, nothing lost), which is what rules out a new local shadowing a global.
 
+The `SampleV1` line numbers and blank counts quoted in this section are the state
+at the category-W commit; §13 removes 82 lines from the same file by resolving
+captures the namer had left as `nil`. Category W itself is unchanged by that fix
+(43 sites, 43 split, 16 declaration lines, 27 inline).
+
 `test/namesplit.test.js` pins the cases that could break the proof: the
 declaration is emitted for a single-target and for a multi-target reuse, a read
 before the first assignment keeps the closure's name, a read inside a closure
@@ -807,3 +812,125 @@ variable is skipped, a compound assignment is handled or skipped, the split is
 idempotent, the result still parses, and a second binding with the same name gets
 the next number rather than `name_22`. 24 tests, 7 of category X and 17 of
 category W.
+
+## 13. The Capture That Was Never Followed: an upvalue slot read from the wrong field
+
+### What the output looked like
+
+`samples/output/Luraph/SampleV1.lua` opened with a confession and then used it:
+
+```lua
+-- unresolved: 21 captured values the walk could not follow across scopes.
+-- They are nil here, so a function that needs one stops where the
+-- original had a value; each use below says what shape it expected.
+local unresolvedCapture1, unresolvedCapture2, ... unresolvedCapture21
+
+local function reach()
+	if unresolvedCapture1() then          -- attempt to call a nil value
+```
+
+185 uses of 21 names, every one of them `nil`. In an executor the script died at
+the first one that ran; that is what "stuck / crash" was. The names were not a
+missing feature -- the values were in the dump the whole time, under the wrong
+key.
+
+### Where it came from
+
+Luraph's `W:kk(kp, ku, upv_tbl, ...)` closure maker takes its upvalue table as an
+argument: `upv_tbl = {[slot] = holder, ...}`. The body's `upval i` reads
+`holder[slot]`, so the name to print is `holder[slot]` and the only thing needed
+is `slot` -- which comes from `u_desc`, a flat table of triplets written by the
+gentleman as `(tag, field2, field3)`.
+
+`_lift_wkk` (`core/obfuscators/luraph_v15/vm_model.py`) read `slot` from a fixed
+field, the third one. That is not where the slot lives, and which of the two
+trailing fields carries it depends on the VM that produced the dump:
+
+| fixture | `field2` in a table of 17 | `field3` in a table of 17 | holder keys |
+|---|---|---|---|
+| `SampleV1` | `8, 9, 10, ...` (the slots) | `3, 3, 3, ...` (a small tag) | `8..24` |
+| `StealAnEgg` | `5394, 5394, 5394, ...` (a constant tag) | `8, 9, 10, ...` (the slots) | `8..24` |
+
+So on one sample every lookup missed (156 misses, 10 distinct tables) and the
+name fell through to `upv%d`, an undeclared identifier -- nil by accident rather
+than by evidence. On the other sample the fixed field sometimes *did* land on a
+key (`1` and `3` are ordinary slots too), which is worse: it printed a real name
+belonging to a different capture, silently. `SampleV1`'s `callback34` read
+`context.rigState.Character` and `context.rigState()` where the same hub function
+in `StealAnEgg` -- lifted from the already-correct encoding -- read
+`context.localPlayer.Character` and `context.callback()`.
+
+### The rule
+
+The upvalue table is its own oracle: its keys *are* the slots. Take `field2` when
+it is a key of that table, else `field3` when it is, else leave the honest
+`upvN` hole. No guess, no invented name, and the choice is per upvalue, not per
+table -- the two encodings can be mixed inside one program.
+
+### Evidence
+
+| | `SampleV1` before | after |
+|---|---|---|
+| `unresolved_uses` / `distinct` | 185 / 21 | **0 / 0** |
+| `-- unresolved:` header lines | 8 | 0 |
+| `unresolvedCapture` identifiers | 161 | 0 |
+| lines / bytes | 43,853 / 1,493,490 | 43,771 / 1,487,897 |
+| `blank_lines` | 4,743 | 4,740 |
+| `bit32_calls` | 49 | 49 |
+| `bit32_chain_lines` | 14 | 14 |
+| `(nil)(` | 1 at 43,596 | 1 at 43,514 |
+| globals touched | 91 | 91 (same set) |
+
+Only names and the comments that described them changed; the statement stream did
+not. Counted syntactically (comments and strings stripped, identifiers collapsed
+to one class): `local` -4 and `,` -17 are exactly the removed header (`4`
+declarations, `17` commas between 21 names); `NAME` +143 and `.` +164 are
+`unresolvedCapture7` becoming `context.callback19` and the like. No keyword and no
+operator count moved.
+
+`StealAnEgg` and `RideAPet` rebuild **byte-identical** to their committed outputs,
+so the fix does not disturb the encoding that was already read correctly, and
+`SampleV1` is deterministic (two builds, same bytes).
+
+Cross-sample check, `callback34`, the same function in both hub scripts:
+
+```lua
+-- StealAnEgg (unchanged, correct before and after)
+local character = context.localPlayer.Character
+if not context.callback() and humanoid and not (humanoid.Health <= 0) then
+	local at = context.rigState.at
+	if context.lastMV then
+-- SampleV1 before this fix
+local character = context.rigState.Character
+if not context.rigState() and humanoid and not (humanoid.Health <= 0) then
+	local at = context.rigState.at
+	if context.localPlayer then
+-- SampleV1 after
+local character = context.localPlayer.Character
+if not context.callback() and humanoid and not (humanoid.Health <= 0) then
+	local at = context.rigState.at
+	if context.lastMV then
+```
+
+Gates unchanged: `bit32_calls` 49 with per-op `band 14, bnot 1, bor 0, bxor 16,
+lshift 6, rshift 12` (inside the bound 14 / 1 / 0 / 16 / 6 / 12 and equal to the
+previous exact count), `bit32_chain_lines` 14, `empty_while_true` 0, and the one
+remaining `(nil)(` site moved only because 82 lines above it went away.
+
+### What this does not fix
+
+Three holes are still in the output, and they are gaps, not bugs:
+
+- **One `return (nil)(nil, nil)`** (line 43,514): a tamper trap whose callee is a
+  constant nil no decoder produced. `codegen` already drops such a call when it is
+  a statement (`structure.prune_after_trap` cuts its successors); in *return*
+  position there is nothing to cut, and the honest replacement -- `return nil` --
+  would change control flow at a point where the original always raised. It stays
+  visible so it can be counted; naming the callee `Color3.fromRGB` would be a
+  guess, not a lift.
+- **Ten spin loops** dropped with a `-- devirt:` comment: the original busy-waits,
+  the output does not.
+- Anything a script does only through those two holes is still missing.
+
+So: the crash that came from calling an unresolved capture is gone, 21 values are
+recovered, and the output is now honest about the one call it cannot name.

@@ -73,7 +73,8 @@ True, `devirt_comments` 4, `(nil)(...)` 0, `bit32_calls` 74, blank 5,613,
 `frame_propagation: bound=0 residual_unknown=116`.
 
 Both outputs are deterministic: running either input twice gives byte-identical
-files.
+files. Neither fixture changes in §13 (the upvalue-slot fix), which is the check
+that the fix does not disturb the encoding those two already read correctly.
 
 ## Expected results at v0.5 (`6c45797`, tag `v0.5-p4-callee-slot`)
 

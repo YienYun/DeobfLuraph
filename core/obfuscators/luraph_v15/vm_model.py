@@ -129,16 +129,38 @@ class _PlainPrinter(LA.Printer):
         entries = []
         upnames = {}
         if isinstance(u_desc, LTable):
+            # `u_desc` is a flat run of triplets, one per upvalue:
+            #
+            #     (tag, field2, field3)
+            #
+            # The upvalue table the caller passes as the closure's upvalue list
+            # is `{[slot] = holder, ...}`, so the body's `upval i` reads
+            # `holder[slot]`. Which of the two trailing fields carries that slot
+            # is not fixed across the VMs this engine reads: one sample puts it
+            # in field2 with field3 a small kind tag (1 / 3), another puts it in
+            # field3 with field2 a constant tag. Reading a fixed field therefore
+            # named the capture after whatever sat under key 1 or 3, and when
+            # nothing did it printed `upvN` -- an undeclared name, i.e. nil, which
+            # crashed the moment the script called one.
+            #
+            # The holder table itself says which field is the slot: its keys are
+            # exactly the slots, so the field whose value is present there is the
+            # one to use. Anything else stays an honest `upvN` hole.
             count = u_desc.length() // 3
             for idx in range(1, count + 1):
-                kind = u_desc.get((idx - 1) * 3 + 1)
-                slot = u_desc.get((idx - 1) * 3 + 3)
-                entries.append(BoxProxy(idx) if kind == 2 else UpContainer(idx))
-                if isinstance(slot, int) and slot in slot_holders:
+                f2 = u_desc.get((idx - 1) * 3 + 2)
+                f3 = u_desc.get((idx - 1) * 3 + 3)
+                if isinstance(f2, int) and f2 in slot_holders:
+                    slot = f2
+                elif isinstance(f3, int) and f3 in slot_holders:
+                    slot = f3
+                else:
+                    slot = None
+                entries.append(BoxProxy(idx) if f3 == 2 else UpContainer(idx))
+                if slot is not None:
                     upnames[idx] = "%s[%d]" % (slot_holders[slot], slot)
-                elif isinstance(slot, int):
+                else:
                     upnames[idx] = "upv%d" % idx
-
         try:
             sh = dict(getattr(dump, "shared_cap", None) or {})
             for k, v in cap.items():

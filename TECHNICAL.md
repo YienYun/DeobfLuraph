@@ -169,10 +169,8 @@ lift cannot honestly fill it in, and the visible damage is not cosmetic —
 
 The honest fix is therefore *not* a constant-decoder change and *not*
 synthesising a value: it is to carry the caller's register state into the
-child proto (shared-frame propagation), and to close the 11
-`-- devirt: loop body not recovered` holes whose bodies define some of those
-registers. Both are model work, and both are listed as the next step after the
-P4 investigation rather than guessed at here.
+child proto (shared-frame propagation), which is model work, and is listed as
+the next step rather than guessed at here.
 
 Reproduction (baseline, from a clean tree):
 
@@ -184,3 +182,59 @@ lines 43822  parses True  devirt_errors 0  devirt_comments 11
 unresolved_uses 185  unresolved_hints 158  unresolved_unhinted 0
 bit32_lines 35  bit32_chain_lines 17  empty_while_true 0
 ```
+
+## 8. The Endless-Loop Holes Are Spin Loops, Not Lost Bodies
+
+`SampleV1` used to carry 11 `-- devirt: loop body not recovered (the trace
+stopped before it ran)` comments. That text was inherited from an older
+assumption and it is wrong, so the holes were re-measured from the IR out:
+
+- Every one of them renders through `codegen.Lower.loop`'s endless-loop branch
+  with a body the renderer produced nothing for. Captured at the point of
+  emission, the body is one `CommentS("")` plus, before renaming,
+  `[Assign, SContinue]`: a block that writes one value and jumps straight back
+  to itself.
+- That value is a scratch/carry register (`800002` style) that `variables.webs`
+  finds no reader for, so `rename` drops the store; with the unconditional
+  back-jump stripped as well (`idioms.strip_trailing_continue`) the loop body
+  is empty. There is no second statement to recover, and the walk reported
+  `0 unlifted blocks` for the whole run, so no block was silently skipped.
+- The run status is `finished`: this script does not hang where these loops sit,
+  which means the code is not reached on the traced path. Nothing about their
+  real body is observable, and writing one would be invention.
+
+Emitting `while true do end` is not an option: it spins forever and the script
+after it never runs. So the renderer now drops the loop where it knows why it
+is empty and leaves one countable marker that states the measured cause:
+
+```
+-- devirt: spin loop left out (its body has no effect: its only statement wrote a value nothing reads)
+```
+
+`ast_polish._mark_truncated_loops` stays as the net for text the renderer never
+produced (a loop that decoded to no statements at all) and now says exactly
+that. Both markers are counted by `scripts/metrics.py` as `devirt_comments`.
+
+Result on `SampleV1`: 11 -> 10 holes, 43,822 -> 43,820 lines, and nothing else
+moved. The eleventh was the `else` half of an `if` whose two branches each held
+only such a loop: with the loop gone to a comment the branch had no statements
+left, so `ast_polish` dropped the empty `else` and its comment with it -- an
+`if` with an empty `else` is the same program.: `(nil)(...)` still 7,
+`bit32` `nil` operands still 2, `bit32_chain_lines` still 17, unresolved
+captures unchanged. Remaining holes and their enclosing functions:
+
+| line | enclosing function | why |
+|---|---|---|
+| 8396, 8398 | `local function reach` | both branches of one `if` |
+| 8429 | `callback42, data7, character` closure | |
+| 8547 | `callback44, state` closure | |
+| 9923 | `callback48, ...` closure | |
+| 11760 | `callback39, state` closure | |
+| 15336 | `local function callback45` | |
+| 17000 | `context2.data.fn` closure | |
+| 43239 | `callback4` closure | |
+| 43813 | `local function callback13` | |
+
+Each of the ten is the same shape: a self-loop whose only lifted statement
+wrote an unread scratch value. None of them had a body that could be put back
+without inventing one.

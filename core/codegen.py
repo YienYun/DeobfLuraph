@@ -1793,7 +1793,19 @@ class Renderer:
             return [ind + "while %s do" % self.expr(st.cond)] + self.block(st.body, ind + "\t") + [ind + "end"]
         if st.kind == "repeat":
             return [ind + "repeat"] + self.block(st.body, ind + "\t") + [ind + "until %s" % self.expr(st.cond)]
-        return [ind + "while true do"] + self.block(st.body, ind + "\t") + [ind + "end"]
+        body = self.block(st.body, ind + "\t")
+        if not body:
+            # An endless loop with nothing in it cannot be emitted: `while true
+            # do end` spins forever, so the script would hang where the original
+            # did not. The walk reached this loop and closed it on a state that
+            # repeats -- every statement it decoded was a write to a value
+            # nothing reads -- so there is no body to put back. Say that,
+            # instead of the loop or a guess (see ast_polish for the same
+            # marker on text the renderer never saw).
+            why = ("its only statement wrote a value nothing reads"
+                   if st.body else "it decoded to no statements")
+            return [ind + "-- devirt: spin loop left out (its body has no effect: %s)" % why]
+        return [ind + "while true do"] + body + [ind + "end"]
 
 def _utf8_at(b, i):
     """The character of a valid UTF-8 sequence starting at b[i] (multi-byte only), else None."""

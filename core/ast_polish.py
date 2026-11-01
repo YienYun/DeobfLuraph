@@ -1148,12 +1148,14 @@ def _drop_degenerate_writes(text):
 def _mark_truncated_loops(text):
     """An empty `while true do` is not source: it spins forever.
 
-    It appears when the walk stops before the loop body (the run report calls
-    that "stopped in an endless loop"). The honest replacement is a hole that
-    says what it is and does not run: the body is unknown, so inventing one
-    would be worse than admitting it, and raising would take the whole script
-    down at the first such point. A `-- devirt: ...` comment is also countable,
-    which is what the gate for this engine is.
+    This is the net for text the renderer did not produce -- `codegen.Lower.loop`
+    already turns such a loop into the same marker where it knows why the body
+    came out empty (every statement in it wrote a value nothing reads). What is
+    left here is a loop with no decoded statements at all. Either way the honest
+    replacement is a hole that says what it is and does not run: the body is
+    unknown, so inventing one would be worse than admitting it, and raising
+    would take the whole script down at the first such point. A `-- devirt: ...`
+    comment is also countable, which is what the gate for this engine is.
     """
     try:
         root = _parse_ast(text)
@@ -1162,7 +1164,7 @@ def _mark_truncated_loops(text):
     btext = text.encode("utf-8")
     starts = _line_starts(btext)
     edits = []
-    marker = b'-- devirt: loop body not recovered (the trace stopped before it ran)'
+    marker = b'-- devirt: spin loop left out (it decoded to no statements)'
 
     def visit(node):
         if not isinstance(node, dict):

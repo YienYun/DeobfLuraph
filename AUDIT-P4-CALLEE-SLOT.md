@@ -1,8 +1,9 @@
 # Audit report -- P4 callee-slot fix (HEAD `678ff63`, tag withheld)
 
-Status: work complete, **not tagged**. This document is the audit package for
-`v0.5-p4-callee-slot`; the tag is created only after this report passes an
-independent audit.
+Status: **audit passed, tagged** -- `v0.5-p4-callee-slot` was created on
+`6c45797` after the independent audit reproduced every number below. Section 9
+records the two bookkeeping corrections the audit asked for, section 8 the two
+deviations it ruled on.
 
 What changed, in one sentence: writes to a jump/cff register that a surviving
 statement **calls through** are no longer dropped, so a call whose callee the
@@ -295,7 +296,7 @@ The two `nil` `bit32` operands (v0.4 lines 43543-43544) are gone (0).
  						local argument5 = bit32.rshift(argument4, 13)
 ```
 
-### 4.2 SampleV1 -- hunk inventory, 22 hunks, 84 removed / 98 added
+### 4.2 SampleV1 -- hunk inventory, 22 hunks, 87 removed / 103 added
 
 Categories: `C` = cosmetic (watermark relocation), `N` = local renumbering caused
 by the new `callback4` body and its globals taking names, `F` = nil-to-name fix,
@@ -328,7 +329,8 @@ by the new `callback4` body and its globals taking names, `F` = nil-to-name fix,
 
 Every hunk is one of: the watermark moving, a name shifting because a new global
 exists, a statement whose writes were dropped only because the register is a call
-target, or the cipher prefix of 2.1. No hunk of any other kind exists.
+target, or the cipher prefix of 2.1. No hunk of any other kind exists. The
+per-line ledger that sums to 87/103 is in section 9.
 
 ### 4.3 StealAnEgg -- the restored WebSocket block (12 statements)
 
@@ -403,12 +405,15 @@ target, or the cipher prefix of 2.1. No hunk of any other kind exists.
 
 ### 4.4 StealAnEgg -- hunk inventory, 25 hunks, 102 removed / 110 added
 
-Normalised comparison (identifiers and numeric literals erased): 96 of the removed
-lines differ from an added line only in local names. Substantive rest: 6 removed,
-12 added, 2 blank -- all inside hunk 21 above. Hunks 1-2 are the watermark comment
-(line 4 -> line 3229); hunks 3-20 and 22-25 are the `value`/`response3`
-renumbering that follows, because `local value = nil` became
-`local response3 = nil` and frees the word `value` for the whole scope.
+Normalised comparison (identifiers and numeric literals erased, watermark comment
+counted separately): 95 of the removed lines differ from an added line only in
+local names. Substantive rest: 6 removed, 12 added, 0 removed / 2 added blank
+lines -- all inside hunk 21 above. Hunks 1-2 are the watermark comment (line 4 ->
+line 3229); hunks 3-20 and 22-25 are the `value`/`response3` renumbering that
+follows, because `local value = nil` became `local response3 = nil` and frees the
+word `value` for the whole scope. Ledger: 102 removed = 1 watermark + 95
+renumbering + 6 substantive; 110 added = 1 watermark + 2 blank + 95 renumbering +
+12 substantive.
 
 The narrowed build and the wide build are **byte-identical** on this input
 (`cmp`), because every statement restored here is itself a write to the callee
@@ -491,7 +496,8 @@ Applied here: SampleV1 = 1xC + 18xN + 1xF/S + 2xR hunks; StealAnEgg = 2xC + 22xN
 ## 8. Open items for the audit
 
 Two places where the result does not match the original gate wording. Both are
-measurement outcomes, not implementation failures:
+measurement outcomes, not implementation failures, and both were **ruled on** by
+the audit (decision quoted in each item):
 
 **A. `bit32_calls` 50 -> 49 (gate wording asked for 50 conserved).** Conserving 50
 requires also restoring one `bit32.bor(1171037852, ...)` store plus the four
@@ -500,7 +506,69 @@ with the callee-only scope, or return to the wide variant and accept the five
 restored bookkeeping statements. The choice changes SampleV1 only (one line, one
 call); StealAnEgg and RideAPet are unaffected.
 
+*Audit decision: accept 49.* The old 50 is not an honest baseline -- it counts
+five calls inside the permanently broken `nil`-operand prefix. The per-operation
+baseline from this milestone on is **band 14, bnot 1, bor 0, bxor 16, lshift 6,
+rshift 12 = 49**. The wide variant (`bor` + four bookkeeping statements) is an
+*optional* P5 candidate under the same evidence pattern, not a gate item.
+
 **B. `(nil)(...)` 7 -> 1 (gate wording asked for 0).** The remaining site is
 `return (nil)(nil, nil)`: callee and both arguments unwritten in the traced
 function, one of the 47 case-3 sites classified in section 1. Reaching 0 would
 require inventing a callee value, which the project rules forbid.
+
+*Audit decision: accept 1.* The gate from this milestone on is
+**`(nil)(...)` <= 1, and only at the documented site (line 43579 of
+`samples/output/Luraph/SampleV1.lua`)**. Any new site -- or that site moving to a
+different construct -- stops the run and is reported.
+
+---
+
+## 9. Bookkeeping reconciliation (audit note 1)
+
+The hunk inventory in 4.2 first reported "84 removed / 98 added". The raw diff of
+the two **committed** outputs is larger, and the authoritative figure is git's own
+count:
+
+```
+git diff --numstat 1e0d1eb 678ff63 -- samples/output/Luraph/SampleV1.lua
+103     87      samples/output/Luraph/SampleV1.lua
+```
+
+so 87 removed / 103 added, 22 hunks. The 84/98 came from counting with
+`grep -c '^-[^-]'` / `grep -c '^+[^+]'`, a filter that silently drops two kinds of
+changed line: (a) a line whose *content* starts with `-` or `+` -- here exactly the
+moved watermark comment `-- This Source Was Generated by discord.gg/c3xVMnUUBv`,
+which renders as `--- This Source ...` on the removed side; and (b) a **blank**
+changed line, which renders as a bare `-` or `+` with no second character. That is
+84 + 1 comment + 2 blank = 87 and 98 + 1 comment + 5 blank = 103. A figure of
+86/102 is the same artefact one blank pair short of the numstat; nothing
+substantive is missing from either count.
+
+Ledger with every line in exactly one bucket (watermark separated first, then
+blank, then identifier-only twins, rest substantive):
+
+| sample | removed | watermark | blank | renumbering twins | substantive |
+|---|---|---|---|---|---|
+| SampleV1 | 87 | 1 | 2 | 71 | 13 |
+| SampleV1 (added) | 103 | 1 | 5 | 71 | 26 |
+| StealAnEgg | 102 | 1 | 0 | 95 | 6 |
+| StealAnEgg (added) | 110 | 1 | 2 | 95 | 12 |
+
+The 13 removed / 26 added substantive `SampleV1` lines are exactly the two things
+4.1 and 4.2 describe: the nine-line `callback4` body becoming a real top-level
+function (`local number7 = 155558815`, `local function callback4(...)`,
+`local number8 = tonumber(argument)`, `if number8 then`, `local max = math.max`,
+`local value2 = table.pack(math.min(...))`, `if number7 ~= 49270517 then`,
+`return max(...)`, `return argument4`), its forward declaration changing from
+`local callback4, value2, value3` to `local callback5`, the `type(argument)` guard,
+the three `tonumber`/`Color3.new`/`callback4` call sites, the two
+`x = bit32.bxor(x, ...)` stores that were being erased with the callee slot, two
+`local number15 = 278712415` / `278712415` style constants, and the merged cipher
+prefix. Every one is enumerated above; none is unexplained.
+
+The `StealAnEgg` ledger (6 / 12) is the block in 4.3, item by item.
+
+From here on every report states its line counts with the command that produced
+them, and any count of changed lines is the git numstat (or the same method,
+`---`/`+++` headers and the file header excluded, blanks included).

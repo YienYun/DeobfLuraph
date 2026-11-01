@@ -138,6 +138,11 @@ CI when any copy drifts. If you change a protocol value, change it in
 - `npm test` (or `python test/run_all.py`) runs the fast suite: unit tests for the Python core (chunk-key vectors, Luau pow semantics, config parsing, protocol nonce forging regression) plus the cross-language protocol consistency checks (spawns `node`, no Luau binaries needed).
 - `python test/run_all.py --golden` additionally re-runs the full pipeline on the benchmark samples and compares byte-for-byte with the committed reference outputs in `sample/output/` (needs `bin/luau` + `bin/luau-ast` from `python build_luau.py`). If a run differs, the reference file is restored and the test fails.
 - `.github/workflows/ci.yml` runs the fast suite on Ubuntu and Windows, syntax-checks every Python/JS file, and builds the patched Luau runtime (cached) for the golden regression.
+- `samples/differential/` holds two real samples (`RideAPet`, `StealAnEgg`) as
+  committed input/output pairs plus the `diff-from-v0.4.diff` each milestone's
+  behavioural claim was made against, so a differential can be re-checked without
+  the machine it was measured on. `samples/input/` stays local-only; this is a
+  fixed, small audit corpus. See its `README.md`.
 
 ## 7. Known Gap: `nil` Operands and the Shared Register Frame
 
@@ -329,7 +334,11 @@ bookkeeping stores, not the callee.
 So the two gates -- `nil` `bit32` operands 0 and `bit32_chain_lines` 17 -- cannot
 both hold: the 17 counted three statements that only existed because the operand
 was `nil`. The amended gate for this milestone is `bit32_chain_lines 14` with
-`bit32_calls` 49, and the fold checked against the fold-disabled lift:
+`bit32_calls` 49, whose per-operation baseline is now **band 14, bnot 1, bor 0,
+bxor 16, lshift 6, rshift 12** (the old 50 counted five calls inside the broken
+`nil` prefix, so it is not a baseline). Likewise `(nil)(...)` is gated at
+**<= 1 and only at the documented site** (line 43579 of the SampleV1 output); any
+new site stops the run. The fold is checked against the fold-disabled lift:
 `scripts/bitfold_verify.py --before <nofold> --after <fold>` reports
 `PASS identical on 512 random inputs`, with the fold now seeing 8 repetitions of
 a 6-statement chain instead of 9 (the 9th was the phase-shifted remainder of the

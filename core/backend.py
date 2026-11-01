@@ -194,6 +194,14 @@ def polish(text):
         except Exception as ex:  
             print("[!] naming pass failed: %s" % ex, file=sys.stderr)
     try:
+        import namesplit
+        text, ns = namesplit.apply_duplicates(text)
+        if ns["duplicates_fixed"] or ns["duplicates_skipped"]:
+            print("[namesplit] duplicate declarations fixed=%d skipped=%r"
+                  % (ns["duplicates_fixed"], ns["duplicates_skipped"]), file=sys.stderr)
+    except Exception as ex:
+        print("[!] duplicate-name pass failed: %s" % ex, file=sys.stderr)
+    try:
         text = localfuncs.rewrite(text)
     except Exception as ex:  
         print("[!] local function pass failed: %s" % ex, file=sys.stderr)

@@ -484,3 +484,78 @@ residual_unknown=55` is the permanent evidence line for `SampleV1`
 would add a mechanism with no instance and no test on this corpus. If a future
 sample shows a read that *does* go through a frame upvalue with a missing name,
 the two cases become testable and can be built then.
+
+## 11. Category X: one name, two locals in one declaration
+
+### The shape
+
+The named output contained declarations like
+
+```lua
+local localPlayer, localPlayer, ok, response = ...
+local runService, runService = workspace.RunService, workspace.RunService
+local data, number3, data = data3, math.max(...) + data3.CruiseHeight, data3
+```
+
+Twenty-two of them in `SampleV1`, twenty-one in `StealAnEgg`, three in
+`RideAPet`; the pre-naming text (`DEVIRT_NO_NAMES=1`) has 121 / 120 / 60. The
+obfuscated input has **zero**: the duplicate is created by this tool, not copied.
+
+### Where it comes from
+
+Names in the lifted text are not invented by the web renamer for these regions.
+`_PlainPrinter` (`core/obfuscators/luraph_v15/vm_model.py`, `expr()` and
+`PlainProto.render()`) prints `capnames[reg]` -- the input's own local name for a
+VM register, recovered from the VM state -- and `render()` splices that name into
+spans of copied source. A register is not a variable: the VM reuses it, and two
+registers can carry the same recovered name. Printing one name per register
+therefore lets two different locals collide, and a `local` declaration that came
+from one source statement can end up declaring the same name twice.
+
+A probe confirmed the boundary: `variables.rename` never sees these statements
+(`def_web` holds no real-register definitions and the register prefix is always
+`r`), so a web split there cannot fix them; the collision exists in the printed
+text.
+
+### The rule
+
+A `local` declaration's initialisers are evaluated before any of the new locals
+is in scope, so in `local a, a = f(), g()` the first `a` can never be read. The
+pass renames it to `_` -- and only when the AST proves it: zero `AstExprLocal`
+references and zero assignment targets resolve to that declaration's
+`local.location`. If a reference is found (which would mean the scoping
+assumption is wrong for that statement) the declaration is counted as
+`duplicate-still-referenced` and left untouched; a skipped statement is reported,
+never guessed.
+
+Name choice: `_` is the shape the rest of the output already uses for a value
+nothing reads, it cannot collide with a real name, and Luau does not report
+shadowing for it. `local _, localPlayer, ok, response = ...` says exactly what
+the code does.
+
+### Evidence
+
+| fixture | declarations with a duplicate name | fixed | skipped |
+|---|---|---|---|
+| `samples/output/Luraph/SampleV1.lua` | 22 | 22 | 0 |
+| `samples/differential/StealAnEgg/output.lua` | 21 | 21 | 0 |
+| `samples/differential/RideAPet/output.lua` | 3 | 3 | 0 |
+
+Each refreshed output was checked against the previous one: applying only this
+pass to the committed output reproduces the new file byte for byte, apart from
+the attribution comment, whose line is chosen from the file's own text
+(`src/watermark.js`). The diff is therefore renames and nothing else. Gate
+metrics are unchanged: `SampleV1` `bit32_calls` 49 with the per-op band
+12 / 1 / 0 / 14 / 4 / 10 (all within 14 / 1 / 0 / 16 / 6 / 12),
+`bit32_chain_lines` 14, `(nil)(` still one site at line 43579, blank lines 4742,
+lines 43836. `RideAPet` 10,219 lines / `bit32_calls` 430 / blank 1,025;
+`StealAnEgg` 50,401 lines / `bit32_calls` 74 / blank 5,612.
+
+The pass is `core/namesplit.py::apply_duplicates`, called from
+`backend.polish()` after naming and before the final `localfuncs` tidy, so it
+sees the names the reader will see. It runs on both the named and the
+`DEVIRT_NO_NAMES` paths. `test/namesplit.test.js` pins the cases that could
+break the proof: an initialiser reading an outer local of the same name, a
+closure reading the surviving local, three duplicates in one statement, a
+statement with no duplicates, `_` not being renamed again, idempotence, and that
+the result still parses.

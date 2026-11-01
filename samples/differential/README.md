@@ -33,10 +33,33 @@ diff -u /tmp/egg_old.lua samples/differential/StealAnEgg/output.lua
 ```
 
 `diff-from-v0.4.diff` in each directory is exactly the last command's output at
-the time of the `v0.5-p4-callee-slot` milestone, so the claim can be checked
-without rebuilding anything.
+the time of the category X milestone (`v0.6`, commit recorded in `TECHNICAL.md`
+§11; no tag until the audit passes), so the claim can be checked without
+rebuilding anything. It still starts at `v0.4-p4-spin-holes`, so it
+carries the v0.5 ledger plus the v0.6 renames; each later section says which part
+is new.
 
-## Expected results at v0.5 (`678ff63`, tag `v0.5-p4-callee-slot`)
+## Expected results at v0.6 (`6c45797`, category X)
+
+`RideAPet` -- 5 hunks, 4 removed / 4 added lines: 3 duplicate declarations named
+`_` (`local data, number3, data` and twice in the fly/idle paths) and the
+attribution comment moving from line 1173 to line 5980. The check that matters is
+mechanical and does not depend on reading a diff: applying only
+`core/namesplit.py::apply_duplicates` to the previous committed output reproduces
+this file byte for byte, apart from that comment. Metrics: lines 10,219, bytes
+328,408, parses True, `bit32_calls` 430, `bit32_chain_lines` 15, blank 1,025.
+
+`StealAnEgg` -- 45 hunks, 123 removed / 131 added. It contains the v0.5 ledger
+unchanged (watermark, 95 renumbering twins, 6 removed / 12 added substantive
+lines in the WebSocket connect block) plus 21 duplicate declarations named `_`
+and the comment's new line. Same mechanical check applies. Metrics: lines 50,401,
+bytes 1,686,054, parses True, `devirt_comments` 4, `(nil)(...)` 0, `bit32_calls`
+74, blank 5,612.
+
+Both outputs are deterministic: running either input twice gives byte-identical
+files.
+
+## Expected results at v0.5 (`6c45797`, tag `v0.5-p4-callee-slot`)
 
 `RideAPet` -- **no diff** (`diff-from-v0.4.diff` is empty): the callee-slot fix
 does not fire on this input (no `[jread]` line in the run log), and the output is

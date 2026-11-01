@@ -1058,6 +1058,31 @@ where every callee register has a definition. The suite is unchanged at 54 pass 
 two consecutive `SampleV1` runs produce the same `md5`
 (`2bc0ee05dc45c9c9241dc12a6d11c1e5`).
 
+### The ground truth for that site
+
+`samples/differential/StealAnEgg/` is a different obfuscation of the *same* UI
+library, and the same function lifts correctly there (`output.lua:49984`):
+
+```lua
+return Color3.fromRGB(math.floor(clampValue(number6, 0, 255, 0)),
+                      math.floor(clampValue(number7, 0, 255, 0)),
+                      math.floor(clampValue(number8, 0, 255, 0)))
+```
+
+That is what `parseColor3` does in `SampleV1` too. The lift there keeps the first
+two `math.floor(clampValue(...))` calls as *statements whose results nothing
+reads*, loses the third, and reaches the call with the callee in frame register
+104 -- a register no lifted proto writes (`[walk]` over the whole run shows the
+single read and no write). So the value existed at run time but never entered the
+dump: that trace segment is the VM's own operand/constant decryptor, and the
+user-level `Color3.fromRGB` load was never lifted. Printing a name there would be
+inventing it, which is why the site stays a visible hole.
+
+The input for this sample is not in the repository (`samples/input/` is ignored),
+but it is recoverable from history: `git show 5abcc5d:Upload/SampleV1.lua`
+rebuilds the committed output byte for byte (`md5 2bc0ee05...`), so every change
+to this path can be re-measured.
+
 ### What this does not fix
 
 The tail it removes is not user code. The statements just above it -- `mixBits`

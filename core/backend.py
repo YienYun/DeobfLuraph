@@ -193,14 +193,23 @@ def polish(text):
                 text = again
         except Exception as ex:  
             print("[!] naming pass failed: %s" % ex, file=sys.stderr)
-    try:
-        import namesplit
-        text, ns = namesplit.apply_duplicates(text)
-        if ns["duplicates_fixed"] or ns["duplicates_skipped"]:
-            print("[namesplit] duplicate declarations fixed=%d skipped=%r"
-                  % (ns["duplicates_fixed"], ns["duplicates_skipped"]), file=sys.stderr)
-    except Exception as ex:
-        print("[!] duplicate-name pass failed: %s" % ex, file=sys.stderr)
+    # One printed name, one binding: a duplicate declaration and a closure's
+    # name reused for a later value are split here, after naming (so the names
+    # the reader sees are the ones being split) and before the final tidy.
+    # DEVIRT_NO_NAMESPLIT keeps the shared names, for bisecting a diff.
+    if not os.environ.get("DEVIRT_NO_NAMESPLIT"):
+        try:
+            import namesplit
+            text, ns = namesplit.apply_duplicates(text)
+            if ns["duplicates_fixed"] or ns["duplicates_skipped"]:
+                print("[namesplit] duplicate declarations fixed=%d skipped=%r"
+                      % (ns["duplicates_fixed"], ns["duplicates_skipped"]), file=sys.stderr)
+            text, ns = namesplit.apply_reuse(text)
+            if ns["reuse_sites"]:
+                print("[namesplit] reuse sites=%d split=%d skipped=%r"
+                      % (ns["reuse_sites"], ns["reuse_split"], ns["reuse_skipped"]), file=sys.stderr)
+        except Exception as ex:
+            print("[!] name split pass failed: %s" % ex, file=sys.stderr)
     try:
         text = localfuncs.rewrite(text)
     except Exception as ex:  

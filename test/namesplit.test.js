@@ -101,3 +101,127 @@ test('a duplicate `_` is not renamed again', () => {
   assert.equal(r.text, src);
   assert.equal(r.stats.duplicates_fixed, 0);
 });
+
+// ---- category W: the closure's name reused for a later value ---------------
+//
+//   local function f() ... end
+//   f = other
+//   ... f.x ...          -- reads the reuse value, not the closure
+//
+// The closure keeps its name; the reuse value gets a new local, used by every
+// read and write from the reassignment on. Only split where the later reads
+// provably see the reuse value: a capture that can run after the split, a read
+// the assignment does not dominate, or an assignment inside a loop can all make
+// the name ambiguous, and those sites are skipped and counted instead.
+
+test('a value assigned after a closure gets its own local, reads included', () => {
+  const src = 'local f = function() return 1 end\nprint(f)\nf = 2\nprint(f)\n';
+  const r = split('reuse', src);
+  assert.equal(r.text, 'local f = function() return 1 end\nprint(f)\nlocal f_2 = 2\nprint(f_2)\n');
+  assert.equal(r.stats.reuse_split, 1);
+});
+
+test('later reassignments stay one temp: one new name, not a number per write', () => {
+  const src = 'local f = function() return 1 end\nf = 2\nprint(f)\nf = 3\nprint(f)\n';
+  const r = split('reuse', src);
+  assert.equal(r.text, 'local f = function() return 1 end\nlocal f_2 = 2\nprint(f_2)\nf_2 = 3\nprint(f_2)\n');
+});
+
+test('a closure created after the split takes the reuse value with the same name', () => {
+  const src = 'local f = function() return 1 end\nf = 2\nlocal function g() return f end\nprint(g())\n';
+  const r = split('reuse', src);
+  assert.equal(r.text, 'local f = function() return 1 end\nlocal f_2 = 2\nlocal function g() return f_2 end\nprint(g())\n');
+});
+
+test('a capture that can run after the split is skipped, not guessed', () => {
+  const src = 'local f = function() return 1 end\nlocal function g() return f end\nf = 2\nprint(f, g())\n';
+  const r = split('reuse', src);
+  assert.equal(r.text, src);
+  assert.deepEqual(r.stats.reuse_skipped, { 'capture-before-split': 1 });
+});
+
+test('a closure created after the first reuse value takes the new name, even when a later write follows', () => {
+  const src = 'local f = function() return 1 end\nf = 2\nlocal function g() return f end\nf = 3\nprint(g())\n';
+  const r = split('reuse', src);
+  assert.equal(r.text, 'local f = function() return 1 end\nlocal f_2 = 2\nlocal function g() return f_2 end\nf_2 = 3\nprint(g())\n');
+});
+
+test('a write inside a nested function is skipped', () => {
+  const src = 'local f = function() return 1 end\nlocal function h() f = 2 end\nprint(f)\n';
+  const r = split('reuse', src);
+  assert.equal(r.text, src);
+  assert.deepEqual(r.stats.reuse_skipped, { 'write-in-closure': 1 });
+});
+
+test('a read the conditional assignment does not dominate is skipped', () => {
+  const src = 'local f = function() return 1 end\nif x then\n\tf = 2\nend\nprint(f)\n';
+  const r = split('reuse', src);
+  assert.equal(r.text, src);
+  assert.deepEqual(r.stats.reuse_skipped, { 'undominated-read': 1 });
+});
+
+test('a read before the assignment inside the same loop is skipped', () => {
+  const src = 'local f = function() return 1 end\nwhile x do\n\tprint(f)\n\tf = 2\nend\n';
+  const r = split('reuse', src);
+  assert.equal(r.text, src);
+  assert.deepEqual(r.stats.reuse_skipped, { 'loop-hazard': 1 });
+});
+
+test('a compound assignment that agrees with itself keeps one name', () => {
+  const src = 'local f = function() return 1 end\nf = 1\nf += 1\nprint(f)\n';
+  const r = split('reuse', src);
+  assert.equal(r.text, 'local f = function() return 1 end\nlocal f_2 = 1\nf_2 += 1\nprint(f_2)\n');
+});
+
+test('a compound assignment that is the first reuse is skipped', () => {
+  const src = 'local f = function() return 1 end\nf += 1\nprint(f)\n';
+  const r = split('reuse', src);
+  assert.equal(r.text, src);
+  assert.deepEqual(r.stats.reuse_skipped, { 'compound-assign': 1 });
+});
+
+test('`local function` form is split the same way', () => {
+  const src = 'local function f() return 1 end\nprint(f)\nf = nil\nprint(f)\n';
+  const r = split('reuse', src);
+  assert.equal(r.text, 'local function f() return 1 end\nprint(f)\nlocal f_2 = nil\nprint(f_2)\n');
+});
+
+test('the split is idempotent and still parses', { skip: astAvailable ? false : 'luau-ast required' }, () => {
+  const src = 'local f = function() return 1 end\nf = 2\nprint(f)\n';
+  const once = split('reuse', src);
+  assert.equal(split('reuse', once.text).text, once.text);
+  assert.ok(parses(once.text), 'rewritten snippet must still be valid Luau');
+});
+
+test('a multi-target assignment declares the new local on its own line', () => {
+  const src = 'local g = 1\nlocal f = function() return 1 end\nf, g = 2, 3\nprint(f, g)\n';
+  const r = split('reuse', src);
+  assert.equal(r.text, 'local g = 1\nlocal f = function() return 1 end\nlocal f_2\nf_2, g = 2, 3\nprint(f_2, g)\n');
+});
+
+test('the declaration goes into the block the assignment runs in', () => {
+  const src = 'local f = function() return 1 end\nif cond then\n\tf = 2\n\tprint(f)\nend\n';
+  const r = split('reuse', src);
+  assert.equal(r.text, 'local f = function() return 1 end\nif cond then\n\tlocal f_2 = 2\n\tprint(f_2)\nend\n');
+});
+
+test('a loop body whose closure would capture a per-iteration variable is skipped', () => {
+  const src = 'local f = function() return 1 end\nwhile cond do\n\tf = 2\n\tlocal function g() return f end\n\tprint(g())\nend\n';
+  const r = split('reuse', src);
+  assert.equal(r.text, src);
+  assert.deepEqual(r.stats.reuse_skipped, { 'loop-capture': 1 });
+});
+
+test('the reuse value is a declared local, never a leaked global', { skip: astAvailable ? false : 'luau-ast required' }, () => {
+  const src = 'local f = function() return 1 end\nf = 2\nprint(f)\n';
+  const out = split('reuse', src).text;
+  assert.match(out, /^local f_2 = 2$/m, 'the reuse value must be declared with `local`');
+});
+
+test('a second binding with the same name gets the next number, not `f_22`', () => {
+  const src = 'local f = function() return 1 end\nf = 2\nprint(f)\ndo\n\tlocal f = function() return 1 end\n\tf = 3\n\tprint(f)\nend\n';
+  const r = split('reuse', src);
+  assert.match(r.text, /^local f_2 = 2$/m);
+  assert.match(r.text, /^\tlocal f_3 = 3$/m);
+  assert.doesNotMatch(r.text, /f_2\d/);
+});

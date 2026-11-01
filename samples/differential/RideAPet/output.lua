@@ -1001,7 +1001,8 @@ local function callback8()
 		end
 
 		local connection = RunService2.Stepped:Connect(callback11)
-		callback11, RunService2 = 1, false
+		local callback11_2
+		callback11_2, RunService2 = 1, false
 
 		while os.clock() < number3 do
 			local value9 = bit32.bxor(403387006, 0)
@@ -1014,7 +1015,7 @@ local function callback8()
 			if not value8 then
 				break
 			end
-			data2, RunService = data[callback11], callback11 == #data
+			data2, RunService = data[callback11_2], callback11_2 == #data
 			local number4 = data2 - value8.Position
 			data2 = number4.Magnitude
 			value9 = u32Trunc((value9 + 3442749056) + (u32Mul(4294967294, (bit32.band(value9, 218548909))) + (326973567 + 743793582)))
@@ -1024,7 +1025,7 @@ local function callback8()
 					RunService2 = true
 					break
 				end
-				callback11 += 1
+				callback11_2 += 1
 				continue
 			end
 
@@ -1673,7 +1674,7 @@ local function callback11()
 		for k, value10 in RunService2(unit) do
 			argument, argument3 = value10:GetAttribute("Position"), data3
 			k, childMap = argument3.BasketCount(), os.clock() + 3
-			callback15 = 0
+			local callback15_2 = 0
 
 			while true do
 				basket, number7 = value10.Parent ~= nil
@@ -1692,12 +1693,12 @@ local function callback11()
 				if attribute then
 					local data = data3
 					data.FlyTo(argument + Vector3.new(0, 3, 0), nil, 5)
-					callback15 = 0
+					callback15_2 = 0
 				end
-				attribute = os.clock() >= callback15
+				attribute = os.clock() >= callback15_2
 
 				if attribute then
-					callback15 = os.clock() + 0.1
+					callback15_2 = os.clock() + 0.1
 					local data = data4
 					data.LastPickupAt = os.clock()
 					data = data3
@@ -2017,9 +2018,9 @@ local function callback11()
 			end
 
 			data2, data5 = data7(data11, callback17, 6), data4
-			callback17 = data5.Dropped == name
+			local callback17_2 = data5.Dropped == name
 
-			if callback17 then
+			if callback17_2 then
 				data11 = data4
 				data11.Target = nil
 				data6 = data4
@@ -2039,20 +2040,20 @@ local function callback11()
 			if data7 then
 				nameMap[name] = os.clock() + 20
 				callback16(name)
-				callback17 = data4
-				callback17.Target = nil
+				callback17_2 = data4
+				callback17_2.Target = nil
 				break
 			end
 
 			data5 = data3
-			data11, callback17 = data5.BasketCount(), data4
-			callback17.LastPickupAt = os.clock()
+			data11, callback17_2 = data5.BasketCount(), data4
+			callback17_2.LastPickupAt = os.clock()
 			data5 = data11 == 0
 			if data5 then
-				callback17 = data4
-				callback17.PickupPos = value7.Position
+				callback17_2 = data4
+				callback17_2.PickupPos = value7.Position
 			end
-			callback17, data6 = os.clock() + 1.2, data4
+			callback17_2, data6 = os.clock() + 1.2, data4
 			data7 = (data6.InstantOn and (os.clock() + 0.15)) or 0
 
 			while true do
@@ -2067,8 +2068,8 @@ local function callback11()
 					local data = data3
 					data.Fire("EggPickup", name)
 				end
-				if os.clock() >= callback17 then
-					if (value7.Config.Parent ~= nil) or (os.clock() >= (callback17 + 1.5)) then
+				if os.clock() >= callback17_2 then
+					if (value7.Config.Parent ~= nil) or (os.clock() >= (callback17_2 + 1.5)) then
 						break
 					end
 				end
@@ -2080,9 +2081,9 @@ local function callback11()
 			data5 = data4
 			data5.Target = nil
 			data5 = data3
-			callback17 = data5.BasketCount() > data11
+			callback17_2 = data5.BasketCount() > data11
 
-			if callback17 then
+			if callback17_2 then
 				data6 = data4
 				data6.Carried[name] = value7.Config
 				data2 = data3
@@ -2321,7 +2322,8 @@ local function callback11()
 		return number, data, data2.MinEggWeight
 	end
 	data10, callback = data4, data3
-	autoCollectEggsSection2, data8, callback19 = callback.WeightSlider, autoCollectEggsSection, {Name = "Min Egg Weight"}
+	local callback19_2
+	autoCollectEggsSection2, data8, callback19_2 = callback.WeightSlider, autoCollectEggsSection, {Name = "Min Egg Weight"}
 
 	local function onRaw(minEggWeight)
 		local data = data3
@@ -2334,8 +2336,8 @@ local function callback11()
 		end
 	end
 
-	callback19.OnRaw = onRaw
-	data10.CollectWeight = autoCollectEggsSection2(data8, callback19)
+	callback19_2.OnRaw = onRaw
+	data10.CollectWeight = autoCollectEggsSection2(data8, callback19_2)
 	options2 = autoCollectEggsSection
 	options2:CreateDropdown({Name = "Collect Priority", Options = data5, Default = data5[2], Callback = function(argument)
 		text3 = tostring(argument)
@@ -2362,9 +2364,9 @@ local function callback11()
 		end
 	end})
 
-	callback19 = autoCollectEggsSection
+	callback19_2 = autoCollectEggsSection
 
-	callback19:CreateSlider({Name = "Min Rebirth Pet Chance", Min = 1, Max = 100, Default = 10, Increment = 1, Unit = "%", SubOf = rebirth.Handle, Callback = function(argument)
+	callback19_2:CreateSlider({Name = "Min Rebirth Pet Chance", Min = 1, Max = 100, Default = 10, Increment = 1, Unit = "%", SubOf = rebirth.Handle, Callback = function(argument)
 		rebirth.Min = math.clamp(tonumber(argument) or 10, 1, 100)
 		local data, condition2 = data4, type(data4.Wake) == "function"
 		if condition2 then
@@ -2416,22 +2418,22 @@ local function callback11()
 		if value then
 			return true
 		end
-		callback21 = localPlayer
-		value = callback21.Character
-		callback21 = value and (value:FindFirstChild("HumanoidRootPart"))
-		petMountJoint = callback21 and (callback21:FindFirstChild("PetMountJoint"))
+		local callback21_2 = localPlayer
+		value = callback21_2.Character
+		callback21_2 = value and (value:FindFirstChild("HumanoidRootPart"))
+		petMountJoint = callback21_2 and (callback21_2:FindFirstChild("PetMountJoint"))
 		value = (petMountJoint and petMountJoint.Part1) and petMountJoint.Part1.Parent
 		if value and (value:GetAttribute("PetName") == argument) then
 			return true
 		end
-		value, callback21 = pcall(function()
+		value, callback21_2 = pcall(function()
 			local localPlayer = localPlayer
 			return require(localPlayer:WaitForChild("PlayerScripts", 5).Game.Pets.PetRenderer)
 		end)
-		petMountJoint = (value and (type(callback21) == "table")) and (type(callback21.GetAll) == "function")
+		petMountJoint = (value and (type(callback21_2) == "table")) and (type(callback21_2.GetAll) == "function")
 
 		if petMountJoint then
-			local ok, response = pcall(callback21.GetAll)
+			local ok, response = pcall(callback21_2.GetAll)
 			value = ok and (type(response) == "table")
 
 			if value then
@@ -3832,17 +3834,18 @@ local function callback15()
 		end
 
 		value(data6, callback30)
-		data, callback30 = {}, data4
-		local position2, data3, number7 = callback30.AutoPlan(position), ipairs, 0
+		local callback30_2
+		data, callback30_2 = {}, data4
+		local position2, data3, number7 = callback30_2.AutoPlan(position), ipairs, 0
 
 		for k, value8 in data3(position2) do
 			holder = value8.Config.Name
-			position, callback30, value = data4, not table.find(data4.Manual, holder)
-			if callback30 then
+			position, callback30_2, value = data4, not table.find(data4.Manual, holder)
+			if callback30_2 then
 				k = data4
 				value = k.Target ~= holder
 			else
-				value = callback30
+				value = callback30_2
 			end
 
 			if value then
@@ -3861,27 +3864,27 @@ local function callback15()
 			end
 		end
 		value = data4
-		callback30, data3 = value.Target
-		if callback30 then
+		callback30_2, data3 = value.Target
+		if callback30_2 then
 			holder = data4
 			data3 = nameMap[holder.Target]
 		else
-			data3 = callback30
+			data3 = callback30_2
 		end
 		holder = nil
 		if data3 then
-			value, callback30 = data4
-			callback30, holder = data4, not value.Carried[data4.Target]
+			value, callback30_2 = data4
+			callback30_2, holder = data4, not value.Carried[data4.Target]
 		else
 			holder = data3
 		end
 		if holder then
 			table.insert(position2, data4.Target)
 		end
-		callback30, holder = ipairs, data4
+		callback30_2, holder = ipairs, data4
 		data3 = holder.Manual
 
-		for k, value8 in callback30(data3) do
+		for k, value8 in callback30_2(data3) do
 			k, holder = nameMap[value8]
 			if k then
 				value = data4
@@ -3916,31 +3919,31 @@ local function callback15()
 				break
 			end
 			data3[value8] = true
-			callback30 = argumentMap[value8]
-			if not callback30 then
-				callback30 = callback28(value8, nameMap[value8])
-				argumentMap[value8] = callback30
+			callback30_2 = argumentMap[value8]
+			if not callback30_2 then
+				callback30_2 = callback28(value8, nameMap[value8])
+				argumentMap[value8] = callback30_2
 			end
-			callback30.Frame.LayoutOrder = k
+			callback30_2.Frame.LayoutOrder = k
 			data6 = callback27()
-			if callback30.Frame.Size.Y.Offset ~= data6 then
-				callback30.Frame.Size = UDim2.new(0.888163447, 0, 0, data6)
+			if callback30_2.Frame.Size.Y.Offset ~= data6 then
+				callback30_2.Frame.Size = UDim2.new(0.888163447, 0, 0, data6)
 			end
 			k = data4
 			if k.Carried[value8] then
-				callback17(callback30.Info, callback30.Rarity .. "  |  In basket")
+				callback17(callback30_2.Info, callback30_2.Rarity .. "  |  In basket")
 			else
-				callback17(callback30.Info, string.format("%s  |  %dm", callback30.Rarity, math.floor(value[value8] or 0)))
+				callback17(callback30_2.Info, string.format("%s  |  %dm", callback30_2.Rarity, math.floor(value[value8] or 0)))
 			end
 			local value9, value10, value11 = callback29(value8, data[value8])
-			callback17(callback30.Status, value9)
-			callback30.Status.TextColor3 = value10
+			callback17(callback30_2.Status, value9)
+			callback30_2.Status.TextColor3 = value10
 
-			if callback30.Button then
-				callback30.Button.Visible = value11 ~= nil
+			if callback30_2.Button then
+				callback30_2.Button.Visible = value11 ~= nil
 				if value11 then
-					callback17(callback30.ButtonText, value11)
-					callback30.Button.ImageColor3 = ((value11 == "Cancel") and data5.Cancel) or data5.Collect
+					callback17(callback30_2.ButtonText, value11)
+					callback30_2.Button.ImageColor3 = ((value11 == "Cancel") and data5.Cancel) or data5.Collect
 				end
 			end
 		end
@@ -3954,8 +3957,8 @@ local function callback15()
 		data3 = data2
 		holder, data6 = data4, data3.Toggle(data4.Collect, false)
 		callback17(textLabel2, (data6 and "Auto: ON") or "Auto: OFF")
-		callback30 = (textLabel2 and textLabel2.Parent) and textLabel2.Parent:IsA("ImageButton")
-		if callback30 then
+		callback30_2 = (textLabel2 and textLabel2.Parent) and textLabel2.Parent:IsA("ImageButton")
+		if callback30_2 then
 			textLabel2.Parent.ImageColor3 = (data6 and data5.AutoOn) or data5.AutoOff
 		end
 		callback17(textLabel, "Sort: " .. sort)
@@ -3966,9 +3969,9 @@ local function callback15()
 		if data3 then
 			textLabel3.Parent.ImageColor3 = (value and data5.AutoOn) or data5.AutoOff
 		end
-		callback30 = notification
+		callback30_2 = notification
 
-		if callback30 then
+		if callback30_2 then
 			value = data4
 			data6, list, position2 = data4, #value.Manual + ((data4.Target and 1) or 0), notification
 			position2.Visible = list > 0
@@ -5977,7 +5980,6 @@ local function callback24()
 			callback("UICorner", {CornerRadius = UDim.new(0.35, 0)}, data9.Button)
 			local data10, button
 			data10, button, value8 = {Color = color2, Thickness = 1.5, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, data9.Button, bit32.bxor(value8, 94752596)
-			-- This Source Was Generated by discord.gg/c3xVMnUUBv
 			callback26("UIStroke", data10, button)
 			button = callback28
 			value8 = bit32.bxor(value8, 152903452)
@@ -6010,6 +6012,7 @@ local function callback24()
 		callback = {Frame = callback26("Frame", {BackgroundColor3 = color3, BackgroundTransparency = 0.04, BorderSizePixel = 0, Visible = false}, nil)}
 		callback26("UICorner", {CornerRadius = UDim.new(0.08, 0)}, callback.Frame)
 		callback.Stroke = callback26("UIStroke", {Color = color4, Thickness = 1.5, ApplyStrokeMode = Enum.ApplyStrokeMode.Border}, callback.Frame)
+		-- This Source Was Generated by discord.gg/c3xVMnUUBv
 		callback26("ImageLabel", {BackgroundTransparency = 1, Image = assetId, ImageTransparency = 0.94, ScaleType = Enum.ScaleType.Tile, TileSize = UDim2.fromOffset(46, 46), Size = UDim2.fromScale(1, 1)}, callback.Frame)
 		callback.Art = callback26("Frame", {BackgroundColor3 = color, BackgroundTransparency = 0.5, BorderSizePixel = 0, Size = UDim2.fromScale(0.22, 1)}, callback.Frame)
 		callback26("UICorner", {CornerRadius = UDim.new(0.08, 0)}, callback.Art)
@@ -6047,9 +6050,9 @@ local function callback24()
 		pcall(callback42)
 	end
 
-	callback25 = type(mainWindow.CreateCanvas) ~= "function"
+	local callback25_2 = type(mainWindow.CreateCanvas) ~= "function"
 
-	if callback25 then
+	if callback25_2 then
 		mainWindow:CreateText({Name = "Egg Predictor", Text = "This library version cannot draw the predictor."})
 	else
 		local value6 = bit32.bxor(141097280, 0)
@@ -6328,8 +6331,8 @@ local function callback25()
 			table.clear(argumentMap)
 			hopAvoid = (callback32(1))
 		end
-		callback32 = #hopAvoid
-		clock = callback32 == 0
+		local callback32_2 = #hopAvoid
+		clock = callback32_2 == 0
 		if clock then
 			callback29(nil)
 			value = nil
@@ -6341,7 +6344,7 @@ local function callback25()
 			id2 = hopAvoid[math.random(1, #hopAvoid)].Id
 		else
 			local value6, value = bit32.bxor(107711254, 0), table
-			data, clock = value6, u32Trunc(callback32)
+			data, clock = value6, u32Trunc(callback32_2)
 			value6 = u32Trunc((bit32.bxor(data, 234444753) + 4194906337) + (u32Mul(4194906337, clock) + u32Mul(4194906337, (bit32.bnot(clock)))))
 			condition4 = value.sort
 			value6 = bit32.bxor(value6, 79316318)
@@ -6379,15 +6382,15 @@ local function callback25()
 		return "waiting"
 	end
 
-	callback30 = data2
-	callback30.ServerHop = serverHop
-	callback30 = serverSection
-	callback30:CreateDropdown({Name = "Server Hop Mode", Options = {"Most Players", "Random", "Least Players"}, Default = "Least Players", Callback = function(argument)
+	local callback30_3 = data2
+	callback30_3.ServerHop = serverHop
+	callback30_3 = serverSection
+	callback30_3:CreateDropdown({Name = "Server Hop Mode", Options = {"Most Players", "Random", "Least Players"}, Default = "Least Players", Callback = function(argument)
 		text5 = tostring(argument or "Least Players")
 	end})
-	callback30 = serverSection
+	callback30_3 = serverSection
 
-	callback30:CreateButton({Name = "Server Hop", ButtonText = "Hop", Callback = function()
+	callback30_3:CreateButton({Name = "Server Hop", ButtonText = "Hop", Callback = function()
 		local value5 = bit32.bxor(147330473, 0)
 		local value2 = value5
 		number7 += 1
@@ -6567,8 +6570,8 @@ local function callback26()
 	end
 
 	pcall(callback31)
-	callback31 = serverSection
-	jobIdInput = callback31:CreateInput({Name = "Job ID", Placeholder = "Paste a server Job ID...", Default = "", MaxLength = 100, Callback = function(argument)
+	local callback31_2 = serverSection
+	jobIdInput = callback31_2:CreateInput({Name = "Job ID", Placeholder = "Paste a server Job ID...", Default = "", MaxLength = 100, Callback = function(argument)
 		text3 = callback28(argument)
 	end})
 	if jobIdInput then
@@ -6577,9 +6580,9 @@ local function callback26()
 			jobIdInput.State._configIgnored = true
 		end
 	end
-	callback31 = serverSection
+	callback31_2 = serverSection
 
-	callback31:CreateButton({Name = "Join Job ID", ButtonText = "Join", Callback = function()
+	callback31_2:CreateButton({Name = "Join Job ID", ButtonText = "Join", Callback = function()
 		local value4 = bit32.bxor(36465658, 0)
 		local value = value4
 		local condition2 = callback27()
@@ -6609,9 +6612,9 @@ local function callback26()
 		end
 	end})
 
-	callback31 = serverSection
+	callback31_2 = serverSection
 
-	callback31:CreateButton({Name = "Copy Current Job ID", ButtonText = "Copy", Callback = function()
+	callback31_2:CreateButton({Name = "Copy Current Job ID", ButtonText = "Copy", Callback = function()
 		local text4 = tostring(game.JobId or "")
 		callback30(text4)
 		local value4 = setclipboard or toclipboard
@@ -6620,9 +6623,9 @@ local function callback26()
 		callback6((ok and "Job ID Copied") or "Job ID Shown", text4)
 	end})
 
-	callback31 = serverSection
+	callback31_2 = serverSection
 
-	callback31:CreateButton({Name = "Rejoin Server", ButtonText = "Rejoin", Callback = function()
+	callback31_2:CreateButton({Name = "Rejoin Server", ButtonText = "Rejoin", Callback = function()
 		local value4 = callback27()
 		if value4 then
 			callback6("Rejoin Failed", "A teleport is already running, try again shortly.")
@@ -6666,8 +6669,8 @@ local function callback26()
 	end
 
 	pcall(callback33)
-	callback31 = serverSection
-	data5.Option = callback31:CreateToggle({Name = "Auto Rejoin When Disconnect", Default = true})
+	callback31_2 = serverSection
+	data5.Option = callback31_2:CreateToggle({Name = "Auto Rejoin When Disconnect", Default = true})
 
 	local function callback34()
 		local now = os.clock()
@@ -7942,7 +7945,7 @@ local function callback28()
 			value6:Destroy()
 		end)
 		RunService2 = RunService
-		callback45 = RunService2.Heartbeat
+		local callback45_2 = RunService2.Heartbeat
 
 		local function callback53(argument)
 			local condition6 = not argument5 or not callback46(argument5:Root())
@@ -7967,14 +7970,15 @@ local function callback28()
 			end
 		end
 
-		local connection = callback45:Connect(callback53)
+		local connection = callback45_2:Connect(callback53)
 		registerItem(function()
 			connection:Disconnect()
 		end)
 	end
 
-	readJsonFile, autoHopTab = data2, data2
-	readJsonFile.HopHandles = autoHopTab.HopHandles or {}
+	local readJsonFile_2
+	readJsonFile_2, autoHopTab = data2, data2
+	readJsonFile_2.HopHandles = autoHopTab.HopHandles or {}
 	local data = data2
 	data.HopHandles.Finder = function()
 		return data5.Handle
@@ -8155,8 +8159,8 @@ local function callback28()
 
 	local options2, data = {Name = "Min Egg Rarity", Note = "Find eggs of the chosen rarity and every rarity above it"}, data3
 	options2.Options = data.RarityChoices
-	readJsonFile = data3
-	options2.Default = readJsonFile.RarityChoices[1]
+	readJsonFile_2 = data3
+	options2.Default = readJsonFile_2.RarityChoices[1]
 	options2.SubOf = data5.Handle
 
 	options2.Callback = function(argument)
@@ -8171,8 +8175,8 @@ local function callback28()
 
 	dropdown = eggFinderSection:CreateDropdown(options2)
 	local callback, options3, value7 = callback4, {Name = "Target Eggs", Note = "Only look for these eggs (empty = all)"}
-	options = names
-	options3.Options = options
+	local options_2 = names
+	options3.Options = options_2
 	options3.Default = {}
 	options3.SubOf = data5.Handle
 
@@ -8188,7 +8192,7 @@ local function callback28()
 	options3.Callback = callback48
 	value5 = callback(eggFinderSection:CreateMultiDropdown(options3))
 	mainWindow = data3
-	options3, options, autoHopTab = mainWindow.WeightSlider, eggFinderSection, {Name = "Min Egg Weight", SubOf = data5.Handle}
+	options3, options_2, autoHopTab = mainWindow.WeightSlider, eggFinderSection, {Name = "Min Egg Weight", SubOf = data5.Handle}
 
 	local function onRaw(minWeight)
 		local condition = condition2
@@ -8200,7 +8204,7 @@ local function callback28()
 	end
 
 	autoHopTab.OnRaw = onRaw
-	value6 = options3(options, autoHopTab)
+	value6 = options3(options_2, autoHopTab)
 	eggFinderSection:CreateLabel({Name = "Wait For Target Egg", Text = "Wait For Target Egg", SubOf = data5.Handle})
 	local options4, data = {Name = "Rarity To Wait For"}, data3
 	options4.Options = data.RarityChoices
@@ -8211,7 +8215,7 @@ local function callback28()
 		data5.WaitRank = data.RarityRank[tostring(argument)] or 0
 	end
 	eggFinderSection:CreateDropdown(options4)
-	options, autoHopTab, mainWindow = callback4, {Name = "Eggs To Wait For"}, names
+	options_2, autoHopTab, mainWindow = callback4, {Name = "Eggs To Wait For"}, names
 	autoHopTab.Options = mainWindow
 	autoHopTab.Default = {}
 	autoHopTab.SubOf = data5.Handle
@@ -8219,7 +8223,7 @@ local function callback28()
 		data5.WaitEggs = callback7(argument)
 	end
 	autoHopTab.Callback = callback49
-	options(eggFinderSection:CreateMultiDropdown(autoHopTab))
+	options_2(eggFinderSection:CreateMultiDropdown(autoHopTab))
 	eggFinderSection:CreateLabel({Name = "Hop Timing", Text = "Hop Timing", SubOf = data5.Handle})
 	eggFinderSection:CreateSlider({Name = "Hop Delay", Note = "Wait this long after the script starts before the first hop", Min = 3, Max = 10, Default = 5, AllowDecimals = true, Increment = 0.5, Unit = "s", SubOf = data5.Handle, Callback = function(argument)
 		data5.HopDelay = math.clamp(tonumber(argument) or 5, 3, 10)

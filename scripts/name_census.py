@@ -1,30 +1,24 @@
 #!/usr/bin/env python3
-"""Census of locals that hold a function and are later assigned something else.
+"""Scope-aware census of locals that hold a function and are later reassigned.
 
-The lifter stores a closure in a register and renders it as a named local
-(`local function X(...) ... end`, or `local X = function ... end`). The same
-register is often reused afterwards for an unrelated value, and both writes share
-one local, so the reuse is printed as an assignment to the function's own name:
+`local function X` (or `local X = function`) followed by `X = <other>` is the
+shape this tool counts. Reading `X` afterwards is normal Lua -- it sees the new
+value -- but the printed name now stands for two different things, and that is
+what makes the output confusing.
 
-    local function RunService2(argument) ... end
-    RunService2 = context.state
-    ... RunService2.AREAS ...          -- reads the reuse value, not the closure
+The census answers two questions per site, from the AST alone:
 
-That is confusing but not automatically wrong -- after the assignment the
-variable really does hold the reuse value. The dangerous shape is a read that is
-*not* dominated by the assignment (the assignment sits inside a branch the read
-is outside of): there the variable may still hold the closure, and one name
-hides which value the code sees.
+  dominated reads    the assignment runs before the read on every path, so the
+                     read really does see the reuse value. Splitting the name at
+                     the assignment is safe and changes no behaviour.
+  undominated reads  the assignment sits inside a branch (or a loop that may not
+                     run) and the read is outside it: the read can still see the
+                     closure. This is the stop-and-ask shape -- reported, never
+                     guessed at.
 
-Scope awareness: a local is identified by the AST's `local.location`, so a
-*different* local reusing the same name in another scope (real shadowing, which
-is correct code) is never counted as a site. Shadowing is reported separately.
-
-Dominance: an assignment dominates a read when, at the deepest block the two
-share, the assignment's statement comes first, and nothing between that point and
-the assignment executes conditionally (an `if`/loop body makes it a maybe). A
-read inside a nested function is never dominated by an assignment in the parent
-(the closure runs later, possibly many times), and vice versa.
+Scope awareness: a local is identified by its luau-ast declaration location, so
+the same *name* declared again in another scope is a different local (correct
+shadowing) and is counted separately, never as a site.
 
 Usage:
     python3 scripts/name_census.py [--json] FILE...
@@ -38,7 +32,8 @@ import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-AST = os.path.join(ROOT, "bin", "luau-ast")
+AST = os.environ.get("LUAU_AST_BIN") or os.path.join(
+    ROOT, "bin", "luau-ast" + (".exe" if os.name == "nt" else ""))
 
 
 def loc(s):
@@ -56,11 +51,11 @@ class Census:
         if r.returncode != 0:
             raise SystemExit("%s: luau-ast failed: %s" % (path, r.stderr.decode("latin-1")[:400]))
         self.root = json.loads(r.stdout.decode("latin-1"))["root"]
-        self.locals = {}     # location -> decl info
-        self.assigns = []    # (location, path, line, pos, fn_depth)
-        self.reads = []      # (location, path, line, pos, fn_depth)
-        self.dup_decls = []  # one `local a, a = ...`: two locals, one name
+        self.locals = {}       # location -> declaration info
+        self.reads = []        # (location, path, line, pos, fn_depth)
+        self.assigns = []      # (location, path, line, pos, fn_depth)
         self.fn_depth = 0
+        self.dups = []         # same statement, same name twice
 
     # ---- traversal -------------------------------------------------------
     def run(self):
@@ -89,15 +84,20 @@ class Census:
                 self.walk_expr(v, path)
             names = [v["name"] for v in st.get("vars") or ()]
             if len(set(names)) != len(names):
-                self.dup_decls.append({"line": s0[0], "names": names})
+                self.dups.append((s0[0], names))
             for i, var in enumerate(st.get("vars") or ()):
                 kind = "LV" if i < len(vals) and vals[i].get("type") == "AstExprFunction" else "value"
                 self._decl(var, kind, s0[0], s0)
             return
         if t in ("AstStatAssign", "AstStatCompoundAssign"):
-            for v in st.get("values") or ():
-                self.walk_expr(v, path)
-            for var in (st.get("vars") or ([st["var"]] if st.get("var") else [])):
+            if t == "AstStatAssign":
+                for v in st.get("values") or ():
+                    self.walk_expr(v, path)
+                vars_ = list(st.get("vars") or ())
+            else:
+                self.walk_expr(st["value"], path)
+                vars_ = [st["var"]]
+            for var in vars_:
                 if var.get("type") == "AstExprLocal":
                     self.assigns.append((var["local"]["location"], path, s0[0], s0, self.fn_depth))
                     self.locals.setdefault(var["local"]["location"], {
@@ -125,13 +125,23 @@ class Census:
             return
         if t in ("AstStatFor", "AstStatForIn"):
             for k in ("from", "to", "step"):
-                if st.get(k):
+                if st.get(k) is not None:
                     self.walk_expr(st[k], path)
             for v in st.get("values") or ():
                 self.walk_expr(v, path)
+            for var in (st.get("vars") or ([st["var"]] if st.get("var") else [])):
+                self._decl(var, "value", s0[0], s0)
             self.walk_block(st["body"], path, True)
             return
-        for k, v in st.items():
+        if t == "AstStatReturn":
+            for v in st.get("list") or ():
+                self.walk_expr(v, path)
+            return
+        if t == "AstStatFunction":
+            self.walk_expr(st["func"], path)
+            self.walk_expr(st["name"], path)
+            return
+        for v in st.values():
             if isinstance(v, dict) and str(v.get("type", "")).startswith("AstExpr"):
                 self.walk_expr(v, path)
             elif isinstance(v, list):
@@ -140,10 +150,12 @@ class Census:
                         self.walk_expr(x, path)
 
     def walk_expr(self, e, path):
+        if not isinstance(e, dict):
+            return
         t = e.get("type")
         if t == "AstExprLocal":
-            self.reads.append((e["local"]["location"], path, loc(e["location"])[0][0],
-                               loc(e["location"])[0], self.fn_depth))
+            s0 = loc(e["location"])[0]
+            self.reads.append((e["local"]["location"], path, s0[0], s0, self.fn_depth))
             return
         if t == "AstExprFunction":
             self.fn_depth += 1
@@ -153,7 +165,7 @@ class Census:
             self.walk_block(e["body"], path, False)
             self.fn_depth -= 1
             return
-        for k, v in e.items():
+        for v in e.values():
             if isinstance(v, dict) and str(v.get("type", "")).startswith("AstExpr"):
                 self.walk_expr(v, path)
             elif isinstance(v, list):
@@ -175,8 +187,6 @@ class Census:
         ia, ir = pa[deepest - 1][1], pr[deepest - 1][1]
         if ia >= ir:
             return False
-        # every statement between the shared block and the assignment must run
-        # unconditionally, or the assignment is only a maybe at the read
         return not any(pa[k][2] for k in range(deepest, len(pa)))
 
     def sites(self):
@@ -193,24 +203,22 @@ class Census:
             first = asg[0]
             after = [r for r in self.reads if r[0] == key and r[3] > first[3]]
             def ok(r):
-                # the closure is certainly gone at the read once *any* earlier
-                # reuse assignment dominates it; the later assignments only
-                # change which reuse value is there, not whether the closure is
                 return any(self.dominated(a, r) for a in asg if a[3] < r[3] and a[4] == r[4])
             dom = [r for r in after if ok(r)]
             und = [r for r in after if not ok(r)]
+            before = [r for r in self.reads if r[0] == key and r[3] <= first[3]]
             out.append({
                 "name": info["name"], "kind": info["kind"], "decl_line": info["line"],
                 "assign_line": first[2], "assigns": len(asg),
                 "assign_lines": [a[2] for a in asg],
-                "reads_after": len(after), "dominated": len(dom), "undominated": len(und),
+                "reads_before": len(before), "reads_after": len(after),
+                "dominated": len(dom), "undominated": len(und),
                 "undominated_lines": sorted({r[2] for r in und}),
-                "nested_reads": sum(1 for r in after if r[4] > first[4]),
             })
         return sorted(out, key=lambda s: (s["decl_line"], s["name"]))
 
     def shadowing(self):
-        """Same name, *different* locals: correct code the census must not flag."""
+        """Same name, different declarations: correct code, counted separately."""
         by_name = {}
         for key, info in self.locals.items():
             by_name.setdefault(info["name"], set()).add(key)
@@ -229,21 +237,18 @@ def main():
         sites = c.sites()
         shadow = c.shadowing()
         result[path] = {"sites": sites, "shadowed_names": len(shadow),
-                        "shadow_names": sorted(shadow), "dup_decls": c.dup_decls}
+                        "duplicate_declarations": c.dups}
         if a.json:
             continue
         print("== %s" % path)
-        print("   sites: %d   names with more than one local (shadowing, not a site): %d"
-              % (len(sites), len(shadow)))
-        print("   duplicate names in one local declaration: %d%s"
-              % (len(c.dup_decls), "".join(
-                  "\n     %6d %r" % (d["line"], d["names"]) for d in c.dup_decls[:5])))
-        print("   %-26s %-3s %6s %6s %7s %5s %5s %5s" %
-              ("name", "kind", "decl", "assign", "assigns", "read+", "dom", "undom"))
+        print("   sites (function local later reassigned): %d" % len(sites))
+        print("   names declared more than once in different scopes: %d" % len(shadow))
+        print("   %-24s %-3s %6s %6s %7s %6s %6s %6s" %
+              ("name", "kind", "decl", "assign", "assigns", "read-", "dom", "undom"))
         for s in sites:
-            print("   %-26s %-3s %6d %6d %7d %5d %5d %5d%s" %
+            print("   %-24s %-3s %6d %6d %7d %6d %6d %6d%s" %
                   (s["name"], s["kind"], s["decl_line"], s["assign_line"], s["assigns"],
-                   s["reads_after"], s["dominated"], s["undominated"],
+                   s["reads_before"], s["dominated"], s["undominated"],
                    "  <-- UNDOMINATED %r" % (s["undominated_lines"][:5],) if s["undominated"] else ""))
         if any(s["undominated"] for s in sites):
             rc = 1

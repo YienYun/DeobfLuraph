@@ -559,3 +559,251 @@ break the proof: an initialiser reading an outer local of the same name, a
 closure reading the surviving local, three duplicates in one statement, a
 statement with no duplicates, `_` not being renamed again, idempotence, and that
 the result still parses.
+
+## 12. Category W: one name, a closure and a later reuse value
+
+### The shape
+
+```lua
+local function callback11()
+	...
+end
+local connection = RunService2.Stepped:Connect(callback11)
+callback11, RunService2 = 1, false          -- the same printed name, a new value
+
+while ... do
+	data2, RunService = data[callback11], callback11 == #data   -- reads the counter
+	...
+	callback11 += 1
+end
+```
+
+A reader sees a function used as an array index and compared to a number. The
+closure and the counter are two different locals at the VM level; the printed
+text gives them one name. 13 sites in `RideAPet`, 38 in `StealAnEgg`, 43 in
+`SampleV1` (94 in the corpus). Each is a function-valued local whose name a
+later write reuses for another value -- usually a scalar or a connection handle,
+in 8 of the 94 a different closure -- and all of them are split: the skip table
+is empty for the whole corpus.
+
+### Where it comes from
+
+The text these sites live in is not built out of register webs. `_PlainPrinter`
+(`core/obfuscators/luraph_v15/vm_model.py`, `expr()` and `PlainProto.render()`)
+renders the obfuscated source's own statement and splices `capnames[reg]` in for
+each register operand -- the input's own local name, recovered for that register.
+A register is not a variable: the VM reuses it, so the name that held a closure
+later holds an integer, and the printed text has no way to say so. The namer
+(`core/names.py`) then renames whatever it can see, which is how the site arrives
+under names like `callback11`, but it neither creates nor can repair the
+collision.
+
+Measured, not assumed: with the namer switched off (`DEVIRT_NO_NAMES=1`) the same
+sites are still there -- 13 in `RideAPet`, 38 in `StealAnEgg`, 43 in `SampleV1` --
+under the lifter's own names (`F`, `S`, `r`, `IM`, ...). So this is a print-level
+name collision, not a web-splitting opportunity, and the pass has to work on the
+printed text where the two lifetimes meet.
+
+### The rule
+
+The split is `core/namesplit.py::apply_reuse`, called from `backend.polish()`
+after naming and before the final `localfuncs` tidy, on both the named and the
+`DEVIRT_NO_NAMES` paths.
+
+* The closure keeps its name. The first reuse assignment and everything that
+  reads the reuse value get one new local, `name_2` (`name_3` if a second binding
+  with that name is split as well -- never `name_22`). One name per binding, not
+  one per write.
+* The new local is declared, not just named: renaming alone would write an
+  undeclared name, i.e. a global. The declaration goes into the deepest block
+  that contains every renamed write and read -- the longest common prefix of
+  their statement paths -- either as a `local ` prefix on the first reuse
+  statement (when that statement is a single-target assignment at the base of
+  that block) or as its own `local name_2` line at the block's indent. If the
+  insertion point is not at the start of a line the site is skipped as
+  `inline-statement`.
+* A read keeps the closure's name only when it cannot run after a reuse
+  assignment, and that is proved per read:
+  * same function: the read is not dominated by any reuse assignment and comes
+    before the first one;
+  * nested function: the read is a capture, so a reuse assignment must dominate
+    the *creation* of that closure, else the closure may be built before any
+    reuse value is in the variable (`capture-before-split`).
+* A write inside a nested function is skipped (`write-in-closure`), a compound
+  assignment whose read and write cannot share the name is skipped
+  (`compound-assign`), and an unplaceable capture is skipped
+  (`capture-unknown`).
+* Loops. Two hazards are checked and both would be reports, not guesses:
+  * `loop-hazard`: a read that keeps the closure's name shares a loop with a
+    reuse assignment that is *outside* the declaration's own loop chain, so the
+    closure's value could still be in the variable on a later iteration. The
+    `local function f() ... end; f(x); f = v` idiom inside a loop is *not* this
+    hazard -- a `local function` re-declares on every iteration, so nothing
+    carries across iterations, and that is why those sites split instead of
+    skipping.
+  * `loop-capture`: the new declaration would sit inside a loop body while a
+    nested closure reads it, which would give each iteration its own variable
+    instead of the single one the obfuscated code shares.
+
+A site that fails any check is counted by reason and left untouched; the table is
+`reuse sites / split-safe / skipped` in the run log.
+
+### Evidence
+
+| fixture | sites | split | skipped | `local name_2` decls | renamed lines | lines |
+|---|---|---|---|---|---|---|
+| `samples/differential/RideAPet/output.lua` | 13 | 13 | none | 4 + 9 inline | 96 | 10,223 |
+| `samples/differential/StealAnEgg/output.lua` | 38 | 38 | none | 16 + 22 inline | 173 | 50,418 |
+| `samples/output/Luraph/SampleV1.lua` | 43 | 43 | none | 16 + 27 inline | 186 | 43,853 |
+
+"4 + 9 inline" means four sites got a declaration line of their own and nine got
+a `local ` prefix on the reuse statement.
+
+Every site, with the line the binding was declared on, the name it was split
+into, and every line in the shipped file that uses the new name:
+
+`RideAPet` (13):
+
+| binding | declared | split into | declared at | renamed reads and writes |
+|---|---|---|---|---|
+| `callback11` | 990 | `callback11_2` | 1004 | 1005, 1018, 1018, 1028, 1028 |
+| `callback15` | 1640 | `callback15_2` | 1678 | 1678, 1697, 1699, 1702 |
+| `callback17` | 2009 | `callback17_2` | 2022 | 2022, 2024, 2044, 2045, 2050, 2051, 2054, 2055, 2057, 2072, 2073, 2085, 2087 |
+| `callback19` | 2310 | `callback19_2` | 2326 | 2327, 2340, 2341, 2368, 2370 |
+| `callback21` | 2394 | `callback21_2` | 2422 | 2422, 2423, 2424, 2425, 2425, 2430, 2434, 2434, 2437 |
+| `callback30` | 3813 | `callback30_2` | 3838 | 3839, 3840, 3844, 3845, 3849, 3868, 3869, 3873, 3877, 3878, 3885, 3888, 3923, 3924, 3925, 3926, 3928, 3930, 3931, 3935, 3935, 3937, 3937, 3940, 3941, 3943, 3944, 3946, 3947, 3961, 3962, 3973, 3975 |
+| `callback25` | 5370 | `callback25_2` | 6053 | 6053, 6055 |
+| `callback30` | 6219 | `callback30_3` | 6385 | 6385, 6386, 6387, 6388, 6391, 6393 |
+| `callback32` | 6318 | `callback32_2` | 6334 | 6334, 6335, 6347 |
+| `callback31` | 6554 | `callback31_2` | 6573 | 6573, 6574, 6583, 6585, 6615, 6617, 6626, 6628, 6672, 6673 |
+| `readJsonFile` | 7341 | `readJsonFile_2` | 7979 | 7980, 7981, 8162, 8163 |
+| `options` | 7633 | `options_2` | 8178 | 8178, 8179, 8195, 8207, 8218, 8226 |
+| `callback45` | 7657 | `callback45_2` | 7948 | 7948, 7973 |
+
+`StealAnEgg` (38):
+
+| binding | declared | split into | declared at | renamed reads and writes |
+|---|---|---|---|---|
+| `callback32` | 3423 | `callback32_2` | 3437 | 3437, 3440, 3451, 3457, 3461 |
+| `callback24` | 4019 | `callback24_2` | 4066 | 4066, 4068, 4083, 4086, 4106, 4107, 4107, 4107, 4107 |
+| `clampValue2` | 4219 | `clampValue2_2` | 4235 | 4235, 4236, 4237, 4257, 4258, 4261, 4262 |
+| `callback37` | 8195 | `callback37_2` | 8222 | 8222, 8224 |
+| `callback38` | 8246 | `callback38_2` | 9885 | 9885, 9886 |
+| `callback39` | 8257 | `callback39_2` | 8562 | 8563, 8564, 9834, 9835, 15283, 15284 |
+| `callback60` | 17254 | `callback60_2` | 17262 | 17264, 17266, 17270, 17356, 17357 |
+| `callback58` | 19198 | `callback58_2` | 19202 | 19203, 19206, 19207, 19210, 19211, 19214 |
+| `callback79` | 20310 | `callback79_2` | 20314 | 20314, 20315, 20316, 20320, 20339, 20340 |
+| `callback80` | 20317 | `callback80_2` | 20323 | 20323, 20343 |
+| `callback78` | 20433 | `callback78_2` | 20465 | 20465, 20466, 20467, 20468, 20470, 20471, 20493, 20494, 20495, 20496, 20497, 20498, 20499, 20500, 20506, 20507, 20508, 20509, 20510, 20511, 20512, 20513 |
+| `callback42` | 21951 | `callback42_2` | 21963 | 21963, 21968 |
+| `callback42` | 23235 | `callback42_3` | 23392 | 23392, 23393 |
+| `callback43` | 23247 | `callback43_2` | 23251 | 23252, 23266, 23272, 23276 |
+| `callback44` | 23261 | `callback44_2` | 23271 | 23272, 23276 |
+| `callback42` | 23425 | `callback42_4` | 23441 | 23442, 23446 |
+| `callback55` | 27346 | `callback55_2` | 27353 | 27353, 27354, 27354, 27359, 27362, 27364, 27366, 27370 |
+| `callback51` | 28803 | `callback51_2` | 28834 | 28835, 28836, 28837, 28891, 28918, 28919 |
+| `callback122` | 34762 | `callback122_2` | 34856 | 34856, 34857 |
+| `callback46` | 36366 | `callback46_2` | 36802 | 36802, 36803, 36804, 36812 |
+| `callback47` | 36391 | `callback47_2` | 36415 | 36415, 36416 |
+| `createTextLabel` | 37055 | `createTextLabel_2` | 37095 | 37095, 37096, 37097, 37098, 37099 |
+| `callback57` | 37674 | `callback57_2` | 37711 | 37713, 37715, 37715, 37733, 37735, 37735, 37758, 37759 |
+| `callback51` | 38934 | `callback51_3` | 38958 | 38958, 38959, 38960 |
+| `callback48` | 40292 | `callback48_2` | 40459 | 40460, 40465, 40469 |
+| `getUIGradient` | 40615 | `getUIGradient_2` | 42350 | 42350, 42351 |
+| `callback47` | 42203 | `callback47_3` | 42348 | 42348, 42349 |
+| `readJsonFile` | 44283 | `readJsonFile_2` | 44440 | 44440, 44441 |
+| `listLayout6` | 45693 | `listLayout6_2` | 45850 | 45851, 45852, 45957, 45958, 45959, 45959, 45959, 46195, 46196, 46196, 46201, 46202, 46407, 46408, 46408, 46408, 46408, 46408, 46409, 46411, 46413, 46808, 46809, 46809, 46809, 46810 |
+| `parent` | 46148 | `parent_2` | 46497 | 46508, 46509, 46509, 46509, 46510, 46511, 46518, 46824, 46830 |
+| `callback95` | 46157 | `callback95_2` | 46832 | 46834, 46835 |
+| `callback96` | 46178 | `callback96_2` | 46823 | 46824, 46829, 46852, 46853 |
+| `callback98` | 46430 | `callback98_2` | 46806 | 46806, 46807 |
+| `callback100` | 46773 | `callback100_2` | 46832 | 46834, 46836, 46858, 46861 |
+| `callback95` | 47505 | `callback95_3` | 47527 | 47527, 47528, 47528, 47528 |
+| `parent2` | 47624 | `parent2_2` | 47690 | 47690, 47691, 47692, 47693, 47694, 47695, 47696, 47699, 47700, 47701 |
+| `callback98` | 47635 | `callback98_3` | 47676 | 47678, 47680 |
+| `uiCorner` | 47658 | `uiCorner_2` | 47676 | 47678, 47680, 47697, 47698, 47699 |
+
+`SampleV1` (43):
+
+| binding | declared | split into | declared at | renamed reads and writes |
+|---|---|---|---|---|
+| `S` | 4228 | `S_2` | 4244 | 4244, 4245, 4246, 4263, 4265 |
+| `EM` | 7892 | `EM_2` | 7919 | 7919, 7921, 8535, 8536 |
+| `FM` | 7943 | `FM_2` | 7953 | 7953, 7959 |
+| `TM` | 7954 | `TM_2` | 8432 | 8432, 8433 |
+| `IM` | 10833 | `IM_2` | 10839 | 10840, 10877, 10877, 10884, 10884, 10885, 10907, 10910, 10912, 10915 |
+| `HM` | 11718 | `HM_2` | 11737 | 11737, 11738, 11739, 11741, 11741, 11741 |
+| `gg` | 12524 | `gg_2` | 12528 | 12529, 12532, 12533, 12536, 12537, 12540 |
+| `yF` | 12851 | `yF_2` | 12914 | 12915, 12919 |
+| `oF` | 13637 | `oF_2` | 13641 | 13641, 13642, 13643, 13647, 13666, 13667 |
+| `EM` | 13644 | `EM_3` | 13657 | 13657, 13658, 13659, 13660, 13661, 13662, 13663 |
+| `EM` | 13760 | `EM_4` | 13813 | 13813, 13814, 13815 |
+| `HM` | 15778 | `HM_3` | 15801 | 15801, 15802 |
+| `fM` | 16557 | `fM_2` | 16713 | 16713, 16714 |
+| `TM` | 16569 | `TM_3` | 16575 | 16576, 16578, 16581, 16588, 16593, 16597 |
+| `I` | 16746 | `I_2` | 16761 | 16761, 16762 |
+| `QM` | 18677 | `QM_2` | 18820 | 18820, 18821 |
+| `lM` | 20235 | `lM_2` | 20248 | 20249, 20252, 20254, 20256, 20260 |
+| `lM` | 21693 | `lM_3` | 21724 | 21725, 21783 |
+| `CM` | 27666 | `CM_2` | 27760 | 27760, 27761 |
+| `HM` | 29277 | `HM_4` | 29290 | 29291, 29295 |
+| `uM` | 29303 | `uM_2` | 29384 | 29384, 29385, 29386, 29387, 29403, 29412, 29417, 29419, 29661 |
+| `AM` | 29976 | `AM_2` | 30012 | 30012, 30013, 30014, 30015, 30020 |
+| `FM` | 30595 | `FM_3` | 30632 | 30634, 30636, 30654, 30656, 30656, 30679, 30680 |
+| `EM` | 31855 | `EM_5` | 31879 | 31879, 31880, 31881 |
+| `H` | 33213 | `H_2` | 33390 | 33390, 33391, 33392, 33393, 33394 |
+| `e` | 35110 | `e_2` | 35270 | 35270, 35271 |
+| `B` | 35450 | `B_2` | 35459 | 35459, 35461, 35461, 35461, 35461, 35463 |
+| `A` | 36246 | `A_2` | 36360 | 36360, 36401, 36401 |
+| `Y` | 37283 | `Y_2` | 37441 | 37441, 37442 |
+| `FM` | 38042 | `FM_4` | 38125 | 38125, 38126, 38126 |
+| `IM` | 38877 | `IM_3` | 38904 | 38905, 38907 |
+| `Zg` | 39187 | `Zg_2` | 39344 | 39345, 39348, 39580, 39581, 39594, 40309, 40310, 40310, 40310, 40310, 40310, 40311, 40404, 40405 |
+| `fg` | 39687 | `fg_2` | 39740 | 39740, 39741, 40331, 40332, 40332, 40332, 40332, 40332, 40332, 40333, 40334, 40335, 40336, 40340, 40386 |
+| `eg` | 39696 | `eg_2` | 39982 | 40006, 40007, 40008, 40009, 40328, 40329, 40387, 40390, 40414, 40415 |
+| `Lg` | 39717 | `Lg_2` | 39867 | 39867, 39869, 40004, 40005, 40005, 40272, 40274, 40282, 40282, 40283, 40283, 40288, 40289, 40296, 40300, 40301 |
+| `m` | 39920 | `m_2` | 40269 | 40292, 40293, 40328, 40330, 40387, 40393 |
+| `t` | 40258 | `t_2` | 40305 | 40305, 40306, 40351, 40352 |
+| `V` | 40342 | `V_2` | 40395 | 40396, 40398 |
+| `a` | 40899 | `a_2` | 40928 | 40929, 40930 |
+| `v` | 41220 | `v_2` | 41242 | 41242, 41243, 41243, 41243 |
+| `AM` | 41369 | `AM_3` | 41435 | 41435, 41436, 41437, 41438, 41439, 41440, 41441, 41444, 41445, 41446 |
+| `mM` | 41380 | `mM_2` | 41421 | 41423, 41425, 41442, 41443, 41444 |
+| `jM` | 41403 | `jM_2` | 41421 | 41423, 41425 |
+
+Each refreshed output was compared against the previous committed one, and every
+added line is a renamed copy of a removed line, a declaration line, the
+attribution comment relocating (its line is chosen from the file's own text), or
+one blank line the following `localfuncs` tidy adds next to a new declaration.
+`RideAPet` 37 hunks (97 removed / 101 added = 96 renames + 4 declarations + 1
+comment), `StealAnEgg` 54 hunks (174 / 191 = 173 + 16 + 1 blank + 1 comment),
+`SampleV1` 61 hunks (187 / 204 = 186 + 16 + 1 blank + 1 comment). Nothing else
+changed: no statement, no constant, no order.
+
+The same check as category X, one step stronger -- the pass is the whole diff:
+applying `apply_duplicates` and `apply_reuse` to a `DEVIRT_NO_NAMESPLIT` build of
+the same input reproduces the shipped file, apart from the attribution comment's
+line and the blank lines the following `localfuncs` tidy re-derives from the
+shifted text: 0 in `RideAPet`, and 2 removed / 3 added (net +1) in `StealAnEgg`
+and `SampleV1`, which is exactly the `blank_lines` delta reported below.
+
+Gate metrics are unchanged: `SampleV1`
+`bit32_calls` 49 with the per-op band 14 / 1 / 0 / 16 / 6 / 12, `bit32_chain_lines`
+14, blank 4,743, lines 43,853 (+17 = 16 declaration lines and the blank one), and
+`(nil)(` is still exactly one site, now line 43,596 -- the same 17 lines lower,
+which is the whole of the shift. `RideAPet` 10,223 lines (+4, all declarations),
+`bit32_calls` 430, `bit32_chain_lines` 15, blank 1,025 unchanged. `StealAnEgg`
+50,418 lines (+17), `bit32_calls` 74, `bit32_chain_lines` 5, blank 5,613 (+1).
+Every output still parses (`bin/luau-ast`), and the set of globals each file
+touches is byte-for-byte the same as before the pass (68 / 93 / 91 names, nothing
+added, nothing lost), which is what rules out a new local shadowing a global.
+
+`test/namesplit.test.js` pins the cases that could break the proof: the
+declaration is emitted for a single-target and for a multi-target reuse, a read
+before the first assignment keeps the closure's name, a read inside a closure
+declared before the split is skipped, a read before the assignment in the same
+loop is skipped, a closure inside a loop that would capture a per-iteration
+variable is skipped, a compound assignment is handled or skipped, the split is
+idempotent, the result still parses, and a second binding with the same name gets
+the next number rather than `name_22`. 24 tests, 7 of category X and 17 of
+category W.

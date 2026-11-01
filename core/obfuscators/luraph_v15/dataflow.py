@@ -1220,8 +1220,25 @@ def _expr_reg_reads(e, out):
     return out
 
 
+def _callee_regs(e, out):
+    """Register numbers an expression uses as a *call target*."""
+    stack = [e]
+    while stack:
+        x = stack.pop()
+        if x is None:
+            continue
+        if isinstance(x, Reg):
+            out.add(x.n)
+        elif isinstance(x, (Multi, SymList)):
+            stack.extend(list(x.items))
+            stack.append(getattr(x, "tail", None))
+        elif isinstance(x, Expr):
+            stack.extend(v for v in x.__dict__.values() if isinstance(v, (Expr, Multi)))
+    return out
+
+
 def materialise_read_jump_regs(lf, order):
-    """Keep the writes of a jump register the function also reads as a value.
+    """Keep the writes of a jump register the function *calls*.
 
     The lifter marks a write to a control-flow register `jump`: its value travels
     in the walk state, so `structure.fill` leaves the statement out and a read of
@@ -1234,9 +1251,15 @@ def materialise_read_jump_regs(lf, order):
     written 17 times, all marked jump and all dropped, and is then called at seven
     sites, which rendered as `(nil)(...)`.
 
-    So: a jump register that a surviving expression reads keeps its writes. Only
-    those registers, and only their `jump` flag -- nothing is invented, and a
-    register whose reads all resolved is untouched.
+    So: a jump register that a surviving statement uses as a call target keeps its
+    writes. Only those registers, and only their `jump` flag -- nothing is
+    invented, and a register whose reads all resolved is untouched.
+
+    The restriction to call targets is deliberate. Un-flagging every read
+    register also resurrects writes the lifter dropped for a reason (generic
+    bookkeeping stores), which adds statements the old output never had; a call
+    whose callee is missing is the defect that has to be fixed, so only the
+    callee slot is taken back.
     """
     jumpy = set(getattr(lf, "jump_regs", ())) | set(getattr(lf, "cff_regs", ()))
     if not jumpy:
@@ -1244,24 +1267,8 @@ def materialise_read_jump_regs(lf, order):
     read = set()
     for _, node in order:
         for st in (node.stmts or ()):
-            if isinstance(st, Assign):
-                if not isinstance(st.target, Reg):
-                    _expr_reg_reads(st.target, read)
-                _expr_reg_reads(st.value, read)
-            elif isinstance(st, CallStmt):
-                _expr_reg_reads(st.fn, read)
-                _expr_reg_reads(st.args, read)
-            elif isinstance(st, SetList):
-                _expr_reg_reads(st.tbl, read)
-                _expr_reg_reads(st.values, read)
-            elif isinstance(st, ForPrep):
-                for e in st.exprs:
-                    _expr_reg_reads(e, read)
-        if getattr(node, "cond", None) is not None:
-            _expr_reg_reads(node.cond, read)
-        oc = getattr(node, "outcome", None)
-        if isinstance(oc, Ret) and oc.values is not None:
-            _expr_reg_reads(oc.values, read)
+            if isinstance(st, CallStmt):
+                _callee_regs(st.fn, read)
     hit = {k for k in read if isinstance(k, int)} & jumpy
     if not hit:
         return 0

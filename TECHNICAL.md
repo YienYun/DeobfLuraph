@@ -261,10 +261,19 @@ register 2 survived. A read with no definition left in its function has no web,
 
 The fix is `dataflow.materialise_read_jump_regs`, called from
 `FunctionLifter.lift` just before `apply_frame_calls`: a register in
-`jump_regs | cff_regs` that a surviving expression actually reads keeps its
-writes (`st.jump = False`). Nothing is invented and nothing else is touched --
-only those registers, only the writes that a live read needs. `lf.materialised_jump_regs`
+`jump_regs | cff_regs` that a surviving statement uses as a **call target**
+keeps its writes (`st.jump = False`). Nothing is invented and nothing else is
+touched -- only those registers, only their `jump` flag. `lf.materialised_jump_regs`
 records the hit set and the run prints one `[jread]` line per proto.
+
+The call-target restriction is not cosmetic. Un-flagging every register a
+surviving expression *reads* also resurrects bookkeeping stores the lifter
+dropped for a reason: on `SampleV1` that added `local number17 = 1889749313`,
+`number17 = 1889749313`, `local number18 = 259159099`,
+`local value14 = bit32.bor(1171037852, number18)` and `number18 = 78971088`
+back into a block whose reads never needed them. A call whose callee is missing
+is the defect being fixed; a store nothing calls is not, so only the callee slot
+is taken back.
 
 Result on `SampleV1`:
 
@@ -273,9 +282,12 @@ Result on `SampleV1`:
 | `(nil)(...)` | 7 | 1 |
 | `bit32` `nil` operands | 2 | 0 |
 | `unresolved_uses` / `hints` / `unhinted` | 185 / 158 / 0 | 185 / 158 / 0 |
-| `bit32_calls` | 50 | 50 |
+| `bit32_calls` | 50 | 49 |
 | `bit32_chain_lines` | 17 | **14** |
-| lines / bytes | 43,820 / 1,492,328 | 43,842 / 1,492,901 |
+| lines / bytes | 43,820 / 1,492,328 | 43,836 / 1,492,727 |
+| `blank_lines` | 4,739 | 4,742 |
+
+One `[jread]` line per run: `proto=<tid> depth=1 kept=17 regs=[2]`.
 
 The only `(nil)(...)` left is `return (nil)(nil, nil)` at the end of
 `callback11`, where the callee is a value the trace never produced (case 3
@@ -301,17 +313,24 @@ them, so this was never the script's own code. Once register 2 is materialised
 the same value is one line of real arithmetic
 (`local number15 = 3972087808`, `local value5 = bit32.band(bit32.bxor(526889733, number15), 536870911)`),
 the run is shorter than three, and the count goes with it: 3 chain lines and 5
-chain calls disappear, which is exactly `17 -> 14` and `25 -> 20`. Total
-`bit32_calls` is unchanged at 50 (5 old calls became 5 new ones); `bit32_lines`
-goes 35 -> 36 because three fabricated lines became four real ones, and four
-`x = bit32.bxor(x, ...)` stores plus one `bit32.bor(...)` that used to be erased
-with the callee slot are visible again.
+chain calls disappear, which is exactly `17 -> 14` and `25 -> 20`.
+
+`bit32_calls` goes 50 -> 49 and that is the whole arithmetic: those three lines
+held five calls, and the replacing code holds four (one `band(bxor(...))` in the
+new prefix plus two `x = bit32.bxor(x, ...)` stores that were being erased with
+the callee slot). The `bit32.bor(1171037852, ...)` store that the wider variant
+also resurrected is deliberately not restored (see the call-target restriction
+above), which is the one call of the difference. `bit32_lines` stays 35: three
+fabricated lines became four real ones, and the fourth is balanced by one
+`bit32.bor` line that is no longer resurrected. `(nil)(...)` and the `nil`
+`bit32` operands are gone either way -- the restriction only removes the
+bookkeeping stores, not the callee.
 
 So the two gates -- `nil` `bit32` operands 0 and `bit32_chain_lines` 17 -- cannot
 both hold: the 17 counted three statements that only existed because the operand
 was `nil`. The amended gate for this milestone is `bit32_chain_lines 14` with
-`bit32_calls` unchanged at 50, and the fold checked against the fold-disabled
-lift: `scripts/bitfold_verify.py --before <nofold> --after <fold>` reports
+`bit32_calls` 49, and the fold checked against the fold-disabled lift:
+`scripts/bitfold_verify.py --before <nofold> --after <fold>` reports
 `PASS identical on 512 random inputs`, with the fold now seeing 8 repetitions of
 a 6-statement chain instead of 9 (the 9th was the phase-shifted remainder of the
 broken prefix).
@@ -332,3 +351,126 @@ shared-frame propagation; `residual_unknown` counts register reads for which
 lifted proto, i.e. before dead code is removed, so it is not the number of
 visible `(nil)(...)` uses (55 against 1 here). Both counters live in
 `variables.LIFT_STATS`, are reset per lift, and are deterministic.
+
+### Differential check on the other samples
+
+The fix was run against the two other lifts in the regression corpus, comparing
+the same input before (`1e0d1eb`) and after, in a separate worktree:
+
+- **RideAPet**: `cmp` byte-identical. The fix is inert on that input.
+- **StealAnEgg**: 25 hunks, 102 removed / 110 added lines. Normalised comparison
+  (identifiers and numeric literals erased) shows 96 of the removed lines differ
+  from an added line only in local names: `local value = nil` became
+  `local response3 = nil`, which frees the word `value` and shifts every later
+  `valueN` in the same scope down by one. The substantive rest -- 6 removed, 12
+  added, plus 2 blank lines -- is one block:
+
+| removed | added |
+|---|---|
+| `local value5, value6 = (nil)()` | `local value4, value5 = callback5()` |
+| `if nil then` | `if not value4 then` + `callback4("No supported WebSocket API found")` |
+| `number4 = nil` | `number4 += 1` + `callback3("Connecting to", "wss://...", "using", value5)` |
+| `local value7 = table.pack((nil)(callback22))[2]` | `local ok, response = pcall(callback22)` |
+| `if nil and value7 then` | `if ok and response then` |
+| `callback4("Connection failed:", (nil)(value7))` | `callback4("Connection failed:", tostring(response))` |
+| -- | `callback6(response3, "OnMessage", "MessageReceived")`, `callback6(response3, "OnClose", "Closed", "OnDisconnect")`, `local callback = callback6`, `callback(response3, "OnError", "Error")` |
+
+That is the WebSocket connect path: five `nil` holes and two permanently-false
+guards become the calls the script actually makes. `(nil)(...)` 3 -> 0, lines
+50,393 -> 50,401, `luau-ast` exit 0 on both sides, `devirt_errors` 0,
+`devirt_comments` 4 on both, `unresolved_uses/hints/unhinted` 0/0/0 on both, and
+the `bit32` metrics identical (74 calls, chain 5). The watermark comment moves
+from line 4 to line 3229 (cosmetic, same text).
+
+The call-target restriction changes nothing here: on this input the narrowed and
+the wide build are byte-identical, because every restored statement *is* a write
+to the callee slot (one `[jread] kept=19 regs=[2]`). The restriction only removes
+the bookkeeping stores on `SampleV1`.
+
+## 10. The `residual_unknown` Population: Measured, Not Guessed
+
+The shared-frame plan assumed the remaining `nil` reads were frame upvalue reads
+whose register the parent had no name for (cases 1 and 2 of that plan). That was
+measured before writing any of it, with an env-gated probe that only reads state
+(`DEVIRT_NILSRC2`; reverted -- the output was byte-identical with it on, so the
+measurement did not perturb the lift).
+
+Method: every `variables.rename` site that resolves to `Const(None)` is recorded
+with its proto (lift sequence number, `pid`, depth), the read's register and its
+block; for the same proto, the walked IR is scanned for `Assign` whose target is
+that register, splitting the count by the `jump` flag, plus the register's
+generation, the proto's `frame_uses` and the number of blocks with an
+`unexplored successor` error. (`CallStmt` results live in temps, not registers,
+so an `Assign` scan does cover register writes.)
+
+55 sites, 39 distinct `(proto, register)` pairs:
+
+| proto | depth | register | read sites | writes in walked IR | category |
+|---|---|---|---|---|---|
+| pid 32 | 0 | `101` | 1 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 105 | 1 | `4` | 1 | 5 | writes exist, only in a condition header or a return |
+| unnamed, lift 105 | 1 | `14` | 1 | 0 | caller-side value -- no write in the function |
+| pid 40 | 1 | `21` | 1 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 13 | 5 | `40` | 1 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 13 | 5 | `102` | 1 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 13 | 5 | `106` | 1 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 13 | 5 | `111` | 1 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 2 | 2 | `18` | 1 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 20 | 1 | `9` | 2 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 21 | 1 | `27` | 3 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 23 | 1 | `15` | 1 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 25 | 1 | `11` | 1 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 34 | 1 | `25` | 1 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 34 | 1 | `38` | 1 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 36 | 1 | `10` | 1 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 38 | 1 | `6` | 1 | 8 | writes exist, only in a condition header or a return |
+| unnamed, lift 38 | 1 | `9` | 1 | 5 | writes exist, only in a condition header or a return |
+| unnamed, lift 38 | 1 | `12` | 1 | 3 | writes exist, only in a condition header or a return |
+| unnamed, lift 38 | 1 | `14` | 1 | 4 | writes exist, only in a condition header or a return |
+| unnamed, lift 38 | 1 | `85` | 1 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 38 | 1 | `104` | 2 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 39 | 1 | `9` | 1 | 1 | writes exist, only in a condition header or a return |
+| unnamed, lift 40 | 1 | `39` | 1 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 41 | 1 | `9` | 1 | 2 | writes exist, only in a condition header or a return |
+| unnamed, lift 43 | 1 | `25` | 1 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 46 | 1 | `17` | 1 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 47 | 1 | `11` | 2 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 47 | 1 | `32` | 1 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 59 | 1 | `7` | 1 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 60 | 1 | `24` | 1 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 63 | 1 | `8` | 2 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 63 | 1 | `9` | 1 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 63 | 1 | `20` | 2 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 64 | 1 | `19` | 9 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 70 | 1 | `7` | 1 | 2 | writes exist, only in a condition header or a return |
+| unnamed, lift 79 | 2 | `16` | 1 | 0 | caller-side value -- no write in the function |
+| unnamed, lift 86 | 1 | `13` | 2 | 0 | caller-side value -- no write in the function |
+| pid 39 | 1 | `8` | 1 | 0 | caller-side value -- no write in the function |
+
+Aggregates:
+
+- 31 of 39 pairs (47 of 55 sites) read a register that the walked IR never
+  writes. Nothing can be restored there: the value is produced outside the lifted
+  body.
+- 8 pairs (8 sites) do have writes -- 1 to 8 each -- but none reaches the read.
+  Where `webs` does record a definition for such a read, that definition sits in a
+  condition header (`block kind 'cond'`, statement 0) or in a `ret` block: a value
+  written inside a header is not addressable later, so there is no statement to
+  put back.
+- `jump` writes: none. This is not the callee-slot class.
+- `unexplored successor` in these protos: none, for all 39. The walk did not stop
+  early; the register genuinely has no write in the function it is read in.
+- `frame_uses`: empty for all 39, and no proto is reached with a frame-valued
+  upvalue. There is no parent frame to widen (`fmap`) and nothing for a
+  `cap_fallback` lookup to find, so cases 1 and 2 of the shared-frame plan have
+  **zero instances** on the only sample available.
+- Depth: 46 sites at depth 1, 2 at depth 2, 4 at depth 5, 1 at depth 0.
+
+Conclusion: every one of the 55 is the hard boundary the plan called case 3 -- a
+value the trace never produced. The one visible consequence left in the output is
+`return (nil)(nil, nil)` in `callback11`. The shared-frame propagation is therefore
+closed as **measured, not implemented**: `frame_propagation: bound=0
+residual_unknown=55` is the permanent evidence line, and writing cases 1 and 2
+would add a mechanism with no instance and no test on this corpus. If a future
+sample shows a read that *does* go through a frame upvalue with a missing name,
+the two cases become testable and can be built then.

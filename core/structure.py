@@ -338,6 +338,129 @@ def merge_equivalent(entry, blocks, D):
                 _rename_temps([b.cond, b.values], rmap, seen)
         recompute_preds(blocks)
 
+def _read_temps(x, out):
+    """Names of the call temps an IR value reads."""
+    st = [x]
+    while st:
+        o = st.pop()
+        if o is None:
+            continue
+        if isinstance(o, (list, tuple)):
+            st.extend(o)
+            continue
+        if isinstance(o, Multi):
+            st.append(o.items)
+            st.append(o.tail)
+            continue
+        if isinstance(o, (S.TempVal, S.TempTail)):
+            out.add(o.t)
+            d = getattr(o, "__dict__", None)
+            if d is not None:
+                st.extend(v for v in d.values() if v is not None
+                          and not isinstance(v, (str, int, float, bytes, bool)))
+            continue
+        d = getattr(o, "__dict__", None)
+        if d is not None and type(o).__name__ not in ("LTable", "Scope", "LuaFunc"):
+            st.extend(v for v in d.values() if v is not None
+                      and not isinstance(v, (str, int, float, bytes, bool)))
+
+def _poison_multi(m, dead, D, depth=0):
+    """Replace reads of dropped call temps inside one Multi."""
+    if m is None or depth > 12:
+        return m
+    if isinstance(m, D.TempTail) and m.t in dead:
+        # a multret outside a Multi: one unknown value is the safe reading
+        return D.Missing(None)
+    if isinstance(m, D.TempVal) and m.t in dead:
+        return D.Missing(None)
+    if isinstance(m, D.Multi):
+        if isinstance(m.tail, D.TempTail) and m.tail.t in dead:
+            # the whole multret came from a call that is not emitted
+            m.items = [D.Missing(None)]
+            m.tail = None
+        else:
+            m.items = [_poison_multi(x, dead, D, depth + 1) for x in m.items]
+            m.tail = _poison_multi(m.tail, dead, D, depth + 1)
+        return m
+    if isinstance(m, (list, tuple)):
+        return type(m)(_poison_multi(x, dead, D, depth + 1) for x in m)
+    if isinstance(m, Reg):
+        return m
+    d = getattr(m, "__dict__", None)
+    if d is not None and type(m).__name__ not in ("LTable", "Scope", "LuaFunc"):
+        for k, v in list(d.items()):
+            if v is None or isinstance(v, (str, int, float, bytes, bool)):
+                continue
+            nv = _poison_multi(v, dead, D, depth + 1)
+            if nv is not v:
+                setattr(m, k, nv)
+    return m
+
+def poison_unknown_callees(entry, blocks, D, frame_bound=()):
+    """Drop direct calls of a register this function never defines.
+
+    A register the finished CFG assigns nowhere and no frame binding names is
+    not a value the deobfuscated function has: it is a caller's frame slot the
+    walk never bound (the report's `residual_unknown`) or a slot from a branch
+    the trace never took.  Printing such a callee produces `(nil)(...)`, which
+    errors the moment that line runs -- and calling a value that does not
+    exist is never valid Lua, which is exactly the rule
+    `ProtoLifter.call_symbolic` already applies to poisoned callees at lift
+    time.  Here the same rule is applied to what only the whole function can
+    show: the call statement is dropped and its results become `Missing`, the
+    value the rest of the engine prints as `nil --[[ constant not decoded ]]`.
+
+    Only a *direct* register callee is treated.  A callee built out of a
+    register (`r40(r102, r106)` may print `context.HttpService:JSONEncode(...)`)
+    still names whatever its own parts resolve to, so it is left alone.
+
+    Returns how many call statements were dropped.
+    """
+    defined = set()
+    used = set()
+    for bid in blocks:
+        b = blocks[bid]
+        for s in b.stmts:
+            if isinstance(s, D.Assign) and isinstance(s.target, D.Reg):
+                defined.add(s.target.n)
+        for x in list(b.stmts) + [b.cond, b.values]:
+            if x is None:
+                continue
+            _read_temps(x, used)
+    dead = set()
+    drops = []
+    for bid in sorted(blocks):
+        for s in blocks[bid].stmts:
+            if not isinstance(s, D.CallStmt):
+                continue
+            fn = s.fn
+            if not isinstance(fn, D.Reg):
+                continue
+            if fn.n in defined or fn.n in frame_bound:
+                continue
+            if s.t not in used:
+                # nothing reads the results: the printer drops a nil call as a
+                # statement on its own, so leave the block as it was
+                continue
+            dead.add(s.t)
+            drops.append((bid, s))
+    if not dead:
+        return 0
+    if os.environ.get("DEVIRT_POISON"):
+        # Diagnostic: what was dropped, so a report can show the calls.
+        for bid, s in drops:
+            print("[poison] block=%r %s" % (bid, D.fmt_stmt(s)), file=sys.stderr)
+    for bid, s in drops:
+        b = blocks[bid]
+        b.stmts = [x for x in b.stmts if x is not s]
+    for b in blocks.values():
+        if b.cond is not None:
+            b.cond = _poison_multi(b.cond, dead, D)
+        if b.values is not None:
+            b.values = _poison_multi(b.values, dead, D)
+        b.stmts = [_poison_multi(s, dead, D) for s in b.stmts]
+    return len(drops)
+
 def thread_empty(entry, blocks):
     """Skip empty goto blocks (dispatcher hops, NOPs); merge straight-line chains."""
     def target(bid, seen=None):

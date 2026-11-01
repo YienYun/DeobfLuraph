@@ -1173,6 +1173,7 @@ def lift_program(source, protos_path, chunk_paths=(), fetch=None):
     fl.stats["runtime_stubs"] = len(prog.dump.shared)
     fl.stats["frame_bound"] = variables.LIFT_STATS["frame_bound"]
     fl.stats["residual_unknown"] = variables.LIFT_STATS["residual_unknown"]
+    fl.stats["unknown_callee"] = variables.LIFT_STATS.get("unknown_callee", 0)
     import structure as _ST
     fl.stats["guards"] = sum(_ST.GUARD_DROPS)
     _ST.GUARD_DROPS[:] = []

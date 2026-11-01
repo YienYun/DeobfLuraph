@@ -30,6 +30,13 @@ def lower(entry_key, order, D, link, prefix, upnames, closure):
     LP.recognize(entry, blocks, D)
 
     entry = ST.thread_empty(entry, blocks)
+    # Registers a frame binding names (`upnames[(up, register)]`) are real
+    # values of the enclosing function, not holes of this one.
+    frame_bound = {k[1] for k in (upnames or {})
+                   if isinstance(k, tuple) and len(k) == 2 and isinstance(k[1], int)}
+    dropped = ST.poison_unknown_callees(entry, blocks, D, frame_bound)
+    if dropped:
+        VR.LIFT_STATS["unknown_callee"] = VR.LIFT_STATS.get("unknown_callee", 0) + dropped
     CG.simplify_blocks(blocks, D)
     names = {("up", i): nm for i, nm in (upnames or {}).items()}
     # The parent's names are fixed text; this function's own registers must step

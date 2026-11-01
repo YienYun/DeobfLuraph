@@ -194,8 +194,9 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None):
             # Countable line for the run report: how many frame registers the
             # shared-frame propagation bound to a parent value, and how many
             # register reads were left with no name at all (printed as `nil`).
-            print("[*]   frame_propagation: bound=%d residual_unknown=%d"
-                  % (stats.get("frame_bound", 0), stats.get("residual_unknown", 0)), file=sys.stderr)
+            print("[*]   frame_propagation: bound=%d residual_unknown=%d unknown_callee=%d"
+                  % (stats.get("frame_bound", 0), stats.get("residual_unknown", 0),
+                     stats.get("unknown_callee", 0)), file=sys.stderr)
             if converged or rnd == rounds:
                 break
             if quick:

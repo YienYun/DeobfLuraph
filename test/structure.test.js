@@ -68,3 +68,65 @@ test('structure prunes dead integrity-guard branches but keeps real ones intact'
     assert.equal(out[k], true, k);
   }
 });
+
+// structure.poison_unknown_callees(): a direct call of a register the finished
+// function never defines cannot be Lua, so the call statement is dropped and its
+// results become the engine's `Missing` (printed as `nil --[[ constant not
+// decoded ]]`) instead of `(nil)(...)`.
+const POISON_SCRIPT = `
+import sys, json
+sys.path.insert(0, ${JSON.stringify(path.join(ROOT, 'core'))})
+import structure as ST
+import ir as D
+from luasym import Reg, Const, Multi, TempTail
+
+def blk(bid, kind, stmts=(), values=None):
+    b = ST.Block(bid)
+    b.kind, b.stmts, b.values = kind, list(stmts), values
+    return b
+
+call = lambda t, fn, args: D.CallStmt(t, fn, Multi(list(args)))
+
+# 1: return (reg 104)(reg 85, reg 104) -- nothing defines 104 or 85
+# 2: call through reg 5, which block 3 assigns
+# 3: the definition
+# 4: call through reg 7, a register a frame binding names
+# 5: call through reg 9 with results nobody reads (the printer drops it)
+blocks = {
+    1: blk(1, 'ret', [call('t1', Reg(104), [Reg(85), Reg(104)])], Multi([], TempTail('t1'))),
+    2: blk(2, 'goto', [call('t2', Reg(5), [Reg(1)]), D.Assign(Reg(2), D.TempVal('t2', 1))]),
+    3: blk(3, 'goto', [D.Assign(Reg(5), Const(1))]),
+    4: blk(4, 'goto', [call('t3', Reg(7), [Reg(1)]), D.Assign(Reg(3), D.TempVal('t3', 1))]),
+    5: blk(5, 'end', [call('t4', Reg(9), [Reg(1)])]),
+}
+for b in blocks.values():
+    b.preds = []
+n = ST.poison_unknown_callees(1, blocks, D, {7})
+ret = blocks[1].values
+out = {
+    'n': n,
+    'dropped': blocks[1].stmts == [],
+    'poisoned': len(ret.items) == 1 and type(ret.items[0]).__name__ == 'Missing' and ret.tail is None,
+    'defined_kept': isinstance(blocks[2].stmts[0], D.CallStmt),
+    'frame_kept': isinstance(blocks[4].stmts[0], D.CallStmt),
+    'unused_kept': isinstance(blocks[5].stmts[0], D.CallStmt),
+}
+
+# a callee built out of a register is left alone: it names whatever its parts do
+blocks2 = {1: blk(1, 'goto', [call('t5', D.Index(Reg(104), Const("JSONEncode")), [Reg(1)]),
+                              D.Assign(Reg(2), D.TempVal('t5', 1))])}
+blocks2[1].preds = []
+m = ST.poison_unknown_callees(1, blocks2, D)
+out['expr_callee_kept'] = isinstance(blocks2[1].stmts[0], D.CallStmt) and m == 0
+print(json.dumps(out))
+`;
+
+test('structure poisons a call of a register the function never defines', () => {
+  const res = spawnSync(getPythonBin(), ['-c', POISON_SCRIPT], { cwd: ROOT, encoding: 'utf8' });
+  assert.equal(res.status, 0, res.stderr || res.stdout);
+  const out = JSON.parse(res.stdout.trim().split('\n').pop());
+  assert.equal(out.n, 1);
+  for (const k of ['dropped', 'poisoned', 'defined_kept', 'frame_kept', 'unused_kept', 'expr_callee_kept']) {
+    assert.equal(out[k], true, k);
+  }
+});

@@ -927,10 +927,134 @@ Three holes are still in the output, and they are gaps, not bugs:
   position there is nothing to cut, and the honest replacement -- `return nil` --
   would change control flow at a point where the original always raised. It stays
   visible so it can be counted; naming the callee `Color3.fromRGB` would be a
-  guess, not a lift.
+  guess, not a lift. **This one site is gone as of §14** (the callee turned out to
+  be a register the function never defines, not a constant); the paragraph above
+  is kept as the state §13 shipped with.
 - **Ten spin loops** dropped with a `-- devirt:` comment: the original busy-waits,
   the output does not.
 - Anything a script does only through those two holes is still missing.
 
 So: the crash that came from calling an unresolved capture is gone, 21 values are
 recovered, and the output is now honest about the one call it cannot name.
+
+## 14. A Call Of A Register The Function Never Defines
+
+§13 left exactly one `(nil)(...)` in `SampleV1` and called it "a tamper trap whose
+callee is a constant nil". The mechanism is different, and knowing it removes the
+site without naming anything:
+
+```lua
+local value7 = table.pack(bit32.lshift(value6, 13))
+return (nil)(nil, nil)              -- §13
+return nil --[[ constant not decoded ]]   -- §14
+```
+
+### Where it came from
+
+Lifting in stages (`core/backend.py` is a pipeline of passes over one CFG) shows
+the call is already broken before any pass touches it. Instrumenting `lower()`
+right after `build_cfg` and watching register 104 for the whole run prints:
+
+```
+[cfg:cfg] n=1 U
+   U b264 T50_215_1 = r104(r85, r104)
+```
+
+One line at the first stage, and it is a *use*: register 104 is read twice (as the
+callee and as the second argument) and written nowhere in the function. The
+register is not lost by a later pass -- `prune_constant_guards`, `prune_after_trap`,
+`drop_unreachable`, `merge_equivalent`, `loops.recognize` and `simplify_blocks` all
+leave the count at one. `variables.rename` then has no web for it, and its
+documented fallback for a read with no web is `Const(None)` -- the `nil` the printer
+writes. Those reads are what the run report has been counting all along:
+
+```
+[*]   frame_propagation: bound=0 residual_unknown=55 ...
+```
+
+The lifted instruction is genuine, not a decode slip: in this VM's mode-5
+dispatcher, opcode 14 is the tail call
+
+```lua
+return a[e[L]](a[h[L]], a[j[L]])
+```
+
+and the decrypted operand arrays hold `e[50] = 104`, `h[50] = 85`, `j[50] = 104`
+for pc 50 -- i.e. `a[104](a[85], a[104])`. The register array `a` is the VM frame
+the lifter models as a `RegFile`, and this proto writes neither 85 nor 104: the
+values are not in this function at all. Reading them as `nil` and *calling* that
+nil is the one thing Lua never allows, so the printed call could only ever raise.
+
+### The rule
+
+`structure.poison_unknown_callees`, called from `lower()` after the loop pass and
+before `simplify_blocks` (so it sees the finished statement set, not one block at a
+time):
+
+* a `CallStmt` whose callee is a **direct** `Reg(n)` is dropped when nothing in the
+  function assigns `n` and no frame binding names it
+  (`upnames[(up, n)]` -- those registers are the *enclosing* function's values and
+  are real);
+* only calls whose result is actually read are treated: an unused nil call is
+  already dropped by the printer, and rewriting blocks the printer handles keeps
+  the diff to the sites that matter;
+* the dropped call's results become `Missing`, the value the rest of the engine
+  prints as `nil --[[ constant not decoded ]]`, so nothing is invented and the
+  hole stays visible;
+* the run report counts them: `unknown_callee=N`.
+
+This is the same rule `ProtoLifter.call_symbolic` has always applied at lift time
+("calling values that do not exist is never valid Lua, so stay poisoned instead of
+emitting `(nil)(...)`"); what was missing was the case only the finished CFG can
+see, a callee register whose definition does not exist anywhere in the function.
+
+### Evidence
+
+```
+[poison] block=126 T50_215_1 = r104(r85, r104)          # DEVIRT_POISON=1
+[*]   frame_propagation: bound=0 residual_unknown=52 unknown_callee=1
+```
+
+| metric | §13 (`ac9acce`) | §14 |
+|---|---|---|
+| `(nil)(...)` in `SampleV1` | 1 | **0** |
+| `residual_unknown` | 55 | **52** |
+| `unknown_callee` | (not reported) | **1** |
+| lines / bytes | 43,771 / 1,487,897 | 43,771 / 1,487,918 |
+| `devirt_errors` / `unresolved_uses` | 0 / 0 | 0 / 0 |
+| `bit32_calls` / chain lines | 49 / 14 | 49 / 14 |
+| `blank_lines` | 4,740 | 4,740 |
+| `parses` | yes | yes |
+
+The whole `SampleV1` diff against `ac9acce` is 20 lines, all accounted for:
+
+* the site itself (`return (nil)(nil, nil)` -> `return nil --[[ constant not
+  decoded ]]`);
+* `callback11` -> `parseColor3` and the `callback11..callback14` renumbering that
+  follows it. Dropping the call removes three unnamed reads from the web analysis,
+  the naming pass sees a function that only builds a `Color3`, and its heuristic
+  name wins over `callbackN`;
+* the author's watermark comment moves 148 lines later. `src/watermark.js` seeds
+  its RNG from the finished source and picks one safe statement boundary out of
+  the pool, so any text change re-picks the line; the comment is still there
+  exactly once, still followed by one `print("Deobf By Zed")`.
+
+`RideAPet` and `StealAnEgg` rebuild **byte-identical** to
+`samples/differential/*/output.lua`, with `unknown_callee=0`: the pass never fires
+where every callee register has a definition. The suite is unchanged at 54 pass /
+2 fail / 19 skipped (the two failures are the pre-existing `#39` and `#72`), and
+two consecutive `SampleV1` runs produce the same `md5`
+(`2bc0ee05dc45c9c9241dc12a6d11c1e5`).
+
+### What this does not fix
+
+The tail it removes is not user code. The statements just above it -- `mixBits`
+with `536870911`, the shifts by 13 and 14, `table.pack(bit32.lshift(v, 13))` -- are
+the VM's own operand decryptor: in the same source region, mode-5 opcode 91 does
+`p = _(U(p, s(p, 13)), 536870911); p = U(p, v(p, 13)); ... h[T] = U(h[T], _(v(p, 0), 127))`
+over the operand arrays, and the constants are identical. The walk reaches that
+machinery because the state it carries into pc 44..50 holds a **symbolic** local
+(`locs` = `T=58, p=None, M='r2'`), so the handler decodes operands from a value
+that is a register rather than a number. Fixing that is a walk-level problem
+(symbolic carried locals), not a printing problem -- the guard here only stops the
+result from being a call of nil. Ten spin loops (§8) are still dropped.

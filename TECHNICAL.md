@@ -219,9 +219,10 @@ Result on `SampleV1`: 11 -> 10 holes, 43,822 -> 43,820 lines, and nothing else
 moved. The eleventh was the `else` half of an `if` whose two branches each held
 only such a loop: with the loop gone to a comment the branch had no statements
 left, so `ast_polish` dropped the empty `else` and its comment with it -- an
-`if` with an empty `else` is the same program.: `(nil)(...)` still 7,
+`if` with an empty `else` is the same program. (`(nil)(...)` was still 7,
 `bit32` `nil` operands still 2, `bit32_chain_lines` still 17, unresolved
-captures unchanged. Remaining holes and their enclosing functions:
+captures unchanged -- the dangling-callee bug below was found after this step.)
+Remaining holes and their enclosing functions:
 
 | line | enclosing function | why |
 |---|---|---|
@@ -238,3 +239,96 @@ captures unchanged. Remaining holes and their enclosing functions:
 Each of the ten is the same shape: a self-loop whose only lifted statement
 wrote an unread scratch value. None of them had a body that could be put back
 without inventing one.
+
+## 9. The Dangling Callee Register: `(nil)(...)` Was Dropped Code, Not A Lost Frame Value
+
+`(nil)(...)` was blamed on the shared register frame for a long time. It is not
+that. In the unnamed closure that produced most of them (no `pid`, depth 1,
+`upnames = [(1, 'r52')]`) register 2 is the VM call slot: the interpreter writes
+the function there and the next dispatch calls it. The lifter flags every write
+that exists only to feed a VM dispatch as `jump`, and `structure.fill` drops
+every `jump`-flagged statement:
+
+```python
+b.stmts += [s for s in node.stmts if not getattr(s, "jump", False)]
+```
+
+In that closure all 17 writes to register 2 were flagged `jump` -- including the
+two that were genuine reads of the script's own values -- while 7 reads of
+register 2 survived. A read with no definition left in its function has no web,
+`variables.rename` gets `None` for it, and the printer has nothing to say but
+`nil`. That is the whole `(nil)(...)` population.
+
+The fix is `dataflow.materialise_read_jump_regs`, called from
+`FunctionLifter.lift` just before `apply_frame_calls`: a register in
+`jump_regs | cff_regs` that a surviving expression actually reads keeps its
+writes (`st.jump = False`). Nothing is invented and nothing else is touched --
+only those registers, only the writes that a live read needs. `lf.materialised_jump_regs`
+records the hit set and the run prints one `[jread]` line per proto.
+
+Result on `SampleV1`:
+
+| | before (v0.4) | after |
+|---|---|---|
+| `(nil)(...)` | 7 | 1 |
+| `bit32` `nil` operands | 2 | 0 |
+| `unresolved_uses` / `hints` / `unhinted` | 185 / 158 / 0 | 185 / 158 / 0 |
+| `bit32_calls` | 50 | 50 |
+| `bit32_chain_lines` | 17 | **14** |
+| lines / bytes | 43,820 / 1,492,328 | 43,842 / 1,492,901 |
+
+The only `(nil)(...)` left is `return (nil)(nil, nil)` at the end of
+`callback11`, where the callee is a value the trace never produced (case 3
+below). The old `if nil ~= "table"` in the same function became
+`if type(argument) ~= "table"`: the dropped write was the `type` call, so the
+old line was permanently true.
+
+### Why `bit32_chain_lines` had to fall with it
+
+`scripts/metrics.py` counts a chain as a run of at least three consecutive
+statements holding a `bit32` call. The three lines that fed the cipher in
+`callback10` were
+
+```
+local value10 = bit32.band(bit32.rshift(nil, 29), 7)
+local value11 = bit32.band(bit32.bxor(nil, value10), 536870911)
+local value12 = bit32.bxor(146907180, value11)
+```
+
+three consecutive lines, five calls -- and `./bin/luau` reports
+`invalid argument #1 to 'rshift' (number expected, got nil)` for the first of
+them, so this was never the script's own code. Once register 2 is materialised
+the same value is one line of real arithmetic
+(`local number15 = 3972087808`, `local value5 = bit32.band(bit32.bxor(526889733, number15), 536870911)`),
+the run is shorter than three, and the count goes with it: 3 chain lines and 5
+chain calls disappear, which is exactly `17 -> 14` and `25 -> 20`. Total
+`bit32_calls` is unchanged at 50 (5 old calls became 5 new ones); `bit32_lines`
+goes 35 -> 36 because three fabricated lines became four real ones, and four
+`x = bit32.bxor(x, ...)` stores plus one `bit32.bor(...)` that used to be erased
+with the callee slot are visible again.
+
+So the two gates -- `nil` `bit32` operands 0 and `bit32_chain_lines` 17 -- cannot
+both hold: the 17 counted three statements that only existed because the operand
+was `nil`. The amended gate for this milestone is `bit32_chain_lines 14` with
+`bit32_calls` unchanged at 50, and the fold checked against the fold-disabled
+lift: `scripts/bitfold_verify.py --before <nofold> --after <fold>` reports
+`PASS identical on 512 random inputs`, with the fold now seeing 8 repetitions of
+a 6-statement chain instead of 9 (the 9th was the phase-shifted remainder of the
+broken prefix).
+
+### The countable run report line
+
+The printer has no honest text for a value the trace never produced, so those
+stay plain `nil` instead of a marker. Countability comes from one line per full
+lift:
+
+```
+[*]   frame_propagation: bound=N residual_unknown=M
+```
+
+`bound` is the number of frame registers bound to a parent value by the
+shared-frame propagation; `residual_unknown` counts register reads for which
+`variables.rename` found no name at all. The second is measured over every
+lifted proto, i.e. before dead code is removed, so it is not the number of
+visible `(nil)(...)` uses (55 against 1 here). Both counters live in
+`variables.LIFT_STATS`, are reset per lift, and are deterministic.

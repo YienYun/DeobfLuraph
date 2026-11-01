@@ -1203,6 +1203,84 @@ def drop_idle_closes(order, captured):
             n.stmts = [x for x in n.stmts if not (isinstance(x, Close) and x.reg not in captured)]
         stack += [n.then, n.els]
 
+def _expr_reg_reads(e, out):
+    """Register numbers an expression (or a Multi/SymList of them) reads."""
+    stack = [e]
+    while stack:
+        x = stack.pop()
+        if x is None:
+            continue
+        if isinstance(x, Reg):
+            out.add(x.n)
+        elif isinstance(x, (Multi, SymList)):
+            stack.extend(list(x.items))
+            stack.append(getattr(x, "tail", None))
+        elif isinstance(x, Expr):
+            stack.extend(v for v in x.__dict__.values() if isinstance(v, (Expr, Multi)))
+    return out
+
+
+def materialise_read_jump_regs(lf, order):
+    """Keep the writes of a jump register the function also reads as a value.
+
+    The lifter marks a write to a control-flow register `jump`: its value travels
+    in the walk state, so `structure.fill` leaves the statement out and a read of
+    the register is normally answered from `jvals`. A read the walk could not
+    answer stays `Reg(k)`, and then the register *is* an ordinary variable of this
+    function -- but every write to it was dropped, so the read reaches no
+    definition and the output says `nil`.
+
+    SampleV1's `callback10` is exactly that: register 2 (the VM's callee slot) is
+    written 17 times, all marked jump and all dropped, and is then called at seven
+    sites, which rendered as `(nil)(...)`.
+
+    So: a jump register that a surviving expression reads keeps its writes. Only
+    those registers, and only their `jump` flag -- nothing is invented, and a
+    register whose reads all resolved is untouched.
+    """
+    jumpy = set(getattr(lf, "jump_regs", ())) | set(getattr(lf, "cff_regs", ()))
+    if not jumpy:
+        return 0
+    read = set()
+    for _, node in order:
+        for st in (node.stmts or ()):
+            if isinstance(st, Assign):
+                if not isinstance(st.target, Reg):
+                    _expr_reg_reads(st.target, read)
+                _expr_reg_reads(st.value, read)
+            elif isinstance(st, CallStmt):
+                _expr_reg_reads(st.fn, read)
+                _expr_reg_reads(st.args, read)
+            elif isinstance(st, SetList):
+                _expr_reg_reads(st.tbl, read)
+                _expr_reg_reads(st.values, read)
+            elif isinstance(st, ForPrep):
+                for e in st.exprs:
+                    _expr_reg_reads(e, read)
+        if getattr(node, "cond", None) is not None:
+            _expr_reg_reads(node.cond, read)
+        oc = getattr(node, "outcome", None)
+        if isinstance(oc, Ret) and oc.values is not None:
+            _expr_reg_reads(oc.values, read)
+    hit = {k for k in read if isinstance(k, int)} & jumpy
+    if not hit:
+        return 0
+    n = 0
+    stack = [node for _, node in order]
+    while stack:
+        node = stack.pop()
+        if node is None:
+            continue
+        for st in (node.stmts or ()):
+            if isinstance(st, Assign) and isinstance(st.target, Reg) \
+                    and st.target.n in hit and getattr(st, "jump", False):
+                st.jump = False
+                n += 1
+        stack += [node.then, node.els]
+    lf.materialised_jump_regs = hit
+    return n
+
+
 def apply_frame_calls(order):
     """Evaluated frame-writing calls (frame_call) -> the register writes."""
     stack = [n for _, n in order]

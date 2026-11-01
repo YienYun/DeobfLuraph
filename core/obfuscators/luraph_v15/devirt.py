@@ -18,6 +18,7 @@ if ROOT not in sys.path:
 
 import backend
 import harness
+import variables
 import luauast as LA
 import luasym as S
 from luasym import (
@@ -40,7 +41,8 @@ from obfuscators.luraph_v15.dataflow import (
     OpenUps, OPENUPS, MaybeBox, UpList, REGFILE, FRAME, FrameProxy, BoxProxy, BoxPart,
     walk_expr, meet, fact_of, eval_fact, truth_of, edge_facts, _replace_dict_fact,
     _upval_open_reg, _single_const_fact, _capture_closure_up_facts, apply_stmt_facts,
-    frame_call, drop_idle_closes, apply_frame_calls, _check_cff_bin, propagate, expr_regs,
+    frame_call, drop_idle_closes, apply_frame_calls, materialise_read_jump_regs, _check_cff_bin,
+    propagate, expr_regs,
 )
 from obfuscators.luraph_v15.vm_model import (
     _classify_vm_method, _PlainPrinter, PlainProto, iter_nodes, VMModel, find_ctor_funcs,
@@ -717,6 +719,11 @@ class FunctionLifter:
                 c.frame_regs = sorted({r for i, e in enumerate(c.upvals, ub) if isinstance(e, RegFile)
                                        for r in c.frame_map.get(i, ())})
         me = sys.modules[__name__]
+        kept_jump_writes = materialise_read_jump_regs(lf, order)
+        if kept_jump_writes:
+            print("[jread] proto=%r depth=%d kept=%d regs=%r"
+                  % (proto.tid, depth, kept_jump_writes,
+                     sorted(getattr(lf, "materialised_jump_regs", ()), key=repr)), file=sys.stderr)
         apply_frame_calls(order)
         drop_idle_closes(order, lf.captured_regs)
         lines, self.params, nerr, fallbacks = backend.lower(
@@ -1088,6 +1095,7 @@ def _drop_dead_upvalue_writes(lines):
 
 def lift_program(source, protos_path, chunk_paths=(), fetch=None):
     """The root proto of every VM -> Luau text (plus stats and constant requests)."""
+    variables.reset_stats()
     prog = Program(source, protos_path, chunk_paths)
     prog.dump.fetcher = fetch
     LAST_DUMP[:] = [prog.dump]
@@ -1163,6 +1171,8 @@ def lift_program(source, protos_path, chunk_paths=(), fetch=None):
         at = next((i for i, l in enumerate(out) if l and not l.startswith("--")), len(out))
         out[at:at] = shared
     fl.stats["runtime_stubs"] = len(prog.dump.shared)
+    fl.stats["frame_bound"] = variables.LIFT_STATS["frame_bound"]
+    fl.stats["residual_unknown"] = variables.LIFT_STATS["residual_unknown"]
     import structure as _ST
     fl.stats["guards"] = sum(_ST.GUARD_DROPS)
     _ST.GUARD_DROPS[:] = []

@@ -1083,6 +1083,48 @@ but it is recoverable from history: `git show 5abcc5d:Upload/SampleV1.lua`
 rebuilds the committed output byte for byte (`md5 2bc0ee05...`), so every change
 to this path can be re-measured.
 
+### Where the decode goes symbolic
+
+The walk is a search over states, not a replay, so the trace below is visit order.
+`_walk` steps each `(mode, pc, jregs, packs, carried locals)` state once; the
+carried locals (`State.locs`) are the dispatcher loop's own variables, keyed by
+the source location they were declared at. For the proto that ends in the poison
+site, one of them goes from a number to a *register* two instructions before the
+operand decryptor runs:
+
+```
+pc=61 mode=5 locs=[(141202, '1186662707')] | r2 = 719669459
+pc=62 mode=5 locs=[(141202, '1186662707')] | r3 = 1186662707
+pc=63 mode=5 locs=[(141202, '1186662707')] | T63_205_1 = bit32.band(r3, 719669459)
+pc=65 mode=5 locs=[(141202, '<Reg 2>')]    | T65_207_1 = r4(T60_196_1[1...])
+pc=66 mode=5 locs=[(141202, '<Reg 2>')]    | r3 = math["floor"]
+pc=67 mode=5 locs=[(141202, '<Reg 2>')]    | T67_209_1 = bit32.rshift(r2, 29) ; ...
+pc=48 mode=5 locs=[(141202, '<Reg 2>')]    | r21 = (r3308 CompareNe "id")
+pc=50 mode=5 locs=[(141202, '<Reg 2>')]    | T50_215_1 = r104(r85, r104)
+```
+
+From pc=67 on, the operand decryptor is fed `r2` -- a register -- where it wants
+the number it was fed at pc=61..63. Every constant after that point is a symbolic
+mix, so the operand it produces is a *symbolic* index, and a symbolic index into
+the frame comes out as concrete-looking nonsense: `r3308`, `r104`, `r85`. That is
+also why the bit32 chain (`536870911`, shifts by 13/14) appears only here --
+`grep -c 536870911` is 3 in `SampleV1` and 0 in both differential fixtures, i.e.
+it is not user code and not normal lifted output.
+
+Turning the carry off entirely is not the answer, and this was measured rather
+than assumed: `DEVIRT_NOCARRY=1` (carry disabled inside `_stepper._note_access`)
+drops the walk from 112 to 127 functions but explodes `residual_unknown` from 52
+to 8,820 and `unknown_callee` from 1 to 207, and the output grows from 43,771 to
+64,875 lines. The carry is what keeps the dispatcher's state alive; one value in
+it is what goes stale.
+
+So the remaining work is precise: find why the local at `0,141202` is re-read as
+`Reg(2)` when the same lifter had the constant `1186662707` in it two steps
+earlier, and either keep the constant or refuse to decode from a register (which
+would leave the call honestly unknown instead of inventing operands). Naming the
+callee `Color3.fromRGB` before that is fixed would be a guess that only looks
+right on this one sample.
+
 ### What this does not fix
 
 The tail it removes is not user code. The statements just above it -- `mixBits`

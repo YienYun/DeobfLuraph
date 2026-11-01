@@ -1125,6 +1125,24 @@ would leave the call honestly unknown instead of inventing operands). Naming the
 callee `Color3.fromRGB` before that is fixed would be a guess that only looks
 right on this one sample.
 
+### The frame slot has no writer at all
+
+Dumping every state the walk visits for that proto (`DEVIRT_PROTODUMP=1`, 936
+visit lines) settles where the callee could have come from:
+
+* `r104` and `r85` are read and **never written** -- not in the visited states,
+  not anywhere in the lifted text of that proto;
+* the proto performs **zero** frame or table stores in the whole walk (a normal
+  proto in the same dump has 107), so the branch that would fill `a[104]` was
+  never walked at all;
+* the only stores that happen are plain register assignments from the VM's own
+  decryptor arithmetic.
+
+So the lift of this function covers the dispatcher's arithmetic path, not the
+code that would have installed `Color3.fromRGB` in the frame. The value is not
+"lost by a pass"; it was never on the path the walk took, which is why printing a
+name there would be invention.
+
 ### What this does not fix
 
 The tail it removes is not user code. The statements just above it -- `mixBits`

@@ -25,3 +25,6 @@ samples/output/**/*.deobf.luau
 samples/input/**
 !samples/input/.gitkeep
 !samples/input/*/.gitkeep
+
+# The root-level Luraph fixtures the integration tests use are inputs too.
+/samples/*_obfuscated.lua

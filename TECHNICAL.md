@@ -138,3 +138,49 @@ CI when any copy drifts. If you change a protocol value, change it in
 - `npm test` (or `python test/run_all.py`) runs the fast suite: unit tests for the Python core (chunk-key vectors, Luau pow semantics, config parsing, protocol nonce forging regression) plus the cross-language protocol consistency checks (spawns `node`, no Luau binaries needed).
 - `python test/run_all.py --golden` additionally re-runs the full pipeline on the benchmark samples and compares byte-for-byte with the committed reference outputs in `sample/output/` (needs `bin/luau` + `bin/luau-ast` from `python build_luau.py`). If a run differs, the reference file is restored and the test fails.
 - `.github/workflows/ci.yml` runs the fast suite on Ubuntu and Windows, syntax-checks every Python/JS file, and builds the patched Luau runtime (cached) for the golden regression.
+
+## 7. Known Gap: `nil` Operands and the Shared Register Frame
+
+`SampleV1` shipped with nine suspicious `nil`s, all inside one lifted function
+(`callback10`, lines 43525-43565): seven `(nil)(...)` call targets and two
+`bit32` operands (`bit32.band(bit32.rshift(nil, 29), 7)` /
+`bit32.band(bit32.bxor(nil, value10), 536870911)`). They are **not** missing
+constants. The measured causes:
+
+- **Class (a), not fetched** — `DEVIRT_MISS=1` reports `fetched=761 requests=0`
+  over the whole run and exactly two misses (`tid=990 slot=243 path=[43,'f']`).
+  Extra fetch rounds cannot move this.
+- **Constant decoding** ruled out by instrumentation: `("const", None)` node reps
+  (`vm_model._PlainPrinter`), `conv(None)` in `codegen`, `as_expr(None)` in
+  `lifter`, and the four explicit `Const(None)` sites in `lifter` all report
+  zero hits on this sample.
+- **Capture naming** ruled out: zero `[up] nilname`, zero unnamed upvalue
+  renders (`upv%d` appears 8 times in 43822 lines).
+- **The actual producer** is `variables.webs()`: a register read that no
+  definition reaches maps to `None`, and `rename()` renders that as the literal
+  `nil` (65 sites across 12 functions on this sample; for 57 of them the
+  register is never written anywhere in that function).
+
+Those 57 registers are read from the frame the proto shares with its caller:
+the value was set outside the lifted body. Once such a value is unknown the
+lift cannot honestly fill it in, and the visible damage is not cosmetic —
+`if nil ~= "table" then` is always true, so the lifted `callback10` returns
+`nil` before doing any work.
+
+The honest fix is therefore *not* a constant-decoder change and *not*
+synthesising a value: it is to carry the caller's register state into the
+child proto (shared-frame propagation), and to close the 11
+`-- devirt: loop body not recovered` holes whose bodies define some of those
+registers. Both are model work, and both are listed as the next step after the
+P4 investigation rather than guessed at here.
+
+Reproduction (baseline, from a clean tree):
+
+```
+$ node deob.js samples/input/Luraph/SampleV1.lua -o /tmp/out.lua
+$ cmp /tmp/out.lua samples/output/Luraph/SampleV1.lua   # identical
+$ python3 scripts/metrics.py samples/output/Luraph/SampleV1.lua
+lines 43822  parses True  devirt_errors 0  devirt_comments 11
+unresolved_uses 185  unresolved_hints 158  unresolved_unhinted 0
+bit32_lines 35  bit32_chain_lines 17  empty_while_true 0
+```

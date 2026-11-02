@@ -1143,6 +1143,33 @@ code that would have installed `Color3.fromRGB` in the frame. The value is not
 "lost by a pass"; it was never on the path the walk took, which is why printing a
 name there would be invention.
 
+Which instruction that is, is now pinned: `DEVIRT_POISON=1` prints the dropped
+statement with the proto it came from, and the one drop in `SampleV1` is
+
+```
+[poison] proto=809 block=126 T50_215_1 = r104(r85, r104)
+```
+
+i.e. a single CALL at pc 50 of the closure whose capability table is 809, whose
+operand numbers are the undecrypted cell values. Three cross-checks agree that
+those numbers are not slots of a real instruction:
+
+* no proto in the dump holds the triple `(e=104, h=85, j=104)` at one index, and
+  `85`/`104` never appear together in the arrays the closure's own capability
+  table points at (`t810` holds `90, 116, 109, 95, 36, 107, 117, 53, 77, 70` for
+  pcs 45..54);
+* 14,849 of the 36,009 `e` operands in `SampleV1.protos.json` (41.2 %) are above
+  their own proto's window (`> max(L+8, 64)`), so a raw cell is not a register
+  number by default in this build;
+* the construct itself is fine everywhere else: the output has 156
+  `Color3.fromRGB` calls against the reference lift's 157, and the missing one is
+  this `return`.
+
+`tor_Reg` is not a way in: with `DEVIRT_BIGREG=1` all 196 events it logs carry
+`obj.tid=None`, `L=None`, `z=None`, so the object it is called with is not the
+proto's capability table and the big numbers cannot be attributed to a proto
+through it.
+
 ### What this does not fix
 
 The tail it removes is not user code. The statements just above it -- `mixBits`

@@ -1368,19 +1368,20 @@ shippable and runnable; it does not make the walk complete.
 
 ## v2 roadmap
 
-v1.0 is frozen: the recorder measures, it never deletes. Everything below is a
-plan, not a promise of behaviour in this release, and nothing here is implemented.
+v1.0 is frozen: the recorder measures, it never deletes. What is marked
+"implemented" below is in this tree; the rest is a plan, and the milestones that
+did not survive measurement are recorded with their numbers rather than dropped.
 
-1. **Replay the operand cell.** The live harness already runs the real VM and
-   answers a request for a lazy constant (`Dump.fetch` -> `harness.fetch` ->
-   `{force_req, force_buf}` on the next sandbox run). The same channel has to
-   answer for an *operand*: "proto P, array T, cell pc" -> the value the VM
-   decoded there. That turns the 41% of operand cells the walk currently reads
-   undecoded (verified without touching the block machinery: 44,800 of 108,700 in
-   the decoded window) into recorded values, which is what the
-   `poison_pc_covered=unrecorded` site in §14 needs. Cost: one request kind on
-   both sides of the bridge, one runtime entry point, and a test that a lifted
-   `Color3.fromRGB(...)` replaces the `return nil` hole.
+1. **Replay the operand cell.** *Attempted, measured, not shipped: see "V2-B"
+   below.* The live harness already runs the real VM and answers a request for a
+   lazy constant (`Dump.fetch` -> `harness.fetch` -> `{force_req, force_buf}` on
+   the next sandbox run), and the same channel does answer for an operand cell --
+   but the answer is only meaningful for a cell the run actually left encrypted.
+   The recorder cannot say which those are (`exec` exists only for arrays the
+   scrambler restores), so the replay has no denominator: on `SampleV1` the
+   second lift loses 4 blocks and 265 lines move away from the v1.0 output. What
+   has to come first is a per-array "decoded in place" flag from the runtime, so
+   `unrecorded` becomes `no` and the replay can be aimed.
 2. **Union coverage over several executions.** *(implemented, see "V2-A"
    below.)*
 3. **Mark blocks that no run covered.** Once 1 and 2 exist, a block whose pcs no
@@ -1441,3 +1442,62 @@ skips, it is a block no *offline* run reached.  The output is unchanged by this
 milestone (`OFF` and `ON` byte-identical to v1.0 on all three fixtures), which is
 the point: V2-A is a measurement, not a rewrite of the lift.
 
+### V2-B: replay of the cells the run never decoded (measured, not shipped)
+
+§14 ends with a hole that is a *dropped call*: `poison_pc_covered=unrecorded
+(pc=50, mode=5, 0/5 arrays the instruction reads carry coverage, 0 decoded
+there)`. The dropped call in `SampleV1` is `T50_215_1 = r104(r85, r104)` -- a
+call the instruction at that pc cannot be, because register 85 and 104 are not
+values the function ever writes. The walk reached a state the recorded run did
+not, decoded that instruction from cells the run never touched, and lifted the
+ciphertext as operands.
+
+V2-B was the obvious repair: those cells are exactly named (the walk records
+`(pc, array tid)` for every instruction array it reads at a pc, see
+`ProtoLifter.pc_reads` / `CallStmt.pc_arrays`), so ask the live VM to decode
+those cells and lift the dump again with the answers. Built as: `poison_sites`
+from `structure.poison_unknown_callees` -> `ProtoLifter.ask_cells` -> fetch
+paths through the long-lived harness -> a `<dump>.replay.json` sidecar -> a
+second lift of the *same* dump bytes in a fresh process (never a second lift in
+one process: `variables.reset_stats` zeroes every `LIFT_STATS` entry, so the
+`poison_sites` list is an `int` by the second pass and the lift dies in
+`backend.py`). The sidecar is never merged into the dump: a JSON round trip
+changes the last digit of a float constant (see V2-A).
+
+**Measured on `SampleV1`, `--exec-rec`:** the live VM answers 4 of the 5
+requested paths; the second lift then reports 112 functions with **4 unlifted
+blocks** (was 0), one closure aborts inside `backend.py:39`, and the output
+differs from v1.0 in **265 lines** -- not only at the replayed site: a whole
+helper function changes order, its guard state changes, and three `nil`
+operands appear inside what used to be the hole
+(`local number15 = math.floor(callback4(number13, 0, 255, nil))`).
+
+**Why it is not shipped: `unrecorded` is not `not decoded`.** These cells are
+not lazy slots the runtime decrypts on demand; the arrays the instruction reads
+carry no per-cell coverage at all, which is what the recorder says when it does
+not watch that array -- and the runtime decoded those cells in place long
+before the dump was taken. Asking the decoder to decode them *again* returns a
+value derived from the already-decoded word, so the answer is neither the
+program's operand nor the ciphertext: it is a third value, which is why the
+lift gets worse instead of better. The same missing signal is also what made
+`fstats.over` and the "already fetched" cache unable to catch it.
+
+So the milestone is closed with its measurement rather than its code, and the
+engine tree is unchanged. A sound version needs the runtime to say, per array,
+which cells it decoded in place (`exec` currently only exists for arrays the
+scrambler restores); with that, `unrecorded` becomes `no`, the replay has a
+denominator it can trust, and the second lift can be limited to protos whose
+cells are provably still encrypted. That is a `runtime/envlog.luau` change plus
+one flag per array in the dump -- a milestone of its own, not a tweak.
+
+Numbers for the record (the replay population): the dumps hold 89585
+(`SampleV1`), 113791 (`RideAPet`) and 94239 (`StealAnEgg`) decoded cells, with
+38 / 51 / 41 protos carrying any per-array coverage. Decoding all of them one
+path at a time is not affordable (every path is a live decode in the sandbox),
+and on this corpus the per-cell answers are not trustworthy anyway, so V2-B does
+not reduce that population. `CreateTab` / `CreateSection` counts are unchanged
+by this milestone (our `StealAnEgg` output 0 / 0 against the sample's 14 / 48).
+
+Off / on for the shipped tree is untouched by this section: no code changed, so
+OFF stays `2bc0ee05` / `9ab92dd9` / `941878d0` and ON stays `8e7134f5` /
+`91f890de` / `2f98357c` (md5, in fixture order).

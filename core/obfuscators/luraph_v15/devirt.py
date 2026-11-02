@@ -1236,6 +1236,9 @@ def lift_program(source, protos_path, chunk_paths=(), fetch=None):
     fl.stats["ru_unexec"] = variables.LIFT_STATS.get("ru_unexec", 0)
     cov, scr, none = prog.dump.exec_summary()
     fl.stats["exec_covered"], fl.stats["exec_scrambled"], fl.stats["exec_no_arrays"] = cov, scr, none
+    fl.stats["exec_runs"] = prog.dump.exec_runs
+    fl.stats["exec_pcs_first"] = prog.dump.exec_pcs_first
+    fl.stats["exec_covered_first"] = prog.dump.exec_covered_first
     fl.stats["residual_unknown"] = variables.LIFT_STATS["residual_unknown"]
     fl.stats["unknown_callee"] = variables.LIFT_STATS.get("unknown_callee", 0)
     import structure as _ST

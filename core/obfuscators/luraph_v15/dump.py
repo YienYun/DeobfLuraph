@@ -55,6 +55,112 @@ class PatchLog(dict):
         d, self.dirty = self.dirty, set()
         return d
 
+def exec_str(pcs):
+    """{3,4,5,9} -> "3-5,9", the format the runtime writes per array."""
+    out = []
+    lo = prev = None
+    for pc in sorted(pcs):
+        if lo is None:
+            lo = prev = pc
+        elif pc == prev + 1:
+            prev = pc
+        else:
+            out.append("%d" % lo if lo == prev else "%d-%d" % (lo, prev))
+            lo = prev = pc
+    if lo is not None:
+        out.append("%d" % lo if lo == prev else "%d-%d" % (lo, prev))
+    return ",".join(out)
+
+
+def array_identity(d):
+    """{table id: (proto identity, field name)} for every array a proto names.
+
+    Dump table ids follow an allocation order, so the same array can carry a
+    different id in another run.  What does not move is the program's own proto
+    id (`pid_of_table`) and the field a proto holds the array under, so that
+    pair is the identity used to merge coverage across runs."""
+    pid_of = {}
+    for k, v in (d.get("pid_of_table") or {}).items():
+        try:
+            pid_of[int(k)] = int(v)
+        except (TypeError, ValueError):
+            continue
+    out = {}
+    for pk, cap in (d.get("protos") or {}).items():
+        if not isinstance(cap, dict):
+            continue
+        self_ref = cap.get("self")
+        ptid = self_ref.get("t") if isinstance(self_ref, dict) else None
+        pid = pid_of.get(ptid)
+        ident = ("pid", pid) if pid is not None else ("key", str(pk))
+        for field, ref in cap.items():
+            if not isinstance(ref, dict) or "t" not in ref:
+                continue
+            key = ident + (field,)
+            tid = ref["t"]
+            if tid not in out or key < out[tid]:
+                out[tid] = key
+    return out
+
+
+def _covered(d, pcs):
+    """"Protos with at least one array in `pcs` (same rule as exec_summary)."""
+    n = 0
+    for cap in (d.get("protos") or {}).values():
+        if not isinstance(cap, dict):
+            continue
+        tids = [v.get("t") for v in cap.values() if isinstance(v, dict) and "t" in v]
+        if any(t in pcs for t in tids if t is not None):
+            n += 1
+    return n
+
+
+def union_exec_runs(texts, base_text=None):
+    """Merge the per-run `exec` coverage of several dumps.
+
+    -> ({tid: {pcs}} in the *first* dump's id space, info).  The dumps are never
+    rewritten: a JSON round trip turns 0.94743997235392186 into
+    0.9474399723539219, and a changed constant changes the lift.
+    """
+    import json
+    dumps = []
+    for t in texts:
+        try:
+            dumps.append(json.loads(t))
+        except (TypeError, ValueError):
+            continue
+    if not dumps:
+        return {}, {"runs": 0}
+    base = dumps[0]
+    if base_text is not None:
+        try:
+            base = json.loads(base_text)
+        except (TypeError, ValueError):
+            base = dumps[0]
+    maps = [(array_identity(d), Dump._exec_pcs(d)) for d in dumps]
+    union = {}
+    for kmap, pcs in maps:
+        for tid, s in pcs.items():
+            union.setdefault(kmap.get(tid, ("tid", tid)), set()).update(s)
+    first_pcs = maps[0][1]
+    kmap0 = array_identity(base)
+    out = {}
+    for tid in map(int, (base.get("tables") or {})):
+        pcs = union.get(kmap0.get(tid, ("tid", tid)))
+        if pcs:
+            out[tid] = pcs
+    info = {
+        "runs": len(dumps),
+        "pcs_first": sum(len(s) for s in first_pcs.values()),
+        "covered_first": _covered(dumps[0], first_pcs),
+        "pcs_union": sum(len(pcs) for pcs in out.values()),
+        "covered_union": _covered(base, out),
+        "base_covered": _covered(base, out),
+        "per_run": [sum(len(s) for s in pcs.values()) for _, pcs in maps],
+    }
+    return out, info
+
+
 class Dump:
     def __init__(self, path):
         opener = gzip.open if str(path).endswith(".gz") else open
@@ -90,7 +196,31 @@ class Dump:
         # with no entry was not covered (a scrambled proto cannot be: see
         # envlog CHAIN.execScan), and "no entry" is never read as "did not run".
         self.exec_pcs = self._exec_pcs(d)
-        self.exec_scrambled = int((d.get("exec_meta") or {}).get("scrambled") or 0)
+        meta = d.get("exec_meta") or {}
+        self.exec_scrambled = int(meta.get("scrambled") or 0)
+        # how many runs the coverage was unioned over, and what the first run
+        # alone covered: the report shows both, so "more runs" is measured.
+        # The union lives in a sidecar next to the dump, so the dump itself is
+        # never re-serialised (that loses the last digit of its float
+        # constants, and a changed constant changes the lift).
+        self.exec_runs = 0
+        self.exec_pcs_first = 0
+        self.exec_covered_first = 0
+        side = str(path) + ".union.json"
+        if os.path.exists(side):
+            try:
+                with open(side, encoding="utf-8") as f:
+                    u = json.load(f)
+            except (OSError, ValueError):
+                u = {}
+            for tid, runs in (u.get("exec") or {}).items():
+                pcs = self._parse_runs(runs)
+                if pcs:
+                    self.exec_pcs[int(tid)] = pcs
+            meta = u.get("meta") or {}
+            self.exec_runs = int(meta.get("runs") or 0)
+            self.exec_pcs_first = int(meta.get("pcs_first") or 0)
+            self.exec_covered_first = int(meta.get("covered_first") or 0)
         self._exec_cov = {}
 
         self._by_operand = self._operand_facts()
@@ -103,24 +233,27 @@ class Dump:
         self._sent = {}         
 
     @staticmethod
+    def _parse_runs(runs):
+        """{"3-9,12" -> {3..9, 12}}."""
+        pcs = set()
+        for part in str(runs or "").split(","):
+            if not part:
+                continue
+            lo, _, hi = part.partition("-")
+            try:
+                a = int(lo)
+                b = int(hi) if hi else a
+            except ValueError:
+                continue
+            pcs.update(range(a, b + 1))
+        return pcs
+
+    @staticmethod
     def _exec_pcs(d):
         """{"3-9,12" -> {3..9, 12}} per table id ("exec" in the dump)."""
         out = {}
         for tid, t in (d.get("tables") or {}).items():
-            runs = t.get("exec")
-            if not runs:
-                continue
-            pcs = set()
-            for part in str(runs).split(","):
-                if not part:
-                    continue
-                lo, _, hi = part.partition("-")
-                try:
-                    a = int(lo)
-                    b = int(hi) if hi else a
-                except ValueError:
-                    continue
-                pcs.update(range(a, b + 1))
+            pcs = Dump._parse_runs(t.get("exec"))
             if pcs:
                 out[int(tid)] = pcs
         return out

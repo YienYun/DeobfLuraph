@@ -1,3 +1,4 @@
+import json
 import os
 import re
 import sys
@@ -125,7 +126,38 @@ def _req_sort_key(r):
     m = re.match(r"^!?(\d+)[,~]", r)
     return (0 if not r.startswith("!") else 1, int(m.group(1)) if m else 10**9, r)
 
-def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None):
+def write_dump(ppath, text, exec_rec_on, seen=None):
+    """Write the proto dump a round works from, and refresh its coverage
+    sidecar from every run seen so far.
+
+    The dump itself is written byte for byte: re-serialising it turns
+    0.94743997235392186 into 0.9474399723539219, and a changed constant changes
+    the lift.  The union lives in `<dump>.union.json`, which `dump.Dump` reads
+    and applies on top of the dump's own per-run numbers.
+    """
+    with open(ppath, "w", encoding="utf-8", newline="\n") as f:
+        f.write(text)
+    if not exec_rec_on or seen is None:
+        return
+    if not seen:
+        seen.append(text)
+    elif text not in seen:
+        seen.append(text)
+    from obfuscators.luraph_v15 import dump as dump_mod
+    union, info = dump_mod.union_exec_runs(seen, base_text=text)
+    if not union:
+        return
+    with open(ppath + ".union.json", "w", encoding="utf-8", newline="\n") as f:
+        json.dump({"exec": {str(t): dump_mod.exec_str(pcs) for t, pcs in union.items()},
+                   "meta": info}, f)
+    print("[*]   [execrec] union over %d run(s): covered %d->%d, cells %s -> %d"
+          % (info.get("runs", 0), info.get("covered_first", 0),
+             info.get("covered_union", 0),
+             ",".join(str(n) for n in (info.get("per_run") or [])),
+             info.get("pcs_union", 0)), file=sys.stderr)
+
+
+def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None, exec_seen=None):
     """Lift the captured protos; constants that only Luraph's lazy decoder can
     produce (code that never ran) are requested from further runs. With a
     live harness (`live()` -> fetch function, while the long-lived harness
@@ -208,10 +240,11 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None):
                       % (ru_e, ru_u, ru_e + ru_u, stats.get("exec_protos", 0)), file=sys.stderr)
             if stats.get("exec_protos") or stats.get("exec_covered"):
                 win = stats.get("exec_window") or 1
-                print("[*]   [execrec] covered=%d scrambled_excluded=%d no_arrays=%d"
+                print("[*]   [execrec] runs=%d covered=%d scrambled_excluded=%d no_arrays=%d"
                       " pcs_visited=%d (%d%% of the decoded window) annotated=%d"
-                      % (stats.get("exec_covered", 0), stats.get("exec_scrambled", 0),
-                         stats.get("exec_no_arrays", 0), stats.get("exec_pcs", 0),
+                      % (stats.get("exec_runs", 0), stats.get("exec_covered", 0),
+                         stats.get("exec_scrambled", 0), stats.get("exec_no_arrays", 0),
+                         stats.get("exec_pcs", 0),
                          int(round(100.0 * stats.get("exec_pcs", 0) / win)),
                          stats.get("walk_trim_unexecuted", 0)), file=sys.stderr)
             seen = []
@@ -247,8 +280,7 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None):
         if not m or m.group(1).startswith("error:"):
             print("[!] constant request run gave no protos", file=sys.stderr)
             break
-        with open(ppath, "w", encoding="utf-8", newline="\n") as f:
-            f.write(m.group(1))
+        write_dump(ppath, m.group(1), exec_rec_on, exec_seen)
     header = job.credit_header()
     prefix = (header + "\n") if header else ""
     marks = last_full_stats.get("trim_marks") or []
@@ -457,6 +489,44 @@ def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths)
     states = sorted(set(re.findall(r"State\d{2,4}", run_text or "")))
     if states:
         job.luarmor_states = states
+    exec_rec_on = bool(os.environ.get("DEVIRT_EXECREC") or getattr(args, "exec_rec", False))
+    exec_seen = []
+    if exec_rec_on:
+        # Coverage is a union of real executions, not a claim from one path.
+        # The runs happen here, before the long-lived harness exists, so the
+        # serve handshake is never disturbed.  Only `exec` is taken from them:
+        # every statement still comes from the dump node handed over.
+        from obfuscators.luraph_v15 import dump as dump_mod
+        try:
+            with open(ppath, encoding="utf-8", errors="replace") as f:
+                texts = [f.read()]
+        except OSError:
+            texts = []
+        if texts:
+            exec_seen.append(texts[0])   # the run node handed over is run 1
+        want = int(os.environ.get("DEVIRT_EXECRUNS") or 3)
+        for i in range(1, max(1, want)):
+            c = dict(cfg)
+            # a different path: the sandbox pins its clock and RNG from
+            # `time_pin`, so another pin walks the script's time and random
+            # branches somewhere else
+            c["time_pin"] = 1700000000 + 7919 * i
+            c["clock_pin"] = 0.125 + 0.01 * i
+            # how long a loop may repeat before the trace cuts it: the runs
+            # below bracket the default so the union sees both a short and a
+            # long walk through the same loop
+            fuel = int(c.get("loop_fuel") or 65536)
+            c["loop_fuel"] = max(64, fuel // 8) if i == 1 else fuel * 16
+            c["spin_fuel"] = max(8, int(c.get("spin_fuel") or 64) // 2) if i == 1 else 4096
+            body, err = runner.run(patched, c, chunks)
+            if body is None:
+                print("[!] coverage run %d failed: %s" % (i + 1, str(err)[-200:]), file=sys.stderr)
+                continue
+            m = re.search(re.escape(harness.mark("PROTOS ")) + r"([^\n]*)\n", body)
+            if m and not m.group(1).startswith("error:"):
+                texts.append(m.group(1))
+        for extra in texts[1:]:
+            write_dump(ppath, extra, exec_rec_on, exec_seen)
     bridge = runner.bridge
     server = [None]
     synced = [False]    
@@ -468,7 +538,7 @@ def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths)
         if first is not None and harness.same_trace(harness.trace_text(first), run_text):
             s_protos, _ = trace.take_line(first, "PROTOS")
             if s_protos and not s_protos.startswith("error:"):
-                job.write(ppath, s_protos)
+                write_dump(ppath, s_protos, exec_rec_on, exec_seen)
             synced[0] = True
         else:
             if first is None:
@@ -534,7 +604,7 @@ def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths)
             server[0] = None
         return runner.run(patched, c, chunks)
     try:
-        return devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths, live)
+        return devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths, live, exec_seen)
     except Exception as e:
 
         print("[!] devirtualization failed: %s: %s" % (type(e).__name__, e), file=sys.stderr)

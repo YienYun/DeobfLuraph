@@ -1381,15 +1381,63 @@ plan, not a promise of behaviour in this release, and nothing here is implemente
    `poison_pc_covered=unrecorded` site in §14 needs. Cost: one request kind on
    both sides of the bridge, one runtime entry point, and a test that a lifted
    `Color3.fromRGB(...)` replaces the `return nil` hole.
-2. **Union coverage over several executions.** `exec_pcs` currently holds one
-   run's set per array (`"exec":"3-9,12"`). Two runs of the same sample take
-   different paths through the VM's load-time decoders, so the dump should carry
-   a set per run and the lifter should union them. No engine change is implied:
-   the union only widens what the recorder can speak for, and the annotation
-   counts stay the same shape.
+2. **Union coverage over several executions.** *(implemented, see "V2-A"
+   below.)*
 3. **Mark blocks that no run covered.** Once 1 and 2 exist, a block whose pcs no
    run ever decoded is a block the program never reached. Such a block becomes a
    marker comment (the §14 `-- devirt:` form), not lifted statements, and not a
    deleted block: the conservation counts in the footer must not shrink. This is
    the only place where coverage is allowed to change the emitted code, and it
    needs 1 and 2 to be complete before it can be evaluated honestly.
+
+### V2-A: coverage from several runs (implemented)
+
+The recorder's set is per array and per run. V2-A makes a job run the script
+more than once and unions what each run decoded, so a claim about "the run"
+becomes a claim about "the runs".
+
+* extra runs happen in `driver.lift` *before* the long-lived harness exists, so
+  the serve handshake is never disturbed; each is a fresh process with its own
+  pin (`time_pin`, `clock_pin`) and its own loop/spin fuel, which is what a
+  different execution path is made of;
+* only `exec` is taken from them -- every statement still comes from the dump
+  node handed over, so coverage can never change the code;
+* arrays are matched by the program's own identity, `(pid_of_table, field)`,
+  because dump table ids follow an allocation order and move between runs;
+* the union is written to `<dump>.union.json`, and `dump.Dump` applies it on top
+  of the dump's own numbers.  The dump itself is written byte for byte: a JSON
+  round trip turns `0.94743997235392186` into `0.9474399723539219`, and a
+  changed constant changes the lift (that was measured the hard way -- the first
+  version merged by rewriting the dump and made `ON` non-deterministic).
+
+The report line carries the measurement, one number per run:
+
+```
+[*]   [execrec] union over 4 run(s): covered 38->38, cells 89585,89585,89585,89585 -> 89585
+```
+
+`cells` is the number of decoded cells over the whole dump, one figure per run
+(the first is the trace run node handed over, then the harness's own dump, then
+the extra runs), followed by the union.  `covered` is the number of protos with
+at least one covered array, first run -> union.
+
+**Measured result: the union adds nothing on this corpus.** Every fixture ran
+into four dumps with four *different* md5s (so they really are different
+executions) yet with exactly the same decoded-cell count, and the union equals
+each run:
+
+| fixture | runs | cells per run | union | covered |
+|---|---|---|---|---|
+| `SampleV1` | 4 | 89585, 89585, 89585, 89585 | 89585 | 38 -> 38 |
+| `RideAPet` | 4 | 113791 x4 | 113791 | 51 -> 51 |
+| `StealAnEgg` | 4 | 94239 x4 | 94239 | 41 -> 41 |
+
+So the offline sandbox decodes the same instruction cells whichever pin, fuel or
+path it is given: what a run does *not* decode is not "another path's code", it
+is code the walk never reaches, and more runs of the same environment will not
+find it.  That is worth knowing before building V2-C on top of this signal: a
+block with no coverage across runs is not automatically a block the program
+skips, it is a block no *offline* run reached.  The output is unchanged by this
+milestone (`OFF` and `ON` byte-identical to v1.0 on all three fixtures), which is
+the point: V2-A is a measurement, not a rewrite of the lift.
+

@@ -25,6 +25,39 @@ file can be named correctly. It cannot be deobfuscated here: the run stops with
 
 ---
 
+## Release note (v1.0)
+
+Frozen: the Luraph v15/v14 lift, its gates, and the execution-coverage recorder.
+The recorder measures; it never prunes.
+
+**What it does.** Lifts a Luraph-protected script into Luau that parses and runs:
+112 functions, 0 unlifted blocks, 0 unresolved uses on the reference sample, and the
+three fixtures rebuild deterministically (gate below).
+
+**What it does not do.**
+
+* One honest hole stays visible at `samples/output/Luraph/SampleV1.lua:43514`:
+  `return nil --[[ constant not decoded ]]`. Not a guess hidden by printing -- the
+  recorder proves the walk invented that instruction:
+  `poison_pc_covered=unrecorded (pc=50, mode=5, 0/5 arrays the instruction reads
+  carry coverage, 0 decoded there)`. The fix is the operand-cell replay in
+  `TECHNICAL.md`, "v2 roadmap".
+* Ten spin loops are left out as `-- devirt: spin loop left out ...` markers, not
+  lifted into code that would hang.
+
+**Coverage recorder.** `--exec-rec` (or `DEVIRT_EXECREC=1`) records the pcs the run
+decoded in place and prints `[execrec]`, `residual_unknown_split` and, when a call
+is dropped, `poison_pc_covered`. Off, output is byte-identical to the committed one.
+
+```bash
+node deob.js samples/input/Luraph/SampleV1.lua -o /tmp/a.lua            # 2bc0ee05… = samples/output
+node deob.js samples/input/Luraph/SampleV1.lua -o /tmp/b.lua --exec-rec # 8e7134f5… (twice)
+for f in RideAPet StealAnEgg; do node deob.js samples/differential/$f/input.lua -o /tmp/$f.lua; done
+node --test test/*.test.js                                              # 55 pass, 1 known fail, 5 skipped
+```
+
+---
+
 ## Layout
 
 ```text
@@ -91,7 +124,8 @@ node tools/oracle/compare.js original.lua out.lua
 Useful flags: `--plugin luraph_v14` (force an engine), `--no-devirt` (behaviour
 trace only), `--debug` (keep the sandbox trace in the output folder), `--strings`
 (dump captured strings), `--budget`, `--timeout`, `--report report.json`,
-`--rename` (extra readability pass).
+`--rename` (extra readability pass), `--exec-rec` (record execution coverage;
+see the release note).
 
 A Luraph run takes about two minutes for a 1 MB file; the sandbox has to execute
 the VM once per lifting round.
@@ -121,11 +155,11 @@ python3 scripts/metrics.py samples/output/Luraph/SampleV1.lua
 npm test              # node --test test/*.test.js
 ```
 
-`node --test test/*.test.js` runs 55 cases: detection, argument parsing, the CFG
-passes, naming, the renamer, Luarmor analysis, and one end-to-end lift. 49 pass,
+`node --test test/*.test.js` runs 61 cases: detection, argument parsing, the CFG
+passes, naming, the renamer, Luarmor analysis, and one end-to-end lift. 55 pass,
 5 are skipped because their sample is not in the working tree, and 1 is a known
 failure (`renamer prevents variable shadowing ...`, which pins a comment layout
-the renamer no longer produces).
+the renamer no longer produces) -- it fails identically before this release.
 
 ---
 

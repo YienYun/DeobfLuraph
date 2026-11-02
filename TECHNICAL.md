@@ -1365,3 +1365,31 @@ register` markers (`residual_unknown=12244`): the walk reaches the VM's operand
 decryptor with a *symbolic* local, the same class of failure as §14, so most of
 that file's lifted bodies are partial. The separator fix keeps such a lift
 shippable and runnable; it does not make the walk complete.
+
+## v2 roadmap
+
+v1.0 is frozen: the recorder measures, it never deletes. Everything below is a
+plan, not a promise of behaviour in this release, and nothing here is implemented.
+
+1. **Replay the operand cell.** The live harness already runs the real VM and
+   answers a request for a lazy constant (`Dump.fetch` -> `harness.fetch` ->
+   `{force_req, force_buf}` on the next sandbox run). The same channel has to
+   answer for an *operand*: "proto P, array T, cell pc" -> the value the VM
+   decoded there. That turns the 41% of operand cells the walk currently reads
+   undecoded (verified without touching the block machinery: 44,800 of 108,700 in
+   the decoded window) into recorded values, which is what the
+   `poison_pc_covered=unrecorded` site in §14 needs. Cost: one request kind on
+   both sides of the bridge, one runtime entry point, and a test that a lifted
+   `Color3.fromRGB(...)` replaces the `return nil` hole.
+2. **Union coverage over several executions.** `exec_pcs` currently holds one
+   run's set per array (`"exec":"3-9,12"`). Two runs of the same sample take
+   different paths through the VM's load-time decoders, so the dump should carry
+   a set per run and the lifter should union them. No engine change is implied:
+   the union only widens what the recorder can speak for, and the annotation
+   counts stay the same shape.
+3. **Mark blocks that no run covered.** Once 1 and 2 exist, a block whose pcs no
+   run ever decoded is a block the program never reached. Such a block becomes a
+   marker comment (the §14 `-- devirt:` form), not lifted statements, and not a
+   deleted block: the conservation counts in the footer must not shrink. This is
+   the only place where coverage is allowed to change the emitted code, and it
+   needs 1 and 2 to be complete before it can be evaluated honestly.

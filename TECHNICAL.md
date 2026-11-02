@@ -1155,3 +1155,71 @@ machinery because the state it carries into pc 44..50 holds a **symbolic** local
 that is a register rather than a number. Fixing that is a walk-level problem
 (symbolic carried locals), not a printing problem -- the guard here only stops the
 result from being a call of nil. Ten spin loops (§8) are still dropped.
+
+## 15. The Separator Luau Reads as the Previous Statement's Terminator
+
+### What happened
+
+The 1.54 MB v15.1 sample (`s_07ca80aa…`, 608 protos) lifted, but Luau refused the
+text:
+
+```
+(15486, 2) - (15486, 3) - Ambiguous syntax: this looks like an argument list
+for a function call, but could also be a start of new statement; use ';' to
+separate statements
+```
+
+The polish pass raised on its very first repair, so `polish_ast` returned nothing
+and *every* polish step was skipped -- dead locals, IIFE unwrapping, bit32 chain
+folding -- while the run still reported success. The shipped text was valid, but
+only by luck: the statement it stumbled on had lost a `;`.
+
+### Where the `;` comes from
+
+`Renderer.block` separates a statement that opens with `(` from the one above it
+by putting a `;` at the start of that line, because Luau itself refuses to decide
+whether `(...)` is a new statement or an argument list:
+
+```
+local t = table.pack(bit32.band(...))
+;(nil).Height = 80
+```
+
+### Where it went
+
+Luau's parser attributes that `;` to the **previous** statement's location, so
+when `_strip_unused_params_and_dead_locals` deleted the dead local above it, the
+deletion's span ended on the separator and took it with it:
+
+```
+edit 611576..611661  (dead `local t = table.pack(...)`, plus "\t\t;")
+->  local t = table.pack(...)          (deleted)
+    (nil).Height = 80                  (its `;` is gone: ambiguous)
+```
+
+### The rule
+
+`_apply_edits` keeps a deleted range's trailing `;` when the next byte is `(` --
+but only where a `;` may stand. As the first statement of a block Luau rejects
+it (`(0,0) Expected identifier when parsing expression, got ';'`), so a deletion
+that also covers the previous statement, or that removes the block's first
+statement, still drops it. `_separator_needed` decides by looking at the nearest
+line *outside* the deleted range: a line ending in `then`, `do`, `else`, `repeat`
+or `end` cannot be called, so nothing needs separating.
+
+### Evidence
+
+* the big sample's round-1 text now polishes (2,578,765 bytes) and parses
+  (`bin/luau-ast` exit 0) where the polish chain aborted before;
+* the shipped run is 44,365 lines that parse, instead of a 3,577-line trace
+  fallback;
+* the four small v15.1 samples are byte-identical to their pre-change output,
+  and the test suite stays at 55 pass / 1 known failure / 5 skipped.
+
+### What this does not fix
+
+The same file still prints 6,177 `-- devirt: dropped a write through an undecoded
+register` markers (`residual_unknown=12244`): the walk reaches the VM's operand
+decryptor with a *symbolic* local, the same class of failure as §14, so most of
+that file's lifted bodies are partial. The separator fix keeps such a lift
+shippable and runnable; it does not make the walk complete.

@@ -138,12 +138,51 @@ def _apply_edits(btext, edits):
     chunks = []
     cur = len(btext)
     for s0, e0, repl in accepted:
+        if not repl and btext[e0:e0 + 1] == b"(" and _separator_needed(btext, s0, e0):
+            # Luau reads a `;` right before a `(` as the previous statement's
+            # terminator, so a statement that had to be separated (`;(nil).x=1`
+            # after a call) loses its separator when that previous statement is
+            # deleted: the two lines would parse as one ambiguous call. Keep the
+            # `;` when the deleted text ends on one.
+            repl = b";"
         chunks.append(btext[e0:cur])
         chunks.append(repl)
         cur = s0
     chunks.append(btext[:cur])
     chunks.reverse()
     return b"".join(chunks)
+
+
+def _separator_needed(btext, s0, e0):
+    """Does deleting `btext[s0:e0]` have to keep its trailing `;`?
+
+    The renderer separates a statement that opens with `(` from the one before
+    it with a `;` of its own, because Luau refuses to guess whether `(...)` is a
+    new statement or an argument list. Luau in turn reads that `;` as the
+    *previous* statement's terminator, so an edit that deletes the previous
+    statement takes the separator with it and the two lines become one
+    ambiguous call. Keep it -- but only where a `;` may stand: as the first
+    statement of a block it is not valid Luau, so a deleted first statement
+    drops it (nothing precedes it, so nothing needs separating)."""
+    stripped = btext[s0:e0].rstrip(b" \t\r\n")
+    if not stripped.endswith(b";"):
+        return False
+    semi = s0 + len(stripped) - 1
+    line_start = btext.rfind(b"\n", 0, semi) + 1
+    if btext[line_start:semi].strip(b" \t"):
+        return True                     # mid-line: a `;` there is always legal
+    # only text outside the deleted range counts: when the previous statement
+    # is what is being deleted, the `(` becomes the block's first statement
+    prev = btext[:min(s0, line_start)].rstrip(b" \t\r\n")
+    if not prev:
+        return False                    # first statement of the file/block
+    head = prev[prev.rfind(b"\n") + 1:].strip(b" \t")
+    if head.startswith(b"--"):
+        return False                    # a comment in the way: do not guess
+    last = head.split()[-1]
+    # `then do else repeat` and `end` cannot be called, so `(` after them is
+    # already unambiguous; anything else may end a call.
+    return last not in (b"then", b"do", b"else", b"repeat", b"end")
 
 
 def _expand_full_line_delete(btext, s0, e0):

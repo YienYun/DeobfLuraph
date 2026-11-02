@@ -23,7 +23,7 @@ Sesuai prinsip *zero fragile regex*, sistem ini dibangun langsung di atas **3 fo
 Jalankan Layer 1 (Devirtualizer Luraph v15.0/v15.1) + Layer 2 (Garbage Cleaner + Verified Renamer + Smart Comments) sekaligus dalam **satu perintah**:
 
 ```bash
-node deob.js samples/StealAnEggg_v15.1_obfuscated.lua -o samples/StealAnEggg_v15.1_Renamed.lua --rename
+node deob.js protected.lua -o renamed.lua --rename
 ```
 
 Opsi tambahan pada `deob.js`:
@@ -35,10 +35,10 @@ Opsi tambahan pada `deob.js`:
 
 ```bash
 # Mode Offline Instan (tanpa API key, tetap memberi nama + komentar pintar otomatis!)
-node renamer/index.js samples/StealAnEggg_v15.1_Deobfuscated.lua -o samples/StealAnEggg_v15.1_Renamed.lua
+node renamer/index.js out.lua -o renamed.lua
 
 # Atau lewat npm script:
-npm run rename -- samples/StealAnEggg_v15.1_Deobfuscated.lua -o samples/StealAnEggg_v15.1_Renamed.lua --comments detailed
+npm run rename -- out.lua -o renamed.lua --comments detailed
 ```
 
 ### 3. Mode Full AI LLM (Opsional)

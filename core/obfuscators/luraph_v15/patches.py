@@ -113,10 +113,6 @@ def collect_requests(source, protos_path, chunk_paths=(), cache=None, fetch=None
         todo += [(kvm, vmobj, c, cf) for c, kvm, cf in reversed(list(zip(kids, kvms, kfacts))) if c is not None]
     cache.entries = kept
     stats["fetched"] = len(dump.fetched)
-    if os.environ.get("DEVIRT_TIMING") and dump.fetched:
-        print("[*]   live requests: %d, patches %.1fs, round trips %.1fs (harness %.1fs), %d KB of patches sent"
-              % ((len(dump.fetched),) + tuple(dump.fetch_time[:3]) + (dump.fetch_time[3] // 1024,)),
-              file=sys.stderr)
     prog.requests = requests
     return stats, requests, format_patches(bw, tw)
 

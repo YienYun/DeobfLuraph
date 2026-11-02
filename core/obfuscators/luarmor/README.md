@@ -38,10 +38,10 @@ present:
 
 ```bash
 # human-readable chain report, no execution
-python3 core/obfuscators/luarmor/analyze.py samples/input/Luarmor/SampleV2_sephal_init.lua
+python3 core/obfuscators/luarmor/analyze.py protected.lua
 
 # full pipeline (report + devirtualization when possible)
-node deob.js samples/input/Luarmor -o /dev/null
+node deob.js folder/
 node deob.js some_loader.lua --plugin luarmor
 ```
 
@@ -51,7 +51,7 @@ node deob.js some_loader.lua --plugin luarmor
 | --- | --- | --- |
 | `SampleV1_client_stub.lua` (1.4 KB) | client stub | annotated stub + `SampleV1_client_stub.luarmor.json` (client tag, sha256, build stamp 1769015477, init URL) |
 | `SampleV2_sephal_init.lua` (331 KB) | sephal init | `24 functions, 0 unlifted blocks, 0 unstructured jumps` → 516 lines of readable bootstrap code |
-| Venyx `Steal An Egg` loader (in `samples/input/Luraph/SampleV3.lua`) | served payload | `42 functions, 0 unlifted blocks` → 5 920 lines, loader id `130307ddb90b87125e0a381843ee1563` |
+| Venyx `Steal An Egg` loader (tested locally, not shipped) | served payload | `42 functions, 0 unlifted blocks` → 5 920 lines, loader id `130307ddb90b87125e0a381843ee1563` |
 
 ## Notes
 

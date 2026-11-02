@@ -15,17 +15,9 @@ __pycache__/
 .deobf-write-*/
 coverage/
 
-# Devirtualizer intermediates (regenerated on every run)
-samples/output/**/*.protos.json
-samples/output/**/*.devirt.luau
-samples/output/**/*.deobf.luau
-samples/output/**/*.chunk_*.luau
-
-# Source material stays local (big, and re-uploaded often); results are tracked,
-# because a deobfuscation nobody can open is not a result.
-samples/input/**
-!samples/input/.gitkeep
-!samples/input/*/.gitkeep
-
-# The root-level Luraph fixtures the integration tests use are inputs too.
-/samples/*_obfuscated.lua
+# Deobfuscation intermediates (regenerated on every run, never committed)
+*.protos.json
+*.devirt.luau
+*.deobf.luau
+*.chunk_*.luau
+*.union.json

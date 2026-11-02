@@ -211,14 +211,8 @@ def polish(text):
     if not os.environ.get("DEVIRT_NO_NAMESPLIT"):
         try:
             import namesplit
-            text, ns = namesplit.apply_duplicates(text)
-            if ns["duplicates_fixed"] or ns["duplicates_skipped"]:
-                print("[namesplit] duplicate declarations fixed=%d skipped=%r"
-                      % (ns["duplicates_fixed"], ns["duplicates_skipped"]), file=sys.stderr)
-            text, ns = namesplit.apply_reuse(text)
-            if ns["reuse_sites"]:
-                print("[namesplit] reuse sites=%d split=%d skipped=%r"
-                      % (ns["reuse_sites"], ns["reuse_split"], ns["reuse_skipped"]), file=sys.stderr)
+            text, _ns = namesplit.apply_duplicates(text)
+            text, _ns = namesplit.apply_reuse(text)
         except Exception as ex:
             print("[!] name split pass failed: %s" % ex, file=sys.stderr)
     try:

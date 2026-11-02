@@ -746,11 +746,7 @@ class FunctionLifter:
                 c.frame_regs = sorted({r for i, e in enumerate(c.upvals, ub) if isinstance(e, RegFile)
                                        for r in c.frame_map.get(i, ())})
         me = sys.modules[__name__]
-        kept_jump_writes = materialise_read_jump_regs(lf, order)
-        if kept_jump_writes:
-            print("[jread] proto=%r depth=%d kept=%d regs=%r"
-                  % (proto.tid, depth, kept_jump_writes,
-                     sorted(getattr(lf, "materialised_jump_regs", ()), key=repr)), file=sys.stderr)
+        materialise_read_jump_regs(lf, order)
         apply_frame_calls(order)
         drop_idle_closes(order, lf.captured_regs)
         poison_before = len(variables.LIFT_STATS.get("poison_sites") or ())
@@ -1248,10 +1244,6 @@ def lift_program(source, protos_path, chunk_paths=(), fetch=None):
     if dead:
         fl.stats["dead_upvalue_writes"] = fl.stats.get("dead_upvalue_writes", 0) + dead
     text = backend.polish("\n".join(out))
-    if os.environ.get("DEVIRT_MISS"):
-        print("[miss] %r" % (dict(prog.dump.misses),), file=sys.stderr)
-        print("[miss] fetched=%d requests=%d" % (len(getattr(prog.dump, "fetched", ())), len(prog.requests)),
-              file=sys.stderr)
     return text, fl.stats, prog.requests, buffer_patches(prog.dump)
 
 finish_text = backend.finish_text

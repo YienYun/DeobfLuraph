@@ -269,10 +269,7 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None, exec_
         c["force_req"] = ";".join(ordered_reqs)
 
         c["force_buf"] = bufs
-        t1 = time.time()
         body, err = rerun(c)
-        if os.environ.get("DEVIRT_TIMING"):
-            print("[*]   constant run %.1fs (total %.0fs)" % (time.time() - t1, time.time() - t0), file=sys.stderr)
         if body is None:
             print("[!] constant request run failed: " + err[-500:], file=sys.stderr)
             break
@@ -578,10 +575,6 @@ def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths)
         if hs is not None and not server[1]:
             server[1] = True
             first, err = hs.reply(args.timeout)
-            if os.environ.get("DEOB_SERVE_DIFF") and first is not None:
-                for nm, tx in (("run", run_text), ("served", harness.trace_text(first))):
-                    with open(job.path(".serve_%s.txt" % nm), "w", encoding="utf-8") as f:
-                        f.write(tx)
             if first is None or not harness.same_trace(harness.trace_text(first), run_text):
                 print("[!] the long-lived harness %s; running the script once per round instead"
                       % ("failed: " + err[-300:] if first is None else "traced differently"),

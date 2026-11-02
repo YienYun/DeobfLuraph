@@ -449,10 +449,6 @@ def poison_unknown_callees(entry, blocks, D, frame_bound=(), on_drop=None):
     if on_drop is not None:
         for _bid, s0 in drops:
             on_drop(s0)
-    if os.environ.get("DEVIRT_POISON"):
-        # Diagnostic: what was dropped, so a report can show the calls.
-        for bid, s in drops:
-            print("[poison] block=%r %s" % (bid, D.fmt_stmt(s)), file=sys.stderr)
     for bid, s in drops:
         b = blocks[bid]
         b.stmts = [x for x in b.stmts if x is not s]

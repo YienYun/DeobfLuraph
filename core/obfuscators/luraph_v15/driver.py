@@ -434,7 +434,25 @@ def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths)
         hs = server[0]
         if hs is None or not synced[0] or os.environ.get("DEOB_NO_FETCH"):
             return None
-        return lambda paths, bufs: hs.fetch(paths, bufs, args.timeout)
+
+        def fetch_live(paths, bufs):
+            # The fetcher outlives the harness object it was made from: the
+            # process can exit (or be closed by a failed reply) between rounds.
+            # Ask the current server, and report a dead one as a failed fetch so
+            # `dump.fetch` falls back to constant rounds -- writing a request
+            # file into a removed directory raised FileNotFoundError and took
+            # the whole devirtualization down with it.
+            cur = server[0]
+            if cur is None or not synced[0] or not cur.alive():
+                # drop it: the rounds below then run the script fresh instead of
+                # asking a process that is already gone
+                if cur is not None:
+                    cur.close()
+                server[0] = None
+                synced[0] = False
+                raise RuntimeError("the long-lived harness is gone")
+            return cur.fetch(paths, bufs, args.timeout)
+        return fetch_live
 
     def rerun(c):
         synced[0] = False
@@ -455,12 +473,17 @@ def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths)
                 hs.close()
                 hs = server[0] = None
         if hs is not None:
-            res = hs.request(c, args.timeout)
+            try:
+                res = hs.request(c, args.timeout)
+            except Exception as e:
+                # a dead harness must not fail the round: the fresh run below
+                # answers the same question, only slower
+                res = (None, "%s: %s" % (type(e).__name__, e))
             if res[0] is not None:
                 synced[0] = True
                 return res
             print("[!] the long-lived harness failed: %s; running the script once per round "
-                  "instead" % res[1][-300:], file=sys.stderr)
+                  "instead" % str(res[1])[-300:], file=sys.stderr)
             hs.close()
             server[0] = None
         return runner.run(patched, c, chunks)

@@ -350,6 +350,11 @@ class HarnessServer:
         self.buf = b""
         self.eof = False
         self.nreq = 0
+        # A harness that exited (or was closed) has already removed its temp
+        # directory, so writing another request file into it would raise
+        # FileNotFoundError from deep inside a fetch. `alive()` is the single
+        # answer every caller asks before touching that directory.
+        self.closed = False
 
         self.deadline = None
         self.timed_out = False
@@ -386,8 +391,16 @@ class HarnessServer:
                     self.eof = True
                     out = self.buf.decode("utf-8", "replace")
                     self.close()
+                    # the harness pads stdout with runs of spaces to flush the
+                    # pipe, so the raw tail is unreadable: collapse them before
+                    # the message is truncated by whoever prints it
+                    out = re.sub(r"[ \t]{8,}", " ", out[-3000:]).strip()
+                    if not out and not self.timed_out:
+                        # no stack trace, no error line: the process was killed
+                        # from outside (the kernel, on a big script's dump)
+                        out = "(no output: killed from outside, most likely out of memory)"
                     return None, ("no reply within %ds" % timeout if self.timed_out else
-                                  "harness process exited") + ": " + out[-3000:]
+                                  "harness process exited") + ": " + out
                 self.buf += b
         finally:
             self.deadline = None
@@ -400,7 +413,14 @@ class HarnessServer:
             return None, out[-3000:]
         return m.group(1), None
 
+    def alive(self):
+        """The process is still running and its directory still exists."""
+        return (not self.closed) and self.proc.poll() is None \
+            and os.path.isdir(self.dir)
+
     def request(self, cfg, timeout, mode="dump"):
+        if not self.alive():
+            raise RuntimeError("the long-lived harness is gone")
         req, buf = cfg.get("force_req") or "", cfg.get("force_buf") or ""
         if len(req) + len(buf) < 2000 and re.fullmatch(r"[\w,@.;=+/:*\-]*", req + buf):
 
@@ -426,6 +446,7 @@ class HarnessServer:
         return m.group(1)
 
     def close(self):
+        self.closed = True
         if self.proc.poll() is None:
             self.proc.kill()
             self.proc.wait()

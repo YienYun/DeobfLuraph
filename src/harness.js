@@ -311,6 +311,7 @@ class HarnessServer {
     this.nreq = 0;
     this.deadline = null;
     this.timedOut = false;
+    this.closed = false;
     this._startWatchdog();
     this._send('__S = require("./harness")\n__S("", "", "start")\n');
   }
@@ -373,7 +374,13 @@ class HarnessServer {
     });
   }
 
+  alive() {
+    // `close()` removes the temp dir, so a later request must not write into it
+    return !this.closed && this.proc.exitCode === null && fs.existsSync(this.dir);
+  }
+
   async request(cfg, timeoutMs, mode = 'dump') {
+    if (!this.alive()) throw new Error('the long-lived harness is gone');
     const req = cfg.force_req || '';
     const buf = cfg.force_buf || '';
     if (req.length + buf.length < 2000 && /^[\w,@.;=+/:*\-]*$/.test(req + buf)) {
@@ -397,6 +404,7 @@ class HarnessServer {
   }
 
   close() {
+    this.closed = true;
     clearInterval(this._wd);
     if (this.proc.exitCode === null) { try { this.proc.kill('SIGKILL'); } catch {} }
     try { require('fs').rmSync(this.dir, { recursive: true, force: true }); } catch {}

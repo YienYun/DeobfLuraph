@@ -85,6 +85,12 @@ class Dump:
             self.protos[key] = {k: self.val(v) for k, v in cap.items()}
         self._paths = None
         self.late = self._lazy_late(d)
+        # Execution coverage recorded by the run (--cfg exec_rec): per table, the
+        # pcs whose cells the run decoded in place.  A set, never a log.  A proto
+        # with no entry was not covered (a scrambled proto cannot be: see
+        # envlog CHAIN.execScan), and "no entry" is never read as "did not run".
+        self.exec_pcs = self._exec_pcs(d)
+        self._exec_cov = {}
 
         self._by_operand = self._operand_facts()
 
@@ -94,6 +100,45 @@ class Dump:
         self.fetch_time = [0.0, 0.0, 0.0, 0]    
         self.extra_patches = (PatchLog(), PatchLog())   
         self._sent = {}         
+
+    @staticmethod
+    def _exec_pcs(d):
+        """{"3-9,12" -> {3..9, 12}} per table id ("exec" in the dump)."""
+        out = {}
+        for tid, t in (d.get("tables") or {}).items():
+            runs = t.get("exec")
+            if not runs:
+                continue
+            pcs = set()
+            for part in str(runs).split(","):
+                if not part:
+                    continue
+                lo, _, hi = part.partition("-")
+                try:
+                    a = int(lo)
+                    b = int(hi) if hi else a
+                except ValueError:
+                    continue
+                pcs.update(range(a, b + 1))
+            if pcs:
+                out[int(tid)] = pcs
+        return out
+
+    def exec_coverage(self, proto):
+        """The pcs of `proto` the recorded run executed, or None when the dump
+        covers none of its arrays (nothing recorded, so nothing to claim)."""
+        key = id(proto)
+        if key in self._exec_cov:
+            return self._exec_cov[key]
+        cov = None
+        h = getattr(proto, "h", None)
+        if isinstance(h, dict) and self.exec_pcs:
+            for arr in h.values():
+                tid = getattr(arr, "tid", None)
+                if tid is not None and tid in self.exec_pcs:
+                    cov = (cov or set()) | self.exec_pcs[tid]
+        self._exec_cov[key] = cov
+        return cov
 
     def _lazy_late(self, d):
         """Lazy constants decoded at run time from an instruction's decoded

@@ -1150,25 +1150,83 @@ statement with the proto it came from, and the one drop in `SampleV1` is
 [poison] proto=809 block=126 T50_215_1 = r104(r85, r104)
 ```
 
-i.e. a single CALL at pc 50 of the closure whose capability table is 809, whose
-operand numbers are the undecrypted cell values. Three cross-checks agree that
-those numbers are not slots of a real instruction:
+i.e. a single CALL at pc 50 of the closure whose capability table is 809.
 
-* no proto in the dump holds the triple `(e=104, h=85, j=104)` at one index, and
-  `85`/`104` never appear together in the arrays the closure's own capability
-  table points at (`t810` holds `90, 116, 109, 95, 36, 107, 117, 53, 77, 70` for
-  pcs 45..54);
-* 14,849 of the 36,009 `e` operands in `SampleV1.protos.json` (41.2 %) are above
-  their own proto's window (`> max(L+8, 64)`), so a raw cell is not a register
-  number by default in this build;
-* the construct itself is fine everywhere else: the output has 156
-  `Color3.fromRGB` calls against the reference lift's 157, and the missing one is
-  this `return`.
+**Corrected:** those operands are not garbage. Instrumenting the emit site shows
+the walk feeding the handler the values its own model of the VM decryptor
+produced, and that model agrees with the arrays:
+
+```
+proto=1151  pc=50  mode=5  opcode=14
+h[50]: raw 0   -> decoded 85
+j[50]: raw 29  -> decoded 104
+m[50]: raw 15  -> decoded 14      (the opcode)
+```
+
+The proto's own field `o=105` says slots up to 105 are legitimate, so 85 and 104
+are real frame slots, not numbers read out of a corrupted cell. What is missing is
+not the operand: it is the slot's **value**, which no proto on the walked path
+ever stores (`r104`/`r85` have no writer in 936 visited states, and the whole
+proto performs zero frame or table stores). A narrow frame-propagation attempt --
+snapshot the caller's registers at the closure's creation site and use them only
+for the callee slot -- changed nothing at all: `frame_propagation: bound=0` and a
+byte-identical output, so no ancestor knows that slot either.
+
+The construct itself is fine everywhere else: the output has 156
+`Color3.fromRGB` calls against the reference lift's 157, and the missing one is
+this `return`. The gap is therefore about *which pcs the run actually executed*,
+not about decoding: the walk reaches (mode 5, pc 50) in a state the recorded run
+never had. `exec_rec` below exists to measure exactly that.
 
 `tor_Reg` is not a way in: with `DEVIRT_BIGREG=1` all 196 events it logs carry
 `obj.tid=None`, `L=None`, `z=None`, so the object it is called with is not the
 proto's capability table and the big numbers cannot be attributed to a proto
 through it.
+
+### Execution coverage (`DEVIRT_EXECREC`)
+
+`DEVIRT_EXECREC=1` makes the run record **which pcs it decoded in place**, so the
+walk can say whether a state is one the program actually had. It is a set, never a
+log: `envlog` keeps one weak-keyed table per number array (`CHAIN.execArr`) and the
+dump emits each array's coverage as a run-length string (`"exec":"3-9,12"`), which
+`dump.Dump._exec_pcs` turns back into `{tid: {pcs}}`. There is no per-step cost and
+no per-step output; the sample's dump grew by well under a megabyte.
+
+Two limits are load-bearing and are why this is an annotation, not a pruning rule:
+
+* a **scrambled** proto cannot be covered -- the scramble rewrites every cell, so a
+  diff says nothing about which instructions ran (`CHAIN.execScan` skips the protos
+  the restore touched, `CHAIN.execRestored`);
+* coverage is therefore not provably complete. An early version trimmed the walk at
+  the first uncovered pc and collapsed the whole lift to four lines, so M1 only ever
+  *marks*: `devirt.lift` collects the uncovered pcs and `driver` appends
+
+```
+-- devirt: N function(s) contain M pc(s) the recorded run never executed; ...
+```
+
+to the output. Nothing is dropped. The footer carries counts only, because dump
+table ids follow an allocation order and differ between runs.
+
+The run report gains two lines:
+
+```
+[*]   residual_unknown_split: ru_exec=1064 ru_unexec=145
+[*]   [execrec] protos=8 pcs_visited=1257 (63% of the decoded window) trimmed=387
+```
+
+`ru_exec` is an unwritten-register read at a pc the run really executed (a genuine
+caller-value gap); `ru_unexec` is one at a pc it never executed (an artefact of the
+walk). They are counted where the lifter gives up on a register (`index` ->
+`Reg(k)`), which is the same event the variable pass later reports as
+`residual_unknown`; the three numbers do not sum, because that pass counts unbound
+uses after structuring. `trimmed` counts annotated steps, the footer counts distinct
+pcs.
+
+Known gaps of this milestone: the flag is an environment variable only (there is no
+`--exec-rec` switch), mode is not recorded (coverage is per proto and pc), and on a
+1.5 MB sample only 8 protos got coverage (151 of 1111 arrays), so the numbers are a
+lower bound on what the run executed.
 
 ### What this does not fix
 

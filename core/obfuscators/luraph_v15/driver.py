@@ -197,6 +197,16 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None):
             print("[*]   frame_propagation: bound=%d residual_unknown=%d unknown_callee=%d"
                   % (stats.get("frame_bound", 0), stats.get("residual_unknown", 0),
                      stats.get("unknown_callee", 0)), file=sys.stderr)
+            if os.environ.get("DEVIRT_EXECREC"):
+                print("[*]   residual_unknown_split: ru_exec=%d ru_unexec=%d"
+                      % (stats.get("ru_exec", 0), stats.get("ru_unexec", 0)), file=sys.stderr)
+            if stats.get("exec_protos"):
+                win = stats.get("exec_window") or 1
+                print("[*]   [execrec] protos=%d pcs_visited=%d (%d%% of the decoded window)"
+                      " trimmed=%d"
+                      % (stats["exec_protos"], stats["exec_pcs"],
+                         int(round(100.0 * stats["exec_pcs"] / win)),
+                         stats.get("walk_trim_unexecuted", 0)), file=sys.stderr)
             if converged or rnd == rounds:
                 break
             if quick:
@@ -225,6 +235,19 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None):
             f.write(m.group(1))
     header = job.credit_header()
     prefix = (header + "\n") if header else ""
+    marks = last_full_stats.get("trim_marks") or []
+    suffix = ""
+    if marks:
+        # Annotation only (DEVIRT_EXECREC): a pc the recorded run never executed
+        # is a value of the walk, not of the program.  Nothing is dropped here --
+        # the set is not proven complete, and §15 is what dropping costs.  The
+        # footer carries counts only: dump table ids are not stable between runs
+        # (they follow an allocation order), so printing them would make the
+        # output differ from one run to the next for no reason.
+        n_pcs = sum(len(pcs) for _, pcs in marks)
+        suffix = ("\n-- devirt: %d function(s) contain %d pc(s) the recorded run never executed;"
+                  " what they decode is the walk's value, not the program's\n"
+                  % (len(marks), n_pcs))
     if text is None:
         # every round failed before the first full lift (the "constant request
         # run failed" path breaks out with text still None): finish_text(None)
@@ -232,7 +255,7 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None):
         sys.exit("[!] no devirtualized output was produced: the constant-request run failed "
                  "before the first full lift (see the error above); re-run with "
                  "DEVIRT_FULL_ROUNDS=1 to lift the first round without extra constant runs")
-    job.write(dpath, prefix + devirt.finish_text(text) + "\n")
+    job.write(dpath, prefix + devirt.finish_text(text) + "\n" + suffix)
     # The caller can distinguish a real lift from an empty/stale file and
     # surface incomplete analysis rather than presenting it as a clean success.
     out_stats = dict(last_full_stats, converged=converged, pending_constant_requests=pending_constants)
@@ -285,6 +308,10 @@ def run(job):
             cfg["fold"] = False
         if devirt_on:
             cfg["devirt"] = True
+        if os.environ.get("DEVIRT_EXECREC"):
+            # record which (proto, pc) the run actually executed (see envlog
+            # CHAIN.execScan); off by default, the walk ignores it when absent
+            cfg["exec_rec"] = True
         harness.user_cfg(args, cfg)
         if spin:
             cfg["spin"] = SPIN_CHECKS

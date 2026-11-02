@@ -68,6 +68,9 @@ async function run(job) {
     if (args.inputText) cfg.input_text = args.inputText;
     if (args.preludeFile) cfg.prelude = require('fs').readFileSync(args.preludeFile, 'latin1');
     if (args.noFold) cfg.fold = false;
+    // record which (proto, pc) the run executed (envlog CHAIN.execScan); off by
+    // default -- the walk ignores the coverage when the dump has none
+    if (process.env.DEVIRT_EXECREC) cfg.exec_rec = true;
     if (spin) cfg.spin = SPIN_CHECKS;
     if (args.cfgJson) Object.assign(cfg, args.cfgJson);
 

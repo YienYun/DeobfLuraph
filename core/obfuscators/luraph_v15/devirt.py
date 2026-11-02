@@ -351,7 +351,16 @@ class Program:
             if node is None:
                 try:
                     lf.cur_facts = facts.get(k, {})
+                    lf.cur_pc = s.pc
                     node = st.step(s, "%s_%d_" % (s.pc, len(order)))
+                    if lf.exec_cov is not None and s.pc not in lf.exec_cov:
+                        # The recorded run never executed this pc, so what the
+                        # walk decodes here is a value of the walk, not of the
+                        # program.  Recorded, never dropped: dropping on a set
+                        # that is not proven complete loses real code (§15), so
+                        # the statements stay and the function carries a marker.
+                        lf.trimmed = getattr(lf, "trimmed", 0) + 1
+                        lf.trimmed_pcs.add(s.pc)
                 except Unsupported as e:
                     if os.environ.get("DEVIRT_TB"):
                         import traceback
@@ -642,6 +651,20 @@ class FunctionLifter:
         lf = ProtoLifter(vm, self.prog.dump, vmobj, proto, upvals, self.prog.globals,
                          cap=cap, shared=shared if cap is None else None)
         lf.init_facts = init_facts
+        # Execution coverage for this proto (DEVIRT_EXECREC): None means the run
+        # recorded nothing for it, which is never read as "did not run".
+        lf.exec_cov = self.prog.dump.exec_coverage(proto) if os.environ.get("DEVIRT_EXECREC") else None
+        lf.trimmed = 0
+        lf.trimmed_pcs = set()
+        if lf.exec_cov is not None:
+            win = 0
+            for arr in list(getattr(proto, "h", {}).values()):
+                h = getattr(arr, "h", None)
+                if isinstance(h, dict):
+                    win = max(win, max((k for k in h if isinstance(k, int)), default=0))
+            self.stats["exec_protos"] = self.stats.get("exec_protos", 0) + 1
+            self.stats["exec_pcs"] = self.stats.get("exec_pcs", 0) + len(lf.exec_cov)
+            self.stats["exec_window"] = self.stats.get("exec_window", 0) + win
         lf.reg_prefix = prefix
         st = make_stepper(vm, lf)
         for _ in range(WALK_RESTARTS):
@@ -729,11 +752,14 @@ class FunctionLifter:
         lines, self.params, nerr, fallbacks = backend.lower(
             s0.key(vm.kstack_link), order, me, vm.kstack_link, prefix, upnames,
             lambda x, names: self.closure(vm, vmobj, x, names, depth, lf))
-        self.stats["fallbacks"] += fallbacks
+        if lf.trimmed_pcs:
+            self.stats.setdefault("trim_marks", []).append(
+                (getattr(proto, "tid", None), sorted(lf.trimmed_pcs)))
         if os.environ.get("DEVIRT_DEBUG"):
             pid = self.prog.dump.pid_of_table.get(proto.tid)
             lines.insert(0, "-- proto %s" % (pid if pid is not None else "t%s" % proto.tid))
         self.stats["errors"] += nerr
+        self.stats["walk_trim_unexecuted"] = self.stats.get("walk_trim_unexecuted", 0) + getattr(lf, "trimmed", 0)
         return lines
 
     def frame_regs(self, vm, vmobj, c, depth=0):
@@ -1172,6 +1198,8 @@ def lift_program(source, protos_path, chunk_paths=(), fetch=None):
         out[at:at] = shared
     fl.stats["runtime_stubs"] = len(prog.dump.shared)
     fl.stats["frame_bound"] = variables.LIFT_STATS["frame_bound"]
+    fl.stats["ru_exec"] = variables.LIFT_STATS.get("ru_exec", 0)
+    fl.stats["ru_unexec"] = variables.LIFT_STATS.get("ru_unexec", 0)
     fl.stats["residual_unknown"] = variables.LIFT_STATS["residual_unknown"]
     fl.stats["unknown_callee"] = variables.LIFT_STATS.get("unknown_callee", 0)
     import structure as _ST

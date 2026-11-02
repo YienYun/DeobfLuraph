@@ -947,6 +947,15 @@ class ProtoLifter:
                     c.extra = dict(src.extra)
                     self.pack_copies[k] = c
                 return c
+            pc = getattr(self, "cur_pc", None)
+            cov = getattr(self, "exec_cov", None)
+            if cov is not None and pc is not None:
+                # Split the unwritten-register reads: one made at a pc the run
+                # really executed is a caller-value gap, one made at a pc it
+                # never executed is an artefact of the walk.
+                import variables as _vr
+                kk = "ru_exec" if pc in cov else "ru_unexec"
+                _vr.LIFT_STATS[kk] = _vr.LIFT_STATS.get(kk, 0) + 1
             r = Reg(k)
             r._gen = self.reg_gen.get(k, 0)
             return r

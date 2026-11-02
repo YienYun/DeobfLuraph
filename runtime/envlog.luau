@@ -5516,6 +5516,17 @@ if E.__PA then
         -- lists their keys (CHAIN.lazyLate[t] = {key = true}, "late") and the
         -- devirtualizer uses them for the operand it decodes itself.
         CHAIN.lazyLate = R.setmetatable({}, { __mode = "k" })
+        -- Execution coverage (--cfg exec_rec), a SET and never a log: for every
+        -- number array, which indices the run decoded in place. Keyed by the
+        -- array table (weak), so it costs one table store per decoded cell and
+        -- nothing per step; the dump turns it into one run-length string per
+        -- array ("3-9,12,40"). A scrambled proto cannot be covered this way (see
+        -- CHAIN.unscramble: a scramble rewrites every cell, so a diff says
+        -- nothing about which instructions ran) -- those are reported as
+        -- unrecorded and never treated as "did not run".
+        local exArr = CFG.exec_rec and R.setmetatable({}, { __mode = "k" }) or nil
+        CHAIN.execArr = exArr
+        CHAIN.execRestored = nil
         local function restore(copy)
                 for arr, c in R.next, copy do
                         local keys = lazyKeys[arr]
@@ -5634,7 +5645,37 @@ if E.__PA then
                                 end
                         end
                 end
+                if CHAIN.execArr then CHAIN.execRestored = done end
                 return fixed
+        end
+        -- Coverage for the protos the restore above did NOT touch: their arrays
+        -- only change where an instruction decoded a cell in place, so a cell
+        -- that differs from its creation-time copy is a pc the run executed.
+        CHAIN.execScan = function()
+                local ex = CHAIN.execArr
+                if not ex then return 0 end
+                local done = CHAIN.execRestored or {}
+                local n = 0
+                for proto, copy in R.next, orig do
+                        if not done[proto] then
+                                for arr, c in R.next, copy do
+                                        if not lazyKeys[arr] then
+                                                local s = nil
+                                                for i, x in R.next, c do
+                                                        if R.rawget(arr, i) ~= x then
+                                                                if s == nil then
+                                                                        s = ex[arr]
+                                                                        if s == nil then s = {}; ex[arr] = s end
+                                                                end
+                                                                s[i] = true
+                                                                n += 1
+                                                        end
+                                                end
+                                        end
+                                end
+                        end
+                end
+                return n
         end
 end
 do
@@ -5643,6 +5684,7 @@ do
                 local PA = E.__PA
                 if not PA then return nil end
                 CHAIN.unscrambled = CHAIN.unscramble()
+                if CHAIN.execScan then CHAIN.execPcs = CHAIN.execScan() else CHAIN.execPcs = nil end
                 local fname = {}
                 for f, label in R.next, FNAME do
                         if R.type(f) == "function" and R.type(label) == "string" then
@@ -6145,7 +6187,32 @@ do
                                 for k in R.next, lateKeys do R.insert(e, enc(k)) end
                                 late = ',"late":[' .. R.concat(e, ",") .. "]"
                         end
+                        local exs = ""
+                        local ex = CHAIN.execArr and CHAIN.execArr[t]
+                        if ex then
+                                local keys = {}
+                                for k in R.next, ex do
+                                        if R.type(k) == "number" then R.insert(keys, k) end
+                                end
+                                R.sort(keys)
+                                local runs, lo, hi = {}, nil, nil
+                                for _, k in R.ipairs(keys) do
+                                        if lo == nil then
+                                                lo, hi = k, k
+                                        elseif k == hi + 1 then
+                                                hi = k
+                                        else
+                                                R.insert(runs, lo == hi and R.tostring(lo) or (lo .. "-" .. hi))
+                                                lo, hi = k, k
+                                        end
+                                end
+                                if lo ~= nil then
+                                        R.insert(runs, lo == hi and R.tostring(lo) or (lo .. "-" .. hi))
+                                end
+                                exs = ',"exec":"' .. R.concat(runs, ",") .. '"'
+                        end
                         return '"' .. i .. '":{"arr":[' .. R.concat(parts, ",") .. '],"kv":[' .. R.concat(kv, ",") .. "]" .. late
+                                .. exs
                                 .. (R.getmetatable(t) ~= nil and (',"mt":true,"mtf":' .. mtIndex(t) .. "}") or "}")
                 end
                 local tabs = {}

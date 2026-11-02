@@ -34,7 +34,11 @@ def lower(entry_key, order, D, link, prefix, upnames, closure):
     # values of the enclosing function, not holes of this one.
     frame_bound = {k[1] for k in (upnames or {})
                    if isinstance(k, tuple) and len(k) == 2 and isinstance(k[1], int)}
-    dropped = ST.poison_unknown_callees(entry, blocks, D, frame_bound)
+    dropped = ST.poison_unknown_callees(entry, blocks, D, frame_bound,
+                                       lambda s0: VR.LIFT_STATS.setdefault(
+                                           "poison_sites", []).append(
+                                               (getattr(s0, "pc_mode", None),
+                                                getattr(s0, "pc_arrays", None))))
     if dropped:
         VR.LIFT_STATS["unknown_callee"] = VR.LIFT_STATS.get("unknown_callee", 0) + dropped
     CG.simplify_blocks(blocks, D)

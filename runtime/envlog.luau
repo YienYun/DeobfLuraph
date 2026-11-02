@@ -5685,6 +5685,12 @@ do
                 if not PA then return nil end
                 CHAIN.unscrambled = CHAIN.unscramble()
                 if CHAIN.execScan then CHAIN.execPcs = CHAIN.execScan() else CHAIN.execPcs = nil end
+                if CHAIN.execArr then
+                        -- how many protos the recorder cannot speak for (scrambled)
+                        local scr = 0
+                        for _ in R.next, CHAIN.execRestored or {} do scr += 1 end
+                        CHAIN.execMeta = scr
+                end
                 local fname = {}
                 for f, label in R.next, FNAME do
                         if R.type(f) == "function" and R.type(label) == "string" then
@@ -6316,7 +6322,7 @@ do
                         end
                 end
                 return '{"root_callee":' .. R.tostring(CHAIN.seen and CHAIN.seen[CHAIN.rootCallee] == "ok" and CHAIN.rootCallee or "null") .. ',"overrides":[' .. R.concat(overs, ",") .. '],"protos":{' .. R.concat(protos, ",") .. '},"tables":{' .. R.concat(tabs, ",") ..
-                        '},"pid_of_table":{' .. R.concat(pidmap, ",") .. '},"proto_arg1":{' .. R.concat(parg1, ",") .. "}}"
+                        '},"pid_of_table":{' .. R.concat(pidmap, ",") .. '},"proto_arg1":{' .. R.concat(parg1, ",") .. "}" .. (CHAIN.execMeta and (',"exec_meta":{"scrambled":' .. R.tostring(CHAIN.execMeta) .. "}") or "") .. "}"
         end
 end
 function noteTrigger()

@@ -70,7 +70,7 @@ async function run(job) {
     if (args.noFold) cfg.fold = false;
     // record which (proto, pc) the run executed (envlog CHAIN.execScan); off by
     // default -- the walk ignores the coverage when the dump has none
-    if (process.env.DEVIRT_EXECREC) cfg.exec_rec = true;
+    if (args.execRec || process.env.DEVIRT_EXECREC) cfg.exec_rec = true;
     if (spin) cfg.spin = SPIN_CHECKS;
     if (args.cfgJson) Object.assign(cfg, args.cfgJson);
 
@@ -206,6 +206,7 @@ async function run(job) {
           stats_path: statsPath,
           chunk_paths: chunkPaths,
           args: {
+            exec_rec: !!args.execRec || !!process.env.DEVIRT_EXECREC,
             budget: args.budget,
             timeout: args.timeout,
             devirt_rounds: args.devirtRounds || 200,

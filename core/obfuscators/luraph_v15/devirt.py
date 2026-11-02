@@ -46,7 +46,8 @@ from obfuscators.luraph_v15.dataflow import (
 )
 from obfuscators.luraph_v15.vm_model import (
     _classify_vm_method, _PlainPrinter, PlainProto, iter_nodes, VMModel, find_ctor_funcs,
-    VMCrash, Overlay, _differs, _hv, _pack_sig, State, WALK_MAX_ERRORS, WALK_RESTARTS,
+    VMCrash, Overlay, _differs, _hv, _pack_sig, State,
+    WALK_MAX_ERRORS, WALK_RESTARTS,
     WALK_LIMIT, _carry_key, MAX_STACK_DEPTHS, STACK_WALK_MAX, _locs_lt,
 )
 from obfuscators.luraph_v15.stepper import (
@@ -108,6 +109,9 @@ def analyze_source(path):
     return hit
 
 _WALK_HINTS = {}
+
+# --exec-rec / DEVIRT_EXECREC: the run recorded execution coverage
+EXEC_REC = False
 
 class Program:
     def __init__(self, source_path, dump_path, chunk_paths=()):
@@ -653,7 +657,7 @@ class FunctionLifter:
         lf.init_facts = init_facts
         # Execution coverage for this proto (DEVIRT_EXECREC): None means the run
         # recorded nothing for it, which is never read as "did not run".
-        lf.exec_cov = self.prog.dump.exec_coverage(proto) if os.environ.get("DEVIRT_EXECREC") else None
+        lf.exec_cov = self.prog.dump.exec_coverage(proto) if (EXEC_REC or os.environ.get("DEVIRT_EXECREC")) else None
         lf.trimmed = 0
         lf.trimmed_pcs = set()
         if lf.exec_cov is not None:
@@ -749,9 +753,13 @@ class FunctionLifter:
                      sorted(getattr(lf, "materialised_jump_regs", ()), key=repr)), file=sys.stderr)
         apply_frame_calls(order)
         drop_idle_closes(order, lf.captured_regs)
+        poison_before = len(variables.LIFT_STATS.get("poison_sites") or ())
         lines, self.params, nerr, fallbacks = backend.lower(
             s0.key(vm.kstack_link), order, me, vm.kstack_link, prefix, upnames,
             lambda x, names: self.closure(vm, vmobj, x, names, depth, lf))
+        poison_sites = (variables.LIFT_STATS.get("poison_sites") or ())[poison_before:]
+        if poison_sites and lf.exec_cov is not None:
+            self.note_poison_sites(poison_sites)
         if lf.trimmed_pcs:
             self.stats.setdefault("trim_marks", []).append(
                 (getattr(proto, "tid", None), sorted(lf.trimmed_pcs)))
@@ -761,6 +769,32 @@ class FunctionLifter:
         self.stats["errors"] += nerr
         self.stats["walk_trim_unexecuted"] = self.stats.get("walk_trim_unexecuted", 0) + getattr(lf, "trimmed", 0)
         return lines
+
+    def note_poison_sites(self, sites):
+        """Was the instruction a dropped call came from decoded in the run?
+
+        `sites` carries, per dropped call, the pc/mode it was lifted at and the
+        instruction arrays the walk read there (recorded by the lifter).  The
+        pc counts as covered only when *every* one of those arrays holds a cell
+        the recorded run decoded in place: one array's word is not the
+        instruction's, so no union and no "some array did it" shortcut."""
+        pcs = self.prog.dump.exec_pcs
+        for (pc, mode), tids in sites:
+            if pc is None:
+                continue
+            tids = sorted(tids or ())
+            rec = [t for t in tids if t in pcs]
+            hit = [t for t in tids if t in pcs and pc in pcs[t]]
+            if not tids or not rec:
+                v = "unrecorded"
+            elif len(hit) == len(tids):
+                v = "yes"
+            elif not hit:
+                v = "no"
+            else:
+                v = "partial"
+            self.stats.setdefault("poison_sites", []).append(
+                (pc, mode, len(tids), len(rec), len(hit), v))
 
     def frame_regs(self, vm, vmobj, c, depth=0):
         """{upvalue index: registers} a closure reads or writes through the
@@ -1200,6 +1234,8 @@ def lift_program(source, protos_path, chunk_paths=(), fetch=None):
     fl.stats["frame_bound"] = variables.LIFT_STATS["frame_bound"]
     fl.stats["ru_exec"] = variables.LIFT_STATS.get("ru_exec", 0)
     fl.stats["ru_unexec"] = variables.LIFT_STATS.get("ru_unexec", 0)
+    cov, scr, none = prog.dump.exec_summary()
+    fl.stats["exec_covered"], fl.stats["exec_scrambled"], fl.stats["exec_no_arrays"] = cov, scr, none
     fl.stats["residual_unknown"] = variables.LIFT_STATS["residual_unknown"]
     fl.stats["unknown_callee"] = variables.LIFT_STATS.get("unknown_callee", 0)
     import structure as _ST

@@ -396,7 +396,7 @@ def _poison_multi(m, dead, D, depth=0):
                 setattr(m, k, nv)
     return m
 
-def poison_unknown_callees(entry, blocks, D, frame_bound=()):
+def poison_unknown_callees(entry, blocks, D, frame_bound=(), on_drop=None):
     """Drop direct calls of a register this function never defines.
 
     A register the finished CFG assigns nowhere and no frame binding names is
@@ -446,6 +446,9 @@ def poison_unknown_callees(entry, blocks, D, frame_bound=()):
             drops.append((bid, s))
     if not dead:
         return 0
+    if on_drop is not None:
+        for _bid, s0 in drops:
+            on_drop(s0)
     if os.environ.get("DEVIRT_POISON"):
         # Diagnostic: what was dropped, so a report can show the calls.
         for bid, s in drops:

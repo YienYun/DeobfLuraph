@@ -103,6 +103,9 @@ class ProtoLifter:
         self.special = vm.special
         self.globals_tab = globals_tab
         self.out = []
+        # pc -> {tid of every instruction array the walk read for that pc};
+        # a dropped call reports the pcs coverage of exactly these arrays
+        self.pc_reads = {}
         self.temp_prefix = ""
         self.tcount = 0
         self.proto_arrays = set()
@@ -1009,6 +1012,12 @@ class ProtoLifter:
                     print("   table tid=%s path=%s items=%s" % (obj.tid, self.dump.paths().get(obj.tid), str(list(obj.h.items())[:12])), file=sys.stderr)
                 raise Unsupported("symbolic index into a concrete VM table (key %s)" % fmt_expr(key))
             v = obj.get(key)
+            if (obj.tid is not None and id(obj) in self.proto_arrays
+                    and getattr(self, "cur_pc", None) is not None):
+                # one of this proto's instruction arrays: remember it for the
+                # pc, so a dropped call can report the coverage of exactly the
+                # arrays its instruction read (see note_poison_sites)
+                self.pc_reads.setdefault(self.cur_pc, set()).add(obj.tid)
             if getattr(self, "_is_v14", False) and id(obj) in self.proto_arrays:
                 pov = self.cur_proto_ov()
                 if pov is not None and obj.tid is not None:
@@ -1818,8 +1827,20 @@ class ProtoLifter:
             return Multi([Missing(None)])
         fe = self.as_expr(fn) if not isinstance(fn, (ClosureExpr,)) else fn
         t = self.new_temp()
-        self.emit(CallStmt(t, fe, Multi([self.value_of(x) if not isinstance(x, SymList) else x
-                                         for x in args.items], args.tail)))
+        st = CallStmt(t, fe, Multi([self.value_of(x) if not isinstance(x, SymList) else x
+                                    for x in args.items], args.tail))
+        if isinstance(fn, Reg) and fn.n not in self.jvals:
+            # Where in the program this indirect call came from.  A call of a
+            # register the finished CFG finds no writer for is dropped by
+            # structure.poison_unknown_callees, and the report then checks the
+            # recorded run's coverage at exactly this pc
+            # (devirt.note_poison_sites turns it into the report line).
+            st.pc_mode = (getattr(self, "cur_pc", None),
+                          (getattr(self, "last_op", None) or (None, None))[0])
+            # the live set, not a copy: the walk may still read another array
+            # of this instruction before the finished CFG decides to drop it
+            st.pc_arrays = self.pc_reads.setdefault(st.pc_mode[0], set())
+        self.emit(st)
         return Multi([], TempTail(t))
 
     def _aead_decrypt_const(self, q_tab, n_idx, m_key):

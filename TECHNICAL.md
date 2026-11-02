@@ -1208,11 +1208,16 @@ Two limits are load-bearing and are why this is an annotation, not a pruning rul
 to the output. Nothing is dropped. The footer carries counts only, because dump
 table ids follow an allocation order and differ between runs.
 
-The run report gains two lines:
+The flag is `--exec-rec` on the command line or `DEVIRT_EXECREC=1` in the
+environment (`deob.js` -> `driver.js` -> `devirt_bridge.py` -> `devirt.EXEC_REC`);
+either one turns the recorder on, nothing else changes.
+
+The run report gains three lines, each carrying its own denominator:
 
 ```
-[*]   residual_unknown_split: ru_exec=1064 ru_unexec=145
-[*]   [execrec] protos=8 pcs_visited=1257 (63% of the decoded window) trimmed=387
+[*]   residual_unknown_split: ru_exec=1064 ru_unexec=145 (of 1209 unwritten-register reads in 8 protos lifted with coverage)
+[*]   [execrec] covered=38 scrambled_excluded=0 no_arrays=86 pcs_visited=1257 (63% of the decoded window) annotated=387
+[*]   poison_pc_covered=unrecorded (pc=50, mode=5, 0/5 arrays the instruction reads carry coverage, 0 decoded there)
 ```
 
 `ru_exec` is an unwritten-register read at a pc the run really executed (a genuine
@@ -1220,13 +1225,65 @@ caller-value gap); `ru_unexec` is one at a pc it never executed (an artefact of 
 walk). They are counted where the lifter gives up on a register (`index` ->
 `Reg(k)`), which is the same event the variable pass later reports as
 `residual_unknown`; the three numbers do not sum, because that pass counts unbound
-uses after structuring. `trimmed` counts annotated steps, the footer counts distinct
-pcs.
+uses after structuring. The denominator of that line is `ru_exec + ru_unexec` over
+the protos the lift walked with coverage (`exec_protos`, 8 here) -- not the dump's
+`covered` count below, which also includes protos no function was lifted from -- so a
+run with no coverage does not print a misleading `0 of 0`.
 
-Known gaps of this milestone: the flag is an environment variable only (there is no
-`--exec-rec` switch), mode is not recorded (coverage is per proto and pc), and on a
-1.5 MB sample only 8 protos got coverage (151 of 1111 arrays), so the numbers are a
-lower bound on what the run executed.
+`[execrec]` splits the protos three ways: `covered` (coverage recorded), `scrambled`
+(the restore touched them, `CHAIN.execMeta`), and `no_arrays` (no array of the proto
+changed at all -- nothing to say). `pcs_visited` is the size of the union of the
+recorded sets and `annotated` counts annotated walk steps, while the footer counts
+distinct pcs.
+
+Known gaps of this milestone: mode is not recorded (coverage is per proto and pc)
+and on a 1.5 MB sample only 38 protos got coverage (151 of 1111 arrays), so the
+numbers are a lower bound on what the run executed.
+
+### The poison pc: measured, not guessed
+
+The question the recorder was built to answer is whether the state that lifts the
+phantom tail call (`return nil --[[ constant not decoded ]]`, §14) is a state the
+program ever had. The answer is computed where the call is actually dropped, not
+from a guess about which arrays an instruction uses:
+
+* `ProtoLifter.index` records, per pc, the dump id of every one of the proto's
+  **instruction arrays** it reads (`self.pc_reads`, restricted to
+  `id(obj) in self.proto_arrays`, so constant tables cannot dilute the set);
+* a call whose callee is a register the proto never stores carries that pc, its
+  mode and the live set of ids on the `CallStmt` (`pc_mode`, `pc_arrays`);
+* `structure.poison_unknown_callees` hands every dropped statement to `backend`,
+  which appends `(pc_mode, pc_arrays)` to `variables.LIFT_STATS["poison_sites"]`,
+  and `devirt.note_poison_sites` turns each into one verdict.
+
+The verdict is per array and admits no union: the pc counts as covered only when
+**every** array the instruction read has that pc in `dump.exec_pcs`; and it is
+`unrecorded`, not `no`, when not one of those arrays carries coverage at all -- no
+recorded cell means the recorder cannot speak, which is a different statement from
+"the run decoded this cell to another value".
+
+For `SampleV1` the site is `pc=50, mode=5` and the five instruction arrays it reads
+carry **no** coverage whatsoever: the run never decoded a cell there. The state that
+lifts `r104(r85, r104)` is therefore the walk's, not the program's -- which is what
+§14's `locs` trace already suggested (a carried local that turned symbolic). That
+makes M3 (frame-slot binding) the wrong next step for this site: binding a slot
+cannot make a pc the program never reached real. The next milestone is the coverage
+extension the recorder was built for: union the recorded sets over several
+executions, and where a block still has no coverage, mark the block instead of
+lifting statements from it.
+
+### Gate for this milestone
+
+| check | result |
+|---|---|
+| `--exec-rec` OFF vs the previous build | `cmp` byte-identical, `md5 2bc0ee05dc45c9c9241dc12a6d11c1e5` |
+| OFF vs the committed `samples/output/Luraph/SampleV1.lua` | `cmp` byte-identical (metrics unchanged) |
+| ON, two runs | same `md5 8e7134f51f1406bb35aa1b4a96c22d91` |
+| ON vs OFF, diff | 7 lines: the moved watermark comment and the 2-line footer |
+| `samples/differential/RideAPet` ON, two runs | same `md5 91f890defce9b332ca6ae3830776416d`, `ru_exec=1697 ru_unexec=705 (of 2402 ... in 21 protos lifted with coverage)`, `covered=51 scrambled_excluded=0 no_arrays=75`, footer `21 function(s) ... 590 pc(s)` |
+| `samples/differential/StealAnEgg` ON, two runs | same `md5 2f98357c61a4d1086743dd9c39a23bc4`, `ru_exec=904 ru_unexec=162 (of 1066 ... in 8 protos lifted with coverage)`, `covered=41 scrambled_excluded=0 no_arrays=83`, footer `8 function(s) ... 121 pc(s)` |
+| both fixtures, ON vs their committed output | 7 diff lines each (watermark + footer), no statement changed |
+| `node --test test/*.test.js` | 61 tests: 55 pass, 1 pre-existing failure, 5 skipped |
 
 ### What this does not fix
 

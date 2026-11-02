@@ -18,6 +18,7 @@ function parseArgs(argv) {
     detect: false,
     plugin: null,
     noDevirt: false,
+    execRec: false,
     noHooks: false,
     noFold: false,
     debug: false,
@@ -54,6 +55,7 @@ function parseArgs(argv) {
     else if (a === '--detect') { args.detect = true; }
     else if (a === '--plugin') { args.plugin = valueAt(++i, a); }
     else if (a === '--no-devirt') { args.noDevirt = true; }
+    else if (a === '--exec-rec') { args.execRec = true; }
     else if (a === '--no-hooks') { args.noHooks = true; }
     else if (a === '--no-fold') { args.noFold = true; }
     else if (a === '--debug') { args.debug = true; }
@@ -414,10 +416,11 @@ async function processFile(absInput, args) {
 async function main() {
   const args = parseArgs(process.argv.slice(2));
 
-  const usage = 'Usage: node deob.js <input.lua | folder> [more_files_or_folders...] [-o <output.lua>] [--rename] [--comments none|light|detailed] [--plugin <name>] [--no-devirt] [--debug] [--detect] [--report <report.json>]';
+  const usage = 'Usage: node deob.js <input.lua | folder> [more_files_or_folders...] [-o <output.lua>] [--rename] [--comments none|light|detailed] [--plugin <name>] [--no-devirt] [--debug] [--detect] [--exec-rec] [--report <report.json>]';
   if (args.help) {
     console.log(usage);
     console.log('Use --detect to classify without executing, or --no-devirt for a behaviour trace.');
+    console.log('Use --exec-rec (or DEVIRT_EXECREC=1) to record which program counters the sample executed.');
     return;
   }
   if (args.inputs.length === 0) {

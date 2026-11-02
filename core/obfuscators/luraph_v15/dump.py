@@ -90,6 +90,7 @@ class Dump:
         # with no entry was not covered (a scrambled proto cannot be: see
         # envlog CHAIN.execScan), and "no entry" is never read as "did not run".
         self.exec_pcs = self._exec_pcs(d)
+        self.exec_scrambled = int((d.get("exec_meta") or {}).get("scrambled") or 0)
         self._exec_cov = {}
 
         self._by_operand = self._operand_facts()
@@ -123,6 +124,24 @@ class Dump:
             if pcs:
                 out[int(tid)] = pcs
         return out
+
+    def exec_summary(self):
+        """(covered, scrambled_excluded, no_arrays) over the dump's protos.
+
+        `covered` counts a proto only when at least one of its own arrays carries
+        coverage; `scrambled_excluded` is what the runtime could not speak for
+        (a scramble rewrites every cell); the rest recorded nothing at all."""
+        if getattr(self, "_exec_sum", None) is None:
+            covered = 0
+            total = 0
+            for cap in (self.raw.get("protos") or {}).values():
+                total += 1
+                tids = [v.get("t") for v in cap.values() if isinstance(v, dict) and "t" in v]
+                if any(t in self.exec_pcs for t in tids if t is not None):
+                    covered += 1
+            scr = min(self.exec_scrambled, max(0, total - covered))
+            self._exec_sum = (covered, scr, max(0, total - covered - scr))
+        return self._exec_sum
 
     def exec_coverage(self, proto):
         """The pcs of `proto` the recorded run executed, or None when the dump

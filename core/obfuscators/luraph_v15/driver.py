@@ -132,7 +132,11 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None):
     made the current dump) the walks ask for them right away (a chain of
     constants, each needed to find the next, then takes one round instead
     of one round per link)."""
+    # --exec-rec / DEVIRT_EXECREC: the run records execution coverage and the
+    # walk marks the pcs it executed was not in (M1: annotation only).
+    exec_rec_on = bool(os.environ.get("DEVIRT_EXECREC") or getattr(job.args, "exec_rec", False))
     from obfuscators.luraph_v15 import devirt
+    devirt.EXEC_REC = exec_rec_on
     args = job.args
     try:
         # Whatever the polish trims goes next to the result instead of away:
@@ -197,16 +201,28 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None):
             print("[*]   frame_propagation: bound=%d residual_unknown=%d unknown_callee=%d"
                   % (stats.get("frame_bound", 0), stats.get("residual_unknown", 0),
                      stats.get("unknown_callee", 0)), file=sys.stderr)
-            if os.environ.get("DEVIRT_EXECREC"):
+            if exec_rec_on:
+                ru_e, ru_u = stats.get("ru_exec", 0), stats.get("ru_unexec", 0)
                 print("[*]   residual_unknown_split: ru_exec=%d ru_unexec=%d"
-                      % (stats.get("ru_exec", 0), stats.get("ru_unexec", 0)), file=sys.stderr)
-            if stats.get("exec_protos"):
+                      " (of %d unwritten-register reads in %d protos lifted with coverage)"
+                      % (ru_e, ru_u, ru_e + ru_u, stats.get("exec_protos", 0)), file=sys.stderr)
+            if stats.get("exec_protos") or stats.get("exec_covered"):
                 win = stats.get("exec_window") or 1
-                print("[*]   [execrec] protos=%d pcs_visited=%d (%d%% of the decoded window)"
-                      " trimmed=%d"
-                      % (stats["exec_protos"], stats["exec_pcs"],
-                         int(round(100.0 * stats["exec_pcs"] / win)),
+                print("[*]   [execrec] covered=%d scrambled_excluded=%d no_arrays=%d"
+                      " pcs_visited=%d (%d%% of the decoded window) annotated=%d"
+                      % (stats.get("exec_covered", 0), stats.get("exec_scrambled", 0),
+                         stats.get("exec_no_arrays", 0), stats.get("exec_pcs", 0),
+                         int(round(100.0 * stats.get("exec_pcs", 0) / win)),
                          stats.get("walk_trim_unexecuted", 0)), file=sys.stderr)
+            seen = []
+            for pc, mode, total, rec, hit, verdict in stats.get("poison_sites") or []:
+                if (pc, mode) in [(x[0], x[1]) for x in seen]:
+                    continue
+                seen.append((pc, mode, total, rec, hit, verdict))
+            for pc, mode, total, rec, hit, verdict in seen:
+                print("[*]   poison_pc_covered=%s (pc=%s, mode=%s, %d/%d arrays the"
+                      " instruction reads carry coverage, %d decoded there)"
+                      % (verdict, pc, mode, rec, total, hit), file=sys.stderr)
             if converged or rnd == rounds:
                 break
             if quick:
@@ -283,6 +299,9 @@ def run(job):
     cache_path = harness.load_p2d_cache(job.input, args.studio)
     runner = harness.Runner(job)
     bridge = runner.bridge
+    # --exec-rec / DEVIRT_EXECREC (M1: coverage is recorded and marked, never
+    # used to drop code)
+    exec_rec_on = bool(os.environ.get("DEVIRT_EXECREC") or getattr(args, "exec_rec", False))
 
     skip = []
 
@@ -308,7 +327,7 @@ def run(job):
             cfg["fold"] = False
         if devirt_on:
             cfg["devirt"] = True
-        if os.environ.get("DEVIRT_EXECREC"):
+        if exec_rec_on:
             # record which (proto, pc) the run actually executed (see envlog
             # CHAIN.execScan); off by default, the walk ignores it when absent
             cfg["exec_rec"] = True

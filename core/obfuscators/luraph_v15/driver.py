@@ -652,22 +652,37 @@ def payload_source(chunk_paths):
                    " so they are omitted." % (nfields - 1),
                    "-- The loader calls this with the hub's library object (a table with Window / Tab /"
                    " Notify); the block below loads the library the script itself points at."]
-            if urls:
-                out += ["local function hubLibrary()",
-                        "\tfor _, url in ipairs({%s}) do" % ", ".join('"%s"' % u for u in urls),
-                        "\t\tlocal ok, lib = pcall(function() return loadstring(game:HttpGet(url))() end)",
-                        "\t\tif ok and type(lib) == \"table\" and lib.Window then return lib end",
-                        "\tend",
-                        "end",
-                        "local ChilliLibrary = hubLibrary()",
-                        "if not ChilliLibrary then",
-                        "\twarn(\"[deobf] the hub library (Window / Tab / Notify) could not be loaded;"
-                        " the script cannot start without it\")",
-                        "\treturn",
-                        "end"]
-            else:
-                out += ["-- (no library URL in the chunk: pass the object the loader supplies)",
-                        "local ChilliLibrary = nil"]
+            cands = list(urls)
+            for u in urls:
+                # the hub serves the same library under a second name
+                base, _, tail = u.rpartition("/")
+                alt = base + "/Chilli%20Library"
+                if "chilli" in u.lower() and alt not in cands:
+                    cands.append(alt)
+            out += ["-- The loader hands this script the hub's UI library.  Fetch it the way the hub does;",
+                    "-- an object already in getgenv().ChilliLibrary wins, so a run inside the full hub is",
+                    "-- unaffected.",
+                    "local function hubLibrary()",
+                    "\tlocal urls = {%s}" % ", ".join('"%s"' % u for u in cands),
+                    "\tfor _, url in ipairs(urls) do",
+                    "\t\tlocal ok, chunk = pcall(function() return loadstring(game:HttpGet(url)) end)",
+                    "\t\tif ok and type(chunk) == \"function\" then",
+                    "\t\t\tlocal ok2, lib = pcall(chunk)",
+                    "\t\t\t-- the library is either the chunk's result or a bootstrap that takes a key",
+                    "\t\t\tif ok2 and type(lib) == \"function\" then",
+                    "\t\t\t\tlocal ok3, real = pcall(lib, \"\")",
+                    "\t\t\t\tif ok3 then lib = real end",
+                    "\t\t\tend",
+                    "\t\t\tif type(lib) == \"table\" and lib.Window then return lib end",
+                    "\t\tend",
+                    "\tend",
+                    "end",
+                    "local ChilliLibrary = (type(getgenv) == \"function\" and getgenv().ChilliLibrary) or hubLibrary()",
+                    "if not ChilliLibrary then",
+                    "\twarn(\"[deobf] the hub library (Window / Tab / Notify) could not be loaded;"
+                    " the script cannot start without it\")",
+                    "\treturn",
+                    "end"]
             out += [""] + lines + ["", "local entry = payload(...)"]
             for lvl in range(2, depth + 1):
                 out.append("entry = entry(%s)" % ("{ChilliLibrary}" if lvl == 2 else ""))

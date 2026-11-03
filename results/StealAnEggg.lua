@@ -103,7 +103,7 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 		return function(...)
 			local number, number2, number3, number4
 			local value18 = argument12[1]
-			local value19, data, value20, value21, number5, number6, number7, data2, value22, number8, number9, data3
+			local value19, data, value20, value21, number5, number6, number7, data2, value78, number8, number9, data3
 			local value23, value24 = argument12[2], value(argument4)
 			local argument4, argument12
 
@@ -144,14 +144,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 
 											value24[value26] = number10
 										else
-											if value22 then
-												for k in value5, value22, nil do
-													local value26 = value22[k]
+											if value78 then
+												for k in value5, value78, nil do
+													local value26 = value78[k]
 													if value26 then
 														value26[5] = value26
 														value26[6] = value24[k]
 														value26[4] = 6
-														value22[k] = nil
+														value78[k] = nil
 													end
 												end
 											end
@@ -253,14 +253,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 												value24[argument7[argument4]][argument5[argument4]] = argument8[argument4]
 											else
 												if value25 == 137 then
-													if value22 then
-														for k in value5, value22, nil do
-															local value26 = value22[k]
+													if value78 then
+														for k in value5, value78, nil do
+															local value26 = value78[k]
 															if value26 then
 																value26[5] = value26
 																value26[6] = value24[k]
 																value26[4] = 6
-																value22[k] = nil
+																value78[k] = nil
 															end
 														end
 													end
@@ -411,7 +411,7 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 
 													if number10 > 0 then
 														iMap = {}
-														local value, value2 = value22, value19
+														local value, value2 = value78, value19
 
 														for i = 1, number10, 1 do
 															local number11 = (i - 1) * 3
@@ -420,7 +420,7 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 															if value27 == 0 then
 																value = value or {}
 																local data5 = value[value28]
-																if not (data5) then
+																if not data5 then
 																	data5 = {[4] = value28, [5] = value24}
 																	value[value28] = data5
 																end
@@ -435,7 +435,7 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 																		if value27 == 2 then
 																			value2 = value2 or {}
 																			local data5 = value2[value28]
-																			if not (data5) then
+																			if not data5 then
 																				data5 = {[6] = value26[number11 + 1], [5] = value24, [4] = value28}
 																				value2[value28] = data5
 																			end
@@ -446,7 +446,7 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 															end
 														end
 
-														value22, value19 = value, value2
+														value78, value19 = value, value2
 													end
 												end
 
@@ -473,14 +473,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 											if value25 == 78 then
 												value24[argument9[argument4]] = value24[argument7[argument4]] < argument8[argument4]
 											else
-												if value22 then
-													for k in value5, value22, nil do
-														local value26 = value22[k]
+												if value78 then
+													for k in value5, value78, nil do
+														local value26 = value78[k]
 														if value26 then
 															value26[5] = value26
 															value26[6] = value24[k]
 															value26[4] = 6
-															value22[k] = nil
+															value78[k] = nil
 														end
 													end
 												end
@@ -514,14 +514,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 												if value25 == 85 then
 													value24[argument9[argument]] = argument15[argument7[argument]][value24[argument3[argument]]]
 												else
-													if value22 then
-														for k in value5, value22, nil do
-															local value26 = value22[k]
+													if value78 then
+														for k in value5, value78, nil do
+															local value26 = value78[k]
 															if value26 then
 																value26[5] = value26
 																value26[6] = value24[k]
 																value26[4] = 6
-																value22[k] = nil
+																value78[k] = nil
 															end
 														end
 													end
@@ -608,14 +608,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 										elseif value25 ~= 93 then
 											value24[argument7[argument4]] = argument[argument9[argument4]]
 										else
-											if value22 then
-												for k in value5, value22, nil do
-													local value26 = value22[k]
+											if value78 then
+												for k in value5, value78, nil do
+													local value26 = value78[k]
 													if value26 then
 														value26[5] = value26
 														value26[6] = value24[k]
 														value26[4] = 6
-														value22[k] = nil
+														value78[k] = nil
 													end
 												end
 											end
@@ -643,14 +643,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 									else
 										if value25 < 88 then
 											if value25 == 87 then
-												if value22 then
-													for k in value5, value22, nil do
-														local value26 = value22[k]
+												if value78 then
+													for k in value5, value78, nil do
+														local value26 = value78[k]
 														if value26 then
 															value26[5] = value26
 															value26[6] = value24[k]
 															value26[4] = 6
-															value22[k] = nil
+															value78[k] = nil
 														end
 													end
 												end
@@ -903,14 +903,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 									else
 										if value25 < 6 then
 											if value25 ~= 5 then
-												if value22 then
-													for k in value5, value22, nil do
-														local value26 = value22[k]
+												if value78 then
+													for k in value5, value78, nil do
+														local value26 = value78[k]
 														if value26 then
 															value26[5] = value26
 															value26[6] = value24[k]
 															value26[4] = 6
-															value22[k] = nil
+															value78[k] = nil
 														end
 													end
 												end
@@ -1131,14 +1131,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 												value24[argument7[argument4]] = value24[argument3[argument4]] > argument9[argument4]
 											end
 										elseif value25 ~= 52 then
-											if value22 then
-												for k in value5, value22, nil do
-													local value26 = value22[k]
+											if value78 then
+												for k in value5, value78, nil do
+													local value26 = value78[k]
 													if value26 then
 														value26[5] = value26
 														value26[6] = value24[k]
 														value26[4] = 6
-														value22[k] = nil
+														value78[k] = nil
 													end
 												end
 											end
@@ -1416,14 +1416,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 												value24[argument3[argument4]] = yp[argument5[argument4]]
 											end
 										elseif value25 == 19 then
-											if value22 then
-												for k in value5, value22, nil do
-													local value26 = value22[k]
+											if value78 then
+												for k in value5, value78, nil do
+													local value26 = value78[k]
 													if value26 then
 														value26[5] = value26
 														value26[6] = value24[k]
 														value26[4] = 6
-														value22[k] = nil
+														value78[k] = nil
 													end
 												end
 											end
@@ -1543,14 +1543,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 											end
 										else
 											if value25 == 42 then
-												if value22 then
-													for k in value5, value22, nil do
-														local value26 = value22[k]
+												if value78 then
+													for k in value5, value78, nil do
+														local value26 = value78[k]
 														if value26 then
 															value26[5] = value26
 															value26[6] = value24[k]
 															value26[4] = 6
-															value22[k] = nil
+															value78[k] = nil
 														end
 													end
 												end
@@ -1628,7 +1628,7 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 
 													if number10 > 0 then
 														iMap = {}
-														local value, value2 = value22, value19
+														local value, value2 = value78, value19
 
 														for i = 1, number10, 1 do
 															local number11 = (i - 1) * 3
@@ -1637,7 +1637,7 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 															if value27 == 0 then
 																value = value or {}
 																local data4 = value[value28]
-																if not (data4) then
+																if not data4 then
 																	data4 = {[4] = value28, [5] = value24}
 																	value[value28] = data4
 																end
@@ -1652,7 +1652,7 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 																		if value27 == 2 then
 																			value2 = value2 or {}
 																			local data4 = value2[value28]
-																			if not (data4) then
+																			if not data4 then
 																				data4 = {[6] = value26[number11 + 1], [5] = value24, [4] = value28}
 																				value2[value28] = data4
 																			end
@@ -1663,29 +1663,29 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 															end
 														end
 
-														value22, value19 = value, value2
+														value78, value19 = value, value2
 													end
 												end
 
 												value24[argument9[argument4]] = argument8[argument4](iMap)
 												number7 = iMap
 											else
-												if value22 then
+												if value78 then
 													local value26 = argument9[argument4]
-													local value27 = value22[value26]
+													local value27 = value78[value26]
 													if value27 then
 														value27[5] = value27
 														value27[6] = value24[value26]
 														value27[4] = 6
-														value22[value26] = nil
+														value78[value26] = nil
 													end
 													value27 = argument3[argument4]
-													value26 = value22[value27]
+													value26 = value78[value27]
 													if value26 then
 														value26[5] = value26
 														value26[6] = value24[value27]
 														value26[4] = 6
-														value22[value27] = nil
+														value78[value27] = nil
 													end
 												end
 											end
@@ -1705,14 +1705,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 												value24[number7 + 1] = data3
 												value24[number7] = data3[argument5[argument4]]
 											else
-												if value22 then
-													for k in value5, value22, nil do
-														local value26 = value22[k]
+												if value78 then
+													for k in value5, value78, nil do
+														local value26 = value78[k]
 														if value26 then
 															value26[5] = value26
 															value26[6] = value24[k]
 															value26[4] = 6
-															value22[k] = nil
+															value78[k] = nil
 														end
 													end
 												end
@@ -1859,14 +1859,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 									if value25 >= 120 then
 										if value25 >= 122 then
 											if value25 == 123 then
-												if value22 then
-													for k in value5, value22, nil do
-														local value26 = value22[k]
+												if value78 then
+													for k in value5, value78, nil do
+														local value26 = value78[k]
 														if value26 then
 															value26[5] = value26
 															value26[6] = value24[k]
 															value26[4] = 6
-															value22[k] = nil
+															value78[k] = nil
 														end
 													end
 												end
@@ -1939,14 +1939,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 											end
 										else
 											if value25 < 114 then
-												if value22 then
-													for k in value5, value22, nil do
-														local value26 = value22[k]
+												if value78 then
+													for k in value5, value78, nil do
+														local value26 = value78[k]
 														if value26 then
 															value26[5] = value26
 															value26[6] = value24[k]
 															value26[4] = 6
-															value22[k] = nil
+															value78[k] = nil
 														end
 													end
 												end
@@ -1974,14 +1974,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 												number7 = argument15[argument9[argument4]]
 												number7[5][number7[4]] = argument2[argument4]
 											else
-												if value22 then
+												if value78 then
 													local value26 = argument7[argument4]
-													local value27 = value22[value26]
+													local value27 = value78[value26]
 													if value27 then
 														value27[5] = value27
 														value27[6] = value24[value26]
 														value27[4] = 6
-														value22[value26] = nil
+														value78[value26] = nil
 													end
 												end
 											end
@@ -1998,14 +1998,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 										elseif value25 == 104 then
 											value24[argument7[argument4]] = value8(value24[argument3[argument4]], value24[argument9[argument4]])
 										else
-											if value22 then
-												for k in value5, value22, nil do
-													local value26 = value22[k]
+											if value78 then
+												for k in value5, value78, nil do
+													local value26 = value78[k]
 													if value26 then
 														value26[5] = value26
 														value26[6] = value24[k]
 														value26[4] = 6
-														value22[k] = nil
+														value78[k] = nil
 													end
 												end
 											end
@@ -2475,14 +2475,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 												number7 = argument3[argument4]
 												data2 = number7 + argument9[argument4]
 
-												if value22 then
-													for k in value5, value22, nil do
-														local value26 = value22[k]
+												if value78 then
+													for k in value5, value78, nil do
+														local value26 = value78[k]
 														if value26 then
 															value26[5] = value26
 															value26[6] = value24[k]
 															value26[4] = 6
-															value22[k] = nil
+															value78[k] = nil
 														end
 													end
 												end
@@ -2516,14 +2516,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 												value24[argument7[argument4]](value11(value24[argument9[argument4]], 1, value24[argument9[argument4]].n))
 											else
 												if value25 == 128 then
-													if value22 then
-														for k in value5, value22, nil do
-															local value26 = value22[k]
+													if value78 then
+														for k in value5, value78, nil do
+															local value26 = value78[k]
 															if value26 then
 																value26[5] = value26
 																value26[6] = value24[k]
 																value26[4] = 6
-																value22[k] = nil
+																value78[k] = nil
 															end
 														end
 													end
@@ -2641,14 +2641,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 													value6(number2, 1, number2.n, data2 + data3, number5)
 												end
 											else
-												if value22 then
-													for k in value5, value22, nil do
-														local value26 = value22[k]
+												if value78 then
+													for k in value5, value78, nil do
+														local value26 = value78[k]
 														if value26 then
 															value26[5] = value26
 															value26[6] = value24[k]
 															value26[4] = 6
-															value22[k] = nil
+															value78[k] = nil
 														end
 													end
 												end
@@ -2714,14 +2714,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 									else
 										if value25 < 154 then
 											if value25 < 152 then
-												if value22 then
-													for k in value5, value22, nil do
-														local value26 = value22[k]
+												if value78 then
+													for k in value5, value78, nil do
+														local value26 = value78[k]
 														if value26 then
 															value26[5] = value26
 															value26[6] = value24[k]
 															value26[4] = 6
-															value22[k] = nil
+															value78[k] = nil
 														end
 													end
 												end
@@ -2790,14 +2790,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 													number5, number4, number2 = (number7 + data2) - 1, number7 + data3, value10(value24[number7](value11(value24, number7 + 1, number7 + data3)))
 													value6(number2, 1, data2, number7, value24)
 												else
-													if value22 then
-														for k in value5, value22, nil do
-															local value26 = value22[k]
+													if value78 then
+														for k in value5, value78, nil do
+															local value26 = value78[k]
 															if value26 then
 																value26[5] = value26
 																value26[6] = value24[k]
 																value26[4] = 6
-																value22[k] = nil
+																value78[k] = nil
 															end
 														end
 													end
@@ -2850,14 +2850,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 												value23 = value24[argument7[argument4]]
 											else
 												if value25 ~= 173 then
-													if value22 then
-														for k in value5, value22, nil do
-															local value26 = value22[k]
+													if value78 then
+														for k in value5, value78, nil do
+															local value26 = value78[k]
 															if value26 then
 																value26[5] = value26
 																value26[6] = value24[k]
 																value26[4] = 6
-																value22[k] = nil
+																value78[k] = nil
 															end
 														end
 													end
@@ -2993,7 +2993,7 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 
 														if number10 > 0 then
 															iMap = {}
-															local value, value2 = value22, value19
+															local value, value2 = value78, value19
 
 															for i = 1, number10, 1 do
 																local number11 = (i - 1) * 3
@@ -3002,7 +3002,7 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 																if value27 == 0 then
 																	value = value or {}
 																	local data4 = value[value28]
-																	if not (data4) then
+																	if not data4 then
 																		data4 = {[4] = value28, [5] = value24}
 																		value[value28] = data4
 																	end
@@ -3017,7 +3017,7 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 																			if value27 == 2 then
 																				value2 = value2 or {}
 																				local data4 = value2[value28]
-																				if not (data4) then
+																				if not data4 then
 																					data4 = {[6] = value26[number11 + 1], [5] = value24, [4] = value28}
 																					value2[value28] = data4
 																				end
@@ -3028,7 +3028,7 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 																end
 															end
 
-															value22, value19 = value, value2
+															value78, value19 = value, value2
 														end
 													end
 
@@ -3130,14 +3130,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 													value24[i] = nil
 												end
 											else
-												if value22 then
-													for k in value5, value22, nil do
-														local value26 = value22[k]
+												if value78 then
+													for k in value5, value78, nil do
+														local value26 = value78[k]
 														if value26 then
 															value26[5] = value26
 															value26[6] = value24[k]
 															value26[4] = 6
-															value22[k] = nil
+															value78[k] = nil
 														end
 													end
 												end
@@ -3211,22 +3211,22 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 												argument15[argument3[argument4]][argument5[argument4]] = argument2[argument4]
 											elseif value25 ~= 77 then
 												value24[argument7[argument4]] = value24[argument3[argument4]] + value24[argument9[argument4]]
-											elseif value22 then
+											elseif value78 then
 												local value26 = argument9[argument4]
-												local value27 = value22[value26]
+												local value27 = value78[value26]
 												if value27 then
 													value27[5] = value27
 													value27[6] = value24[value26]
 													value27[4] = 6
-													value22[value26] = nil
+													value78[value26] = nil
 												end
 												value27 = argument3[argument4]
-												value26 = value22[value27]
+												value26 = value78[value27]
 												if value26 then
 													value26[5] = value26
 													value26[6] = value24[value27]
 													value26[4] = 6
-													value22[value27] = nil
+													value78[value27] = nil
 												end
 											end
 										else
@@ -3431,14 +3431,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 											elseif value25 == 26 then
 												value24[argument9[argument4]] = value24[argument3[argument4]] % argument2[argument4]
 											else
-												if value22 then
-													for k in value5, value22, nil do
-														local value26 = value22[k]
+												if value78 then
+													for k in value5, value78, nil do
+														local value26 = value78[k]
 														if value26 then
 															value26[5] = value26
 															value26[6] = value24[k]
 															value26[4] = 6
-															value22[k] = nil
+															value78[k] = nil
 														end
 													end
 												end
@@ -3549,14 +3549,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 													data3, data2 = value26, value27
 												end
 											else
-												if value22 then
-													for k in value5, value22, nil do
-														local value26 = value22[k]
+												if value78 then
+													for k in value5, value78, nil do
+														local value26 = value78[k]
 														if value26 then
 															value26[5] = value26
 															value26[6] = value24[k]
 															value26[4] = 6
-															value22[k] = nil
+															value78[k] = nil
 														end
 													end
 												end
@@ -3627,14 +3627,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 												else
 													value24[argument3[argument4]] = #value24[argument7[argument4]]
 												end
-											elseif value22 then
+											elseif value78 then
 												local value26 = argument9[argument4]
-												local value27 = value22[value26]
+												local value27 = value78[value26]
 												if value27 then
 													value27[5] = value27
 													value27[6] = value24[value26]
 													value27[4] = 6
-													value22[value26] = nil
+													value78[value26] = nil
 												end
 											end
 										else
@@ -3720,22 +3720,22 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 												value24[argument7[argument4 + 2]] = argument[argument9[argument4 + 2]]
 												argument4 += 2
 											else
-												if value22 then
+												if value78 then
 													local value26 = argument9[argument4]
-													local value27 = value22[value26]
+													local value27 = value78[value26]
 													if value27 then
 														value27[5] = value27
 														value27[6] = value24[value26]
 														value27[4] = 6
-														value22[value26] = nil
+														value78[value26] = nil
 													end
 													value27 = argument7[argument4]
-													value26 = value22[value27]
+													value26 = value78[value27]
 													if value26 then
 														value26[5] = value26
 														value26[6] = value24[value27]
 														value26[4] = 6
-														value22[value27] = nil
+														value78[value27] = nil
 													end
 												end
 											end
@@ -3755,14 +3755,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 											if value25 < 3 then
 												value24[argument9[argument4]] = value2(value24[argument7[argument4]], argument10[argument4])
 											elseif value25 == 4 then
-												if value22 then
-													for k in value5, value22, nil do
-														local value26 = value22[k]
+												if value78 then
+													for k in value5, value78, nil do
+														local value26 = value78[k]
 														if value26 then
 															value26[5] = value26
 															value26[6] = value24[k]
 															value26[4] = 6
-															value22[k] = nil
+															value78[k] = nil
 														end
 													end
 												end
@@ -3793,14 +3793,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 									else
 										if value25 < 7 then
 											if value25 == 6 then
-												if value22 then
-													for k in value5, value22, nil do
-														local value26 = value22[k]
+												if value78 then
+													for k in value5, value78, nil do
+														local value26 = value78[k]
 														if value26 then
 															value26[5] = value26
 															value26[6] = value24[k]
 															value26[4] = 6
-															value22[k] = nil
+															value78[k] = nil
 														end
 													end
 												end
@@ -3851,14 +3851,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 										if value25 >= 27 then
 											if value25 >= 28 then
 												if value25 ~= 29 then
-													if value22 then
-														for k in value5, value22, nil do
-															local value26 = value22[k]
+													if value78 then
+														for k in value5, value78, nil do
+															local value26 = value78[k]
 															if value26 then
 																value26[5] = value26
 																value26[6] = value24[k]
 																value26[4] = 6
-																value22[k] = nil
+																value78[k] = nil
 															end
 														end
 													end
@@ -3923,14 +3923,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 													value24[argument9[argument4]][value24[argument14[argument4]]] = value24[argument7[argument4]]
 												end
 											else
-												if value22 then
-													for k in value5, value22, nil do
-														local value26 = value22[k]
+												if value78 then
+													for k in value5, value78, nil do
+														local value26 = value78[k]
 														if value26 then
 															value26[5] = value26
 															value26[6] = value24[k]
 															value26[4] = 6
-															value22[k] = nil
+															value78[k] = nil
 														end
 													end
 												end
@@ -3990,30 +3990,30 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 											value24[argument7[argument4]] = value24[argument14[argument4]] % argument9[argument4]
 										end
 									elseif value25 ~= 31 then
-										if value22 then
+										if value78 then
 											local value26 = argument9[argument4]
-											local value27 = value22[value26]
+											local value27 = value78[value26]
 											if value27 then
 												value27[5] = value27
 												value27[6] = value24[value26]
 												value27[4] = 6
-												value22[value26] = nil
+												value78[value26] = nil
 											end
 											value26 = argument14[argument4]
-											value27 = value22[value26]
+											value27 = value78[value26]
 											if value27 then
 												value27[5] = value27
 												value27[6] = value24[value26]
 												value27[4] = 6
-												value22[value26] = nil
+												value78[value26] = nil
 											end
 											value26 = argument7[argument4]
-											value27 = value22[value26]
+											value27 = value78[value26]
 											if value27 then
 												value27[5] = value27
 												value27[6] = value24[value26]
 												value27[4] = 6
-												value22[value26] = nil
+												value78[value26] = nil
 											end
 										end
 									else
@@ -4117,14 +4117,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 										else
 											if value25 >= 49 then
 												if value25 == 50 then
-													if value22 then
+													if value78 then
 														local value26 = argument14[argument4]
-														local value27 = value22[value26]
+														local value27 = value78[value26]
 														if value27 then
 															value27[5] = value27
 															value27[6] = value24[value26]
 															value27[4] = 6
-															value22[value26] = nil
+															value78[value26] = nil
 														end
 													end
 												else
@@ -4166,14 +4166,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 									if value25 >= 66 then
 										if value25 >= 68 then
 											if value25 < 69 then
-												if value22 then
-													for k in value5, value22, nil do
-														local value26 = value22[k]
+												if value78 then
+													for k in value5, value78, nil do
+														local value26 = value78[k]
 														if value26 then
 															value26[5] = value26
 															value26[6] = value24[k]
 															value26[4] = 6
-															value22[k] = nil
+															value78[k] = nil
 														end
 													end
 												end
@@ -4255,7 +4255,7 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 
 													if number10 > 0 then
 														iMap = {}
-														local value, value2 = value22, value19
+														local value, value2 = value78, value19
 
 														for i = 1, number10, 1 do
 															local number11 = (i - 1) * 3
@@ -4264,7 +4264,7 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 															if value27 == 0 then
 																value = value or {}
 																local data5 = value[value28]
-																if not (data5) then
+																if not data5 then
 																	data5 = {[4] = value28, [5] = value24}
 																	value[value28] = data5
 																end
@@ -4279,7 +4279,7 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 																		if value27 == 2 then
 																			value2 = value2 or {}
 																			local data5 = value2[value28]
-																			if not (data5) then
+																			if not data5 then
 																				data5 = {[6] = value26[number11 + 1], [5] = value24, [4] = value28}
 																				value2[value28] = data5
 																			end
@@ -4290,7 +4290,7 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 															end
 														end
 
-														value22, value19 = value, value2
+														value78, value19 = value, value2
 													end
 												end
 
@@ -4434,14 +4434,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 											if value25 < 105 then
 												value24[argument9[argument4]][argument10[argument4]] = argument2[argument4]
 											elseif value25 ~= 106 then
-												if value22 then
-													for k in value5, value22, nil do
-														local value26 = value22[k]
+												if value78 then
+													for k in value5, value78, nil do
+														local value26 = value78[k]
 														if value26 then
 															value26[5] = value26
 															value26[6] = value24[k]
 															value26[4] = 6
-															value22[k] = nil
+															value78[k] = nil
 														end
 													end
 												end
@@ -4537,14 +4537,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 													number7 = argument14[argument4]
 													data2 = number7 + argument7[argument4]
 
-													if value22 then
-														for k in value5, value22, nil do
-															local value26 = value22[k]
+													if value78 then
+														for k in value5, value78, nil do
+															local value26 = value78[k]
 															if value26 then
 																value26[5] = value26
 																value26[6] = value24[k]
 																value26[4] = 6
-																value22[k] = nil
+																value78[k] = nil
 															end
 														end
 													end
@@ -4620,14 +4620,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 													number7 = argument7[argument4]
 													value24[number7], value24[number7 + 1] = argument9[argument4], argument10[argument4]
 												else
-													if value22 then
-														for k in value5, value22, nil do
-															local value26 = value22[k]
+													if value78 then
+														for k in value5, value78, nil do
+															local value26 = value78[k]
 															if value26 then
 																value26[5] = value26
 																value26[6] = value24[k]
 																value26[4] = 6
-																value22[k] = nil
+																value78[k] = nil
 															end
 														end
 													end
@@ -4778,14 +4778,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 
 												argument3[argument4] = 21
 											else
-												if value22 then
-													for k in value5, value22, nil do
-														local value26 = value22[k]
+												if value78 then
+													for k in value5, value78, nil do
+														local value26 = value78[k]
 														if value26 then
 															value26[5] = value26
 															value26[6] = value24[k]
 															value26[4] = 6
-															value22[k] = nil
+															value78[k] = nil
 														end
 													end
 												end
@@ -4914,14 +4914,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 									else
 										if value25 >= 125 then
 											if value25 < 126 then
-												if value22 then
-													for k in value5, value22, nil do
-														local value26 = value22[k]
+												if value78 then
+													for k in value5, value78, nil do
+														local value26 = value78[k]
 														if value26 then
 															value26[5] = value26
 															value26[6] = value24[k]
 															value26[4] = 6
-															value22[k] = nil
+															value78[k] = nil
 														end
 													end
 												end
@@ -4990,14 +4990,14 @@ end, [110] = function(argument, argument2, argument3, argument4, argument5, argu
 									else
 										if value25 < 135 then
 											if value25 == 134 then
-												if value22 then
-													for k in value5, value22, nil do
-														local value26 = value22[k]
+												if value78 then
+													for k in value5, value78, nil do
+														local value26 = value78[k]
 														if value26 then
 															value26[5] = value26
 															value26[6] = value24[k]
 															value26[4] = 6
-															value22[k] = nil
+															value78[k] = nil
 														end
 													end
 												end
@@ -5057,6 +5057,7 @@ end, [98] = buffer.writei8, [95] = function(_, _, _, argument)
 			genv.ChilliCanvasHold = true
 			local CoreGui = game:GetService("CoreGui")
 			pcall(function()
+				-- Bootstrap executor global environment and UI container
 				local hui = gethui()
 				if typeof(hui) == "Instance" then
 					CoreGui = hui
@@ -5069,7 +5070,7 @@ end, [98] = buffer.writei8, [95] = function(_, _, _, argument)
 
 			local function callback(argument3, parent, argument4)
 				local instance = Instance.new(argument3)
-				for k, value in next, argument4, nil do
+				for k, value in next, argument4 do
 					instance[k] = value
 				end
 				instance.Parent = parent
@@ -5163,7 +5164,7 @@ end, [104] = vector.create, [67] = bit32.rrotate, [7] = string.unpack, [54] = bu
 
 		local function callback2(...)
 			local value = value
-			local value13, argument3, value14, value15 = value(argument3), argument10
+			local value13, argument3, data49, data210 = value(argument3), argument10
 			local value3, value4, _, value5, value6, value7, value8, value9, value10 = value11, value8, value3, value4, value5, value6, value7, value9, value10
 
 			local value16, value17, value18, value19, value20 = value2(function(...)
@@ -5220,7 +5221,7 @@ end, [104] = vector.create, [67] = bit32.rrotate, [7] = string.unpack, [54] = bu
 							end
 						else
 							local iMap2
-							local value18, value, _, data, data2 = argument7[argument3], value14, value15
+							local value18, value, _, data, data2 = argument7[argument3], data49, data210
 
 							if value18 then
 								local number = #value18 / 3
@@ -5235,7 +5236,7 @@ end, [104] = vector.create, [67] = bit32.rrotate, [7] = string.unpack, [54] = bu
 										if value19 == 0 then
 											data = data or {}
 											local data3 = data[value20]
-											if not (data3) then
+											if not data3 then
 												data3 = {[4] = value20, [5] = value13}
 												data[value20] = data3
 											end
@@ -5250,7 +5251,7 @@ end, [104] = vector.create, [67] = bit32.rrotate, [7] = string.unpack, [54] = bu
 													if value19 == 2 then
 														data2 = data2 or {}
 														local data3 = data2[value20]
-														if not (data3) then
+														if not data3 then
 															data3 = {[6] = value18[number2 + 1], [5] = value13, [4] = value20}
 															data2[value20] = data3
 														end
@@ -5267,14 +5268,14 @@ end, [104] = vector.create, [67] = bit32.rrotate, [7] = string.unpack, [54] = bu
 								data, data2 = value, _
 							end
 
-							value14, value15 = data, data2
+							data49, data210 = data, data2
 							value13[argument11[argument3]] = argument4[argument3](iMap2)
 							iMap = iMap2
 						end
 					else
 						if not (value17 < 1) then
 							if value17 ~= 2 then
-								local data, data2 = value14, value15
+								local data, data2 = data49, data210
 
 								if data then
 									for k in value3, data, nil do
@@ -5332,7 +5333,7 @@ end, [104] = vector.create, [67] = bit32.rrotate, [7] = string.unpack, [54] = bu
 					end
 				end
 			else
-				local data, data2 = value14, value15
+				local data, data2 = data49, data210
 
 				if data then
 					for k in value3, data, nil do
@@ -5877,8 +5878,8 @@ end, [48] = coroutine.wrap, [92] = function(argument, _, _, argument2)
 
 		return function(argument5, argument6, argument7)
 			local number = 1
-			local value3
-			local argument2, argument3, argument4, value4, argument8, number2, argument9, value5, value6, _, value7, value8 = argument5, argument6, argument7
+			local data50
+			local argument2, argument3, argument4, value4, argument8, number2, argument9, value5, value6, _, number62, number32 = argument5, argument6, argument7
 
 			while true do
 				argument5 = nil
@@ -5911,9 +5912,9 @@ end, [48] = coroutine.wrap, [92] = function(argument, _, _, argument2)
 							number, argument9 = ((value9 < 128) and 13) or 17, value9
 						else
 							local number3, number4 = number2 - 1, 1 + 0
-							local number5 = value7 - number4
-							local data = {number3 + 0, number4, value3, number5, nil}
-							number, value3 = 19, data
+							local number5 = number62 - number4
+							local data = {number3 + 0, number4, data50, number5, nil}
+							number, data50 = 19, data
 						end
 					elseif number <= 10 then
 						if number <= 8 then
@@ -5945,25 +5946,25 @@ end, [48] = coroutine.wrap, [92] = function(argument, _, _, argument2)
 						local value9, number5, number6 = argument[28](number2), argument4 * 16843009, number2 - (number2 % 4)
 						local number7, number8 = number6 - 1, 4 + 0
 						local number9 = 0 - number8
-						local data = {value3, nil, number7 + 0, number8, number9}
-						number, value3, argument3, argument9, value5, value6, _, value7 = 16, data, argument5, number3, number4, value9, number5, number6
+						local data = {data50, nil, number7 + 0, number8, number9}
+						number, data50, argument3, argument9, value5, value6, _, number62 = 16, data, argument5, number3, number4, value9, number5, number6
 					end
 				elseif number <= 22 then
 					if number <= 18 then
 						if number <= 16 then
 							if number <= 15 then
-								local value9, value10, value11 = argument[54], argument[57](value4, argument8 + value8), value[5][value[4]][argument3]
-								value9(value6, value8, (argument[56](value10, value11, _)))
+								local value9, value10, value11 = argument[54], argument[57](value4, argument8 + number32), value[5][value[4]][argument3]
+								value9(value6, number32, (argument[56](value10, value11, _)))
 								argument5 = value2[5][value2[4]][argument3]
 								number, argument3 = 16, argument5
 							else
-								local condition, condition2, condition3 = value3[5], value3[4], value3[3]
+								local condition, condition2, condition3 = data50[5], data50[4], data50[3]
 								local number3, condition4 = condition + condition2, condition2 <= 0
 								condition2, condition = number3 >= condition3, number3 <= condition3
 								condition3 = (condition4 and condition2) or (not condition4 and condition)
-								value3[5] = number3
+								data50[5] = number3
 								if condition3 then
-									number, value8 = 15, number3
+									number, number32 = 15, number3
 								else
 									number = 26
 								end
@@ -5976,11 +5977,11 @@ end, [48] = coroutine.wrap, [92] = function(argument, _, _, argument2)
 						end
 					elseif number <= 20 then
 						if number <= 19 then
-							local condition, condition2, condition3 = value3[4], value3[2], value3[1]
+							local condition, condition2, condition3 = data50[4], data50[2], data50[1]
 							local number3, condition4 = condition + condition2, condition2 <= 0
 							condition, condition2 = number3 >= condition3, number3 <= condition3
 							condition3 = (condition4 and condition) or (not condition4 and condition2)
-							value3[4] = number3
+							data50[4] = number3
 							if condition3 then
 								number, number2 = 27, number3
 							else
@@ -6004,14 +6005,14 @@ end, [48] = coroutine.wrap, [92] = function(argument, _, _, argument2)
 							number, argument9 = ((value9 < 128) and 3) or 7, value9
 						end
 					elseif number <= 25 then
-						local value9 = value3[3]
+						local value9 = data50[3]
 						argument2[6] = argument[90](argument2)
 						local value10, value11, value12 = argument:mP(argument2, value6)
 						local value13 = argument[102](value6, value12)
-						number, value3, argument2, argument3, argument4, number2 = ((value13 < 128) and 8) or 5, value9, value10, value11, value12, value13
+						number, data50, argument2, argument3, argument4, number2 = ((value13 < 128) and 8) or 5, value9, value10, value11, value12, value13
 					else
-						local value9 = value3[1]
-						number, value3 = 6, value9
+						local value9 = data50[1]
+						number, data50 = 6, value9
 					end
 				elseif number <= 28 then
 					if number <= 27 then
@@ -6337,7 +6338,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local ok, response = xpcall(argument6, function(argument7)
 					return tostring(argument7) .. (" | " .. tostring(debug.traceback()):sub(1, 400))
 				end)
-				if not (ok) then
+				if not ok then
 					parts[#parts + 1] = argument5 .. (": " .. tostring(response))
 					warn("[Chilli] " .. (argument5 .. (" failed: " .. tostring(response))))
 				end
@@ -6395,9 +6396,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 			local function callback(argument5, argument6)
 				local instance = Instance.new(argument5)
 				instance.Name = HttpService:GenerateGUID(false):gsub("-", ""):sub(1, 14)
-				for k, value2 in next, argument6, nil do
+				for k, value in next, argument6 do
 					if k ~= "Parent" then
-						instance[k] = value2
+						instance[k] = value
 					end
 				end
 				instance.Parent = argument6.Parent
@@ -6429,7 +6430,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					return false
 				end
 				local value4 = coroutine.running()
-				local value5 = table.pack(...)
+				local packedValues = table.pack(...)
 				local argument7, thread
 				local condition2 = false
 
@@ -6449,7 +6450,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end
 
 				task.spawn(function()
-					callback2(table.pack(pcall(value3.InvokeServer, value3, table.unpack(value5, 1, value5.n))))
+					callback2(table.pack(pcall(value3.InvokeServer, value3, table.unpack(packedValues, 1, packedValues.n))))
 				end)
 				if not argument7 then
 					thread, condition2 = task.delay(15, callback2), true
@@ -6580,8 +6581,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 			data[53] = function(...)
 				local data2, world = {...}, workspace:FindFirstChild("World") or workspace:FindFirstChild("__OBJECTS")
-				for _, value3 in ipairs(data2) do
-					world = world and (world:FindFirstChild(value3))
+				for _, value in ipairs(data2) do
+					world = world and (world:FindFirstChild(value))
 				end
 				return world
 			end
@@ -6716,7 +6717,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				callback9(argument5.BaseMutation)
 				if type(argument5.Mutations) == "table" then
-					for k, mutation in next, argument5.Mutations, nil do
+					for k, mutation in next, argument5.Mutations do
 						callback9((((type(k) == "string") and (mutation == true)) and k) or mutation)
 					end
 				end
@@ -6725,7 +6726,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 			local function callback9(argument5, argument6, argument7)
 				local value3 = callback7(argument5)
-				if not (value3) then
+				if not value3 then
 					return 0
 				end
 				argument6 = tonumber(argument6) or 1
@@ -6810,8 +6811,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 			end
 
 			local list2 = {"None"}
-			for _, value3 in next, labelMap2, nil do
-				list2[#list2 + 1] = value3
+			for _, value in next, labelMap2 do
+				list2[#list2 + 1] = value
 			end
 			table.sort(list2, function(argument5, argument6)
 				return (argument5 == "None") or ((argument6 ~= "None") and (argument5 < argument6))
@@ -6827,18 +6828,18 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end
 
 				local argumentMap = {}
-				for _, value3 in ipairs(argument5) do
-					argumentMap[(argument6 and argument6[value3]) or value3] = true
+				for _, value in ipairs(argument5) do
+					argumentMap[(argument6 and argument6[value]) or value] = true
 				end
 				return argumentMap
 			end
 
 			local data2, data3 = {}, {None = "None"}
-			for i, value3 in ipairs(nameList) do
-				data2[value3] = i
+			for i, value in ipairs(nameList) do
+				data2[value] = i
 			end
-			for k, value3 in next, labelMap2, nil do
-				data3[value3] = k
+			for k, value in next, labelMap2 do
+				data3[value] = k
 			end
 
 			data[68] = function(argument5, argument6)
@@ -6886,8 +6887,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					if #argument6.m == 0 then
 						return argument5.mut.None == true
 					end
-					for _, value3 in ipairs(argument6.m) do
-						if argument5.mut[value3] then
+					for _, value in ipairs(argument6.m) do
+						if argument5.mut[value] then
 							return true
 						end
 					end
@@ -6902,8 +6903,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 			genv.ChilliHubSaeCleanup = function()
 				data[55] = false
 				local value3 = data[15]
-				for _, value4 in ipairs(value3.cleanup) do
-					pcall(value4)
+				for _, value in ipairs(value3.cleanup) do
+					pcall(value)
 				end
 				for _, connection in ipairs(connections) do
 					pcall(connection.Disconnect, connection)
@@ -6921,8 +6922,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				if next(argumentMap2) then
 					local argumentMap = argumentMap2
 					argumentMap2 = {}
-					for _, value3 in next, argumentMap, nil do
-						pcall(value3)
+					for _, value in next, argumentMap do
+						pcall(value)
 					end
 				end
 			end)
@@ -6954,7 +6955,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				value3.warned = number6.warned or {}
 
 				if (argument5 == "warn") or (argument5 == "err") then
-					if not (mainWindow.open) then
+					if not mainWindow.open then
 						value3, number6 = data[15], os.clock() - (data[15].warned[status] or -1000000000)
 						if number6 > 60 then
 							local value4 = data[15]
@@ -6979,8 +6980,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 			local function callback17(argument5, argument6, argument7)
 				callback14(argument5, function()
-					for k, value3 in next, argument7, nil do
-						argument6:Set(k, value3)
+					for k, value in next, argument7 do
+						argument6:Set(k, value)
 					end
 				end)
 			end
@@ -6999,18 +7000,18 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				pcall(function()
 					local value3 = data[33]
 
-					for k, value4 in next, value3.Assets.Directory, nil do
-						k = (type(value4) == "table") and value4.Rarity
-						value4 = k and tonumber(k.RarityNumber or k.Rank)
-						if value4 then
-							rarityMap[value4] = rarityMap[value4] or tostring((k.DisplayName or k._id) or value4)
+					for k, value in next, value3.Assets.Directory do
+						k = (type(value) == "table") and value.Rarity
+						value = k and tonumber(k.RarityNumber or k.Rank)
+						if value then
+							rarityMap[value] = rarityMap[value] or tostring((k.DisplayName or k._id) or value)
 						end
 					end
 				end)
 
 				if not (next(rarityMap)) then
-					for i, value3 in ipairs(nameList) do
-						rarityMap[i] = value3
+					for i, value in ipairs(nameList) do
+						rarityMap[i] = value
 					end
 				end
 				local value3 = data[15]
@@ -7048,11 +7049,11 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					pcall(function()
 						local value7 = data[33]
 
-						for k, value8 in next, value7.Assets.Directory, nil do
-							local rarity = (type(value8) == "table") and value8.Rarity
+						for k, value in next, value7.Assets.Directory do
+							local rarity = (type(value) == "table") and value.Rarity
 							local rarity2 = rarity and tonumber(rarity.RarityNumber or rarity.Rank)
 							if rarity2 then
-								list3[#list3 + 1] = {n = tostring(value8.DisplayName or k), r = rarity2, rn = tostring((rarity.DisplayName or rarity._id) or rarity2), c = tostring(k)}
+								list3[#list3 + 1] = {n = tostring(value.DisplayName or k), r = rarity2, rn = tostring((rarity.DisplayName or rarity._id) or rarity2), c = tostring(k)}
 							end
 						end
 					end)
@@ -7083,7 +7084,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				value7.minRar = function(argument5)
 					local value8 = data[15]
 					local value9 = value8.RIDX[tostring(argument5)]
-					if not (value9) then
+					if not value9 then
 						return nil
 					end
 					argument5 = {}
@@ -7098,7 +7099,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				value8.maxRar = function(argument5)
 					local iMap = data[15]
 					local value9 = iMap.RIDX[tostring(argument5)]
-					if not (value9) then
+					if not value9 then
 						return nil
 					end
 					iMap = {}
@@ -7112,9 +7113,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				value9.names = function(argument5)
 					local data5
-					for _, value10 in ipairs(((type(argument5) == "table") and argument5) or {}) do
+					for _, value in ipairs(((type(argument5) == "table") and argument5) or {}) do
 						data5 = data5 or {}
-						data5[tostring(value10):gsub(" %(.-%)$", ""):gsub(" %[[^%]]*%]$", "")] = true
+						data5[tostring(value):gsub(" %(.-%)$", ""):gsub(" %[[^%]]*%]$", "")] = true
 					end
 					return data5
 				end
@@ -7180,10 +7181,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 			end
 
 			data[15].poke = function()
-				for _, value4 in ipairs(iMap) do
-					if value4.info then
-						if not (value4.busy) then
-							value4.at = 0
+				for _, value in ipairs(iMap) do
+					if value.info then
+						if not value.busy then
+							value.at = 0
 						end
 					end
 				end
@@ -7301,7 +7302,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							number9.respawn()
 							return false
 						elseif (os.clock() - now3) > 1 then
-							if not (condition2) then
+							if not condition2 then
 								local value5 = data[9]
 								value5("RF/Treadmill/AskDoff")
 								local value6, value7, value8 = data[17], data[18], data[45]
@@ -7328,9 +7329,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					if not value4 then
 						return false
 					end
-					if not (value4.Anchored) then
+					if not value4.Anchored then
 						i = data[15]
-						if not (i.onAdmin) then
+						if not i.onAdmin then
 							return true
 						end
 					end
@@ -7424,13 +7425,13 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				leaveTree = data[19]
 				local value4, condition2 = leaveTree(), data[45]
 				leaveTree = condition2()
-				if not (value4) then
+				if not value4 then
 					return false
 				end
 				condition2 = data[15]
 
 				if condition2.hideTread then
-					if not (argument6) then
+					if not argument6 then
 						attribute = data[21]
 						if attribute(value4.Position) then
 							local value5 = data[15]
@@ -7477,7 +7478,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end
 				local value4 = data[19]
 				local value5 = value4()
-				if not (value5) then
+				if not value5 then
 					return false
 				end
 				value4 = data[21]
@@ -7874,6 +7875,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 			data[15].ragTo = ragTo
 
+			-- Drives character physics velocity toward target destination
 			local function callback29(argument5, argument6, argument7, argument8, argument9)
 				local now3 = data[15]
 				if now3.ready then
@@ -7886,7 +7888,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				while argument6() and (os.clock() < assemblyLinearVelocity) do
 					clock = data[19]
 					local value4 = clock()
-					if not (value4) then
+					if not value4 then
 						return false
 					end
 					if value4.Anchored then
@@ -7951,13 +7953,13 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 			local iMap2, data7, data8 = {}, {}, {{"Farm", nil, {"+Auto Steal", "Auto Progression", "Auto Mutation", "Auto Place Egg", "Auto Treadmill", "Auto Hatch & Equip", "Keep Eggs", "Auto Sell", "Auto Fuse Machine", "Auto Favorite", "Priority"}}, {"Event", nil, {"UFO Sightings", "Shooting Star", "Butterfly Bloom", "The Hollow"}}, {"Admin Abuse", "Right", {"Capture The Egg", "Admin Treadmill", "Instant Steal V3", "Minigame Eggs", "Cursed Island Wars"}}, {"Player", nil, {"ESP", "+Movement", "+Character", "+Combat"}}, {"Predictor", nil, {"Discord Webhook", "+Egg Predictor", "Fuse Predictor"}}, {"Server", nil, {"+Server"}}, {"Misc", nil, {"+Performance", "+Utility"}}, {"Auto Hop", nil, {"+Egg Finder"}}, {"Discord", "Right", {"+Community"}}, {"Venyx", "Right", {"+Venyx"}}}
 
-			for i, value4 in ipairs(data8) do
-				i = mainWindow:Tab(value4[1], value4[2])
-				data7[value4[1]] = i
-				for i2, value5 in ipairs(value4[3]) do
-					i2 = value5:sub(1, 1) == "+"
-					value5 = (i2 and value5:sub(2)) or value5
-					iMap2[value5] = i:Section(value5, i2)
+			for i, value in ipairs(data8) do
+				i = mainWindow:Tab(value[1], value[2])
+				data7[value[1]] = i
+				for i2, value in ipairs(value[3]) do
+					i2 = value:sub(1, 1) == "+"
+					value = (i2 and value:sub(2)) or value
+					iMap2[value] = i:Section(value, i2)
 				end
 			end
 
@@ -7981,7 +7983,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					while argument do
 						if argument:IsA("GuiObject") then
-							if not (argument.Visible) then
+							if not argument.Visible then
 								return false
 							end
 						end
@@ -7999,10 +8001,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					argument5.Set = function(argument6)
 						local data9
-						for k, value4 in next, argument6, nil do
-							if argument5.Spec[k] ~= value4 then
+						for k, value in next, argument6 do
+							if argument5.Spec[k] ~= value then
 								data9 = data9 or {}
-								data9[k] = value4
+								data9[k] = value
 							end
 						end
 						if data9 then
@@ -8071,7 +8073,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							condition6, condition2, condition3 = condition4, true, true
 						elseif condition4 then
 							condition6, condition2, condition3 = condition4, true, true
-						elseif not (condition2) then
+						elseif not condition2 then
 							condition6, condition2, condition3 = condition4, true, true
 						end
 					end
@@ -8159,9 +8161,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 
 					angelicTreadmill = treadmillMap.AngelicTreadmill
-					for _, value5 in ipairs((adminTreadmill and adminTreadmill:GetChildren()) or {}) do
-						if treadmillMap[value5.Name] then
-							angelicTreadmill = treadmillMap[value5.Name]
+					for _, value in ipairs((adminTreadmill and adminTreadmill:GetChildren()) or {}) do
+						if treadmillMap[value.Name] then
+							angelicTreadmill = treadmillMap[value.Name]
 							break
 						end
 					end
@@ -8320,9 +8322,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 			saveFile("05_swap#1", function()
 				local condition2, condition3 = false, false
 
+				-- Registers ChildAdded signal callback(s)
 				local function callback33(argument5)
 					condition2 = false
-					if not (argument5) then
+					if not argument5 then
 						return
 					end
 
@@ -8582,7 +8585,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				value9 = data[15]
 
 				value9.autoSteal = callback19(autoSteal, "Auto Steal", "steal", false, function(argument5)
-					if not (argument5) then
+					if not argument5 then
 						callback23(value6)
 						local value12 = data[15]
 						value12.curUid = nil
@@ -8641,11 +8644,11 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				function mainWindow.pre(argument5)
 					local function callback34(argument6)
-						for k, value16 in next, argument5, nil do
-							k = (type(value16) == "table") and value16["Auto Steal"]
-							value16 = (type(k) == "table") and k[argument6]
-							if type(value16) == "table" then
-								return value16, k
+						for k, value in next, argument5 do
+							k = (type(value) == "table") and value["Auto Steal"]
+							value = (type(k) == "table") and k[argument6]
+							if type(value) == "table" then
+								return value, k
 							end
 						end
 					end
@@ -8661,7 +8664,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					if fastDelivery then
 						if fastDelivery.Value == true then
 							if v2TweenSpeed then
-								if not (v2TweenSpeed.Delivery) then
+								if not v2TweenSpeed.Delivery then
 									v2TweenSpeed.Delivery = {Value = "Fast Tween"}
 								end
 							end
@@ -8702,7 +8705,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					if instantStealV2 and (instantSteal.Value ~= true) then
 						instantStealV2.Delivery = {Value = "Walk"}
 					elseif instantStealV2 then
-						if not (instantStealV2.Delivery) then
+						if not instantStealV2.Delivery then
 							instantStealV2.Delivery = {Value = "Instant Steps"}
 						end
 					end
@@ -8926,7 +8929,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local value21 = value20()
 
 					if currentCamera and character then
-						if not (value21) then
+						if not value21 then
 							return
 						end
 					else
@@ -9301,21 +9304,21 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local function trust()
 					local value26 = data11[35]
 
-					for i, value27 in ipairs(value26) do
-						i = rawget(value27, "Evidence")
+					for i, value in ipairs(value26) do
+						i = rawget(value, "Evidence")
 						if type(i) == "table" then
 							i.Speed = 0
 							i.Teleport = 0
 							i.Flight = 0
 						end
-						for _, value28 in ipairs(sampleList) do
-							rawset(value27, value28, nil)
+						for _, value79 in ipairs(sampleList) do
+							rawset(value, value79, nil)
 						end
-						if rawget(value27, "ThreatLevel") == "Observing" then
-							rawset(value27, "ThreatLevel", "Trusted")
+						if rawget(value, "ThreatLevel") == "Observing" then
+							rawset(value, "ThreatLevel", "Trusted")
 						end
-						if rawget(value27, "MovementMode") == "Correcting" then
-							rawset(value27, "MovementMode", "Grounded")
+						if rawget(value, "MovementMode") == "Correcting" then
+							rawset(value, "MovementMode", "Grounded")
 						end
 					end
 				end
@@ -9335,10 +9338,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						steal = condition3
 					end
 
-					if not (steal) then
+					if not steal then
 						value26 = data[28]
 
-						if not (value26.boostOn) then
+						if not value26.boostOn then
 							condition3 = data[28]
 
 							if condition3.ufoTp then
@@ -9361,7 +9364,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					steal, value26 = character, data[1]
 
 					if (steal ~= data[1].Character) or (#data11[35] == 0) then
-						if not (condition2) then
+						if not condition2 then
 							if os.clock() >= number7 then
 								condition2 = true
 								task.spawn(function()
@@ -9398,7 +9401,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				value28.stepTo = function(vector_2, argument5)
 					local value29 = data[19]
 					local value30 = value29()
-					if not (value30) then
+					if not value30 then
 						return false
 					end
 					local number9, value31 = math.max(callback4() * 1.515, 40), data[29]
@@ -9471,7 +9474,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					flyY = data[19]
 					local value29, number9 = flyY(), 0
-					if not (value29) then
+					if not value29 then
 						return
 					end
 					local number10, flyY3, number11 = ((argument7.X <= value29.Position.X) and 1) or -1, data[15], data[15]
@@ -9548,7 +9551,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							end
 							condition5 = data[19]
 							value29 = condition5()
-							if not (value29) then
+							if not value29 then
 								return
 							end
 							condition4, condition5 = number12 - value29.Position.Y, data[29]
@@ -9681,7 +9684,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 						value30 = data[19]
 						value29 = value30()
-						if not (value29) then
+						if not value29 then
 							return
 						end
 						local value31, value = data[15], value29
@@ -9897,7 +9900,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							value32(value33(position + value34(0, 3, 0)))
 						elseif condition5.Magnitude > 2 then
 							condition4 = data[15]
-							if not (condition4.agBusy) then
+							if not condition4.agBusy then
 								value31 = nil
 								value31, condition3.AssemblyLinearVelocity = data[29], (condition5.Unit * math.min(callback4() * 0.95, condition5.Magnitude / 0.05)) + data[29](0, condition3.AssemblyLinearVelocity.Y, 0)
 							end
@@ -9931,10 +9934,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local function callback41(argument5)
 					local value32 = data[23]
 
-					for _, value33 in pairs(value32()) do
-						if type(value33) == "table" then
-							if value33.Uid == argument5 then
-								return value33.State == "Slot"
+					for _, value in pairs(value32()) do
+						if type(value) == "table" then
+							if value.Uid == argument5 then
+								return value.State == "Slot"
 							end
 						end
 					end
@@ -10060,8 +10063,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						if os.clock() >= number11 then
 							number11 = os.clock() + 1
 							value32, condition3 = data[23], false
-							for _, value33 in pairs(value32()) do
-								condition3 = if type(value33) == "table" then if value33.Uid == argument5 then value33.State ~= "Slot" else condition3 else condition3
+							for _, value in pairs(value32()) do
+								condition3 = if type(value) == "table" then if value.Uid == argument5 then value.State ~= "Slot" else condition3 else condition3
 							end
 							if not condition3 then
 								return false, "Egg went back to its nest"
@@ -10175,7 +10178,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local value34 = data[65]
 					local value35, kMap = value34(), {}
 					local index, categoryMap = ((value35 and (type(value35.Index) == "table")) and value35.Index) or {}, categoryMap2
-					for k in next, categoryMap, nil do
+					for k in next, categoryMap do
 						if index[k] ~= true then
 							kMap[k] = true
 						end
@@ -10191,16 +10194,16 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					number10, categoryMap = os.clock() + 5, {}
 					local categoryMap3 = data[65]
 					local value34 = categoryMap3()
-					if not (value34) then
+					if not value34 then
 						categoryMap3 = categoryMap
 						return categoryMap3
 					end
 					local index, categoryMap4, inventoryList = ((type(value34.Index) == "table") and value34.Index) or {}, {}, {"Inventory", "EggInventory"}
 
-					for _, value35 in ipairs(inventoryList) do
-						for _, value36 in next, ((type(value34[value35]) == "table") and value34[value35]) or {}, nil do
-							if type(value36) == "table" then
-								categoryMap4[(value36.Category or value36.AssetCategory) or ""] = true
+					for _, value in ipairs(inventoryList) do
+						for _, value in next, ((type(value34[value]) == "table") and value34[value]) or {}, nil do
+							if type(value) == "table" then
+								categoryMap4[(value.Category or value.AssetCategory) or ""] = true
 							end
 						end
 					end
@@ -10381,7 +10384,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 
 					if argument6 == "mv" then
-						if not (e.mv) then
+						if not e.mv then
 							e.mv = ((#e.m > 0) and (e.v / math.max(callback9(e.cat, e.s, {}), 1))) or 1
 						end
 					end
@@ -10418,7 +10421,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							end
 						end
 
-						if not (argument6) then
+						if not argument6 then
 							return list3
 						end
 					end
@@ -10573,7 +10576,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						value34 = data[15]
 						value34.fieldFresh = number12 <= 2
 					end
-					for k in next, uidMap2, nil do
+					for k in next, uidMap2 do
 						if not (uidMap3[k]) then
 							uidMap2[k] = nil
 						end
@@ -10691,7 +10694,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					for k2, value40 in value(argument:eP(value39)) do
 						if type(value40) == "table" then
-							if not (value40.Placement) then
+							if not value40.Placement then
 								local value41 = data[15]
 
 								if not (value41.reserved[k2]) then
@@ -10705,7 +10708,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 										k3 = protect
 									end
 
-									if not (k3) then
+									if not k3 then
 										numVal = toNumberOrDefault2(value40)
 
 										if #numVal.m == 0 then
@@ -10723,7 +10726,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 					end
 
-					if not (k) then
+					if not k then
 						return false
 					end
 					callback2("RE/PetSatchel/SellSelection", {Eggs = {k}, Assets = {}})
@@ -10760,7 +10763,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							if argument5 == value40.UserId then
 								local value41 = data[28]
 								if value41.bagSell then
-									if not (condition4) then
+									if not condition4 then
 										condition4 = true
 										task.defer(data[15].bagCheck)
 									end
@@ -10777,7 +10780,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						return nil
 					end
 					local value40 = callback46()[1]
-					if not (value40) then
+					if not value40 then
 						return nil
 					end
 					local value41 = data[15]
@@ -10835,7 +10838,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 
 					value42 = value43 or value42
-					if not (value42) then
+					if not value42 then
 						value41 = data[11]
 						return value41("Matching eggs are in other players' hands")
 					end
@@ -10864,10 +10867,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						return value42[argument5]
 					end
 
-					for _, value43 in pairs(value42) do
-						if type(value43) == "table" then
-							if value43.Uid == argument5 then
-								return value43
+					for _, value in pairs(value42) do
+						if type(value) == "table" then
+							if value.Uid == argument5 then
+								return value
 							end
 						end
 					end
@@ -10948,6 +10951,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local uidMap3 = {}
 
+				-- Registers PreSimulation signal callback(s)
 				local function callback51(argument5, argument6, argument7)
 					local uid, condition9 = argument5.Uid, data[1]
 					local character, RunService3 = condition9.Character, data[8]
@@ -11072,7 +11076,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						condition8 = data[20]
 						condition7 = condition8()
 
-						if not (condition6) then
+						if not condition6 then
 							RunService3 += condition7
 							if RunService3 >= 3 then
 								condition5, condition9 = condition, condition6
@@ -11122,7 +11126,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						if (if character then not character else condition9) and (condition9.State == "Slot") then
 							character = (callback53(condition9))
 						else
-							if not (character) then
+							if not character then
 								if condition9 then
 									value41 = data[11]
 									value41("The egg fell, taking it")
@@ -11163,7 +11167,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						if character then
 							local value42, value43 = value31(uid, argument6)
 
-							if not (value42) then
+							if not value42 then
 								if argument6() then
 									if (argument7 or 0) < 4 then
 										if toNumberOrDefault3(uid) then
@@ -11347,7 +11351,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 								pos, text = value42, value43
 							end
 
-							if not (pos) then
+							if not pos then
 								if argument() then
 									value41 = data[1]
 
@@ -11401,11 +11405,11 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							if pos then
 								local value41 = data[23]
 
-								for _, value42 in pairs(value41()) do
-									if type(value42) == "table" then
-										if value42.Uid == argument5.Uid then
-											if value42.State ~= "Slot" then
-												if value42.State ~= "Dropped" then
+								for _, value in pairs(value41()) do
+									if type(value) == "table" then
+										if value.Uid == argument5.Uid then
+											if value.State ~= "Slot" then
+												if value.State ~= "Dropped" then
 													local condition8, text2 = false, "Taken by someone"
 													pos, text = condition8, text2
 												end
@@ -11421,7 +11425,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						pos, text = callback51(argument5, argument)
 					else
 						if pos then
-							if not (condition7) then
+							if not condition7 then
 								adminSteal2, adminSteal3 = value24(argument5.Uid, argument, argument5.Pos, true)
 								condition5, adminSteal = nil
 								if adminSteal2 then
@@ -11480,7 +11484,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						adminSteal2 = data[1]
 
 						if adminSteal2.Character == character then
-							if not (pos) then
+							if not pos then
 								adminSteal = data11[42]
 								if not (adminSteal()) then
 									adminSteal3 = data[26]
@@ -11497,7 +11501,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					adminSteal3 = data[28]
 
 					if adminSteal3.steal then
-						if not (pos) then
+						if not pos then
 							if argument5.kind ~= "ufo" then
 								adminSteal = data[15]
 								adminSteal.stealRetry = os.clock() + 6
@@ -11510,7 +11514,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						adminSteal3.tpKeep = nil
 					end
 
-					if not (pos) then
+					if not pos then
 						condition5 = callback49(argument5.Uid)
 
 						if condition5 then
@@ -11558,7 +11562,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					adminSteal3 = (adminSteal and ((((value6.again and (value6.again.uid == argument5.Uid)) and value6.again.nb) or 0) + 1)) or 0
 					value6.again = ((((pos == false) or (text ~= nil)) or adminSteal) and {uid = argument5.Uid, n = (adminSteal2 and 0) or (condition5 + 1), nb = adminSteal3}) or nil
 					if adminSteal3 >= 3 then
-						if not (condition7) then
+						if not condition7 then
 							uidMap[argument5.Uid] = os.clock() + 30
 							value6.again = nil
 						end
@@ -11674,7 +11678,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					if argument5 then
 						if mainWindow.busy then
 							return
-						elseif not (mainWindow.ready) then
+						elseif not mainWindow.ready then
 							return
 						end
 					else
@@ -11771,7 +11775,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							argument6.CFrame = value11(argument7)
 						end)
 					end
-					if not (argument8) then
+					if not argument8 then
 						return
 					end
 					local value, value11 = ipairs, argument[46](argument5:GetDescendants())
@@ -11791,14 +11795,14 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local value11 = data[19]
 					local value12 = value11()
 
-					for _, value13 in ipairs((value12 and workspace:GetChildren()) or {}) do
-						if value13:IsA("Model") and value13:FindFirstChild("Hitbox") then
-							for _, descendant in ipairs(value13:GetDescendants()) do
+					for _, value in ipairs((value12 and workspace:GetChildren()) or {}) do
+						if value:IsA("Model") and value:FindFirstChild("Hitbox") then
+							for _, descendant in ipairs(value:GetDescendants()) do
 								if (descendant:IsA("JointInstance") or descendant:IsA("WeldConstraint")) or descendant:IsA("RigidConstraint") then
 									if descendant.Part0 == value12 then
-										return value13
+										return value
 									elseif descendant.Part1 == value12 then
-										return value13
+										return value
 									end
 								end
 							end
@@ -11818,14 +11822,14 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					argument5.Archivable = true
 					local ok, response = pcall(argument5.Clone, argument5)
 					argument5.Archivable = archivable
-					for k, value11 in next, descendantMap, nil do
+					for k, value in next, descendantMap do
 						pcall(function()
-							k.Archivable = value11
+							k.Archivable = value
 						end)
 					end
 
 					if ok then
-						if not (response) then
+						if not response then
 							return
 						end
 					else
@@ -11863,9 +11867,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local value11, value12 = data[60], data[60]
 					pcall(data[60].UnbindFromRenderStep, data[60], "VenyxAG")
 					dis.beat:Disconnect()
-					for _, value13 in ipairs(dis.hidden) do
+					for _, value in ipairs(dis.hidden) do
 						pcall(function()
-							value13.LocalTransparencyModifier = 0
+							value.LocalTransparencyModifier = 0
 						end)
 					end
 					pcall(function()
@@ -11898,8 +11902,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local data14, value11 = {}, data11[64]
 					argument:UP(data14, 0, argument5, value11())
 
-					for _, value12 in ipairs(data14) do
-						for _, descendant in ipairs(value12:GetDescendants()) do
+					for _, value in ipairs(data14) do
+						for _, descendant in ipairs(value:GetDescendants()) do
 							if descendant:IsA("BasePart") then
 								dis.hidden[#dis.hidden + 1] = descendant
 							elseif descendant:IsA("Decal") then
@@ -11911,9 +11915,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 
 					local function callback37()
-						for _, value12 in ipairs(dis.hidden) do
+						for _, value in ipairs(dis.hidden) do
 							pcall(function()
-								value12.LocalTransparencyModifier = 1
+								value.LocalTransparencyModifier = 1
 							end)
 						end
 						pcall(function()
@@ -11928,8 +11932,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local RunService2 = data[60]
 					dis.beat = RunService2.Heartbeat:Connect(callback37)
 
-					for _, value12 in ipairs(data14) do
-						local callback37_2 = callback36(value12, currentCamera)
+					for _, value in ipairs(data14) do
+						local callback37_2 = callback36(value, currentCamera)
 						dis.copies[#dis.copies + 1] = callback37_2
 						if callback37_2 then
 							if argument6 then
@@ -12059,7 +12063,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					condition6 = condition4 or condition5
 
 					if condition6 then
-						if not (condition) then
+						if not condition then
 							if callback37() then
 								local value13 = data[15]
 								value13.agKick()
@@ -12088,7 +12092,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local egg = value14.Egg
 
 					if egg then
-						if not (egg.CarryChanged) then
+						if not egg.CarryChanged then
 							return
 						end
 					else
@@ -12202,10 +12206,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback37()
 					local uids, uidMap, number6, curUid = {}, {}, 0, data[15]
-					for _, value7 in ipairs(curUid.pick) do
-						if not (uidMap[value7]) then
-							uidMap[value7] = true
-							uids[#uids + 1] = value7
+					for _, value in ipairs(curUid.pick) do
+						if not (uidMap[value]) then
+							uidMap[value] = true
+							uids[#uids + 1] = value
 						end
 					end
 					curUid = data[28]
@@ -12213,14 +12217,14 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					if curUid.steal then
 						local value7, value8 = data[15], data[15]
 
-						for i, value9 in ipairs(value7.stealSort(value8.allEggs())) do
-							if value9.tg then
-								if value9.kind ~= "ufo" then
-									if not (uidMap[value9.Uid]) then
+						for i, value in ipairs(value7.stealSort(value8.allEggs())) do
+							if value.tg then
+								if value.kind ~= "ufo" then
+									if not (uidMap[value.Uid]) then
 										if number6 < 8 then
 											i = number6 + 1
-											uidMap[value9.Uid] = true
-											uids[#uids + 1] = value9.Uid
+											uidMap[value.Uid] = true
+											uids[#uids + 1] = value.Uid
 											number6 = i
 										end
 									end
@@ -12279,7 +12283,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local function callback42()
 					local value7 = data[28]
 
-					if not (value7.steal) then
+					if not value7.steal then
 						local value8 = data[15]
 						if value8.autoSteal then
 							local value9 = data[15]
@@ -12429,7 +12433,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						argument5.Visible = visible
 					end
 				end
-				local condition2, number6, condition3, condition4, condition5, number7, connections3, kMap, uidMap, ok, value12, value, imageLabel, value13, value2, position, title, plusEquip, scrollingFrame, template, value14, value15, data13 = false, 0, false, false, false, 0, {}, {}, {}
+				local condition2, number6, condition3, condition4, condition5, number7, connections3, kMap, uidMap, ok, value12, value, imageLabel, value13, value2, position, title, plusEquip, scrollingFrame, template, tween, tween4, data13 = false, 0, false, false, false, 0, {}, {}, {}
 				local value16, condition6, condition7, condition8, callback53, callback54 = mainWindow:State("Steal Panel Open", true), false, false, false
 				local function callback55(argument5, argument6)
 					connections3[#connections3 + 1] = argument5:Connect(argument6)
@@ -12453,10 +12457,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end
 
 				local function callback57(argument5)
-					local ok2, response = pcall(argument5.Clone, argument5)
+					local ok, response = pcall(argument5.Clone, argument5)
 
-					if ok2 then
-						if not (response) then
+					if ok then
+						if not response then
 							return nil
 						end
 					else
@@ -12477,8 +12481,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						descendant.Name = callback34()
 					end
 				end
-				local number8, value3, data14 = 2.3120369911193848, setmetatable, {__mode = "k"}
-				local value17 = value3({}, data14)
+				local number8, setmetatableFn, data14 = 2.3120369911193848, setmetatable, {__mode = "k"}
+				local value17 = setmetatableFn({}, data14)
 				local thickness, thickness2
 
 				local function callback59(argument5, argument6, argument7)
@@ -12496,8 +12500,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end
 
 				local function callback60()
-					for k, value18 in pairs(value17) do
-						callback59(k, value18[1], value18[2])
+					for k, value in pairs(value17) do
+						callback59(k, value[1], value[2])
 					end
 				end
 
@@ -12536,6 +12540,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 				end
 
+				-- Registers MouseEnter, MouseLeave, MouseButton1Down signal callback(s)
 				local function callback64(argument5)
 					local button = argument5.Button
 					local scale = argument5.Scale or callback("UIScale", {Parent = button})
@@ -12553,11 +12558,11 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local list3 = {}
 
 				local function callback65(argument5)
-					for _, value18 in ipairs(list3) do
-						pcall(value18.Cancel, value18)
+					for _, value in ipairs(list3) do
+						pcall(value.Cancel, value)
 					end
 					table.clear(list3)
-					if not (argument5) then
+					if not argument5 then
 						return
 					end
 					local function callback66(argument6, argument7, argument8)
@@ -12621,11 +12626,11 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					if close then
 						if getconnections then
-							local ok2, response = pcall(getconnections, close.Activated)
+							local ok, response = pcall(getconnections, close.Activated)
 							local number = number9
-							for _, value18 in ipairs(((ok2 and (type(response) == "table")) and response) or {}) do
+							for _, value in ipairs(((ok and (type(response) == "table")) and response) or {}) do
 								number = if pcall(function()
-									value18:Fire()
+									value:Fire()
 								end) then number + 1 else number
 							end
 							if number == 0 then
@@ -12654,12 +12659,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback69(argument5, argument6)
 					local column = ok.Column
-					if not (column.Parent) then
+					if not column.Parent then
 						return
 					end
-					if value15 then
-						value15:Cancel()
-						value15 = nil
+					if tween4 then
+						tween4:Cancel()
+						tween4 = nil
 					end
 					local position = column.Position
 					local udim2 = UDim2.new(position.X.Scale, (argument5 and math.ceil(column.AbsoluteSize.X * 1.03)) or 0, position.Y.Scale, position.Y.Offset)
@@ -12667,7 +12672,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						column.Position = udim2
 						return
 					end
-					value15 = callback45(column, (argument5 and value9) or value7, {Position = udim2})
+					tween4 = callback45(column, (argument5 and value9) or value7, {Position = udim2})
 				end
 
 				local number9 = 0.849
@@ -12703,7 +12708,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback72()
 					local data2 = data13
-					if not (data2) then
+					if not data2 then
 						return
 					end
 					local value18 = data[15]
@@ -12722,7 +12727,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local uidMap2, uidMap3, data15 = {}, {}, {}
 
 				local function callback73()
-					if not (scrollingFrame) then
+					if not scrollingFrame then
 						return
 					end
 					callback72()
@@ -12733,8 +12738,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							data16, response3 = response, response2
 						end
 					end)
-					for _, value18 in pairs(uidMap) do
-						list4[#list4 + 1] = value18
+					for _, value in pairs(uidMap) do
+						list4[#list4 + 1] = value
 					end
 					local arguments, argumentMap3, argumentMap4 = {}, {}, {}
 					local function callback74(argument5)
@@ -12747,8 +12752,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						callback74(response3)
 					end
 					local response = data16
-					for _, value18 in ipairs(response) do
-						callback74(value18)
+					for _, value in ipairs(response) do
+						callback74(value)
 					end
 					for i, argument5 in ipairs(arguments) do
 						argumentMap4[argument5] = i
@@ -12789,38 +12794,38 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					local now3, list5, list6 = os.clock(), {}, {}
 
-					for _, value18 in ipairs(list4) do
-						local callback74_2 = uidMap2[value18.Uid]
-						if (callback74_2 and (callback74_2 > now3)) and uidMap3[value18.Uid] then
-							list6[#list6 + 1] = value18
+					for _, value in ipairs(list4) do
+						local callback74_2 = uidMap2[value.Uid]
+						if (callback74_2 and (callback74_2 > now3)) and uidMap3[value.Uid] then
+							list6[#list6 + 1] = value
 						else
-							uidMap2[value18.Uid] = nil
-							list5[#list5 + 1] = value18
+							uidMap2[value.Uid] = nil
+							list5[#list5 + 1] = value
 						end
 					end
 
 					table.sort(list6, function(argument5, argument6)
 						return uidMap3[argument5.Uid] < uidMap3[argument6.Uid]
 					end)
-					for _, value18 in ipairs(list6) do
-						table.insert(list5, math.clamp(uidMap3[value18.Uid], 1, #list5 + 1), value18)
+					for _, value in ipairs(list6) do
+						table.insert(list5, math.clamp(uidMap3[value.Uid], 1, #list5 + 1), value)
 					end
 					table.clear(uidMap3)
 
-					for i, value18 in ipairs(list5) do
-						uidMap3[value18.Uid] = i
-						response = kMap[value18.Uid]
+					for i, value in ipairs(list5) do
+						uidMap3[value.Uid] = i
+						response = kMap[value.Uid]
 						if response then
 							if response.Frame.LayoutOrder ~= i then
 								response.Frame.LayoutOrder = i
 							end
-							callback70(response, argumentMap4[value18.Uid], value18.Uid == response3, number10)
+							callback70(response, argumentMap4[value.Uid], value.Uid == response3, number10)
 						end
 					end
 				end
 
 				local function callback74()
-					if not (scrollingFrame) then
+					if not scrollingFrame then
 						return
 					end
 					local number10 = math.max(1, math.floor((scrollingFrame.AbsoluteSize.X / 4.426229508196721) + 0.5))
@@ -12828,8 +12833,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						return
 					end
 					number7 = number10
-					for _, value18 in pairs(kMap) do
-						value18.Frame.Size = UDim2.new(1, 0, 0, number10)
+					for _, value in pairs(kMap) do
+						value.Frame.Size = UDim2.new(1, 0, 0, number10)
 					end
 				end
 
@@ -12918,7 +12923,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback77(argument5, argument6)
 					if condition5 then
-						if not (scrollingFrame) then
+						if not scrollingFrame then
 							return
 						end
 					else
@@ -12961,7 +12966,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					if value18 then
 						if argument5 == number6 then
-							if not (condition2) then
+							if not condition2 then
 								return
 							end
 						else
@@ -12981,7 +12986,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							if type(assetCategory) == "string" then
 								uidMap4[uid] = true
 								local value20, entry2, scale = callback48(assetCategory), uidMap[uid], tonumber(value19.AssetScale) or 1
-								if not (entry2) then
+								if not entry2 then
 									entry2 = {Uid = uid}
 									uidMap[uid] = entry2
 								end
@@ -13010,7 +13015,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							now3 = os.clock()
 							if argument5 ~= number6 then
 								return
-							elseif not (condition2) then
+							elseif not condition2 then
 								return
 							end
 						end
@@ -13064,7 +13069,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				callback54 = function()
 					if condition6 then
 						return
-					elseif not (condition2) then
+					elseif not condition2 then
 						return
 					end
 					condition6 = true
@@ -13088,7 +13093,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local function callback81(argument5)
 					if condition5 then
 						return
-					elseif not (value2) then
+					elseif not value2 then
 						return
 					end
 					condition5 = true
@@ -13104,7 +13109,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						argument5()
 
 						if condition5 then
-							if not (value2) then
+							if not value2 then
 								return
 							end
 						else
@@ -13114,20 +13119,21 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					callback69(true)
 					value13.Enabled = true
-					if value14 then
-						value14:Cancel()
+					if tween then
+						tween:Cancel()
 					end
 					argument5 = value2
 					argument5.Position = getUDim2()
-					value14 = callback45(value2, value7, {Position = position})
+					tween = callback45(value2, value7, {Position = position})
 					callback60()
 					callback74()
 					task.spawn(pcall, runUntilTimeout, number6)
 				end
 
+				-- Registers Completed signal callback(s)
 				local function callback82(argument5, argument6, argument7)
 					if condition5 then
-						if not (value2) then
+						if not value2 then
 							return
 						end
 					else
@@ -13138,20 +13144,20 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					if argument6 then
 						value16:Set(false)
 					end
-					if value14 then
-						value14:Cancel()
+					if tween then
+						tween:Cancel()
 					end
 					if argument7 then
 						value13.Enabled = false
 						return
 					end
-					local value18 = callback45(value2, value8, {Position = getUDim2()})
-					value14 = value18
+					local tween5 = callback45(value2, value8, {Position = getUDim2()})
+					tween = tween5
 
-					value18.Completed:Connect(function(playbackState)
+					tween5.Completed:Connect(function(playbackState)
 						if playbackState == Enum.PlaybackState.Completed then
-							if value14 == value18 then
-								if not (condition5) then
+							if tween == tween5 then
+								if not condition5 then
 									if value13 then
 										local value, position2
 										value, position2, value13.Enabled = value2, position, false
@@ -13183,6 +13189,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					return ScreenGui
 				end
 
+				-- Registers Activated signal callback(s)
 				local function callback84()
 					if value12 then
 						if value12.Parent then
@@ -13190,12 +13197,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 					end
 					local value18 = callback57(ok.Pets)
-					if not (value18) then
+					if not value18 then
 						return false
 					end
 					local nameList2 = {"Notification", "ReadyNotification", "NightImage", "NightText", "ConsoleButton", "Badge"}
-					for i, value19 in ipairs(nameList2) do
-						i = callback35(value18, value19)
+					for i, value in ipairs(nameList2) do
+						i = callback35(value18, value)
 						if i then
 							i:Destroy()
 						end
@@ -13221,7 +13228,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 								q(function()
 									if value13 then
-										if not (condition5) then
+										if not condition5 then
 											pcall(callback81, true)
 										end
 									end
@@ -13258,7 +13265,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local button, eggs, pets = value.Button, ok.Eggs, ok.Pets
 
 					if eggs.Parent then
-						if not (pets.Parent) then
+						if not pets.Parent then
 							return
 						end
 					else
@@ -13274,23 +13281,24 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						scale = if scale <= 0 then 1 else scale
 						local number11, number12, number13, absolutePosition = eggs.AbsolutePosition + (eggs.AbsoluteSize / 2), pets.AbsolutePosition + (pets.AbsoluteSize / 2), eggs.AbsoluteSize / scale, value12.AbsolutePosition
 						local value18, value19 = uDim2FromOffset(number11.X - absolutePosition.X, (number11.Y - (number12.Y - number11.Y)) - absolutePosition.Y), uDim2FromOffset(number13.X, number13.Y)
-						if not (condition5) then
+						if not condition5 then
 							value3, value4 = value18, value19
 						end
 						callback85(button, value18, value19)
 					elseif if condition5 then not condition5 else value3 then
 						callback85(button, value3, value4)
-					elseif not (value3) then
+					elseif not value3 then
 						return callback52(button, false)
 					end
 
 					callback52(button, true)
 				end
 
+				-- Registers Activated, InputBegan signal callback(s)
 				local function callback87()
 					local frame = ok.ActivePets.Frame
 					local value18 = callback57(frame)
-					if not (value18) then
+					if not value18 then
 						return false
 					end
 					local header, scrollingFrame2 = callback35(value18, "Header"), callback35(value18, "ScrollingFrame")
@@ -13307,7 +13315,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					if header and scrollingFrame2 then
 						if close then
 							if unequip then
-								if not (textLabel) then
+								if not textLabel then
 									value18:Destroy()
 									return false
 								end
@@ -13548,7 +13556,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end
 
 				local function callback88()
-					if not (condition2) then
+					if not condition2 then
 						return
 					end
 					condition2, condition6, condition8 = false, false, false
@@ -13557,9 +13565,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					if condition5 then
 						condition5 = false
 
-						if not (ok.ActivePets.Enabled) then
+						if not ok.ActivePets.Enabled then
 							if ok.GrowingEggs then
-								if not (ok.GrowingEggs.Enabled) then
+								if not ok.GrowingEggs.Enabled then
 									callback69(false, true)
 								end
 							else
@@ -13568,13 +13576,13 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 					end
 
-					if value14 then
-						value14:Cancel()
-						value14 = nil
+					if tween then
+						tween:Cancel()
+						tween = nil
 					end
-					for _, value18 in ipairs(connections3) do
+					for _, value in ipairs(connections3) do
 						pcall(function()
-							value18:Disconnect()
+							value:Disconnect()
 						end)
 					end
 					table.clear(connections3)
@@ -13595,8 +13603,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 					local ok2 = callback56()
 
-					if not (ok2) then
-						if not (condition3) then
+					if not ok2 then
+						if not condition3 then
 							condition3 = true
 							task.delay(2, function()
 								condition3 = false
@@ -13662,8 +13670,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					ok2 = data[33]
 					thickness4 = ok2.Egg
 
-					for i, value18 in ipairs((thickness4 and {"FieldRefreshed", "FieldShifted", "FieldGone", "FieldClaimed", "SnapshotRefreshed"}) or {}) do
-						uiStroke = thickness4[value18]
+					for i, value in ipairs((thickness4 and {"FieldRefreshed", "FieldShifted", "FieldGone", "FieldClaimed", "SnapshotRefreshed"}) or {}) do
+						uiStroke = thickness4[value]
 
 						if type(uiStroke) == "table" then
 							ok2, i = pcall(uiStroke.Connect, uiStroke, callback54)
@@ -13695,9 +13703,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 								break
 							end
 
-							local ok2, gameRef = ok, game
+							local ok4, gameRef = ok, game
 
-							if not (ok2.Eggs:IsDescendantOf(gameRef) and ok.ActivePets:IsDescendantOf(game)) then
+							if not (ok4.Eggs:IsDescendantOf(gameRef) and ok.ActivePets:IsDescendantOf(game)) then
 								task.defer(function()
 									callback88()
 									callback53()
@@ -13843,17 +13851,17 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				ps.MutationText = function(argument5)
 					local parts2 = {}
 
-					for i, value11 in ipairs(((type(argument5) == "table") and argument5) or {}) do
-						local text = string.upper(labelMap2[value11] or value11)
+					for i, value in ipairs(((type(argument5) == "table") and argument5) or {}) do
+						local text = string.upper(labelMap2[value] or value)
 
-						if (value11 == "Rainbow") or (value11 == "Prismatic") then
+						if (value == "Rainbow") or (value == "Prismatic") then
 							local parts3 = {}
 							for i2 = 1, #text, 1 do
 								parts3[i2] = ps.Paint(nameList2[((i2 - 1) % 6) + 1], text:sub(i2, i2))
 							end
 							parts2[i] = ps.Bold(table.concat(parts3))
 						else
-							parts2[i] = ps.Bold(ps.Paint(labelMap5[value11] or "#8FE3FF", ps.Escape(text)))
+							parts2[i] = ps.Bold(ps.Paint(labelMap5[value] or "#8FE3FF", ps.Escape(text)))
 						end
 					end
 
@@ -13892,15 +13900,15 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local function callback36(argument5, argument6)
 					argument6 = callback35(argument6)
 
-					for k, value11 in pairs(argument5) do
-						if type(value11) == "table" then
-							local value, data13 = ipairs, {k, value11._id or "", value11.DisplayName or "", ((type(value11.Egg) == "table") and value11.Egg.ModelName) or ""}
+					for k, value80 in pairs(argument5) do
+						if type(value80) == "table" then
+							local value, data13 = ipairs, {k, value80._id or "", value80.DisplayName or "", ((type(value80.Egg) == "table") and value80.Egg.ModelName) or ""}
 
 							for _, value12 in value(data13) do
 								value12 = tostring(value12)
 								if value12 ~= "" then
 									if callback35(value12) == argument6 then
-										return value11
+										return value80
 									end
 								end
 							end
@@ -13950,7 +13958,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					while argument do
 						if argument:IsA("GuiObject") then
-							if not (argument.Visible) then
+							if not argument.Visible then
 								return false
 							end
 						end
@@ -13973,8 +13981,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					value.wr(text, value.enc(text2) or "{}")
 				end
 				local number6 = getServerTimeNow() - 1800
-				for k, value7 in next, visited, nil do
-					if value7 < number6 then
+				for k, value in next, visited do
+					if value < number6 then
 						visited[k] = nil
 					end
 				end
@@ -14023,19 +14031,19 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						if type(i) ~= "table" then
 							break
 						end
-						for _, value7 in ipairs(i.data or {}) do
-							if value7.id ~= gameRef.JobId then
-								list3[#list3 + 1] = value7
+						for _, value in ipairs(i.data or {}) do
+							if value.id ~= gameRef.JobId then
+								list3[#list3 + 1] = value
 							end
 						end
 
 						if #list3 > 0 then
 							if argument5 ~= "Random" then
 								break
-							elseif not (i.nextPageCursor) then
+							elseif not i.nextPageCursor then
 								break
 							end
-						elseif not (i.nextPageCursor) then
+						elseif not i.nextPageCursor then
 							break
 						end
 
@@ -14095,7 +14103,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 										local id = id
 
 										if id == value8.id then
-											if not (condition2) then
+											if not condition2 then
 												local idMap = idMap
 												idMap[value8.id] = true
 												callback35(argument5)
@@ -14136,19 +14144,19 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					return callback35(argument5.hopping)
 				end
 
-				local eggFinder, text3, text4, data11, value, value2, data12, autoHop = iMap2["Egg Finder"], "Idle", "idle", {}
+				local eggFinder, text3, text4, data11, value, number132, data12, autoHop = iMap2["Egg Finder"], "Idle", "idle", {}
 				local function callback37(argument5, argument6)
 					text3, text4 = argument5, argument6
 				end
 
 				autoHop = callback19(eggFinder, "Auto Hop", "autoHop", false, function(argument5)
-					if not (argument5) then
+					if not argument5 then
 						callback37("Idle", "idle")
 						return
 					end
 					if mainWindow.busy then
 						return
-					elseif not (mainWindow.ready) then
+					elseif not mainWindow.ready then
 						return
 					end
 					mainWindow:Dialog({Title = "Auto Hop", Warn = "WARNING", Body = "Auto Hop keeps joining new servers to find eggs that match its filters. Turn it off to stop.", Tip = "\"Steal Then Hop\" and \"After A Rare Spawns\" stop at night.", Cancel = "Cancel", Accept = "Turn On", no = function()
@@ -14161,7 +14169,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local paint = ps.Paint
 				local bold = ps.Bold
 				local escape = ps.Escape
-				local color, number8, number9, text5, hopWhen, configMap, configMap2, argumentMap, argumentMap3, number10, number11, number12, condition3, argument2, data13, argument3, argument4, argument10, argument11, value3, condition4, data14 = Color3.new(1, 1, 1), 3.8, 1.2, "No egg matches here", "After stealing a match", {idle = {"IDLE", "#9AA3B5"}, scan = {"SCANNING", "#7FD8FF"}, found = {"FILTER EGG HERE", "#4DFF7A"}, night = {"NIGHT", "#9C8CFF"}, rare = {"WAITING", "#FF7AE0"}, steal = {"AUTO STEAL BUSY", "#FFC24D"}, joining = {"JOINING SERVER", "#FF9A3D"}, race = {"RACING EVENT", "#FFD452"}, star = {"SHOOTING STAR", "#FFEE8C"}}, {Slot = {"ON NEST", "#4DFF7A"}, Dropped = {"DROPPED", "#FFC24D"}, Carried = {"BEING CARRIED", "#FF8A5C"}}, {}, {}, 0, 0, 1, false
+				local color, number8, number9, text5, hopWhen, configMap, configMap2, argumentMap, argumentMap3, number10, number11, number12, condition3, argument2, data13, argument3, argument4, argument10, argument11, number152, condition4, data14 = Color3.new(1, 1, 1), 3.8, 1.2, "No egg matches here", "After stealing a match", {idle = {"IDLE", "#9AA3B5"}, scan = {"SCANNING", "#7FD8FF"}, found = {"FILTER EGG HERE", "#4DFF7A"}, night = {"NIGHT", "#9C8CFF"}, rare = {"WAITING", "#FF7AE0"}, steal = {"AUTO STEAL BUSY", "#FFC24D"}, joining = {"JOINING SERVER", "#FF9A3D"}, race = {"RACING EVENT", "#FFD452"}, star = {"SHOOTING STAR", "#FFEE8C"}}, {Slot = {"ON NEST", "#4DFF7A"}, Dropped = {"DROPPED", "#FFC24D"}, Carried = {"BEING CARRIED", "#FF8A5C"}}, {}, {}, 0, 0, 1, false
 
 				local function callback38(argument5)
 					local text6 = tostring(argument5.Spec.Text or "")
@@ -14200,7 +14208,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local record = value.Record
 					local assetCategory, number13, mutations = ps.AssetInfo(record.AssetCategory), tonumber(record.AssetScale) or 1, ((type(record.Mutations) == "table") and record.Mutations) or {}
 					mutations = if #mutations == 0 then if type(record.BaseMutation) == "string" then if record.BaseMutation ~= "" then {record.BaseMutation} else mutations else mutations else mutations
-					data14, number11, number10 = {i = assetCategory, m = mutations, a = value.Area, s = configMap2[value.State] or configMap2.Slot, v = (assetCategory.EarningRate * ps.ScaleFactor(number13)) * ps.MutationMultiplier(mutations)}, value2, 2
+					data14, number11, number10 = {i = assetCategory, m = mutations, a = value.Area, s = configMap2[value.State] or configMap2.Slot, v = (assetCategory.EarningRate * ps.ScaleFactor(number13)) * ps.MutationMultiplier(mutations)}, number132, 2
 				end
 
 				local function callback40()
@@ -14233,12 +14241,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					if condition6 ~= condition3 then
 						condition3, number10 = condition6, 2
 						argument5 = data13
-						for _, value8 in ipairs(argument5) do
-							value8({Visible = condition6})
+						for _, value in ipairs(argument5) do
+							value({Visible = condition6})
 						end
 					end
 
-					if not (condition6) then
+					if not condition6 then
 						return
 					end
 					color2, argument5 = data14.i, data14.s
@@ -14301,8 +14309,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					argumentMap.c({Width = argument3, Height = number15})
 					argumentMap.a({Height = number15})
-					if number15 ~= value3 then
-						value3 = number15
+					if number15 ~= number152 then
+						number152 = number15
 						argument2:SetContentLines(number15)
 					end
 				end
@@ -14318,10 +14326,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 						argumentMap[argument6] = function(argument9)
 							local data15
-							for k, value9 in next, argument9, nil do
-								if argument8[k] ~= value9 then
+							for k, value in next, argument9 do
+								if argument8[k] ~= value then
 									data15 = data15 or {}
-									data15[k] = value9
+									data15[k] = value
 								end
 							end
 							if data15 then
@@ -14410,8 +14418,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						local value10 = data[28]
 
 						if value10.hopSync then
-							if not (condition5) then
-								if not (mainWindow.busy) then
+							if not condition5 then
+								if not mainWindow.busy then
 									condition5 = true
 									value9:Set(argument7)
 									condition5 = false
@@ -14424,7 +14432,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						local value10 = data[28]
 
 						if value10.hopSync then
-							if not (condition5) then
+							if not condition5 then
 								condition5 = true
 								argument5:Set(argument7)
 								condition5 = false
@@ -14448,9 +14456,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					if #argument5 < #value9.AREAS then
 						data12 = {}
-						for i, value10 in ipairs(argument5) do
+						for i, value in ipairs(argument5) do
 							i = data12
-							i[value10:gsub("%s", "")] = true
+							i[value:gsub("%s", "")] = true
 						end
 					end
 				end, true, nil, autoHop), "Target Areas")
@@ -14467,8 +14475,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				table.insert(syncWithAutoStealFilters.ls, function(argument5)
 					if argument5 and not mainWindow.busy then
-						for _, value9 in ipairs(list3) do
-							value9[1]:Set(value9[2].Value)
+						for _, value in ipairs(list3) do
+							value[1]:Set(value[2].Value)
 						end
 					end
 				end)
@@ -14611,7 +14619,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					number13 = nil
 					number13, value = number15 + number14, data16
-					value2 = number13
+					number132 = number13
 					if condition5 then
 						zones = data[28]
 						if zones.hopWhen == "A rare egg spawned" then
@@ -14664,8 +14672,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 			local function callback34(argument5)
 				local data11 = {}
-				for _, value7 in ipairs(((type(argument5.EquippedAssets) == "table") and argument5.EquippedAssets) or {}) do
-					data11[value7] = true
+				for _, value in ipairs(((type(argument5.EquippedAssets) == "table") and argument5.EquippedAssets) or {}) do
+					data11[value] = true
 				end
 				return data11
 			end
@@ -14739,7 +14747,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local autoPlaceEgg = iMap2["Auto Place Egg"]
 				local pen = callback16("pen", autoPlaceEgg:Text("Pen Status", "Pen status unknown"))
 				local autoPlaceEgg2 = callback19(autoPlaceEgg, "Auto Place Egg", "place", false, function(argument5)
-					if not (argument5) then
+					if not argument5 then
 						callback23(value7)
 					end
 				end)
@@ -14823,6 +14831,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local value12 = argument:KP(17, 18, {[16] = data, [29] = data, [18] = data}, argument2, argument4, nil)
 
+				-- Runs polling loop until condition succeeds or timeout expires (os.clock)
 				local function wear(argument5)
 					local number8 = data[26]
 					if number8("Egg", "WearEggTool", argument5) == false then
@@ -14885,11 +14894,11 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 					local placeIdx3, assetCategoryMap, number8 = placeIdx2 or {}, {}, 0
 
-					for _, value15 in pairs(value13) do
-						if type(value15) == "table" then
-							if value15.Placement then
+					for _, value in pairs(value13) do
+						if type(value) == "table" then
+							if value.Placement then
 								placeIdx = number8 + 1
-								assetCategoryMap[(value15.AssetCategory or value15.Category) or ""] = true
+								assetCategoryMap[(value.AssetCategory or value.Category) or ""] = true
 								number8 = placeIdx
 							end
 						end
@@ -14899,7 +14908,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					for k, value15 in placeIdx(value13) do
 						if type(value15) == "table" then
-							if not (value15.Placement) then
+							if not value15.Placement then
 								if (value7.bad[k] or 0) < os.clock() then
 									value14 = data[15]
 
@@ -14935,8 +14944,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						number9 += 1
 					end
 					placeIdx3 = 0
-					for _, value16 in pairs(value13) do
-						placeIdx3 = if type(value16) == "table" then if value16.Placement then placeIdx3 else placeIdx3 + 1 else placeIdx3
+					for _, value in pairs(value13) do
+						placeIdx3 = if type(value) == "table" then if value.Placement then placeIdx3 else placeIdx3 + 1 else placeIdx3
 					end
 					assetCategoryMap, placeIdx = pcall(function()
 						local value16 = data[33]
@@ -14970,15 +14979,15 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						local value19 = data[28]
 						callback38(value15, value19.placeFirst)
 					end
-					for i, value19 in ipairs(value17) do
-						table.insert(value15, i, value19)
+					for i, value in ipairs(value17) do
+						table.insert(value15, i, value)
 					end
 					return {list = value15, room = 30 - value14, recs = value16}
 				end
 
 				value7.run = function(argument5, argument6)
 					local value14 = callback41()
-					if not (value14) then
+					if not value14 then
 						return
 					end
 					local value15 = data[11]
@@ -15101,9 +15110,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					placeIdx, data2.Hatched = data[44], tostring(data[44].hatched)
 					callback17("hs", nostat, data2)
 					data2 = data[28]
-					if not (data2.hatch) then
+					if not data2.hatch then
 						placeIdx = data[28]
-						if not (placeIdx.placeIdx) then
+						if not placeIdx.placeIdx then
 							return
 						end
 					end
@@ -15201,9 +15210,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				number6 = callback19(keepEggs, "Keep Matching Eggs", "keepOn", true)
 
 				local function callback39(argument5)
-					local value2 = ipairs
+					local ipairsFn = ipairs
 					local data11
-					for k, value8 in value2(argument5) do
+					for k, value8 in ipairsFn(argument5) do
 						data11 = data11 or {}
 						k = data[15]
 						data11[k.RIDX[value8] or 0] = true
@@ -15225,8 +15234,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					if argument5.keepOn then
 						if type(argument6) ~= "table" then
 							return false
-						elseif not (value) then
-							if not (condition2) then
+						elseif not value then
+							if not condition2 then
 								return false
 							end
 						end
@@ -15251,14 +15260,14 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local value7 = callback22({name = "Mutate", mover = true, gap = 1, pri = 3, soft = true, bad = {}})
 				local autoMutation = iMap2["Auto Mutation"]
 				local autoMutate = callback19(autoMutation, "Auto Mutate", "mutate", false, function(argument5)
-					if not (argument5) then
+					if not argument5 then
 						callback23(value7)
 					end
 				end)
 				local mst, enabledFlags = callback16("mst", autoMutation:Text("Mutate Status", "Off", autoMutate)), {Boss = true, Scrambled = true, Enchanted = true, Nitro = true, Spectral = true, Alien = true}
 				local value8 = autoMutation:Dropdown("Mutations To Use", {"Fractured", "Scrambled", "Enchanted", "Nitro", "Spectral", "Abducted"}, {"Fractured", "Scrambled", "Enchanted", "Nitro", "Spectral", "Abducted"}, function(argument5)
-					for k, value8 in next, labelMap4, nil do
-						enabledFlags[k] = table.find(argument5, value8) ~= nil
+					for k, value in next, labelMap4 do
+						enabledFlags[k] = table.find(argument5, value) ~= nil
 					end
 				end, true, nil, autoMutate)
 
@@ -15312,12 +15321,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					argument:UP(data13, 0, value11.Character or (callback10()), value12.Character and (callback10()))
 
 					for k, value13 in value(data13) do
-						for _, value14 in ipairs((value13 and value13:GetChildren()) or {}) do
-							if value14:IsA("Tool") then
-								if value14:GetAttribute("ItemType") == "MutationConsumable" then
-									k = (value14:GetAttribute("MutationId") or value14:GetAttribute("MutationTemplate")) or "Boss"
-									attributeMap[k] = attributeMap[k] or value14
-									valueMap[k] = (valueMap[k] or 0) + ((tonumber(value14:GetAttribute("Uses")) or tonumber(value14.Name:match("%[X(%d+)%]"))) or 1)
+						for _, value in ipairs((value13 and value13:GetChildren()) or {}) do
+							if value:IsA("Tool") then
+								if value:GetAttribute("ItemType") == "MutationConsumable" then
+									k = (value:GetAttribute("MutationId") or value:GetAttribute("MutationTemplate")) or "Boss"
+									attributeMap[k] = attributeMap[k] or value
+									valueMap[k] = (valueMap[k] or 0) + ((tonumber(value:GetAttribute("Uses")) or tonumber(value.Name:match("%[X(%d+)%]"))) or 1)
 								end
 							end
 						end
@@ -15355,19 +15364,19 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 						if condition2 then
 							local numVal, condition3 = toNumberOrDefault2(value13), false
-							for _, value14 in ipairs(numVal.m) do
-								condition3 = condition3 or (data12[value14] == true)
+							for _, value in ipairs(numVal.m) do
+								condition3 = condition3 or (data12[value] == true)
 							end
 							placement = data[68]
 
 							if placement(data11, numVal) and not condition3 then
-								for k2, value14 in next, argument5, nil do
-									if enabledFlags[k2] then
-										if not (numVal.ms[k2]) then
-											if (value7.bad[k .. k2] or 0) < os.clock() then
+								for key, value in next, argument5 do
+									if enabledFlags[key] then
+										if not (numVal.ms[key]) then
+											if (value7.bad[k .. key] or 0) < os.clock() then
 												numVal.uid = k
-												numVal.k = k2
-												numVal.tool = value14
+												numVal.k = key
+												numVal.tool = value
 												numVals[#numVals + 1] = numVal
 												break
 											end
@@ -15403,11 +15412,11 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						local value13, value14 = callback11()[mutPick.uid], callback41()
 						numVal = ((type(value13) == "table") and value13.Placement) and toNumberOrDefault2(value13)
 
-						for _, value15 in ipairs((numVal and mutPick.ks) or {}) do
-							if value14[value15] then
-								if not (numVal.ms[value15]) then
-									if (value7.bad[mutPick.uid .. value15] or 0) < os.clock() then
-										numVal.uid, numVal.k, numVal.tool = mutPick.uid, value15, value14[value15]
+						for _, value in ipairs((numVal and mutPick.ks) or {}) do
+							if value14[value] then
+								if not (numVal.ms[value]) then
+									if (value7.bad[mutPick.uid .. value] or 0) < os.clock() then
+										numVal.uid, numVal.k, numVal.tool = mutPick.uid, value, value14[value]
 										numVal.pick = true
 										return numVal
 									end
@@ -15423,7 +15432,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 
 					mutPick = data[28]
-					if not (mutPick.mutate) then
+					if not mutPick.mutate then
 						return
 					end
 					mutPick = callback42(callback41())
@@ -15445,7 +15454,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local value13, value14 = callback36(argument5.uid), data[15]
 					local uid = value14.eggPos(argument5.uid)
 
-					if not (value13) then
+					if not value13 then
 						if uid then
 							mst("Going to " .. argument5.n)
 							value14 = data[29]
@@ -15466,7 +15475,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 					end
 
-					if not (value13) then
+					if not value13 then
 						value7.bad[argument5.uid .. argument5.k] = os.clock() + 30
 						return mst(argument5.n .. " is not in your pen")
 					end
@@ -15545,12 +15554,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 			saveFile("20_farm#5", function()
 				local value7 = callback22({name = "Treadmill", mover = true, gap = 2, pri = 9, soft = true})
 				callback19(iMap2["Auto Treadmill"], "Auto Treadmill", "tread", false, function(argument5)
-					if not (argument5) then
+					if not argument5 then
 						callback23(value7)
 					end
 				end)
 				callback19(iMap2["Admin Treadmill"], "Use Admin Treadmill", "adminTread", false, function(argument5)
-					if not (argument5) then
+					if not argument5 then
 						callback23(value7)
 					end
 				end)
@@ -15639,9 +15648,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						if argument then
 							argument7 = data[15]
 
-							if not (argument7.onAdmin) then
+							if not argument7.onAdmin then
 								argument6 = data[28]
-								if not (argument6.tread) then
+								if not argument6.tread then
 									if not (callback26()) then
 										task.spawn(data[9], "RF/Treadmill/AskDoff")
 									end
@@ -15656,7 +15665,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local value11, value12, value13 = value10(), callback40()
 
 					if value11 then
-						if not (value12) then
+						if not value12 then
 							return
 						end
 					else
@@ -15723,7 +15732,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							local value12 = data[15]
 							condition2 = value12.onAdmin == true
 
-							if not (condition2) then
+							if not condition2 then
 								if os.clock() > (argument5 - 0.1) then
 									value12 = data[9]
 									local AskWearStill, value13, value14 = value12("RF/Treadmill/AskWearStill")
@@ -15825,8 +15834,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						pre(argument5)
 					end
 
-					for k, value11 in next, argument5, nil do
-						k = (type(value11) == "table") and value11["Auto Progression"]
+					for k, value in next, argument5 do
+						k = (type(value) == "table") and value["Auto Progression"]
 
 						if type(k) == "table" then
 							if k["Auto Claim"] then
@@ -15889,7 +15898,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				value11.fn = function()
 					local value12 = data[65]
 					local value13 = value12()
-					if not (value13) then
+					if not value13 then
 						return
 					end
 					local number8, data11 = tonumber(value13.Money) or 0, data[28]
@@ -15940,8 +15949,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 										argument:UP(data12, 0, entries, entries2)
 										entries, entries2 = condition3, condition2
 										for _, value14 in value(data12) do
-											for _, value15 in ipairs(((type(value14) == "table") and value14) or {}) do
-												entries, entries2 = true, if index[value15.AssetId] then entries2 else false
+											for _, value in ipairs(((type(value14) == "table") and value14) or {}) do
+												entries, entries2 = true, if index[value.AssetId] then entries2 else false
 											end
 										end
 
@@ -16029,12 +16038,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 			data[66] = function(argument, argument5)
 				local argument6, value7, numVals, numVals2 = callback34(argument), callback35(), {}, {}
 
-				for k, value8 in next, ((type(argument.Inventory) == "table") and argument.Inventory) or {}, nil do
-					if type(value8) == "table" then
-						if not (value8.InFuse) then
-							if not (value8.IsFavorite) then
+				for k, value in next, ((type(argument.Inventory) == "table") and argument.Inventory) or {}, nil do
+					if type(value) == "table" then
+						if not value.InFuse then
+							if not value.IsFavorite then
 								if not (argument6[k]) then
-									local numVal = toNumberOrDefault2(value8)
+									local numVal = toNumberOrDefault2(value)
 									numVal.uid = k
 									numVals[#numVals + 1] = numVal
 								end
@@ -16047,7 +16056,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				for k, value8 in argument(argument6) do
 					if type(value8) == "table" then
-						if not (value8.Placement) then
+						if not value8.Placement then
 							if k ~= value7 then
 								argument5 = data[15]
 
@@ -16152,7 +16161,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local function callback41(argument5)
 					local response = data[65]
 					local ok = response()
-					if not (ok) then
+					if not ok then
 						return 0, 0
 					end
 					response = data[66]
@@ -16160,8 +16169,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local data12, data13 = callback40(response2, Pet, "sellPetsKeep"), callback40(value10, Egg, "sellEggsKeep")
 					local number6 = #data12
 					local number7, number8 = #data13, 0
-					for _, value11 in ipairs(value10) do
-						if data11[value11.cat] and table.find(data13, value11.uid) then
+					for _, value in ipairs(value10) do
+						if data11[value.cat] and table.find(data13, value.uid) then
 							number8 += 1
 						end
 					end
@@ -16170,10 +16179,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					pcall(function()
 						AssetItems = require(ReplicatedStorage.Shared.Util.AssetItems)
 					end)
-					for _, value11 in ipairs(data12) do
-						response2 = ok.Inventory[value11]
-						value11, response = pcall(AssetItems.SalePrice, response2)
-						number9 += (value11 and tonumber(response)) or (toNumberOrDefault2(response2).v * 100)
+					for _, value in ipairs(data12) do
+						response2 = ok.Inventory[value]
+						value, response = pcall(AssetItems.SalePrice, response2)
+						number9 += (value and tonumber(response)) or (toNumberOrDefault2(response2).v * 100)
 					end
 					response = ipairs
 					for k, value11 in response(data13) do
@@ -16248,8 +16257,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					value8.favMatch = ((argument5 == "Match Any") and "Any picked rule") or "All picked rules"
 				end, false, "Pass any check or all checks", autoFavoritePet)
 				local list3, list4 = {"Off"}, data[15]
-				for _, value8 in ipairs(list4.RNUM) do
-					list3[#list3 + 1] = value8
+				for _, value in ipairs(list4.RNUM) do
+					list3[#list3 + 1] = value
 				end
 				autoFavorite:Dropdown("Favorite Min Rarity", list3, "Off", function(argument5)
 					local value8 = data[15]
@@ -16378,7 +16387,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				value7.fn = function()
 					local value8 = data[65]
 					local number6 = value8()
-					if not (number6) then
+					if not number6 then
 						return
 					end
 					local value9, rar, favEq = callback34(number6), (((data11.rar or data11.mut) or data11.any) or ((data11.minV or 0) > 0)) or (next(data12) ~= nil), data[15]
@@ -16636,8 +16645,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					local function callback48(argument5, argument6, argument7, argument8, argument9, argument10)
 						local TextLabel = callback("TextLabel", {Parent = argument5, BackgroundTransparency = 1, TextColor3 = color, TextTruncate = uiStroke.TextTruncate.AtEnd, Text = "", FontFace = ps.RarityFont, Position = uDim2FromScale(argument6, argument7), Size = uDim2FromScale(argument8, argument9)})
-						for k, value23 in next, argument10 or {}, nil do
-							TextLabel[k] = value23
+						for k, value in next, argument10 or {}, nil do
+							TextLabel[k] = value
 						end
 						callback("UIStroke", {Parent = TextLabel, Thickness = 1.5})
 						return TextLabel
@@ -16666,7 +16675,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 						if argument5.AutomaticSize == uiStroke.AutomaticSize.None then
 							local uiTextSizeConstraint = argument5:FindFirstChildOfClass("UITextSizeConstraint")
-							if not (uiTextSizeConstraint) then
+							if not uiTextSizeConstraint then
 								uiTextSizeConstraint = callback("UITextSizeConstraint", {Parent = argument5, MinTextSize = 1})
 								argument5.TextScaled = true
 							end
@@ -16701,7 +16710,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local function destroyAll(argument5, argument6)
 						local value23, edgePaint = callback53(argument6), argument5:FindFirstChild("EdgePaint")
 
-						if not (value23) then
+						if not value23 then
 							if edgePaint then
 								edgePaint:Destroy()
 							end
@@ -16748,8 +16757,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						if tint == 1 then
 							iMap5[2] = iMap5[1]
 						end
-						for i, value23 in ipairs(iMap5) do
-							iMap6[i] = ColorSequenceKeypoint.new((i - 1) / (#iMap5 - 1), value23)
+						for i, value in ipairs(iMap5) do
+							iMap6[i] = ColorSequenceKeypoint.new((i - 1) / (#iMap5 - 1), value)
 						end
 						argument5.Tint = colorSequenceNew(iMap6)
 						return argument5.Tint
@@ -16897,8 +16906,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 						if #argument6 > 0 then
 							local parts2 = {}
-							for i, value23 in ipairs(argument6) do
-								parts2[i] = tostring(labelMap2[value23] or value23):gsub("%s*[Mm]utation$", ""):upper()
+							for i, value in ipairs(argument6) do
+								parts2[i] = tostring(labelMap2[value] or value):gsub("%s*[Mm]utation$", ""):upper()
 							end
 							text, color3 = table.concat(parts2, argument7 or " + "), data13[tostring(argument6[1])] or value15
 						end
@@ -16950,6 +16959,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						argument5.Corner = callback46(value23, 0.5, 0.5, 0.5, 0.5, 0.94, 0.94)
 					end
 
+					-- Registers Activated signal callback(s)
 					local function callback66(argument5)
 						local data18 = {}
 						local value23 = callback44(callback45(value19, value9, 0.04, 0, 0, 0, 0, {LayoutOrder = argument5, Visible = false}), 0.07)
@@ -17083,6 +17093,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						condition4, condition2 = false, true
 					end
 
+					-- Registers Activated signal callback(s)
 					local function callback72(argument5)
 						data17 = {}
 						local value23, data, data2 = callback44(callback45(nil, value9, 0.04, 0, 0, 1, 1, {Visible = false}), 0.1), data17, data17
@@ -17144,7 +17155,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							data17.Dock = spot2
 							argument3:SetDock(spot2, {Gap = 0.35, Divider = false})
 						end
-						if not (spot) then
+						if not spot then
 							return
 						end
 						if callback68(data17, argument5) then
@@ -17195,19 +17206,19 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						Frame2.Padding = Frame
 						size2, frame2, size, Frame2 = value20, uiListLayout, value21, uiListLayout2
 						size2.Size, frame2.Padding, size.Size, Frame2.Padding = uDim2New(1, 0, 0, floor(argument5 * 2.9)), uDimNew(0, value24), uDim2New(1, 0, 0, floor(argument5 * 2.1)), uDimNew(0, value24)
-						for _, value26 in ipairs(kMap) do
-							value26.Frame.Size, value26.Limit.MaxTextSize, value26.Value:FindFirstChildOfClass("UIStroke").Thickness = uDim2New(value26.Share, -math.ceil((value24 * 4) / 5), 1, 0), max(8, floor(argument5 * 1.25)), max(1, (argument5 * 1.25) * 0.08)
-							callback51(value26.Caption, argument5 * 0.74)
+						for _, value in ipairs(kMap) do
+							value.Frame.Size, value.Limit.MaxTextSize, value.Value:FindFirstChildOfClass("UIStroke").Thickness = uDim2New(value.Share, -math.ceil((value24 * 4) / 5), 1, 0), max(8, floor(argument5 * 1.25)), max(1, (argument5 * 1.25) * 0.08)
+							callback51(value.Caption, argument5 * 0.74)
 						end
-						for _, value26 in ipairs(iMap4) do
-							value26.Button.Size = uDim2New(0.25, -math.ceil((value24 * 3) / 4), 1, 0)
-							callback51(value26.Text, argument5 * 0.92)
+						for _, value in ipairs(iMap4) do
+							value.Button.Size = uDim2New(0.25, -math.ceil((value24 * 3) / 4), 1, 0)
+							callback51(value.Text, argument5 * 0.92)
 						end
 						callback51(value22, argument5 * 0.72)
 						Frame = value22
 						Frame.Size = uDim2New(1, 0, 0, floor(argument5 * 1.5))
-						for _, value26 in ipairs(iMap3) do
-							callback67(value26)
+						for _, value in ipairs(iMap3) do
+							callback67(value)
 						end
 						argument2, stats, position2 = (7.6 * argument5) - (text * 2), data17.Stats, data17.ActionText
 						value24 = max(1, (number12 - argument2) - (argument5 * 1.1))
@@ -17221,6 +17232,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						data17.Stroke.Thickness, data17.CornerStroke.Thickness = max(1.2, argument2 * 0.008), max(1, argument2 * 0.0045)
 					end
 
+					-- Registers Activated signal callback(s)
 					local function callback75(argument5)
 						argument3 = argument5
 						Frame = callback("Frame", {AutomaticSize = y, BackgroundTransparency = 1, Size = uDim2FromScale(1, 0)})
@@ -17243,12 +17255,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							kMap[k] = {Frame = value24, Value = value25, Caption = callback48(value24, 0.33, 0.58, 0.65, 0.36, {TextColor3 = value10, TextXAlignment = left, Text = value23[3]}), Share = ((k == 5) and 0.28) or 0.18, Limit = callback("UITextSizeConstraint", {Parent = value25, MinTextSize = 6})}
 						end
 
-						for i, value23 in ipairs(data11) do
+						for i, value81 in ipairs(data11) do
 							value = callback47(value21, {BackgroundColor3 = color, BorderSizePixel = 0, LayoutOrder = i})
 							callback44(value, 0.3)
-							data18 = {Key = value23[1], Title = value23[2], Button = value, Stroke = getUIStroke(value, value11, 1.2), Gradient = getUIGradient(value, value23[3]), Text = callback48(value, 0, 0, 1, 1)}
+							data18 = {Key = value81[1], Title = value81[2], Button = value, Stroke = getUIStroke(value, value11, 1.2), Gradient = getUIGradient(value, value81[3]), Text = callback48(value, 0, 0, 1, 1)}
 							value.Activated:Connect(function()
-								data15.Filter = value23[1]
+								data15.Filter = value81[1]
 								condition2 = true
 							end)
 							iMap4[i] = data18
@@ -17275,20 +17287,20 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							response2 = data16
 						end
 						local data18, sort, data, number11, value23 = {All = #response2, Ready = 0, Growing = 0, Inventory = 0}, data15.Sort, response2, 0
-						for _, value24 in ipairs(data) do
-							data18[value24.Status] += 1
-							number11, value23 = number11 + value24.Income, if value23 then if value24.Income > value23.Income then value24 else value23 else value24
+						for _, value in ipairs(data) do
+							data18[value.Status] += 1
+							number11, value23 = number11 + value.Income, if value23 then if value.Income > value23.Income then value else value23 else value
 						end
-						for i, value24 in ipairs(data11) do
-							callback49(kMap[i].Value, tostring(data18[value24[1]]))
+						for i, value in ipairs(data11) do
+							callback49(kMap[i].Value, tostring(data18[value[1]]))
 						end
 						callback49(kMap[5].Value, "$" .. formatRate(number11))
 
-						for _, value24 in ipairs(iMap4) do
-							data = data15.Filter == value24.Key
-							callback49(value24.Text, value24.Title .. ("  " .. data18[value24.Key]))
-							if value24.Active ~= data then
-								value24.Active, value24.Gradient.Enabled, value24.Button.BackgroundColor3, value24.Button.BackgroundTransparency, value24.Text.TextColor3, value24.Stroke.Color = data, data, (data and color) or value9, (data and 0) or 0.15, (data and color) or value10, (data and color2) or value11
+						for _, value in ipairs(iMap4) do
+							data = data15.Filter == value.Key
+							callback49(value.Text, value.Title .. ("  " .. data18[value.Key]))
+							if value.Active ~= data then
+								value.Active, value.Gradient.Enabled, value.Button.BackgroundColor3, value.Button.BackgroundTransparency, value.Text.TextColor3, value.Stroke.Color = data, data, (data and color) or value9, (data and 0) or 0.15, (data and color) or value10, (data and color2) or value11
 							end
 						end
 
@@ -17311,10 +17323,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 						local text, list3, data2 = argument3:Query():lower(), {}, response2
 
-						for _, value24 in ipairs(data2) do
-							if (data15.Filter == "All") or (value24.Status == data15.Filter) then
-								if callback60(value24, text) then
-									list3[#list3 + 1] = value24
+						for _, value in ipairs(data2) do
+							if (data15.Filter == "All") or (value.Status == data15.Filter) then
+								if callback60(value, text) then
+									list3[#list3 + 1] = value
 								end
 							end
 						end
@@ -17322,13 +17334,13 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						data18, data = response2
 						data2 = 0
 
-						for i, value24 in ipairs(data18) do
-							if value24.Id == id then
-								data, data2 = value24, i
+						for i, value in ipairs(data18) do
+							if value.Id == id then
+								data, data2 = value, i
 								break
 							end
-							if value24 == value23 then
-								data, data2 = value24, i
+							if value == value23 then
+								data, data2 = value, i
 							end
 						end
 
@@ -17338,7 +17350,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						for i = 1, data2, 1 do
 							data = iMap3[i]
 
-							if not (data) then
+							if not data then
 								if data18 >= 12 then
 									condition2 = true
 									data2 = i - 1
@@ -17386,12 +17398,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						local page2 = ps.IsShown(page) and (page.AbsoluteSize.X > 0)
 						local Frame2 = (page2 and (Frame ~= nil)) and ps.IsShown(Frame)
 						if Frame2 then
-							if not (condition3) then
+							if not condition3 then
 								condition2 = true
 							end
 						end
 						condition3 = Frame2
-						if not (page2) then
+						if not page2 then
 							return
 						end
 
@@ -17489,7 +17501,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							end
 						end
 
-						if not (scaleBands) then
+						if not scaleBands then
 							response2 = {0.85, 1.05, 2000, 1.45, 1.55, 250, 1.9, 2.1, 125, 2.85, 3.15, 62.5, 3.8, 4.2, 31.25, 0.3, 0.45, 18, 0.1, 0.2, 5, 5.8, 6.2, 15.625, 9.5, 12.5, 3, 12, 17, 0.05, 20, 35, 0.0001}
 							scaleBands = {}
 							response = #response2
@@ -17516,7 +17528,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local function callback52()
 						local value11 = data[65]
 						local value12 = value11()
-						if not (value12) then
+						if not value12 then
 							return
 						end
 						local value13, value14, list4, fusionEggReward = callback41(value12.FusionSlots), callback41(value12.Inventory), {}, value12.FusionEggReward
@@ -17541,7 +17553,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					local function callback54(argument)
 						local value11 = callback53(argument)
-						if not (value11) then
+						if not value11 then
 							return
 						end
 						local size, textWrapped = value11.Size, value11.TextWrapped
@@ -17559,7 +17571,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					local function callback55(size, argument)
 						local number20 = callback53(size)
-						if not (number20) then
+						if not number20 then
 							return
 						end
 						size = number20.Size
@@ -17622,18 +17634,18 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						data12.Info.Set({Width = gap})
 						data14, set = max(1, (number9 - number6) - 0.5), 0
 
-						for i, value12 in ipairs(list3) do
-							if value12.Handle then
-								gap = (value12.Gap and 0.5) or 0
-								value11 = callback55(value12.Handle, number9)
+						for i, value in ipairs(list3) do
+							if value.Handle then
+								gap = (value.Gap and 0.5) or 0
+								value11 = callback55(value.Handle, number9)
 								if value11 then
-									value12.Height = value11
+									value.Height = value11
 								end
-								i = max(1, value12.Height or 1)
-								value12.Handle.Set({Y = set + gap, Width = number9, Height = i})
+								i = max(1, value.Height or 1)
+								value.Handle.Set({Y = set + gap, Width = number9, Height = i})
 								set += (i + 0.11) + gap
 							else
-								local slot = value12.Slot
+								local slot = value.Slot
 								value11 = callback55(slot.Detail, data14)
 								if value11 then
 									slot.DU = value11
@@ -17678,10 +17690,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local function callback63(argument5, argument6)
 						local condition4 = argument5 ~= nil
 						argument2:SetDock((condition4 and 5) or 0, {Gap = 0.22})
-						for _, value11 in next, data12, nil do
-							value11.Set({Visible = condition4})
+						for _, value in next, data12 do
+							value.Set({Visible = condition4})
 						end
-						if not (condition4) then
+						if not condition4 then
 							return
 						end
 						callback59(data12.Icon, argument5)
@@ -17711,7 +17723,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 
 					callback39 = function()
-						if not (argument2) then
+						if not argument2 then
 							return
 						end
 						number17 = 2
@@ -17721,7 +17733,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						local function callback64(argument5, argument6)
 							number20 += 1
 							local value11 = data13[number20]
-							if not (value11) then
+							if not value11 then
 								value11 = argument2:Text({Name = "Line", Width = 1, Height = 1, Wrap = true, Visible = false})
 								data13[number20] = value11
 							end
@@ -17802,32 +17814,32 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 									if #items == 3 then
 										local data14, data15, iMap3, number24 = {items[1].Scale, items[2].Scale, items[3].Scale}, {}, {}, 0
-										for i, value13 in ipairs(callback50()) do
-											i = value13.weight * callback51(data14, value13.min, value13.max)
+										for i, value in ipairs(callback50()) do
+											i = value.weight * callback51(data14, value.min, value.max)
 											number24 += i
-											local number25, data16 = #data15 + 1, {Min = value13.min, Max = value13.max, Weight = i}
-											data16.Color, data15[number25] = callback49(value13.min), data16
+											local number25, data16 = #data15 + 1, {Min = value.min, Max = value.max, Weight = i}
+											data16.Color, data15[number25] = callback49(value.min), data16
 										end
 										table.sort(data15, function(argument5, argument6)
 											return argument5.Weight > argument6.Weight
 										end)
-										for i, value13 in ipairs(data15) do
-											local number25, value14, value15 = ((number24 > 0) and ((value13.Weight / number24) * 100)) or 0, callback47(category, value13.Min), callback47(category, value13.Max)
-											data14, i = callback44(value13.Color, callback46(value13)), value14 and value15
+										for i, value in ipairs(data15) do
+											local number25, value14, value15 = ((number24 > 0) and ((value.Weight / number24) * 100)) or 0, callback47(category, value.Min), callback47(category, value.Max)
+											data14, i = callback44(value.Color, callback46(value)), value14 and value15
 											local i2, text7 = (i and (value9 .. paint(text5, formatWeight(value14) .. (" - " .. formatWeight(value15))))) or "", ((number25 >= 10) and text2) or ((number25 >= 1) and text3)
 											callback64(data14 .. (i2 .. (value9 .. callback44(text7 or text, (((number25 >= 1) and "%.1f%%") or "%.3f%%"):format(number25)))))
 										end
 										callback67("Size Doubling", callback44(text3, ("%.2f%%"):format(number18 * 100)) .. paint(text, (" per roll, x2 again and again up to %dx"):format(number19)))
 										local number25, number26 = 0, 0
 
-										for i, value13 in ipairs(data15) do
-											i, data14 = ((number24 > 0) and (value13.Weight / number24)) or 0, max(value13.Max - value13.Min, 1e-09)
-											local number27, ok = math.clamp((value13.Max - number23) / data14, 0, 1), number18
-											number25 += i * (number27 + (ok * (math.clamp((value13.Max - (number23 / 2)) / data14, 0, 1) - number27)))
-											number27 = (value13.Min + value13.Max) / 2
-											value13, ok = (1 - number18) * income(value12, number27), number18
+										for i, value in ipairs(data15) do
+											i, data14 = ((number24 > 0) and (value.Weight / number24)) or 0, max(value.Max - value.Min, 1e-09)
+											local number27, ok = math.clamp((value.Max - number23) / data14, 0, 1), number18
+											number25 += i * (number27 + (ok * (math.clamp((value.Max - (number23 / 2)) / data14, 0, 1) - number27)))
+											number27 = (value.Min + value.Max) / 2
+											value, ok = (1 - number18) * income(value12, number27), number18
 											local number28 = ok * income(value12, math.min(number27 * 2, number19))
-											number26 = number26 + (i * (value13 + number28))
+											number26 = number26 + (i * (value + number28))
 										end
 
 										callback65("RESULT PREDICTION", text4)
@@ -17846,8 +17858,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 										if Fuse then
 											callback67("Estimated Value", callback44(text2, formatRate(income(value12, Fuse.Min)) .. (" ~ " .. formatRate(income(value12, Fuse.Max)))) .. (value9 .. (paint(text, "at ") .. callback44(Fuse.Color, callback46(Fuse)))))
-											for _, value13 in ipairs(data15) do
-												Fuse = if value13.Max > Fuse.Max then value13 else Fuse
+											for _, value in ipairs(data15) do
+												Fuse = if value.Max > Fuse.Max then value else Fuse
 											end
 											callback67("Best Case", callback44(Fuse.Color, callback46(Fuse)) .. ("  " .. callback44(text2, formatRate(income(value12, Fuse.Max)))))
 										end
@@ -17896,8 +17908,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							local number20, number21 = argument6 / max(argument7, 1), 0.9 / max(argument5:TextSize(), 1)
 							number12, number13, number9, number10, number17, number11 = argument6, argument7, number20, argument7, 2, number21
 							data12.Rarity.Set({StrokeThickness = number11})
-							for _, value12 in ipairs(argumentMap) do
-								value12.Rarity.Set({StrokeThickness = number11})
+							for _, value in ipairs(argumentMap) do
+								value.Rarity.Set({StrokeThickness = number11})
 							end
 						end)
 
@@ -17932,16 +17944,16 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local font2, data15 = Font.new("rbxasset://fonts/families/GothamSSm.json", uiStroke.FontWeight.Medium), {}
 				local data16, data17, data18 = {"StealFilter", "Steal Filter Eggs", labelMap3.egg, 77, 255, 122, "Steal:filter"}, {"Butterfly", "Butterfly Bloom", labelMap3.net, 120, 230, 255, "Bloom"}, {"Place", "Auto Place Egg", labelMap3.pet, 255, 194, 77}
 				argument:UP(data15, 0, data16, {"Star", "Shooting Star", "rbxassetid://118070800707365", 255, 238, 140}, {"Hollow", "The Hollow Race", "rbxassetid://76336013947157", 190, 140, 255}, {"UFO", "UFO Sightings", "rbxassetid://119740573002066", 105, 255, 173}, data17, {"StealWisp", "Steal Wisp Quest Eggs", "rbxassetid://117266037162644", 150, 255, 220, "Steal:wisp"}, {"StealIndex", "Steal Missing Index Eggs", "rbxassetid://72512465543867", 127, 216, 255, "Steal:index"}, data18, {"Essence", "Auto Mutate", labelMap3.essence, 90, 235, 255, "Mutate"}, {"Treadmill", "Treadmill", "rbxassetid://116351329433541", 255, 140, 70})
-				local iMap3, data19, text, argumentMap, condition2, number6, list, data20, Frame, Frame2, value8, value9, TextButton, value10, Frame3, value2, number7, value3, argument2 = {}, {}, "ChilliLibrary/SAE_Priority.json", {}, false, 0
-				for i, value11 in ipairs(data15) do
-					iMap3[i], data19[value11[1]] = value11[1], value11
+				local iMap3, data19, text, argumentMap, condition2, number6, list, data20, Frame, Frame2, value8, value9, TextButton, value10, Frame3, value2, number7, number102, argument2 = {}, {}, "ChilliLibrary/SAE_Priority.json", {}, false, 0
+				for i, value in ipairs(data15) do
+					iMap3[i], data19[value[1]] = value[1], value
 				end
 				local rank, text2 = {}, data[15]
 				text2.rank = rank
 
 				local function callback39(argument5)
-					for i, value11 in ipairs(argument5) do
-						rank[data19[value11][7] or value11] = i
+					for i, value in ipairs(argument5) do
+						rank[data19[value][7] or value] = i
 					end
 					rank["Steal:pick"], rank["Steal:ufo"], rank.Combat = 0, rank.UFO - 0.1, rank.Treadmill - 0.5
 					rank.Machine, rank.WispGo = rank.Bloom + 0.1, rank["Steal:wisp"] + 0.1
@@ -17951,8 +17963,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback40(argument5, parent, argument6)
 					local instance = Instance.new(argument5)
-					for k, value11 in next, argument6, nil do
-						instance[k] = value11
+					for k, value in next, argument6 do
+						instance[k] = value
 					end
 					instance.Parent = parent
 					return instance
@@ -17979,8 +17991,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback45(argument5, argument6, argument7)
 					local TextLabel = callback40("TextLabel", argument5, {BackgroundTransparency = 1, TextColor3 = color, TextXAlignment = uiStroke.TextXAlignment.Left, TextYAlignment = uiStroke.TextYAlignment.Center, TextScaled = true, Text = "", FontFace = argument6})
-					for k, value11 in next, argument7, nil do
-						TextLabel[k] = value11
+					for k, value in next, argument7 do
+						TextLabel[k] = value
 					end
 					callback40("UITextSizeConstraint", TextLabel, {MaxTextSize = 18, MinTextSize = 1})
 					return TextLabel
@@ -17990,39 +18002,40 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					argument5:FindFirstChildOfClass("UITextSizeConstraint").MaxTextSize = maxTextSize
 				end
 
+				-- Runs polling loop until condition succeeds or timeout expires (os.clock)
 				local function callback47(argument5)
-					for k, value11 in next, argumentMap, nil do
+					for k, value82 in next, argumentMap do
 						local value12 = data20[k]
-						callback41(value11.Badge, data14[value12] or data13)
-						value11.Number.Text, value11.Title.Text = tostring(value12), data19[k][2]
-						value11.Stroke.Color, value11.Stroke.Transparency, value11.Paint.Enabled = ((value12 == 1) and color) or value7, ((value12 == 1) and 0) or 0.2, value12 == 1
-						value11.Glow.BackgroundTransparency = (((k == argument2) and (os.clock() < number6)) and 0.55) or 0.82
-						local value, btn = ipairs, value11.Btn
+						callback41(value82.Badge, data14[value12] or data13)
+						value82.Number.Text, value82.Title.Text = tostring(value12), data19[k][2]
+						value82.Stroke.Color, value82.Stroke.Transparency, value82.Paint.Enabled = ((value12 == 1) and color) or value7, ((value12 == 1) and 0) or 0.2, value12 == 1
+						value82.Glow.BackgroundTransparency = (((k == argument2) and (os.clock() < number6)) and 0.55) or 0.82
+						local value, btn = ipairs, value82.Btn
 
 						for k2, value13 in value(btn) do
 							local active = ((k2 == 1) and (value12 > 1)) or ((k2 == 2) and (value12 < #list))
 							value13.b.Active, value13.b.BackgroundTransparency = active, (active and 0) or 0.55
 							callback41(value13.b, (active and data11) or data12)
-							for _, value14 in ipairs(value13) do
-								value14.BackgroundColor3 = (active and color) or color3FromRGB(128, 132, 150)
+							for _, value in ipairs(value13) do
+								value.BackgroundColor3 = (active and color) or color3FromRGB(128, 132, 150)
 							end
 							value13.s.Visible = active
 						end
 
 						btn = number7
-						value = uDim2FromOffset(value3, btn + ((value12 - 1) * (Frame3 + value2)))
+						value = uDim2FromOffset(number102, btn + ((value12 - 1) * (Frame3 + value2)))
 
 						if argument5 then
 							if condition2 then
-								getService("TweenService"):Create(value11.Frame, TweenInfo.new(0.22, uiStroke.EasingStyle.Quad, uiStroke.EasingDirection.Out), {Position = value}):Play()
+								getService("TweenService"):Create(value82.Frame, TweenInfo.new(0.22, uiStroke.EasingStyle.Quad, uiStroke.EasingDirection.Out), {Position = value}):Play()
 							else
-								value11.Frame.Position = value
+								value82.Frame.Position = value
 							end
 						else
-							value11.Frame.Position = value
+							value82.Frame.Position = value
 						end
 
-						value11.Frame.ZIndex = ((k == argument2) and 2) or 1
+						value82.Frame.ZIndex = ((k == argument2) and 2) or 1
 					end
 				end
 
@@ -18031,17 +18044,17 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						return math.floor(argument7 * argument8)
 					end
 					local size, number8, number9, number10, Frame4, value11 = math.max(160, argument6), callback49(3.1), callback49(5.2), math.max(6, callback49(0.45)), callback49(2.9), callback49(0.45)
-					value3, Frame3, value2 = number10, Frame4, value11
-					number7 = (value3 + number8) + value2
-					argument6, number10, Frame4, value11 = (size - (value3 * 2)) - math.max(4, callback49(0.3)), Frame2, Frame2, uDim2FromOffset(value3, value3)
+					number102, Frame3, value2 = number10, Frame4, value11
+					number7 = (number102 + number8) + value2
+					argument6, number10, Frame4, value11 = (size - (number102 * 2)) - math.max(4, callback49(0.3)), Frame2, Frame2, uDim2FromOffset(number102, number102)
 					size = uDim2FromOffset(argument6, number8)
 					number10.Position = value11
 					Frame4.Size = size
 					Frame4 = TextButton
 					Frame4.Size = uDim2FromOffset(number9, callback49(1.9))
 					size = value8
-					size.Size = uDim2New(0, (argument6 - number9) - value3, 0, math.floor(number8 * 0.56))
-					number10, Frame4, value11, size = value9, value9, uDim2FromOffset(0, math.floor(number8 * 0.58)), uDim2New(0, (argument6 - number9) - value3, 0, math.floor(number8 * 0.36))
+					size.Size = uDim2New(0, (argument6 - number9) - number102, 0, math.floor(number8 * 0.56))
+					number10, Frame4, value11, size = value9, value9, uDim2FromOffset(0, math.floor(number8 * 0.58)), uDim2New(0, (argument6 - number9) - number102, 0, math.floor(number8 * 0.36))
 					number10.Position = value11
 					Frame4.Size = size
 					callback46(value8, callback49(1.45))
@@ -18051,25 +18064,25 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					Frame4 = ((value11 + number10) + number8) + callback49(1.1)
 					size = math.max(20, ((argument6 - Frame4) - (number9 * 2)) - callback49(1.5))
 
-					for _, value12 in next, argumentMap, nil do
-						value12.Frame.Size, value12.Badge.Size, value12.Badge.Position = uDim2FromOffset(argument6, Frame3), uDim2FromOffset(number10, number10), uDim2New(0, value11, 0.5, 0)
-						value12.IconBack.Size, value12.IconBack.Position = uDim2FromOffset(number8, number8), uDim2New(0, (value11 + number10) + callback49(0.5), 0.5, 0)
-						value12.Title.Position, value12.Title.Size = uDim2New(0, Frame4, 0.14, 0), uDim2New(0, size, 0.42, 0)
-						value12.Sub.Position, value12.Sub.Size = uDim2New(0, Frame4, 0.56, 0), uDim2New(0, size, 0.3, 0)
-						callback46(value12.Title, callback49(1.1))
-						callback46(value12.Sub, callback49(0.78))
-						callback46(value12.Number, math.floor(number10 * 0.7))
-						value12.Holder.Position = uDim2New(1, -value11, 0.5, 0)
-						value12.Holder:FindFirstChildOfClass("UIListLayout").Padding = UDim.new(0, callback49(0.4))
-						for _, value13 in ipairs(value12.Btn) do
-							value13.b.Size = uDim2FromOffset(number9, number9)
+					for _, value in next, argumentMap do
+						value.Frame.Size, value.Badge.Size, value.Badge.Position = uDim2FromOffset(argument6, Frame3), uDim2FromOffset(number10, number10), uDim2New(0, value11, 0.5, 0)
+						value.IconBack.Size, value.IconBack.Position = uDim2FromOffset(number8, number8), uDim2New(0, (value11 + number10) + callback49(0.5), 0.5, 0)
+						value.Title.Position, value.Title.Size = uDim2New(0, Frame4, 0.14, 0), uDim2New(0, size, 0.42, 0)
+						value.Sub.Position, value.Sub.Size = uDim2New(0, Frame4, 0.56, 0), uDim2New(0, size, 0.3, 0)
+						callback46(value.Title, callback49(1.1))
+						callback46(value.Sub, callback49(0.78))
+						callback46(value.Number, math.floor(number10 * 0.7))
+						value.Holder.Position = uDim2New(1, -value11, 0.5, 0)
+						value.Holder:FindFirstChildOfClass("UIListLayout").Padding = UDim.new(0, callback49(0.4))
+						for _, value in ipairs(value.Btn) do
+							value.b.Size = uDim2FromOffset(number9, number9)
 						end
 					end
 
 					callback47(false)
 					condition2 = true
 					argument6 = number7
-					Frame4, number10 = (argument6 + (#list * (Frame3 + value2))) + value3, Frame
+					Frame4, number10 = (argument6 + (#list * (Frame3 + value2))) + number102, Frame
 					number10.Size = uDim2New(1, 0, 0, Frame4)
 					argument5:SetContentLines(Frame4 / argument7)
 				end
@@ -18077,17 +18090,17 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local function callback49(argument5, argument6)
 					local list3, data21 = {}, {}
 
-					for _, value11 in ipairs(((type(argument5) == "table") and argument5) or {}) do
-						if data19[value11] then
-							if not (data21[value11]) then
-								data21[value11] = true
-								list3[#list3 + 1] = value11
+					for _, value in ipairs(((type(argument5) == "table") and argument5) or {}) do
+						if data19[value] then
+							if not (data21[value]) then
+								data21[value] = true
+								list3[#list3 + 1] = value
 							end
 						end
 					end
 
-					for i, value11 in ipairs(iMap3) do
-						if not (data21[value11]) then
+					for i, value in ipairs(iMap3) do
+						if not (data21[value]) then
 							argument5 = 1
 
 							for i2 = i - 1, 1, -1 do
@@ -18098,13 +18111,13 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 								end
 							end
 
-							table.insert(list3, argument5, value11)
+							table.insert(list3, argument5, value)
 						end
 					end
 
 					list, data20 = list3, {}
-					for i, value11 in ipairs(list3) do
-						data20[value11] = i
+					for i, value in ipairs(list3) do
+						data20[value] = i
 					end
 					if argument6 then
 						return
@@ -18124,6 +18137,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end)
 				end
 
+				-- Registers Activated signal callback(s)
 				local function callback50(argument5)
 					local condition3, options = data19[argument5], {Btn = {}}
 					local iMap4 = color3FromRGB(condition3[4], condition3[5], condition3[6])
@@ -18233,8 +18247,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						callback49(iMap3)
 					end)
 					local list = list
-					for _, value11 in ipairs(list) do
-						callback50(value11)
+					for _, value in ipairs(list) do
+						callback50(value)
 					end
 					argument5:Attach(Frame, argument5:Root())
 					argument5:OnResize(function(argument6, argument7, argument8)
@@ -18330,10 +18344,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				argument:UP(data11, 0, value7.Character or (callback10()), callback10())
 
 				for _, value8 in value(data11) do
-					for _, value9 in ipairs((value8 and value8:GetChildren()) or {}) do
-						if value9:IsA("Tool") then
-							if argument5(value9) then
-								return value9
+					for _, value in ipairs((value8 and value8:GetChildren()) or {}) do
+						if value:IsA("Tool") then
+							if argument5(value) then
+								return value
 							end
 						end
 					end
@@ -18357,6 +18371,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				value8.wVer = value8.wVer + 1
 			end
 
+			-- Runs polling loop until condition succeeds or timeout expires (os.clock)
 			local function callback41()
 				if condition2 then
 					return
@@ -18376,10 +18391,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				if type(directory) ~= "table" then
 					return
 				end
-				for k, value7 in next, directory, nil do
-					batControllerData = (type(value7) == "table") and value7.BatControllerData
-					if (batControllerData or ((type(value7) == "table") and (value7.ToolController == "Slap"))) or tostring(k):lower():find("scrambl") then
-						callback40(k, (batControllerData and tonumber(batControllerData.RangeBonus)) or -1, ((type(value7) == "table") and value7.DisplayName) or k)
+				for k, value in next, directory do
+					batControllerData = (type(value) == "table") and value.BatControllerData
+					if (batControllerData or ((type(value) == "table") and (value.ToolController == "Slap"))) or tostring(k):lower():find("scrambl") then
+						callback40(k, (batControllerData and tonumber(batControllerData.RangeBonus)) or -1, ((type(value) == "table") and value.DisplayName) or k)
 					end
 				end
 				table.sort(arguments, function(argument5, argument6)
@@ -18401,12 +18416,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				argument:UP(data11, 0, value9.Character, callback10())
 
 				for _, value10 in value(data11) do
-					for i, value11 in ipairs((value10 and value10:GetChildren()) or {}) do
-						if value11:IsA("Tool") then
-							i = getAttribute(value11)
+					for i, value in ipairs((value10 and value10:GetChildren()) or {}) do
+						if value:IsA("Tool") then
+							i = getAttribute(value)
 							clonedTbl[i] = true
 							if argumentMap3[i] == nil then
-								if value11:GetAttribute("IsBat") == true then
+								if value:GetAttribute("IsBat") == true then
 									callback40(i, 0, i)
 								end
 							end
@@ -18536,24 +18551,24 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				butterflyBloom:Surface({Name = "Butterflies", ShowTitle = false, Layout = "free", Style = {TextScale = 1, LineHeight = 1.1, MinLines = 3.3, MaxLines = 3.3, AutoHeight = true, BackgroundTransparency = 0.35, TextColor = Color3.fromRGB(255, 255, 255), TextStrokeTransparency = 0.7}, Build = function(argument5)
 					configMap.st = argument5:Text({X = 0.7, Y = 0.15, Width = 1, Height = 1.1, Scale = 1, Wrap = false, Text = "Off", Color = "#FFFFFF", TextStrokeTransparency = 0.6})
 					local iMap3, number7 = {}, 24
-					for i, value8 in ipairs(data11) do
+					for i, value in ipairs(data11) do
 						local number8 = 0.7 + ((i - 1) * 4.7)
-						iMap3[i] = argument5:Image({X = number8, Y = 1.35, Width = 1.85, Height = 1.85, Image = value8[2], BackgroundTransparency = 1})
-						configMap.texts[value8[1]] = argument5:Text({X = number8 + 2.05, Y = 1.6, Width = 3, Height = 1.35, Scale = 1.2, Wrap = false, Text = "0", Color = value8[3], TextStrokeTransparency = 0.6})
+						iMap3[i] = argument5:Image({X = number8, Y = 1.35, Width = 1.85, Height = 1.85, Image = value[2], BackgroundTransparency = 1})
+						configMap.texts[value[1]] = argument5:Text({X = number8 + 2.05, Y = 1.6, Width = 3, Height = 1.35, Scale = 1.2, Wrap = false, Text = "0", Color = value[3], TextStrokeTransparency = 0.6})
 					end
 					argument5:SetContentLines(3.3)
 
 					function configMap.lay()
 						local iMap4, number8 = {}, 0
-						for i, value8 in ipairs(data11) do
-							iMap4[i] = 2.05 + (#(configMap.shown[value8[1]] or "0") * 0.62)
+						for i, value in ipairs(data11) do
+							iMap4[i] = 2.05 + (#(configMap.shown[value[1]] or "0") * 0.62)
 							number8 += iMap4[i]
 						end
 						local number9, number10 = math.max(0.5, ((number7 - 1.4) - number8) / (#data11 - 1)), 0.7
 
-						for i, value8 in ipairs(data11) do
+						for i, value in ipairs(data11) do
 							iMap3[i].Set({X = number10})
-							local texts, value9 = configMap.texts, value8[1]
+							local texts, value9 = configMap.texts, value[1]
 							local set, data12 = texts[value9].Set, {X = number10 + 2.05}
 							data12.Width = (iMap4[i] - 2.05) + 0.3
 							set(data12)
@@ -18573,7 +18588,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end})
 
 				local autoButterflyBloom = callback19(butterflyBloom, "Auto Butterfly Bloom", "bloom", false, function(argument5)
-					if not (argument5) then
+					if not argument5 then
 						callback23(value7)
 					end
 				end)
@@ -18583,8 +18598,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				butterflyBloom:Dropdown("Catch Butterflies", {"Radiant Butterfly", "Amethyst Butterfly", "Sapphire Butterfly", "Emerald Butterfly"}, {"Radiant Butterfly", "Amethyst Butterfly", "Sapphire Butterfly", "Emerald Butterfly"}, function(argument5)
 					enabledFlags = {}
-					for i, value8 in ipairs(argument5) do
-						i = labelMap4[value8:match("^(%a+)")]
+					for i, value in ipairs(argument5) do
+						i = labelMap4[value:match("^(%a+)")]
 						if i then
 							enabledFlags[i] = true
 						end
@@ -18685,6 +18700,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local raycastParams = RaycastParams.new()
 				raycastParams.FilterType = Enum.RaycastFilterType.Exclude
 
+				-- Casts raycast in workspace and computes ground/surface hit position
 				local function raycastGround(argument5)
 					local filterDescendantsInstances, humanoid = {}, data[1]
 					argument:UP(filterDescendantsInstances, 0, humanoid.Character, workspace:FindFirstChild("ButterflyBloomSwarm"))
@@ -18708,6 +18724,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					return argument5 and ((argument5:IsA("BasePart") and argument5.Position) or (argument5:IsA("Model") and argument5:GetPivot().Position))
 				end
 
+				-- Runs polling loop until condition succeeds or timeout expires (os.clock)
 				local function runUntilTimeout(argument5, argument6)
 					local value9, value10 = data[1], data[1]
 					pcall(data[1].RequestStreamAroundAsync, data[1], argument5)
@@ -18867,11 +18884,11 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 
 					if cat and not next(idMap2) then
-						for k, value10 in next, idMap, nil do
+						for k, value in next, idMap do
 							if not (idMap2[k]) then
-								local ok, response = pcall(cat.PositionAt, value10, serverTimeNow)
+								local ok, response = pcall(cat.PositionAt, value, serverTimeNow)
 								if ok then
-									callback57(k, value10, response)
+									callback57(k, value, response)
 								end
 							end
 						end
@@ -19035,7 +19052,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					local now3, now4, number9, normalWalk = os.clock(), os.clock(), 0, data[60]
 
-					local value11, huge = trackConnection(normalWalk.Stepped, function()
+					local connection, huge = trackConnection(normalWalk.Stepped, function()
 						local value11 = data[28]
 						if value11.bfMode ~= "Stand" then
 							return
@@ -19048,10 +19065,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						for _, value13 in value(argument:eP(value12)) do
 							value11 = data[1]
 
-							for _, value14 in ipairs((((value13 ~= value11) and value13.Character) and value13.Character:GetChildren()) or {}) do
-								if value14:IsA("BasePart") then
-									if value14.CanCollide then
-										value14.CanCollide = false
+							for _, value in ipairs((((value13 ~= value11) and value13.Character) and value13.Character:GetChildren()) or {}) do
+								if value:IsA("BasePart") then
+									if value.CanCollide then
+										value.CanCollide = false
 									end
 								end
 							end
@@ -19145,7 +19162,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							local value13 = data[29]
 							local value14, assemblyLinearVelocity = value13(vector_3.X - value.Position.X, 0, vector_3.Z - value.Position.Z), value.AssemblyLinearVelocity
 
-							if not (normalWalk) then
+							if not normalWalk then
 								value13 = data[15]
 								local normalWalk2 = value13.normalWalk
 								local humanoid2
@@ -19230,7 +19247,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						vector_2()
 					end
 
-					value11:Disconnect()
+					connection:Disconnect()
 
 					if humanoid then
 						humanoid.PlatformStand = false
@@ -19294,13 +19311,13 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					data12.Essence = value10.Essence
 
 					callback14("bst", function()
-						if not (configMap.st) then
+						if not configMap.st then
 							return
 						end
 						configMap.st.Set({Text = condition4})
 						local condition5
 
-						for k, text in next, configMap.texts, nil do
+						for k, text in next, configMap.texts do
 							local text2 = (bfRec[k] and ("%d/%d"):format(data12[k] or 0, bfRec[k])) or tostring(data12[k] or 0)
 							if configMap.shown[k] ~= text2 then
 								configMap.shown[k] = text2
@@ -19328,9 +19345,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				reButterfliesRemoved, autoButterflyBloom = {"Emerald To Sapphire", "Sapphire To Amethyst", "Amethyst To Radiant"}, function(argument5)
 					data12 = {}
-					for i, value11 in ipairs(argument5) do
+					for i, value in ipairs(argument5) do
 						i = data12
-						i[#i + 1] = labelMap4[value11:match("^(%a+)")]
+						i[#i + 1] = labelMap4[value:match("^(%a+)")]
 					end
 				end
 
@@ -19344,10 +19361,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				pcall(function()
 					local ButterflyFlags, costMap = require(ReplicatedStorage.Shared.Flags.ButterflyFlags), {Green = "GreenToBlueCost", Blue = "BlueToPurpleCost", Purple = "PurpleToGoldenCost"}
-					for k, value11 in next, costMap, nil do
-						valueMap3[k] = tonumber(ButterflyFlags[value11]:Get()) or valueMap3[k]
+					for k, value in next, costMap do
+						valueMap3[k] = tonumber(ButterflyFlags[value]:Get()) or valueMap3[k]
 					end
-					for k in next, valueMap4, nil do
+					for k in next, valueMap4 do
 						valueMap4[k] = tonumber(ButterflyFlags["Essence" .. k]:Get()) or valueMap4[k]
 					end
 				end)
@@ -19356,8 +19373,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				butterflyBloom2.bfRec = valueMap4
 
 				local function callback58(argument5)
-					for k, value11 in next, valueMap4, nil do
-						if (argument5[k] or 0) < value11 then
+					for k, value in next, valueMap4 do
+						if (argument5[k] or 0) < value then
 							return false
 						end
 					end
@@ -19433,6 +19450,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 				end
 
+				-- Triggers ProximityPrompt interaction and waits for completion
 				local function enterTree(argument5)
 					local parent = data[1]
 					if parent:GetAttribute("InEnchantedTree") then
@@ -19442,7 +19460,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local Build = parent("Build", "EnchantedTreeInterior", "Markers", "EnterTrigger", "EnchantedTreeEntrance", "EnchantedTreePrompt")
 					parent = Build and Build.Parent
 					local worldPosition = parent and ((parent:IsA("Attachment") and parent.WorldPosition) or (parent:IsA("BasePart") and parent.Position))
-					if not (worldPosition) then
+					if not worldPosition then
 						return false
 					end
 					parent = data[1]
@@ -19602,7 +19620,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback60(argument5, argument6, argument7, ...)
 					local value13 = callback52(argument6)
-					if not (value13) then
+					if not value13 then
 						return false
 					end
 
@@ -19766,8 +19784,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					if not (argumentMap[argument5]) then
 						local data11 = {}
 						pcall(function()
-							for _, value8 in ipairs(require(ReplicatedStorage.Data.Areas.Configs[argument5]).DropTable) do
-								data11[tostring(value8[1] or value8.Category)] = true
+							for _, value in ipairs(require(ReplicatedStorage.Data.Areas.Configs[argument5]).DropTable) do
+								data11[tostring(value[1] or value.Category)] = true
 							end
 						end)
 						argumentMap[argument5] = data11
@@ -19789,13 +19807,13 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local data12, data13 = condition3(), callback47((type(argument5.Match) == "table") and argument5.Match.AreaId)
 					local data14, conditionMap, conditionMap2 = callback34(data12 or {}), {}, {}
 
-					for k, value8 in next, ((data12 and (type(data12.Inventory) == "table")) and data12.Inventory) or {}, nil do
-						condition3 = (type(value8) == "table") and tostring(value8.AssetCategory)
+					for k, value in next, ((data12 and (type(data12.Inventory) == "table")) and data12.Inventory) or {}, nil do
+						condition3 = (type(value) == "table") and tostring(value.AssetCategory)
 
 						if condition3 then
 							if data13[condition3] then
-								if not (value8.IsFavorite) then
-									if not (value8.InFuse) then
+								if not value.IsFavorite then
+									if not value.InFuse then
 										if not (data14[k]) then
 											conditionMap[condition3] = conditionMap[condition3] or {}
 											table.insert(conditionMap[condition3], k)
@@ -19807,8 +19825,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 					end
 
-					for _, value8 in pairs(callback11()) do
-						condition3 = (type(value8) == "table") and tostring(value8.AssetCategory)
+					for _, value in pairs(callback11()) do
+						condition3 = (type(value) == "table") and tostring(value.AssetCategory)
 						if condition3 then
 							if data13[condition3] then
 								conditionMap2[condition3] = (conditionMap2[condition3] or 0) + 1
@@ -19818,17 +19836,17 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					data11 = {q = argument5, at = os.clock(), supply = 0}
 
-					for k, value8 in next, conditionMap, nil do
-						if #value8 >= 3 then
+					for k, value in next, conditionMap do
+						if #value >= 3 then
 							data14, condition3 = data11, data11
-							data14.ready = {value8[1], value8[2], value8[3]}
+							data14.ready = {value[1], value[2], value[3]}
 							condition3.cat = k
 						end
 					end
 
-					for _, value8 in next, conditionMap2, nil do
+					for _, value in next, conditionMap2 do
 						data13 = data11
-						data13.supply = math.max(data11.supply, value8)
+						data13.supply = math.max(data11.supply, value)
 					end
 					data12 = data11
 					return data12
@@ -19856,9 +19874,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						return false
 					end
 
-					for k, value10 in next, match, nil do
+					for k, value in next, match do
 						if k == "AreaId" then
-							if value10 ~= argument5.a then
+							if value ~= argument5.a then
 								return false
 							end
 						elseif k == "Rarity" then
@@ -19866,8 +19884,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							rarity = rarity and rarity.Rarity
 
 							if rarity then
-								if not (rarity.DisplayName == value10) then
-									if not (rarity._id == value10) then
+								if not (rarity.DisplayName == value) then
+									if not (rarity._id == value) then
 										return false
 									end
 								end
@@ -19886,7 +19904,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				value8.wispSteals = function()
 					local value9 = data[28]
-					if not (value9.wisp) then
+					if not value9.wisp then
 						return false
 					end
 					local value10, value11 = callback44()
@@ -19928,7 +19946,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local function callback51(argument5)
 					local value10 = data[65]
 					local value11 = value10()
-					if not (value11) then
+					if not value11 then
 						return
 					end
 
@@ -19941,12 +19959,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 
 					value10 = callback48(argument5)
-					if not (value10.ready) then
+					if not value10.ready then
 						return wt(((value10.supply >= 3) and "Hatching eggs for the fuse quest") or "Stealing eggs for the fuse quest")
 					end
 					local data12, fusionSlotMap = {}, {}
-					for _, value12 in ipairs(value10.ready) do
-						data12[value12] = true
+					for _, value in ipairs(value10.ready) do
+						data12[value] = true
 					end
 					local value, fusionSlots = ipairs, ((type(value11.FusionSlots) == "table") and value11.FusionSlots) or {}
 
@@ -19984,7 +20002,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				value7.fn = function()
 					local value10, value11 = callback44()
-					if not (value11) then
+					if not value11 then
 						return wt("Reading quest")
 					end
 					local number7 = ((type(wisp) == "table") and tonumber(wisp.StageCount)) or 4
@@ -19992,7 +20010,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						callback17("wst", nostat, {Stage = ("%d / %d"):format(number7, number7), Progress = "Complete"})
 						return wt("Done, the Enchanted Tree is open")
 					end
-					if not (value11.Accepted) then
+					if not value11.Accepted then
 						callback17("wst", nostat, {Stage = ("0 / %d"):format(number7), Progress = "Not accepted"})
 					end
 					local number8 = callback45(value11)
@@ -20000,7 +20018,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						callback17("wst", nostat, {Stage = ("%d / %d"):format(tonumber(value11.Stage) or 1, number7), Progress = ("%d / %d"):format(toNumberOrDefault3(value11, number8), tonumber(number8.Target) or 1)})
 					end
 					number8 = data[28]
-					if not (number8.wisp) then
+					if not number8.wisp then
 						return wt("Off")
 					end
 					if value10.FusionLocked then
@@ -20010,7 +20028,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 					end
 
-					if not (value11.Accepted) then
+					if not value11.Accepted then
 						number8 = ((type(wisp) == "table") and tonumber(wisp.RequiredSpeedPower)) or 50000000000
 						if (tonumber(value10.SpeedPower) or 0) < number8 then
 							return wt("Needs " .. (callback6(number8) .. " speed power to meet the wisp"))
@@ -20044,7 +20062,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 
 					if (tonumber(value11.Stage) or 1) >= number7 then
-						if not (value11.Returning) then
+						if not value11.Returning then
 							value10 = data[9]
 							value10("RF/WispCompanion/Request", "BeginReturn")
 						end
@@ -20118,7 +20136,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					pcall(data[1].RequestStreamAroundAsync, data[1], value11)
 					local value14 = data[19]
 					local value15 = value14()
-					if not (value15) then
+					if not value15 then
 						return
 					end
 					if (value15.Position - value11).Magnitude > 1200 then
@@ -20237,7 +20255,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					if ok then
 						if response then
-							if not (now3) then
+							if not now3 then
 								return false
 							end
 						else
@@ -20254,10 +20272,11 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local reMountRacePowerUp, number9, number10, now4 = RunService2:FindFirstChild("RE/MountRace/PowerUp"), 0, 0
 					cframe = {}
 
+					-- Drives character physics velocity toward target destination
 					local function callback48()
 						local cframe2, value9 = response:FrameAt(number7), data[19]
 						local value10 = value9()
-						if not (value10) then
+						if not value10 then
 							return
 						end
 
@@ -20288,12 +20307,13 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						value10.AssemblyAngularVelocity = value9
 					end
 
+					-- Fires remote event reMountRacePowerUp on the server
 					local function fireRemote()
 						local serverTime, pad = workspace:GetServerTimeNow(), data[19]
 						local value9 = pad()
 
 						if reMountRacePowerUp then
-							if not (value9) then
+							if not value9 then
 								return
 							end
 						else
@@ -20321,12 +20341,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							end
 						end
 
-						for i, value10 in ipairs(CollectionService:GetTagged("RacePowerUpSpawn")) do
-							if value10:IsDescendantOf(firstChild) then
-								pad, i = (value10:FindFirstChild("Pad") or value10.PrimaryPart) or value10:FindFirstChildWhichIsA("BasePart"), value10:GetAttribute("RaceBoxReadyAt")
+						for i, taggedInstance in ipairs(CollectionService:GetTagged("RacePowerUpSpawn")) do
+							if taggedInstance:IsDescendantOf(firstChild) then
+								pad, i = (taggedInstance:FindFirstChild("Pad") or taggedInstance.PrimaryPart) or taggedInstance:FindFirstChildWhichIsA("BasePart"), taggedInstance:GetAttribute("RaceBoxReadyAt")
 								if pad and ((type(i) ~= "number") or (i <= serverTime)) then
 									if (pad.Position - value9.Position).Magnitude <= 30 then
-										reMountRacePowerUp:FireServer("Pickup", value10)
+										reMountRacePowerUp:FireServer("Pickup", taggedInstance)
 										break
 									end
 								end
@@ -20397,8 +20417,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						task.wait(0.25)
 					end
 
-					for _, value9 in ipairs(cframe) do
-						value9:Disconnect()
+					for _, value in ipairs(cframe) do
+						value:Disconnect()
 					end
 					return callback45()
 				end
@@ -20484,7 +20504,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local hlSt = callback16("hlSt", theHollow:Text("The Hollow Status", "Off"))
 
 				callback19(theHollow, "Auto Race The Hollow", "hollow", false, function(argument5)
-					if not (argument5) then
+					if not argument5 then
 						local value7, value8 = data[4], data[15]
 						if value7 == value8.HL.job then
 							callback23(data[4])
@@ -20531,7 +20551,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 				end}
 				callback19(shootingStar, "Auto Catch Shooting Star", "star", false, function(argument5)
-					if not (argument5) then
+					if not argument5 then
 						callback23(value7)
 					end
 				end)
@@ -20784,7 +20804,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 						if value11 then
 							if value10 then
-								if not (value13) then
+								if not value13 then
 									return
 								end
 							else
@@ -21041,10 +21061,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						return ok[argument5]
 					end
 
-					for _, value7 in pairs(ok) do
-						if type(value7) == "table" then
-							if value7.Uid == argument5 then
-								return value7
+					for _, value in pairs(ok) do
+						if type(value) == "table" then
+							if value.Uid == argument5 then
+								return value
 							end
 						end
 					end
@@ -21094,7 +21114,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local value7 = data[19]
 					local value8, number7 = value7(), data[8]
 					value7 = number7()
-					if not (value8) then
+					if not value8 then
 						return
 					end
 					if value7 then
@@ -21113,6 +21133,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					value8(number7)
 				end
 
+				-- Scans children for "CarryAreaEgg" and selects the nearest target by distance
 				local function callback49(argument5, argument6)
 					local children, value7, number7, carryAreaEgg, value = ipairs, argument[46](workspace:GetChildren()), 14
 
@@ -21146,6 +21167,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					return carryAreaEgg
 				end
 
+				-- Triggers ProximityPrompt interaction and waits for completion
 				local function callback50(argument5, argument6)
 					local character = data[8]
 					local number7, number8 = character(), data[1]
@@ -21207,7 +21229,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					return true
 				end})
 				local autoCaptureEventEgg = callback19(captureTheEgg, "Auto Capture Event Egg", "capture", false, function(argument5)
-					if not (argument5) then
+					if not argument5 then
 						callback23(value7)
 					end
 				end)
@@ -21221,6 +21243,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local data11 = {}
 				local number7 = -9
 
+				-- Runs polling loop until condition succeeds or timeout expires (os.clock)
 				local function callback53()
 					if (os.clock() - number7) < 5 then
 						local data = data11
@@ -21260,12 +21283,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local function callback54(argument5, argument6)
 					argument6 = argument6 or 0
 
-					for _, value8 in ipairs(callback53()) do
-						if argument5.X >= (value8.lo.X + argument6) then
-							if argument5.X <= (value8.hi.X - argument6) then
-								if argument5.Z >= (value8.lo.Z + argument6) then
-									if argument5.Z <= (value8.hi.Z - argument6) then
-										return value8
+					for _, value in ipairs(callback53()) do
+						if argument5.X >= (value.lo.X + argument6) then
+							if argument5.X <= (value.hi.X - argument6) then
+								if argument5.Z >= (value.lo.Z + argument6) then
+									if argument5.Z <= (value.hi.Z - argument6) then
+										return value
 									end
 								end
 							end
@@ -21273,6 +21296,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 				end
 
+				-- Scans children for "HumanoidRootPart" and selects the nearest target by distance
 				local function callback55(argument5)
 					local humanoidRootPart, children, number8 = ipairs, argument[46](Players:GetPlayers()), 1 / 0
 					for k, value8 in humanoidRootPart(argument:eP(children)) do
@@ -21420,14 +21444,14 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 								value8 = callback56(value10.Position)
 							end
 							number8 = os.clock() + 0.25
-							local value13, value, value2 = callback54(value10.Position), value8
+							local value13, value, value83 = callback54(value10.Position), value8
 							if value then
-								value2 = value
+								value83 = value
 							else
 								condition4, condition5 = data[29]
-								condition5, value2 = data[28], condition4(value10.Position.X, ((value13 and value13.y) or value10.Position.Y) + data[28].capH, value10.Position.Z)
+								condition5, value83 = data[28], condition4(value10.Position.X, ((value13 and value13.y) or value10.Position.Y) + data[28].capH, value10.Position.Z)
 							end
-							callback48(value2, 220, number9)
+							callback48(value83, 220, number9)
 							callback51("Holding the event egg" .. text)
 						else
 							if numVal then
@@ -21483,7 +21507,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 									callback51("Someone has the event egg")
 								else
 									local value13 = callback46(argument5, value11)
-									if not (value13) then
+									if not value13 then
 										break
 									end
 									local Wall = data[29]
@@ -21750,7 +21774,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 					end
 
-					if not (uid) then
+					if not uid then
 						callback58()
 						return callback57("Egg landed, looking for it")
 					end
@@ -21787,7 +21811,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 						local value13 = data[28]
 
-						if not (value13.steal) then
+						if not value13.steal then
 							local value14 = data[15]
 
 							if value14.autoSteal then
@@ -21805,6 +21829,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local value12 = data[15]
 
+				-- Runs polling loop until condition succeeds or timeout expires (os.clock)
 				value12.greenLight = function(argument5, argument6)
 					local number10 = os.clock() + 20
 
@@ -21872,11 +21897,11 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end
 
 				local function callback46(argument5)
-					for _, value24 in ipairs(CollectionService:GetTagged("BanjoCricketMushroom")) do
-						if value24:GetAttribute("MushroomIndex") == argument5 then
-							local hitbox = value24:FindFirstChild("Hitbox") or value24:FindFirstChild("Hitbox Part")
+					for _, taggedInstance in ipairs(CollectionService:GetTagged("BanjoCricketMushroom")) do
+						if taggedInstance:GetAttribute("MushroomIndex") == argument5 then
+							local hitbox = taggedInstance:FindFirstChild("Hitbox") or taggedInstance:FindFirstChild("Hitbox Part")
 							local ok, response = pcall(function()
-								return (hitbox and hitbox.Position) or value24:GetPivot().Position
+								return (hitbox and hitbox.Position) or taggedInstance:GetPivot().Position
 							end)
 							if ok then
 								if response then
@@ -21906,6 +21931,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					return (value25 ~= nil) and ((value25.Position - ((callback48("Passages", "SecretRoomSpawn") or callback48("SecretRoomSpawn")) or value16)).Magnitude < 120)
 				end
 
+				-- Casts raycast in workspace and computes ground/surface hit position
 				local function raycastGround(argument5)
 					local raycastParams, filterDescendantsInstances, number7 = RaycastParams.new(), {}, data[1]
 					argument:UP(filterDescendantsInstances, 0, number7.Character)
@@ -21971,6 +21997,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					return true
 				end
 
+				-- Runs polling loop until condition succeeds or timeout expires (os.clock)
 				local function callback52(argument5, argument6, argument7)
 					local number7 = os.clock() + argument7
 
@@ -22153,6 +22180,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					return callback44().Claimed == true
 				end
 
+				-- Runs polling loop until condition succeeds or timeout expires (os.clock)
 				local function callback56()
 					local Passages = data[8]
 					local value24 = Passages()
@@ -22234,7 +22262,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 
 					if callback44().Solved ~= true then
-						if not (data11.solved) then
+						if not data11.solved then
 							if not (callback53(argument6)) then
 								callback56()
 								return callback57("puzzle not solved, trying again")
@@ -22483,17 +22511,17 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local list3 = {}
 					list = list3
 
-					for i, value15 in ipairs((workspace:FindFirstChild("Plots") and workspace.Plots:GetChildren()) or {}) do
+					for i, value in ipairs((workspace:FindFirstChild("Plots") and workspace.Plots:GetChildren()) or {}) do
 						i = {"TreadmillBottom", "TreadmillUpgrade"}
 
-						for i2, value16 in ipairs(i) do
-							i2 = value15:FindFirstChild(value16)
+						for i2, value84 in ipairs(i) do
+							i2 = value:FindFirstChild(value84)
 
-							for _, value17 in ipairs((i2 and ((i2:IsA("BasePart") and {i2}) or i2:GetDescendants())) or {}) do
-								if value17:IsA("BasePart") then
-									list3[#list3 + 1] = {value17, value17.CanTouch, value17.CanCollide}
-									value17.CanTouch = false
-									value17.CanCollide = false
+							for _, value in ipairs((i2 and ((i2:IsA("BasePart") and {i2}) or i2:GetDescendants())) or {}) do
+								if value:IsA("BasePart") then
+									list3[#list3 + 1] = {value, value.CanTouch, value.CanCollide}
+									value.CanTouch = false
+									value.CanCollide = false
 								end
 							end
 						end
@@ -22508,9 +22536,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							task.wait(0.2)
 						end
 
-						for _, value15 in ipairs(list3) do
-							if value15[1].Parent then
-								value15[1].CanTouch, value15[1].CanCollide = value15[2], value15[3]
+						for _, value in ipairs(list3) do
+							if value[1].Parent then
+								value[1].CanTouch, value[1].CanCollide = value[2], value[3]
 							end
 						end
 						list = nil
@@ -22588,6 +22616,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					callback50(false)
 				end)
 
+				-- Casts raycast in workspace and computes ground/surface hit position
 				local function raycastGround()
 					local raycastParams = data[19]
 					local value16 = raycastParams()
@@ -22625,6 +22654,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					return true
 				end
 
+				-- Drives character physics velocity toward target destination
 				value16.run = function(argument5, argument6)
 					callback50(true)
 
@@ -22667,12 +22697,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 						number8, sd = 25
 
-						for i, value17 in ipairs(((type(snap.Entries) == "table") and snap.Entries) or {}) do
-							i = ((((type(value17) == "table") and (value17.Team == text)) and (value17.State == "Alive")) and (typeof(value17.Model) == "Instance")) and value17.Model:FindFirstChild("HumanoidRootPart")
-							value17 = i and (i.Position - argument5.Position).Magnitude
-							if value17 then
-								if value17 < number8 then
-									number8, sd = value17, i
+						for i, value in ipairs(((type(snap.Entries) == "table") and snap.Entries) or {}) do
+							i = ((((type(value) == "table") and (value.Team == text)) and (value.State == "Alive")) and (typeof(value.Model) == "Instance")) and value.Model:FindFirstChild("HumanoidRootPart")
+							value = i and (i.Position - argument5.Position).Magnitude
+							if value then
+								if value < number8 then
+									number8, sd = value, i
 								end
 							end
 						end
@@ -22730,7 +22760,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local ciw = callback16("ciw", cursedIslandWars:Text("Cursed Island Wars Status", "Waiting for Cursed Island Wars"))
 				callback19(cursedIslandWars, "Auto Play Cursed Island Wars", "ciw", true, function(argument5)
 					callback50(argument5 and data11.held())
-					if not (argument5) then
+					if not argument5 then
 						callback23(value16)
 					end
 				end)
@@ -22760,7 +22790,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				ufoSightings = iMap2["UFO Sightings"]
 				local ufo2 = callback16("ufo", ufoSightings:Text("UFO Status", "Off"))
 				callback19(ufoSightings, "Auto UFO", "ufo", false, function(argument5)
-					if not (argument5) then
+					if not argument5 then
 						callback23(value7)
 					end
 				end)
@@ -22775,8 +22805,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 					ufo.st = st
 					ufo.sus = {}
-					for _, value8 in ipairs(st.Suspicious or {}) do
-						ufo.sus[value8] = true
+					for _, value in ipairs(st.Suspicious or {}) do
+						ufo.sus[value] = true
 					end
 				end
 
@@ -22889,7 +22919,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						return
 					end
 					condition3 = os.clock() >= (ufo.no or 0)
-					if not (st.Unlocked) then
+					if not st.Unlocked then
 						return (condition3 and "repair") or nil
 					end
 
@@ -22921,8 +22951,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					if st.Event then
 						if st.Required then
-							if not (st.Decoded) then
-								if not (st.Complete) then
+							if not st.Decoded then
+								if not st.Complete then
 									return "decode"
 								end
 							end
@@ -22983,6 +23013,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					return callback50() and callback29(argument5, callback50, argument7 or 8, 40)
 				end
 
+				-- Runs polling loop until condition succeeds or timeout expires (os.clock)
 				local function callback50(argument5, argument6)
 					local number7 = os.clock() + argument5
 
@@ -22997,6 +23028,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					return true
 				end
 
+				-- Runs polling loop until condition succeeds or timeout expires (os.clock)
 				local function callback51(argument5, argument6)
 					local number7 = os.clock() + 1.2
 					while (os.clock() < number7) and (argument6()) do
@@ -23042,17 +23074,17 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 									end
 								end
 
-								for _, value15 in ipairs(data11) do
-									local number8, number9 = argument7 + value15[2], argument8 + value15[3]
+								for _, value in ipairs(data11) do
+									local number8, number9 = argument7 + value[2], argument8 + value[3]
 
-									if value15[1] ~= argument9 then
-										if bit32.band(value14, value15[1]) ~= 0 then
+									if value[1] ~= argument9 then
+										if bit32.band(value14, value[1]) ~= 0 then
 											if number8 >= 1 then
 												if number8 <= 5 then
 													if number9 >= 1 then
 														if number9 <= 5 then
 															if not (data12[((number8 - 1) * 5) + number9]) then
-																if callback54(number8, number9, value15[4]) then
+																if callback54(number8, number9, value[4]) then
 																	return true
 																end
 															end
@@ -23073,13 +23105,14 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					return (callback54(2, 1, 8) and rotations) or nil
 				end
 
+				-- Static configuration/preset table: commandHandlers (135 lines)
 				local commandHandlers = {repair = function(argument5)
 					local ufoSightingsCamp = workspace:FindFirstChild("UFOSightingsCamp")
-					if not (ufoSightingsCamp) then
+					if not ufoSightingsCamp then
 						return
 					end
 
-					if not (ufo.st.MetChaser) then
+					if not ufo.st.MetChaser then
 						local position = ufoSightingsCamp.AlienChaser.HumanoidRootPart.Position
 
 						if callback49(position, argument5) then
@@ -23215,6 +23248,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end)
 				end
 
+				-- Drives character physics velocity toward target destination
 				commandHandlers.decode = function(argument5)
 					local value14, value15 = callback54(), data[8]
 					local value16 = value15()
@@ -23309,6 +23343,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					return true
 				end
 
+				-- Drives character physics velocity toward target destination
 				commandHandlers.hold = function(argument5)
 					local assemblyLinearVelocity = data[19]
 					local value14 = assemblyLinearVelocity()
@@ -23335,6 +23370,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					return true
 				end
 
+				-- Runs polling loop until condition succeeds or timeout expires (os.clock)
 				commandHandlers.board = function(argument5)
 					local position = ufo.st.Ufo and ufo.st.Ufo.Position
 
@@ -23395,18 +23431,18 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 						local value16, data12, value17 = callback46(), {}, data[15]
 						value14 = value17.bat()
-						for _, value18 in ipairs((value16 and value16.List) or {}) do
-							callback2("RE/UFOSightings/CollectRock", value16.Id, value18.Index)
+						for _, value in ipairs((value16 and value16.List) or {}) do
+							callback2("RE/UFOSightings/CollectRock", value16.Id, value.Index)
 						end
-						for _, value18 in ipairs(ufo.st.Interior.Broken or {}) do
-							data12[value18] = true
+						for _, value in ipairs(ufo.st.Interior.Broken or {}) do
+							data12[value] = true
 						end
 						value17 = nil
 
-						for _, value18 in ipairs((capsules and capsules:GetChildren()) or {}) do
-							if value18:IsA("Model") then
-								if not (data12[value18.Name]) then
-									value17 = value18
+						for _, value in ipairs((capsules and capsules:GetChildren()) or {}) do
+							if value:IsA("Model") then
+								if not (data12[value.Name]) then
+									value17 = value
 									break
 								end
 							end
@@ -23600,7 +23636,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local value16 = commandHandlers[argument5](argument6)
 
 					if (argument5 == "repair") or (argument5 == "trade") then
-						if not (value16) then
+						if not value16 then
 							if argument6() then
 								ufo.no = os.clock() + 60
 							end
@@ -23723,12 +23759,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					return {h = Frame, sh = argument8, l = argument5, sg = argument7, tg = argument6}
 				end
 
-				local function callback52(argument5, text, p)
+				local function callback52(argument5, text, color)
 					if argument5.l.Text ~= text then
 						argument5.l.Text, argument5.sh.Text = text, text
 					end
-					if argument5.p ~= p then
-						argument5.p, argument5.tg.Color, argument5.tg.Rotation, argument5.sg.Color = p, p.t, p.r or 90, p.s
+					if argument5.p ~= color then
+						argument5.p, argument5.tg.Color, argument5.tg.Rotation, argument5.sg.Color = color, color.t, color.r or 90, color.s
 					end
 				end
 
@@ -23737,9 +23773,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end
 
 				local function disconnectAll(argument5)
-					for _, value7 in ipairs(argument5) do
+					for _, value in ipairs(argument5) do
 						pcall(function()
-							value7:Disconnect()
+							value:Disconnect()
 						end)
 					end
 					table.clear(argument5)
@@ -23861,12 +23897,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					local function callback59(argument5)
 						local value, number14 = argument5.v, 0
-						for i, value10 in ipairs(data16) do
-							number14 = if value[i] then number14 + value10 else number14
+						for i, value85 in ipairs(data16) do
+							number14 = if value[i] then number14 + value85 else number14
 						end
 						number14 = max(number14, 1)
-						for i, value10 in ipairs(argument5.hs) do
-							value10.Visible, value10.Size = value[i], uDim2FromScale(1, (value[i] and (data16[i] / number14)) or 0)
+						for i, value86 in ipairs(argument5.hs) do
+							value86.Visible, value86.Size = value[i], uDim2FromScale(1, (value[i] and (data16[i] / number14)) or 0)
 						end
 						local value10, value11, number15 = callback47(120, number11), max(1, floor(clampValue(number11) * number14)), 4.5 * number11
 						if ((argument5.w ~= value10) or (argument5.ht ~= value11)) or (argument5.f ~= condition3) then
@@ -23883,8 +23919,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						local ImageLabel = callback("ImageLabel", {Parent = Frame, AnchorPoint = vector2New(0.5, 1), BackgroundTransparency = 1, Position = uDim2FromScale(0.5, 1), Size = uDim2FromScale(1, 1), ScaleType = Enum.ScaleType.Fit})
 						callback("UIAspectRatioConstraint", {Parent = ImageLabel, DominantAxis = Enum.DominantAxis.Height})
 						local data19, data20 = {b = value10, ic = ImageLabel, r = {}, hs = {Frame}, v = {false, true, false, false, false, false}}, {font, font3, font, font, font}
-						for i, value12 in ipairs(data20) do
-							data19.r[i] = callback51(value11, value12, i, 0)
+						for i, value in ipairs(data20) do
+							data19.r[i] = callback51(value11, value, i, 0)
 							data19.hs[i + 1] = data19.r[i].h
 						end
 						callback59(data19)
@@ -23914,8 +23950,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							end
 						end
 
-						for k, value10 in next, Egg, nil do
-							if ((type(value10) == "table") and (value10.Placement ~= nil)) and (type(value10.AssetCategory) == "string") then
+						for k, value in next, Egg do
+							if ((type(value) == "table") and (value.Placement ~= nil)) and (type(value.AssetCategory) == "string") then
 								local text2, child = tostring(k)
 								for _, child2 in ipairs(childs) do
 									if child2.Name:find(text2, 1, true) or (child2:GetAttribute("Uid") == text2) then
@@ -23928,8 +23964,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 									argument5, placedEggRenders = pcall(function()
 										return (child:IsA("Model") and child:GetPivot()) or child.CFrame
 									end)
-									text = ((type(value10.Mutations) == "table") and value10.Mutations) or {}
-									list3[#list3 + 1] = {Uid = argument7 .. text2, AssetCategory = value10.AssetCategory, AssetScale = value10.AssetScale, Mutations = text, BaseMutation = value10.BaseMutation or text[1], State = "Base", AreaId = argument6, BottomCFrame = (argument5 and placedEggRenders) or nil, Model = child}
+									text = ((type(value.Mutations) == "table") and value.Mutations) or {}
+									list3[#list3 + 1] = {Uid = argument7 .. text2, AssetCategory = value.AssetCategory, AssetScale = value.AssetScale, Mutations = text, BaseMutation = value.BaseMutation or text[1], State = "Base", AreaId = argument6, BottomCFrame = (argument5 and placedEggRenders) or nil, Model = child}
 								end
 							end
 						end
@@ -23969,8 +24005,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 
 						callback65(argument6.BaseMutation)
-						for k, value10 in next, ((type(argument6.Mutations) == "table") and argument6.Mutations) or {}, nil do
-							callback65((((type(k) == "string") and (value10 == true)) and k) or value10)
+						for k, value in next, ((type(argument6.Mutations) == "table") and argument6.Mutations) or {}, nil do
+							callback65((((type(k) == "string") and (value == true)) and k) or value)
 						end
 						local number14, value10, condition11, condition12, condition13, condition14, value = tonumber(argument6.AssetScale) or 1, {}, (enabledFlags.Icon == true) and (argument7.ic ~= nil), enabledFlags.Name == true, (enabledFlags.Rarity == true) and (argument7.nm ~= ""), (enabledFlags.Mutation == true) and (arguments2[1] ~= nil), enabledFlags.Value
 						argument:UP(value10, 0, condition11, condition12, condition13, condition14, value == true, false)
@@ -23988,8 +24024,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 						if value10[4] then
 							argument7 = {}
-							for i, value11 in ipairs(arguments2) do
-								argument7[i] = (labelMap2[value11] or value11):gsub("%s*[Mm]utation$", ""):upper()
+							for i, value in ipairs(arguments2) do
+								argument7[i] = (labelMap2[value] or value):gsub("%s*[Mm]utation$", ""):upper()
 							end
 							callback52(r[3], table.concat(argument7, " + "), data18[arguments2[1]] or value9)
 						end
@@ -24049,8 +24085,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							callback52(r[5], table.concat(parts2, "  |  "), data15)
 						end
 
-						for i, value11 in ipairs(argument5.v) do
-							if value11 ~= value10[i] then
+						for i, value in ipairs(argument5.v) do
+							if value ~= value10[i] then
 								argument5.v = value10
 								callback59(argument5)
 								break
@@ -24078,8 +24114,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 
 						local function callback67(argument7, argument8, argument9)
-							for _, value10 in ipairs(callback62(argument7, argument8, argument9)) do
-								callback66(value10)
+							for _, value in ipairs(callback62(argument7, argument8, argument9)) do
+								callback66(value)
 							end
 						end
 						local value = next
@@ -24102,7 +24138,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 									return
 								elseif argument6 ~= number12 then
 									return
-								elseif not (condition6) then
+								elseif not condition6 then
 									return
 								end
 							end
@@ -24126,10 +24162,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 
 						argument2 = kMap
-						for k, value10 in next, argument2, nil do
+						for k, value in next, argument2 do
 							if not (uidMap[k]) then
 								kMap[k] = nil
-								value10.b:Destroy()
+								value.b:Destroy()
 							end
 						end
 						return true
@@ -24137,7 +24173,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					local function callback66()
 						if condition6 then
-							if not (kMap2) then
+							if not kMap2 then
 								return
 							end
 						else
@@ -24176,6 +24212,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						return (((type(argument5) == "table") and (type(argument5.Records) == "table")) and argument5.Records) or nil
 					end
 
+					-- Runs polling loop until condition succeeds or timeout expires (os.clock)
 					local function callback67()
 						local number = number12
 						if kMap2 then
@@ -24186,7 +24223,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						local value10 = data[26]
 						local records = getRecords(value10("Egg", "ReadFieldEggs"))
 
-						if not (records) then
+						if not records then
 							if rfEggWorldAskFieldEggSnapshot then
 								if os.clock() >= number8 then
 									number8 = os.clock() + 30
@@ -24198,12 +24235,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 						if number ~= number12 then
 							return
-						elseif not (condition6) then
+						elseif not condition6 then
 							return
 						end
 						if records then
 							kMap2 = {}
-							for k, record in next, records, nil do
+							for k, record in next, records do
 								kMap2[k] = record
 							end
 						end
@@ -24227,9 +24264,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					local function callback69()
 						local kMap = kMap
-						for _, value10 in next, kMap, nil do
-							value10.w = nil
-							callback59(value10)
+						for _, value in next, kMap do
+							value.w = nil
+							callback59(value)
 						end
 					end
 
@@ -24255,8 +24292,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 						refreshedList = {"FieldRefreshed", "FieldShifted", "FieldGone", "FieldClaimed", "SnapshotRefreshed"}
 
-						for i, value10 in ipairs(refreshedList) do
-							i = egg[value10]
+						for i, value in ipairs(refreshedList) do
+							i = egg[value]
 
 							if type(i) == "table" then
 								if i.Connect then
@@ -24272,8 +24309,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 						egg = {"AreaEggSlotsClient", "PlacedEggRenders"}
 
-						for i, value10 in ipairs(egg) do
-							i = workspace:FindFirstChild(value10)
+						for i, value in ipairs(egg) do
+							i = workspace:FindFirstChild(value)
 							if i then
 								connections3[#connections3 + 1] = i.ChildAdded:Connect(callback68)
 								connections3[#connections3 + 1] = i.ChildRemoved:Connect(callback68)
@@ -24355,11 +24392,11 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					table.sort(ks)
 					callback71_2 = "Any"
-					for _, value11 in ipairs(ks) do
-						text = ("%d - %s"):format(value11, kMap3[value11])
+					for _, value in ipairs(ks) do
+						text = ("%d - %s"):format(value, kMap3[value])
 						list3[#list3 + 1] = text
-						data19[text] = value11
-						callback71_2 = if value11 == 5 then text else callback71_2
+						data19[text] = value
+						callback71_2 = if value == 5 then text else callback71_2
 					end
 					esp:Dropdown("ESP Min Rarity", list3, callback71_2, function(argument5)
 						number9 = data19[argument5] or 0
@@ -24412,7 +24449,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					local function destroyAll(argument5)
 						local argumentEntry = argumentMap[argument5]
-						if not (argumentEntry) then
+						if not argumentEntry then
 							return
 						end
 						argumentMap[argument5] = nil
@@ -24421,13 +24458,14 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						argumentEntry.b:Destroy()
 					end
 
+					-- Registers AncestryChanged signal callback(s)
 					local function callback58(argument5, argument6)
 						if argumentMap[argument6] then
 							return
 						end
 						local humanoidRootPart = argument6:FindFirstChild("HumanoidRootPart")
 						humanoidRootPart = (((humanoidRootPart and humanoidRootPart:IsA("BasePart")) and humanoidRootPart) or argument6.PrimaryPart) or argument6:FindFirstChildWhichIsA("BasePart", true)
-						if not (humanoidRootPart) then
+						if not humanoidRootPart then
 							return
 						end
 						parent = getParent(parent)
@@ -24456,10 +24494,11 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					espGuards = callback53("ESP Guards", function()
 						local value7 = data[53]
 						local Areas2 = value7("Areas", "GuardAreas")
-						if not (Areas2) then
+						if not Areas2 then
 							return
 						end
 
+						-- Registers ChildAdded signal callback(s)
 						local function callback59(child)
 							local function callback60(child2)
 								if child2 then
@@ -24481,7 +24520,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						connections3[#connections3 + 1] = Areas2.ChildAdded:Connect(callback59)
 					end, function()
 						disconnectAll(connections3)
-						for k in next, argumentMap, nil do
+						for k in next, argumentMap do
 							destroyAll(k)
 						end
 						if parent then
@@ -24492,8 +24531,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					callback54("ESP Guard Size", espGuards, function(argument5)
 						number8 = argument5
-						for _, value7 in next, argumentMap, nil do
-							callback57(value7)
+						for _, value in next, argumentMap do
+							callback57(value)
 						end
 					end)
 				end
@@ -24509,7 +24548,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 
 					local function callback56(argument5)
-						if not (argument5) then
+						if not argument5 then
 							return ""
 						end
 						local value9 = callback55(argument5.TextureId)
@@ -24518,8 +24557,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 						local nameList2 = {"Icon", "Image", "Thumbnail", "TextureId"}
 
-						for i, value10 in ipairs(nameList2) do
-							i = argument5:GetAttribute(value10)
+						for i, value in ipairs(nameList2) do
+							i = argument5:GetAttribute(value)
 							if type(i) == "string" then
 								if callback55(i) ~= "" then
 									return callback55(i)
@@ -24605,7 +24644,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					local function callback63(argument5, argument6)
 						local humanoid = argument6:FindFirstChildOfClass("Humanoid")
-						if not (humanoid) then
+						if not humanoid then
 							return
 						end
 						if argument5.nh ~= humanoid then
@@ -24633,7 +24672,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					local function callback65(argument5)
 						if argument5.t then
-							if not (argument5.ch) then
+							if not argument5.ch then
 								return
 							end
 						else
@@ -24740,7 +24779,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					local function callback67(player)
 						local playerEntry = playerMap[player]
-						if not (playerEntry) then
+						if not playerEntry then
 							return
 						end
 						callback64(playerEntry)
@@ -24748,6 +24787,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						playerMap[player] = nil
 					end
 
+					-- Registers CharacterAdded, CharacterRemoving signal callback(s)
 					local function callback68(player)
 						local value9 = data[1]
 						if player == value9 then
@@ -24769,9 +24809,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 
 					local function callback69()
-						for _, value9 in next, playerMap, nil do
-							if value9.t then
-								callback60(value9.t)
+						for _, value in next, playerMap do
+							if value.t then
+								callback60(value.t)
 							end
 						end
 					end
@@ -24800,19 +24840,19 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 								task.wait(1)
 
 								if number == number8 then
-									for k, value9 in next, playerMap, nil do
-										local character, b = k.Character, value9.t and value9.t.b
+									for k, value in next, playerMap do
+										local character, b = k.Character, value.t and value.t.b
 										number2 = ((b and b.Parent) and b.Adornee) and b.Adornee:IsDescendantOf(workspace)
 
 										if character then
 											b = workspace
 
 											if character:IsDescendantOf(b) then
-												if value9.ch ~= character then
-													callback66(value9, k, character)
+												if value.ch ~= character then
+													callback66(value, k, character)
 												elseif number2 then
 												else
-													callback66(value9, k, character)
+													callback66(value, k, character)
 												end
 											end
 										end
@@ -24824,7 +24864,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						condition3 = false
 						number8 += 1
 						disconnectAll(connections3)
-						for k in next, playerMap, nil do
+						for k in next, playerMap do
 							callback67(k)
 						end
 						if parent then
@@ -24888,8 +24928,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							end
 						end
 						local ok, response = pcall(debug.getupvalues, argument5)
-						for k, value10 in next, (ok and response) or {}, nil do
-							k = callback46(value10, argument6, argument7 + 1, argument8)
+						for k, value in next, (ok and response) or {}, nil do
+							k = callback46(value, argument6, argument7 + 1, argument8)
 							if k then
 								return k
 							end
@@ -24899,9 +24939,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							return argument5
 						end
 
-						for k, value10 in next, argument5, nil do
-							if (type(value10) == "table") or (type(value10) == "function") then
-								k = callback46(value10, argument6, argument7 + 1, argument8)
+						for k, value in next, argument5 do
+							if (type(value) == "table") or (type(value) == "function") then
+								k = callback46(value, argument6, argument7 + 1, argument8)
 								if k then
 									return k
 								end
@@ -24918,7 +24958,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					if backpack then
 						if getconnections then
 							if debug then
-								if not (debug.getupvalues) then
+								if not debug.getupvalues then
 									return
 								end
 							else
@@ -24937,19 +24977,19 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local value, data13 = ipairs, {backpack:FindFirstChild("Hotbar"), main}
 
 					for k, value10 in value(data13) do
-						for i, value11 in ipairs((value10 and value10:GetChildren()) or {}) do
-							if value11:IsA("GuiButton") then
-								i = value9[value11]
+						for i, value in ipairs((value10 and value10:GetChildren()) or {}) do
+							if value:IsA("GuiButton") then
+								i = value9[value]
 
 								if (i == nil) or ((type(i) == "number") and ((os.clock() - i) > 30)) then
-									backpackGui, k = pcall(getconnections, value11.Activated)
-									for _, value12 in ipairs((backpackGui and k) or {}) do
-										i = value12.Function and callback46(value12.Function, value11, 0, {})
+									backpackGui, k = pcall(getconnections, value.Activated)
+									for _, value87 in ipairs((backpackGui and k) or {}) do
+										i = value87.Function and callback46(value87.Function, value, 0, {})
 										if i then
 											break
 										end
 									end
-									value9[value11] = i or os.clock()
+									value9[value] = i or os.clock()
 								end
 
 								if type(i) == "table" then
@@ -24996,7 +25036,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						callback50(match)
 					end
 					scale = callback48(argument5, "Scale")
-					if not (scale) then
+					if not scale then
 						local number8, value10, number9 = tonumber(callback48(argument5, "Weight")), data[26], tonumber(data[26]("Rec", "WeightKgForScale", callback48(argument5, "Category"), 1))
 						scale = (((number8 and number9) and (number9 > 0)) and ((number8 / number9) ^ 0.3333333333333333)) or 1
 					end
@@ -25016,7 +25056,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local function callback51(argument, argument5)
 					while argument and (argument ~= argument5) do
 						if argument:IsA("GuiObject") then
-							if not (argument.Visible) then
+							if not argument.Visible then
 								return false
 							end
 						end
@@ -25049,7 +25089,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						number7 = os.clock() + 2
 						value8 = callback47() or value8
 					end
-					if not (value8) then
+					if not value8 then
 						return
 					end
 					local ScreenGui2, ScreenGui3, ScreenGui4, ScreenGui5, ignoreGuiInset, screenInsets, displayOrder = ScreenGui, ScreenGui, ScreenGui, ScreenGui, backpackGui.IgnoreGuiInset, backpackGui.ScreenInsets, backpackGui.DisplayOrder + 1
@@ -25071,8 +25111,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 					Frame2, displayOrder = {}, value8
 
-					for k, value10 in next, displayOrder, nil do
-						ScreenGui3, playerGui = (type(value10) == "table") and rawget(value10, "Frame"), (type(value10) == "table") and rawget(value10, "Tool")
+					for k, value in next, displayOrder do
+						ScreenGui3, playerGui = (type(value) == "table") and rawget(value, "Frame"), (type(value) == "table") and rawget(value, "Tool")
 						ignoreGuiInset = (typeof(ScreenGui3) == "Instance") and (((typeof(playerGui) == "Instance") and (playerGui.Parent ~= nil)) or ((type(playerGui) == "table") and (type(rawget(playerGui, "GetAttribute")) == "function")))
 
 						if (ignoreGuiInset and ((callback48(playerGui, "ItemType") or "Asset"):sub(1, 5) == "Asset")) and callback48(playerGui, "Category") then
@@ -25080,16 +25120,16 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							screenInsets = (((if ScreenGui5 then ScreenGui2 else not ScreenGui5) and callback51(ScreenGui3, backpackGui)) and callback49(playerGui)) or 0
 
 							if screenInsets > 0 then
-								local value11 = data11[value10] or callback50()
-								data11[value10] = value11
-								Frame2[value10] = true
+								local value11 = data11[value] or callback50()
+								data11[value] = value11
+								Frame2[value] = true
 								local Frame3 = (ScreenGui5 and Frame) or ScreenGui
 
 								if value11.l.Parent ~= Frame3 then
 									if not (pcall(function()
 										value11.l.Parent = Frame3
 									end)) then
-										data11[value10] = nil
+										data11[value] = nil
 										continue
 									end
 								end
@@ -25108,10 +25148,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					ignoreGuiInset = data11
 
-					for k, value10 in next, ignoreGuiInset, nil do
+					for k, value in next, ignoreGuiInset do
 						if not (Frame2[k]) then
-							if value10.l.Visible then
-								value10.l.Visible = false
+							if value.l.Visible then
+								value.l.Visible = false
 							end
 						end
 					end
@@ -25218,7 +25258,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						else
 							local value9 = data[28]
 							if value9.jump then
-								if not (value8.Anchored) then
+								if not value8.Anchored then
 									value7:ChangeState(Enum.HumanoidStateType.Jumping)
 								end
 							end
@@ -25237,6 +25277,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				physicsMap[Enum.HumanoidStateType.Ragdoll] = true
 				physicsMap[Enum.HumanoidStateType.FallingDown] = true
 
+				-- Drives character physics velocity toward target destination
 				local function callback44()
 					local value7 = data[1]
 					local character, value8 = value7.Character, data[8]
@@ -25278,11 +25319,11 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						elseif descendant:IsA("HingeConstraint") then
 							descendant:Destroy()
 						elseif descendant:IsA("Motor6D") then
-							if not (descendant.Enabled) then
+							if not descendant.Enabled then
 								descendant.Enabled = true
 							end
 						elseif descendant:IsA("AnimationConstraint") then
-							if not (descendant.Enabled) then
+							if not descendant.Enabled then
 								descendant.Enabled = true
 							end
 						end
@@ -25367,12 +25408,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end)
 
 					if argument5 then
-						for _, value8 in ipairs(CollectionService:GetTagged("PlacedTrap")) do
-							pcall(callback45, value8)
+						for _, taggedInstance in ipairs(CollectionService:GetTagged("PlacedTrap")) do
+							pcall(callback45, taggedInstance)
 						end
 					else
 						local data = data11
-						for k in next, data, nil do
+						for k in next, data do
 							if k.Parent then
 								k.CanTouch = true
 							end
@@ -25452,15 +25493,15 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					callback30("prompt", argument5 and ProximityPromptService.PromptShown, callback46)
 					callback30("starTap", argument5 and ProximityPromptService.PromptButtonHoldBegan, callback47)
 
-					if not (argument5) then
+					if not argument5 then
 						ProximityPromptService = data12
-						for k, value8 in next, ProximityPromptService, nil do
+						for k, value in next, ProximityPromptService do
 							if k.Parent then
-								k.HoldDuration = value8
+								k.HoldDuration = value
 							end
 						end
 						local data = data13
-						for k in next, data, nil do
+						for k in next, data do
 							pcall(k.Enable, k)
 						end
 						data12, data13 = {}, {}
@@ -25473,12 +25514,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					data14.act = {}
 					local value8, ok2, response2 = data[1], pcall(getconnections, data[1].Idled)
 
-					for _, value9 in ipairs((ok2 and response2) or {}) do
-						local ok3, response3 = pcall(debug.getupvalues, value9.Function)
+					for _, value in ipairs((ok2 and response2) or {}) do
+						local ok, response3 = pcall(debug.getupvalues, value.Function)
 
-						for _, value10 in next, (ok3 and response3) or {}, nil do
-							if typeof(value10) == "Instance" then
-								if value10.ClassName == "TeleportService" then
+						for _, value in next, (ok and response3) or {}, nil do
+							if typeof(value) == "Instance" then
+								if value.ClassName == "TeleportService" then
 									return
 								end
 							end
@@ -25487,21 +25528,21 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					response2, ok2 = pcall(getgc, false)
 
-					for i, value9 in ipairs((response2 and ok2) or {}) do
+					for i, value in ipairs((response2 and ok2) or {}) do
 						if (i % 120) == 0 then
 							task.wait()
 						end
 
-						if type(value9) == "function" then
-							if islclosure(value9) then
-								local ok3, response3 = pcall(debug.info, value9, "s")
+						if type(value) == "function" then
+							if islclosure(value) then
+								local ok, response3 = pcall(debug.info, value, "s")
 
-								if ok3 then
+								if ok then
 									if type(response3) == "string" then
 										if response3:find("AntiAFK", 1, true) then
-											local ok4, response4 = pcall(debug.info, value9, "n")
+											local ok, response4 = pcall(debug.info, value, "n")
 											if (response4 == "markActive") or (response4 == "reportActiveFromInput") then
-												data14.act[#data14.act + 1] = value9
+												data14.act[#data14.act + 1] = value
 											end
 										end
 									end
@@ -25513,14 +25554,14 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback49(argument5)
 					if argument5 then
-						local value, value2, value8 = ipairs, getconnections
+						local value, value2, connections = ipairs, getconnections
 						if value2 then
 							local value9
-							value9, value8 = data[1], getconnections(data[1].Idled)
+							value9, connections = data[1], getconnections(data[1].Idled)
 						else
-							value8 = value2
+							connections = value2
 						end
-						for _, value9 in value(value8 or {}) do
+						for _, value9 in value(connections or {}) do
 							if pcall(value9.Disable, value9) then
 								data14.idle[#data14.idle + 1] = value9
 							end
@@ -25528,8 +25569,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						return
 					end
 
-					for _, value8 in ipairs(data14.idle) do
-						pcall(value8.Enable, value8)
+					for _, value in ipairs(data14.idle) do
+						pcall(value.Enable, value)
 					end
 					data14.idle = {}
 					data14.act = nil
@@ -25547,11 +25588,11 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				value8.fn = function()
 					callback49(true)
-					if not (data14.act) then
+					if not data14.act then
 						callback48()
 					end
-					for _, value9 in ipairs(data14.act) do
-						pcall(value9)
+					for _, value in ipairs(data14.act) do
+						pcall(value)
 					end
 				end
 
@@ -25679,6 +25720,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 				end
 
+				-- Drives character physics velocity toward target destination
 				local function callback47(parent)
 					local part = data[15]
 					part.invisBusy = true
@@ -25686,7 +25728,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					parent:WaitForChild("Head", 10)
 
 					if humanoid then
-						if not (humanoidRootPart) then
+						if not humanoidRootPart then
 							part = data[15]
 							invisBusy = false
 							part.invisBusy = false
@@ -25933,6 +25975,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 				end)
 
+				-- Scans children for "RightHand" and selects the nearest target by distance
 				callback44 = function()
 					local value13 = data[1]
 					local character = value13.Character
@@ -26100,7 +26143,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						return
 					end
 
-					if not (argument6) then
+					if not argument6 then
 						if (tonumber(argument5:GetAttribute("RagdollEndTime")) or 0) > getServerTimeNow() then
 							return
 						end
@@ -26109,7 +26152,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end
 
 				local function callback45(argument)
-					if not (argument) then
+					if not argument then
 						local value9 = data[15]
 						local value10, value11 = value9.bat()
 						argument = value11
@@ -26117,6 +26160,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					return ((17 + (argument or 0)) * ((workspace:GetAttribute("DragonEggEventActive") and 2.5) or 1)) - 1
 				end
 
+				-- Drives character physics velocity toward target destination
 				local function callback46(argument5, argument6)
 					if workspace:GetAttribute("PvPDisabled") then
 						return
@@ -26183,6 +26227,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local value9 = data[15]
 
+				-- Drives character physics velocity toward target destination
 				value9.chase = function(argument5, argument6)
 					local value10, value11 = callback44(argument5, argument6), data[19]
 					local value12, assemblyAngularVelocity = value11(), data[8]
@@ -26219,6 +26264,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				data12, data11 = setmetatable, {__mode = "k"}
 				local value10, value11 = data12({}, data11), data[15]
 
+				-- Drives character physics velocity toward target destination
 				value11.huntStep = function(argument5, argument6, argument7)
 					local assemblyAngularVelocity = data[19]
 					local value12, data13 = assemblyAngularVelocity(), data[8]
@@ -26306,7 +26352,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local function callback49(argument, argument5)
 					local player = data[19]
 					local value13, argument6 = player(), argument or (1 / 0)
-					if not (value13) then
+					if not value13 then
 						return
 					end
 					player, argument = nil
@@ -26343,10 +26389,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end
 
 				local function callback51(argument5)
-					for _, value14 in ipairs(iMap3) do
-						if value14 ~= argument5 then
-							if value14.Value then
-								value14:Set(false)
+					for _, value in ipairs(iMap3) do
+						if value ~= argument5 then
+							if value.Value then
+								value:Set(false)
 							end
 						end
 					end
@@ -26370,7 +26416,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 
 					value14 = data[28]
-					if not (value14.combat) then
+					if not value14.combat then
 						callback23(value13)
 					end
 					callback18()
@@ -26378,9 +26424,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				playerList = {"Auto Hit Nearest Player", "Auto Hit Egg Holders", "Auto Hit Specific Player"}
 
-				for i, value14 in ipairs(playerList) do
-										local value15 = combat:Toggle(value14, false, function(argument5)
-						if callback50(ragTo, value14) then
+				for i, value in ipairs(playerList) do
+										local value15 = combat:Toggle(value, false, function(argument5)
+						if callback50(ragTo, value) then
 							return
 						end
 						if argument5 then
@@ -26586,7 +26632,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					while argument6() do
 						if (os.clock() - now3) > 0.3 then
 							now3, argument5 = os.clock(), callback55()
-							if not (argument5) then
+							if not argument5 then
 								break
 							end
 						end
@@ -26617,7 +26663,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local UserInputService = getService("UserInputService")
 				local Stats = getService("Stats")
 				local clock = os.clock
-				local floor, value, value2 = math.floor, tostring, tonumber
+				local floor, value, tonumberFn = math.floor, tostring, tonumber
 				local color = Color3.new(1, 1, 1)
 				local color2, assetId = Color3.new(0, 0, 0), "rbxassetid://128961717706452"
 				local hui = (gethui and gethui()) or getService("CoreGui")
@@ -26648,12 +26694,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					return (callback44(argument5) and argument5) or {}
 				end
 				local unitSuffixes2, data11 = {"", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc"}, {}
-				for i, value12 in ipairs(unitSuffixes2) do
-					data11[value12:lower()] = 10 ^ ((i - 1) * 3)
+				for i, value in ipairs(unitSuffixes2) do
+					data11[value:lower()] = 10 ^ ((i - 1) * 3)
 				end
 
 				local function callback46(argument5)
-					argument5 = math.abs(value2(argument5) or 0)
+					argument5 = math.abs(tonumberFn(argument5) or 0)
 					local number7 = 1
 					while (argument5 >= 1000) and (number7 < #unitSuffixes2) do
 						argument5, number7 = argument5 / 1000, number7 + 1
@@ -26670,7 +26716,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						return
 					end
 					local match, match2 = argument5:gsub("<[^>]->", ""):gsub("[%$,%s]", ""):match("^([%d%.]+)(%a*)")
-					match = value2(match)
+					match = tonumberFn(match)
 					argument5 = match and data11[match2:lower()]
 					return argument5 and (match * argument5)
 				end
@@ -26704,10 +26750,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					argumentMap4[argument5] = clock() + 2
 					argumentEntry = callback50()
 
-					for i, value12 in ipairs((argumentEntry and {"GameHUD", "TradmilHud"}) or {}) do
-						i = argumentEntry:FindFirstChild(value12)
-						value12 = i and (i:FindFirstChild(argument5, true))
-						i = value12 and (value12:FindFirstChild("Value"))
+					for i, value in ipairs((argumentEntry and {"GameHUD", "TradmilHud"}) or {}) do
+						i = argumentEntry:FindFirstChild(value)
+						value = i and (i:FindFirstChild(argument5, true))
+						i = value and (value:FindFirstChild("Value"))
 
 						if i then
 							if i:IsA("TextLabel") then
@@ -26725,7 +26771,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local leaderstats = data[1]
 					local leaderstats2 = leaderstats:FindFirstChild("leaderstats")
 					leaderstats = leaderstats2 and (leaderstats2:FindFirstChild(argument5))
-					return leaderstats and value2(leaderstats.Value)
+					return leaderstats and tonumberFn(leaderstats.Value)
 				end
 
 				local function callback53(argument5)
@@ -26733,12 +26779,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					if not (callback44(rarity)) then
 						return "", 0
 					end
-					return value((rarity.DisplayName or rarity._id) or ""), value2(rarity.Rank or rarity.RarityNumber) or 0, rarity
+					return value((rarity.DisplayName or rarity._id) or ""), tonumberFn(rarity.Rank or rarity.RarityNumber) or 0, rarity
 				end
 
 				local function callback54(argument5, argument6, argument7)
 					local value12, value13 = callback9(argument5, argument6, (callback8({Mutations = argument7}))), callback7(argument5)
-					return (((value12 > 0) and value12) or (value13 and value2(value13.EarningRate))) or 0
+					return (((value12 > 0) and value12) or (value13 and tonumberFn(value13.EarningRate))) or 0
 				end
 				local value12, list3, number7 = mainWindow:State("Farm HUD Stolen Eggs", {}), {}, 0
 				local number8 = -1
@@ -26751,14 +26797,14 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 					table.clear(list3)
 					local number10
-					number10, condition3 = value2(argument5.Count) or 0, true
+					number10, condition3 = tonumberFn(argument5.Count) or 0, true
 					number7 = number10
 
 					if callback44(argument5.History) then
-						for _, value15 in ipairs(argument5.History) do
-							if callback44(value15) then
+						for _, value in ipairs(argument5.History) do
+							if callback44(value) then
 								if #list3 < 20 then
-									table.insert(list3, value15)
+									table.insert(list3, value)
 								end
 							end
 						end
@@ -26766,7 +26812,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					if callback44(argument5.Best) then
 						local best2, best3, number11 = argument5.Best, argument5.Best
-						number11, best = value2(best3.Rank) or -1, best2
+						number11, best = tonumberFn(best3.Rank) or -1, best2
 						number8 = number11
 					end
 				end
@@ -26808,17 +26854,17 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 								if not (callback44(value16)) then
 									value16 = nil
 
-									for _, value18 in next, value17, nil do
-										if callback44(value18) then
-											if value18.Uid == uid then
-												value16 = value18
+									for _, value in next, value17 do
+										if callback44(value) then
+											if value.Uid == uid then
+												value16 = value
 												break
 											end
 										end
 									end
 								end
 
-								data12 = {Cat = value((argument5.AssetCategory or (value16 and value16.AssetCategory)) or ""), Scale = value2((value16 and value16.AssetScale) or argument5.AssetScale), Mut = ((value16 and callback44(value16.Mutations)) and value16.Mutations) or callback45(argument5.Mutations)}
+								data12 = {Cat = value((argument5.AssetCategory or (value16 and value16.AssetCategory)) or ""), Scale = tonumberFn((value16 and value16.AssetScale) or argument5.AssetScale), Mut = ((value16 and callback44(value16.Mutations)) and value16.Mutations) or callback45(argument5.Mutations)}
 							end)
 						end)
 					end
@@ -26894,7 +26940,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							else
 								userId = readOwnedEgg
 							end
-							local readOwnedEgg2, number10, serverTimeNow, value17 = ((callback44(userId) and userId.Placement) and userId) or argument6, (callback44(userId) and value2(userId.GrowthSpeedMultiplier)) or 1, getServerTimeNow(), data[1]
+							local readOwnedEgg2, number10, serverTimeNow, value17 = ((callback44(userId) and userId.Placement) and userId) or argument6, (callback44(userId) and tonumberFn(userId.GrowthSpeedMultiplier)) or 1, getServerTimeNow(), data[1]
 							return rec.WallSecondsRemaining(readOwnedEgg2, serverTimeNow, number10, rec.CurrentNightCredit(readOwnedEgg2, serverTimeNow, number10, value17))
 						end)
 					end)
@@ -26946,7 +26992,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					local value16 = callback7(argument8)
 					local value17, value18 = callback53(value16)
-					data16 = {Uid = argument6, Rec = argument7, En = value16, Rank = value18, Cat = argument8, Scale = argument9, Mut = mutations, N = number11, Size = value2(argument9) or argument10, Rate = callback54(argument8, argument9, mutations)}
+					data16 = {Uid = argument6, Rec = argument7, En = value16, Rank = value18, Cat = argument8, Scale = argument9, Mut = mutations, N = number11, Size = tonumberFn(argument9) or argument10, Rate = callback54(argument8, argument9, mutations)}
 					argument5[argument6] = data16
 					return data16
 				end
@@ -26990,23 +27036,23 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						table.clear(data14)
 						table.clear(data15)
 					end
-					local data16, data17, value3, value17, value18 = {}, {}, next, callback45(value16.EquippedAssets)
+					local data16, data17, nextFn, value17, value18 = {}, {}, next, callback45(value16.EquippedAssets)
 					placed = 0
-					for k in value3, value17, value18 do
+					for k in nextFn, value17, value18 do
 						placed += 1
 					end
-					value17, value18, value3 = next, callback45(value16.Inventory)
+					value17, value18, nextFn = next, callback45(value16.Inventory)
 					local pets = 0
-					for k, value19 in value17, value18, value3 do
+					for k, value19 in value17, value18, nextFn do
 						if callback44(value19) then
 							pets += 1
 							callback63(data16, callback60(data14, k, value19, value19.Category, value19.Scale, 1), callback61)
 						end
 					end
-					value18, value3, value17 = next, callback45(value16.EggInventory)
+					value18, nextFn, value17 = next, callback45(value16.EggInventory)
 					local eggs, grow = 0, 0
 
-					for k, value19 in value18, value3, value17 do
+					for k, value19 in value18, nextFn, value17 do
 						if callback44(value19) then
 							eggs += 1
 							grow = if value19.Placement then grow + 1 else grow
@@ -27024,7 +27070,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					pcall(function()
 						local byUpgradeLevel = data[33]
-						local tread, number11 = byUpgradeLevel.Tread, value2(value16.TreadmillUpgradeLevel) or 0
+						local tread, number11 = byUpgradeLevel.Tread, tonumberFn(value16.TreadmillUpgradeLevel) or 0
 						byUpgradeLevel = tread.GetByUpgradeLevel(number11)
 						if not (callback44(byUpgradeLevel)) then
 							return
@@ -27033,7 +27079,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						local function callback65(argument5)
 							return (value((argument5.DisplayName or argument5._id) or "Treadmill"):gsub("%s*Treadmill$", ""))
 						end
-						data13.Tread = {Name = callback65(byUpgradeLevel), Mult = value2(byUpgradeLevel.SpeedMultiplier) or 1, Icon = byUpgradeLevel.Icon and value(byUpgradeLevel.Icon), Note = ((ok and callback44(response)) and ("next " .. (callback65(response) .. (" $" .. callback46(value2(response.Price) or 0))))) or "max treadmill"}
+						data13.Tread = {Name = callback65(byUpgradeLevel), Mult = tonumberFn(byUpgradeLevel.SpeedMultiplier) or 1, Icon = byUpgradeLevel.Icon and value(byUpgradeLevel.Icon), Note = ((ok and callback44(response)) and ("next " .. (callback65(response) .. (" $" .. callback46(tonumberFn(response.Price) or 0))))) or "max treadmill"}
 					end)
 
 					return data13
@@ -27053,7 +27099,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 					end
 
-					local textLabel2 = (((readyNotification and readyNotification.Visible) and textLabel) and value2(textLabel.Text)) or 0
+					local textLabel2 = (((readyNotification and readyNotification.Visible) and textLabel) and tonumberFn(textLabel.Text)) or 0
 					return textLabel2
 				end
 
@@ -27153,7 +27199,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					return Speed3, callback57(Speed4)
 				end), (formatCompact("Treadmill", assetId2, 255, 255, 255, 170, 230, 255, function()
 					local tread = callback64().Tread
-					if not (tread) then
+					if not tread then
 						return "-", ""
 					end
 					local mult = tread.Mult
@@ -27162,7 +27208,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local value16, text2 = callback46(number7), ((number9 > 0) and ("+" .. (number9 .. " this session"))) or ""
 					return value16, text2
 				end), (formatCompact("Best Steal", assetId3, 225, 195, 255, 160, 100, 240, function()
-					if not (best) then
+					if not best then
 						return "None yet", ""
 					end
 					local value16, value17, value18 = callback7(best.Category), value(best.Name), value(best.Rarity or "")
@@ -27175,11 +27221,11 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local serverTimeNow = data[15]
 					local ss = serverTimeNow.SS
 					local text2, pay = (((ss.caught or 0) > 0) and (ss.caught .. " caught")) or "", ss.pay
-					if not (pay) then
+					if not pay then
 						return "None", text2
 					end
 					ss = getServerTimeNow()
-					serverTimeNow = value2(pay.LandAt) or ss
+					serverTimeNow = tonumberFn(pay.LandAt) or ss
 					if ss < serverTimeNow then
 						return "Falling", callback49(serverTimeNow - ss) .. " to land"
 					end
@@ -27203,15 +27249,15 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					return mainWindow:State("Farm HUD " .. (argument5 .. " Position"), {})
 				end
 				local ids = {}
-				for _, value16 in ipairs(data16) do
-					callback67(value16.Id)
-					for _, entry in ipairs(value16.Items) do
+				for _, value in ipairs(data16) do
+					callback67(value.Id)
+					for _, entry in ipairs(value.Items) do
 						ids[#ids + 1] = entry.Id
 					end
 				end
-				for _, value16 in ipairs(data17) do
-					callback67(value16.Id)
-					ids[#ids + 1] = value16.Id
+				for _, value in ipairs(data17) do
+					callback67(value.Id)
+					ids[#ids + 1] = value.Id
 				end
 				ids[#ids + 1] = "Steal History"
 				callback67("Steal History")
@@ -27271,8 +27317,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end
 
 				local function destroyAll(argument5, argument6)
-					for _, value18 in ipairs(argument5.G) do
-						value18:Destroy()
+					for _, value in ipairs(argument5.G) do
+						value:Destroy()
 					end
 					argument5.G = {callback75(argument5.Stroke, argument6, 45), callback75(argument5.Rarity, argument6)}
 					if argument5.Glow then
@@ -27282,8 +27328,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback76(argument5, argument6, argument7, argument8)
 					local TextLabel = callback70("TextLabel", argument5, {TextColor3 = color, TextSize = argument6, TextXAlignment = left, TextTruncate = uiStroke.TextTruncate.AtEnd, Text = "", FontFace = font})
-					for k, value18 in next, argument7, nil do
-						TextLabel[k] = value18
+					for k, value in next, argument7 do
+						TextLabel[k] = value
 					end
 					callback("UIStroke", {Parent = TextLabel, Color = color2, Thickness = (argument8 and 1.8) or 2.4, LineJoinMode = uiStroke.LineJoinMode.Round})
 					return TextLabel
@@ -27445,25 +27491,25 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end
 
 				local function callback88(argument5)
-					local number14 = math.max(0, os.time() - (value2(argument5) or os.time()))
+					local number14 = math.max(0, os.time() - (tonumberFn(argument5) or os.time()))
 					return ((((number14 < 60) and (number14 .. "s ago")) or ((number14 < 3600) and ((number14 // 60) .. "m ago"))) or ((number14 < 86400) and ((number14 // 3600) .. "h ago"))) or ((number14 // 86400) .. "d ago")
 				end
 
 				local function callback89()
-					for i, value18 in ipairs(list5) do
+					for i, value88 in ipairs(list5) do
 						i = value16
-						local condition7 = i[value18.Show.Id] == true
-						callback69(value18.Panel, condition7)
+						local condition7 = i[value88.Show.Id] == true
+						callback69(value88.Panel, condition7)
 
 						if condition7 then
-							local value19, value, cards = callback64()[value18.Show.Id], ipairs, value18.Cards
+							local value19, value, cards = callback64()[value88.Show.Id], ipairs, value88.Cards
 
 							for k, card in value(cards) do
 								i = value19[k]
 
 								if i then
 									if k <= number13 then
-										callback87(card, value18.Show, i, k)
+										callback87(card, value88.Show, i, k)
 									else
 										callback69(card, false)
 									end
@@ -27475,39 +27521,39 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 
 					local value3 = value17
-					if not (value3) then
+					if not value3 then
 						return
 					end
 					callback69(value3, value16["Steal History"] == true)
 					local condition7 = false
 
-					for i, value18 in ipairs(iMap3) do
+					for i, value89 in ipairs(iMap3) do
 						local value19 = list3[i]
 
 						if value19 then
 							if i <= (number13 + 1) then
-								callback69(value18, true)
+								callback69(value89, true)
 								local key = value(value19.At) .. ("|" .. (value(value19.Category) .. ("|" .. value(condition4))))
 
-								if value18.Key ~= key then
+								if value89.Key ~= key then
 									local value20 = callback7(value19.Category)
 									local value21, value22, value23 = callback53(value20)
-									value18.Key = key
-									destroyAll(value18, value23)
-									local image, icon = value18.Image, (((condition4 and value20) and value20.Icon) and value(value20.Icon)) or ((value20 and callback44(value20.Egg)) and value(value20.Egg.Icon or ""))
+									value89.Key = key
+									destroyAll(value89, value23)
+									local image, icon = value89.Image, (((condition4 and value20) and value20.Icon) and value(value20.Icon)) or ((value20 and callback44(value20.Egg)) and value(value20.Egg.Icon or ""))
 									image.Image = (icon or (value20 and value(value20.Icon or ""))) or ""
-									value18.Name.Text, value18.Rarity.Text = value(value19.Name or value19.Category), value(value19.Rarity or ""):upper()
-									callback82(value18.VC, (value2(value19.Value) and callback47(value19.Value)) or "")
-									callback82(value18.SC, (value2(value19.Scale) and ("x%.2f"):format(value2(value19.Scale))) or "")
+									value89.Name.Text, value89.Rarity.Text = value(value19.Name or value19.Category), value(value19.Rarity or ""):upper()
+									callback82(value89.VC, (tonumberFn(value19.Value) and callback47(value19.Value)) or "")
+									callback82(value89.SC, (tonumberFn(value19.Scale) and ("x%.2f"):format(tonumberFn(value19.Scale))) or "")
 								end
 
-								callback82(value18.When, callback88(value19.At))
+								callback82(value89.When, callback88(value19.At))
 								condition7 = true
 							else
-								callback69(value18, false)
+								callback69(value89, false)
 							end
 						else
-							callback69(value18, false)
+							callback69(value89, false)
 						end
 					end
 
@@ -27515,18 +27561,18 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end
 
 				local function callback90()
-					for k, value18 in next, idMap, nil do
-						callback69(value18, value16[k] == true)
+					for k, value in next, idMap do
+						callback69(value, value16[k] == true)
 					end
 
-					for _, value18 in ipairs(list4) do
-						if value18.Group then
-							local value, items, condition7 = ipairs, value18.Group.Items, false
+					for _, value90 in ipairs(list4) do
+						if value90.Group then
+							local value, items, condition7 = ipairs, value90.Group.Items, false
 							for k, entry in value(items) do
 								k = value16
 								condition7 = if k[entry.Id] then true else condition7
 							end
-							callback69(value18, condition7)
+							callback69(value90, condition7)
 						end
 					end
 
@@ -27562,9 +27608,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					if callback44(value18) then
 						if type(value18.XOffset) == "number" then
 							if type(value18.YOffset) == "number" then
-								argument5 = value2(value18.Unit)
+								argument5 = tonumberFn(value18.Unit)
 								local argument8 = ((argument5 and (argument5 > 0)) and (argument6 / argument5)) or 1
-								return uDim2New(value2(value18.XScale) or 0, floor((value18.XOffset * argument8) + 0.5), 0, floor((16 + (((((value2(value18.YScale) or 0) * argument7) + value18.YOffset) - (value2(value18.Top) or 16)) * argument8)) + 0.5))
+								return uDim2New(tonumberFn(value18.XScale) or 0, floor((value18.XOffset * argument8) + 0.5), 0, floor((16 + (((((tonumberFn(value18.YScale) or 0) * argument7) + value18.YOffset) - (tonumberFn(value18.Top) or 16)) * argument8)) + 0.5))
 							end
 						end
 					end
@@ -27572,8 +27618,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback92()
 					local numVal, number14 = clampValue(), 0
-					for _, value18 in ipairs(list4) do
-						number14 = if value18.Col == "Center" then if value18.F.Visible then math.max(number14, value18.F.AbsoluteSize.X) else number14 else number14
+					for _, value in ipairs(list4) do
+						number14 = if value.Col == "Center" then if value.F.Visible then math.max(number14, value.F.AbsoluteSize.X) else number14 else number14
 					end
 					local value18, f = floor((number14 / 2) + (26 * numVal)), list4[1].F
 					f.Position = uDim2New(0.5, 0, 0, 16)
@@ -27594,7 +27640,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local number14 = 0
 
 				local function callback93()
-					if not (ScreenGui) then
+					if not ScreenGui then
 						return
 					end
 					number14 += 1
@@ -27611,7 +27657,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						value18()
 						if number ~= number14 then
 							return
-						elseif not (ScreenGui) then
+						elseif not ScreenGui then
 							return
 						end
 						callback92()
@@ -27619,26 +27665,27 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						value18()
 						if number ~= number14 then
 							return
-						elseif not (ScreenGui) then
+						elseif not ScreenGui then
 							return
 						end
-						for _, value19 in ipairs(list4) do
-							callback78(value19.F, value19.Id)
+						for _, value in ipairs(list4) do
+							callback78(value.F, value.Id)
 						end
 					end)
 				end
 
+				-- Disconnects all tracked RBXScriptConnections and clears the list
 				local function disconnectAll()
-					for _, value18 in ipairs(connections3) do
-						value18:Disconnect()
+					for _, value in ipairs(connections3) do
+						value:Disconnect()
 					end
 					if ScreenGui then
 						ScreenGui:Destroy()
 					end
 					ScreenGui, value17 = nil, nil
 					local data19 = {connections3, UIScales, list4, idMap, list5, iMap3}
-					for _, value18 in ipairs(data19) do
-						table.clear(value18)
+					for _, value in ipairs(data19) do
+						table.clear(value)
 					end
 				end
 
@@ -27647,11 +27694,11 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					ScreenGui = callback("ScreenGui", {Archivable = false, DisplayOrder = -101, IgnoreGuiInset = true, ResetOnSpawn = false, ZIndexBehavior = uiStroke.ZIndexBehavior.Sibling})
 					local value18, value19 = callback91()
 
-					for i, value20 in ipairs(data16) do
-						local value21 = callback80(value20, i)
-						value21.Group = value20
+					for i, value in ipairs(data16) do
+						local value21 = callback80(value, i)
+						value21.Group = value
 						callback74(value21.Body, 4)
-						for i2, entry in ipairs(value20.Items) do
+						for i2, entry in ipairs(value.Items) do
 							local Frame, text2 = callback70("Frame", value21.Body, {LayoutOrder = i2, Size = uDim2FromOffset((entry.Wide and 380) or 250, 46)}), entry.Id:upper()
 							local ImageLabel, value22, value23 = callback70("ImageLabel", Frame, {Image = entry.Icon, Position = uDim2FromOffset(0, 2), ScaleType = fit, Size = uDim2FromOffset(42, 42)}), callback76(Frame, 13, {RichText = true, Text = text2, TextColor3 = value10, Position = uDim2FromOffset(50, 3), Size = uDim2New(1, -50, 0, 14)}, true), callback76(Frame, (entry.Wide and 18) or 24, {Position = uDim2FromOffset(50, 18), Size = uDim2New(1, -50, 0, 26)})
 							getUIGradient(value23, entry.A, entry.B)
@@ -27659,13 +27706,13 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 					end
 
-					for i, value20 in ipairs(data17) do
-						local value21, iMap4 = callback80(value20, 100 + i), {}
+					for i, value in ipairs(data17) do
+						local value21, iMap4 = callback80(value, 100 + i), {}
 						callback("UIListLayout", {Parent = value21.Body, FillDirection = horizontal, SortOrder = layoutOrder, Padding = uDimNew(0, 10)})
 						for i2 = 1, 6, 1 do
 							iMap4[i2] = callback85(value21.Body, i2)
 						end
-						list5[#list5 + 1] = {Panel = value21, Show = value20, Cards = iMap4}
+						list5[#list5 + 1] = {Panel = value21, Show = value, Cards = iMap4}
 					end
 
 					value17 = callback80(formatCompact2("Steal History", "Left", 255, 60, 90, 255, 140, 160), 2.5)
@@ -27726,23 +27773,23 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 						number17 = value20 + 0.5
 
-						for k, value21 in next, idMap, nil do
+						for k, value91 in next, idMap do
 							if value16[k] then
-								local ok, lv, lq, li = pcall(value21.Item.Read)
+								local ok, lv, lq, li = pcall(value91.Item.Read)
 
 								if ok then
-									lv, lq, li = value(lv or "-"), value(lq or ""), li or value21.Item.Icon
-									if lv ~= value21.LV then
-										value21.LV = lv
-										value21.Value.Text = lv
+									lv, lq, li = value(lv or "-"), value(lq or ""), li or value91.Item.Icon
+									if lv ~= value91.LV then
+										value91.LV = lv
+										value91.Value.Text = lv
 									end
-									if lq ~= value21.LQ then
-										value21.LQ = lq
-										value21.Cap.Text = value21.Title .. (((lq ~= "") and (text .. (lq .. "</font>"))) or "")
+									if lq ~= value91.LQ then
+										value91.LQ = lq
+										value91.Cap.Text = value91.Title .. (((lq ~= "") and (text .. (lq .. "</font>"))) or "")
 									end
-									if li ~= value21.LI then
-										value21.LI = li
-										value21.Icon.Image = li
+									if li ~= value91.LI then
+										value91.LI = li
+										value91.Icon.Image = li
 									end
 								end
 							end
@@ -27801,8 +27848,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					argument5:Dropdown("Egg Card Image", {"Egg Image", "Pet Image"}, "Egg Image", function(argument6)
 						condition4 = argument6 == "Pet Image"
-						for _, value19 in ipairs(list5) do
-							for _, card in ipairs(value19.Cards) do
+						for _, value in ipairs(list5) do
+							for _, card in ipairs(value.Cards) do
 								card.Key = nil
 							end
 						end
@@ -27838,7 +27885,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					callback44(argument5)
 
 					if argument5 then
-						if not (queueOnTeleport) then
+						if not queueOnTeleport then
 							if mainWindow.ready then
 								callback15("Auto Load", "This executor cannot queue a script for the next server")
 							end
@@ -28031,8 +28078,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 					end
 					local data12 = {137, 80, 78, 71, 13, 10, 26, 10}
-					for _, value10 in ipairs(data12) do
-						callback48(value10)
+					for _, value in ipairs(data12) do
+						callback48(value)
 					end
 					callback49(13)
 					data12 = number11
@@ -28040,8 +28087,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					callback49(argument6)
 					callback49(argument7)
 					local data13 = {8, 6, 0, 0, 0}
-					for _, value10 in ipairs(data13) do
-						callback48(value10)
+					for _, value in ipairs(data13) do
+						callback48(value)
 					end
 					callback49(callback46(buf, data12, number11 - 1))
 					data13 = buffer.create(number9)
@@ -28109,8 +28156,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback49(argument5, argument6)
 					local ok, response = pcall(gameRef.HttpGet, gameRef, argument5)
-					local ok2, response2 = pcall(HttpService.JSONDecode, HttpService, (ok and response) or "")
-					argument5 = ((ok2 and (type(response2) == "table")) and (type(response2.data) == "table")) and response2.data[1]
+					local ok, response2 = pcall(HttpService.JSONDecode, HttpService, (ok and response) or "")
+					argument5 = ((ok and (type(response2) == "table")) and (type(response2.data) == "table")) and response2.data[1]
 					response = ((type(argument5) == "table") and (argument5.state == "Completed")) and argument5.imageUrl
 					return (((type(response) == "string") and (if argument6 then response:find("/Image/", 1, true) else not argument6)) and response) or nil
 				end
@@ -28241,8 +28288,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					task.spawn(function()
 						local text2 = callback7(argument6.cat)
 						local color, parts2 = (text2 and text2.Rarity) and text2.Rarity.Color, {}
-						for _, value11 in ipairs(argument6.m) do
-							parts2[#parts2 + 1] = labelMap2[value11] or value11
+						for _, value in ipairs(argument6.m) do
+							parts2[#parts2 + 1] = labelMap2[value] or value
 						end
 						local text3, value11, number8 = ("x%.2f"):format(argument6.s), data[26], tonumber(data[26]("Rec", "WeightKgForScale", argument6.cat, argument6.s))
 						text3 = if number8 then text3 .. (text .. callback53(number8)) else text3
@@ -28304,7 +28351,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					condition6 = number8 >= (value12.bagMax or 115)
 
 					if condition6 then
-						if not (condition5) then
+						if not condition5 then
 							if getMatch2() then
 								local data13, value13 = {title = "Egg Bag Full!", color = 16732245}, data[15]
 								data13.description = ("**Eggs:** %d / %d\nPlace, hatch or sell to make room."):format(number8, value13.bagMax or 115)
@@ -28432,7 +28479,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback45(argument5, argument6, argument7)
 					local argumentMap = value7[argument5]
-					if not (argumentMap) then
+					if not argumentMap then
 						argumentMap = {}
 						value7[argument5] = argumentMap
 					end
@@ -28512,6 +28559,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local data14, number8 = {}, 1
 
+				-- Registers Heartbeat signal callback(s)
 				local function callback49()
 					if connection then
 						return
@@ -28572,15 +28620,15 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end
 
 				local function callback51(argument5)
-					for k, value10 in next, kMap, nil do
-						if not (argument5 and argument5[value10]) then
+					for k, value in next, kMap do
+						if not (argument5 and argument5[value]) then
 							pcall(k.Enable, k)
 							kMap[k] = nil
 						end
 					end
 
 					if argument5 then
-						if not (getconnections) then
+						if not getconnections then
 							return
 						end
 					else
@@ -28592,16 +28640,16 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					for k, value in value(nameList2) do
 						local value10, ok, response = data[60], pcall(getconnections, data[60][value])
 
-						for i, value11 in ipairs((ok and response) or {}) do
-							value = value11.Function
+						for i, value92 in ipairs((ok and response) or {}) do
+							value = value92.Function
 							k = value and select(2, pcall(debug.info, value, "s"))
 							i = (type(k) == "string") and k:match("([%w_]+)$")
 
 							if i then
 								if argument5[i] then
-									if not (kMap[value11]) then
-										if pcall(value11.Disable, value11) then
-											kMap[value11] = i
+									if not (kMap[value92]) then
+										if pcall(value92.Disable, value92) then
+											kMap[value92] = i
 										end
 									end
 								end
@@ -28614,7 +28662,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local currentCamera, model = workspace.CurrentCamera, data[1]
 					local character, position = model.Character, currentCamera and currentCamera.CFrame.Position
 
-					for k in next, value8, nil do
+					for k in next, value8 do
 						model = k.Parent and k:FindFirstAncestorOfClass("Model")
 
 						if model then
@@ -28635,9 +28683,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 					end
 
-					if not (argument5) then
-						for k, value10 in next, value9, nil do
-							pcall(k.AdjustSpeed, k, value10)
+					if not argument5 then
+						for k, value in next, value9 do
+							pcall(k.AdjustSpeed, k, value)
 						end
 						table.clear(value9)
 					end
@@ -28651,12 +28699,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				value10.fn = function()
 					local data15 = {}
-					for _, value11 in ipairs(controllerList) do
-						data15[value11] = true
+					for _, value in ipairs(controllerList) do
+						data15[value] = true
 					end
 					if number7 >= 3 then
-						for _, value11 in ipairs(eggList) do
-							data15[value11] = true
+						for _, value in ipairs(eggList) do
+							data15[value] = true
 						end
 					end
 					data15.HalloweenDimensionController = true
@@ -28679,13 +28727,13 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					table.clear(data14)
 					number8 = 1
 
-					for k, value11 in next, value7, nil do
+					for k, value in next, value7 do
 						local data = data14
 
 						data[#data + 1] = function()
-							for k2, value12 in next, value11, nil do
+							for key, value in next, value do
 								pcall(function()
-									k[k2] = value12
+									k[key] = value
 								end)
 							end
 						end
@@ -28699,7 +28747,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local function callback54()
 					callback53()
 					local condition3 = data[28]
-					if not (condition3.opt) then
+					if not condition3.opt then
 						return
 					end
 					condition3 = ((text == "Max") and 3) or ((text == "Strong") and 2)
@@ -28718,8 +28766,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						callback44(Lighting, "Technology", Enum.Technology.Compatibility)
 					end
 					rendering = {Decoration = false, WaterWaveSize = 0, WaterWaveSpeed = 0, WaterReflectance = 0, WaterTransparency = 1}
-					for k, value11 in next, rendering, nil do
-						callback44(terrain, k, value11)
+					for k, value in next, rendering do
+						callback44(terrain, k, value)
 					end
 
 					for _, child in ipairs(Lighting:GetChildren()) do
@@ -28817,12 +28865,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end
 
 				local function callback59()
-					for k, value14 in next, value12, nil do
+					for k, value in next, value12 do
 						if not (callback57(k)) then
 							value12[k] = nil
-							if value14.Parent then
+							if value.Parent then
 								if k.Parent == Folder then
-									k.Parent = value14
+									k.Parent = value
 								end
 							end
 						end
@@ -28838,10 +28886,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						hideMine2 = value14.hideOthers
 					end
 
-					for k in next, enabledFlags, nil do
+					for k in next, enabledFlags do
 						value14 = workspace:FindFirstChild(k)
-						for _, value15 in ipairs((value14 and value14:GetChildren()) or {}) do
-							callback58(value15)
+						for _, value in ipairs((value14 and value14:GetChildren()) or {}) do
+							callback58(value)
 						end
 						callback30("hide" .. k, (value14 and hideMine2) and value14.ChildAdded, function(argument5)
 							task.defer(callback58, argument5)
@@ -28874,7 +28922,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				data2 = callback19(performance, "Disable 3D Render", "no3d", false, function(enabled)
 					local value15, value16 = data[60], data[60]
 					pcall(data[60].Set3dRenderingEnabled, data[60], not enabled)
-					local value, value2, number9 = pcall, setfpscap
+					local value, ok, number9 = pcall, setfpscap
 					if enabled then
 						local value17
 						value17, number9 = data[28], math.min(data[28].fpsCap, 40)
@@ -28888,7 +28936,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						local value17 = data[28]
 						enabled2 = value17.fpsCap
 					end
-					value(value2, enabled2)
+					value(ok, enabled2)
 
 					pcall(function()
 						local rendering = settings().Rendering
@@ -28898,7 +28946,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							rendering.QualityLevel = Enum.QualityLevel.Level01
 						elseif qualityLevel then
 							local value17 = data[28]
-							if not (value17.opt) then
+							if not value17.opt then
 								rendering.QualityLevel = qualityLevel
 								qualityLevel = nil
 							end
@@ -28929,9 +28977,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 				end
 
-				local StarterGui, value2, data16 = getService("StarterGui"), setmetatable, {__mode = "k"}
-				local value15, value2, data17 = value2({}, data16), setmetatable, {__mode = "k"}
-				local value16, connections3, data18 = value2({}, data17), {}, {}
+				local StarterGui, setmetatableFn, data16 = getService("StarterGui"), setmetatable, {__mode = "k"}
+				local value15, setmetatableFn, data17 = setmetatableFn({}, data16), setmetatable, {__mode = "k"}
+				local value16, connections3, data18 = setmetatableFn({}, data17), {}, {}
 				local function callback60(argument5)
 					value16[argument5] = (value16[argument5] or 0) + 1
 					argument5.Enabled = false
@@ -28952,7 +29000,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					connections3[#connections3 + 1] = argument5:GetPropertyChangedSignal("Enabled"):Connect(function()
 						local value17 = data[28]
-						if not (value17.hideUI) then
+						if not value17.hideUI then
 							return
 						end
 
@@ -28981,6 +29029,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local value17 = data[15]
 
+				-- Disconnects all tracked RBXScriptConnections and clears the list
 				value17.hideUI = function(hideUI)
 					local data19 = data[28]
 					if data19.hideUI == hideUI then
@@ -28993,8 +29042,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					callback30("hideUI", (hideUI and playerGui) and playerGui.ChildAdded, callback61)
 
 					if hideUI then
-						for _, value18 in ipairs((playerGui and playerGui:GetChildren()) or {}) do
-							callback61(value18)
+						for _, value in ipairs((playerGui and playerGui:GetChildren()) or {}) do
+							callback61(value)
 						end
 						local value, value18 = ipairs, argument[46](Enum.CoreGuiType:GetEnumItems())
 
@@ -29008,21 +29057,21 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							end
 						end
 					else
-						for _, value18 in ipairs(connections3) do
-							value18:Disconnect()
+						for _, value in ipairs(connections3) do
+							value:Disconnect()
 						end
 
-						for k, value18 in next, value15, nil do
+						for k, value in next, value15 do
 							if k.Parent then
-								if value18 then
+								if value then
 									k.Enabled = true
 								end
 							end
 						end
 
 						local data = data18
-						for _, value18 in ipairs(data) do
-							pcall(StarterGui.SetCoreGuiEnabled, StarterGui, value18, true)
+						for _, value in ipairs(data) do
+							pcall(StarterGui.SetCoreGuiEnabled, StarterGui, value, true)
 						end
 						table.clear(value15)
 						table.clear(value16)
@@ -29068,6 +29117,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					ScreenGui2, Frame2, UIScale, value19, value20, text2, text3, number10 = nil, nil, nil, nil, nil, nil, nil, 0
 				end
 
+				-- Parses and normalizes RGB input into a Color3 value
 				local function callback63()
 					destroyAll()
 					ScreenGui2 = callback("ScreenGui", {DisplayOrder = 58, IgnoreGuiInset = true, ResetOnSpawn = false, ZIndexBehavior = Enum.ZIndexBehavior.Sibling})
@@ -29087,7 +29137,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local condition3, input, vector2, position
 
 					Frame2.InputBegan:Connect(function(input2)
-						if not (condition3) then
+						if not condition3 then
 							if input2.UserInputState == Enum.UserInputState.Begin then
 								local value21 = data[15]
 								if value21.press(input2) then
@@ -29141,7 +29191,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				RunService = data[60]
 
 				callback30("fpsC", RunService.RenderStepped, function(argument5)
-					if not (value19) then
+					if not value19 then
 						return
 					end
 					argument5 = math.clamp(argument5, 0.001, 1)
@@ -29204,7 +29254,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					if section.Name == "Interface" then
 						callback19(section, "Chilli Finder HUD", "finderHud", true, function(argument5)
 							genv.ChilliFinderHidden = if argument5 then nil else not argument5
-							if not (argument5) then
+							if not argument5 then
 								if genv.ChilliFinderPanelClose then
 									pcall(genv.ChilliFinderPanelClose)
 								end
@@ -29247,7 +29297,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local function generateRandomId(argument5)
 					local rng = Random.new()
 					local text = string.format("%08x%08x", rng:NextInteger(0, 4294967295), rng:NextInteger(0, 4294967295))
-					local value8, value9, list3 = callback44(value7.Secret .. text, 2166136261), callback44(text .. value7.Secret, 2654435769), table.create(#argument5)
+					local value8, value9, items = callback44(value7.Secret .. text, 2166136261), callback44(text .. value7.Secret, 2654435769), table.create(#argument5)
 
 					for i = 1, #argument5, 1 do
 						value8 = bxor(value8, lshift(value8, 13))
@@ -29255,10 +29305,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						value8, value9 = bxor(value8, lshift(value8, 5)), bxor(value9, lshift(value9, 13))
 						value9 = bxor(value9, rshift(value9, 17))
 						value9 = bxor(value9, lshift(value9, 5))
-						list3[i] = string.format("%02x", bxor(string.byte(argument5, i), band(bxor(rshift(value8, 8), rshift(value9, 16)), 255)))
+						items[i] = string.format("%02x", bxor(string.byte(argument5, i), band(bxor(rshift(value8, 8), rshift(value9, 16)), 255)))
 					end
 
-					rng = table.concat(list3)
+					rng = table.concat(items)
 					return "c3." .. (text .. ("." .. (rng .. ("." .. string.format("%08x%08x", callback44(rng .. value7.Secret, 3735928559), callback44(value7.Secret .. rng, 3405691582))))))
 				end
 
@@ -29326,8 +29376,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							if type(Mutations) == "table" then
 								if type(Mutations.EarningsFor) == "function" then
 									if type(record.Mutations) == "table" then
-										local ok2, response2 = pcall(Mutations.EarningsFor, record.Mutations)
-										ok = if ok2 then if type(response2) == "number" then if response2 > 0 then response2 else ok else ok else ok
+										local ok7, response2 = pcall(Mutations.EarningsFor, record.Mutations)
+										ok = if ok7 then if type(response2) == "number" then if response2 > 0 then response2 else ok else ok else ok
 									end
 								end
 							end
@@ -29338,16 +29388,16 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 								local rarity, number10 = ((type(EggState.Rarity) == "table") and EggState.Rarity) or {}, 0
 								if type(EggRecords) == "table" then
 									if type(EggRecords.WeightKgForScale) == "function" then
-										local ok2, response2 = pcall(EggRecords.WeightKgForScale, record.AssetCategory, response)
-										number10 = if ok2 then if tonumber(response2) then tonumber(response2) else number10 else number10
+										local ok, response2 = pcall(EggRecords.WeightKgForScale, record.AssetCategory, response)
+										number10 = if ok then if tonumber(response2) then tonumber(response2) else number10 else number10
 									end
 								end
 								local parts2 = {}
 
 								if type(record.Mutations) == "table" then
-									for k2, mutation in pairs(record.Mutations) do
+									for key, mutation in pairs(record.Mutations) do
 										if mutation == true then
-											table.insert(parts2, tostring(k2))
+											table.insert(parts2, tostring(key))
 										elseif type(mutation) == "string" then
 											table.insert(parts2, mutation)
 										end
@@ -29395,11 +29445,11 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							condition3 = false
 							local list3 = {}
 
-							for _, value8 in ipairs(response) do
-								if not (uidMap2[value8.uid]) then
-									uidMap2[value8.uid] = true
-									uidMap[value8.uid] = {miss = 0}
-									table.insert(list3, value8)
+							for _, value in ipairs(response) do
+								if not (uidMap2[value.uid]) then
+									uidMap2[value.uid] = true
+									uidMap[value.uid] = {miss = 0}
+									table.insert(list3, value)
 									if #list3 == 10 then
 										callback48(list3)
 										task.wait(0.3)
@@ -29421,7 +29471,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local now3 = os.clock()
 
 					if (now3 - number10) < number8 then
-						if not (condition5) then
+						if not condition5 then
 							condition5 = true
 							task.delay(number8, function()
 								condition5 = false
@@ -29486,24 +29536,24 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							end
 							response, ok = {}, {}
 
-							for _, value8 in pairs(number11) do
-								if type(value8) == "table" then
-									if value8.Uid then
-										if value8.State ~= "Claimed" then
-											response[value8.Uid] = true
+							for _, value in pairs(number11) do
+								if type(value) == "table" then
+									if value.Uid then
+										if value.State ~= "Claimed" then
+											response[value.Uid] = true
 										end
 									end
 								end
 							end
 
-							for k, value8 in pairs(uidMap) do
+							for k, value in pairs(uidMap) do
 								if response[k] then
-									value8.seen = true
-									value8.miss = 0
-								elseif value8.seen then
-									value8.miss = value8.miss + 1
+									value.seen = true
+									value.miss = 0
+								elseif value.seen then
+									value.miss = value.miss + 1
 								end
-								if value8.miss >= 2 then
+								if value.miss >= 2 then
 									if #ok < 10 then
 										uidMap[k] = nil
 										ok[#ok + 1] = k
@@ -29610,11 +29660,11 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local center2 = context.scrollingFrame.VerticalAlignment.Center
 				local layoutOrder = context.scrollingFrame.SortOrder.LayoutOrder
 				local center3 = context.scrollingFrame.TextXAlignment.Center
-				local left, text, text2, text3, value, value2, labelMap4 = context.scrollingFrame.TextXAlignment.Left, "UIAspectRatioConstraint", "UIGradient", "UIStroke", tostring, tonumber, {a = "AnchorPoint", p = "Position", s = "Size", z = "ZIndex", v = "Visible", bt = "BackgroundTransparency", bc = "BackgroundColor3", o = "LayoutOrder", t = "Text", rt = "RichText", xa = "TextXAlignment", ts = "TextScaled", tc = "TextColor3", ff = "FontFace", bs = "BorderSizePixel", tt = "TextTruncate", r = "Rotation"}
+				local left, text, text2, text3, value, tonumberFn, labelMap4 = context.scrollingFrame.TextXAlignment.Left, "UIAspectRatioConstraint", "UIGradient", "UIStroke", tostring, tonumber, {a = "AnchorPoint", p = "Position", s = "Size", z = "ZIndex", v = "Visible", bt = "BackgroundTransparency", bc = "BackgroundColor3", o = "LayoutOrder", t = "Text", rt = "RichText", xa = "TextXAlignment", ts = "TextScaled", tc = "TextColor3", ff = "FontFace", bs = "BorderSizePixel", tt = "TextTruncate", r = "Rotation"}
 
 				local function callback44(argument5, argument6, parent)
-					for k, value11 in next, argument6, nil do
-						argument5[labelMap4[k] or k] = value11
+					for k, value in next, argument6 do
+						argument5[labelMap4[k] or k] = value
 					end
 					if parent then
 						argument5.Parent = parent
@@ -29651,9 +29701,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					context2.UICorner.CornerRadius = context2.data
 				end
 				local function callback49(argument5, argument6, argument7, argument8)
-					local value11 = callback45(text3, {Thickness = argument6, Transparency = argument7, Color = argument8}, argument5)
-					value11:SetAttribute("own", true)
-					return value11
+					local uIStroke = callback45(text3, {Thickness = argument6, Transparency = argument7, Color = argument8}, argument5)
+					uIStroke:SetAttribute("own", true)
+					return uIStroke
 				end
 
 				local function callback50(argument5, argument6)
@@ -29751,15 +29801,16 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback59(argument5, argument6)
 					local text5 = ("%08x%08x"):format(math.random(0, 2147483646), math.random(0, 2147483646))
-					local value11, value12, list3 = callback56(argument6 .. text5, 2166136261), callback56(text5 .. argument6, 2654435769), table.create(#argument5)
+					local value11, value12, items = callback56(argument6 .. text5, 2166136261), callback56(text5 .. argument6, 2654435769), table.create(#argument5)
 					for i = 1, #argument5, 1 do
 						value11, value12 = callback57(value11), callback57(value12)
-						list3[i] = ("%02x"):format(bxor(argument5:byte(i), band(bxor(rshift(value11, 8), rshift(value12, 16)), 255)))
+						items[i] = ("%02x"):format(bxor(argument5:byte(i), band(bxor(rshift(value11, 8), rshift(value12, 16)), 255)))
 					end
-					argument5 = table.concat(list3)
+					argument5 = table.concat(items)
 					return "c3." .. (text5 .. ("." .. (argument5 .. ("." .. callback58(argument5, argument6)))))
 				end
 
+				-- Runs polling loop until condition succeeds or timeout expires (os.clock)
 				local function callback60(argument5, argument6, argument7)
 					local data11 = {}
 					local match, match2, match3 = tostring(argument5):match("^c3%.(%x+)%.(%x+)%.(%x+)$")
@@ -29835,9 +29886,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local data11, data12, data13 = {{"Any", 0}, {"Secret+", 8}, {"Eternal+", 9}, {"Divine", 10}}, {0, 8, 9, 10}, {{"Qi", 1e+18}, {"Qa", 1000000000000000}, {"T", 1000000000000}, {"B", 1000000000}, {"M", 1000000}, {"K", 1000}}
 
 				local function callback63(argument5)
-					for _, value11 in ipairs(data13) do
-						if argument5 >= value11[2] then
-							return ("%.2f"):format(argument5 / value11[2]):gsub("%.?0+$", "") .. value11[1]
+					for _, value in ipairs(data13) do
+						if argument5 >= value[2] then
+							return ("%.2f"):format(argument5 / value[2]):gsub("%.?0+$", "") .. value[1]
 						end
 					end
 					return value(argument5)
@@ -29858,31 +29909,31 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						return 0
 					end
 					local match, match2 = argument5:match("^(%d*%.?%d+)(%a*)$")
-					match = value2(match)
-					if not (match) then
+					match = tonumberFn(match)
+					if not match then
 						return nil
 					end
 
 					if match2 == "" then
 						return match
 					end
-					for _, value11 in ipairs(data13) do
-						if value11[1]:lower() == match2 then
-							return match * value11[2]
+					for _, value in ipairs(data13) do
+						if value[1]:lower() == match2 then
+							return match * value[2]
 						end
 					end
 				end
 
 				local jsonFile, data14 = readJsonFile(chilliFinderSettingsFile) or {}, {gap = 5, hold = true, reload = true, list = 0, night = 10, age = 30}
-				for k, value11 in next, data14, nil do
+				for k, value in next, data14 do
 					if jsonFile[k] == nil then
-						jsonFile[k] = value11
+						jsonFile[k] = value
 					end
 				end
 				jsonFile.egl = nil
-				jsonFile.min = max(5000000000, value2(jsonFile.min) or 0)
-				jsonFile.age = clamp(value2(jsonFile.age) or 30, 0, 120)
-				jsonFile.night = clamp((((jsonFile.night == false) and 0) or value2(jsonFile.night)) or 10, 0, 60)
+				jsonFile.min = max(5000000000, tonumberFn(jsonFile.min) or 0)
+				jsonFile.age = clamp(tonumberFn(jsonFile.age) or 30, 0, 120)
+				jsonFile.night = clamp((((jsonFile.night == false) and 0) or tonumberFn(jsonFile.night)) or 10, 0, 60)
 				if jsonFile.rar == nil then
 					jsonFile.rar = ({0, 6, 8, 9, 10})[jsonFile.minR or 1] or 0
 				end
@@ -29896,7 +29947,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end
 
 				if jsonFile.dur then
-					data14 = value2(jsonFile.gap)
+					data14 = tonumberFn(jsonFile.gap)
 					if data14 then
 						if data14 > 0 then
 							jsonFile.gap = math.min(60, jsonFile.dur)
@@ -29904,7 +29955,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 				end
 
-				jsonFile.gap = clamp(floor((value2(jsonFile.gap) or 0) + 0.5), 0, 60)
+				jsonFile.gap = clamp(floor((tonumberFn(jsonFile.gap) or 0) + 0.5), 0, 60)
 				jsonFile.dur = nil
 				local value11
 				local function callback67()
@@ -29957,7 +30008,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				if jsonFile2 then
 					if jsonFile2.token then
-						if not (cachedFile.s) then
+						if not cachedFile.s then
 							cachedFile.s = jsonFile2
 							condition4 = true
 						end
@@ -29966,7 +30017,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				if jsonFile.user ~= nil then
 					if jsonFile.user ~= "" then
-						if not (cachedFile.u) then
+						if not cachedFile.u then
 							cachedFile.u = jsonFile.user
 							condition4 = true
 						end
@@ -29984,7 +30035,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local function callback69()
 					cachedFile = readCachedFile()
 					local s = cachedFile.s
-					return ((((type(s) == "table") and value2(s.endTs)) and (s.endTs > (getServerTimeNow2() * 1000))) and s) or nil
+					return ((((type(s) == "table") and tonumberFn(s.endTs)) and (s.endTs > (getServerTimeNow2() * 1000))) and s) or nil
 				end
 				session.sess = callback69()
 				local function callback70()
@@ -30092,7 +30143,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback79(argument5, argument6)
 					if value13 then
-						if not (value13.fly) then
+						if not value13.fly then
 							session.ajSend({a = "x", j = value13.e.jobId, r = argument6 or "other"})
 						end
 					end
@@ -30104,7 +30155,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end
 
 				local function callback80()
-					return value2(workspace:GetAttribute("AreaEggCyclePeriodSeconds")) or 300
+					return tonumberFn(workspace:GetAttribute("AreaEggCyclePeriodSeconds")) or 300
 				end
 				local function callback81()
 					local value14, serverTimeNow = callback80(), getServerTimeNow2()
@@ -30112,7 +30163,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end
 
 				local function callback82()
-					if not (value13) then
+					if not value13 then
 						return
 					end
 					value13.tries += 1
@@ -30138,8 +30189,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						ajSend, value2 = ((queue_on_teleport or queueonteleport) or (syn and syn.queue_on_teleport)) or (fluxus and fluxus.queue_on_teleport), tostring(genv2.ChilliFinderUrl or "https://api.luarmor.net/files/v4/loaders/130307ddb90b87125e0a381843ee1563.lua")
 
 						if ajSend then
-							if not (genv2.ChilliHubSaeCleanup) then
-								if not (genv2.VenyxSAE) then
+							if not genv2.ChilliHubSaeCleanup then
+								if not genv2.VenyxSAE then
 									if rawget(_G, "__ChilliFinderQueued") ~= true then
 										if pcall(ajSend, ("local ok, on = pcall(function() return game:GetService(\"TeleportService\"):GetTeleportSetting(\"__ChilliFinderAutoLoad\") end)\nif ok and on == true then if not game:IsLoaded() then game.Loaded:Wait() end loadstring(game:HttpGet(%q))() end"):format(value2)) then
 											_G.__ChilliFinderQueued = true
@@ -30158,7 +30209,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					task.spawn(function()
 						local ok, response = pcall(context.TeleportService.TeleportToPlaceInstance, context.TeleportService, value.e.placeId, value.e.jobId, context.data3)
 
-						if not (ok) then
+						if not ok then
 							if value13 == value then
 								local value2, value3, why, next_2 = value13, value13, tostring(response):sub(1, 40), os.clock() + 0.1
 								value2.why = why
@@ -30211,7 +30262,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				callback55(context.TeleportService.TeleportInitFailed, function(r, argument, argument5)
 					if r ~= context.data3 then
 						return
-					elseif not (value13) then
+					elseif not value13 then
 						return
 					end
 					local value14, teleportResult = context.data12(), context.scrollingFrame.TeleportResult
@@ -30261,7 +30312,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local data17 = value13 and ((argument == context.scrollingFrame.TeleportState.Started) or (argument == context.scrollingFrame.TeleportState.InProgress))
 
 					if data17 then
-						if not (value13.fly) then
+						if not value13.fly then
 							local ajSend, data18 = session.ajSend, {a = "f"}
 							data18.j = value13.e.jobId
 							ajSend(data18)
@@ -30289,7 +30340,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				callback84()
 				local function callback85(argument5)
 					local value14 = callback80()
-					return getServerTimeNow2() >= (((floor(((argument5.at or 0) / 1000) / value14) + 1) * value14) - (value2(workspace:GetAttribute("AreaEggCycleDefaultNightSeconds")) or 10))
+					return getServerTimeNow2() >= (((floor(((argument5.at or 0) / 1000) / value14) + 1) * value14) - (tonumberFn(workspace:GetAttribute("AreaEggCycleDefaultNightSeconds")) or 10))
 				end
 
 				local function callback86(argument5)
@@ -30322,7 +30373,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local now3 = os.clock()
 
 					if now3 >= (session.ownAt or 0) then
-						if not (session.ownBusy) then
+						if not session.ownBusy then
 							session.ownAt = now3 + 2
 							session.ownBusy = true
 
@@ -30432,8 +30483,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						eggs = eggs3
 					else
 						eggs = table.clone(eggs)
-						for _, value14 in ipairs(eggs2) do
-							eggs[#eggs + 1] = value14
+						for _, value in ipairs(eggs2) do
+							eggs[#eggs + 1] = value
 						end
 
 						for _, egg in ipairs(session.eggs) do
@@ -30486,14 +30537,14 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 
 					if session.holdT and (a < session.holdT) then
-						if not (go) then
+						if not go then
 							session.gate = nil
 							return
 						end
 					elseif session.ws then
-						if not (session.aj) then
+						if not session.aj then
 							if a < (session.ajT or 0) then
-								if not (go) then
+								if not go then
 									session.gate = nil
 									return
 								end
@@ -30519,29 +30570,29 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						return (argument5.at or 0) > (argument6.at or 0)
 					end
 
-					local value3, i, number2
+					local value107, i22, number2
 
-					for i2, value14 in ipairs(session.pick or {}) do
-						if value14.jobId then
-							if (session.failed[value14.jobId] or 0) <= a then
-								pick, number = value(value14.id), session.tried[value14.jobId] or 0
+					for i2, value93 in ipairs(session.pick or {}) do
+						if value93.jobId then
+							if (session.failed[value93.jobId] or 0) <= a then
+								pick, number = value(value93.id), session.tried[value93.jobId] or 0
 								if go == pick then
 									i2 = -1
-									value3, i, number2 = value14, i2, number
+									value107, i22, number2 = value93, i2, number
 									break
 								end
-								local number9 = ((((f[pick] or ((session.fullAt[value14.jobId] or 0) > a)) or (((value14.pm or 0) > 0) and ((value14.pc or 0) >= value14.pm))) and 10000) or value2(m[pick])) or 0
-								if (if value3 then number9 < i else not value3) or ((number9 == i) and ((number < number2) or ((number == number2) and callback90(value14, value3)))) then
-									value3, i, number2 = value14, number9, number
+								local number9 = ((((f[pick] or ((session.fullAt[value93.jobId] or 0) > a)) or (((value93.pm or 0) > 0) and ((value93.pc or 0) >= value93.pm))) and 10000) or tonumberFn(m[pick])) or 0
+								if (if value107 then number9 < i22 else not value107) or ((number9 == i22) and ((number < number2) or ((number == number2) and callback90(value93, value107)))) then
+									value107, i22, number2 = value93, number9, number
 								end
 							end
 						end
 					end
 
 					context2.session = session
-					context2.hold = (value3 and jsonFile.hold) and (getServerTimeNow2() < ((((value3.at or 0) / 1000) + context.data3:GetNetworkPing()) + 0.1))
+					context2.hold = (value107 and jsonFile.hold) and (getServerTimeNow2() < ((((value107.at or 0) / 1000) + context.data3:GetNetworkPing()) + 0.1))
 					context2.session.gate = context2.hold
-					context2.jobId = ((((value3 and not session.gate) and not callback81()) and (a >= (session.floodAt or 0))) and (value3.placeId == context.data.PlaceId)) and value3.jobId
+					context2.jobId = ((((value107 and not session.gate) and not callback81()) and (a >= (session.floodAt or 0))) and (value107.placeId == context.data.PlaceId)) and value107.jobId
 					m, f = context2.jobId, nil
 
 					if m then
@@ -30549,15 +30600,15 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						local callback90_3 = not pick
 
 						if pick then
-							a = (value13.a and not value13.fly) and (value3.jobId ~= value13.e.jobId)
+							a = (value13.a and not value13.fly) and (value107.jobId ~= value13.e.jobId)
 
 							if a then
-								number = i == -1
+								number = i22 == -1
 								if number then
 									f = number
 								else
-									local value14 = session.tried[value3.jobId]
-									f = if value14 then not value14 else (value3.at or 0) > ((value13.e.at or 0) + 250)
+									local value14 = session.tried[value107.jobId]
+									f = if value14 then not value14 else (value107.at or 0) > ((value13.e.at or 0) + 250)
 								end
 							else
 								f = a
@@ -30570,11 +30621,11 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 
 					if f then
-						if i == -1 then
+						if i22 == -1 then
 							session.go = nil
 						end
 						value13 = nil
-						callback83(value3, true)
+						callback83(value107, true)
 					end
 				end
 
@@ -30582,7 +30633,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					if session.auto then
 						if callback71() then
 							if callback68() then
-								if not (session.hold) then
+								if not session.hold then
 									session.pickNext()
 								end
 							end
@@ -30595,19 +30646,19 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					if argument5.aj then
 						local aj = {m = argument5.aj.m or {}, f = {}, g = {}}
-						for _, value14 in ipairs(argument5.aj.f or {}) do
-							aj.f[value(value14)] = true
+						for _, value94 in ipairs(argument5.aj.f or {}) do
+							aj.f[value(value94)] = true
 						end
-						for _, value14 in ipairs(argument5.aj.g or {}) do
-							aj.g[value(value14)] = true
+						for _, value95 in ipairs(argument5.aj.g or {}) do
+							aj.g[value(value95)] = true
 						end
 						session.aj = aj
 					end
 
 					if argument5.gn then
 						local data18 = {}
-						for _, value14 in ipairs(argument5.gn) do
-							data18[value(value14)] = true
+						for _, value96 in ipairs(argument5.gn) do
+							data18[value(value96)] = true
 						end
 						for _, egg in ipairs(session.eggs) do
 							if data18[value(egg.id)] then
@@ -30618,7 +30669,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 						if value13 then
 							if value13.a then
-								if not (value13.fly) then
+								if not value13.fly then
 									if value13.e.gone then
 										context2.failed = session.failed
 										context2.jobId = value13.e.jobId
@@ -30634,7 +30685,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					if argument5.hold then
 						context2.session = session
-						context2.number2 = context.data12() + (value2(argument5.hold) or 0)
+						context2.number2 = context.data12() + (tonumberFn(argument5.hold) or 0)
 						context2.session.holdT = context2.number2
 					end
 
@@ -30676,7 +30727,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							break
 						end
 					end
-					if not (condition6) then
+					if not condition6 then
 						return
 					end
 					local uidMap, uids, condition7 = {}, {}, false
@@ -30734,21 +30785,21 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end
 
 				local function callback90(argument5, argument6)
-					for i, value14 in ipairs(((type(argument5) == "table") and argument5) or {}) do
-						i = (type(value14) == "table") and ((value14.id or value14.uid) or (value(value14.name) .. value(value14.at)))
+					for i, value97 in ipairs(((type(argument5) == "table") and argument5) or {}) do
+						i = (type(value97) == "table") and ((value97.id or value97.uid) or (value(value97.name) .. value(value97.at)))
 
 						if i then
 							if not (session.seen[i]) then
 								session.seen[i] = true
-								session.last = max(session.last, value2(value14.id) or 0)
-								value14.value = value2(value14.value) or 0
-								session.eggs[#session.eggs + 1] = value14
+								session.last = max(session.last, tonumberFn(value97.id) or 0)
+								value97.value = tonumberFn(value97.value) or 0
+								session.eggs[#session.eggs + 1] = value97
 								callback77()
 							end
 						end
 					end
 
-					if not (argument6) then
+					if not argument6 then
 						argument5 = (getServerTimeNow2() - 300) * 1000
 						for i = #session.eggs, 1, -1 do
 							if (session.eggs[i].at or 0) < argument5 then
@@ -30794,18 +30845,18 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local data18
 
 				local function callback92(argument5)
-					if not (data18) then
+					if not data18 then
 						data18 = {}
 
 						pcall(function()
-							local rarityGradients, value3, directory = callback52(callback52(callback52(context.data2, "Assets"), "UI"), "RarityGradients"), next, require(context.data2.Data.Assets).Directory
+							local rarityGradients, nextFn, directory = callback52(callback52(callback52(context.data2, "Assets"), "UI"), "RarityGradients"), next, require(context.data2.Data.Assets).Directory
 
-							for _, value14 in value3, directory, nil do
+							for _, value14 in nextFn, directory, nil do
 								if type(value14) == "table" then
 									if value14.DisplayName then
 										local rarity, icon = value14.Rarity, value14.Icon
 										local rarity2, data = (rarityGradients and rarity) and rarityGradients:FindFirstChild(value((rarity._id or rarity.DisplayName) or "")), data18
-										data[value14.DisplayName] = {icon = ((value2(icon) and ("rbxassetid://" .. icon)) or ((type(icon) == "string") and icon)) or "", color = ((rarity and (typeof(rarity.Color) == "Color3")) and rarity.Color) or color, grad = (rarity2 and ((rarity2:IsA(text2) and rarity2) or rarity2:FindFirstChildWhichIsA(text2, true))) or nil}
+										data[value14.DisplayName] = {icon = ((tonumberFn(icon) and ("rbxassetid://" .. icon)) or ((type(icon) == "string") and icon)) or "", color = ((rarity and (typeof(rarity.Color) == "Color3")) and rarity.Color) or color, grad = (rarity2 and ((rarity2:IsA(text2) and rarity2) or rarity2:FindFirstChildWhichIsA(text2, true))) or nil}
 									end
 								end
 							end
@@ -30850,7 +30901,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local ok, response = pcall(argument5.Clone, argument5)
 
 					if ok then
-						if not (response) then
+						if not response then
 							return nil
 						end
 					else
@@ -30872,7 +30923,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 				end
 				local function formatCompact(argument5)
-					if not (argument5) then
+					if not argument5 then
 						return nil
 					end
 					return {b = argument5, g = findFirstChildOfClass(argument5, text2), k = callback52(argument5, text3), h = callback52(argument5, "UIStrokeClr"), l = callback52(argument5, "Label") or callback52(argument5, "TextLabel"), Scale = callback52(argument5, "PressScale") or callback52(argument5, "BtnScale")}
@@ -30954,7 +31005,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					scale.Scale, scale.Parent = 1, argument5.b
 					argument5.Scale = scale
 					local mouseValues = {MouseEnter = 1.06, MouseLeave = 1, MouseButton1Down = 0.94, MouseButton1Up = 1.06}
-					for k, mouseValue in next, mouseValues, nil do
+					for k, mouseValue in next, mouseValues do
 						callback55(argument5.b[k], function()
 							context.TweenService:Create(scale, tweenInfo, {Scale = mouseValue}):Play()
 						end)
@@ -30979,7 +31030,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback102(argument5)
 					local ok, response = pcall(argument5)
-					if not (ok) then
+					if not ok then
 						warn("[Chilli Finder] " .. value(response))
 					end
 				end
@@ -30996,17 +31047,17 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local function callback104(argument5)
 					return (argument5.UserInputType == userInputType.MouseButton1) or (argument5.UserInputType == userInputType.Touch)
 				end
-				local number8, number9, value3, data20 = 2.3120369911193848, 556, setmetatable, {__mode = "k"}
-				local value14, data21 = value3({}, data20), {}
+				local number8, number9, setmetatableFn, data20 = 2.3120369911193848, 556, setmetatable, {__mode = "k"}
+				local value14, data21 = setmetatableFn({}, data20), {}
 
 				local function callback105()
 					local width = (data21.panel and data21.panel.AbsoluteSize.X) or 0
 					local number10 = (number8 * width) / number9
 
 					if width > 0 then
-						for k, value15 in pairs(value14) do
+						for k, value in pairs(value14) do
 							if k.Parent then
-								k.Thickness = value15 * number10
+								k.Thickness = value * number10
 							end
 						end
 					end
@@ -31053,7 +31104,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local column = value15.Column
 
 					if column then
-						if not (column.Parent) then
+						if not column.Parent then
 							return
 						end
 					else
@@ -31085,12 +31136,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							if k then
 								if getconnections then
 									local activePets = activePets
-									for _, value17 in ipairs(getconnections(k.Activated)) do
+									for _, value in ipairs(getconnections(k.Activated)) do
 										activePets = if pcall(function()
-											value17:Fire()
+											value:Fire()
 										end) then true else activePets
 									end
-									if not (activePets) then
+									if not activePets then
 										value16.Enabled = false
 									end
 								else
@@ -31113,7 +31164,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local data22 = {}
 					if condition5 then
 						return
-					elseif not (data21.panel) then
+					elseif not data21.panel then
 						return
 					end
 					condition5 = true
@@ -31138,9 +31189,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					tween:Play()
 				end
 
+				-- Plays UI/property tween transition and hooks Completed callback
 				local function chilliFinderPanelClose(argument5, argument6)
 					if condition5 then
-						if not (data21.panel) then
+						if not data21.panel then
 							return
 						end
 					else
@@ -31148,7 +31200,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 
 					condition5 = false
-					if not (argument5) then
+					if not argument5 then
 						callback107(false)
 					end
 					if tween then
@@ -31164,7 +31216,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					tween2.Completed:Connect(function(playbackState)
 						if playbackState == context.scrollingFrame.PlaybackState.Completed then
 							if tween == tween2 then
-								if not (condition5) then
+								if not condition5 then
 									data21.gui.Enabled = false
 								end
 							end
@@ -31179,8 +31231,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback110()
 					local nameList2 = {"btn", "gui"}
-					for i, value16 in ipairs(nameList2) do
-						i = data21[value16]
+					for i, value in ipairs(nameList2) do
+						i = data21[value]
 						if i then
 							pcall(i.Destroy, i)
 						end
@@ -31224,7 +31276,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						callback77()
 					end
 
-					local firstChildOfClass, number10, scale, number11, text9, value17 = findFirstChildOfClass(value16, "UIScale") or context.data4("UIScale", value16), 0, 1, 22, "Rest"
+					local firstChildOfClass, number10, scale, number11, text9, connection = findFirstChildOfClass(value16, "UIScale") or context.data4("UIScale", value16), 0, 1, 22, "Rest"
 
 					local function callback113(deltaTime)
 						local number12, value18, number = firstChildOfClass.Scale - scale, math.exp(-number11 * deltaTime), number10
@@ -31235,9 +31287,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						if math.abs(number) < 0.0005 then
 							if math.abs(number10) < 0.0005 then
 								firstChildOfClass.Scale = scale
-								if value17 then
-									value17:Disconnect()
-									value17 = nil
+								if connection then
+									connection:Disconnect()
+									connection = nil
 								end
 							else
 								firstChildOfClass.Scale = scale + number
@@ -31262,10 +31314,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						if mouseEnabled == "Sunk" then
 							callback101()
 						end
-						if not (value17) then
+						if not connection then
 							data22[1] = (context.RunService.PreRender:Connect(callback113))
-							value17 = data22[1]
-							connections3[#connections3 + 1] = value17
+							connection = data22[1]
+							connections3[#connections3 + 1] = connection
 						end
 					end)
 
@@ -31279,7 +31331,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback112()
 					local btn = data21.btn
-					if not (btn) then
+					if not btn then
 						return
 					end
 					local tradmilHud = callback52(value15.Hud, "TradmilHud")
@@ -31289,7 +31341,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					if shopBTN then
 						if speedMulti then
 							if tradmilHud.Visible then
-								if not (value15.GameHud.Visible) then
+								if not value15.GameHud.Visible then
 									shop, index, left = shopBTN, speedMulti, leftControls
 								end
 							end
@@ -31367,7 +31419,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					if ((header and scrollingFrame) and close) and spacer then
 						if unequip then
-							if not (textLabel) then
+							if not textLabel then
 								value16:Destroy()
 								return false
 							end
@@ -31438,7 +31490,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					aspectRatio4, chilliStealPanelFrame = {}, {"force", "min", "rar", "acct"}
 
-					for i, value17 in ipairs(chilliStealPanelFrame) do
+					for i, value in ipairs(chilliStealPanelFrame) do
 						context2.formatCompact = formatCompact
 						context2.callback = callback44
 						context2.clone = unequip:Clone()
@@ -31455,7 +31507,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						context2.data2.s = context.data9(0.88, 0.33)
 						context2.data3 = (context2.callback2(context2.clone2, context2.data2, aspectRatio3.b))
 						aspectRatio3.Cap = context2.data3
-						aspectRatio4[value17] = aspectRatio3
+						aspectRatio4[value] = aspectRatio3
 					end
 
 					local function callback118(argument5, argument6)
@@ -31493,14 +31545,14 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					callback51(context.data9(0.21875, 0.64), context.data9(0.025, 0), pk)
 					data21.opts = {}
 
-					for i, value18 in ipairs(data11) do
-						title = callback117({o = i, v = true}, pk, nil, 0.88, 0.64, value18[1], function()
-							jsonFile.rar = value18[2]
+					for i, value in ipairs(data11) do
+						title = callback117({o = i, v = true}, pk, nil, 0.88, 0.64, value[1], function()
+							jsonFile.rar = value[2]
 							callback67()
 							session.drawer = nil
 						end)
 						context2.UITextSizeConstraint = (context.data4("UITextSizeConstraint", title.l))
-						context2.data4 = value18[2]
+						context2.data4 = value[2]
 						title.tc = context2.UITextSizeConstraint
 						title.v = context2.data4
 						data21.opts[i] = title
@@ -31562,9 +31614,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 
 						local function callback122(argument13)
-							local value19 = clamp((argument13 - frame2.AbsolutePosition.X) / max(1, frame2.AbsoluteSize.X), 0, 1)
-							callback121(value19)
-							argument13 = argument9(value19)
+							local absolutePosition = clamp((argument13 - frame2.AbsolutePosition.X) / max(1, frame2.AbsoluteSize.X), 0, 1)
+							callback121(absolutePosition)
+							argument13 = argument9(absolutePosition)
 							if argument13 ~= jsonFile[argument6] then
 								jsonFile[argument6] = argument13
 								callback98(TextBox, argument10(argument13))
@@ -31608,7 +31660,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end)
 
 						data22 = {f = value18, sync = function()
-							if not (argument) then
+							if not argument then
 								callback121(argument8(jsonFile[argument6]))
 							end
 							if not (TextBox:IsFocused()) then
@@ -31627,7 +31679,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						return floor((argument5 * 60) + 0.5)
 					end, callback65, function(argument5)
 						argument5 = argument5:lower():gsub("[%ss]", "")
-						local condition6 = ((argument5 == "off") and 0) or value2(argument5)
+						local condition6 = ((argument5 == "off") and 0) or tonumberFn(argument5)
 						return condition6 and clamp(floor(condition6 + 0.5), 0, 60)
 					end, "Type seconds from 0 to 60, like 5"), min = glx(blue, "min", aspectRatio4.min, function(argument5)
 						return clamp(math.log(argument5 / 5000000000) / 5.298317366548036, 0, 1)
@@ -31733,7 +31785,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							number14 = data22[1]
 							callback101()
 							if callback121("Sign in with your chillihub.pro account to use Auto Join") then
-								if not (session.who) then
+								if not session.who then
 									session.view = nil
 								end
 								return
@@ -31741,7 +31793,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							session.auto = not session.auto
 							session.autoAt = getServerTimeNow2() * 1000
 							callback89()
-							if not (session.auto) then
+							if not session.auto then
 								pcall(function()
 									context.TeleportService:SetTeleportSetting("__ChilliFinderAuto", false)
 								end)
@@ -31864,7 +31916,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 						callback103(data22.b.b, function()
 							local e = data22.e
-							if not (e) then
+							if not e then
 								return
 							end
 
@@ -32061,7 +32113,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 								sess = text2:sub(1, #text)
 							end
 
-							if not (condition7) then
+							if not condition7 then
 								callback129()
 							end
 						end)
@@ -32079,7 +32131,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					callback130()
 
 					local function callback131(argument5)
-						if not (httpRequest) then
+						if not httpRequest then
 							return callback78("This executor cannot send requests")
 						end
 						local data22, data
@@ -32117,8 +32169,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							local cachedFile2, value20 = value(httpRequest, requestData)
 							local cachedFile3 = (cachedFile2 and (type(value20) == "table")) and callback60(value20.Body, text4)
 							session.dirty = true
-							if not (cachedFile3) then
-								if not (argument5) then
+							if not cachedFile3 then
+								if not argument5 then
 									session.acct = "Could not reach chillihub.pro, try again"
 								end
 								return
@@ -32133,14 +32185,14 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 								cachedFile2.rt = cachedFile3.rt
 								saveFile3(cachedFile)
 							end
-							if not (argument5) then
+							if not argument5 then
 								sess = ""
 								callback129()
 							end
 
-							if not (cachedFile3.ok) then
+							if not cachedFile3.ok then
 								session.acct = cachedFile3.error or "Sign in failed"
-								if not (argument5) then
+								if not argument5 then
 									session.who = nil
 								end
 								return
@@ -32148,7 +32200,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 							session.who = cachedFile3.username
 
-							if not (cachedFile3.active) then
+							if not cachedFile3.active then
 								cachedFile2 = cachedFile3.booking or {}
 								session.whoAt = os.clock() + math.clamp(((cachedFile2.startsInMs or 120000) / 1000) + 2, 5, 120)
 								if session.drawer == "sign" then
@@ -32169,7 +32221,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							session.view = nil
 							session.drawer = nil
 							callback70()
-							if not (argument5) then
+							if not argument5 then
 								session.auto = false
 								pcall(function()
 									context.TeleportService:SetTeleportSetting("__ChilliFinderAuto", false)
@@ -32228,7 +32280,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							callback122(callback128(0.74, "Sign Up", hud), "Sign Up", "Link copied, open chillihub.pro in your browser to sign up", "Open chillihub.pro in your browser to sign up")
 						end)
 
-						if not (ok) then
+						if not ok then
 							for _, child in ipairs(value20:GetChildren()) do
 								if child:IsA("TextLabel") then
 									child.Parent = parent
@@ -32251,7 +32303,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						callback131(true)
 					end
 
-					if not (session.sess) then
+					if not session.sess then
 						if cachedFile.rt then
 							task.defer(callback131, true)
 						elseif sess ~= "" then
@@ -32287,9 +32339,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					callback51(context.data9(0.31, 0.42), context.data9(0.02, 0.06), aspectRatio3)
 					aspectRatio = {"PLAN", "TIME LEFT", "ENDS AT", "FEED", "DELAY", "FINDER"}
 
-					for i, value20 in ipairs(aspectRatio) do
+					for i, value in ipairs(aspectRatio) do
 						chilliStealPanelFrame, number11, header = callback46({o = i, z = 7}, aspectRatio3), DB.val:Clone(), {rt = true, ts = true, xa = center3, z = 8}
-						header.t = "<font color=\"#C8C2DC\">" .. (value20 .. "</font>")
+						header.t = "<font color=\"#C8C2DC\">" .. (value .. "</font>")
 						callback44(number11, callback47(value8, 0.5, 0, 1, 0.38, header), chilliStealPanelFrame)
 						context2.callback20 = callback44
 						context2.clone7 = DB.name:Clone()
@@ -32303,7 +32355,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						context2.data31.z = 8
 						context2.data31.t = ""
 						foot_2 = (context2.callback20(context2.clone7, context2.data31, chilliStealPanelFrame))
-						value19_2.info[value20] = {l = foot_2, g = findFirstChildOfClass(foot_2, text2)}
+						value19_2.info[value] = {l = foot_2, g = findFirstChildOfClass(foot_2, text2)}
 					end
 
 					local function callback132(argument5, argument6, argument7, argument8, argument9)
@@ -32319,7 +32371,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						callback55(TextBox.FocusLost, function()
 							local text9 = TextBox.Text:lower():gsub("%s", "")
 							local match, match2 = text9:match("^(%d*%.?%d+)([sm]?)$")
-							local match3 = ((text9 == "off") and 0) or (match and (value2(match) * (((match2 == "m") and 60) or 1)))
+							local match3 = ((text9 == "off") and 0) or (match and (tonumberFn(match) * (((match2 == "m") and 60) or 1)))
 
 							if match3 then
 								jsonFile[argument8] = clamp(floor(match3 + 0.5), 0, argument7)
@@ -32441,33 +32493,33 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						local context3 = {}
 						local number15 = #(jsonFile.only or {})
 						clone8.Text = ((number15 > 0) and ("<font color=\"#7CF25A\">" .. (number15 .. " picked</font>"))) or "<font color=\"#C8C2DC\">All eggs</font>"
-						for i, value20 in ipairs(data22) do
+						for i, value in ipairs(data22) do
 							local iEntry, number = iMap3[i], number14
-							callback97(iEntry, ((number == value20[2]) and hud) or off)
+							callback97(iEntry, ((number == value[2]) and hud) or off)
 						end
 
-						for i, value20 in ipairs(list3) do
+						for i, value in ipairs(list3) do
 							i, number15 = data16
 							if i then
 								local data = data16
-								number15 = data[value20.n] == true
+								number15 = data[value.n] == true
 							else
 								number15 = i
 							end
-							local b, data23 = value20.b, (number14 == 0) or ((number14 == -1) and number15)
-							i = (data23 or (value20.r == number14)) and ((text9 == "") or (value20.l:find(text9, 1, true) ~= nil))
+							local b, data23 = value.b, (number14 == 0) or ((number14 == -1) and number15)
+							i = (data23 or (value.r == number14)) and ((text9 == "") or (value.l:find(text9, 1, true) ~= nil))
 							b.Visible = i
-							context3.st = value20.st
-							context3.st2 = value20.st
-							context3.st3 = value20.st
-							context3.data = (number15 and context.data5(255, 204, 64)) or value20.c
+							context3.st = value.st
+							context3.st2 = value.st
+							context3.st3 = value.st
+							context3.data = (number15 and context.data5(255, 204, 64)) or value.c
 							context3.data2 = (number15 and 2.5) or 1.5
 							context3.data3 = (number15 and 0) or 0.6
 							context3.st.Color = context3.data
 							context3.st2.Thickness = context3.data2
 							context3.st3.Transparency = context3.data3
-							context3.b = value20.b
-							context3.dot = value20.dot
+							context3.b = value.b
+							context3.dot = value.dot
 							context3.data4 = (number15 and context.data5(48, 38, 22)) or context.data5(24, 21, 34)
 							context3.condition = number15 == true
 							context3.b.BackgroundColor3 = context3.data4
@@ -32475,9 +32527,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 					end
 
-					for i, value20 in ipairs(data22) do
-						iMap3[i] = callback124(i, 0.18, value20[1], off, function()
-							number14 = value20[2]
+					for i, value in ipairs(data22) do
+						iMap3[i] = callback124(i, 0.18, value[1], off, function()
+							number14 = value[2]
 							callback135()
 							ScrollingFrame.CanvasPosition = Vector2.zero
 						end, data34)
@@ -32514,16 +32566,16 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						pcall(function()
 							local displayNameMap = {}
 
-							for k, value20 in next, require(context.data2.Data.Assets).Directory, nil do
-								k = (type(value20) == "table") and value20.Rarity
-								local rarity = k and value2((k.Order or k.Index) or k.Rank)
+							for k, value98 in next, require(context.data2.Data.Assets).Directory, nil do
+								k = (type(value98) == "table") and value98.Rarity
+								local rarity = k and tonumberFn((k.Order or k.Index) or k.Rank)
 
-								if value20.DisplayName then
+								if value98.DisplayName then
 									if rarity then
 										if rarity >= 8 then
-											if not (displayNameMap[value20.DisplayName]) then
-												displayNameMap[value20.DisplayName] = true
-												list4[#list4 + 1] = {n = value20.DisplayName, r = rarity, rn = value((k.DisplayName or k._id) or ""), v = value2(value20.EarningRate) or 0}
+											if not (displayNameMap[value98.DisplayName]) then
+												displayNameMap[value98.DisplayName] = true
+												list4[#list4 + 1] = {n = value98.DisplayName, r = rarity, rn = value((k.DisplayName or k._id) or ""), v = tonumberFn(value98.EarningRate) or 0}
 											end
 										end
 									end
@@ -32538,8 +32590,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							return argument5.v > argument6.v
 						end)
 
-						for i, value20 in ipairs(list4) do
-							local value21 = callback92(value20.n)
+						for i, value99 in ipairs(list4) do
+							local value21 = callback92(value99.n)
 							local callback = callback45
 							local data23 = {}
 							data23.t = ""
@@ -32564,17 +32616,17 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							context3.data.ScaleType = context.scrollingFrame.ScaleType.Fit
 							context3.data.z = 9
 							context3.callback3("ImageLabel", context3.callback2(context3.data2, 0.5, 0.05, 0.72, 0.54, context3.data), TextButton)
-							local TextLabel = callback45("TextLabel", callback47(value8, 0.5, 0.61, 0.92, 0.19, {bt = 1, ff = fontFace, t = value20.n, ts = true, tc = color, TextStrokeTransparency = 0.35, z = 9}), TextButton)
+							local TextLabel = callback45("TextLabel", callback47(value8, 0.5, 0.61, 0.92, 0.19, {bt = 1, ff = fontFace, t = value99.n, ts = true, tc = color, TextStrokeTransparency = 0.35, z = 9}), TextButton)
 							context3.callback4 = callback45
 							context3.text2 = text2
 							context3.data3 = {}
 							context3.data3.r = 90
-							context3.data3.Color = ((value.grad and (value20.r ~= 8)) and value.grad.Color) or context.data11(((value20.r == 8) and context.data5(225, 230, 240)) or value.color)
+							context3.data3.Color = ((value.grad and (value99.r ~= 8)) and value.grad.Color) or context.data11(((value99.r == 8) and context.data5(225, 230, 240)) or value.color)
 							context3.callback4(context3.text2, context3.data3, TextLabel)
 							context3.callback5 = callback44
 							context3.clone = TextLabel:Clone()
 							context3.data4 = {}
-							context3.data4.t = value20.rn:upper()
+							context3.data4.t = value99.rn:upper()
 							context3.data4.p = context.data9(0.5, 0.82)
 							context3.data4.s = context.data9(0.66, 0.12)
 							context3.data4.TextStrokeTransparency = 0.6
@@ -32603,13 +32655,13 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							context3.uiStroke2.Color = context.data5(70, 40, 0)
 							context3.callback7(context3.text4, context3.uiStroke2, TextLabel)
 							local data24 = {{0.36, 0.58, 0.3, 45}, {0.58, 0.48, 0.56, -50}}
-							for _, value22 in ipairs(data24) do
-								callback48(getFrame(callback47(value7, value22[1], value22[2], value22[3], 0.14, {bs = 0, bc = color, r = value22[4], z = 11}), TextLabel), 1)
+							for _, value in ipairs(data24) do
+								callback48(getFrame(callback47(value7, value[1], value[2], value[3], 0.14, {bs = 0, bc = color, r = value[4], z = 11}), TextLabel), 1)
 							end
-							list3[#list3 + 1] = {b = TextButton, st = i, dot = TextLabel, n = value20.n, l = value20.n:lower(), r = value20.r, c = value.color}
+							list3[#list3 + 1] = {b = TextButton, st = i, dot = TextLabel, n = value99.n, l = value99.n:lower(), r = value99.r, c = value.color}
 
 							callback103(TextButton, function()
-								local only, number = getOnly(), value20.n
+								local only, number = getOnly(), value99.n
 								local pos = table.find(only, number)
 								if pos then
 									table.remove(only, pos)
@@ -32626,10 +32678,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					callback124(1, 0.3, "Select all", blue, function()
 						local only = getOnly()
 
-						for _, value20 in ipairs(list3) do
-							if value20.b.Visible then
-								if not (table.find(only, value20.n)) then
-									only[#only + 1] = value20.n
+						for _, value in ipairs(list3) do
+							if value.b.Visible then
+								if not (table.find(only, value.n)) then
+									only[#only + 1] = value.n
 								end
 							end
 						end
@@ -32663,9 +32715,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 
 					data21.acctF = acctF
-					for k, value20 in next, aspectRatio4, nil do
-						callback100(value20)
-						callback103(value20.b, ((k == "acct") and acctF) or (function()
+					for k, value in next, aspectRatio4 do
+						callback100(value)
+						callback103(value.b, ((k == "acct") and acctF) or (function()
 							callback138(k)
 						end))
 					end
@@ -32684,9 +32736,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						callback132_2 = callback45("ImageLabel", callback47(value7, 0.5, 0.5, 0.74, 0.74, {bt = 1, Image = "rbxasset://textures/ui/Settings/MenuBarIcons/GameSettingsTab.png", z = aspectRatio.l.ZIndex + 1}), DB)
 						context.data4(text, callback132_2)
 						mouseEnabled = {{-2, 0}, {2, 0}, {0, -2}, {0, 2}, {-1.5, -1.5}, {1.5, 1.5}, {-1.5, 1.5}, {1.5, -1.5}}
-						for _, value20 in ipairs(mouseEnabled) do
+						for _, value in ipairs(mouseEnabled) do
 							glx_2, header = callback132_2:Clone(), {ImageColor3 = color2, z = callback132_2.ZIndex - 1}
-							context2.data39 = (context.data7(0.5, value20[1], 0.5, value20[2]))
+							context2.data39 = (context.data7(0.5, value[1], 0.5, value[2]))
 							header.p = context2.data39
 							callback44(glx_2, header, DB)
 						end
@@ -32855,7 +32907,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							context2.session3 = session
 							context2.rooms = argument5.rooms or nil
 							context2.room = argument5.room
-							context2.number = context.data12() + ((value2(argument5.roomNext) or 0) / 1000)
+							context2.number = context.data12() + ((tonumberFn(argument5.roomNext) or 0) / 1000)
 							context2.session.rooms = context2.rooms
 							context2.session2.room = context2.room
 							context2.session3.roomAt = context2.number
@@ -32867,7 +32919,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				session.setRoom = function(ask)
 					if ask == session.room then
 						return
-					elseif not (session.sess) then
+					elseif not session.sess then
 						return
 					end
 					local sess = session.sess
@@ -32875,11 +32927,11 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					task.spawn(function()
 						local ok, response = pcall(context.data.HttpGet, context.data, robloxMcpUrl .. ("joiner/room?s=" .. (sess.token .. ("&r=" .. ask))))
 						local ok2 = ok and callback60(response, sess.secret, true)
-						if not (ok2) then
+						if not ok2 then
 							return callback78("Could not change room, try again")
 						end
 						callback116(ok2)
-						if not (ok2.ok) then
+						if not ok2.ok then
 							session.ask = ask
 							return
 						end
@@ -32926,7 +32978,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 								end
 							end
 
-							if not (clone) then
+							if not clone then
 								k.RichText = true
 
 								if session.txOn then
@@ -32960,7 +33012,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 									end
 								end
 
-								if not (session.txOn) then
+								if not session.txOn then
 									k.Visible = value16[2]
 								end
 							end
@@ -32994,12 +33046,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					if condition6 and (now >= (tx.at or 0)) then
 						local b, clone = tx.b, tx.b:Clone()
 
-						for k, value16 in pairs(tx) do
-							if typeof(value16) == "Instance" then
-								if value16 ~= b then
-									if value16 ~= tx.par then
-										txOn = clone:FindFirstChild(value16.Name, true)
-										tx[k], session.tx[value16] = txOn, nil
+						for k, value in pairs(tx) do
+							if typeof(value) == "Instance" then
+								if value ~= b then
+									if value ~= tx.par then
+										txOn = clone:FindFirstChild(value.Name, true)
+										tx[k], session.tx[value] = txOn, nil
 										if txOn then
 											if txOn:IsA("TextLabel") then
 												txOn.RichText = true
@@ -33016,7 +33068,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						pcall(b.Destroy, b)
 					end
 
-					if not (tx.b.Visible) then
+					if not tx.b.Visible then
 						tx.b.Visible = true
 					end
 					txOn = session.sgOk
@@ -33036,11 +33088,11 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback119()
 					local data22 = {}
-					if not (data21.panel) then
+					if not data21.panel then
 						return
 					end
 
-					if not (session.fakeV) then
+					if not session.fakeV then
 						if data21.vip then
 						elseif layoutOrder then
 							if layoutOrder ~= "" then
@@ -33052,6 +33104,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 				end
 
+				-- Resolves available executor WebSocket constructor (syn / WebSocket)
 				local function callback120()
 					if session.ws then
 						return
@@ -33141,7 +33194,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback121(argument5, argument6)
 					local ok, response = pcall(context.data.HttpGet, context.data, argument5)
-					if not (ok) then
+					if not ok then
 						return nil, (value(response):find("401") and "expired") or ""
 					end
 					return callback60(response, argument6, true), value(response)
@@ -33152,9 +33205,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					local value16 = context.data12()
 
 					pcall(function()
-						local directory, Mutations, value3, records = require(context.data2.Data.Assets).Directory, require(context.data2.Shared.Modules.Mutations), pairs, require(context.data2.Client.EggState).ReadFieldEggs().Records
+						local directory, Mutations, pairsFn, records = require(context.data2.Data.Assets).Directory, require(context.data2.Shared.Modules.Mutations), pairs, require(context.data2.Client.EggState).ReadFieldEggs().Records
 
-						for k, record in value3(records) do
+						for k, record in pairsFn(records) do
 							number10 += 1
 							k = ((((type(record) == "table") and (record.State ~= "Claimed")) and record.Uid) and not value(record.Uid):find("^FirstAreaEgg")) and directory[record.AssetCategory]
 							local rarity = k and k.Rarity
@@ -33173,7 +33226,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 								condition7 = k
 							end
 
-							if condition7 and (((rarity and value2(rarity.RarityNumber or rarity.Rank)) or 0) >= jsonFile.rar) then
+							if condition7 and (((rarity and tonumberFn(rarity.RarityNumber or rarity.Rank)) or 0) >= jsonFile.rar) then
 								local arguments2, argumentMap = {}, {}
 
 								local function callback123(argument5)
@@ -33193,13 +33246,13 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 								callback123(record.BaseMutation)
 								if type(record.Mutations) == "table" then
-									for k2, mutation in next, record.Mutations, nil do
-										callback123((((type(k2) == "string") and (mutation == true)) and k2) or mutation)
+									for key, mutation in next, record.Mutations do
+										callback123((((type(key) == "string") and (mutation == true)) and key) or mutation)
 									end
 								end
 								local ok, response = pcall(Mutations.EarningsFor, arguments2)
-								local callback123_2 = value2(record.AssetScale) or 1
-								if (((value2(k.EarningRate) or 0) * (((callback123_2 > 5) and (((callback123_2 / 5) ^ 1.2) * 19.637875755794113)) or (callback123_2 ^ 1.85))) * ((ok and value2(response)) or 1)) >= max(jsonFile.min, 1) then
+								local callback123_2 = tonumberFn(record.AssetScale) or 1
+								if (((tonumberFn(k.EarningRate) or 0) * (((callback123_2 > 5) and (((callback123_2 / 5) ^ 1.2) * 19.637875755794113)) or (callback123_2 ^ 1.85))) * ((ok and tonumberFn(response)) or 1)) >= max(jsonFile.min, 1) then
 									condition6 = true
 									break
 								end
@@ -33208,7 +33261,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end)
 
 					if number10 > 0 then
-						if not (session.loadAt) then
+						if not session.loadAt then
 							session.loadAt = value16
 						end
 					end
@@ -33240,7 +33293,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback123()
 					value15 = callback106()
-					if not (value15) then
+					if not value15 then
 						return
 					end
 					local ok, response = pcall(function()
@@ -33251,7 +33304,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						condition7 = true
 					else
 						callback110()
-						if not (ok) then
+						if not ok then
 							genv2.ChilliFinderErr = value(response)
 						end
 					end
@@ -33291,12 +33344,12 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					end
 
 					if p then
-						for _, value19 in ipairs(p.gh) do
-							value19.TextTransparency = 1
+						for _, value in ipairs(p.gh) do
+							value.TextTransparency = 1
 						end
 						p.top.Visible, p.bot.Visible, p.sg.Visible, p.sc.Visible = false, false, false, false
-						for _, value19 in ipairs(p.sh) do
-							value19.BackgroundTransparency = 1
+						for _, value in ipairs(p.sh) do
+							value.BackgroundTransparency = 1
 						end
 					end
 				end
@@ -33306,8 +33359,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						pcall(callback124, data62.b)
 					end
 					if data62.p then
-						for _, value19 in ipairs(data62.p.all) do
-							pcall(value19.Destroy, value19)
+						for _, value in ipairs(data62.p.all) do
+							pcall(value.Destroy, value)
 						end
 					end
 					data62.p = nil
@@ -33395,7 +33448,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 					if p then
 						if l then
-							if not (l.Parent) then
+							if not l.Parent then
 								return
 							end
 						else
@@ -33405,7 +33458,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						return
 					end
 
-					if not (b) then
+					if not b then
 						if argument5 < data62.n then
 							return
 						end
@@ -33501,24 +33554,24 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						scale.Offset = context2.data9
 					end
 
-					for i, value20 in ipairs(p.gh) do
+					for i, value in ipairs(p.gh) do
 						argument5 = ((i ~= 1) and -1) or 1
 						context2.number5 = o.p + context.data10(randInt + (argument5 * 3), randInt2 + (argument5 * 2))
-						value20.Text = t
-						value20.Rotation = rotation
-						value20.TextTransparency = 0.3
-						value20.Position = context2.number5
+						value.Text = t
+						value.Rotation = rotation
+						value.TextTransparency = 0.3
+						value.Position = context2.number5
 					end
 
-					for i, value20 in ipairs(p.sh) do
+					for i, value in ipairs(p.sh) do
 						offset, s, b = ((i * 7919) % 97) / 97, (((i % 2) ~= 0) and -1) or 1, getRandInt(3, 9)
 						context2.data10 = (context.data10(b, b))
 						context2.number6 = (offset * 360) + ((value19 * 180) * s)
 						context2.number7 = randInt4 + context.data10(((offset - 0.5) * 68) * value19, ((s * 22) * value19) * (0.4 + (offset * 0.6)))
-						value20.Size = context2.data10
-						value20.Rotation = context2.number6
-						value20.Position = context2.number7
-						value20.BackgroundTransparency = value19
+						value.Size = context2.data10
+						value.Rotation = context2.number6
+						value.Position = context2.number7
+						value.BackgroundTransparency = value19
 					end
 				end
 
@@ -33562,7 +33615,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 					end
 
-					if not (condition7) then
+					if not condition7 then
 						if value19 >= number13 then
 							number13 = value19 + 2
 							glx, title = pcall(callback123)
@@ -33574,8 +33627,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 								warn("[Chilli Finder] " .. tostring(title))
 								pcall(restoreLeft)
 								local guiList = {"hudGui", "gui"}
-								for i, value20 in ipairs(guiList) do
-									i = data21[value20]
+								for i, value in ipairs(guiList) do
+									i = data21[value]
 									if i then
 										i:Destroy()
 									end
@@ -33617,7 +33670,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 
 						if value13 then
-							if not (value13.fly) then
+							if not value13.fly then
 								if callback81() then
 									callback79("Night is close, join stopped")
 								end
@@ -33690,7 +33743,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 									end
 									callback120()
 
-									if not (session.ws) then
+									if not session.ws then
 										local value20, value21 = callback121(robloxMcpUrl .. ("joiner/feed?s=" .. (session.sess.token .. ("&since=" .. session.last))), session.sess.secret)
 
 										if value20 then
@@ -33729,7 +33782,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 								if value20 and (type(value20.eggs) == "table") then
 									for _, egg in ipairs(value20.eggs) do
-										egg.value = value2(egg.value) or 0
+										egg.value = tonumberFn(egg.value) or 0
 									end
 									session.sample = value20.eggs
 									session.dirty = true
@@ -33757,7 +33810,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 						if hold ~= session.hold then
 							if session.hold then
-								if not (hold) then
+								if not hold then
 									session.autoAt = getServerTimeNow2() * 1000
 									callback89()
 								end
@@ -33776,7 +33829,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							if hold2 ~= session.ajKey then
 								session.ajKey = hold2
 								if session.auto then
-									if not (session.aj) then
+									if not session.aj then
 										session.ajT = value19 + 0.5
 									end
 								end
@@ -33823,7 +33876,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							break
 						end
 						local ok, response = pcall(callback129)
-						if not (ok) then
+						if not ok then
 							genv2.ChilliFinderErr = value(response)
 						end
 						task.wait((((#session.inbox > 0) or session.gate) and 0) or 0.2)
@@ -33841,8 +33894,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					if genv2.ChilliFinderPanelClose == chilliFinderPanelClose then
 						genv2.ChilliFinderPanelClose = nil
 					end
-					for _, value19 in ipairs(connections3) do
-						pcall(value19.Disconnect, value19)
+					for _, value in ipairs(connections3) do
+						pcall(value.Disconnect, value)
 					end
 					callback110()
 					if value11 then
@@ -33871,7 +33924,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				local function callback44()
 					local ok = pcall(setclipboard or toclipboard, cJK4bs2mgTUrl)
 					callback15((ok and "Discord Link Copied") or "Discord Link", cJK4bs2mgTUrl)
-					if not (options.Copy) then
+					if not options.Copy then
 						return
 					end
 					number8 += 1
@@ -33886,8 +33939,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback45(argument5, ...)
 					local data12 = {...}
-					for _, value7 in ipairs(data12) do
-						value7.Set({Width = argument5})
+					for _, value in ipairs(data12) do
+						value.Set({Width = argument5})
 					end
 				end
 
@@ -33922,10 +33975,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					options.Link = callback47(options.Invite, 0.6, 1.35, 1.6, 1.05, cJK4bs2mgTUrl:sub(9), nil, {Font = "code"})
 					options.Copy = argument5:Button({Parent = options.Invite, Y = 0.8, Width = 6.4, Height = 2, Text = "<b>Copy Link</b>", Background = "#5865F2", BackgroundTransparency = 0, HoverTransparency = 0.15, PressTransparency = 0.3, StrokeColor = "#9AA3FF", StrokeThickness = 0.0909, Callback = callback44})
 					options.Header = callback47(nil, 0.30000000000000004, 10.45, 1, 0.8, "<b>WHAT YOU GET</b>", "#9C9CB4")
-					for i, value7 in ipairs(data11) do
+					for i, value in ipairs(data11) do
 						colorSequenceKeypointNew = argument5:Frame({Name = "Perk", X = 0.2, Y = (11.4 + ((i - 1) * 3.35)) + 0.2, Height = 3, BackgroundTransparency = 0.68, Corner = 0.35})
-						argument5:Frame({Parent = colorSequenceKeypointNew, X = 0.3, Y = 0.45, Width = 0.22, Height = 2.1, Background = value7[1], Corner = 0.11})
-						options.Perks[i] = {colorSequenceKeypointNew, callback47(colorSequenceKeypointNew, 0.85, 0.3, 1.1, nil, "<b>" .. (value7[2] .. "</b>"), value7[1]), callback47(colorSequenceKeypointNew, 0.85, 1.35, 1.5, 0.86, value7[3], "#C8C8D8", {Wrap = true})}
+						argument5:Frame({Parent = colorSequenceKeypointNew, X = 0.3, Y = 0.45, Width = 0.22, Height = 2.1, Background = value[1], Corner = 0.11})
+						options.Perks[i] = {colorSequenceKeypointNew, callback47(colorSequenceKeypointNew, 0.85, 0.3, 1.1, nil, "<b>" .. (value[2] .. "</b>"), value[1]), callback47(colorSequenceKeypointNew, 0.85, 1.35, 1.5, 0.86, value[3], "#C8C8D8", {Wrap = true})}
 					end
 					options.Tip = callback47(nil, 0.30000000000000004, (number7 - 2.2) - 0.2, 2, 0.8, "Paste the copied link into your browser or the Discord app to join.", "#8A8AA2", {Wrap = true})
 					argument5:SetContentLines(number7)
@@ -33966,8 +34019,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback46(argument5, argument6)
 					local is = {}
-					for i, value7 in ipairs(callback45(argument5)) do
-						i = argument6(tostring(value7))
+					for i, value in ipairs(callback45(argument5)) do
+						i = argument6(tostring(value))
 						if i then
 							is[#is + 1] = i
 						end
@@ -33982,6 +34035,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end
 				local value7 = callback13({"Icon", "Name", "Rarity", "Value", "Mutation", "Size", "Weight", "Area"})
 
+				-- Static configuration/preset table: commandHandlers (34 lines)
 				local commandHandlers = {r = function(argument5)
 					if argument5 == "Any" then
 						return table.clone(list)
@@ -34026,10 +34080,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						if match2 then
 							condition4 = ((type(antiGuardEnabled[match2]) == "table") and antiGuardEnabled[match2][match3]) or nil
 
-							if not (condition4) then
-								for _, value8 in next, antiGuardEnabled, nil do
-									if (type(value8) == "table") and (type(value8[match3]) == "table") then
-										condition4 = value8[match3]
+							if not condition4 then
+								for _, value in next, antiGuardEnabled do
+									if (type(value) == "table") and (type(value[match3]) == "table") then
+										condition4 = value[match3]
 										break
 									end
 								end
@@ -34085,7 +34139,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end
 
 								local value8 = trackConnection(heartbeat, function()
-					if not (condition3) then
+					if not condition3 then
 						return
 					end
 					condition3 = false
@@ -34135,11 +34189,11 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 					data12.X = (argument6 - 5) - number8
 					set(data12)
 					data11.Card.Set({Width = argument6})
-					for i, value9 in ipairs(iMap3) do
+					for i, value in ipairs(iMap3) do
 						set = 0.3 + (((i - 1) % 2) * (argument5 + 0.5))
-						value9[1].Set({X = set + 0.25, Width = 0.8})
-						value9[2].Set({X = set + 1.05, Width = argument5 - 1.4})
-						value9[3].Set({X = set + 1.05, Width = argument5 - 1.4})
+						value[1].Set({X = set + 0.25, Width = 0.8})
+						value[2].Set({X = set + 1.05, Width = argument5 - 1.4})
+						value[3].Set({X = set + 1.05, Width = argument5 - 1.4})
 					end
 					data11.Loader.Set({Width = argument6})
 					data11.Code.Set({Width = argument6 - 5})
@@ -34164,9 +34218,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 						if not (ok and response) then
 							text5 = "Chilli Hub/VenyxMark1.png"
-							local ok2, response2 = pcall(isfile, text5)
+							local ok, response2 = pcall(isfile, text5)
 
-							if not (ok2 and response2) then
+							if not (ok and response2) then
 								local value, base64decode = pcall, crypt and (crypt.base64decode or (crypt.base64 and crypt.base64.decode))
 								local value10, value11 = value(base64decode or base64_decode, "iVBORw0KGgoAAAANSUhEUgAAAIYAAACACAYAAADOIBGMAAAPWklEQVR4nOydedRd0xnGn8/qH6VKQtIEFVESJTGFGKrRIk1Lo9RUZZWlWLS0S9qaaQ1VStAGCdpGzFMQjURVUkPNpVTFGErNbRUd1Oo/PI+7b9Z1c+6Z9rvvOefe81trr/199557hr3f8+7pfd+9DGpqIlgGNTUR1IJRE8kSwXjvvfdWYLqOaRxq+grW+eZMVzMt2/xsiWAMDAz8i9kzTA/xgCNQ0xewrk9idh/TE5SB/zU/H2g76BPMXmb6CNPNTHvw4P+gpudgXQ9hNpvpc0z/ZxrGun6r+f2H+hj84m/MrnD/bs+0iCfYCjU9BetUdfsYGkIhLmoVChHV+Ty/5e8RTHfxRMegpidgXZ7FbD7TsJaPz28/binBoOTcy+yqto9P4QmvZFoONZWEdbcS0wL+OaXtK2mLR9qP7zRcPS/isz2ZHuXJx6OmUrDOvshsEdN2EV9Pj/pNpGBQgu5idm/EV2sxPcAL7Y2aSsC6+g6z3zANj/j6Ntb1g1G/i5vgOj3mu8t4we+jptSwjo5lNi3mkFM7fTGA+BO/xGy1mENOo8QdjZrSwbqbyizu5X2BdTey05dJU+KnJ3x/FG/gUtSUBg0QmG5EvFCI2LpN0hgrMnuVaVnEs5Bpx9aZs5ruw/r6OBr9ic8kHKpZ7lVYX+90OiBWY/CHb6NDr7UN9Xbn88Y+hppCYNkPQuMFTRIKcW6cUIhYjeEuqGny15GOu5m250X/jZquwTpamdltTOunOPxdptVZR/+IOyhx2d1Nk09DOjR9fqtTaTVdwL24v0c6oRBnJgmFSNQY7uJj0JhbT4tW6ybyBv6LmmCwXoYyu4Np3Qw/G816eSbpoFSGOjyRZs1uQXq2YJqDmmC4gYGmuLMIxdw0QiGyWHCdjWxM5M3/GjXmsFyXR2P0sQGycVbaA1M1JS03pOnTTZCN6ymlu6LGBGdl9VumzyIb97AeUptQZLX5nIXs7MKHqZsVO65BdqEQs7IcnFVjaNld0+SDkZ3zKLGHoiY3LP8LmR2I7GhkOTLLBGQmjeEmRc5EPg7hg30XNblg2R2OfEIhzsg6K51JYwg3uym70BWRj0m8yVtRkxqW+WRmc5EPzVloQuvdLD/K7Ffi5iauQH5m80HXQU0qWFZjmV2J/MzMKhQir8PR+cjPCmgIx6dQEwvLaCQanc3lkZ9fIAe5BIMS+Ciz3yE/eguuQk1H3FzFPGSbwGpnHutqMXLg46LoozXEeD58kr1HP3MJ03rwI+0a11Jk7ny2worV+skY+LEXpdqnDe05WK4nMvsh/Lif5boFcuLr1OzTCV1yDhbEhqj5AJbFV+AvFGI2PPDVGJro0tA1ycIrib8wbeT8Z/sW1yFX/83X4EleZav7uJd6aQxe+E1mF8GfNZkuRs1l8BcKcZGvz7FFfIxzYMPOzgeiL+GzH8lsS9hwLjzxakqauEWynWDD+pT2LEZBlYfltxGzh2HDNSy/r8ETq4g6vkPXVmaij3DzFVfDjhkwwEQwKKEyGklrMJyE5jdORv+gfsVo2PAc6+J2GGAZg+tU2HEchSOrQVDl4DN+AXZNsDCbMDTpYwg3dP0n7FA/Y3yeBaAq4JqQB+A35d3O8lYG2GYaww1dLSa8mmg95UfoXU6DrVBcbmmVb6YxBN+CbeC3uBbFBBeWoWdgOclzbwFs2dAtbppgKhiCD30/s81gxxNM43qlSXHGvHLHWBN2PMTy2RSGhAgAewlskbr9MXoHNSGWQiFy2VzEEUJjaEr3r0wrwZa1+VY8iwrDstEy+iLY8nemEdYa1VxjuA6QySRLGz9B9Unt8JOBs0M0s+YaQ/DNWB0NrWGN/GEXooKwTOR05bUU3oGhaZyUsxIkyDxv9EU0vKWs+Rmqy1TYMzeEUIiQuw+EUJtj+ebthorhohyOhD0hyvgDgjQlTVggMsAZCVue4lvyaVQIlsNzsB+JLGY5jEIgQu9XYrnq2mQdFnRlXB3dTg7WQiGs7GAiCa0xPsnsRdgjX8xRZTcFdIFNNMQOEWFoaKj+hQiqMXjjcoD+FexReKEjUX5OQBihODekUIigGkPwrVF/4AmEYZiLEVY6nGFvqAm5UXkdidISfE80PsCTzEI5MZdZa5yEMMwLLRQiuMYQfHt2R8MHMwRDWFBvoETweWWR9RTCsBOfN3gIq67sosgHuRZhZkLFQSgfUxCGxd0QCtHN7TVDaYzDnDVUKeC9rMLsYIQhVBkuRTcFI8ToRGhIaOHSZ8VRCIeFc1cqutLHaMK36ZfM9oc98rpareh5DW0vhUaMMl+XzShm8Pm+jS7RTY0hzkMY1JTsgeLRmkgIoRChyi6SrmoMwbdKIY63hj2P843yDcngBZ9NUXfXhj3z+WxfRhfptsYQeaP+JbGe89MoBF57R4QRCtH1ADNd1xiChagxvpX3VSsL+GYVIhx8pjuZTYA9hWjCIjSGCGWmN9Et3HUVXlO7S4YQClGIu2ZRgiEn3lCzld9C9wk1WniF2qKQIHaFCIYzXs0dOCyBvNFzc+H8RL6JMPwUBVGUxhASjBBbZA1lZXnHh8iAhsmDYI9cPs39RdJSmGBQayhOVCibxa5NBCHcWs3UInelLGRU0sTt/KeZwhC7L45w1urBCGhzISeiNQcK3DqsyKakqTV+jjB0Y9U11GLZmQMF7ydXqMYQzi4yhBXWoyzcoPFDA83H6GUZUfQWpYVqDMECkNoMsQ6wQcg5DZ5bztYhJummFS0UonDBcGTdiC8tSfub+xBiUx51NkMN4zNRCsFwXuwhjFD2RTj2hj3Ty2KmWHgfo0nAHv62LOzbYAjvdXtm82HPYNchL5yyNCXSGnLjCzGvEcLX9auw57SyCIUojcYQfBOHM3sVtrzGAl8FhvA+pe4tA8Oob7GG64iXgtJoDMGCeQ32HdHhrMgvwQieS3E5raMFTSuTUIhSCYZDgWStVeqesMPyXEJzOIUtlnWidILh3pzDYItJ9F0XX2xn2DLFxUgtFWXUGBIO7V1i6aA0iJW6C/zR7kMfhR3P8lktg+aaUUrBcFj7ilg0AdbNyNEoKaUalbTDt/xx2IVVlnHQsLy+JyFipfNe1kdJKbPGEEfADjUBPib41nMX30OJKbVg8I26CbbR/3w6oZYTZXPKvr99qZsS4bbefAQ2vMkKyTUHwfuQG6SVQdFo3sczKDFlb0qkNf4Eu+0pBrOCM5v58zeTYScUM8ouFKL0guE4Aw1zNwv2QXasjItlZ3ECKkAlBMMZxVptrZWpn0FtsRyzHWGD+kxDUAGqojEkHFpDeRL+DHV+pmnZgWlF+KNguNoPdRGvfyPTeBQAr7st02ym2HgllREMh5WXWZahp9Uw9TAK9z1o7PWmGdQHWDk3Ma2DLuAE4kH+qSD9Cnh/U9zxpR+VtMOHuwH+6xVvsZIGpzmQ13ub2Qrw40peby93vqhAdcfz+yCb9bidIKYzTW75eBGvNzbud1XTGEKhjHwj5wxK05y4gPa+QqEFsiVbk7tAdX9oO+ZkXuslJtMFOp7vODR2apzc9tWxSb+tnGCwYGWyPx3+7JXimDwjmHbOibDjjIrqtxrTDazME+GJgtUxaXFOnvLD276+nfdzY9I5KteUCBelT3MBw+HHqiykVztcYwSzF+CHvOxGR7ka8vxz0HmEpKH5xDy7IvK8mzOTh/zIDod8nue9I+E0lWxKpDU0C2nhnxq3FmMRfe+Qgc7+p3GuDXLCulMdRmSAx+ue70Nnobg0jVCISmqMJk5dfh35eYMFNSTivAoM/zL8AsTP4rn3izuA11FY6eMRz0E8z4UJ55EGlZaIWySU9hqTdnW5khqjhRPgx8qug9aObEF8dw1I01dQZKGkuZkLeI8dTf/4nfomdyN55XjfLCYHlRYMPujT8HeKPsZF8/0A/r0Gsx/Aj1N4b88nHeQCyGjkk7QL4hG8r1ntH/KzTZg9xLRBwu/lmpBpB+1KNyWChSM7C3VEffxUVbgKTqvpb3mvJRV0HM+zEjLtaMRnUESeNJGTZYKwm3xb+RtNvF2O5LiiC3n8RGSk8oIh3Pj/BpSDHVgRNyMjfAYtFKbRVH9EQ4jSOILLbnZcHrfHnhAMkbIjF5rjWAmnICd8Bu0sYLVgJyQUDyMHPSMYImBk3jT8mZXg0wQ13RM03BwLf3ZOM5HViaqPStopUmN4W7W7KDrboLES68M+PkIhekowXEzMzO27AVfx2nNggNsET9GN826Gtz/PcSk86ammRFAdr4rG3ECI3QujeJ1pXWtvMj7HODT2kstio7o778Nk//hea0r0xr3CrJsb9h44EMDFkOfU6GNehp9cbyUUoucEQ7CALkG2Qs3LTF5rLgJAjaFdrr+R4Se78DdmEYR6rilpwkLSGohWJ01jY7SgEdDGAwHCLvLeZb+RNxaXyS6LPSsYwu1fYumw1IqEwsrfZQm8Z5nd+TQJml6fwHt7EB70ZFPSxHl7hfAmPyOQUGwJ//vVEsHNbs0nNz2tMQQLaBgaoxSrQPCKFTZ2wDjON+9zY2baDMdqq1BZum2W14m7pzWGYMFoOGkZenH3AEKh/pA6sUlCIQMlLYhpJ8qke5D1+bXISc8LhmBFKvSiRbyNQ90w0prr0LD5jEPW6tvw+lotncm/t2NK6vhOirPliKPnm5JWWEjaWSnvNpwyi7MwDv4QKVdVNTcziddf1PbbTZndguRJsF352+uRgX4TDM2KKhhLVs8yNUdjBoyj9vJ+5HiUtKYhDTU5xmhZ+7EtQGc7T/EOGqOop5GSvmhKmrhZ0TRuA+0cEEAo1Bm+IOEwrXlM6CQUwoXb1sLbYzHnkQFSpt2S+kowhOtvZNn79RgXwMWaqYh3fzhYTRfTO0hAZoQubFOcmePWFMbUM6l91ZS0wkKSit444bB7WOBbwf7acgtY2OFr9SNkvpfLgZvnlkbUdHrUIqJWbEelCU3ddxqjBfmQxu0Lshj2MT2bdJru1sTZ2LxCIVx4SEUhujviaw2LU43O+lZjCL5dCnHQabEtSDgkXlMjm4vbPlbUoP3ymuHFXEvRAbT9d+v8SKq45f2sMZr9jagVyQMGwoVDavVqf8VdayNroRA85wxmo/DhtRdZlU9J+m1fC4ZwS/TntHx0Ij9LY8qfGb7BBzBTWAJ5hR3OtFaoazVR4H4mNZuT0JgmF4fyXmKH7H3dlDRxuy1rLuAlFmKwzXx5HbXvj2WdbDK+BzWfijE6l/fRcRRTC0ZNJH3flNREUwtGTSTvAwAA///2y1mvAAAABklEQVQDALNzu4AFm6hAAAAAAElFTkSuQmCC")
 
@@ -34225,9 +34279,9 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 			saveFile("90_run#1", function()
 				local enabledFlags = {Mutate = true, Bloom = true, Combat = true, Machine = true, Banjo = true}
-				for _, value7 in ipairs(iMap) do
-					if enabledFlags[value7.name] then
-						value7.vis = true
+				for _, value in ipairs(iMap) do
+					if enabledFlags[value.name] then
+						value.vis = true
 					end
 				end
 				local function rank2(argument5)
@@ -34309,10 +34363,10 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				value10.better = function(argument5)
 					local value11 = data[15]
 
-					for _, value12 in ipairs(value11.queue or {}) do
-						if value12 ~= argument5 then
-							if not (value12.aux) then
-								return getRank(value12) < math.max(argument5.erank or 0, getRank(argument5))
+					for _, value in ipairs(value11.queue or {}) do
+						if value ~= argument5 then
+							if not value.aux then
+								return getRank(value) < math.max(argument5.erank or 0, getRank(argument5))
 							end
 						end
 					end
@@ -34336,7 +34390,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 					end
 
-					if not (argument8) then
+					if not argument8 then
 						argument6 = data[15]
 
 						if argument6.invisWant() then
@@ -34389,7 +34443,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 							return lastMV.run(plan, callback49)
 						end)
 						lastMV.acted = ok and (response == true)
-						if not (ok) then
+						if not ok then
 							local value12 = data[11]
 							value12(lastMV.name .. (": " .. tostring(response):sub(1, 60)), "err")
 						end
@@ -34398,7 +34452,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 
 						if lastMV.flipped then
-							if not (lastMV.acted) then
+							if not lastMV.acted then
 								if (os.clock() - lastMV.t0) < 8 then
 									lastMV.at = math.max(lastMV.at, os.clock() + 2)
 								end
@@ -34426,7 +34480,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 						end
 
 						if response then
-							if not (response.Anchored) then
+							if not response.Anchored then
 								value12 = data[43]
 								response.AssemblyLinearVelocity = value12
 							end
@@ -34487,7 +34541,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 												if k then
 													value12.rank = ((type(k) == "number") and k) or nil
 													list3[#list3 + 1], list4[#list4 + 1] = value12, value12
-												elseif not (value12.ready) then
+												elseif not value12.ready then
 													if now3 >= value12.at then
 														value12.rank = nil
 														list4[#list4 + 1] = value12
@@ -34573,7 +34627,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 									end
 
 									if condition then
-										if not (value13.aux) then
+										if not value13.aux then
 											condition4 = data[15]
 											if condition4.stealDawn then
 												k = data[15]
@@ -34654,7 +34708,7 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 
 				local function callback52()
 					local ok, response = xpcall(callback51, debug.traceback)
-					if not (ok) then
+					if not ok then
 						local value11 = data[15]
 						value11.schedErr = "outer: " .. tostring(response)
 					end
@@ -34748,8 +34802,8 @@ end, [105] = function(argument, _, argument2, _, _, argument3)
 				end
 				data[55] = false
 				state2 = data[15]
-				for _, value7 in ipairs(state2.cleanup or {}) do
-					pcall(value7)
+				for _, value in ipairs(state2.cleanup or {}) do
+					pcall(value)
 				end
 				for _, connection in ipairs(connections) do
 					pcall(connection.Disconnect, connection)
@@ -35175,7 +35229,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 				local max = math.max
 				local min = math.min
 				local abs = math.abs
-				local ceil, value12 = math.ceil, tostring
+				local ceil, tostringFn = math.ceil, tostring
 				local layoutOrder, text = scrollingFrame.SortOrder.LayoutOrder, "rbxasset://fonts/families/GothamSSm.json"
 				local font = Font.new(text, scrollingFrame.FontWeight.ExtraBold, scrollingFrame.FontStyle.Normal)
 				local font2 = Font.new(text, scrollingFrame.FontWeight.ExtraBold, scrollingFrame.FontStyle.Italic)
@@ -35183,8 +35237,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 				local function callback(...)
 					local iMap, data2 = {}, {...}
-					for i, value13 in ipairs(data2) do
-						iMap[i] = ColorSequenceKeypoint.new(value13[1], value13[2])
+					for i, value in ipairs(data2) do
+						iMap[i] = ColorSequenceKeypoint.new(value[1], value[2])
 					end
 					return ColorSequence.new(iMap)
 				end
@@ -35234,12 +35288,12 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						instance.BorderSizePixel = 0
 					end
 
-					for k, value19 in next, argument5, nil do
+					for k, value in next, argument5 do
 						if type(k) == "number" then
-							value19.Parent = instance
+							value.Parent = instance
 						elseif k ~= "p" then
 							if k ~= "Parent" then
-								instance[labelMap[k] or k] = value19
+								instance[labelMap[k] or k] = value
 							end
 						end
 					end
@@ -35331,9 +35385,9 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 				local function callback10(argument4, argument5, argument6, argument7)
 					local condition, input
 
-					for _, value19 in ipairs(argument4) do
-						trackConnection(value19.InputBegan, function(input2)
-							if not (condition) then
+					for _, value in ipairs(argument4) do
+						trackConnection(value.InputBegan, function(input2)
+							if not condition then
 								if input2.UserInputState == begin then
 									if callback9(input2) then
 										if argument5(input2) ~= false then
@@ -35355,7 +35409,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						if condition then
 							if input and (input2 == input) then
 								argument6(input2)
-							elseif not (input) then
+							elseif not input then
 								if input2.UserInputType == mouseMovement then
 									argument6(input2)
 								end
@@ -35381,22 +35435,22 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 				local function callback11(argument4, ...)
 					if argument4 then
 						local ok, response = pcall(argument4, ...)
-						if not (ok) then
-							warn("[Chilli] " .. value12(response))
+						if not ok then
+							warn("[Chilli] " .. tostringFn(response))
 							if #data.errs < 50 then
-								data.errs[#data.errs + 1] = value12(response)
+								data.errs[#data.errs + 1] = tostringFn(response)
 							end
 						end
 					end
 				end
 
 				local function callback12(argument4, argument5, argument6)
-					local UIScale, condition, value19 = number("UIScale", {p = argument4, n = "InteractionScale"}), false
+					local UIScale, condition, tween = number("UIScale", {p = argument4, n = "InteractionScale"}), false
 					local function playTween(argument7, argument8)
-						if value19 then
-							value19:Cancel()
+						if tween then
+							tween:Cancel()
 						end
-						value19 = tw(UIScale, {Scale = argument7}, argument8)
+						tween = tw(UIScale, {Scale = argument7}, argument8)
 					end
 					trackConnection(argument4.MouseEnter, function()
 						condition = true
@@ -35472,8 +35526,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					if #data2 > 0 then
 						local data = data2
 						data2 = {}
-						for _, value20 in ipairs(data) do
-							callback11(value20)
+						for _, value in ipairs(data) do
+							callback11(value)
 						end
 					end
 				end)
@@ -35485,8 +35539,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 				local function formatCompact(argument4, argument5, argument6, argument7, argument8, argument9)
 					local frame, data3 = getFrame({p = argument4, n = "Caret", A = value4, P = argument6, S = argument7, T = 1, Z = argument8, getUIAspectRatioConstraint(true)}), {{0.335355, 45}, {0.664645, -45}}
-					for _, value20 in ipairs(data3) do
-						getFrame({p = frame, n = "Arm", A = value4, P = uDim2FromScale(value20[1], 0.535355), R = value20[2], S = uDim2FromScale(0.6657, argument9 or 0.2), B = argument5, Z = argument8 + 1})
+					for _, value in ipairs(data3) do
+						getFrame({p = frame, n = "Arm", A = value4, P = uDim2FromScale(value[1], 0.535355), R = value[2], S = uDim2FromScale(0.6657, argument9 or 0.2), B = argument5, Z = argument8 + 1})
 					end
 					return frame
 				end
@@ -35558,7 +35612,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 				end
 
 				local function dec(argument4)
-					if not (argument4) then
+					if not argument4 then
 						return
 					end
 					local ok, response = pcall(HttpService.JSONDecode, HttpService, argument4)
@@ -35629,7 +35683,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 				local unitMultipliers = {k = 1000, m = 1000000, b = 1000000000, t = 1000000000000}
 
 				local function callback17(argument4)
-					argument4 = value12(argument4 or ""):gsub("[%s,/]", ""):lower():gsub("s$", "")
+					argument4 = tostringFn(argument4 or ""):gsub("[%s,/]", ""):lower():gsub("s$", "")
 					if argument4 == "" then
 						return 0
 					elseif argument4 == "off" then
@@ -35642,12 +35696,12 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 				data.s2v = toNumberOrDefault
 				local function colorizeText(color, argument4)
-					local value20, value21, value22, text2 = floor((color.R * 255) + 0.5), floor((color.G * 255) + 0.5), floor((color.B * 255) + 0.5), value12(argument4):gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;")
+					local value20, value21, value22, text2 = floor((color.R * 255) + 0.5), floor((color.G * 255) + 0.5), floor((color.B * 255) + 0.5), tostringFn(argument4):gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;")
 					return ("<font color=\"rgb(%d,%d,%d)\">%s</font>"):format(value20, value21, value22, text2)
 				end
-				local index, index2, widgetSpecs = {}, {}, {}
+				local index, ClassProto, widgetSpecs = {}, {}, {}
 				index.__index = index
-				index2.__index = index2
+				ClassProto.__index = ClassProto
 				widgetSpecs.__index = widgetSpecs
 				local number5, number6, arguments = 1, 1, {}
 				local function callback18(argument4)
@@ -35730,7 +35784,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					callback6({p = frame, n = "Label", A = value4, P = value8, S = uDim2FromScale(1.14, 0.98), x = "X", W = true, Z = 6}, font3)
 
 					do
-						local condition, value23
+						local condition, tween
 						local function getUDim2()
 							local number9 = 0.06637302041053772 / number5
 							return uDim2New(number9, 0, 0.6588137149810791, 0)
@@ -35738,10 +35792,10 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 						local function playTween(argument5, argument6)
 							local uDim = getUDim2()
-							if value23 then
-								value23:Cancel()
+							if tween then
+								tween:Cancel()
 							end
-							value23 = tw(textButton, {Size = uDim2New(uDim.X.Scale * argument5, 0, uDim.Y.Scale * argument5, 0)}, argument6)
+							tween = tw(textButton, {Size = uDim2New(uDim.X.Scale * argument5, 0, uDim.Y.Scale * argument5, 0)}, argument6)
 						end
 
 						trackConnection(textButton.MouseEnter, function()
@@ -35769,8 +35823,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						object.cols[i] = {f = frame2, e = sidePreset[3], ly = number("UIListLayout", {p = frame2, n = "TabLayout", H = center, Y = layoutOrder}), pd = number("UIPadding", {p = frame2, n = "TabPadding"})}
 					end
 					local textButton2, frames, data3 = getTextButton({p = frame3, n = "ResizeGrip", A = vector2New(1, 1), Selectable = false, Z = 120, getUIAspectRatioConstraint()}), {}, {{0.5, 0.9}, {0.68, 0.54}, {0.84, 0.22}}
-					for _, value23 in ipairs(data3) do
-						frames[#frames + 1] = getFrame({p = textButton2, n = "GripBar", A = value4, P = uDim2FromScale(value23[1], value23[1]), S = uDim2FromScale(value23[2], 0.13), R = -45, B = value, T = 0.35, Z = 121})
+					for _, value100 in ipairs(data3) do
+						frames[#frames + 1] = getFrame({p = textButton2, n = "GripBar", A = value4, P = uDim2FromScale(value100[1], value100[1]), S = uDim2FromScale(value100[2], 0.13), R = -45, B = value, T = 0.35, Z = 121})
 					end
 					local condition, value3, absoluteSize
 					local function callback21(argument5)
@@ -35782,7 +35836,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						callback21(true)
 					end)
 					trackConnection(textButton2.MouseLeave, function()
-						if not (condition) then
+						if not condition then
 							callback21(false)
 						end
 					end)
@@ -35838,8 +35892,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					local frame6, TextBox = getFrame({p = frame2, n = "Underline", A = vector2New(0.5, 1), P = uDim2FromScale(0.5, 1), S = uDim2FromScale(0, 0.11), B = value, Z = 9}), number("TextBox", {p = frame2, n = "Input", A = value5, P = uDim2FromScale(0.025, 0.5), S = uDim2FromScale(0.9, 0.62), PH = "Filter features...", PC3 = value18, X = left, Z = 8})
 					callback4(TextBox)
 					local textButton3, data4 = getTextButton({p = frame2, n = "Clear", A = value6, P = uDim2FromScale(0.985, 0.5), S = uDim2FromScale(0.075, 0.74), V = false, Z = 9, getUIAspectRatioConstraint(true)}), {45, -45}
-					for _, value23 in ipairs(data4) do
-						getFrame({p = textButton3, n = "Arm", A = value4, P = value8, S = uDim2FromScale(0.82, 0.2), R = value23, B = color3FromRGB(255, 72, 72), Z = 10})
+					for _, value in ipairs(data4) do
+						getFrame({p = textButton3, n = "Arm", A = value4, P = value8, S = uDim2FromScale(0.82, 0.2), R = value, B = color3FromRGB(255, 72, 72), Z = 10})
 					end
 					callback12(textButton3, 1.12, 0.9)
 					callback14(textButton3, function()
@@ -35852,7 +35906,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 					callback2(TextBox, "Text", function()
 						textButton3.Visible = TextBox.Text ~= ""
-						if not (object.sbQuiet) then
+						if not object.sbQuiet then
 							if object.Cur then
 								object.Cur.q = TextBox.Text
 								object:Search(TextBox.Text)
@@ -35929,6 +35983,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					argument4:Resize((argument4.base.X.Scale * absoluteSize.X) * argument5, (argument4.base.Y.Scale * absoluteSize.Y) * argument5)
 				end
 
+				-- Registers Completed signal callback(s)
 				index.Show = function(argument4, open)
 					open = if open == nil then not argument4.open else open
 					if argument4.open == open then
@@ -35942,7 +35997,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					argument4.anim = true
 
 					if open then
-						if not (condition) then
+						if not condition then
 							main.Position = uDim2New(rest.X.Scale, rest.X.Offset, rest.Y.Scale + 0.245, rest.Y.Offset)
 						end
 						main.Size = argument4.size
@@ -35993,7 +36048,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 				index.Tab = function(argument4, argument5, argument6, argument7)
 					local argument = argument4
-					local object = setmetatable({W = argument, Name = argument5, Disp = argument7 or argument5, Sections = {}, q = "", ci = ((argument6 == "Right") and 2) or 1}, index2)
+					local object = setmetatable({W = argument, Name = argument5, Disp = argument7 or argument5, Sections = {}, q = "", ci = ((argument6 == "Right") and 2) or 1}, ClassProto)
 					object.btn, object.base = formatCompact2({p = argument.cols[object.ci].f, n = argument7 or argument5, S = uDim2New(1, 0, 0.13, 0), O = #argument.Tabs + 1, Text = argument7 or argument5})
 					local ScrollingFrame = number("ScrollingFrame", {p = argument.main, n = argument5 .. "Page", a = true, A = value4, T = 1, C = true, Z = 5, CanvasSize = uDim2FromOffset(0, 0), ScrollBarImageColor3 = value, ScrollingDirection = scrollingFrame.ScrollingDirection.Y, VerticalScrollBarInset = scrollingFrame.ScrollBarInset.None, V = false})
 					object.page = ScrollingFrame
@@ -36028,7 +36083,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					end)
 					argument.Tabs[#argument.Tabs + 1] = object
 					argument:Reflow()
-					if not (argument.Cur) then
+					if not argument.Cur then
 						argument:Select(object)
 					end
 					return object
@@ -36073,15 +36128,15 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 				end
 				local number8, number9, number10, number11, number12, number13 = 0.22, 0.09999999633202186, 0.67569, 0.3388905, 0.5388904999999999, 0.6192006943127453
 
-				index2.Section = function(argument4, argument5, argument, argument6)
+				ClassProto.Section = function(argument4, argument5, argument, argument6)
 					local w, argument2 = argument4.W, argument4
 					local object = setmetatable({W = w, t = argument4, Name = argument5, Disp = argument6 or argument5, open = argument ~= false, rows = {}, n = 0}, widgetSpecs)
 					object.f = getFrame({p = argument4.page, n = argument5 .. "Section", T = 1, S = toUDim2(0), AutomaticSize = scrollingFrame.AutomaticSize.Y, O = #argument4.Sections + 1, Z = 3, number("UIListLayout", {n = "SectionLayout", H = center, Y = layoutOrder, G = uDimNew(0, 2)})})
 					local value20 = callback6({p = object.f, n = argument6 or argument5, A = value4, O = 1, S = uDim2New(0.97, 0, 0, 36), x = argument6 or argument5, W = true, Z = 4}, true)
 					local frame = getFrame({p = value20, n = "ArrowClip", A = value4, P = uDim2FromScale(0.4, 0.5), S = uDim2FromOffset(1, 1), T = 1, C = true, Z = 6})
-					local frame2, value2 = getFrame({p = frame, n = "Arrow", A = value4, P = value8, S = uDim2FromOffset(1, 1), T = 1, Z = 6}), ipairs
+					local frame2, ipairsFn = getFrame({p = frame, n = "Arrow", A = value4, P = value8, S = uDim2FromOffset(1, 1), T = 1, Z = 6}), ipairs
 					w = {{number8 + (number9 * 2), number10 + (number9 * 2), value14}, {number8, number10, value13}}
-					for k, value21 in value2(w) do
+					for k, value21 in ipairsFn(w) do
 						argument, argument6 = ipairs, {{number11, 45}, {1 - number11, -45}}
 						for _, value22 in argument(argument6) do
 							getFrame({p = frame2, n = "Arm", A = value4, P = uDim2FromScale(value22[1], number12), R = value22[2], S = uDim2FromScale(value21[2], value21[1]), B = value, Z = 5 + k, getUIGradient(value21[3])})
@@ -36119,7 +36174,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					object.b = getFrame({p = object.g, n = "Content", T = 1, S = toUDim2(0), AutomaticSize = scrollingFrame.AutomaticSize.Y, Z = 3, number("UIListLayout", {n = "OptionLayout", H = center, Y = layoutOrder})})
 
 					callback2(object.b, "AbsoluteSize", function()
-						if not (object.tw) then
+						if not object.tw then
 							object.g.Size = uDim2New(1, 0, 0, (object.open and object.b.AbsoluteSize.Y) or 0)
 						end
 						if abs(object.b.AbsoluteSize.X - (object.lw or 0)) > 0.5 then
@@ -36154,6 +36209,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					end
 				end
 
+				-- Registers Completed signal callback(s)
 				widgetSpecs.Expand = function(argument4, open, argument5)
 					closeDropdown()
 					argument4.open = open
@@ -36174,18 +36230,18 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					local ar, data3 = argument4.ar, {}
 					data3.Rotation = (open and 0) or -90
 					tw(ar, data3, 0.24)
-					local value20 = tw(g, {Size = toUDim2(height)}, 0.28, quint)
-					argument4.tw = value20
+					local tween = tw(g, {Size = toUDim2(height)}, 0.28, quint)
+					argument4.tw = tween
 
 					local function callback21()
-						if argument4.tw == value20 then
+						if argument4.tw == tween then
 							argument4.tw = nil
 							g.Visible, g.ClipsDescendants = argument4.open, not argument4.open
 							g.Size = uDim2New(1, 0, 0, (argument4.open and argument4.b.AbsoluteSize.Y) or 0)
 						end
 					end
 
-					value20.Completed:Connect(callback21)
+					tween.Completed:Connect(callback21)
 				end
 
 				local function callback21(argument4, argument5, argument6)
@@ -36210,7 +36266,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					else
 						argument6 = frame2
 					end
-					if not (ratio) then
+					if not ratio then
 						data3.m = getFrame({p = argument6, n = "Main", A = value4, P = value8, S = uDim2FromScale(1, 0.85), B = value2, T = 0.5, Z = 3, callback3(0.05)})
 						data3.lb = callback6({p = data3.m, n = "Label", A = value5, P = uDim2FromScale(0.025, 0.5), S = uDim2FromScale(0.65, 0.64), x = argument5, W = true, X = left, Z = 5})
 					end
@@ -36228,7 +36284,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 							return data3.dd()
 						end
 
-						if not (data3.ratio) then
+						if not data3.ratio then
 							return
 						end
 						frame2.Size = uDim2New(number7, 0, 0, max(1, floor(((((width * number7) / number5) / data3.ratio) * (data3.lines or 1)) + 0.5)))
@@ -36236,12 +36292,13 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 					callback2(frame2, "AbsoluteSize", function()
 						if data3.shown ~= false then
-							if not (data3.ht) then
+							if not data3.ht then
 								frame.Size = uDim2New(data3.hw, 0, 0, frame2.AbsoluteSize.Y)
 							end
 						end
 					end)
 
+					-- Registers Completed signal callback(s)
 					data3.apply = function(argument8)
 						local hide = data3.hide
 						local condition = not hide
@@ -36277,7 +36334,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 							return
 						end
 						data3.shown = condition2
-						if not (condition2) then
+						if not condition2 then
 							if data3.close then
 								data3.close()
 							end
@@ -36295,11 +36352,11 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 							frame.Size = hide
 							frame.Visible = condition2
 						else
-							local value20 = tw(frame, {Size = hide}, 0.28, quint)
-							data3.ht = value20
+							local tween = tw(frame, {Size = hide}, 0.28, quint)
+							data3.ht = tween
 
 							local function callback23()
-								if data3.ht == value20 then
+								if data3.ht == tween then
 									data3.ht = nil
 									frame.Visible = data3.shown
 									if data3.shown then
@@ -36308,7 +36365,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 								end
 							end
 
-							value20.Completed:Connect(callback23)
+							tween.Completed:Connect(callback23)
 						end
 
 						if data3.o and data3.o.kids then
@@ -36330,7 +36387,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					o.Path = section.t.Name .. (" > " .. (section.Name .. (" > " .. row.name)))
 					o.ls = {}
 					row.o = o
-					if not (section.noReg) then
+					if not section.noReg then
 						w.Opts[#w.Opts + 1] = o
 						w.ByPath[o.Path] = o
 					end
@@ -36338,16 +36395,16 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 					o.Set = function(argument4, argument5, argument6)
 						set(argument4, argument5, argument6)
-						for _, value20 in ipairs(argument4.ls) do
-							callback11(value20, argument4.Value)
+						for _, value in ipairs(argument4.ls) do
+							callback11(value, argument4.Value)
 						end
 						if argument4.kids then
 							for _, kid in ipairs(argument4.kids) do
 								kid.apply()
 							end
 						end
-						if not (argument4.Skip) then
-							if not (w.busy) then
+						if not argument4.Skip then
+							if not w.busy then
 								w:Dirty()
 							end
 						end
@@ -36364,7 +36421,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						row.wf = wf
 						when.kids = when.kids or {}
 						table.insert(when.kids, row)
-						if not (row.sub) then
+						if not row.sub then
 							row.hw = 0.96
 							row.h.Size = uDim2New(0.96, 0, 0, row.h.Size.Y.Offset)
 						end
@@ -36376,13 +36433,13 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						if row.setNote then
 							row.setNote(argument4)
 						elseif row.nt then
-							row.nt.Text = value12(argument4 or "")
+							row.nt.Text = tostringFn(argument4 or "")
 						end
 					end
 
 					o.Title = function(argument4, argument5)
-						row.lb.Text = value12(argument5)
-						argument4.Disp = value12(argument5)
+						row.lb.Text = tostringFn(argument5)
+						argument4.Disp = tostringFn(argument5)
 					end
 					if o.Def == nil then
 						o.Def = getClonedTbl(o.Value)
@@ -36401,16 +36458,16 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					local control = {}
 					control.Value = argument6 == true
 
-					control.Set = function(argument10, value22, argument11)
-						value22 = value22 == true
-						argument10 = value22 ~= control.Value
-						control.Value = value22
-						value21(value22)
+					control.Set = function(argument10, value, argument11)
+						value = value == true
+						argument10 = value ~= control.Value
+						control.Value = value
+						value21(value)
 						if argument11 then
 						elseif argument10 then
-							callback11(argument7, value22)
+							callback11(argument7, value)
 						elseif argument11 == false then
-							callback11(argument7, value22)
+							callback11(argument7, value)
 						end
 					end
 
@@ -36427,7 +36484,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 				local function callback23(argument4)
 					argument4 = tonumber(argument4)
-					if not (argument4) then
+					if not argument4 then
 						return 0
 					end
 					for i = 0, 6, 1 do
@@ -36455,7 +36512,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 					local function roundValue(argument13)
 						argument13 = tonumber(argument13) or 0
-						if not (condition2) then
+						if not condition2 then
 							return math.round(argument13)
 						end
 						local number14 = 10 ^ condition3
@@ -36464,7 +36521,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 					argument6, argument = roundValue(argument6), roundValue(argument)
 					local condition4 = (condition2 and max(10 ^ (-condition3), roundValue(abs(tonumber(argument10) or (10 ^ (-condition3)))))) or max(1, math.round(abs(tonumber(argument10) or 1)))
-					local m, value22 = value20.m, value12(argument11 or "")
+					local m, value22 = value20.m, tostringFn(argument11 or "")
 					callback21(value20, 0.48, value22)
 					local TextBox = number("TextBox", {p = m, n = "Value", A = value5, P = uDim2FromScale(0.525, 0.5), S = uDim2FromScale(0.095, 0.56), B = value2, T = 0.6, Z = 5, number("UIPadding", {n = "ValuePadding"})})
 					callback4(TextBox)
@@ -36476,7 +36533,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						if condition then
 							return formatRate(argument13)
 						end
-						return (condition2 and string.format("%." .. (condition3 .. "f"), argument13)) or value12(math.round(argument13))
+						return (condition2 and string.format("%." .. (condition3 .. "f"), argument13)) or tostringFn(math.round(argument13))
 					end
 
 					local function callback24(argument13)
@@ -36490,8 +36547,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					end
 
 					local function callback25()
-						local value23 = clamp(((control.Max > control.Min) and ((control.Value - control.Min) / (control.Max - control.Min))) or 0, 0.0575, 0.9425)
-						frame2.Size, frame3.Position = uDim2FromScale(value23, 1), uDim2FromScale(value23, 0.5)
+						local max = clamp(((control.Max > control.Min) and ((control.Value - control.Min) / (control.Max - control.Min))) or 0, 0.0575, 0.9425)
+						frame2.Size, frame3.Position = uDim2FromScale(max, 1), uDim2FromScale(max, 0.5)
 						if TextBox:IsFocused() then
 							return
 						end
@@ -36501,15 +36558,15 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						callback24(text2)
 					end
 
-					control.Set = function(argument13, value23, argument14)
-						value23 = clamp(tonumber(value23) or control.Value, control.Min, control.Max)
-						value23 = if value23 > control.Min then if value23 < control.Max then clamp(roundValue(control.Min + (floor(((value23 - control.Min) / condition4) + 0.5) * condition4)), control.Min, control.Max) else value23 else value23
-						argument13 = value23 ~= control.Value
-						control.Value = value23
+					control.Set = function(argument13, value, argument14)
+						value = clamp(tonumber(value) or control.Value, control.Min, control.Max)
+						value = if value > control.Min then if value < control.Max then clamp(roundValue(control.Min + (floor(((value - control.Min) / condition4) + 0.5) * condition4)), control.Min, control.Max) else value else value
+						argument13 = value ~= control.Value
+						control.Value = value
 						callback25()
 						if argument14 then
 						elseif argument13 then
-							callback11(argument8, (condition and toNumberOrDefault(value23)) or value23)
+							callback11(argument8, (condition and toNumberOrDefault(value)) or value)
 						end
 					end
 
@@ -36555,12 +36612,12 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					return control
 				end
 
-				widgetSpecs.Dropdown = function(argument4, argument5, argument6, argument7, argument8, argument9, value20, argument10, argument11)
+				widgetSpecs.Dropdown = function(argument4, argument5, argument6, argument7, argument8, argument9, value108, argument10, argument11)
 					local w = argument4.W
 					local value21 = argument4:Row(argument5, argument10, true)
 					local textButton = getTextButton({p = value21.m, n = "Dropdown", A = value4, P = uDim2FromScale(0.845, 0.5), S = uDim2FromScale(0.28, 0.62), B = value2, T = 0.6, Z = 6, callback3(0.1)})
 					callback12(textButton, 1.025, 0.975)
-					local value22 = value12(value20 or "")
+					local value22 = tostringFn(value108 or "")
 					callback21(value21, 0.66, value22)
 					callback22(value21, 0.65, value22 ~= "")
 					if value22 ~= "" then
@@ -36574,8 +36631,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 					local function callback24()
 						local iMap = {}
-						for i, value27 in ipairs(((type(control.Options) == "function") and control.Options()) or control.Options) do
-							iMap[i] = value12(value27)
+						for i, value in ipairs(((type(control.Options) == "function") and control.Options()) or control.Options) do
+							iMap[i] = tostringFn(value)
 						end
 						return iMap
 					end
@@ -36593,13 +36650,13 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					local function callback26(textTransparency)
 						if argument9 then
 							local number18 = #control.Value
-							value23.Text = (((number18 == 0) and control.Empty) or ((number18 == 1) and value12(control.Value[1]))) or (number18 .. " selected")
+							value23.Text = (((number18 == 0) and control.Empty) or ((number18 == 1) and tostringFn(control.Value[1]))) or (number18 .. " selected")
 						else
-							value23.Text = value12(control.Value or "")
+							value23.Text = tostringFn(control.Value or "")
 						end
 						local data = data3
-						for _, value27 in next, data, nil do
-							value27.paint(textTransparency)
+						for _, value in next, data do
+							value.paint(textTransparency)
 						end
 
 						if formattedText2 then
@@ -36608,8 +36665,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 							textTransparency = ((data > 0) and 0) or 0.45
 							value26.TextTransparency = textTransparency
 							value26:FindFirstChildOfClass("UIStroke").Transparency = textTransparency
-							for _, value27 in ipairs(data4) do
-								value27.BackgroundTransparency = textTransparency
+							for _, value in ipairs(data4) do
+								value.BackgroundTransparency = textTransparency
 							end
 						end
 					end
@@ -36633,6 +36690,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						return ks
 					end
 
+					-- Registers Completed signal callback(s)
 					local function callback28(argument12)
 						local number = number14
 						local value27, number18, condition2, visible = uDim2New(1, 0, 0, number + ((condition and (number16 + number15)) or 0)), number17 * 2, condition
@@ -36654,10 +36712,10 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						if argument12 then
 							value21.rt, value21.mt = tw(value21.r, {Size = toUDim22(value27.Y.Offset)}, 0.26, quint), tw(frame, {Size = number}, 0.26, quint)
 
-							if not (condition) then
+							if not condition then
 								value21.mt.Completed:Connect(function(playbackState)
 									if playbackState == scrollingFrame.PlaybackState.Completed then
-										if not (condition) then
+										if not condition then
 											frame.Visible = false
 										end
 									end
@@ -36707,14 +36765,14 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 					local function callback30()
 						local data = data3
-						for _, value27 in next, data, nil do
-							value27.b:Destroy()
+						for _, value in next, data do
+							value.b:Destroy()
 						end
 						data3 = {}
 						data = callback24()
 
 						if #data >= 5 then
-							if not (frame2) then
+							if not frame2 then
 								frame2 = getFrame({p = frame, n = "Search", B = value2, T = 0.6, Z = 7, callback3(0.07)})
 								value24 = callback4(number("TextBox", {p = frame2, n = "Input", A = value4, P = value8, S = uDim2FromScale(0.94, 0.56), PH = "Search...", PC3 = value18, Z = 9}))
 								callback2(value24, "Text", function()
@@ -36724,11 +36782,11 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 							end
 						end
 
-						if not (control.empty) then
+						if not control.empty then
 							control.empty = callback6({p = frame, n = "Empty", x = "No match", t = 0.4, V = false, Z = 9})
 						end
 
-						for i, value27 in ipairs(data) do
+						for i, value101 in ipairs(data) do
 							local textButton2 = getTextButton({p = frame, n = "Option" .. i, O = i, B = value2, T = 0.45, Z = 7, callback3(0.07)})
 							local data5, condition2, frame3, frame4 = {b = textButton2, aw = 0}, false
 							if argument9 then
@@ -36736,10 +36794,10 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 							else
 								frame3 = getFrame({p = textButton2, n = "Accent", A = value5, P = uDim2FromScale(0, 0.5), S = uDim2FromScale(0, 1), B = value, Z = 8, getUIGradient(value15, "AccentGradient")})
 							end
-							local value28 = callback6({p = textButton2, n = "Label", A = value4, P = uDim2FromScale((argument9 and 0.56) or 0.5, 0.5), S = uDim2FromScale((argument9 and 0.62) or 0.78, 0.56), x = value27, W = true, Z = 9})
+							local value28 = callback6({p = textButton2, n = "Label", A = value4, P = uDim2FromScale((argument9 and 0.56) or 0.5, 0.5), S = uDim2FromScale((argument9 and 0.62) or 0.78, 0.56), x = value101, W = true, Z = 9})
 
 							data5.paint = function(argument12)
-								local value29 = callback25(value27)
+								local value29 = callback25(value101)
 								local number19, condition3 = (value29 and 0.85) or 0, (value29 and 0.2) or ((condition2 and 0.3) or 0.45)
 								local frame5 = (frame4 and uDim2FromScale(number19, number19)) or uDim2New(0, (value29 and data5.aw) or 0, 1, 0)
 								if argument12 then
@@ -36763,11 +36821,11 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 							callback14(textButton2, function()
 								if argument9 then
 									local clonedTbl = table.clone(control.Value)
-									local pos = table.find(clonedTbl, value27)
+									local pos = table.find(clonedTbl, value101)
 									if pos then
 										table.remove(clonedTbl, pos)
 									else
-										clonedTbl[#clonedTbl + 1] = value27
+										clonedTbl[#clonedTbl + 1] = value101
 									end
 									if argument11 then
 										control.Value = clonedTbl
@@ -36776,23 +36834,23 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 										control:Set(clonedTbl)
 									end
 								elseif argument11 then
-									control.Value = value27
+									control.Value = value101
 									callback26(true)
 								else
-									control:Set(value27)
+									control:Set(value101)
 									w.closeDD()
 								end
 							end)
 
-							data3[value27] = data5
+							data3[value101] = data5
 						end
 					end
 
 					if argument11 then
 						value25 = callback6({p = frame, n = "Hint", x = argument11[1], W = true, t = 0.28, Z = 9})
-						argument6, value20, argument10 = nil
-						formattedText2, argument6, value26, value20, argument10 = formatCompact2({p = frame, n = "Apply", S = uDim2FromOffset(0, 0), Z = 9, full = true, Text = argument11[2], LSize = uDim2FromScale(0.88, 0.56), wrap = true, h = 1.03})
-						data4 = {value20, argument10}
+						argument6, value108, argument10 = nil
+						formattedText2, argument6, value26, value108, argument10 = formatCompact2({p = frame, n = "Apply", S = uDim2FromOffset(0, 0), Z = 9, full = true, Text = argument11[2], LSize = uDim2FromScale(0.88, 0.56), wrap = true, h = 1.03})
+						data4 = {value108, argument10}
 
 						callback14(formattedText2, function()
 							if getArgument() == 0 then
@@ -36845,12 +36903,12 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 						if argument9 then
 							local ks, data5 = {}, {}
-							for _, value27 in ipairs(callback24()) do
-								data5[value27] = true
+							for _, value in ipairs(callback24()) do
+								data5[value] = true
 							end
 
-							for k, value27 in next, (((type(argument12) == "table") and argument12) or ((argument12 ~= nil) and {argument12})) or {}, nil do
-								local k2 = (((type(k) == "string") and (value27 == true)) and k) or value12(value27)
+							for k, value in next, (((type(argument12) == "table") and argument12) or ((argument12 ~= nil) and {argument12})) or {}, nil do
+								local k2 = (((type(k) == "string") and (value == true)) and k) or tostringFn(value)
 								if data5[k2] or (type(control.Options) == "function") then
 									if not (table.find(ks, k2)) then
 										ks[#ks + 1] = k2
@@ -36860,7 +36918,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 							control.Value = ks
 						else
-							local value27, condition2 = callback24(), ((argument12 ~= nil) and value12(argument12)) or nil
+							local value27, condition2 = callback24(), ((argument12 ~= nil) and tostringFn(argument12)) or nil
 							control.Value = ((((condition2 and (table.find(value27, condition2) or (type(control.Options) == "function"))) and condition2) or control.Value) or control.Def) or value27[1]
 						end
 
@@ -36879,13 +36937,13 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					end
 
 					if argument9 then
-						value20 = {}
-						for _, value27 in ipairs(((type(argument7) == "table") and argument7) or {}) do
-							value20[#value20 + 1] = value12(value27)
+						value108 = {}
+						for _, value102 in ipairs(((type(argument7) == "table") and argument7) or {}) do
+							value108[#value108 + 1] = tostringFn(value102)
 						end
-						control.Value = value20
+						control.Value = value108
 					else
-						control.Value = ((argument7 ~= nil) and value12(argument7)) or callback24()[1]
+						control.Value = ((argument7 ~= nil) and tostringFn(argument7)) or callback24()[1]
 					end
 
 					callback26(false)
@@ -36897,7 +36955,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					local value20 = argument4:Row(argument5, fd)
 					fd = getFrame({p = value20.m, n = "Field", A = value4, P = uDim2FromScale(0.845, 0.5), S = uDim2FromScale(0.28, 0.62), B = value2, T = 0.6, Z = 4, callback3(0.1)})
 					local frame, value21 = getFrame({p = fd, n = "Underline", A = vector2New(0.5, 1), P = uDim2FromScale(0.5, 1), S = uDim2FromScale(0, 0.11), B = value, Z = 6}), callback4(number("TextBox", {p = fd, n = "Input", A = value4, P = value8, S = uDim2FromScale(0.9, 0.56), PH = argument6 or "Type...", PC3 = value18, Z = 5}))
-					argument5 = value12(argument8 or "")
+					argument5 = tostringFn(argument8 or "")
 					callback21(value20, 0.66, argument5)
 					callback22(value20, 0.65, argument5 ~= "")
 					if argument5 ~= "" then
@@ -36905,14 +36963,14 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					end
 					local control = {Value = ""}
 
-					control.Set = function(argument9, value22, argument10)
-						value22 = value12(value22 or ""):match("^%s*(.-)%s*$")
-						argument9 = value22 ~= control.Value
-						control.Value = value22
-						value21.Text = value22
+					control.Set = function(argument9, value, argument10)
+						value = tostringFn(value or ""):match("^%s*(.-)%s*$")
+						argument9 = value ~= control.Value
+						control.Value = value
+						value21.Text = value
 						if argument10 then
 						elseif argument9 then
-							callback11(argument7, value22)
+							callback11(argument7, value)
 						end
 					end
 
@@ -36945,7 +37003,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 							end
 						end)
 
-						if not (condition) then
+						if not condition then
 							if argument12 ~= "" then
 								condition = true
 								value22.Text = argument12
@@ -36966,7 +37024,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					return data3
 				end
 
-				widgetSpecs.Text = function(argument4, argument5, value20, argument6)
+				widgetSpecs.Text = function(argument4, argument5, value, argument6)
 					local value21 = argument4:Row(argument5, argument6)
 					value21.lb.Size = uDim2FromScale(0.94, 0.64)
 					callback21(value21, 0.94, "")
@@ -36977,18 +37035,18 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						value21.fit()
 					end
 					local control = {}
-					control.Value = value20 or argument5
+					control.Value = value or argument5
 					control.Skip = true
 
-					control.Set = function(lines, value22)
-						value22 = value12(value22 or "")
-						if value22 == control.Value then
-							if value21.lb.Text == value22 then
+					control.Set = function(lines, text)
+						text = tostringFn(text or "")
+						if text == control.Value then
+							if value21.lb.Text == text then
 								return
 							end
 						end
-						control.Value, value21.lb.Text = value22, value22
-						lines = select(2, value22:gsub("\n", "")) + 1
+						control.Value, value21.lb.Text = text, text
+						lines = select(2, text:gsub("\n", "")) + 1
 						if lines ~= (value21.lines or 1) then
 							value21.lines = lines
 							value21.lb.Size = uDim2FromScale(0.94, ((lines > 1) and 0.9) or 0.64)
@@ -37003,7 +37061,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 				local widgetSpecs2 = {Toggle = {3, 5}, Slider = {5, 9}, Dropdown = {4, 7}, Input = {3, 5}, Button = {3, 6}, Text = {nil, 3}}
 
-				for k in next, widgetSpecs2, nil do
+				for k in next, widgetSpecs2 do
 					local widgetSpec = widgetSpecs[k]
 					widgetSpecs[k] = function(argument4, ...)
 						local value20 = widgetSpec(argument4, ...)
@@ -37021,7 +37079,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 				local value20 = userInputType({}, text)
 
 				local function callback24(argument4, argument5)
-					if not (argument4) then
+					if not argument4 then
 						return
 					end
 					local data3 = value20[argument4]
@@ -37032,7 +37090,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						end
 					end
 
-					if not (data3) then
+					if not data3 then
 						if argument5 == "" then
 							return
 						elseif argument4.RichText then
@@ -37046,7 +37104,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					if argument5 ~= "" then
 						pos, value21 = data3.t:lower():find(argument5, 1, true)
 					end
-					if not (pos) then
+					if not pos then
 						argument4.RichText, argument4.Text = false, data3.t
 						value20[argument4] = nil
 						return
@@ -37060,7 +37118,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 				end
 
 				local function callback25(argument4)
-					local value21 = value12(argument4.Disp or argument4.Name)
+					local value21 = tostringFn(argument4.Disp or argument4.Name)
 					if value21:lower():sub(-4) == " tab" then
 						return value21
 					elseif value21:lower() == "tab" then
@@ -37071,13 +37129,13 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 				index.Search = function(argument4, visible)
 					local cur = argument4.Cur
-					if not (cur) then
+					if not cur then
 						return
 					end
 					local text2 = visible:match("^%s*(.-)%s*$"):lower()
 
 					for i, section in ipairs(cur.Sections) do
-						if not (section.res) then
+						if not section.res then
 							i = (text2 == "") or (section.Disp:lower():find(text2, 1, true) ~= nil)
 							visible = if section.extra then (section.extra(text2) == true) or i else i
 							callback24(section.hd, text2)
@@ -37086,7 +37144,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 								i2 = row.o
 
 								if i2 or row.canvas then
-									local i3 = ((text2 == "") or i) or (value12((i2 and (i2.Disp or i2.Name)) or row.name):lower():find(text2, 1, true) ~= nil)
+									local i3 = ((text2 == "") or i) or (tostringFn((i2 and (i2.Disp or i2.Name)) or row.name):lower():find(text2, 1, true) ~= nil)
 
 									if text2 == "" then
 										if row.q ~= nil then
@@ -37121,7 +37179,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 								end
 								section.f.Visible = visible
 								if visible then
-									if not (section.open) then
+									if not section.open then
 										section:Expand(true, false)
 									end
 								end
@@ -37149,7 +37207,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 								i = number14
 
 								for i2, section in ipairs(tab.Sections) do
-									if not (section.res) then
+									if not section.res then
 										local os_, condition = {}, section.Disp:lower():find(argument6, 1, true) ~= nil
 
 										for _, row in ipairs(section.rows) do
@@ -37162,7 +37220,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 															os_[#os_ + 1] = i2
 															i += 1
 														else
-															if value12(i2.Disp or i2.Name):lower():find(argument6, 1, true) then
+															if tostringFn(i2.Disp or i2.Name):lower():find(argument6, 1, true) then
 																os_[#os_ + 1] = i2
 																i += 1
 															end
@@ -37190,7 +37248,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						return
 					end
 
-					if not (res) then
+					if not res then
 						res = argument5:Section("__ChilliSearchResults", true, "Other Tabs")
 						res.res = true
 						res.noReg = true
@@ -37202,8 +37260,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 					local iMap, pathMap, layoutOrder2 = {}, {}, 0
 
-					for i, value21 in ipairs(list) do
-						i = value21.t.Name .. ("\000" .. value21.s.Name)
+					for i, value103 in ipairs(list) do
+						i = value103.t.Name .. ("\000" .. value103.s.Name)
 						local headerEntry = res.hdr[i]
 
 						if not headerEntry then
@@ -37236,10 +37294,10 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						end
 
 						layoutOrder2 += 1
-						headerEntry.x.h.LayoutOrder, headerEntry.x.h.Visible, headerEntry.go = layoutOrder2, true, value21.l[1]
-						headerEntry.lb.Text = "GO TO  " .. (callback25(value21.t) .. ("  >  " .. value21.s.Disp))
+						headerEntry.x.h.LayoutOrder, headerEntry.x.h.Visible, headerEntry.go = layoutOrder2, true, value103.l[1]
+						headerEntry.lb.Text = "GO TO  " .. (callback25(value103.t) .. ("  >  " .. value103.s.Disp))
 						iMap[i] = true
-						local value, l = ipairs, value21.l
+						local value, l = ipairs, value103.l
 
 						for _, value22 in value(l) do
 							local value23 = res.mir[value22.Path]
@@ -37253,16 +37311,16 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 								end
 								clonedTbl[widgetSpec[2]] = nil
 								clonedTbl[1] = value22.Disp or value22.Name
-								i, value21 = pcall(res[value22.mk], res, table.unpack(clonedTbl, 1, max(clonedTbl.n, widgetSpec[2])))
+								i, value103 = pcall(res[value22.mk], res, table.unpack(clonedTbl, 1, max(clonedTbl.n, widgetSpec[2])))
 
-								if i and value21 then
-									value23 = value21
+								if i and value103 then
+									value23 = value103
 									value23.mirrorOf = value22
 									value23.Skip = true
 
 									if (value22.Type ~= "button") and (value22.Type ~= "text") then
 										value23.ls[#value23.ls + 1] = function(argument7)
-											if not (condition) then
+											if not condition then
 												value22:Set(getClonedTbl(argument7))
 											end
 										end
@@ -37299,18 +37357,18 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						end
 					end
 
-					for k, value21 in next, res.hdr, nil do
+					for k, value in next, res.hdr do
 						if not (iMap[k]) then
-							value21.x.h.Visible = false
+							value.x.h.Visible = false
 						end
 					end
-					for k, value21 in next, res.mir, nil do
+					for k, value in next, res.mir do
 						if not (pathMap[k]) then
-							value21.row.h.Visible = false
+							value.row.h.Visible = false
 						end
 					end
 					res.f.Visible = true
-					if not (res.open) then
+					if not res.open then
 						res:Expand(true, false)
 					end
 					callback11(argument4.qChips)
@@ -37322,7 +37380,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					argument4.nav = (argument4.nav or 0) + 1
 					local nav = argument4.nav
 					argument4:Select(t)
-					if not (section.open) then
+					if not section.open then
 						section:Expand(true)
 					end
 
@@ -37346,16 +37404,16 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						local page, h = t.page, argument5.row.h
 						h = if h.Visible then h else section.hd
 						local canvasPosition = page.CanvasPosition
-						local value21 = clamp(((h.AbsolutePosition.Y - page.AbsolutePosition.Y) + canvasPosition.Y) - (page.AbsoluteSize.Y * 0.28), 0, max(0, page.AbsoluteCanvasSize.Y - page.AbsoluteSize.Y))
-						local value22 = tw(page, {CanvasPosition = vector2New(canvasPosition.X, value21)}, 0.46, quint)
+						local absolutePosition = clamp(((h.AbsolutePosition.Y - page.AbsolutePosition.Y) + canvasPosition.Y) - (page.AbsoluteSize.Y * 0.28), 0, max(0, page.AbsoluteCanvasSize.Y - page.AbsoluteSize.Y))
+						local tween = tw(page, {CanvasPosition = vector2New(canvasPosition.X, absolutePosition)}, 0.46, quint)
 						pcall(function()
-							value22.Completed:Wait()
+							tween.Completed:Wait()
 						end)
 
 						if nav ~= argument4.nav then
 							return
 						elseif h.Parent then
-							if not (h.Visible) then
+							if not h.Visible then
 								return
 							end
 						else
@@ -37373,10 +37431,10 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 						task.delay(0.5, function()
 							if value23.Parent then
-								local value24, destroyAll = tw(value23, {Transparency = 1}, 0.28), function()
+								local tween, destroyAll = tw(value23, {Transparency = 1}, 0.28), function()
 									value23:Destroy()
 								end
-								value24.Completed:Connect(destroyAll)
+								tween.Completed:Connect(destroyAll)
 							end
 						end)
 					end)
@@ -37417,7 +37475,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					if condition then
 						if object2 then
 							if object2.gui then
-								if not (object2.gui.Parent) then
+								if not object2.gui.Parent then
 									return
 								end
 							else
@@ -37440,8 +37498,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					argument6 = max(0, tonumber(argument6) or 3)
 					local frame2 = getFrame({p = frame, n = "NotificationSlot", O = number14, S = uDim2FromScale(1, 0), T = 1, Z = 100})
 					local frame3 = getFrame({p = frame2, n = "ChilliNotify", A = value6, P = uDim2FromScale(2.1, 0.5), S = value10, B = value2, T = 0.35, C = true, Z = 101, callback3(0.045), getFrame({n = "Accent", S = uDim2FromScale(0.026, 1), B = value, Z = 102, getUIGradient(value16, "RedGradient")})})
-					callback6({p = frame3, n = "Title", P = uDim2FromScale(0.07, 0.14), S = uDim2FromScale(0.88, 0.28), x = value12(argument4 or "Notification"), X = left, Z = 103}, true)
-					callback6({p = frame3, n = "Body", P = uDim2FromScale(0.07, 0.48), S = uDim2FromScale(0.86, 0.3), x = value12(argument5 or ""), W = true, X = left, y = scrollingFrame.TextYAlignment.Top, t = 0.28, Z = 103})
+					callback6({p = frame3, n = "Title", P = uDim2FromScale(0.07, 0.14), S = uDim2FromScale(0.88, 0.28), x = tostringFn(argument4 or "Notification"), X = left, Z = 103}, true)
+					callback6({p = frame3, n = "Body", P = uDim2FromScale(0.07, 0.48), S = uDim2FromScale(0.86, 0.3), x = tostringFn(argument5 or ""), W = true, X = left, y = scrollingFrame.TextYAlignment.Top, t = 0.28, Z = 103})
 					local frame4, data3 = getFrame({p = getFrame({p = frame3, n = "Track", A = vector2New(0.5, 1), P = uDim2FromScale(0.5, 1), S = uDim2FromScale(1, 0.055), B = value2, T = 0.45, V = argument6 > 0, Z = 102}), n = "Fill", A = value5, P = uDim2FromScale(0, 0.5), S = value10, B = color3FromRGB(239, 28, 28), Z = 103}), {slot = frame2, card = frame3}
 					list[#list + 1] = data3
 					tw(frame2, {Size = uDim2FromScale(1, 0.115)}, 0.3, quint)
@@ -37464,7 +37522,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 				local function callback28(argument4)
 					condition = argument4
-					if not (argument4) then
+					if not argument4 then
 						for i = #list, 1, -1 do
 							callback26(list[i], true)
 						end
@@ -37478,11 +37536,11 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					end
 					local control, argument = {Name = argument5, Value = argument6, Def = argument6, ls = {}}, argument4
 
-					control.Set = function(_, value22)
-						control.Value = value22
+					control.Set = function(_, value)
+						control.Value = value
 						argument:Dirty()
-						for _, value23 in ipairs(control.ls) do
-							callback11(value23, value22)
+						for _, value104 in ipairs(control.ls) do
+							callback11(value104, value)
 						end
 					end
 
@@ -37525,8 +37583,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						end
 					end
 
-					for k, value21 in next, argument4.St, nil do
-						kMap[k] = {Value = value21.Value}
+					for k, value in next, argument4.St do
+						kMap[k] = {Value = value.Value}
 					end
 					return {Version = 2, Profile = argument4.Active, SavedAt = os.time(), States = kMap, Values = tabMap}
 				end
@@ -37543,7 +37601,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					if argument4.AutoSave then
 						if argument4.busy then
 							return
-						elseif not (argument4.ready) then
+						elseif not argument4.ready then
 							return
 						end
 					else
@@ -37563,8 +37621,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 				end
 
 				local function callback30(argument4, argument5, argument6)
-					for k, value21 in next, argument4, nil do
-						k = (type(value21) == "table") and value21[argument5]
+					for k, value in next, argument4 do
+						k = (type(value) == "table") and value[argument5]
 						if type(k) == "table" then
 							if k[argument6] ~= nil then
 								return k[argument6]
@@ -37584,7 +37642,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					end
 
 					for i, opt in ipairs(argument4.Opts) do
-						if not (opt.Skip) then
+						if not opt.Skip then
 							if opt.Type ~= "button" then
 								if opt.Type ~= "text" then
 									i = ((values[opt.Tab] and values[opt.Tab][opt.Sec]) and values[opt.Tab][opt.Sec][opt.Name]) or callback30(values, opt.Sec, opt.Name)
@@ -37598,16 +37656,16 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						end
 					end
 
-					for k, value21 in next, ((type(argument5.States) == "table") and argument5.States) or {}, nil do
+					for k, value in next, ((type(argument5.States) == "table") and argument5.States) or {}, nil do
 						values = argument4.St[k]
 
-						if (values and (type(value21) == "table")) and (value21.Value ~= nil) then
-							values.Value = value21.Value
-							for _, value22 in ipairs(values.ls) do
-								callback11(value22, value21.Value)
+						if (values and (type(value) == "table")) and (value.Value ~= nil) then
+							values.Value = value.Value
+							for _, value105 in ipairs(values.ls) do
+								callback11(value105, value.Value)
 							end
-						elseif type(value21) == "table" then
-							argument4:State(k, value21.Value)
+						elseif type(value) == "table" then
+							argument4:State(k, value.Value)
 						end
 					end
 
@@ -37616,17 +37674,17 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 				end
 
 				index.Find = function(argument4, argument5)
-					for _, value21 in ipairs(argument4:List()) do
-						if value21:lower() == value12(argument5):lower() then
-							return value21
+					for _, value in ipairs(argument4:List()) do
+						if value:lower() == tostringFn(argument5):lower() then
+							return value
 						end
 					end
 				end
 
 				index.Load = function(argument4, argument5)
 					local value21 = argument4:Find(argument5)
-					if not (value21) then
-						return false, "Config does not exist: " .. value12(argument5)
+					if not value21 then
+						return false, "Config does not exist: " .. tostringFn(argument5)
 					end
 					local function callback31(argument6)
 						return (type(argument6) == "table") and ((type(argument6.Values) == "table") or (type(argument6.States) == "table"))
@@ -37655,8 +37713,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 				index.List = function(argument4)
 					local data3, texts, ok, response = {[text2:lower()] = text2}, {}, pcall(listfiles, argument4.dirP .. "/configs")
 
-					for _, value21 in ipairs((ok and response) or {}) do
-						argument4 = value12(value21):gsub("\\", "/"):match("([^/]+)%.json$")
+					for _, value in ipairs((ok and response) or {}) do
+						argument4 = tostringFn(value):gsub("\\", "/"):match("([^/]+)%.json$")
 						if argument4 then
 							if argument4 ~= "" then
 								data3[argument4:lower()] = argument4
@@ -37664,9 +37722,9 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						end
 					end
 
-					for k, value21 in next, data3, nil do
+					for k, value in next, data3 do
 						if k ~= text2:lower() then
-							texts[#texts + 1] = value21
+							texts[#texts + 1] = value
 						end
 					end
 					table.sort(texts, function(argument5, argument6)
@@ -37687,9 +37745,9 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					if (if cachedFile2 then not cachedFile2 else cachedFile) and (cachedFile ~= "") then
 						local ok, response = pcall(listfiles, "ChilliLibrary/configs")
 
-						for i, value21 in ipairs((ok and response) or {}) do
-							i = value12(value21):gsub("\\", "/"):match("([^/]+)$")
-							argument5 = (i and (i:sub(-5) == ".json")) and readCachedFile(value21)
+						for i, value in ipairs((ok and response) or {}) do
+							i = tostringFn(value):gsub("\\", "/"):match("([^/]+)$")
+							argument5 = (i and (i:sub(-5) == ".json")) and readCachedFile(value)
 							if argument5 then
 								saveFile(argument4.dirP .. ("/configs/" .. i), argument5)
 							end
@@ -37699,7 +37757,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					end
 
 					cachedFile2 = dec(readCachedFile(text3)) or {}
-					argument4.AutoLoad, argument4.AutoSave, argument4.Startup = cachedFile2.AutoLoad ~= false, cachedFile2.AutoSave ~= false, value12(cachedFile2.StartupConfig or text2)
+					argument4.AutoLoad, argument4.AutoSave, argument4.Startup = cachedFile2.AutoLoad ~= false, cachedFile2.AutoSave ~= false, tostringFn(cachedFile2.StartupConfig or text2)
 					argument4.Active = argument4.Startup
 				end
 
@@ -37707,7 +37765,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					argument4.busy = true
 
 					for _, opt in ipairs(argument4.Opts) do
-						if not (opt.Skip) then
+						if not opt.Skip then
 							if opt.Def ~= nil then
 								if opt.Tab ~= "Config" then
 									pcall(opt.Set, opt, getClonedTbl(opt.Def))
@@ -37716,9 +37774,9 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						end
 					end
 
-					for _, value21 in next, argument4.St, nil do
-						if value21.Def ~= nil then
-							value21:Set(getClonedTbl(value21.Def))
+					for _, value in next, argument4.St do
+						if value.Def ~= nil then
+							value:Set(getClonedTbl(value.Def))
 						end
 					end
 					argument4.busy = false
@@ -37781,7 +37839,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 						local number15 = toVector2(input2) - value
 
-						if not (condition2) then
+						if not condition2 then
 							if number15.Magnitude < 8 then
 								return
 							end
@@ -37815,11 +37873,11 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 				end
 
 				local labelMap2, nameList = {Zero = "0", One = "1", Two = "2", Three = "3", Four = "4", Five = "5", Six = "6", Seven = "7", Eight = "8", Nine = "9", LeftControl = "LCtrl", RightControl = "RCtrl", LeftShift = "LShift", RightShift = "RShift", LeftAlt = "LAlt", RightAlt = "RAlt", Return = "Enter", Space = "Space", Backspace = "Back"}, {"Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"}
-				for i, value21 in ipairs(nameList) do
-					labelMap2["Keypad" .. value21] = "Num" .. (i - 1)
+				for i, value in ipairs(nameList) do
+					labelMap2["Keypad" .. value] = "Num" .. (i - 1)
 				end
 				local function getEntry(argument4)
-					return (argument4 and (labelMap2[argument4] or value12(argument4))) or nil
+					return (argument4 and (labelMap2[argument4] or tostringFn(argument4))) or nil
 				end
 				local enabledFlags, enabledFlags2 = {toggle = true, button = true, slider = true, input = true}, {toggle = true, button = true}
 				local function getEnabledFlag(argument4)
@@ -37882,7 +37940,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 					local function toNumberOrDefault3(argument5)
 						local number16, number17 = callback35(argument5)
-						local condition2 = (type(value24.Value) == "table") and value24.Value[value12(argument5)]
+						local condition2 = (type(value24.Value) == "table") and value24.Value[tostringFn(argument5)]
 						if type(condition2) == "table" then
 							number16, number17 = tonumber(condition2.X or condition2[1]) or number16, tonumber(condition2.Y or condition2[2]) or number17
 						end
@@ -37891,11 +37949,11 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 					local pathMap, iMap2 = {}, {}
 					local function callback36(argument5)
-						return (type(value25.Value) == "table") and (value25.Value[value12(argument5)] == true)
+						return (type(value25.Value) == "table") and (value25.Value[tostringFn(argument5)] == true)
 					end
 					local function callback37()
-						for i, value28 in ipairs(iMap2) do
-							value28.col = callback36(i)
+						for i, value in ipairs(iMap2) do
+							value.col = callback36(i)
 						end
 					end
 
@@ -37912,7 +37970,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						local function toggleCol()
 							sectionView.col = not sectionView.col
 							local clonedTbl = getClonedTbl2(value25.Value)
-							clonedTbl[value12(i)] = sectionView.col
+							clonedTbl[tostringFn(i)] = sectionView.col
 							value25:Set(clonedTbl)
 							if sectionView.tw then
 								sectionView.tw:Cancel()
@@ -37944,7 +38002,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 								return
 							end
 							local number16 = toVector2(argument5) - value
-							if not (condition2) then
+							if not condition2 then
 								if number16.Magnitude < 6 then
 									return
 								end
@@ -37954,12 +38012,12 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						end, function()
 							if condition2 then
 								local clonedTbl = getClonedTbl2(value24.Value)
-								for k, value28 in next, clonedTbl, nil do
-									if type(value28) ~= "table" then
+								for k, value in next, clonedTbl do
+									if type(value) ~= "table" then
 										clonedTbl[k] = nil
 									end
 								end
-								clonedTbl[value12(i)] = {X = frame2.Position.X.Scale, Y = frame2.Position.Y.Scale}
+								clonedTbl[tostringFn(i)] = {X = frame2.Position.X.Scale, Y = frame2.Position.Y.Scale}
 								value24:Set(clonedTbl)
 							else
 								toggleCol()
@@ -38038,10 +38096,10 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 							local value29, value30 = argument6:Places()
 
 							local function callback42()
-								local value31 = clamp(((argument6.Max > argument6.Min) and clamp((argument6.Value - argument6.Min) / (argument6.Max - argument6.Min), 0, 1)) or 0, 0.0575, 0.9425)
-								bar.Size, hold.Position = uDim2FromScale(value31, 1), uDim2FromScale(value31, 0.5)
+								local max = clamp(((argument6.Max > argument6.Min) and clamp((argument6.Value - argument6.Min) / (argument6.Max - argument6.Min), 0, 1)) or 0, 0.0575, 0.9425)
+								bar.Size, hold.Position = uDim2FromScale(max, 1), uDim2FromScale(max, 0.5)
 								if not (clone:IsFocused()) then
-									clone.RichText, clone.Text = false, (value29 and string.format("%." .. (value30 .. "f"), argument6.Value)) or value12(math.round(argument6.Value))
+									clone.RichText, clone.Text = false, (value29 and string.format("%." .. (value30 .. "f"), argument6.Value)) or tostringFn(math.round(argument6.Value))
 								end
 							end
 
@@ -38072,19 +38130,20 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 							clone.Parent = formattedText
 							local input = clone.Input
 							formattedText = clone.Underline
-							input.Text = value12(argument6.Value or "")
+							input.Text = tostringFn(argument6.Value or "")
 							callback15(input, clone, formattedText, function()
 								argument6:Set(input.Text)
-								input.Text = value12(argument6.Value or "")
+								input.Text = tostringFn(argument6.Value or "")
 							end)
 							callback39(argument5, argument6, function()
 								if not (input:IsFocused()) then
-									input.Text = value12(argument6.Value or "")
+									input.Text = tostringFn(argument6.Value or "")
 								end
 							end)
 						end
 					end
 
+					-- Disconnects all tracked RBXScriptConnections and clears the list
 					local function callback41()
 						table.clear(pathMap)
 						local number16, iMap3 = callback31(), {}
@@ -38092,50 +38151,50 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 							iMap3[i] = {}
 						end
 
-						for i, value29 in ipairs(callback32()) do
-							i = argument.ByPath[value29]
+						for i, value in ipairs(callback32()) do
+							i = argument.ByPath[value]
 
 							if i then
 								if getEnabledFlag(i) then
-									local insert, iEntry, data4 = table.insert, iMap3[toNumberOrDefault2(value29)], {o = i}
-									data4.k = (UserInputService.KeyboardEnabled and getEntry(number16[value29])) or nil
+									local insert, iEntry, data4 = table.insert, iMap3[toNumberOrDefault2(value)], {o = i}
+									data4.k = (UserInputService.KeyboardEnabled and getEntry(number16[value])) or nil
 									insert(iEntry, data4)
 								end
 							end
 						end
 
-						for i, value29 in ipairs(iMap2) do
-							for _, con in ipairs(value29.cons) do
+						for i, value in ipairs(iMap2) do
+							for _, con in ipairs(value.cons) do
 								con:Disconnect()
 							end
-							for _, entry in ipairs(value29.items) do
+							for _, entry in ipairs(value.items) do
 								entry:Destroy()
 							end
-							table.clear(value29.cons)
-							table.clear(value29.items)
+							table.clear(value.cons)
+							table.clear(value.items)
 							local iEntry, iEntry2 = iMap3[i], iMap[i]
 
 							if if iEntry2 then #iEntry == 0 else not iEntry2 then
-								value29.pn.Visible = false
+								value.pn.Visible = false
 							else
 								local number17, number18, number19 = 0.032 * number15, 0.022 * number15, 0.005 * number15
 								number16 = ((#iEntry - 1) * number19) + (#iEntry * number17)
 								local number20 = (number18 + number19) + number16
-								value29.frac = number16 / number20
-								if value29.tw then
-									value29.tw:Cancel()
-									value29.tw = nil
+								value.frac = number16 / number20
+								if value.tw then
+									value.tw:Cancel()
+									value.tw = nil
 								end
-								value29.pn.Size = uDim2FromScale(0.078 * number15, number20)
-								value29.hd.Size = uDim2FromScale(0.94, number18 / number20)
-								value29.body.Position, value29.body.Size = uDim2FromScale(0.5, (number18 + number19) / number20), uDim2FromScale(1.32, (value29.col and 0) or value29.frac)
-								value29.bl.Padding = uDimNew(number19 / number16, 0)
-								value29.car.Rotation = (value29.col and 180) or 0
-								for i2, value30 in ipairs(iEntry) do
-									callback40(value29, value30.o, value30.k, i2, number17 / number16)
+								value.pn.Size = uDim2FromScale(0.078 * number15, number20)
+								value.hd.Size = uDim2FromScale(0.94, number18 / number20)
+								value.body.Position, value.body.Size = uDim2FromScale(0.5, (number18 + number19) / number20), uDim2FromScale(1.32, (value.col and 0) or value.frac)
+								value.bl.Padding = uDimNew(number19 / number16, 0)
+								value.car.Rotation = (value.col and 180) or 0
+								for i2, value106 in ipairs(iEntry) do
+									callback40(value, value106.o, value106.k, i2, number17 / number16)
 								end
-								value29.pn.Position = uDim2FromScale(toNumberOrDefault3(i))
-								value29.pn.Visible = true
+								value.pn.Position = uDim2FromScale(toNumberOrDefault3(i))
+								value.pn.Visible = true
 							end
 						end
 					end
@@ -38143,7 +38202,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					argument.qRefresh = function(argument5)
 						local value29 = value28[argument5]
 						if value29 then
-							for k in next, value29, nil do
+							for k in next, value29 do
 								callback11(k)
 							end
 						end
@@ -38190,8 +38249,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 					local value30, value31 = pinPadSection:Dropdown("Visible Quick Bars", {"Quick Bar 1", "Quick Bar 2", "Quick Bar 3", "Quick Bar 4", "Quick Bar 5"}, {"Quick Bar 1", "Quick Bar 2", "Quick Bar 3", "Quick Bar 4", "Quick Bar 5"}, function(argument5)
 						iMap = {}
-						for i, value30 in ipairs(argument5) do
-							i = tonumber(value12(value30):match("(%d+)$"))
+						for i, value in ipairs(argument5) do
+							i = tonumber(tostringFn(value):match("(%d+)$"))
 							if i then
 								iMap[i] = true
 							end
@@ -38204,8 +38263,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 					value31:Title("Quick Bar Size")
 					local callback43_3 = {value29, settingsTab, value30, value31}
-					for _, value32 in ipairs(callback43_3) do
-						value32.Quick = false
+					for _, value in ipairs(callback43_3) do
+						value.Quick = false
 					end
 					value27.Enabled = settingsTab.Value
 					local Notifications = argument:State("Notifications", true)
@@ -38230,13 +38289,13 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 										local value34 = argument4:Button("UI Toggle Key", "Rebind", function()
 						argument.cap = "__OPEN__"
 						callback28:Note("Press any key...")
-					end, "Current: " .. value12(getEntry(value26.Value)), "")
+					end, "Current: " .. tostringFn(getEntry(value26.Value)), "")
 					value34.Quick = false
 					local function callback44()
-						value34:Note("Current: " .. value12(getEntry(value26.Value)))
+						value34:Note("Current: " .. tostringFn(getEntry(value26.Value)))
 					end
 					value26.ls[#value26.ls + 1] = callback44
-					if not (UserInputService.KeyboardEnabled) then
+					if not UserInputService.KeyboardEnabled then
 						value29:Visible(false)
 						value34:Visible(false)
 					end
@@ -38281,7 +38340,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						local value36, value37 = callback45(m)
 						local frame2, iMap3 = getFrame({p = QuickRow.r, n = "BarMenu", A = value6, P = uDim2FromScale(0.985, 0.755), S = uDim2FromScale(0.4, 0), T = 1, V = false, Z = 5, number("UIListLayout", {n = "MenuLayout", FillDirection = scrollingFrame.FillDirection.Horizontal, H = scrollingFrame.HorizontalAlignment.Right, VerticalAlignment = scrollingFrame.VerticalAlignment.Center, Y = layoutOrder, G = uDimNew(0.024, 0)})}), {}
 						for i = 1, 5, 1 do
-							enabledFlag = getTextButton({p = frame2, n = "Bar" .. i, O = i, S = uDim2FromScale(0.176, 1), x = value12(i), B = value2, T = 0.4, Z = 6, callback3(0.09)})
+							enabledFlag = getTextButton({p = frame2, n = "Bar" .. i, O = i, S = uDim2FromScale(0.176, 1), x = tostringFn(i), B = value2, T = 0.4, Z = 6, callback3(0.09)})
 							callback4(enabledFlag)
 							callback12(enabledFlag, 1.06, 0.94)
 							iMap3[i] = enabledFlag
@@ -38290,16 +38349,16 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						local function pt()
 							local value38 = callback33(path)
 							value37(value38, false)
-							textButton.Text, textButton.TextTransparency = value12(toNumberOrDefault2(path)), (value38 and 0) or 0.5
-							for i, value39 in ipairs(iMap3) do
-								value39.BackgroundTransparency, value39.TextTransparency = ((i == toNumberOrDefault2(path)) and 0.15) or 0.4, ((i == toNumberOrDefault2(path)) and 0) or 0.2
+							textButton.Text, textButton.TextTransparency = tostringFn(toNumberOrDefault2(path)), (value38 and 0) or 0.5
+							for i, value in ipairs(iMap3) do
+								value.BackgroundTransparency, value.TextTransparency = ((i == toNumberOrDefault2(path)) and 0.15) or 0.4, ((i == toNumberOrDefault2(path)) and 0) or 0.2
 							end
 							if textButton3 then
 								textButton3.Text = (((argument.cap == path) and "?") or getEntry(callback31()[path])) or "-"
 							end
 						end
 
-						local NumberValue, condition3, value38 = number("NumberValue", {p = QuickRow.r, n = "BarMenuAlpha"}), false
+						local NumberValue, condition3, tween = number("NumberValue", {p = QuickRow.r, n = "BarMenuAlpha"}), false
 
 						local function callback48(argument7)
 							local ratio = 10 + (-3.8 * argument7)
@@ -38337,14 +38396,14 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 								value35 = nil
 							end
 
-							if value38 then
-								value38:Cancel()
+							if tween then
+								tween:Cancel()
 							end
-							value38 = tw(NumberValue, {Value = (argument7 and 1) or 0}, 0.26, quint)
+							tween = tw(NumberValue, {Value = (argument7 and 1) or 0}, 0.26, quint)
 						end
 
-						for i, value39 in ipairs(iMap3) do
-							callback14(value39, function()
+						for i, value in ipairs(iMap3) do
+							callback14(value, function()
 								local clonedTbl = getClonedTbl2(value22.Value)
 								clonedTbl[path] = i
 								value22:Set(clonedTbl)
@@ -38403,7 +38462,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 									i3 = row2.o
 
 									if i3 then
-										if not (section2.noReg) then
+										if not section2.noReg then
 											if getEnabledFlag(i3) then
 												row2, i = callback25(i3.Section.t) .. ("  >  " .. i3.Section.Disp)
 
@@ -38433,7 +38492,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						local hxMap, condition3 = {}, false
 
 						for i, formattedText in ipairs(formattedTexts) do
-							if not (formattedText.hdr) then
+							if not formattedText.hdr then
 								i = (argument5 == "") or (formattedText.s:find(argument5, 1, true) ~= nil)
 								formattedText.h.Visible = i
 								callback24(formattedText.lb, argument5)
@@ -38537,12 +38596,12 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 							return
 						end
 
-						if input.KeyCode.Name == value12(value26.Value) then
+						if input.KeyCode.Name == tostringFn(value26.Value) then
 							gameProcessed = not argument.open
 							return argument:Show(gameProcessed)
 						end
 
-						if not (value29.Value) then
+						if not value29.Value then
 							return
 						end
 						local value, value36, value37 = next, callback31()
@@ -38579,8 +38638,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						callback46()
 					end
 					value24.ls[#value24.ls + 1] = function()
-						for i, value36 in ipairs(iMap2) do
-							value36.pn.Position = uDim2FromScale(toNumberOrDefault3(i))
+						for i, value in ipairs(iMap2) do
+							value.pn.Position = uDim2FromScale(toNumberOrDefault3(i))
 						end
 					end
 					value25.ls[#value25.ls + 1] = callback37
@@ -38625,7 +38684,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					value22.NoSave = true
 
 					local value23 = configSection:Toggle("Auto Save Config", argument2.AutoSave, function(autoSave)
-						if not (argument2.ready) then
+						if not argument2.ready then
 							return
 						end
 						argument2.AutoSave = autoSave
@@ -38636,7 +38695,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					end, "Auto save: " .. argument2.Active)
 
 					local value24 = configSection:Toggle("Auto Load Config", argument2.AutoLoad, function(autoLoad)
-						if not (argument2.ready) then
+						if not argument2.ready then
 							return
 						end
 						argument2.AutoLoad = autoLoad
@@ -38666,8 +38725,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 					argument2.cfgNotes = cfgNotes
 					local function callback31()
-						for _, value27 in ipairs(data3) do
-							value27:Refresh(argument2:List())
+						for _, value in ipairs(data3) do
+							value:Refresh(argument2:List())
 						end
 						cfgNotes()
 					end
@@ -38745,8 +38804,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					local callback34, deleteList = function(argument5)
 						local condition2 = false
 
-						for i, value27 in ipairs(argument5) do
-							i = argument2:Find(value27)
+						for i, value in ipairs(argument5) do
+							i = argument2:Find(value)
 
 							if i then
 								if i:lower() ~= "default" then
@@ -38775,7 +38834,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 					data3[3] = argument4:Dropdown("Set Startup Config", value21, argument2.Startup, function(argument5)
 						local value27 = argument2:Find(argument5)
-						if not (value27) then
+						if not value27 then
 							return callback31()
 						end
 						argument2.Startup = value27
@@ -38815,7 +38874,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						if ((type(condition2) ~= "table") or (condition2.Format ~= "ChilliLibraryConfig")) or (type(condition2.Config) ~= "table") then
 							return data.Notify("Import Failed", "Paste exported config JSON first.")
 						end
-						match = callback33(value12(condition2.Name or "Imported"):sub(1, 40)) or "Imported"
+						match = callback33(tostringFn(condition2.Name or "Imported"):sub(1, 40)) or "Imported"
 						local match2, number15 = match, 1
 						while argument2:Find(match2) do
 							number15 += 1
@@ -38832,8 +38891,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					local callback34_2 = data3
 					data3 = {}
 					argument:UP(data3, 0, callback34_2[2], callback34_2[3], callback34_2[4], callback34_2[5])
-					for _, value28 in ipairs(data3) do
-						value28.Skip = true
+					for _, value in ipairs(data3) do
+						value.Skip = true
 					end
 					cfgNotes()
 					return configTab
@@ -38923,8 +38982,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 					local function callback31(argument6, argument7, argument8, argument9, argument10, argument11, argument12, argument13, argument14)
 						local TextLabel = number("TextLabel", {p = argument6, P = uDim2FromOffset(argument8, argument9), S = uDim2FromOffset(argument10, argument11), FontFace = font, TextColor3 = value, TextSize = argument7, X = left, Text = argument12 or "", Z = 12})
-						for k, value21 in next, argument14 or {}, nil do
-							TextLabel[k] = value21
+						for k, value in next, argument14 or {}, nil do
+							TextLabel[k] = value
 						end
 						argument10 = getUIStroke(TextLabel, max(1, argument7 * ((argument13 and 0.065) or 0.08)), true)
 						if argument13 then
@@ -38995,8 +39054,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 				local font4, data3 = Font.new("rbxasset://fonts/families/RobotoMono.json", scrollingFrame.FontWeight.Bold), {}
 				data3.Center = scrollingFrame.TextXAlignment.Center
 				data3.Right = right
-				local index3 = {}
-				index3.__index = index3
+				local ClassProto = {}
+				ClassProto.__index = ClassProto
 				local function getFont(argument4)
 					return (((argument4 == "code") and font4) or argument4) or font
 				end
@@ -39046,7 +39105,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 				end
 
 				local function callback34(argument4, argument5, argument6, argument7, argument8, applyStrokeMode, argument9)
-					if not (argument9) then
+					if not argument9 then
 						if argument5.StrokeColor == nil then
 							if argument5.StrokeThickness == nil then
 								return
@@ -39106,8 +39165,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					end}
 
 					data4.Set = function(argument8)
-						for k, value21 in next, argument8, nil do
-							argument6[k] = value21
+						for k, value in next, argument8 do
+							argument6[k] = value
 						end
 						callback38(argument4, data4)
 						return data4
@@ -39119,10 +39178,10 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 				end
 
 				local function callback40(argument4, argument5, argument6, argument7)
-					argument5.Text, argument5.FontFace, argument5.TextSize, argument5.TextColor3 = value12(argument6.Text or ""), getFont(argument6.Font), max(6, floor((argument4.ts * (argument6.Scale or 1)) + 0.5)), callback31(argument6.Color, argument7)
+					argument5.Text, argument5.FontFace, argument5.TextSize, argument5.TextColor3 = tostringFn(argument6.Text or ""), getFont(argument6.Font), max(6, floor((argument4.ts * (argument6.Scale or 1)) + 0.5)), callback31(argument6.Color, argument7)
 				end
 
-				index3.Frame = function(argument4, argument5)
+				ClassProto.Frame = function(argument4, argument5)
 					local frame2 = getFrame({n = argument5.Name or "Panel", B = value2, T = 1, Z = 6})
 					return callback39(argument4, frame2, argument5, function()
 						callback37(argument4, frame2, argument5)
@@ -39131,7 +39190,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					end)
 				end
 
-				index3.Text = function(argument4, argument5)
+				ClassProto.Text = function(argument4, argument5)
 					local TextLabel = number("TextLabel", {n = argument5.Name or "Text", RichText = true, Z = argument5.ZIndex or 7})
 
 					return callback39(argument4, TextLabel, argument5, function()
@@ -39143,7 +39202,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					end)
 				end
 
-				index3.Button = function(argument4, argument5)
+				ClassProto.Button = function(argument4, argument5)
 					local textButton, condition2, condition3 = getTextButton({n = "Button", B = callback31(argument5.Background, value2), RichText = true, Z = 8}), false, false
 					local function callback41()
 						local value21 = callback32(argument5.BackgroundTransparency, 0.35)
@@ -39181,17 +39240,17 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					return value21
 				end
 
-				index3.Image = function(argument4, argument5)
+				ClassProto.Image = function(argument4, argument5)
 					local ImageLabel = number("ImageLabel", {n = "Image", B = value2, T = 1, ScaleType = scrollingFrame.ScaleType.Fit, Z = argument5.ZIndex or 7})
 					return callback39(argument4, ImageLabel, argument5, function()
-						ImageLabel.Image = value12(argument5.Image or "")
+						ImageLabel.Image = tostringFn(argument5.Image or "")
 						callback37(argument4, ImageLabel, argument5)
 						callback34(ImageLabel, argument5, value, 0.08, argument4.u, border)
 						destroyAll(ImageLabel, (argument5.Corner or 0.3) * argument4.u)
 					end)
 				end
 
-				index3.Bar = function(argument4, argument5)
+				ClassProto.Bar = function(argument4, argument5)
 					local frame2 = getFrame({n = "Bar", C = true, Z = 7})
 					local frame3 = getFrame({p = frame2, n = "Fill", S = uDim2FromScale(0, 1), Z = 8})
 
@@ -39204,26 +39263,26 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					end)
 				end
 
-				index3.Root = function(argument4)
+				ClassProto.Root = function(argument4)
 					return argument4.root
 				end
-				index3.Dock = function(argument4)
+				ClassProto.Dock = function(argument4)
 					return argument4.dock
 				end
-				index3.Unit = function(argument4)
+				ClassProto.Unit = function(argument4)
 					return argument4.u
 				end
-				index3.Width = function(argument4)
+				ClassProto.Width = function(argument4)
 					return argument4.w
 				end
-				index3.TextSize = function(argument4)
+				ClassProto.TextSize = function(argument4)
 					return argument4.ts
 				end
-				index3.Query = function(argument4)
+				ClassProto.Query = function(argument4)
 					return argument4.query
 				end
 
-				index3.SetDock = function(argument4, argument5, argument6)
+				ClassProto.SetDock = function(argument4, argument5, argument6)
 					argument4.du, argument4.dg = max(0, argument5), argument6.Gap
 					argument4.dirty = true
 					if argument6.Divider ~= nil then
@@ -39231,14 +39290,14 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					end
 				end
 
-				index3.SetContentLines = function(argument4, argument5)
+				ClassProto.SetContentLines = function(argument4, argument5)
 					argument4.ch = ceil(argument5 * argument4.u)
 					argument4.dirty = true
 				end
-				index3.OnResize = function(argument4, argument5)
+				ClassProto.OnResize = function(argument4, argument5)
 					argument4.rh[#argument4.rh + 1] = argument5
 				end
-				index3.Attach = attach
+				ClassProto.Attach = attach
 
 				local function callback41(argument4)
 					for i = #argument4.pp, 1, -1 do
@@ -39262,7 +39321,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 
 					while argument do
 						if argument:IsA("GuiObject") then
-							if not (argument.Visible) then
+							if not argument.Visible then
 								return false
 							end
 						end
@@ -39297,7 +39356,7 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 					local frame3 = getFrame({p = m, n = "CanvasDock", T = 1, V = false, Z = 7})
 					local frame4 = getFrame({p = m, n = "CanvasDockRule", B = color3FromRGB(170, 174, 184), V = false, Z = 7})
 					local frame5 = getFrame({p = ScrollingFrame, n = "CanvasRoot", AutomaticSize = scrollingFrame.AutomaticSize.Y, T = 1, S = toUDim2(0), Z = 6})
-					local object = setmetatable({sty = style, root = frame5, dock = frame3, el = {}, pp = {}, pa = {}, rh = {}, b = argument5.Build, u = 16, ts = 13, lh = style.LineHeight, w = 0, query = "", du = 0, dr = true, dirty = true}, index3)
+					local object = setmetatable({sty = style, root = frame5, dock = frame3, el = {}, pp = {}, pa = {}, rh = {}, b = argument5.Build, u = 16, ts = 13, lh = style.LineHeight, w = 0, query = "", du = 0, dr = true, dirty = true}, ClassProto)
 
 					local function callback43()
 						local parent, width = r.Parent, r.AbsoluteSize.X
@@ -39347,12 +39406,12 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 							object.b = nil
 							callback11(parent, object, value24, u)
 						end
-						for _, value25 in ipairs(object.rh) do
-							callback11(value25, object, value24, u)
+						for _, value in ipairs(object.rh) do
+							callback11(value, object, value24, u)
 						end
 						callback41(object)
-						for _, value25 in ipairs(object.el) do
-							pcall(value25.Apply)
+						for _, value in ipairs(object.el) do
+							pcall(value.Apply)
 						end
 						number19 = max(object.ch or ceil(frame5.AbsoluteSize.Y), ceil(u * style.MinLines), 1)
 						parent = min(number19, ceil(u * floor(style.MaxLines)))
@@ -39415,8 +39474,8 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 						end
 
 						if #object.pa > 0 then
-							for _, value23 in ipairs(object.pa) do
-								pcall(value23.Apply)
+							for _, value in ipairs(object.pa) do
+								pcall(value.Apply)
 							end
 							table.clear(object.pa)
 							object.dirty = true
@@ -39430,12 +39489,12 @@ end, [41] = getfenv, [50] = function(argument, _, _, _, argument2)
 									number18 = deltaTime
 									local ok, response = pcall(callback43)
 
-									if not (ok) then
+									if not ok then
 										object.dirty = true
-										if not (object.warned) then
+										if not object.warned then
 											object.warned = true
-											warn("[Chilli] canvas " .. value12(response))
-											data.errs[#data.errs + 1] = "canvas " .. value12(response)
+											warn("[Chilli] canvas " .. tostringFn(response))
+											data.errs[#data.errs + 1] = "canvas " .. tostringFn(response)
 										end
 									end
 								end
@@ -39685,7 +39744,7 @@ end, [78] = string.sub, [13] = buffer.readi16, [52] = function(argument, _, argu
 
 		return function()
 			local number = 11
-			local value4, value5, value6, number2, number3, value7, value8, value9, value10, value11, value12, value13, _, number4
+			local data51, value5, value6, number2, number3, value7, value8, number72, value10, value11, number82, number73, _, number4
 
 			while true do
 				local number5, number6
@@ -39693,21 +39752,21 @@ end, [78] = string.sub, [13] = buffer.readi16, [52] = function(argument, _, argu
 				if number <= 5 then
 					if number <= 2 then
 						if number <= 0 then
-							local number7, number8 = value9 - 1, 1 + 0
-							local number9 = value12 - number8
-							local data = {number7 + 0, number8, nil, value4, number9}
-							number, value4 = 8, data
+							local number7, number8 = number72 - 1, 1 + 0
+							local number9 = number82 - number8
+							local data = {number7 + 0, number8, nil, data51, number9}
+							number, data51 = 8, data
 						elseif number <= 1 then
 							return value11
 						else
-							local value14 = value4[2]
-							number, value4 = 0, value14
+							local value14 = data51[2]
+							number, data51 = 0, value14
 						end
 					elseif number <= 3 then
 						local value14 = argument[55](number4, 255)
 						value10[_], value10[value14] = value10[value14], value10[_]
 						local value15 = argument[93](value5, number2, number3, value6, (argument[42](value10[argument[55](value10[_] + value10[value14], 255)], 24)))
-						argument[54](value11, value13, (argument[56](argument[57](value7, value8 + value13), value15)))
+						argument[54](value11, number73, (argument[56](argument[57](value7, value8 + number73), value15)))
 						number, value5, value6, number2, number3 = 7, _, value14, _, value14
 					elseif number <= 4 then
 						local value14 = argument[55](value6 + value10[_], 255)
@@ -39730,22 +39789,22 @@ end, [78] = string.sub, [13] = buffer.readi16, [52] = function(argument, _, argu
 						value10[value14], value10[value15] = value10[value15], value10[value14]
 						number, value5, value6, number2, number3 = 5, number7, value15, argument[42](value10[argument[55](value10[value14] + value10[value15], 255)], 0), value14 + 1
 					elseif number <= 7 then
-						local condition, condition2, condition3 = value4[3], value4[1], value4[4]
+						local condition, condition2, condition3 = data51[3], data51[1], data51[4]
 						local number7, condition4 = condition + condition2, condition2 <= 0
 						condition2, condition = number7 >= condition3, number7 <= condition3
 						condition3 = (condition4 and condition2) or (not condition4 and condition)
-						value4[3] = number7
+						data51[3] = number7
 						if condition3 then
-							number, value13 = 6, number7
+							number, number73 = 6, number7
 						else
 							number = 2
 						end
 					else
-						local condition, condition2, condition3 = value4[5], value4[2], value4[1]
+						local condition, condition2, condition3 = data51[5], data51[2], data51[1]
 						local number7, condition4 = condition + condition2, condition2 <= 0
 						condition2, condition = number7 >= condition3, number7 <= condition3
 						condition3 = (condition4 and condition2) or (not condition4 and condition)
-						value4[5] = number7
+						data51[5] = number7
 						if condition3 then
 							number, value5 = 9, number7
 						else
@@ -39760,8 +39819,8 @@ end, [78] = string.sub, [13] = buffer.readi16, [52] = function(argument, _, argu
 					argument[16](value11, value5, (argument[56](argument[102](value7, value8 + value5), value14)))
 					number, number2, number3 = 8, number5, number6
 				elseif number <= 10 then
-					local value14 = value4[4]
-					number, value4 = 1, value14
+					local value14 = data51[4]
+					number, data51 = 1, value14
 				else
 					local value14, value15 = value[5][value[4]], value2[5][value2[4]]
 					local number7 = argument[96](value14) - value15
@@ -39770,8 +39829,8 @@ end, [78] = string.sub, [13] = buffer.readi16, [52] = function(argument, _, argu
 					local number9, number10 = number8 - 1, 4 + 0
 					local number11 = 0 - number10
 					local data
-					data, number = {number10, value4, number11, number9 + 0, nil}, 7
-					value4, number2, number3, value7, value8, value9, value10, value11, value12 = data, 0, 0, value14, value15, number7, value16, value17, number8
+					data, number = {number10, data51, number11, number9 + 0, nil}, 7
+					data51, number2, number3, value7, value8, number72, value10, value11, number82 = data, 0, 0, value14, value15, number7, value16, value17, number8
 				end
 			end
 		end
@@ -39830,8 +39889,8 @@ end, BP = function(argument, argument2, argument3, argument4)
 
 				argument2 = {__index = function(argument10, argument11)
 					local number2 = 183
-					local value22
-					local argument2, argument3, argument4, number3, number, number4, value23, number5, number6, value24, value25, h2, value26, value27, value28, value29 = argument10, argument11
+					local data52
+					local argument2, argument3, argument4, number3, number, number4, value23, number5, number6, number112, value25, h2, number133, value27, number134, number103 = argument10, argument11
 
 					while true do
 						local number7, number8, number9
@@ -39856,8 +39915,8 @@ end, BP = function(argument, argument2, argument3, argument4)
 													number2, argument4, number3, number = 73, number10, number11, number12
 												else
 													local number10, number11 = number - 1, 1 + 0
-													local data = {value22, value26 - number11, number11, nil, number10 + 0}
-													number2, value22 = 67, data
+													local data = {data52, number133 - number11, number11, nil, number10 + 0}
+													number2, data52 = 67, data
 												end
 											elseif number2 <= 3 then
 												local value31 = number[argument4]
@@ -39872,8 +39931,8 @@ end, BP = function(argument, argument2, argument3, argument4)
 												local value31, number12, number13 = value5(number), 1583242846, number - (number % 4)
 												local number14, number15 = number13 - 1, 4 + 0
 												local number16 = 0 - number15
-												local data = {number15, number14 + 0, number16, value22, nil}
-												number2, value22, argument4, number5, number6, value24, value25, h2, value26 = 161, data, argument10, 94, number10, number11, value31, number12, number13
+												local data = {number15, number14 + 0, number16, data52, nil}
+												number2, data52, argument4, number5, number6, number112, value25, h2, number133 = 161, data, argument10, 94, number10, number11, value31, number12, number13
 											else
 												local number10 = 1 + number3
 												local condition
@@ -39905,11 +39964,11 @@ end, BP = function(argument, argument2, argument3, argument4)
 									elseif number2 <= 17 then
 										if number2 <= 14 then
 											if number2 <= 12 then
-												local condition, condition2, condition3 = value22[3], value22[5], value22[1]
+												local condition, condition2, condition3 = data52[3], data52[5], data52[1]
 												local number10, condition4 = condition + condition2, condition2 <= 0
 												condition2, condition = number10 >= condition3, number10 <= condition3
 												condition3 = (condition4 and condition2) or (not condition4 and condition)
-												value22[3] = number10
+												data52[3] = number10
 												if condition3 then
 													number2, number = 23, number10
 												else
@@ -39940,8 +39999,8 @@ end, BP = function(argument, argument2, argument3, argument4)
 										if number2 <= 18 then
 											number2, number3 = 29, 1 + number3
 										elseif number2 <= 19 then
-											local value31 = value2(value23, number3 + value29)
-											value(value26, value29, (value3(value27, j[number5], value31)))
+											local value31 = value2(value23, number3 + number103)
+											value(number133, number103, (value3(value27, j[number5], value31)))
 											number7 = tp[number5]
 											number2, number5 = 195, number7
 										else
@@ -39953,9 +40012,9 @@ end, BP = function(argument, argument2, argument3, argument4)
 									elseif number2 <= 22 then
 										local number10, number11, number12 = number3 + 1, 217, 91
 										local number13, number14 = 0, ((((argument4 + 128) % 256) * number11) + number12) % 256
-										number2, argument4, number3, number, number5, number6, value24, value25, h2, value26, value27 = 58, number10, 128, number11, number12, number13, number14, _, h, value6(value23, number10 + number13), value3
+										number2, argument4, number3, number, number5, number6, number112, value25, h2, number133, value27 = 58, number10, 128, number11, number12, number13, number14, _, h, value6(value23, number10 + number13), value3
 									else
-										argument10 = (value24 + (argument4 * number6)) % 256
+										argument10 = (number112 + (argument4 * number6)) % 256
 										_(value25, number, (value3(number5, value6(value23, number + number3), argument10)))
 										number2, argument4 = 12, argument10
 									end
@@ -39970,11 +40029,11 @@ end, BP = function(argument, argument2, argument3, argument4)
 													number2, number4, value23, number5 = 9, value31, value32, number10
 												end
 											elseif number2 <= 25 then
-												local condition, condition2, condition3 = value22[3], value22[1], value22[4]
+												local condition, condition2, condition3 = data52[3], data52[1], data52[4]
 												local number10, condition4 = condition + condition2, condition2 <= 0
 												condition2, condition = number10 >= condition3, number10 <= condition3
 												condition3 = (condition4 and condition2) or (not condition4 and condition)
-												value22[3] = number10
+												data52[3] = number10
 												if condition3 then
 													number2, number4 = 130, number10
 												else
@@ -39983,18 +40042,18 @@ end, BP = function(argument, argument2, argument3, argument4)
 											else
 												local value31, number10 = value11(number4), 1 + 0
 												local number11 = 1 - number10
-												local data = {number10, nil, value22, number4 + 0, number11}
-												number2, value22, value23 = 28, data, value31
+												local data = {number10, nil, data52, number4 + 0, number11}
+												number2, data52, value23 = 28, data, value31
 											end
 										elseif number2 <= 27 then
 											local value31 = value6(value25, number3 + 2)
 											number2, number5 = ((128 > value31) and 98) or 103, value31
 										elseif number2 <= 28 then
-											local condition, condition2, condition3 = value22[5], value22[1], value22[4]
+											local condition, condition2, condition3 = data52[5], data52[1], data52[4]
 											local number10, condition4 = condition + condition2, condition2 <= 0
 											condition, condition2 = number10 >= condition3, number10 <= condition3
 											condition3 = (condition4 and condition) or (not condition4 and condition2)
-											value22[5] = number10
+											data52[5] = number10
 											if condition3 then
 												number2, number5 = 114, number10
 											else
@@ -40005,18 +40064,18 @@ end, BP = function(argument, argument2, argument3, argument4)
 											number7 = (135 + argument4) % 256
 											local value31, number12, number13 = value5(number4), 2273806215, number4 - (number4 % 4)
 											local number14, number15 = number13 - 1, 4 + 0
-											local data = {value22, 0 - number15, number15, number14 + 0, nil}
-											number2, value22, number5, number6, value24, value25, h2, value26, value27, value28 = 195, data, number7, 135, value12, number10, number11, value31, number12, number13
+											local data = {data52, 0 - number15, number15, number14 + 0, nil}
+											number2, data52, number5, number6, number112, value25, h2, number133, value27, number134 = 195, data, number7, 135, value12, number10, number11, value31, number12, number13
 										end
 									elseif number2 <= 32 then
 										if number2 <= 30 then
 											number2, number3 = 122, 1 + number3
 										elseif number2 <= 31 then
-											local condition, condition2, condition3 = value22[5], value22[2], value22[4]
+											local condition, condition2, condition3 = data52[5], data52[2], data52[4]
 											local number10, condition4 = condition + condition2, condition2 <= 0
 											condition2, condition = number10 >= condition3, number10 <= condition3
 											condition3 = (condition4 and condition2) or (not condition4 and condition)
-											value22[5] = number10
+											data52[5] = number10
 											if condition3 then
 												number2, number5 = 8, number10
 											else
@@ -40031,8 +40090,8 @@ end, BP = function(argument, argument2, argument3, argument4)
 										local value31 = number3(argument4, number4, number)
 										number2, number3 = 66, value31
 									elseif number2 <= 34 then
-										local value31 = value22[4]
-										number2, value22 = 66, value31
+										local value31 = data52[4]
+										number2, data52 = 66, value31
 									else
 										number2, number3 = 66, argument4 + (number3 * 4294967296)
 									end
@@ -40040,8 +40099,8 @@ end, BP = function(argument, argument2, argument3, argument4)
 									if number2 <= 38 then
 										if number2 <= 36 then
 											local number10, number11 = number4 - 1, 1 + 0
-											local data = {number11, nil, value28 - number11, number10 + 0, value22}
-											number2, value22 = 25, data
+											local data = {number11, nil, number134 - number11, number10 + 0, data52}
+											number2, data52 = 25, data
 										elseif number2 <= 37 then
 											local number10 = number3 + 1
 											local value31 = value6(value23, number10)
@@ -40069,9 +40128,9 @@ end, BP = function(argument, argument2, argument3, argument4)
 										number17, number2, number = number16 + (number10 + (number15 + number11)), 33, 4 + number
 										number4 = number17
 									elseif number2 <= 43 then
-										local value31, value32, number10 = value22[1], number5(value25), number3 + number
+										local value31, value32, number10 = data52[1], number5(value25), number3 + number
 										local value33 = value6(value23, number10)
-										number2, value22, argument4, number3, number4 = ((value33 < 128) and 5) or 158, value31, value32, number10, value33
+										number2, data52, argument4, number3, number4 = ((value33 < 128) and 5) or 158, value31, value32, number10, value33
 									else
 										local number10, number11, number12 = number3 + 1, (76 + argument4) % 256, 0
 										local value31 = value2(value23, 0 + number10)
@@ -40084,9 +40143,9 @@ end, BP = function(argument, argument2, argument3, argument4)
 										local value31 = value6(value23, 2 + number3)
 										number2, number5 = ((value31 >= 128) and 47) or 188, value31
 									else
-										local value31, value32, number10 = value22[3], number5(value25), number3 + number
+										local value31, value32, number10 = data52[3], number5(value25), number3 + number
 										local value33 = value6(value23, number10)
-										number2, value22, argument4, number3, number, number4 = ((128 > value33) and 178) or 79, value31, value32, value14, number10, value33
+										number2, data52, argument4, number3, number, number4 = ((128 > value33) and 178) or 79, value31, value32, value14, number10, value33
 									end
 								elseif number2 <= 47 then
 									local value31 = value6(value23, number3 + 3)
@@ -40095,8 +40154,8 @@ end, BP = function(argument, argument2, argument3, argument4)
 									number17, number2, number3 = number15 + (number16 + number12), 123, number3 + 4
 									number = number17
 								else
-									local value31 = value22[1]
-									number2, value22 = 136, value31
+									local value31 = data52[1]
+									number2, data52 = 136, value31
 								end
 							elseif number2 <= 73 then
 								if number2 <= 60 then
@@ -40105,11 +40164,11 @@ end, BP = function(argument, argument2, argument3, argument4)
 											if number2 <= 49 then
 												number2 = ((183 < number5) and 171) or 132
 											elseif number2 <= 50 then
-												local value31, value32 = value22[2], value6(value25, number4)
-												number2, value22, argument4 = ((128 <= value32) and 53) or 112, value31, value32
+												local value31, value32 = data52[2], value6(value25, number4)
+												number2, data52, argument4 = ((128 <= value32) and 53) or 112, value31, value32
 											else
-												local value31 = value22[2]
-												number2, value22, number3 = 66, value31, argument4
+												local value31 = data52[2]
+												number2, data52, number3 = 66, value31, argument4
 											end
 										elseif number2 <= 52 then
 											local value31 = value6(value25, number3)
@@ -40119,9 +40178,9 @@ end, BP = function(argument, argument2, argument3, argument4)
 											number2, number3 = ((128 <= value31) and 173) or 154, value31
 										else
 											local number10, number11 = number - 1, 1 + 0
-											local number12 = value26 - number11
-											local data = {number10 + 0, value22, number12, nil, number11}
-											number2, value22 = 12, data
+											local number12 = number133 - number11
+											local data = {number10 + 0, data52, number12, nil, number11}
+											number2, data52 = 12, data
 										end
 									elseif number2 <= 57 then
 										if number2 <= 55 then
@@ -40138,17 +40197,17 @@ end, BP = function(argument, argument2, argument3, argument4)
 											number2, argument4 = 85, number8
 										end
 									elseif number2 <= 58 then
-										value25(h2, number6, (value27(value26, value24, number3)))
+										value25(h2, number6, (value27(number133, number112, number3)))
 										local number10 = 1
-										_(h, number10, (value3((number5 + (number * value24)) % 256, number3, (value6(value23, number10 + argument4)))))
+										_(h, number10, (value3((number5 + (number * number112)) % 256, number3, (value6(value23, number10 + argument4)))))
 										number2, number3 = 66, (value15(h, number4))
 									elseif number2 <= 59 then
 										local number10, number11 = 217, 91
 										number9 = (argument4 + 135) % 256
 										local value31, number12, number13 = value5(number), 2273806215, number - (number % 4)
 										local number14, number15 = number13 - 1, 4 + 0
-										local data = {nil, 0 - number15, value22, number14 + 0, number15}
-										number2, value22, argument4, number4, number5, number6, value24, value25, h2, value26 = 92, data, number9, 135, value12, number10, number11, value31, number12, number13
+										local data = {nil, 0 - number15, data52, number14 + 0, number15}
+										number2, data52, argument4, number4, number5, number6, number112, value25, h2, number133 = 92, data, number9, 135, value12, number10, number11, value31, number12, number13
 									else
 										local value31 = value6(value25, 1 + number3)
 										number2, value23 = ((128 <= value31) and 27) or 165, value31
@@ -40165,14 +40224,14 @@ end, BP = function(argument, argument2, argument3, argument4)
 											number2 = ((170 < number5) and 133) or 107
 										end
 									elseif number2 <= 64 then
-										local value31 = value22[3]
-										number2, value22 = 66, value31
+										local value31 = data52[3]
+										number2, data52 = 66, value31
 									elseif number2 <= 65 then
-										local condition, condition2, condition3 = value22[5], value22[1], value22[4]
+										local condition, condition2, condition3 = data52[5], data52[1], data52[4]
 										local number10, condition4 = condition + condition2, condition2 <= 0
 										condition2, condition = number10 >= condition3, number10 <= condition3
 										condition3 = (condition4 and condition2) or (not condition4 and condition)
-										value22[5] = number10
+										data52[5] = number10
 										if condition3 then
 											number2, number = 26, number10
 										else
@@ -40184,11 +40243,11 @@ end, BP = function(argument, argument2, argument3, argument4)
 									end
 								elseif number2 <= 69 then
 									if number2 <= 67 then
-										local condition, condition2, condition3 = value22[2], value22[3], value22[5]
+										local condition, condition2, condition3 = data52[2], data52[3], data52[5]
 										local number10, condition4 = condition + condition2, condition2 <= 0
 										condition2, condition = number10 >= condition3, number10 <= condition3
 										condition3 = (condition4 and condition2) or (not condition4 and condition)
-										value22[2] = number10
+										data52[2] = number10
 										if condition3 then
 											number2, h2 = 143, number10
 										else
@@ -40237,7 +40296,7 @@ end, BP = function(argument, argument2, argument3, argument4)
 										elseif number2 <= 75 then
 											number2, number, number3 = 4, number5 + (128 * (number - 128)), 2 + number3
 										else
-											local number10, number11, number12, number13 = number5 - 128, (number6 - 128) * 128, value24 * 16384
+											local number10, number11, number12, number13 = number5 - 128, (number6 - 128) * 128, number112 * 16384
 											number13, number2, number3 = number12 + (number11 + number10), 122, number3 + 3
 											number5 = number13
 										end
@@ -40273,11 +40332,11 @@ end, BP = function(argument, argument2, argument3, argument4)
 									number13, number2, number3 = (number12 + number11) + number10, 59, 3 + number3
 									number = number13
 								else
-									local condition, condition2, condition3 = value22[4], value22[3], value22[5]
+									local condition, condition2, condition3 = data52[4], data52[3], data52[5]
 									local number10, condition4 = condition + condition2, condition2 <= 0
 									condition2, condition = number10 >= condition3, number10 <= condition3
 									condition3 = (condition4 and condition2) or (not condition4 and condition)
-									value22[4] = number10
+									data52[4] = number10
 									if condition3 then
 										number2, value27 = 57, number10
 									else
@@ -40321,11 +40380,11 @@ end, BP = function(argument, argument2, argument3, argument4)
 								end
 							elseif number2 <= 94 then
 								if number2 <= 92 then
-									local condition, condition2, condition3 = value22[2], value22[5], value22[4]
+									local condition, condition2, condition3 = data52[2], data52[5], data52[4]
 									local number10, condition4 = condition + condition2, condition2 <= 0
 									condition, condition2 = number10 >= condition3, number10 <= condition3
 									condition3 = (condition4 and condition) or (not condition4 and condition2)
-									value22[2] = number10
+									data52[2] = number10
 									if condition3 then
 										number2, value27 = 189, number10
 									else
@@ -40363,7 +40422,7 @@ end, BP = function(argument, argument2, argument3, argument4)
 									if number2 <= 104 then
 										if number2 <= 101 then
 											if number2 <= 99 then
-												number8 = ((number6 * argument4) + value24) % 256
+												number8 = ((number6 * argument4) + number112) % 256
 												_(value25, h2, (value3(number4, value6(value23, h2 + number3), number8)))
 												number2, argument4 = 168, number8
 											elseif number2 <= 100 then
@@ -40384,8 +40443,8 @@ end, BP = function(argument, argument2, argument3, argument4)
 											number10 = 0
 											local number11 = 1 + 0
 											local number12 = 1 - number11
-											local data = {nil, number11, number4 + 0, value22, number12}
-											number2, value22, number3 = 108, data, number10
+											local data = {nil, number11, number4 + 0, data52, number12}
+											number2, data52, number3 = 108, data, number10
 										elseif number2 <= 103 then
 											local value31 = value6(value25, number3 + 3)
 											local number11, number12, number13, number14, number15 = (number4 - 128) * 128, value23 - 128, 2097152 * (number5 - 128), (value31 % 128) * 16384, value31 % 128
@@ -40410,11 +40469,11 @@ end, BP = function(argument, argument2, argument3, argument4)
 											end
 										end
 									elseif number2 <= 108 then
-										local condition, condition2, condition3 = value22[5], value22[2], value22[3]
+										local condition, condition2, condition3 = data52[5], data52[2], data52[3]
 										local number11, condition4 = condition + condition2, condition2 <= 0
 										condition2, condition = number11 >= condition3, number11 <= condition3
 										condition3 = (condition4 and condition2) or (not condition4 and condition)
-										value22[5] = number11
+										data52[5] = number11
 										if condition3 then
 											number2, value23 = 187, number11
 										else
@@ -40426,8 +40485,8 @@ end, BP = function(argument, argument2, argument3, argument4)
 									else
 										local value31, number11 = value11(3 * argument4), 1 + 0
 										local number12 = 1 - number11
-										local data = {number11, value22, argument4 + 0, number12, nil}
-										number2, value22, argument4 = 131, data, value31
+										local data = {number11, data52, argument4 + 0, number12, nil}
+										number2, data52, argument4 = 131, data, value31
 									end
 								elseif number2 <= 116 then
 									if number2 <= 113 then
@@ -40471,7 +40530,7 @@ end, BP = function(argument, argument2, argument3, argument4)
 									if number2 <= 120 then
 										local number10, number11, number12 = 1 + number3, 217, 91
 										local number13, number14 = 0, ((((146 + argument4) % 256) * number11) + number12) % 256
-										number2, argument4, number3, number, number5, number6, value24, value25, h2, value26, value27 = 125, number10, 146, number11, number12, number13, number14, _, h, value6(value23, number10 + number13), value3
+										number2, argument4, number3, number, number5, number6, number112, value25, h2, number133, value27 = 125, number10, 146, number11, number12, number13, number14, _, h, value6(value23, number10 + number13), value3
 									else
 										number2, number5, number3 = 122, number6 + (128 * (number5 - 128)), 2 + number3
 									end
@@ -40483,8 +40542,8 @@ end, BP = function(argument, argument2, argument3, argument4)
 									number8 = (135 + argument4) % 256
 									local value31, number12, number13 = value5(number), 2273806215, number - (number % 4)
 									local number14, number15 = number13 - 1, 4 + 0
-									local data = {value22, nil, number15, 0 - number15, number14 + 0}
-									number2, value22, argument4, number4, number5, number6, value24, value25, h2, value26 = 85, data, number8, 135, value12, number10, number11, value31, number12, number13
+									local data = {data52, nil, number15, 0 - number15, number14 + 0}
+									number2, data52, argument4, number4, number5, number6, number112, value25, h2, number133 = 85, data, number8, 135, value12, number10, number11, value31, number12, number13
 								end
 							elseif number2 <= 135 then
 								if number2 <= 129 then
@@ -40494,9 +40553,9 @@ end, BP = function(argument, argument2, argument3, argument4)
 											local value31 = value6(value23, number10)
 											number2, number3, number4 = ((128 <= value31) and 77) or 86, number10, value31
 										elseif number2 <= 125 then
-											value25(h2, number6, (value27(number3, value24, value26)))
+											value25(h2, number6, (value27(number3, number112, number133)))
 											local number10 = 1
-											_(h, number10, (value3(((number * value24) + number5) % 256, number3, (value6(value23, number10 + argument4)))))
+											_(h, number10, (value3(((number * number112) + number5) % 256, number3, (value6(value23, number10 + argument4)))))
 											number2, number3 = 66, (value18(h, number4))
 										else
 											local value31 = value6(value23, argument4 + 3)
@@ -40519,14 +40578,14 @@ end, BP = function(argument, argument2, argument3, argument4)
 								elseif number2 <= 132 then
 									if number2 <= 130 then
 										number7 = ((number5 * value25) + h2) % 256
-										_(value26, number4, (value3(value6(value23, number4 + number3), number7, number6)))
+										_(number133, number4, (value3(value6(value23, number4 + number3), number7, number6)))
 										number2, number5 = 25, number7
 									elseif number2 <= 131 then
-										local condition, condition2, condition3 = value22[4], value22[1], value22[3]
+										local condition, condition2, condition3 = data52[4], data52[1], data52[3]
 										local number10, condition4 = condition + condition2, condition2 <= 0
 										condition, condition2 = number10 >= condition3, number10 <= condition3
 										condition3 = (condition4 and condition) or (not condition4 and condition2)
-										value22[4] = number10
+										data52[4] = number10
 										if condition3 then
 											number2, number = 94, number10
 										else
@@ -40550,22 +40609,22 @@ end, BP = function(argument, argument2, argument3, argument4)
 								if number2 <= 138 then
 									if number2 <= 136 then
 										local number10, number11 = number - 1, 1 + 0
-										local number12 = value26 - number11
-										local data = {number11, number10 + 0, value22, number12, nil}
-										number2, value22 = 168, data
+										local number12 = number133 - number11
+										local data = {number11, number10 + 0, data52, number12, nil}
+										number2, data52 = 168, data
 									elseif number2 <= 137 then
 										local number10
 										number10, number2 = argument4 - 128, 68
 										argument4, number3 = ((number3 - 128) * 128) + ((number * 16384) + number10), 3
 									else
-										local value31 = value22[3]
-										number2, value22 = 2, value31
+										local value31 = data52[3]
+										number2, data52 = 2, value31
 									end
 								elseif number2 <= 139 then
 									local value31, number10 = value11(number), 1 + 0
 									local number11 = 1 - number10
-									local data = {number10, nil, value22, number + 0, number11}
-									number2, value22, number3 = 65, data, value31
+									local data = {number10, nil, data52, number + 0, number11}
+									number2, data52, number3 = 65, data, value31
 								elseif number2 <= 140 then
 									number2, number3 = 4, number3 + 1
 								else
@@ -40575,11 +40634,11 @@ end, BP = function(argument, argument2, argument3, argument4)
 								end
 							elseif number2 <= 144 then
 								if number2 <= 142 then
-									local value31, value32 = value22[5], value24(value26)
+									local value31, value32 = data52[5], number112(number133)
 									number[argument4] = value32
-									number2, value22, number3 = 66, value31, value32
+									number2, data52, number3 = 66, value31, value32
 								elseif number2 <= 143 then
-									number9 = (value24 + (argument4 * number6)) % 256
+									number9 = (number112 + (argument4 * number6)) % 256
 									_(value25, h2, (value3(value6(value23, number3 + h2), number9, number4)))
 									number2, argument4 = 67, number9
 								else
@@ -40594,16 +40653,16 @@ end, BP = function(argument, argument2, argument3, argument4)
 									number13, number14, number2 = (number10 + number12) + number11, 3 + number3, 139
 									number4 = number13
 								else
-									local value31 = value22[3]
+									local value31 = data52[3]
 									number3[number] = value23
-									number2, value22 = 65, value31
+									number2, data52 = 65, value31
 								end
 							elseif number2 <= 147 then
 								local value31 = value11(number3, value6(value23, argument4), argument4 + 1)
 								number2, number3 = 66, value31
 							else
-								local value31 = value22[4]
-								number2, value22 = 54, value31
+								local value31 = data52[4]
+								number2, data52 = 54, value31
 							end
 						elseif number2 <= 173 then
 							if number2 <= 160 then
@@ -40625,7 +40684,7 @@ end, BP = function(argument, argument2, argument3, argument4)
 										value(h, number13, (value3(j[number11], number12, value31)))
 										value31 = tp[number11]
 										number13 = 4
-										number2, argument4, number3, number, number5, number6, value24, value25, h2, value26 = 196, number10, number12, value31, number13, value, h, value2(value23, number13 + number10), j[value31], value3
+										number2, argument4, number3, number, number5, number6, number112, value25, h2, number133 = 196, number10, number12, value31, number13, value, h, value2(value23, number13 + number10), j[value31], value3
 									elseif number2 <= 153 then
 										number2 = ((108 ~= number5) and 32) or 152
 									else
@@ -40661,11 +40720,11 @@ end, BP = function(argument, argument2, argument3, argument4)
 							elseif number2 <= 166 then
 								if number2 <= 163 then
 									if number2 <= 161 then
-										local condition, condition2, condition3 = value22[3], value22[1], value22[2]
+										local condition, condition2, condition3 = data52[3], data52[1], data52[2]
 										local number10, condition4 = condition + condition2, condition2 <= 0
 										condition, condition2 = number10 >= condition3, number10 <= condition3
 										condition3 = (condition4 and condition) or (not condition4 and condition2)
-										value22[3] = number10
+										data52[3] = number10
 										if condition3 then
 											number2, value27 = 41, number10
 										else
@@ -40697,11 +40756,11 @@ end, BP = function(argument, argument2, argument3, argument4)
 										number2, value23 = 149, value31
 									end
 								elseif number2 <= 168 then
-									local condition, condition2, condition3 = value22[4], value22[1], value22[2]
+									local condition, condition2, condition3 = data52[4], data52[1], data52[2]
 									local number10, condition4 = condition + condition2, condition2 <= 0
 									condition, condition2 = number10 >= condition3, number10 <= condition3
 									condition3 = (condition4 and condition) or (not condition4 and condition2)
-									value22[4] = number10
+									data52[4] = number10
 									if condition3 then
 										number2, h2 = 99, number10
 									else
@@ -40721,7 +40780,7 @@ end, BP = function(argument, argument2, argument3, argument4)
 								end
 							elseif number2 <= 172 then
 								local value31 = value6(value25, 2 + number3)
-								number2, value24 = ((128 <= value31) and 182) or 76, value31
+								number2, number112 = ((128 <= value31) and 182) or 76, value31
 							else
 								local value31 = value6(value25, 2)
 								number2, number = ((128 <= value31) and 186) or 137, value31
@@ -40737,8 +40796,8 @@ end, BP = function(argument, argument2, argument3, argument4)
 										return number3
 									end
 								elseif number2 <= 177 then
-									local value31 = value22[1]
-									number2, value22 = 36, value31
+									local value31 = data52[1]
+									number2, data52 = 36, value31
 								elseif number2 <= 178 then
 									number2, number = 33, 1 + number
 								else
@@ -40759,7 +40818,7 @@ end, BP = function(argument, argument2, argument3, argument4)
 									number4 = number18
 								else
 									local value31 = value6(value25, number3 + 3)
-									local number10, number11, number12, number13, number14, number15 = 128 * (number5 - 128), number6 - 128, 2097152 * (value24 - 128), 16384 * (value31 % 128), value31 % 128
+									local number10, number11, number12, number13, number14, number15 = 128 * (number5 - 128), number6 - 128, 2097152 * (number112 - 128), 16384 * (value31 % 128), value31 % 128
 									number15, number2, number3 = (number13 + (number11 + (((value31 - number14) * 2097152) + number12))) + number10, 122, number3 + 4
 									number5 = number15
 								end
@@ -40790,8 +40849,8 @@ end, BP = function(argument, argument2, argument3, argument4)
 								elseif number2 <= 187 then
 									local value31, number10, number11 = value7(argument4, (value23 % number) + 1, 2 + (value23 % number)), 1 + value23, 1 + 0
 									local number12 = number10 - number11
-									number10 = {nil, number11, value22, number4 + 0, number12}
-									number2, value22, value23 = 31, number10, value31
+									number10 = {nil, number11, data52, number4 + 0, number12}
+									number2, data52, value23 = 31, number10, value31
 								else
 									local number10, number11, number12, number13 = number - 128, (number4 - 128) * 128, number5 * 16384
 									number13, number2, number3 = (number12 + number11) + number10, 123, 3 + number3
@@ -40803,8 +40862,8 @@ end, BP = function(argument, argument2, argument3, argument4)
 								number9 = tp[argument4]
 								number2, argument4 = 92, number9
 							elseif number2 <= 190 then
-								local value31 = value22[3]
-								number2, value22 = 108, value31
+								local value31 = data52[3]
+								number2, data52 = 108, value31
 							else
 								local number10, number11, number12, number13 = number3 - 128, (number - 128) * 128, number4 * 16384
 								number13, number2, argument4 = number12 + (number11 + number10), 127, 3 + argument4
@@ -40826,18 +40885,18 @@ end, BP = function(argument, argument2, argument3, argument4)
 							end
 						elseif number2 <= 196 then
 							if number2 <= 195 then
-								local condition, condition2, condition3 = value22[2], value22[3], value22[4]
+								local condition, condition2, condition3 = data52[2], data52[3], data52[4]
 								local number10, condition4 = condition + condition2, condition2 <= 0
 								condition2, condition = number10 >= condition3, number10 <= condition3
 								condition3 = (condition4 and condition2) or (not condition4 and condition)
-								value22[2] = number10
+								data52[2] = number10
 								if condition3 then
-									number2, value29 = 19, number10
+									number2, number103 = 19, number10
 								else
 									number2 = 177
 								end
 							else
-								number6(value24, number5, (value26(number3, h2, value25)))
+								number6(number112, number5, (number133(number3, h2, value25)))
 								local value31, number10 = tp[number], 8
 								local value32 = value2(value23, number10 + argument4)
 								value(h, number10, (value3(j[value31], number3, value32)))

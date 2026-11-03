@@ -1217,12 +1217,25 @@ class ProtoLifter:
             if id(obj) in self.proto_arrays:
                 def _collect_out_regs(ex):
                     out_r = list(expr_regs(ex))
-                    tmap = {st.t: st for st in self.out if isinstance(st, CallStmt)}
+                    # The call map is only needed to look through a TempVal,
+                    # and only built when one shows up: this runs for every
+                    # store of a script the walk interprets, and rebuilding an
+                    # O(len(self.out)) index each time made a long chunk's lift
+                    # quadratic (one hub proto did not finish in 25 minutes).
+                    # Temp ids are unique per call statement, so a map built
+                    # earlier stays valid; the length guard only refreshes it.
+                    tmap = None
                     seen_t = set()
                     tqueue = [ex]
                     while tqueue:
                         cur = tqueue.pop()
                         if isinstance(cur, TempVal):
+                            if tmap is None:
+                                if getattr(self, "_tmap_n", -1) != len(self.out):
+                                    self._tmap = {st.t: st for st in self.out
+                                                  if isinstance(st, CallStmt)}
+                                    self._tmap_n = len(self.out)
+                                tmap = self._tmap
                             if cur.t not in seen_t and cur.t in tmap:
                                 seen_t.add(cur.t)
                                 cst = tmap[cur.t]

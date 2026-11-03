@@ -727,6 +727,10 @@ class State:
 WALK_MAX_ERRORS = 100
 WALK_RESTARTS = 64
 WALK_LIMIT = int(os.environ.get("DEVIRT_WALK_LIMIT", 250000))
+# wall-clock budget for the restart passes of one proto (seconds)
+# wall-clock budget for the restart passes of one proto; 0 = no limit
+# (opt-in: the default must behave exactly like the frozen engine)
+WALK_SECONDS = float(os.environ.get("DEVIRT_WALK_SECONDS", 0))
 
 class PackTop:
     __slots__ = ("n",)

@@ -47,7 +47,7 @@ from obfuscators.luraph_v15.dataflow import (
 from obfuscators.luraph_v15.vm_model import (
     _classify_vm_method, _PlainPrinter, PlainProto, iter_nodes, VMModel, find_ctor_funcs,
     VMCrash, Overlay, _differs, _hv, _pack_sig, State,
-    WALK_MAX_ERRORS, WALK_RESTARTS,
+    WALK_MAX_ERRORS, WALK_RESTARTS, WALK_SECONDS,
     WALK_LIMIT, _carry_key, MAX_STACK_DEPTHS, STACK_WALK_MAX, _locs_lt,
 )
 from obfuscators.luraph_v15.stepper import (
@@ -268,13 +268,14 @@ class Program:
         proto = vm.proto_of(cap)
         lf = ProtoLifter(vm, self.dump, vm.vmobj_of(cap), proto, upvals, self.globals, cap=cap)
         st = make_stepper(vm, lf)
+        deadline = (time.time() + WALK_SECONDS) if WALK_SECONDS else None
         for _ in range(WALK_RESTARTS):
-            s0, order, restart = self._walk(vm, lf, st, limit)
-            if not restart:
+            s0, order, restart = self._walk(vm, lf, st, limit, deadline)
+            if not restart or getattr(lf, "walk_deadline_hit", False):
                 break
         return s0, order, lf
 
-    def _walk(self, vm, lf, st, limit):
+    def _walk(self, vm, lf, st, limit, deadline=None):
         """Sparse conditional constant propagation over the instruction graph.
         Each state (mode, pc, loop depth, jump registers, packs) is stepped
         once; register facts (constant / truthy / falsy) flow along edges and
@@ -403,6 +404,11 @@ class Program:
                     break
             steps += 1
             if steps > limit * 20:
+                break
+            if deadline is not None and (steps & 2047) == 0 and time.time() > deadline:
+                # A restart that runs out of time is not going to converge on
+                # the next pass: stop here and keep what this pass built.
+                lf.walk_deadline_hit = True
                 break
             if lf.stack_base is not None and len(order) > STACK_WALK_MAX and getattr(st, "carry", None):
 
@@ -671,10 +677,21 @@ class FunctionLifter:
             self.stats["exec_window"] = self.stats.get("exec_window", 0) + win
         lf.reg_prefix = prefix
         st = make_stepper(vm, lf)
+        # Each restart re-walks from the start with the hints the previous pass
+        # discovered, so a proto whose hints settle only after many passes costs
+        # the sum of all of them -- one hub root was still climbing after 100
+        # minutes.  The passes are bounded by time as well as by count, and a
+        # proto that runs out of time says so instead of running forever.
+        deadline = (time.time() + WALK_SECONDS) if WALK_SECONDS else None
         for _ in range(WALK_RESTARTS):
-            s0, order, restart = self.prog._walk(vm, lf, st, WALK_LIMIT)
+            s0, order, restart = self.prog._walk(vm, lf, st, WALK_LIMIT, deadline)
             if not restart:
                 break
+            if getattr(lf, "walk_deadline_hit", False):
+                lf.walk_truncated = True
+                break
+        if getattr(lf, "walk_truncated", False):
+            self.stats["walk_truncated"] = self.stats.get("walk_truncated", 0) + 1
         self._last_lf = lf
         self.prog.requests |= lf.requests
         vreg_init_map = {
@@ -817,9 +834,10 @@ class FunctionLifter:
             lf.init_facts = init_facts
             lf.walk_only = True
             st = make_stepper(cvm, lf)
+            deadline = (time.time() + WALK_SECONDS) if WALK_SECONDS else None
             for _ in range(WALK_RESTARTS):
-                _, _, restart = self.prog._walk(cvm, lf, st, WALK_LIMIT)
-                if not restart:
+                _, _, restart = self.prog._walk(cvm, lf, st, WALK_LIMIT, deadline)
+                if not restart or getattr(lf, "walk_deadline_hit", False):
                     break
         except Unsupported:
             return uses
@@ -1186,7 +1204,10 @@ def lift_program(source, protos_path, chunk_paths=(), fetch=None):
         arg1 = prog.dump.proto_arg1.get(int(pid)) if str(pid).isdigit() else None
         init_facts = {("vararg", 1): ("c", arg1)} if isinstance(arg1, (int, float)) else None
         lines = fl.lift(vm, vmobj, proto, UpList(), {}, 0, init_facts=init_facts)
-        if tag == payload and not loaders:
+        # The payload is always inlined at top level, also when the loader VMs
+        # are lifted next to it: wrapping it in `return vm_root_N(...)` put the
+        # watermark print after that return, and the file no longer parsed.
+        if tag == payload:
             out.append("")
             params = [p for p in fl.params if p != "..."]
             if params:

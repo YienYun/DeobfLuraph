@@ -238,6 +238,10 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None, exec_
                 print("[*]   residual_unknown_split: ru_exec=%d ru_unexec=%d"
                       " (of %d unwritten-register reads in %d protos lifted with coverage)"
                       % (ru_e, ru_u, ru_e + ru_u, stats.get("exec_protos", 0)), file=sys.stderr)
+            if stats.get("walk_truncated"):
+                print("[*]   %d proto(s) were cut at the walk budget (%ds each): their"
+                      " statements past the cut are not in the output"
+                      % (stats["walk_truncated"], int(devirt.WALK_SECONDS)), file=sys.stderr)
             if stats.get("exec_protos") or stats.get("exec_covered"):
                 win = stats.get("exec_window") or 1
                 print("[*]   [execrec] runs=%d covered=%d scrambled_excluded=%d no_arrays=%d"

@@ -169,6 +169,11 @@ def emit_payload_source(job, dpath, chunk_paths, why=None):
     text, nfun = found[0], found[1]
     print("[*] payload: printing the loadstring'd chunk as the script (%d lines, %d functions)%s"
           % (text.count("\n") + 1, nfun, (" -- " + why) if why else ""), file=sys.stderr)
+    # The payload is plain Luau, so it gets the same whole-program passes the
+    # lifted text gets: local function folding, dead-local cleanup and the
+    # semantic local naming that makes the script's own logic readable.
+    import backend
+    text = backend.polish(text)
     header = job.credit_header()
     job.write(dpath, ((header + "\n") if header else "") + devirt.finish_text(text) + "\n")
     return dict(functions=nfun, walked=0, errors=0, fallbacks=0,

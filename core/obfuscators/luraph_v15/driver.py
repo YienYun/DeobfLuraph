@@ -167,8 +167,10 @@ def emit_payload_source(job, dpath, chunk_paths, why=None):
     if not found:
         return None
     text, nfun = found[0], found[1]
-    print("[*] payload: printing the loadstring'd chunk as the script (%d lines, %d functions)%s"
-          % (text.count("\n") + 1, nfun, (" -- " + why) if why else ""), file=sys.stderr)
+    note = found[2] if len(found) > 2 else ""
+    print("[*] payload: printing the loadstring'd chunk as the script (%d lines, %d functions)%s%s"
+          % (text.count("\n") + 1, nfun, (" -- " + note) if note else "",
+             (" \u2014 " + why) if why else ""), file=sys.stderr)
     # The payload is plain Luau, so it gets the same whole-program passes the
     # lifted text gets: local function folding, dead-local cleanup and the
     # semantic local naming that makes the script's own logic readable.
@@ -514,12 +516,86 @@ def run(job):
             write_trace()
     return job.trace_path
 
+def _keyname(k):
+    if not isinstance(k, dict):
+        return None
+    v = k.get("value")
+    if isinstance(v, bytes):
+        return v.decode("latin-1")
+    if v is not None:
+        return str(v)
+    return k.get("name")
+
+
+# Names a script uses and an interpreter does not: they are the script's own
+# calls (services, UI, instances).  A field of the loader table that is full of
+# them IS the script; the fields full of buffer/byte arithmetic are the
+# interpreter that carries it.
+SCRIPT_API = ("GetService", "GetChildren", "GetDescendants", "FindFirstChild", "CreateWindow",
+              "CreateSection", "HttpGet", "Window", "Tab", "Section", "Notify", "IsA",
+              "GetPlayerFromCharacter", "Destroy", "Clone")
+SCRIPT_GLOBALS = ("getgenv", "warn", "Instance", "writefile", "makefolder", "readfile", "gethui")
+
+
+def _script_score(node):
+    """How much of a function reads like the script itself, not like a VM."""
+    from obfuscators.luraph_v15.vm_model import iter_nodes
+    score = 0
+    for n in iter_nodes(node):
+        t = n.get("type")
+        if t == "AstExprIndexName" and n.get("index") in SCRIPT_API:
+            score += 1
+        elif t == "AstExprGlobal" and n.get("name") in SCRIPT_GLOBALS:
+            score += 1
+    return score
+
+
+def _wrapper_depth(fn):
+    """How many `return function` levels stand between the field and the script
+    body: the loader calls them one by one."""
+    d = 0
+    node = fn
+    while isinstance(node, dict) and node.get("type") == "AstExprFunction":
+        d += 1
+        body = (node.get("body") or {}).get("body") or []
+        if len(body) == 1 and body[0].get("type") == "AstStatReturn" \
+                and len(body[0].get("list") or []) == 1 \
+                and body[0]["list"][0].get("type") == "AstExprFunction":
+            node = body[0]["list"][0]
+        else:
+            break
+    return d
+
+
+def _library_urls(path):
+    """The library URLs the chunk itself carries: the loader fetches one of them
+    at run time and hands the result to the script.  Discord/invite links and
+    plain asset URLs are not libraries."""
+    try:
+        with open(path, encoding="latin-1") as f:
+            raw = f.read()
+    except OSError:
+        return []
+    urls = []
+    for m in re.finditer(r"https://raw\.githubusercontent\.com/[^\s\"'\\]+", raw):
+        u = m.group(0)
+        low = u.lower()
+        if "discord" in low or u in urls:
+            continue
+        if "chilli" in low or "library" in low or "lib" in low:
+            urls.append(u)
+    return urls[:3]
+
+
 def payload_source(chunk_paths):
-    """The script the loader runs: a loadstring'd chunk that is still Luau
-    source (Luraph leaves most of a payload readable, names aside). Printing it
-    from the AST gives the statements as the author wrote them -- including the
-    code the VM lift never reaches, because it is not in the bytecode at all.
-    -> text, or None when no chunk parses as source."""
+    """The script the loader runs, as Luau text.
+
+    A Luraph-style protector can keep the script itself as plain Lua source and
+    put it in one field of the table it returns; the other fields are its
+    interpreter, which the script does not need in order to be read.  Printing
+    that field gives the script's own logic (services, UI, flow) instead of the
+    machine around it.  A chunk that is not shaped that way is printed whole.
+    -> (text, functions, note) or None when no chunk parses as source."""
     import luauast as LA
     from obfuscators.luraph_v15 import vmmap
     from obfuscators.luraph_v15.vm_model import iter_nodes
@@ -529,14 +605,79 @@ def payload_source(chunk_paths):
             root = vmmap.load_ast(path)
         except Exception:
             continue
-        pr = LA.Printer("\t")
+        whole = LA.Printer("\t")
         for st in root["body"]:
-            pr.stat(st, 0)
-        text = "\n".join(pr.lines)
+            whole.stat(st, 0)
         nfun = sum(1 for n in iter_nodes(root) if n.get("type") == "AstExprFunction")
+        text, note = "\n".join(whole.lines), ""
+        # `return setmetatable({...}, {...}):method(...)`: a loader table.
+        body = root.get("body") or []
+        field_fn, nfields = None, 0
+        if len(body) == 1 and body[0].get("type") == "AstStatReturn" \
+                and len(body[0].get("list") or []) == 1:
+            call = body[0]["list"][0]
+            if call.get("type") == "AstExprCall" and (call.get("func") or {}).get("type") == "AstExprIndexName":
+                callee = call["func"]["expr"]
+                if (callee or {}).get("type") == "AstExprCall" \
+                        and (callee.get("func") or {}).get("type") == "AstExprGlobal" \
+                        and (callee["func"].get("global") or callee["func"].get("name")) == "setmetatable":
+                    tbl = next((a for a in callee.get("args") or []
+                                if a.get("type") == "AstExprTable"), None)
+                    if tbl is not None:
+                        items = [it for it in tbl.get("items") or []
+                                 if (it.get("value") or {}).get("type") == "AstExprFunction"]
+                        nfields = len(items)
+                        scored = sorted(((_script_score(it["value"]), i, it) for i, it in enumerate(items)),
+                                        key=lambda x: -x[0])
+                        top = scored[0] if scored else None
+                        second = scored[1][0] if len(scored) > 1 else 0
+                        # One field has to stand out: the script, not a handler
+                        # that happens to touch one service.
+                        if top is not None and top[0] >= 40 and top[0] >= 3 * max(second, 1):
+                            field_fn = top[2]
+        if field_fn is not None:
+            fn = field_fn["value"]
+            pr = LA.Printer("\t")
+            pr.stat({"type": "AstStatReturn", "list": [fn]}, 0)
+            depth = _wrapper_depth(fn)
+            name = _keyname(field_fn.get("key")) or "?"
+            lines = list(pr.lines)
+            head = lines[0]
+            if head.startswith("return "):
+                head = head[len("return "):]
+            lines[0] = "local payload = " + head
+            urls = _library_urls(path)
+            out = ["-- The script as the loader carries it: field %r of %d in its table." % (name, nfields),
+                   "-- The other %d field(s) are the interpreter that runs it; they are not the script,"
+                   " so they are omitted." % (nfields - 1),
+                   "-- The loader calls this with the hub's library object (a table with Window / Tab /"
+                   " Notify); the block below loads the library the script itself points at."]
+            if urls:
+                out += ["local function hubLibrary()",
+                        "\tfor _, url in ipairs({%s}) do" % ", ".join('"%s"' % u for u in urls),
+                        "\t\tlocal ok, lib = pcall(function() return loadstring(game:HttpGet(url))() end)",
+                        "\t\tif ok and type(lib) == \"table\" and lib.Window then return lib end",
+                        "\tend",
+                        "end",
+                        "local ChilliLibrary = hubLibrary()",
+                        "if not ChilliLibrary then",
+                        "\twarn(\"[deobf] the hub library (Window / Tab / Notify) could not be loaded;"
+                        " the script cannot start without it\")",
+                        "\treturn",
+                        "end"]
+            else:
+                out += ["-- (no library URL in the chunk: pass the object the loader supplies)",
+                        "local ChilliLibrary = nil"]
+            out += [""] + lines + ["", "local entry = payload(...)"]
+            for lvl in range(2, depth + 1):
+                out.append("entry = entry(%s)" % ("{ChilliLibrary}" if lvl == 2 else ""))
+            out += ["entry()", ""]
+            text = "\n".join(out)
+            note = "field %r of %d, %d wrapper level(s)" % (name, nfields, depth)
         if best is None or len(text) > len(best[0]):
-            best = (text, nfun)
+            best = (text, nfun, note)
     return best
+
 
 def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths):
     """devirtualize() with its constant rounds answered by one long-lived

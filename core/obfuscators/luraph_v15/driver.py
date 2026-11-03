@@ -187,12 +187,6 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None, exec_
     exec_rec_on = bool(os.environ.get("DEVIRT_EXECREC") or getattr(job.args, "exec_rec", False))
     from obfuscators.luraph_v15 import devirt
     import deadline
-
-    # A build whose dispatch the walk cannot follow used to spin until the
-    # caller killed the process, leaving no output at all.  The lift stops at
-    # this budget and the payload-source route takes over; the samples that do
-    # lift take 30-100s, so the default leaves them alone.
-    lift_seconds = int(os.environ.get("DEVIRT_LIFT_SECONDS") or 120)
     devirt.EXEC_REC = exec_rec_on
     args = job.args
     try:
@@ -552,12 +546,6 @@ def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths)
         job.luarmor_states = states
     from obfuscators.luraph_v15 import devirt
     import deadline
-
-    # A build whose dispatch the walk cannot follow used to spin until the
-    # caller killed the process, leaving no output at all.  The lift stops at
-    # this budget and the payload-source route takes over; the samples that do
-    # lift take 30-100s, so the default leaves them alone.
-    lift_seconds = int(os.environ.get("DEVIRT_LIFT_SECONDS") or 120)
 
     # The payload-source route on demand (the automatic one is the fallback in
     # devirtualize() when the walk loses the script or passes its budget).

@@ -843,15 +843,26 @@ def apply_stmt_facts(st, facts, lf, pos=None):
                 if rcf is not None:
                     rcf.pop(st.target.n, None)
                 if lf is not None:
-                    for ch in getattr(lf, "children", ()):
+                    # Only a child with open upvalue registers (or facts for
+                    # them) can be affected by this write, and the path has
+                    # already recorded which closures are open: visiting those
+                    # beats scanning every closure the proto ever made.
+                    oc_ch = facts.get(("__open_ch__",))
+                    kid_by_id = getattr(lf, "_kid_by_id", None)
+                    if oc_ch is not None and kid_by_id is not None:
+                        src = [kid_by_id[i] for i in oc_ch[1] if i in kid_by_id]
+                    else:
+                        src = getattr(lf, "children", ())
+                    for ch in src:
+                        open_ups = getattr(ch, "_open_up_regs", None)
+                        uf_map = getattr(ch, "up_facts", None)
+                        if open_ups is None and uf_map is None:
+                            continue
                         cat = getattr(ch, "_created_at", None)
                         if cat is not None and pos is not None and cat[0] == pos[0] and pos[1] <= cat[1]:
                             continue
-                        oc_ch = facts.get(("__open_ch__",))
                         if oc_ch is not None and id(ch) not in oc_ch[1]:
                             continue
-                        open_ups = getattr(ch, "_open_up_regs", None)
-                        uf_map = getattr(ch, "up_facts", None)
                         post_uf = getattr(ch, "_post_up_facts", None)
                         if open_ups:
                             for ui, ureg in list(open_ups.items()):

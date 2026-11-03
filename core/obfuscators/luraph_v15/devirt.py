@@ -297,6 +297,10 @@ class Program:
         lf.children.clear()
         if hasattr(lf, "_kids_by_tid"):
             lf._kids_by_tid.clear()
+        if hasattr(lf, "_pending_ups"):
+            lf._pending_ups.clear()
+        if hasattr(lf, "_kid_by_id"):
+            lf._kid_by_id.clear()
         lf.captured_regs.clear()
         lf.reg_const_fact = {}
         lf.reg_closure_fact = {}

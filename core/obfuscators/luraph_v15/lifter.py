@@ -112,6 +112,8 @@ class ProtoLifter:
         self.reg_arrays = set()      
         self.children = []
         self._kids_by_tid = {}
+        self._pending_ups = []    # children whose upvalue table may still fill in
+        self._kid_by_id = {}      # id(child) -> child, for the open-closure sets
         self.requests = set()
         self.jump_regs = set()
         self.need_jump_regs = set()
@@ -207,6 +209,9 @@ class ProtoLifter:
         tid = getattr(getattr(c, "proto", None), "tid", None)
         if tid is not None:
             self._kids_by_tid.setdefault(tid, []).append(c)
+        self._kid_by_id[id(c)] = c
+        if getattr(c, "_ups_tbl", None) is not None and not c.upvals:
+            self._pending_ups.append(c)
         return c
     def initial_state(self):
         self.in_prologue = True
@@ -2074,13 +2079,22 @@ class ProtoLifter:
                         self.captured_regs.add(v)
 
     def finalize_step_closures(self):
-        for c in self.children:
+        """A closure's upvalue table can still be filled by the program after the
+        closure is made, so the empty ones are retried -- but only those, never
+        every child of the proto on every step."""
+        keep = []
+        for c in self._pending_ups:
             ups = getattr(c, "_ups_tbl", None)
-            if isinstance(ups, LTable) and not c.upvals and ups.h:
+            if c.upvals:
+                continue
+            if isinstance(ups, LTable) and ups.h:
                 entries, upval_base = self._extract_upvals_table(ups)
                 c.upvals[:] = entries
                 c.upval_base = upval_base
                 self._note_captured_upvals(entries)
+                continue
+            keep.append(c)
+        self._pending_ups = keep
 
 def extract_upvals_table(ups, is_v14=False):
     """(entries, base) of a closure's upvalue table: index order and origin.

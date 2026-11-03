@@ -1160,7 +1160,9 @@ def _replace_error_markers(text):
     could not be lifted are still missing, and still say so.
     """
     def repl(m):
-        msg = m.group(1)
+        # group 2 is the message; group 1 is the indent, and reading it here
+        # turned every marker into `-- <tabs>` -- a hole with no explanation.
+        msg = m.group(2)
         indent = m.group("indent")
         return "%s-- %s" % (indent, msg)
     pat = re.compile(r'^(?P<indent>[ \t]*)error\("(devirt:[^"]*)"\)\s*$', re.M)

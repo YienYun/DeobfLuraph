@@ -2,6 +2,7 @@ import copy
 import re
 import sys
 import os
+import deadline as _deadline
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -181,7 +182,13 @@ def prune_after_trap(entry, blocks):
         b.preds = [p for p in b.preds if p in blocks]
     return len(dead)
 
+_FILLS = [0]
+
+
 def fill(b, node, key, new_block, head_of, nodes, D, link):
+    _FILLS[0] += 1
+    if not _FILLS[0] & 511:
+        _deadline.check()
     if getattr(node, "error", None):
         b.stmts += node.stmts
         b.kind = "error"

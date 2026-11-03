@@ -18,6 +18,7 @@ if ROOT not in sys.path:
 
 import backend
 import harness
+import deadline as _deadline
 import luasym as S
 from luasym import (
     LTable, Builtin, LuaFunc, Buf, Unsupported, Expr, Const, Reg, Pseudo, Global,
@@ -606,7 +607,8 @@ def _post_cap_const_fact(lf, reg):
 
 def _capture_closure_up_facts(c, facts, lf=None):
     if lf is not None and isinstance(c.proto, LTable) and not hasattr(c, "arg_facts"):
-        for ch in getattr(lf, "children", ()):
+        kids = (getattr(lf, "_kids_by_tid", None) or {}).get(c.proto.tid) or getattr(lf, "children", ())
+        for ch in kids:
             if ch is not c and isinstance(ch.proto, LTable) and ch.proto.tid == c.proto.tid and hasattr(ch, "arg_facts"):
                 c.arg_facts = dict(ch.arg_facts)
                 break
@@ -1326,10 +1328,14 @@ def propagate(node, facts, succ, lf):
     """Walk one instruction's IR tree under the facts, collecting feasible
     successors with their facts."""
     stack = [(node, facts)]
+    tick = 0
     while stack:
         n, f = stack.pop()
         if n is None:
             continue
+        tick += 1
+        if not tick & 255:
+            _deadline.check()
         for idx, st in enumerate(n.stmts):
             if isinstance(st, Assign) and _check_cff_bin(st.value, f, lf):
                 return "cff_restart"

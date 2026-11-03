@@ -157,6 +157,24 @@ def write_dump(ppath, text, exec_rec_on, seen=None):
              info.get("pcs_union", 0)), file=sys.stderr)
 
 
+def emit_payload_source(job, dpath, chunk_paths, why=None):
+    """Write the loadstring'd chunk, printed as Luau, as the result.  A Luraph
+    build can keep the script readable and virtualize only the wrapper;
+    printing the payload is then the faithful output (names aside) and the only
+    route that reaches the code the VM never carries.  -> stats, or None."""
+    from obfuscators.luraph_v15 import devirt
+    found = payload_source(chunk_paths)
+    if not found:
+        return None
+    text, nfun = found[0], found[1]
+    print("[*] payload: printing the loadstring'd chunk as the script (%d lines, %d functions)%s"
+          % (text.count("\n") + 1, nfun, (" -- " + why) if why else ""), file=sys.stderr)
+    header = job.credit_header()
+    job.write(dpath, ((header + "\n") if header else "") + devirt.finish_text(text) + "\n")
+    return dict(functions=nfun, walked=0, errors=0, fallbacks=0,
+                payload_source=text.count("\n") + 1)
+
+
 def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None, exec_seen=None):
     """Lift the captured protos; constants that only Luraph's lazy decoder can
     produce (code that never ran) are requested from further runs. With a
@@ -168,6 +186,13 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None, exec_
     # walk marks the pcs it executed was not in (M1: annotation only).
     exec_rec_on = bool(os.environ.get("DEVIRT_EXECREC") or getattr(job.args, "exec_rec", False))
     from obfuscators.luraph_v15 import devirt
+    import deadline
+
+    # A build whose dispatch the walk cannot follow used to spin until the
+    # caller killed the process, leaving no output at all.  The lift stops at
+    # this budget and the payload-source route takes over; the samples that do
+    # lift take 30-100s, so the default leaves them alone.
+    lift_seconds = int(os.environ.get("DEVIRT_LIFT_SECONDS") or 120)
     devirt.EXEC_REC = exec_rec_on
     args = job.args
     try:
@@ -216,8 +241,19 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None, exec_
         if full:
             print("[*] devirtualizing (round %d)..." % rnd, file=sys.stderr)
             t1 = time.time()
-            text, stats, reqs, bufs = devirt.run_big_stack(devirt.lift_program, job.source_path, ppath, chunk_paths,
-                                                           live and live())
+            try:
+                text, stats, reqs, bufs = devirt.run_big_stack(devirt.lift_program, job.source_path, ppath,
+                                                               chunk_paths, live and live())
+            except (devirt.WalkLost, deadline.LiftTimeout) as ex:
+                # The walk is not following this build: every callee it cannot
+                # resolve prints as `(nil)(...)`, and the chains grow until Luau
+                # refuses to parse them.  The payload is source, so print that
+                # instead of shipping a broken file.
+                out_stats = emit_payload_source(job, dpath, chunk_paths,
+                                                "the walk lost the script (%s)" % ex)
+                if out_stats is not None:
+                    return out_stats
+                raise
             new = reqs - requested
             last_full_stats = dict(stats)
             pending_constants = len(new)
@@ -514,17 +550,21 @@ def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths)
     states = sorted(set(re.findall(r"State\d{2,4}", run_text or "")))
     if states:
         job.luarmor_states = states
+    from obfuscators.luraph_v15 import devirt
+    import deadline
+
+    # A build whose dispatch the walk cannot follow used to spin until the
+    # caller killed the process, leaving no output at all.  The lift stops at
+    # this budget and the payload-source route takes over; the samples that do
+    # lift take 30-100s, so the default leaves them alone.
+    lift_seconds = int(os.environ.get("DEVIRT_LIFT_SECONDS") or 120)
+
+    # The payload-source route on demand (the automatic one is the fallback in
+    # devirtualize() when the walk loses the script or passes its budget).
     if os.environ.get("DEVIRT_PAYLOAD_SRC"):
-        from obfuscators.luraph_v15 import devirt
-        found = payload_source(chunk_paths)
-        if found:
-            text, nfun = found
-            print("[*] payload: the loadstring'd chunk is Luau source, printing it as the script "
-                  "(%d lines, %d functions)" % (text.count("\n") + 1, nfun), file=sys.stderr)
-            header = job.credit_header()
-            job.write(dpath, ((header + "\n") if header else "") + devirt.finish_text(text) + "\n")
-            return dict(functions=nfun, walked=0, errors=0, fallbacks=0,
-                        payload_source=text.count("\n") + 1)
+        out_stats = emit_payload_source(job, dpath, chunk_paths, "asked for by DEVIRT_PAYLOAD_SRC")
+        if out_stats is not None:
+            return out_stats
         print("[!] payload: no chunk reads as Luau source; lifting the VMs instead", file=sys.stderr)
     exec_rec_on = bool(os.environ.get("DEVIRT_EXECREC") or getattr(args, "exec_rec", False))
     exec_seen = []

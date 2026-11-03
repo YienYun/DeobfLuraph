@@ -111,6 +111,7 @@ class ProtoLifter:
         self.proto_arrays = set()
         self.reg_arrays = set()      
         self.children = []
+        self._kids_by_tid = {}
         self.requests = set()
         self.jump_regs = set()
         self.need_jump_regs = set()
@@ -197,6 +198,16 @@ class ProtoLifter:
             raise Unsupported("closure maker did not return the VM closure")
         self.maker_scope = f.env
 
+
+    def add_child(self, c):
+        """Children of this proto, plus an index by proto id: the dataflow asks
+        "a sibling closure of the same proto" for every closure statement it
+        meets, and scanning every child for that is quadratic on a big proto."""
+        self.children.append(c)
+        tid = getattr(getattr(c, "proto", None), "tid", None)
+        if tid is not None:
+            self._kids_by_tid.setdefault(tid, []).append(c)
+        return c
     def initial_state(self):
         self.in_prologue = True
         cs = Scope(self.maker_scope)
@@ -507,7 +518,7 @@ class ProtoLifter:
         for u in ups:
             if isinstance(u, Reg):
                 self.captured_regs.add(u.n)
-        self.children.append(c)
+        self.add_child(c)
         return c
 
     def parallel_values(self, targets, vals, it):
@@ -710,7 +721,7 @@ class ProtoLifter:
                         cvm = getattr(self.dump, "vms", {}).get(ctag, self.vm)
                         wc = ClosureExpr(cproto, [])
                         wc.vm = cvm
-                        self.children.append(wc)
+                        self.add_child(wc)
 
         for n in undeclared:
             if id(n) in consumed_ids:
@@ -844,7 +855,7 @@ class ProtoLifter:
 
         proto = PlainProto(fn, node, [], lines, node_reps=node_reps)
         c = ClosureExpr(proto, ups)
-        self.children.append(c)
+        self.add_child(c)
         return c
 
     def plain_function_text(self, fn):
@@ -1977,7 +1988,7 @@ class ProtoLifter:
                 for v in e.h.values():
                     if isinstance(v, int) and any(isinstance(x, RegFile) for x in e.h.values()):
                         self.captured_regs.add(v)
-        self.children.append(c)
+        self.add_child(c)
         return c
 
     def make_closure(self, args, vm=None):
@@ -1999,7 +2010,7 @@ class ProtoLifter:
                 c.vm = vm
                 c.state_table = st
                 c.shared_cap = self.dump.shared_cap
-                self.children.append(c)
+                self.add_child(c)
                 return c
         pi, ui = vm.proto_index(), vm.upvals_index()
         proto = vals[pi] if len(vals) > pi else None
@@ -2047,7 +2058,7 @@ class ProtoLifter:
             # the child's VM state is its own proto table (see above)
             c.state_table = proto
         self._note_captured_upvals(entries)
-        self.children.append(c)
+        self.add_child(c)
         return c
 
     def _extract_upvals_table(self, ups):

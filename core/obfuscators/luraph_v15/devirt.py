@@ -295,6 +295,8 @@ class Program:
                 st.vreg_of.update(hvr)
                 lf.vreg_set |= hvrs
         lf.children.clear()
+        if hasattr(lf, "_kids_by_tid"):
+            lf._kids_by_tid.clear()
         lf.captured_regs.clear()
         lf.reg_const_fact = {}
         lf.reg_closure_fact = {}
@@ -1015,6 +1017,11 @@ class FunctionLifter:
                 lines = ["error(\"devirt: could not lift closure: %s\")" % str(ex).replace("\"", "'")]
                 params = ["..."]
             except Exception as ex:
+                # A lost walk or a spent budget is the whole lift talking, not
+                # this closure: let the driver switch routes.
+                import deadline
+                if isinstance(ex, (WalkLost, deadline.LiftTimeout)):
+                    raise
                 # one broken function must not abort the whole 1000-function run:
                 # mark it explicitly and keep lifting the rest (same convention
                 # as the "unexplored successor" markers).
@@ -1167,6 +1174,23 @@ def _drop_dead_upvalue_writes(lines):
     return keep, dropped
 
 
+class WalkLost(Exception):
+    """The walk lost the script: thousands of register reads carry no value, so
+    every unresolved callee prints as `(nil)(nil, nil)` -- text that is not the
+    program and can no longer be parsed once the chains nest.  Raising lets the
+    caller take another route instead of shipping it."""
+
+# A lift that loses this many register reads is not the script any more.  A
+# healthy lift of a VM-protected hub counts a few hundred (the sample that
+# works: 275); the broken route counts thousands.
+WALK_LOST_UNKNOWN = int(os.environ.get("DEVIRT_WALK_LOST") or 4000)
+
+# Per-proto wall-clock budget.  A build whose dispatch the walk cannot follow
+# sends one proto into minutes of dataflow and CFG work, growing memory with it
+# until the process dies without output.  A proto of a sample that lifts takes
+# a few seconds, so this only ever cuts the runaway one.
+PROTO_SECONDS = int(os.environ.get("DEVIRT_PROTO_SECONDS") or 45)
+
 def lift_program(source, protos_path, chunk_paths=(), fetch=None):
     """The root proto of every VM -> Luau text (plus stats and constant requests)."""
     variables.reset_stats()
@@ -1203,7 +1227,15 @@ def lift_program(source, protos_path, chunk_paths=(), fetch=None):
             payload_pid = pid
         arg1 = prog.dump.proto_arg1.get(int(pid)) if str(pid).isdigit() else None
         init_facts = {("vararg", 1): ("c", arg1)} if isinstance(arg1, (int, float)) else None
-        lines = fl.lift(vm, vmobj, proto, UpList(), {}, 0, init_facts=init_facts)
+        import deadline
+        deadline.arm(PROTO_SECONDS)
+        try:
+            lines = fl.lift(vm, vmobj, proto, UpList(), {}, 0, init_facts=init_facts)
+        finally:
+            deadline.disarm()
+        if variables.LIFT_STATS.get("residual_unknown", 0) > WALK_LOST_UNKNOWN:
+            raise WalkLost("%d register reads carry no value (limit %d) after %s"
+                           % (variables.LIFT_STATS["residual_unknown"], WALK_LOST_UNKNOWN, where))
         # The payload is always inlined at top level, also when the loader VMs
         # are lifted next to it: wrapping it in `return vm_root_N(...)` put the
         # watermark print after that return, and the file no longer parsed.

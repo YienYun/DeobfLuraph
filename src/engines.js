@@ -18,6 +18,7 @@ const trace = require('./traceout');
 const tidy = require('./tidy');
 const { getPythonBin, pythonEnv } = require('./pyenv');
 const { isValidLuaSyntax } = require('./luau_check');
+const vmmap = require('./vmmap');
 
 const ROOT = path.resolve(__dirname, '..');
 const CORE = path.join(ROOT, 'core');
@@ -41,6 +42,10 @@ function finalizeStaticResult(job, outPath, label) {
   }
   return outPath;
 }
+
+// How many watchdog checks in a row without a new statement mean "pure VM
+// code spinning forever" (same value src/driver.js uses).
+const V14_SPIN_CHECKS = 24;
 
 async function runLuraphV14(job) {
   const { args } = job;
@@ -75,7 +80,24 @@ async function runLuraphV14(job) {
   if (args.cfgJson) Object.assign(cfg, args.cfgJson);
 
   process.stderr.write(`[*] tracing Luraph v14 ${job.input}...\n`);
-  const res = await runner.run(patched, cfg);
+  let res = await runner.run(patched, cfg);
+  if (!res.body) {
+    // A build that spins inside its own VM never reaches the runtime's budget
+    // check, so the run answers nothing at all and the whole file is lost. The
+    // runtime has a spin watchdog for exactly this (same one src/driver.js
+    // uses) but it only exists when the dispatch loop heads carry its counter,
+    // and this path never turned it on. Patch the heads, run once more, and let
+    // the watchdog end the run the way a budget abort does: with the trace it
+    // had already recorded.
+    const stuck = /timed out|no reply|stalled|harness process exited/i.test(res.err || '');
+    if (stuck && !cfg.spin) {
+      process.stderr.write('[*] the run never answered (the script spins inside its own VM): '
+        + 'replaying with the spin watchdog on\n');
+      patched = vmmap.patchSpin(patched);
+      cfg.spin = V14_SPIN_CHECKS;
+      res = await runner.run(patched, cfg);
+    }
+  }
   if (!res.body) {
     runner.finish();
     throw new Error(res.err || 'Luraph v14 trace failed without output');

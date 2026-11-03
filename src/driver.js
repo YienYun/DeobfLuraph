@@ -79,6 +79,21 @@ async function run(job) {
     body = res.body;
 
     if (!body) {
+      // A script that spins inside its own VM never reaches the runtime's
+      // budget check, so the run answers nothing and the whole file is lost.
+      // The runtime has a spin watchdog for exactly this -- but only when the
+      // dispatch loop heads carry its counter, and this loop never turned it
+      // on (`spin` stayed false for every run). Patch the heads and run once
+      // more: the watchdog then ends the run the way a budget abort does, with
+      // the trace it had already recorded.
+      const stuck = /timed out|no reply|stalled|harness process exited/i.test(res.err || '');
+      if (stuck && !spin && attempt < args.maxRuns) {
+        process.stderr.write('[*] the run never answered (the script spins inside its own VM): '
+          + 'replaying with the spin watchdog on\n');
+        spin = true;
+        patched = args.noHooks ? patched : vmmap.patchSpin(patched);
+        continue;
+      }
       runner.finish();
       throw new Error(res.err || 'Trace failed without output');
     }

@@ -479,6 +479,30 @@ def run(job):
             write_trace()
     return job.trace_path
 
+def payload_source(chunk_paths):
+    """The script the loader runs: a loadstring'd chunk that is still Luau
+    source (Luraph leaves most of a payload readable, names aside). Printing it
+    from the AST gives the statements as the author wrote them -- including the
+    code the VM lift never reaches, because it is not in the bytecode at all.
+    -> text, or None when no chunk parses as source."""
+    import luauast as LA
+    from obfuscators.luraph_v15 import vmmap
+    from obfuscators.luraph_v15.vm_model import iter_nodes
+    best = None
+    for path in chunk_paths or ():
+        try:
+            root = vmmap.load_ast(path)
+        except Exception:
+            continue
+        pr = LA.Printer("\t")
+        for st in root["body"]:
+            pr.stat(st, 0)
+        text = "\n".join(pr.lines)
+        nfun = sum(1 for n in iter_nodes(root) if n.get("type") == "AstExprFunction")
+        if best is None or len(text) > len(best[0]):
+            best = (text, nfun)
+    return best
+
 def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths):
     """devirtualize() with its constant rounds answered by one long-lived
     harness (started now, so the script runs while round 1 walks); a fresh
@@ -490,6 +514,18 @@ def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths)
     states = sorted(set(re.findall(r"State\d{2,4}", run_text or "")))
     if states:
         job.luarmor_states = states
+    if os.environ.get("DEVIRT_PAYLOAD_SRC"):
+        from obfuscators.luraph_v15 import devirt
+        found = payload_source(chunk_paths)
+        if found:
+            text, nfun = found
+            print("[*] payload: the loadstring'd chunk is Luau source, printing it as the script "
+                  "(%d lines, %d functions)" % (text.count("\n") + 1, nfun), file=sys.stderr)
+            header = job.credit_header()
+            job.write(dpath, ((header + "\n") if header else "") + devirt.finish_text(text) + "\n")
+            return dict(functions=nfun, walked=0, errors=0, fallbacks=0,
+                        payload_source=text.count("\n") + 1)
+        print("[!] payload: no chunk reads as Luau source; lifting the VMs instead", file=sys.stderr)
     exec_rec_on = bool(os.environ.get("DEVIRT_EXECREC") or getattr(args, "exec_rec", False))
     exec_seen = []
     if exec_rec_on:

@@ -341,7 +341,8 @@ local function checkBudget()
         end
         local now = R.clock()
         if now - START > TIME_BUDGET then
-                ABORT_REASON = "time budget exhausted"
+                ABORT_REASON = CFG._spinIdle and "endless loop in the script's own code (no environment access)"
+                        or "time budget exhausted"
                 R.error(ABORT, 0)
         end
         -- heartbeat (harness.run_once): the pipe is block-buffered, so the padding
@@ -5407,7 +5408,7 @@ if CFG.spin then
                         R.print(MARK .. "HB\n" .. R.rep(" ", 16384))
                 end
                 if stmtCount ~= lastS or nextId ~= lastId then
-                        idle, lastS, lastId = 0, stmtCount, nextId
+                        idle, lastS, lastId, CFG._spinIdle = 0, stmtCount, nextId, false
                         return
                 end
                 if CHAIN.decodeUntil then
@@ -5419,10 +5420,8 @@ if CFG.spin then
                         return
                 end
                 idle += 1
-                if idle >= CFG.spin then
-                        ABORT_REASON = ABORT_REASON or "endless loop in the script's own code (no environment access)"
-                        checkBudget()
-                end
+                CFG._spinIdle = idle >= CFG.spin
+                checkBudget()
         end
         E.__SPIN = sw
 end

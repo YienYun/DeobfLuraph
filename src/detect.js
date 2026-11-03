@@ -2,7 +2,9 @@
 
 const zlib = require('zlib');
 
-const LURAPH_HEADER = /This file was protected using Luraph Obfuscator v(\d+)(?:\.(\d+))?/;
+// Luraph writes the credit line either way ("protected" / "generated") and the
+// version is the most reliable signal a build gives: read both spellings.
+const LURAPH_HEADER = /This file was (?:protected|generated) using Luraph Obfuscator v(\d+)(?:\.(\d+))?/;
 const LURAPH_VM_SHAPE = /\[\d+\]=(bit32|buffer|string|table|math)\.\w+/;
 const VM_CHUNK_START = /[\s\]]*return setmetatable\(\{/;
 
@@ -37,8 +39,10 @@ function detectLuraphV14(source) {
   if (m) {
     const major = m[1];
     const minor = m[2] || '0';
-    if (major === '14' && (minor === '7' || minor === '8' || minor === '9')) {
-      return 1.0;
+    if (major === '14') {
+      // 14.7-14.9 are the shapes this engine was built against; older minors
+      // share the loader and fail honestly instead of being called "unknown".
+      return (minor === '7' || minor === '8' || minor === '9') ? 1.0 : 0.8;
     }
     return 0.3;
   }
@@ -237,7 +241,7 @@ function detectWynfuscate(source) {
 const PLUGINS = [
   { name: 'luarmor_client', label: 'Luarmor v4 (client stub / sephal init / served payload)', detect: detectLuarmor },
   { name: 'luraph_v15', label: 'Luraph v15', detect: detectLuraphV15 },
-  { name: 'luraph_v14', label: 'Luraph v14 (v14.7–v14.9)', detect: detectLuraphV14 },
+  { name: 'luraph_v14', label: 'Luraph v14', detect: detectLuraphV14 },
   { name: 'moonsec', label: 'MoonSec V3 / V2', detect: detectMoonsec },
   { name: 'moonveil', label: 'MoonVeil', detect: detectMoonveil },
   { name: 'prometheus', label: 'Prometheus', detect: detectPrometheus },

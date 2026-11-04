@@ -221,6 +221,16 @@ def polish(text):
                   file=sys.stderr)
     except Exception as ex:
         print("[!] copy pass failed: %s" % ex, file=sys.stderr)
+    # Folding a copy takes the reads that kept the register alive with it, so
+    # the stores it leaves behind are dead and worth a second sweep.
+    try:
+        import deadstore as _deadstore
+        text, after = _deadstore.strip(text)
+        if after.get("removed"):
+            print("[*] dead stores after copy folding: %d removed"
+                  % after["removed"], file=sys.stderr)
+    except Exception as ex:
+        print("[!] post-copy dead store pass failed: %s" % ex, file=sys.stderr)
     # The u32 arithmetic a v15 build leaves behind is exact: folding it turns a
     # state machine's seed chain into the constants it computes, which is what
     # the control-flow passes need in order to see what a branch tests.

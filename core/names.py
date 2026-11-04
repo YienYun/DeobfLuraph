@@ -286,6 +286,27 @@ def singular(name):
     return None
 
 
+_ELEMENT_SUFFIX = ("List", "Array", "Table", "Collection", "Map", "Set", "Dict",
+                   "Lookup", "Cache", "Registry", "Pool", "Options", "Data")
+
+
+def element_name(name):
+    """What one item of a collection is called: `nameList` -> `name`, `pets` -> `pet`."""
+    if not name:
+        return None
+    one = singular(name)
+    if one:
+        return one
+    for suffix in _ELEMENT_SUFFIX:
+        if name.endswith(suffix) and len(name) > len(suffix) + 2:
+            stem = name[: -len(suffix)]
+            one = singular(stem)
+            if one:
+                return one
+            return stem[0].lower() + stem[1:]
+    return None
+
+
 def plural(name):
     if not name or name in KEYWORDS:
         return None
@@ -1491,7 +1512,7 @@ class Namer:
             if base is not None:
                 if base[0] == "local":
                     src = self.locals.get(base[1])
-                    nm = singular(src.get("new")) if src else None
+                    nm = element_name(src.get("new")) if src else None
                     if nm:
                         return nm
                 else:

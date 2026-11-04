@@ -267,6 +267,34 @@
         "bytes": 280360
       },
       "sha256": "73f876c6f2bd2c610b0e8aed0581f1f85194b94c53707c635c9269dcb4991038"
+    },
+    {
+      "id": "lph-v15-1-5",
+      "file": "Lph5-V15.1.lua",
+      "family": "luraph_v15",
+      "build": "15.1",
+      "tier": "full",
+      "source": {
+        "repo": "YienYun/Luraph",
+        "path": "SampleLuraph/LphV15/Lph5-V15.1.lua",
+        "blob": "1b8b333d2ae364b1431cc0f3372f555b19970335",
+        "bytes": 525533
+      },
+      "sha256": "909a8564fdd0c9ef8e10e5619b434bad17e6b5237d1f4c9790a4bcae11b4a492"
+    },
+    {
+      "id": "lph-v15-0-6",
+      "file": "Lph6-V15.0.lua",
+      "family": "luraph_v15",
+      "build": "15.0",
+      "tier": "full",
+      "source": {
+        "repo": "YienYun/Luraph",
+        "path": "SampleLuraph/LphV15/Lph6-V15.0.lua",
+        "blob": "76bc2b3e2bc0cd8870f46e5aad10b6aeaea260b2",
+        "bytes": 804324
+      },
+      "sha256": "5e24c3b696f888fd20492c263137f0128542df295e6cb492121611868e7c15b4"
     }
   ]
 }

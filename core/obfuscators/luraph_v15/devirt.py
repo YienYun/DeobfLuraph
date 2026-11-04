@@ -1193,7 +1193,20 @@ WALK_LOST_UNKNOWN = int(os.environ.get("DEVIRT_WALK_LOST") or 4000)
 # sends one proto into minutes of dataflow and CFG work, growing memory with it
 # until the process dies without output.  A proto of a sample that lifts takes
 # a few seconds, so this only ever cuts the runaway one.
-PROTO_SECONDS = int(os.environ.get("DEVIRT_PROTO_SECONDS") or 45)
+# Wall-clock allowance for lifting one root proto. A flat number is wrong: the
+# payload of a large build is a single proto with hundreds of functions, and it
+# legitimately takes a minute or more, while the loaders next to it take none.
+# The allowance therefore scales with the size of the capture, with a floor so a
+# small build is never rushed and a ceiling so a pathological proto still gives
+# up instead of hanging. DEVIRT_PROTO_SECONDS overrides it outright.
+PROTO_SECONDS = int(os.environ.get("DEVIRT_PROTO_SECONDS") or 0)
+
+
+def proto_seconds(n_protos):
+    """Seconds one root proto may take, given how many protos the run captured."""
+    if PROTO_SECONDS:
+        return PROTO_SECONDS
+    return max(60, min(900, 2 * int(n_protos or 0)))
 
 def lift_program(source, protos_path, chunk_paths=(), fetch=None):
     """The root proto of every VM -> Luau text (plus stats and constant requests)."""
@@ -1232,7 +1245,11 @@ def lift_program(source, protos_path, chunk_paths=(), fetch=None):
         arg1 = prog.dump.proto_arg1.get(int(pid)) if str(pid).isdigit() else None
         init_facts = {("vararg", 1): ("c", arg1)} if isinstance(arg1, (int, float)) else None
         import deadline
-        deadline.arm(PROTO_SECONDS)
+        allowance = proto_seconds(len(lst))
+        deadline.arm(allowance)
+        if os.environ.get("DEVIRT_DEBUG"):
+            print("[*] lift allowance: %ds for %d captured proto(s)" % (allowance, len(lst)),
+                  file=sys.stderr)
         try:
             lines = fl.lift(vm, vmobj, proto, UpList(), {}, 0, init_facts=init_facts)
         finally:

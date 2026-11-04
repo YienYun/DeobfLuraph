@@ -1,7 +1,11 @@
 {
-  "input": "/tmp/luraph-public-samples/v14.8/cd666dfb20c03439.lua",
+  "schema_version": 1,
+  "input": "/home/user/DeobfLuraph/fixtures/input/cd666dfb20c03439.lua",
   "output": "/home/user/DeobfLuraph/results/Luraph_v14.8_cd666dfb20c03439.deobf.luau",
+  "output_sha256": "2f369dac5f560a353c2f66d62f2cc7d74ba1d744fd291ea4cf7a2ca469b1fe3d",
+  "output_bytes": 5633,
   "obfuscator": "luraph_v14",
+  "engine": "Luraph v14",
   "confidence": 1,
   "result_type": "trace",
   "trace_status": "aborted: endless loop in the script's own code (no environment access)",
@@ -27,6 +31,8 @@
     "run_status": "aborted: endless loop in the script's own code (no environment access)"
   },
   "warnings": [
-    "Trace did not finish normally: aborted: endless loop in the script's own code (no environment access)"
+    "the v14 mapper found no dispatch loop in the outer file: either a build outside v14.7-v14.9, or a carrier that delivers its payload through loadstring. Tracing to find out which",
+    "Trace did not finish normally: aborted: endless loop in the script's own code (no environment access)",
+    "Result is a behaviour trace, not reconstructed source (see the file header)."
   ]
 }

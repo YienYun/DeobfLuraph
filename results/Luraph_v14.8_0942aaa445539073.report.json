@@ -1,7 +1,11 @@
 {
-  "input": "/tmp/luraph-public-samples/v14.8/0942aaa445539073.lua",
+  "schema_version": 1,
+  "input": "/home/user/DeobfLuraph/fixtures/input/0942aaa445539073.lua",
   "output": "/home/user/DeobfLuraph/results/Luraph_v14.8_0942aaa445539073.deobf.luau",
+  "output_sha256": "6b0203f6d952d930d41353d43012e7f6b4bbcb2f2b20ce848284a4556c6c5d5b",
+  "output_bytes": 18927,
   "obfuscator": "luraph_v14",
+  "engine": "Luraph v14",
   "confidence": 1,
   "result_type": "devirtualized",
   "trace_status": "finished",

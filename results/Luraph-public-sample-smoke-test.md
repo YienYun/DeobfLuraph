@@ -1,21 +1,37 @@
 # Luraph public-sample smoke test
 
-Engine revision at test time: `305b27821a279b168faade997260708082214bd7`.
+Regenerated **2026-11-04** with the engine in this commit, after the
+determinism and attribution fixes: the credit line is now the first line of every
+result, and no diagnostic can carry a memory address. Every row is reproducible
+from the pinned input and the flags shown; the fast-tier subset is additionally
+pinned byte-for-byte in `test/golden.json`.
 
-Inputs were fetched from [`terrorlua/obfuscator-samples/Luraph`](https://github.com/terrorlua/obfuscator-samples/tree/main/Luraph). The input files themselves are not included in this repository; the Git blob IDs below identify the exact samples. Generated outputs and CLI reports are stored alongside this summary in `results/`.
+Inputs are third-party files and are **not** stored in this repository.
+`fixtures/manifest.json` pins each one by repository, path, blob id, size and
+sha256; `node scripts/fixtures.js fetch` retrieves and verifies them.
 
-All generated `.luau` outputs passed the repository's `bin/luau-ast` syntax check. Most runs used `--budget 30 --timeout 45` (the exceptions are noted).
+| Sample (source Git blob) | Output | Outcome | Flags |
+|---|---|---|---|
+| [v14.8/0942aaa445539073.lua](https://github.com/terrorlua/obfuscator-samples/blob/main/Luraph/v14.8/0942aaa445539073.lua) `d428c5a6…` | [`Luraph_v14.8_0942aaa445539073.deobf.luau`](Luraph_v14.8_0942aaa445539073.deobf.luau) | **Devirtualized, finished** — 976 lines, 27 functions, 0 unlifted blocks, 0 unstructured jumps. The 976-line baseline is unchanged by the fixes. | `--budget 30 --timeout 45` |
+| [v14.8/cd666dfb20c03439.lua](https://github.com/terrorlua/obfuscator-samples/blob/main/Luraph/v14.8/cd666dfb20c03439.lua) `d45584a3…` | [`Luraph_v14.8_cd666dfb20c03439.deobf.luau`](Luraph_v14.8_cd666dfb20c03439.deobf.luau) | **Trace only** — 104 statements, 219 lines. The outer file is a decompressor, not a VM: the payload arrives through `loadstring` and then aborts with `endless loop in the script's own code (no environment access)`. Reported as a trace, with the trace header saying so. | `--budget 30 --timeout 45` |
+| [v14.8/e81607b826471087.lua](https://github.com/terrorlua/obfuscator-samples/blob/main/Luraph/v14.8/e81607b826471087.lua) `40eb4636…` | [`Luraph_v14.8_e81607b826471087.deobf.luau`](Luraph_v14.8_e81607b826471087.deobf.luau) | **Partial** — 12 functions lifted into 7 lines; the run stops at `No key provided or invalid`, so the output is the bootstrap, not the decrypted payload. | `--budget 30 --timeout 45` |
+| [v14.9/e462eaaccbac09b0.lua](https://github.com/terrorlua/obfuscator-samples/blob/main/Luraph/v14.9/e462eaaccbac09b0.lua) `79df2d5c…` | No output (refused) | **Refused, honestly** — the mapper finds no dispatch loop in the outer file and a 25 s behaviour trace records nothing. The CLI says exactly that instead of writing an empty or traced-at-random file. | `--budget 15 --timeout 25` |
+| [v15.0/5ae248d6527b5c01.lua](https://github.com/terrorlua/obfuscator-samples/blob/main/Luraph/v15.0/5ae248d6527b5c01.lua) `3b2dfe1f…` | [`Luraph_v15.0_5ae248d6527b5c01.deobf.luau`](Luraph_v15.0_5ae248d6527b5c01.deobf.luau) | **Devirtualized, finished** — 4 lines, 1 function; recovers `print("hello")`. | `--budget 20 --timeout 45` |
+| [v15.0/392628e9da400b8a.lua](https://github.com/terrorlua/obfuscator-samples/blob/main/Luraph/v15.0/392628e9da400b8a.lua) `3e66fead…` | [`Luraph_v15.0_392628e9da400b8a.deobf.luau`](Luraph_v15.0_392628e9da400b8a.deobf.luau) | **Trace only** — 14 lines; the run dies on `attempt to call missing method 'pW'`, so no function is lifted and the result is labelled a trace. | `--budget 20 --timeout 45` |
+| [v15.0/f44daa11fdc2663b.lua](https://github.com/terrorlua/obfuscator-samples/blob/main/Luraph/v15.0/f44daa11fdc2663b.lua) `96451c4e…` | [`Luraph_v15.0_f44daa11fdc2663b.deobf.luau`](Luraph_v15.0_f44daa11fdc2663b.deobf.luau) | **Partial devirtualization** — 2,404 lines, 28 functions, 0 unlifted blocks; the run ends on `nil + number` with 192 residual unknown frame reads. | `--budget 20 --timeout 40 --max-runs 2` |
+| [v15.1/2153b779fa7a87f2.lua](https://github.com/terrorlua/obfuscator-samples/blob/main/Luraph/v15.1/2153b779fa7a87f2.lua) `b252ab03…` | [`Luraph_v15.1_2153b779fa7a87f2.deobf.luau`](Luraph_v15.1_2153b779fa7a87f2.deobf.luau) | **Devirtualized, finished** — 15 lines, 3 functions. | `--budget 25 --timeout 45` |
+| [LphV14/dSAjehr43.lua](https://github.com/YienYun/Luraph/blob/main/SampleLuraph/LphV14/dSAjehr43.lua) `e57349c3…` | [`Luraph_v14_dSAjehr43.deobf.luau`](Luraph_v14_dSAjehr43.deobf.luau) | **Partial devirtualization** — 1,644 lines, 27 functions, 0 unlifted blocks; two unresolved-capture headers remain and the trace ends with the no-progress endless-loop status. | `--budget 30 --timeout 60` |
 
-| Sample (source Git blob) | Output | Outcome |
-|---|---|---|
-| [v14.8/0942aaa445539073.lua](https://github.com/terrorlua/obfuscator-samples/blob/main/Luraph/v14.8/0942aaa445539073.lua) `d428c5a656f85922ba1433c831e7ac190271d6c7` | [`Luraph_v14.8_0942aaa445539073.deobf.luau`](Luraph_v14.8_0942aaa445539073.deobf.luau) | **Devirtualized, finished** — 976 lines, 27 functions, 0 unlifted blocks. Matches the previously recorded 976-line regression target. |
-| [v14.8/cd666dfb20c03439.lua](https://github.com/terrorlua/obfuscator-samples/blob/main/Luraph/v14.8/cd666dfb20c03439.lua) `d45584a31b99417a33329621579d16f92578c6bc` | [`Luraph_v14.8_cd666dfb20c03439.deobf.luau`](Luraph_v14.8_cd666dfb20c03439.deobf.luau) | **Trace only** — 104 statements; stopped as `aborted: endless loop in the script's own code (no environment access)`. The captured 69,197-byte chunk needs the parent’s 123,797-byte buffer argument; running it without that argument fails at `buffer.readu8`. With the captured argument, a bounded direct harness run still recorded 104 statements and 42 distinct global names before the same loop abort. The observed names/trace did not show an explicit key or HTTP-service request; this sample remains unresolved. |
-| [v14.8/e81607b826471087.lua](https://github.com/terrorlua/obfuscator-samples/blob/main/Luraph/v14.8/e81607b826471087.lua) `40eb4636ed3ab49763e8de0012cc001da6659672` | [`Luraph_v14.8_e81607b826471087.deobf.luau`](Luraph_v14.8_e81607b826471087.deobf.luau) | **Partial only** — 12 functions were lifted, but runtime stopped with `No key provided or invalid`; output is a short bootstrap/stub, not the decrypted payload. |
-| [v14.9/e462eaaccbac09b0.lua](https://github.com/terrorlua/obfuscator-samples/blob/main/Luraph/v14.9/e462eaaccbac09b0.lua) `79df2d5c09ceef60b977a490c5cdb9995c726849` | No output | **Timed out** at the 25-second harness limit (`--budget 15`). |
-| [v15.0/5ae248d6527b5c01.lua](https://github.com/terrorlua/obfuscator-samples/blob/main/Luraph/v15.0/5ae248d6527b5c01.lua) `3b2dfe1f8df4d1c5fdcf7164dc34b5367ac66215` | [`Luraph_v15.0_5ae248d6527b5c01.deobf.luau`](Luraph_v15.0_5ae248d6527b5c01.deobf.luau) | **Devirtualized, finished** — 1 function; recovered `print("hello")`. |
-| [v15.0/392628e9da400b8a.lua](https://github.com/terrorlua/obfuscator-samples/blob/main/Luraph/v15.0/392628e9da400b8a.lua) `3e66fead6e384458c446f96e5066e3206b62c6b5` | [`Luraph_v15.0_392628e9da400b8a.deobf.luau`](Luraph_v15.0_392628e9da400b8a.deobf.luau) | **Trace only** — runtime error `attempt to call missing method 'pW'`; no functions lifted. |
-| [v15.0/f44daa11fdc2663b.lua](https://github.com/terrorlua/obfuscator-samples/blob/main/Luraph/v15.0/f44daa11fdc2663b.lua) `96451c4e0b774e5e247725cf73d2fc5856674f61` | [`Luraph_v15.0_f44daa11fdc2663b.deobf.luau`](Luraph_v15.0_f44daa11fdc2663b.deobf.luau) | **Partial devirtualization** — 2,404 lines, 28 functions, 0 unlifted blocks; runtime ended on `nil + number`, with 192 residual unknown frame reads. Used `--budget 20 --timeout 40 --max-runs 2`. |
-| [v15.1/2153b779fa7a87f2.lua](https://github.com/terrorlua/obfuscator-samples/blob/main/Luraph/v15.1/2153b779fa7a87f2.lua) `b252ab033c8be62e2f539f326c312ab6ec274899` | [`Luraph_v15.1_2153b779fa7a87f2.deobf.luau`](Luraph_v15.1_2153b779fa7a87f2.deobf.luau) | **Devirtualized, finished** — 3 functions, 15 lines. |
-| [LphV14/dSAjehr43.lua](https://github.com/YienYun/Luraph/blob/main/SampleLuraph/LphV14/dSAjehr43.lua) `e57349c34eaaf0aacc77e292516785aac70f7032` | [`Luraph_v14_dSAjehr43.deobf.luau`](Luraph_v14_dSAjehr43.deobf.luau) | **Partial devirtualization** — 1,644 lines, 27 functions, 0 unlifted blocks; one unresolved capture. Trace ended with the no-progress endless-loop watchdog status. Luau syntax passes. |
+Notes that the table cannot show:
 
-Each successful CLI run has a corresponding `.report.json` file. The known v14.8 baseline matches 976 lines; the `Lph1-v15.0` sample mentioned in earlier notes was not present in the public directory, so it was not claimed as verified here.
+* **Every success above is deterministic.** Running the same input with the same
+  flags twice produces identical bytes; `test/e2e.test.js` asserts that on the
+  fast tier.
+* **A trace is not source.** Where the row says *trace only*, the file records
+  what the run observed at each step (a value computed at run time appears as its
+  result). It says so in its header and the report says `result_type: trace`.
+* **A refusal is a result too.** `e462` gets no file because nothing honest could
+  be written for it; the CLI explains which two things it could have been (an
+  out-of-range build, or a carrier whose payload never arrived).
+* The known gaps — the dropped call at `pc=50`, the partly lifted UI region — are
+  documented with their numbers in [`../TECHNICAL.md`](../TECHNICAL.md) §3.

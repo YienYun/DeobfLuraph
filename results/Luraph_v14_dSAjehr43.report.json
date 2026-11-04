@@ -1,7 +1,11 @@
 {
-  "input": "/tmp/luraph-user-sample/dSAjehr43.lua",
+  "schema_version": 1,
+  "input": "/home/user/DeobfLuraph/fixtures/input/dSAjehr43.lua",
   "output": "/home/user/DeobfLuraph/results/Luraph_v14_dSAjehr43.deobf.luau",
+  "output_sha256": "10cd74b0952458ccc72d903e4a2070e365d28550b05d8db18468f7246dce2dc3",
+  "output_bytes": 34478,
   "obfuscator": "luraph_v14",
+  "engine": "Luraph v14",
   "confidence": 0.8,
   "result_type": "devirtualized",
   "trace_status": "aborted: endless loop in the script's own code (no environment access)",

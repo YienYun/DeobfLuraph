@@ -295,6 +295,20 @@
         "bytes": 804324
       },
       "sha256": "5e24c3b696f888fd20492c263137f0128542df295e6cb492121611868e7c15b4"
+    },
+    {
+      "id": "lph-v15-1-rideapet",
+      "file": "RideAPet.lua",
+      "family": "luraph_v15",
+      "build": "15.1",
+      "tier": "full",
+      "source": {
+        "repo": "tienkhanh1/Chilli-Hub-Script",
+        "path": "RideAPet",
+        "blob": "71a9b6dea39374870db0f4599291aa4cd81f2a93",
+        "bytes": 338756
+      },
+      "sha256": "14cd35cc227c94f314b789c2c0cc2afa40b780754262f3017d9aaf65c2660a79"
     }
   ]
 }

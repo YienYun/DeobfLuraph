@@ -48,6 +48,7 @@ fireproximityprompt queueonteleport getnameexecutor cloneref load
 RaycastParams OverlapParams Content setthreadidentity set_thread_identity
 getupvalues islclosure replicatesignal firetouchinterest getconnections
 UserSettings gethwid toclipboard crypt base64_decode base64_encode WebSocket
+getclipboard readclipboard getrbxclipboard setrbxclipboard
 decompile getscriptbytecode getscripthash setreadonly canloadstring
 vector settings hookfunction getfunctionhash
 `.split(/\s+/).filter(Boolean));

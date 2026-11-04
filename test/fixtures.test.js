@@ -25,7 +25,10 @@ test('every sample is pinned by repo, path, blob id and sha256', () => {
     assert.ok(['luraph_v14', 'luraph_v15'].includes(sample.family), sample.id);
     assert.ok(['core', 'full'].includes(sample.tier), sample.id);
     assert.ok(sample.source.repo.includes('/'), sample.id);
-    assert.match(sample.source.path, /\.lua$/, sample.id);
+    // Pinned by repo + path + blob + sha256. Most upstream samples end in
+    // `.lua`; the Chilli-hub repo publishes some with no extension at all
+    // (`Chilli-Hub-Script/RideAPet`), so a bare file name is allowed too.
+    assert.ok(/\.lua$/.test(sample.source.path) || /^[\w. -]+$/.test(sample.source.path), sample.id);
     assert.match(sample.source.blob, BLOB_RE, sample.id);
     assert.match(sample.sha256, SHA256_RE, sample.id);
     assert.ok(Number.isSafeInteger(sample.source.bytes) && sample.source.bytes > 0, sample.id);

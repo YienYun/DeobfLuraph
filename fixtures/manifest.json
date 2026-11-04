@@ -309,6 +309,20 @@
         "bytes": 338756
       },
       "sha256": "14cd35cc227c94f314b789c2c0cc2afa40b780754262f3017d9aaf65c2660a79"
+    },
+    {
+      "id": "lph-v15-0-jumpforanimals",
+      "file": "JumpForAnimals.lua",
+      "family": "luraph_v15",
+      "build": "15.0",
+      "tier": "full",
+      "source": {
+        "repo": "tienkhanh1/Chilli-Hub-Script",
+        "path": "JumpForAnimals",
+        "blob": "f7c9f0ffcac62ed570d7ee0e9d18112b71f1416b",
+        "bytes": 503353
+      },
+      "sha256": "f057a69b2c3b08e4e111225cd3ab98247fe0a50425a0f18eff13220be4af455d"
     }
   ]
 }

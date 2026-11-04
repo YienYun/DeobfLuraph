@@ -7,7 +7,7 @@
 --   Script:3
 --   <harness>:7738
 --   
--- 0 statements recorded in 0.04s
+-- 0 statements recorded
 -- warning: 55 unknown global(s) were answered by ever-callable proxies (guessed behaviour, see their call sites): DTGCGO, YWGCGT, TROinI, wFDWor3, VRUinF, WXDOC, ZXCDBU, UBDMC, ForQXRinC, BorNWRinH, ESDIDO, EVDDFS, ...
 
 

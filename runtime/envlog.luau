@@ -6844,7 +6844,10 @@ end
 local body = render()
 local header = {}
 R.insert(header, "-- run status: " .. R.gsub(status, "\n", "\n--   "))
-R.insert(header, R.fmt("-- %d statements recorded in %.2fs", stmtCount, R.clock() - START))
+-- No wall-clock time here. It used to read "recorded in 0.04s", and that alone
+-- made two runs over the same input differ: a trace is evidence, so it has to
+-- be reproducible byte for byte. The duration is reported on the console.
+R.insert(header, R.fmt("-- %d statements recorded", stmtCount))
 if #urls > 0 then
         R.insert(header, "-- URLs requested:")
         for _, u in R.ipairs(urls) do R.insert(header, "--   " .. u) end

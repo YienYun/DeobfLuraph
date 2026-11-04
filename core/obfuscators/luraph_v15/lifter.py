@@ -447,8 +447,9 @@ class ProtoLifter:
                         fr.h[k] = pv
                 self.jstack = fr
                 return
-            raise Unsupported("LPH_JIT loop stack set to %r (%s; stack %s)" % (
-                v, {k: fmt_any(x) for k, x in v.h.items()} if isinstance(v, LTable) else "", fmt_any(self.jstack)))
+            raise Unsupported("LPH_JIT loop stack set to %s (%s; stack %s)" % (
+                S.describe_value(v), {k: fmt_any(x) for k, x in v.h.items()} if isinstance(v, LTable) else "",
+                fmt_any(self.jstack)))
         if sp[0] == "reg":
             if isinstance(v, Multi):
                 v = v.first()
@@ -646,7 +647,7 @@ class ProtoLifter:
             if text is not None:
                 return Opaque("function", text)
             return Opaque("function", "function(...) end")
-        raise Unsupported("value %r in an expression" % (v,))
+        raise Unsupported("value %s in an expression" % S.describe_value(v))
 
     def plain_closure(self, fn):
         """A plain Lua function that captures outer locals via the maker function."""
@@ -986,7 +987,7 @@ class ProtoLifter:
             return Upval(obj.idx)
         if isinstance(obj, UpList):
             if not isinstance(key, int):
-                raise Unsupported("upvalue index %r" % (key,))
+                raise Unsupported("upvalue index %s" % S.describe_value(key))
             return obj.get(key)
         if isinstance(obj, FrameProxy):
             if not isinstance(key, int):
@@ -995,7 +996,7 @@ class ProtoLifter:
             return Upval((obj.idx, key))
         if isinstance(obj, OpenUps):
             if not isinstance(key, int):
-                raise Unsupported("open upvalue index %r" % (key,))
+                raise Unsupported("open upvalue index %s" % S.describe_value(key))
             return MaybeBox(key)
         if isinstance(obj, MaybeBox):
             return None
@@ -1121,7 +1122,7 @@ class ProtoLifter:
             return Index(obj, self.as_expr(key))
         if obj is None:
             raise Unsupported("index nil")
-        raise Unsupported("index %r" % (obj,))
+        raise Unsupported("index %s" % S.describe_value(obj))
 
     def _can_decode_const(self, obj, op):
         if not isinstance(op, (int, float)):
@@ -1157,7 +1158,7 @@ class ProtoLifter:
             return lst.extra[key]
         if is_sym(key):
             return Index(self.as_expr(lst), self.as_expr(key))
-        raise Unsupported("packed list index %r" % (key,))
+        raise Unsupported("packed list index %s" % S.describe_value(key))
 
     def newindex(self, obj, key, v, it):
         if isinstance(key, Multi):
@@ -1330,7 +1331,7 @@ class ProtoLifter:
             # `t[k] = v` where t never materialized at capture (a nil slot of
             # an uncaptured table): skip -- raising used to poison the walk
             return
-        raise Unsupported("newindex %r" % (obj,))
+        raise Unsupported("newindex %s" % S.describe_value(obj))
 
     def cur_ov(self):
         return self.ov if self.ov is not None else self.ov_base
@@ -1440,7 +1441,7 @@ class ProtoLifter:
                 if k <= len(rest.items):
                     return Multi(rest.items[k:], rest.tail)
                 return Multi([], rest.tail.drop(k - len(rest.items)) if rest.tail else None)
-            raise Unsupported("select with %r" % (n,))
+            raise Unsupported("select with %s" % S.describe_value(n))
         if name == "coroutine.wrap":
             if a.items and isinstance(a.items[0], (ClosureExpr, Expr)):
                 t = self.new_temp()
@@ -1621,7 +1622,7 @@ class ProtoLifter:
             return Multi([FrameArg(n) if self.jvals.get(n) is FRAME else Reg(n) for n in range(i, j + 1)])
         if isinstance(t, SymList):
             if not isinstance(i, int) or i < 1 or i - 1 > len(t.items):
-                raise Unsupported("unpack packed list from %r" % (i,))
+                raise Unsupported("unpack packed list from %s" % S.describe_value(i))
             items = t.items[i - 1:]
             j_adj = (j - (i - 1)) if isinstance(j, int) else j
             if j_adj is None or is_sym(j_adj) or (isinstance(j_adj, int) and t.tail is not None and j_adj >= len(items)):
@@ -1639,7 +1640,7 @@ class ProtoLifter:
             self.emit(CallStmt(tt, Global("table.unpack"),
                                Multi([self.value_of(x) if x is not None else Const(None) for x in a.items], a.tail)))
             return Multi([], TempTail(tt))
-        raise Unsupported("unpack %r" % (t,))
+        raise Unsupported("unpack %s" % S.describe_value(t))
 
     def tmove(self, a):
         src, f, e, t, dst = (a.items + [None] * 5)[:5]
@@ -1729,7 +1730,7 @@ class ProtoLifter:
             return self.symlist_get(src, i)
         if isinstance(src, LTable):
             return src.get(i)
-        raise Unsupported("move from %r" % (src,))
+        raise Unsupported("move from %s" % S.describe_value(src))
 
     def put(self, dst, i, v):
         if isinstance(dst, RegFile):
@@ -1746,7 +1747,7 @@ class ProtoLifter:
         elif isinstance(dst, LTable):
             dst.set(i, v)
         else:
-            raise Unsupported("move into %r" % (dst,))
+            raise Unsupported("move into %s" % S.describe_value(dst))
 
     def call_symbolic(self, fn, args, it, stat):
         # A callee or an argument derived from a poisoned (junk-branch) value:

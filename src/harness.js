@@ -243,7 +243,7 @@ async function runOnce(luau, source, cfg, hpath, timeoutSec, keepHarness, chunks
   LAST_RAW = stdout + err;
   const m = new RegExp(mark('ENVLOG-BEGIN') + '\\n([\\s\\S]*?)' + mark('ENVLOG-END')).exec(stdout);
   if (!m) {
-    return { body: null, err: stdout.slice(-3000) + '\n' + err.slice(-3000) };
+    return { body: null, err: clipDiagnostic(stdout.slice(-4000) + '\n' + err.slice(-4000)) };
   }
   let result = m[1];
   for (const hp of [hpath, hpath.replace(/\\/g, '/')]) {
@@ -251,6 +251,20 @@ async function runOnce(luau, source, cfg, hpath, timeoutSec, keepHarness, chunks
       result = result.replace(new RegExp(hp.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ':\\d+: ', 'g'), '');
     }
   }
+  // Absolute paths are machine state, and the harness directory
+  // (`deobf_node_XXXXXX`) is freshly generated per run. A trace that embeds
+  // either is not reproducible across two runs and shows the layout of the
+  // machine it ran on, so both become stable placeholders before the text can
+  // become a result. Stack traces are the usual source:
+  //   --   /tmp/deobf_node_ab12/file.deobf.luau.harness.luau:7733
+  for (const hp of [path.resolve(hpath), path.resolve(hpath).replace(/\\/g, '/')]) {
+    result = result.split(hp).join('<harness>');
+    result = result.split(path.dirname(hp)).join('<tmp>');
+  }
+  result = result
+    .replace(/[A-Za-z]:\\[^\s:]*deobf_node_[A-Za-z0-9]+/g, '<tmp>')
+    .replace(/\/tmp\/deobf_node_[A-Za-z0-9]+/g, '<tmp>')
+    .replace(/\/var\/folders\/[^\s:]+/g, '<tmp>');
   return { body: result, err: null };
 }
 
@@ -286,6 +300,29 @@ function _communicate(cmd, timeoutMs, stallMs) {
       }
     }, 200);
   });
+}
+
+/** One-line, bounded summary of a crashed or stuck run.
+ *
+ * The harness pads its heartbeat with 16 KB of spaces and a spinning script
+ * can echo a wall of its own source, so a raw tail of its output is both
+ * unreadable and potentially megabytes long (it once reached a log line).
+ * A diagnostic is for a human: drop the padding, keep the informative lines,
+ * cap the length. Full detail is what --debug keeps the harness for.
+ */
+function clipDiagnostic(text, limit = 600) {
+  if (!text) return '';
+  let s = String(text).replace(/\r\n?/g, '\n');
+  s = s.replace(/[ \t]{4,}/g, ' ');
+  const lines = s.split('\n').map((line) => line.trim()).filter(Boolean);
+  if (!lines.length) return '';
+  const tail = [];
+  for (let i = lines.length - 1; i >= 0 && tail.join(' | ').length < limit; i--) {
+    tail.unshift(lines[i]);
+  }
+  let out = tail.join(' | ');
+  if (out.length > limit) out = out.slice(0, limit - 1) + '\u2026';
+  return out;
 }
 
 function takeChunks(body) {
@@ -353,21 +390,21 @@ class HarnessServer {
           const out = all.slice(0, idx + END.length).toString('utf8');
           LAST_RAW = out;
           const m = new RegExp(mark('ENVLOG-BEGIN') + '\\n([\\s\\S]*?)' + mark('ENVLOG-END')).exec(out);
-          if (!m) return resolve({ body: null, err: out.slice(-3000) });
+          if (!m) return resolve({ body: null, err: clipDiagnostic(out.slice(-4000)) });
           return resolve({ body: m[1], err: null });
         }
       };
       const onEnd = () => {
         clearTimeout(timer);
         const out = Buffer.concat(accum).toString('utf8');
-        resolve({ body: null, err: (this.timedOut ? 'timed out' : 'harness exited') + ': ' + out.slice(-3000) });
+        resolve({ body: null, err: (this.timedOut ? 'timed out' : 'harness exited') + ': ' + clipDiagnostic(out.slice(-4000)) });
       };
       const timer = setTimeout(() => {
         this.proc.stdout.off('data', onData);
         this.proc.stdout.off('end', onEnd);
         this.proc.kill('SIGKILL');
         const out = Buffer.concat(accum).toString('utf8');
-        resolve({ body: null, err: 'timed out: ' + out.slice(-3000) });
+        resolve({ body: null, err: 'timed out: ' + clipDiagnostic(out.slice(-4000)) });
       }, timeoutMs);
       this.proc.stdout.on('data', onData);
       this.proc.stdout.once('end', onEnd);
@@ -436,15 +473,16 @@ class Runner {
     this.hpath = job.tracePath + '.harness.luau';
   }
 
-  async run(source, cfg, chunks = {}) {
-    return runOnce(this.luau, source, cfg, this.hpath, this.job.args.timeout, this.job.args.keepHarness, chunks);
+  async run(source, cfg, chunks = {}, timeoutSec) {
+    const timeout = timeoutSec || this.job.args.timeout;
+    return runOnce(this.luau, source, cfg, this.hpath, timeout, this.job.args.keepHarness, chunks);
   }
 
   finish() {}
 }
 
 module.exports = {
-  findLuau, luauAst, chunkKey, longString, luaValue,
+  findLuau, luauAst, chunkKey, longString, luaValue, clipDiagnostic,
   buildHarness, runOnce, takeChunks, takeP2d, p2dMiss,
   loadP2dCache, p2dCachePath, traceText, sameTrace,
   HarnessServer, Runner,

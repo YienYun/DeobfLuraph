@@ -1,9 +1,98 @@
 import math
+import re
 import struct
 import unicodedata
 
 class Unsupported(Exception):
     pass
+
+# A diagnostic string can become part of the output (`-- devirt: ...`), so it
+# must be a pure function of the input. Python's default object repr is not:
+# it carries id(), which changes from run to run and made two runs over one
+# input produce different bytes. describe_value() is the only way a VM value
+# may be formatted into a message; scrub_addresses() is the last line of
+# defence for messages built elsewhere.
+_ADDRESS_RE = re.compile(r"<([A-Za-z_][\w.]*) object at 0x[0-9a-fA-F]+>")
+_CLIP = 120
+
+
+def _clip_text(s, limit=_CLIP):
+    return s if len(s) <= limit else s[:limit - 3] + "..."
+
+
+def _lua_bytes_repr(b):
+    out = ['"']
+    for byte in b:
+        if byte == 0x22:
+            out.append('\\"')
+        elif byte == 0x5C:
+            out.append("\\\\")
+        elif 0x20 <= byte < 0x7F:
+            out.append(chr(byte))
+        else:
+            out.append("\\%d" % byte)
+    out.append('"')
+    return "".join(out)
+
+
+def describe_value(v):
+    """Deterministic, one-line description of an internal value.
+
+    Never carries a memory address and never depends on allocation order, so
+    the same input always produces the same output bytes."""
+    if v is None:
+        return "nil"
+    if v is True:
+        return "true"
+    if v is False:
+        return "false"
+    t = type(v)
+    if t is int:
+        return str(v)
+    if t is float:
+        return repr(v)
+    if t is str:
+        return _clip_text(_lua_bytes_repr(v.encode("latin-1", "replace")))
+    if t is bytes:
+        return _clip_text(_lua_bytes_repr(v))
+    if isinstance(v, LTable):
+        return "table#%s" % v.tid if v.tid is not None else "table(%d field(s))" % len(v.h)
+    if isinstance(v, RegFile):
+        return "register file"
+    if isinstance(v, EnvTable):
+        return "environment table"
+    if isinstance(v, UpContainer):
+        return "upvalue container #%s" % v.idx
+    if isinstance(v, Buf):
+        return "buffer(%d byte(s))" % len(v.data)
+    if isinstance(v, Builtin):
+        return "Builtin(%s)" % v.name
+    if isinstance(v, LuaFunc):
+        return "Lua function"
+    if isinstance(v, Multi):
+        return "multi(%d value(s)%s)" % (len(v.items), ", tail" if v.tail is not None else "")
+    if isinstance(v, SymList):
+        return "packed list(%d value(s)%s)" % (len(v.items), ", tail" if v.tail is not None else "")
+    # A class that defines its own __repr__ gives a stable, readable
+    # description (object.__repr__ would give the address, which is exactly
+    # what this function exists to keep out of the output).
+    try:
+        if type(v).__repr__ is not object.__repr__:
+            return _clip_text(repr(v))
+        d = getattr(v, "__dict__", None)
+        if d:
+            return "<%s %s>" % (t.__name__, _clip_text(str(d)))
+    except Exception:
+        pass
+    return "<%s>" % t.__name__
+
+
+def scrub_addresses(text):
+    """Replace any surviving `<X object at 0x...>` with `<X>`.
+
+    Defence in depth: describe_value() covers the values this module formats,
+    this covers a message assembled somewhere else."""
+    return _ADDRESS_RE.sub(lambda m: "<%s>" % m.group(1), text)
 
 class LTable:
     __slots__ = ("h", "tid", "meta")
@@ -30,7 +119,9 @@ class LTable:
         return n
 
     def __repr__(self):
-        return "LTable#%s" % (self.tid if self.tid is not None else id(self))
+        # tid is deterministic (assigned at creation); id() is not, and this
+        # repr reaches diagnostic text, so it must never fall back to it.
+        return "LTable#%s" % (self.tid if self.tid is not None else "-")
 
 class Buf:
     __slots__ = ("data",)
@@ -64,7 +155,7 @@ def norm_key(k):
     if isinstance(k, float) and math.isfinite(k) and k == int(k):
         return int(k)
     if isinstance(k, Expr):
-        raise Unsupported("symbolic table key on a concrete table: %r" % (k,))
+        raise Unsupported("symbolic table key on a concrete table: %s" % describe_value(k))
     return k
 
 class Expr:
@@ -1342,7 +1433,7 @@ class Interp:
         if op in ("Add", "Sub", "Mul", "Div", "FloorDiv", "Mod", "Pow"):
             x, y = lua_num(a), lua_num(b)
             if x is None or y is None:
-                raise Unsupported("arith on %r %r" % (a, b))
+                raise Unsupported("arith on %s %s" % (describe_value(a), describe_value(b)))
             return arith(op, x, y)
         if op == "Concat":
             def s(v):
@@ -1359,7 +1450,7 @@ class Interp:
         if op in ("CompareLt", "CompareLe", "CompareGt", "CompareGe"):
             if not ((isinstance(a, (int, float)) and isinstance(b, (int, float)) and not isinstance(a, bool)
                      and not isinstance(b, bool)) or (isinstance(a, bytes) and isinstance(b, bytes))):
-                raise Unsupported("compare %r %r" % (a, b))
+                raise Unsupported("compare %s %s" % (describe_value(a), describe_value(b)))
             return {"CompareLt": a < b, "CompareLe": a <= b, "CompareGt": a > b, "CompareGe": a >= b}[op]
         raise Unsupported("binop " + op)
 
@@ -1378,7 +1469,7 @@ class Interp:
                 return len(a)
             if isinstance(a, LTable):
                 return a.length()
-            raise Unsupported("len of %r" % (a,))
+            raise Unsupported("len of %s" % describe_value(a))
         raise Unsupported("unop " + op)
 
     def index(self, obj, key):

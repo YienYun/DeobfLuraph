@@ -92,7 +92,11 @@ const LUARMOR_CHAIN = [
 
 function detectLuarmor(source) {
   const head = source.slice(0, 65536);
-  if (/\bsuperflow_bytecode(?:_ext\d+)?\s*=\s*\{/.test(head)) return 0.95;
+  // The sephal init table is the Luarmor chain's own signature, not a hint:
+  // score it certainty so the chain report is produced even when the chunk it
+  // carries also has a Luraph header (which otherwise scores 1.0 as well, and
+  // the first plugin to reach a score wins the tie).
+  if (/\bsuperflow_bytecode(?:_ext\d+)?\s*=\s*\{/.test(head)) return 1.0;
   if (/\b_bsdata0\s*=\s*\{/.test(head) && (/\bsuperflow_bytecode(?:_ext\d+)?\s*=/.test(head) || /luarmor\.net\/v4_init_/i.test(source))) {
     return 0.95;
   }

@@ -603,7 +603,7 @@ class Stepper:
             if loop_i is not None and state is not None:
                 self._mode_loop_cache[state.mode] = loop_i
         if loop_i is None:
-            raise Unsupported("mode %r selects no dispatch loop" % (state.mode,))
+            raise Unsupported("mode %s selects no dispatch loop" % S.describe_value(state.mode))
         i, st, w = loop_i
         try:
             lf.last_op = (state.mode, it.eval(_disp_fetch_expr(w), inner))

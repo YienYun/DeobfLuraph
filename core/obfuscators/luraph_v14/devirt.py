@@ -516,7 +516,7 @@ class _ConcretePFEnv:
             return obj.get(S.norm_key(key))
         if isinstance(obj, dict):
             return obj.get(key)
-        raise Unsupported("concrete index %r[%r]" % (obj, key))
+        raise Unsupported("concrete index %s[%s]" % (S.describe_value(obj), S.describe_value(key)))
 
     def newindex(self, obj, key, val, it):
         self._tick()
@@ -533,7 +533,7 @@ class _ConcretePFEnv:
             else:
                 obj[key] = val
             return
-        raise Unsupported("concrete newindex %r[%r]" % (obj, key))
+        raise Unsupported("concrete newindex %s[%s]" % (S.describe_value(obj), S.describe_value(key)))
 
     def call_builtin(self, fn, args, it, stat=False):
         self._tick()
@@ -578,14 +578,14 @@ class _ConcretePFEnv:
                 return Multi([self.globals])
             if fn.name == "setfenv":
                 return Multi([av[0] if av else None])
-        raise Unsupported("concrete call %r" % (fn,))
+        raise Unsupported("concrete call %s" % S.describe_value(fn))
 
     def length(self, obj):
         if isinstance(obj, LTable):
             return obj.length()
         if isinstance(obj, (bytes, str)):
             return len(obj)
-        raise Unsupported("concrete len %r" % (obj,))
+        raise Unsupported("concrete len %s" % S.describe_value(obj))
 
 
 def _clone_vm_ltable(t, skip_ids, seen=None):

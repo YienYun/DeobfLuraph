@@ -349,7 +349,8 @@ def convert_stmts(stmts, D):
                     or (isinstance(st.target, D.Const) and not isinstance(st.target.v, bytes)):
                 # a numeric-for recognition side effect writes the raw counter
                 # value (no register behind it): not expressible as Luau
-                out.append(CommentS("dropped write to raw counter slot %r" % (getattr(st.target, "v", st.target),)))
+                out.append(CommentS("dropped write to raw counter slot %s"
+                                 % S.describe_value(getattr(st.target, "v", st.target))))
                 continue
             if isinstance(v, SymList) and not isinstance(st.target, Reg):
 
@@ -365,7 +366,7 @@ def convert_stmts(stmts, D):
                 continue
             out.append(AssignS([conv(st.target, D)], Multi([conv(v, D)])))
         else:
-            out.append(CommentS("unknown statement %r" % (st,)))
+            out.append(CommentS("unknown statement <%s>" % type(st).__name__))
     return out
 
 class ForPrepS:
@@ -1559,7 +1560,7 @@ class Renderer:
         if isinstance(e, NewTableE):
             return self.table(e)
         if isinstance(e, ClosureExpr):
-            return "function(...) --[[ closure %r ]] end" % (e.proto,)
+            return "function(...) --[[ closure %s ]] end" % S.describe_value(e.proto)
         if isinstance(e, FuncE):
             ind = getattr(self, "cur_ind", "")
             return "\n".join([e.lines[0]] + [ind + l for l in e.lines[1:]])
@@ -1726,7 +1727,7 @@ class Renderer:
                 return [ind + "local " + ", ".join(st.names)]
             return [ind + "local %s = %s" % (", ".join(st.names), self.multi(st.values))]
         if isinstance(st, CommentS):
-            return [ind + "-- " + st.text] if st.text else []
+            return [ind + "-- " + S.scrub_addresses(st.text)] if st.text else []
         if isinstance(st, (CloseS, ForPrepS)):
             return []
         if type(st).__name__ == "DoBlock":
@@ -1746,7 +1747,8 @@ class Renderer:
         if isinstance(st, ST.SCrash):
             return [ind + "LPH_CRASH()"]
         if isinstance(st, ST.SError):
-            return [ind + "error(\"devirt: %s\")" % st.msg.replace("\\", "\\\\").replace("\"", "'")]
+            msg = S.scrub_addresses(st.msg).replace("\\", "\\\\").replace("\"", "'")
+            return [ind + "error(\"devirt: %s\")" % msg]
         if isinstance(st, ST.SGotoState):
 
             return [ind + "error(\"devirt: unstructured jump to block_%s\") -- goto block_%s" % (st.target, st.target)]

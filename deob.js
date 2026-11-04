@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 'use strict';
 
+const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const detectModule = require('./src/detect');
 const driver = require('./src/driver');
 const engines = require('./src/engines');
+const harness = require('./src/harness');
 const { injectWatermark } = require('./src/watermark');
 
 const DIRECTORY_EXTENSIONS = ['.lua', '.luau'];
@@ -252,6 +254,14 @@ async function processFile(absInput, args) {
 
   process.stderr.write(`[*] obfuscator: ${plugin.label} (detected, ${confidence.toFixed(2)})\n`);
 
+  const notes = [];
+  if (plugin.name === 'generic') {
+    const note = 'the input does not match any obfuscator this build supports; '
+      + 'only a behaviour trace is possible, not a lifted script';
+    process.stderr.write(`[!] ${note}\n`);
+    notes.push(note);
+  }
+
   const outdir = resolveDefaultOutdir(absInput);
   const defaultOutName = path.basename(absInput).replace(/\.txt$/i, '.luau');
   const final = args.output && args.singleFile
@@ -289,6 +299,7 @@ async function processFile(absInput, args) {
 
     const job = new Job(absInput, jobSource, args, tracePath, args.debug, plugin.label);
     job.sourcePath = sourcePath;
+    job.warnings.push(...notes);
 
     let result;
     if (plugin.name === 'luarmor_client') {
@@ -389,10 +400,17 @@ async function processFile(absInput, args) {
       // trace is just as much a deobfuscated script as a lifted one).
       content = injectWatermark(content);
       writeAtomically(final, content);
+      if (job.resultType === 'trace') {
+        job.warnings.push('Result is a behaviour trace, not reconstructed source (see the file header).');
+      }
       const report = {
+        schema_version: 1,
         input: path.resolve(absInput),
         output: path.resolve(final),
+        output_sha256: crypto.createHash('sha256').update(content, 'utf8').digest('hex'),
+        output_bytes: Buffer.byteLength(content, 'utf8'),
         obfuscator: plugin.name,
+        engine: plugin.label,
         confidence,
         result_type: job.resultType,
         trace_status: job.traceStatus,
@@ -464,7 +482,8 @@ async function main() {
       if (res) succeeded++;
       else failed++;
     } catch (err) {
-      process.stderr.write(`[!] failed on ${path.basename(file)}: ${err.message || err}\n`);
+      const detail = harness.clipDiagnostic(err && err.message ? err.message : String(err));
+      process.stderr.write(`[!] failed on ${path.basename(file)}: ${detail}\n`);
       failed++;
     }
   }

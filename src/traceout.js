@@ -22,8 +22,18 @@ function takeStrings(body) {
   return start === -1 ? [body, null] : [body.slice(0, start), body.slice(start + marker.length)];
 }
 
+// A trace records values, not source: `local x = 1; print(x)` traces as
+// `print(1)`, because the value the program used is what the run observed.
+// That is useful and it is not a decompilation, so every trace file says so in
+// its own header instead of relying on the reader remembering the flag.
+const TRACE_NOTE = [
+  'BEHAVIOUR TRACE, NOT RECONSTRUCTED SOURCE: each line is what the run',
+  'observed at that step, so a value computed at run time appears as its result.',
+  'When a lift is available, `node deob.js` writes that script instead of this trace.',
+];
+
 function header(_inputPath, notes = []) {
-  return notes.map(note => `-- ${note}\n`).join('');
+  return [...notes, ...TRACE_NOTE].map(note => `-- ${note}\n`).join('');
 }
 
 function statusLine(body) {

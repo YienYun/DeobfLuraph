@@ -117,6 +117,21 @@ async function runLuraphV14(job) {
         }
     }
 
+    // The mapper rewrites every dispatch-loop head it recognises. Nothing
+    // rewritten means this build is outside the 14.7-14.9 range it targets --
+    // or that the payload is not in the outer file at all (a compressed
+    // carrier delivers it through loadstring). Both cases are worth one short
+    // look, not a full-budget run that ends in an opaque timeout: probe with a
+    // bounded trace and say plainly what happened.
+    const mapperMatched = args.noHooks || patched !== job.source;
+    if (!mapperMatched) {
+        const note = 'the v14 mapper found no dispatch loop in the outer file: '
+            + 'either a build outside v14.7-v14.9, or a carrier that delivers its '
+            + 'payload through loadstring. Tracing to find out which';
+        process.stderr.write(`[*] ${note}\n`);
+        job.warnings.push(note);
+    }
+
     const cachePath = harness.loadP2dCache(job.input);
     const runner = new harness.Runner(job);
     const cfg = {
@@ -153,7 +168,7 @@ async function runLuraphV14(job) {
         return added;
     };
     process.stderr.write(`[*] tracing Luraph v14 ${job.input}...\n`);
-    let res = await runner.run(patched, cfg, chunks);
+    let res = await runner.run(patched, cfg, chunks, args.timeout);
     if (!res.body) {
         // --no-hooks omits the dispatch counters. If that run hangs, enable the
         // watchdog once; hooked runs already have it from their first execution.
@@ -163,11 +178,18 @@ async function runLuraphV14(job) {
                 + 'replaying with the spin watchdog on\n');
             patched = vmmap.patchSpin(patched);
             cfg.spin = V14_SPIN_CHECKS;
-            res = await runner.run(patched, cfg);
+            res = await runner.run(patched, cfg, {}, args.timeout);
         }
     }
     if (!res.body) {
         runner.finish();
+        if (!mapperMatched) {
+            throw new Error('no v14 dispatch loop matched in the outer file and the '
+                + `${args.timeout}s behaviour trace produced nothing. This is either a build `
+                + 'outside the v14.7-v14.9 range the mapper targets, or a carrier whose '
+                + 'payload never arrived (it may need a live session). '
+                + `Detail: ${res.err || 'the run returned no output'}`);
+        }
         throw new Error(res.err || 'Luraph v14 trace failed without output');
     }
 
@@ -185,7 +207,7 @@ async function runLuraphV14(job) {
         }
 
         process.stderr.write(`[*] script loadstring'd ${added} new VM chunk(s); instrumenting and re-running\n`);
-        const again = await runner.run(patched, cfg, chunks);
+        const again = await runner.run(patched, cfg, chunks, args.timeout);
         if (!again.body) {
             process.stderr.write('[!] the re-run with the instrumented chunk produced nothing; '
                 + 'keeping what the previous run recorded\n');

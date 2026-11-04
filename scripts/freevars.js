@@ -45,6 +45,10 @@ getnamecallmethod setnamecallmethod firetouchinterest fireclickdetector
 getnilinstances setfpscap queue_on_teleport
 syn fluxus krnl http_request cleardrawcache get_extendedmetatable
 fireproximityprompt queueonteleport getnameexecutor cloneref load
+RaycastParams OverlapParams Content setthreadidentity set_thread_identity
+getupvalues islclosure replicatesignal firetouchinterest getconnections
+UserSettings gethwid toclipboard crypt base64_decode base64_encode WebSocket
+decompile getscriptbytecode getscripthash setreadonly canloadstring
 vector settings hookfunction getfunctionhash
 `.split(/\s+/).filter(Boolean));
 

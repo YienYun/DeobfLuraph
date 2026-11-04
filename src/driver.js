@@ -267,7 +267,10 @@ async function run(job) {
     const lines = lifted.split('\n').length;
     const stats = job.liftStats;
     if (lifted.trim() && stats.functions > 0 && (nilCalls < 50 || nilCalls * 100 < lines)) {
-      job.resultType = 'devirtualized';
+      // A file printed from the source the loader carries is not a lift; name
+      // it after what it is so the report cannot be read as something it is
+      // not (machine-as-script, or script-as-devirtualization).
+      job.resultType = stats.payload_source ? 'payload-source' : 'devirtualized';
       if (stats.errors || stats.fallbacks) {
         job.warnings.push(`Lift has ${stats.errors} unlifted blocks and ${stats.fallbacks} unstructured jumps.`);
       }

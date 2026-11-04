@@ -2,33 +2,21 @@
   "schema_version": 1,
   "input": "/home/user/DeobfLuraph/fixtures/input/Lph5-V15.1.lua",
   "output": "/home/user/DeobfLuraph/results/Luraph_v15.1_Lph5-V15.1.deobf.luau",
-  "output_sha256": "de80f109736c8f5a1a8425b9c76350e99c609615e801dad3f0b22fb948eab867",
-  "output_bytes": 182662,
+  "output_sha256": "5c47a7f39b6e163a61b8a1a6b0d4df2f61da269f3fa140452344dfb856e987f6",
+  "output_bytes": 979375,
   "obfuscator": "luraph_v15",
   "engine": "Luraph v15",
   "confidence": 1,
-  "result_type": "devirtualized",
+  "result_type": "payload-source",
   "trace_status": "finished",
   "lift_stats": {
-    "functions": 50,
+    "functions": 2190,
+    "walked": 0,
     "errors": 0,
     "fallbacks": 0,
-    "guards": 0,
-    "walk_trim_unexecuted": 0,
-    "runtime_stubs": 0,
-    "frame_bound": 0,
-    "ru_exec": 0,
-    "ru_unexec": 0,
-    "exec_covered": 0,
-    "exec_scrambled": 0,
-    "exec_no_arrays": 83,
-    "exec_runs": 0,
-    "exec_pcs_first": 0,
-    "exec_covered_first": 0,
-    "residual_unknown": 16,
-    "unknown_callee": 0,
-    "converged": true,
-    "pending_constant_requests": 0
+    "payload_source": 25484
   },
-  "warnings": []
+  "warnings": [
+    "Constant resolution did not converge; the output may be incomplete."
+  ]
 }

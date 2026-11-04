@@ -127,6 +127,20 @@ second lift has no trustworthy denominator: it lost 4 blocks and moved 265 lines
 of the reference output. What a sound version needs first is a per-array
 "decoded in place" flag from the runtime, so `unrecorded` can become `no`.
 
+**One file can carry two scripts, and the wrapper is not the script.** The
+Chilli-hub build in the fixture set (`StealAnEggg`, pinned as `lph-v15-1-5`) is a
+`return setmetatable({...})` table: the hub's UI library is virtualized, and the
+Steal-An-Egg script itself sits in one field of that table as *plain Luau*.
+Lifting the VM recovers the machine (5,055 lines of ChilliLibrary), which is a
+faithful result for the wrapper and the wrong answer for the question "what does
+this script do". The engine now reads the carrier first: when one function field
+of the returned table clearly reads like a script (services, globals — 477
+script-shaped reads against 68 for the next field, out of 92) and parses as Luau,
+that field is printed as the result and the report says `result_type:
+payload-source`. `DEVIRT_PREFER_VM=1` keeps the old route and lifts the wrapper
+instead. Nothing about the payload is guessed: the field is the code the loader
+calls, printed through the same polish the lifted text gets.
+
 **A folded declaration used to turn a live table into a nil global.** The
 lifter writes a self-referential table the way Lua requires it — declared first,
 assigned second:

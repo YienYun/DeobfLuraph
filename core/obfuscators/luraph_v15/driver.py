@@ -157,13 +157,13 @@ def write_dump(ppath, text, exec_rec_on, seen=None):
              info.get("pcs_union", 0)), file=sys.stderr)
 
 
-def emit_payload_source(job, dpath, chunk_paths, why=None):
+def emit_payload_source(job, dpath, chunk_paths, why=None, require_script=False):
     """Write the loadstring'd chunk, printed as Luau, as the result.  A Luraph
     build can keep the script readable and virtualize only the wrapper;
     printing the payload is then the faithful output (names aside) and the only
     route that reaches the code the VM never carries.  -> stats, or None."""
     from obfuscators.luraph_v15 import devirt
-    found = payload_source(chunk_paths)
+    found = payload_source(chunk_paths, require_script=require_script)
     if not found:
         return None
     text, nfun = found[0], found[1]
@@ -194,6 +194,16 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None, exec_
     exec_rec_on = bool(os.environ.get("DEVIRT_EXECREC") or getattr(job.args, "exec_rec", False))
     from obfuscators.luraph_v15 import devirt
     import deadline
+    # A Luraph build can keep the script itself as plain Luau in a field of the
+    # table it returns and virtualize only the wrapper.  Printing that field is
+    # then the whole script; lifting the wrapper gives the machine around it
+    # (for one Chilli-hub sample: 5,055 lines of library against the script's
+    # 28,537).  `DEVIRT_PREFER_VM=1` keeps the old behaviour.
+    if not os.environ.get("DEVIRT_PREFER_VM"):
+        out_stats = emit_payload_source(job, dpath, chunk_paths,
+                                        "the loader carries the script as source", require_script=True)
+        if out_stats is not None:
+            return out_stats
     devirt.EXEC_REC = exec_rec_on
     args = job.args
     try:
@@ -587,7 +597,7 @@ def _library_urls(path):
     return urls[:3]
 
 
-def payload_source(chunk_paths):
+def payload_source(chunk_paths, require_script=False):
     """The script the loader runs, as Luau text.
 
     A Luraph-style protector can keep the script itself as plain Lua source and
@@ -612,7 +622,7 @@ def payload_source(chunk_paths):
         text, note = "\n".join(whole.lines), ""
         # `return setmetatable({...}, {...}):method(...)`: a loader table.
         body = root.get("body") or []
-        field_fn, nfields = None, 0
+        field_fn, nfields, runner_up, top_score = None, 0, (0, None), 0
         if len(body) == 1 and body[0].get("type") == "AstStatReturn" \
                 and len(body[0].get("list") or []) == 1:
             call = body[0]["list"][0]
@@ -629,12 +639,19 @@ def payload_source(chunk_paths):
                         nfields = len(items)
                         scored = sorted(((_script_score(it["value"]), i, it) for i, it in enumerate(items)),
                                         key=lambda x: -x[0])
+                        if os.environ.get("DEVIRT_DEBUG"):
+                            for sc, i, it in scored[:4]:
+                                n = sum(1 for _ in iter_nodes(it["value"]))
+                                print("[carrier] score=%d key=%r nodes=%d" % (sc, _keyname(it.get("key")), n),
+                                      file=sys.stderr)
                         top = scored[0] if scored else None
                         second = scored[1][0] if len(scored) > 1 else 0
                         # One field has to stand out: the script, not a handler
                         # that happens to touch one service.
                         if top is not None and top[0] >= 40 and top[0] >= 3 * max(second, 1):
                             field_fn = top[2]
+                            top_score = top[0]
+                            runner_up = (second, _keyname(scored[1][2].get("key")) if len(scored) > 1 else None)
         if field_fn is not None:
             fn = field_fn["value"]
             pr = LA.Printer("\t")
@@ -647,9 +664,11 @@ def payload_source(chunk_paths):
                 head = head[len("return "):]
             lines[0] = "local payload = " + head
             urls = _library_urls(path)
-            out = ["-- The script as the loader carries it: field %r of %d in its table." % (name, nfields),
-                   "-- The other %d field(s) are the interpreter that runs it; they are not the script,"
-                   " so they are omitted." % (nfields - 1),
+            out = ["-- The script the loader runs, printed from the source the loader carries:"
+                   " field %r of %d in its table." % (name, nfields),
+                   "-- It is plain Luau, not virtualized code, so it is printed rather than lifted.",
+                   "-- Of the %d function fields this one is the only one that reads like a script"
+                   " (%d against %d for the next, field %r)." % (nfields, top_score, runner_up[0], runner_up[1]),
                    "-- The loader calls this with the hub's library object (a table with Window / Tab /"
                    " Notify); the block below loads the library the script itself points at."]
             cands = list(urls)
@@ -689,6 +708,8 @@ def payload_source(chunk_paths):
             out += ["entry()", ""]
             text = "\n".join(out)
             note = "field %r of %d, %d wrapper level(s)" % (name, nfields, depth)
+        if require_script and not note:
+            continue   # no field reads as the script: this chunk is the machine
         if best is None or len(text) > len(best[0]):
             best = (text, nfun, note)
     return best

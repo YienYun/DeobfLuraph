@@ -15,6 +15,11 @@ __pycache__/
 .deobf-write-*/
 coverage/
 
+# Test fixtures: third-party samples fetched by blob id and verified by sha256
+# (fixtures/manifest.json pins them). Never committed -- 9 MB of other people's
+# binaries do not belong in this repository.
+/fixtures/input/
+
 # Deobfuscation intermediates (regenerated on every run, never committed)
 *.protos.json
 *.devirt.luau

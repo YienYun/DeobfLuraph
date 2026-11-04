@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "generated_by": "scripts/update-golden.js",
+  "note": "Pinned results of the deterministic engine. Regenerate only with an intended change.",
+  "node": "v22.22.3",
+  "samples": [
+    {
+      "id": "lph-v15-0-lph1",
+      "file": "Lph1-v15.0.lua",
+      "args": [
+        "--budget",
+        "30",
+        "--timeout",
+        "45"
+      ],
+      "exit_code": 0,
+      "result_type": "devirtualized",
+      "lines": 242,
+      "bytes": 7750,
+      "sha256": "a596bfa5bd9db33259dd4f6651efc53191e55587eee69cd784a4b86ecee30d1a",
+      "md5": "73349afe8f69e7aee382902f10c54255",
+      "functions": 16,
+      "trace_status": "finished"
+    },
+    {
+      "id": "t14-8-0942",
+      "file": "0942aaa445539073.lua",
+      "args": [
+        "--budget",
+        "30",
+        "--timeout",
+        "45"
+      ],
+      "exit_code": 0,
+      "result_type": "devirtualized",
+      "lines": 976,
+      "bytes": 18927,
+      "sha256": "6b0203f6d952d930d41353d43012e7f6b4bbcb2f2b20ce848284a4556c6c5d5b",
+      "md5": "7518a6dc735210b477e5176a35b8e34d",
+      "functions": 27,
+      "trace_status": "finished"
+    },
+    {
+      "id": "t15-0-5ae248",
+      "file": "5ae248d6527b5c01.lua",
+      "args": [
+        "--budget",
+        "30",
+        "--timeout",
+        "45"
+      ],
+      "exit_code": 0,
+      "result_type": "devirtualized",
+      "lines": 4,
+      "bytes": 92,
+      "sha256": "bf3fc64dbfa297bb6a4e54c2686dd9af01a91eb4b10610affbc87706ed04fe12",
+      "md5": "5922bd291a68f0fdb3d78b83691cd8f4",
+      "functions": 1,
+      "trace_status": "finished"
+    },
+    {
+      "id": "t15-1-2153",
+      "file": "2153b779fa7a87f2.lua",
+      "args": [
+        "--budget",
+        "30",
+        "--timeout",
+        "45"
+      ],
+      "exit_code": 0,
+      "result_type": "devirtualized",
+      "lines": 15,
+      "bytes": 276,
+      "sha256": "e4a772962aa049356f62adb3d8ec156e2e697743dcbab45083fe08d66b2fb3c0",
+      "md5": "8e9f4deb4a38b187992c738228ed7422",
+      "functions": 3,
+      "trace_status": "finished"
+    }
+  ]
+}

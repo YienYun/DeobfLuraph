@@ -1,7 +1,7 @@
 # Luraph public-sample smoke test
 
 Regenerated **2026-11-04** with the engine in this commit, after the flattening
-pass: constant-state dispatch loops are unrolled into the code they really run,
+pass and after the self-referential-initialiser fix in §3: constant-state dispatch loops are unrolled into the code they really run,
 and the v15 lifter no longer aborts on a proto whose execution coverage was never
 recorded (`exec_cov`), which had made `f44daa` unreproducible. Two v15 stress
 samples from the benchmark repository were added, and the per-proto lift
@@ -21,12 +21,12 @@ sha256; `node scripts/fixtures.js fetch` retrieves and verifies them.
 | [v14.9/e462eaaccbac09b0.lua](https://github.com/terrorlua/obfuscator-samples/blob/main/Luraph/v14.9/e462eaaccbac09b0.lua) `79df2d5c…` | No output (refused) | **Refused, honestly** — the mapper finds no dispatch loop in the outer file and a 25 s behaviour trace records nothing. The CLI says exactly that instead of writing an empty or traced-at-random file. | `--budget 15 --timeout 25` |
 | [v15.0/5ae248d6527b5c01.lua](https://github.com/terrorlua/obfuscator-samples/blob/main/Luraph/v15.0/5ae248d6527b5c01.lua) `3b2dfe1f…` | [`Luraph_v15.0_5ae248d6527b5c01.deobf.luau`](Luraph_v15.0_5ae248d6527b5c01.deobf.luau) | **Devirtualized, finished** — 4 lines, 1 function; recovers `print("hello")`. | `--budget 20 --timeout 45` |
 | [v15.0/392628e9da400b8a.lua](https://github.com/terrorlua/obfuscator-samples/blob/main/Luraph/v15.0/392628e9da400b8a.lua) `3e66fead…` | [`Luraph_v15.0_392628e9da400b8a.deobf.luau`](Luraph_v15.0_392628e9da400b8a.deobf.luau) | **Trace only** — 14 lines; the run dies on `attempt to call missing method 'pW'`, so no function is lifted and the result is labelled a trace. | `--budget 20 --timeout 45` |
-| [v15.0/f44daa11fdc2663b.lua](https://github.com/terrorlua/obfuscator-samples/blob/main/Luraph/v15.0/f44daa11fdc2663b.lua) `96451c4e…` | [`Luraph_v15.0_f44daa11fdc2663b.deobf.luau`](Luraph_v15.0_f44daa11fdc2663b.deobf.luau) | **Partial devirtualization** — 2,408 lines, 11 functions, 0 unlifted blocks; the run ends on `nil + number` with 192 residual unknown frame reads. | `--budget 20 --timeout 40 --max-runs 2` |
+| [v15.0/f44daa11fdc2663b.lua](https://github.com/terrorlua/obfuscator-samples/blob/main/Luraph/v15.0/f44daa11fdc2663b.lua) `96451c4e…` | [`Luraph_v15.0_f44daa11fdc2663b.deobf.luau`](Luraph_v15.0_f44daa11fdc2663b.deobf.luau) | **Partial devirtualization** — 2,337 lines, 28 functions, 0 unlifted blocks; the run ends on `nil + number` with 194 residual unknown frame reads. | `--budget 20 --timeout 40 --max-runs 2` |
 | [v15.1/2153b779fa7a87f2.lua](https://github.com/terrorlua/obfuscator-samples/blob/main/Luraph/v15.1/2153b779fa7a87f2.lua) `b252ab03…` | [`Luraph_v15.1_2153b779fa7a87f2.deobf.luau`](Luraph_v15.1_2153b779fa7a87f2.deobf.luau) | **Devirtualized, finished** — 15 lines, 3 functions. | `--budget 25 --timeout 45` |
 | [LphV14/dSAjehr43.lua](https://github.com/YienYun/Luraph/blob/main/SampleLuraph/LphV14/dSAjehr43.lua) `e57349c3…` | [`Luraph_v14_dSAjehr43.deobf.luau`](Luraph_v14_dSAjehr43.deobf.luau) | **Partial devirtualization** — 1,522 lines, 19 functions, 0 unlifted blocks; two unresolved-capture headers remain and the trace ends with the no-progress endless-loop status. | `--budget 30 --timeout 60` |
 
-| [LphV15/Lph5-V15.1.lua](https://github.com/YienYun/Luraph/blob/main/SampleLuraph/LphV15/Lph5-V15.1.lua) `1b8b333d…` | [`Luraph_v15.1_Lph5-V15.1.deobf.luau`](Luraph_v15.1_Lph5-V15.1.deobf.luau) | **Devirtualized, finished** — 5,054 lines, 50 functions, 0 unlifted blocks, 0 unstructured jumps, 16 residual unknown frame reads. A Roblox loading screen: `CoreGui:FindFirstChild("ChilliHubLoading")`, `Instance.new`, the labels and their strings come out as written. | `--budget 40 --timeout 60` |
-| [LphV15/Lph6-V15.0.lua](https://github.com/YienYun/Luraph/blob/main/SampleLuraph/LphV15/Lph6-V15.0.lua) `76bc2b3e…` | [`Luraph_v15.0_Lph6-V15.0.deobf.luau`](Luraph_v15.0_Lph6-V15.0.deobf.luau) | **Devirtualized, finished** — 9,679 lines, 766 functions, 0 unlifted blocks, 0 unstructured jumps, 185 residual unknown frame reads. The largest build in the set; it needs ~72 s of lifting, which the old flat 45 s per-proto allowance refused. | `--budget 60 --timeout 120` |
+| [LphV15/Lph5-V15.1.lua](https://github.com/YienYun/Luraph/blob/main/SampleLuraph/LphV15/Lph5-V15.1.lua) `1b8b333d…` | [`Luraph_v15.1_Lph5-V15.1.deobf.luau`](Luraph_v15.1_Lph5-V15.1.deobf.luau) | **Devirtualized, finished** — 5,055 lines, 50 functions, 0 unlifted blocks, 0 unstructured jumps, 16 residual unknown frame reads. A Roblox loading screen: `CoreGui:FindFirstChild("ChilliHubLoading")`, `Instance.new`, the labels and their strings come out as written. | `--budget 40 --timeout 60` |
+| [LphV15/Lph6-V15.0.lua](https://github.com/YienYun/Luraph/blob/main/SampleLuraph/LphV15/Lph6-V15.0.lua) `76bc2b3e…` | [`Luraph_v15.0_Lph6-V15.0.deobf.luau`](Luraph_v15.0_Lph6-V15.0.deobf.luau) | **Devirtualized, finished** — 9,702 lines, 766 functions, 0 unlifted blocks, 0 unstructured jumps, 185 residual unknown frame reads. The largest build in the set; it needs ~72 s of lifting, which the old flat 45 s per-proto allowance refused. | `--budget 60 --timeout 120` |
 
 Notes that the table cannot show:
 
@@ -46,3 +46,12 @@ Notes that the table cannot show:
   (`DEVIRT_PROTO_SECONDS` overrides it). A flat 45 s used to reject `Lph6` — a
   single payload proto with 766 functions — after the walk had already finished
   the work; it now lifts in ~72 s and is reported honestly either way.
+* **Every file here compiles.** `node scripts/luac.js results/*.luau` feeds each
+  output to the Luau compiler (`loadstring` in `bin/luau`) and fails on the first
+  syntax error; `npm test` runs it over the committed results.
+* **No file here reads an undeclared register.** `node scripts/freevars.js
+  results/*.luau` parses each output with `bin/luau-ast` and lists every
+  identifier that is read but never declared. Register names (`r4`, `r34`) count
+  as a hole and fail the check; unknown globals (`syn`, `fluxus`, `Webhook`) are
+  reported as notes, because those belong to the executor or the payload.
+  `Lph6` is the only row with notes left (7 of them) and zero holes.

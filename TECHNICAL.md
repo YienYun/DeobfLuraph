@@ -127,6 +127,25 @@ second lift has no trustworthy denominator: it lost 4 blocks and moved 265 lines
 of the reference output. What a sound version needs first is a per-array
 "decoded in place" flag from the runtime, so `unrecorded` can become `no`.
 
+**A folded declaration used to turn a live table into a nil global.** The
+lifter writes a self-referential table the way Lua requires it — declared first,
+assigned second:
+
+```lua
+local handlers
+handlers = { _unpack = function(a) return handlers._unpack(a) end }
+```
+
+`ast_polish._merge_local_decls` folded that into `local handlers = {...}`, which
+is *not* the same program: inside its own initialiser the name is not in scope, so
+Luau resolves it as a global. The result compiled, ran, and then crashed with
+`attempt to index nil` the first time the recursive helper was called — and the
+free-variable gate reported it as `r4`, the register name the fold had left
+behind. The fold now skips any value that mentions the variable being declared
+(`_has_ident_reference`), the same guard `_sugar_local_functions` already had for
+`local f = function() ... f ... end`. Two sites in `Lph6` and one in `f44daa`
+were affected; both files now report zero unresolved register reads.
+
 **Builds outside the v14.7–v14.9 range are refused, quickly.** The v14 mapper
 rewrites dispatch-loop heads; a build whose loop shape it does not know (the
 14.0/14.4/14.6 samples in the fixture set) matches nothing. Rather than spend a
@@ -137,11 +156,23 @@ refusal is a fixture expectation in `test/golden.json`, not an untested path.
 ## 4. Checks
 
 ```bash
-npm test          # syntax gate + watermark/detector/diagnostics/fixtures suites
+npm test          # Luau compile gate over results/*.luau + watermark/detector/
+                  # diagnostics/fixtures suites
 npm run test:e2e  # golden regression: exact bytes, run twice, Luau syntax gate,
                   # report sha256 matches the file, no internal repr, trace labelled
-npm run test:all  # both
+npm run luac      # every result compiles in Luau (bin/luau + loadstring)
+npm run freevars  # every result is closed: no undeclared register read
+npm run gate      # both of the above, strict -- this is what a release must pass
+npm run test:all  # test + test:e2e
 ```
+
+**Compiling is not enough, and the gates say so.** `scripts/luac.js` feeds each
+output to the real Luau compiler; `scripts/freevars.js` parses it with
+`bin/luau-ast` and separates two things that look alike in a diff: a register the
+lifter could not name (`r4`, `r34` — a hole, exit 1) and a global the payload or
+the executor owns (`syn`, `fluxus`, `Webhook` — a note). `npm run gate` is strict
+about the first and silent about the second. CI runs the compile gate as a test
+and the free-variable gate as a report until the remaining notes are understood.
 
 `test/golden.json` pins the result of each fast-tier sample: sha256, md5, line
 count, result type and lifted function count. A deterministic engine makes such

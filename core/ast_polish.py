@@ -901,6 +901,12 @@ def _merge_local_decls(text):
             value = avals[0]
             if value.get("type") == "AstExprFunction":
                 continue
+            # Not every pair folds. `local t` / `t = { ... t ... }` is the one
+            # shape that cannot: inside its own initialiser the name is not in
+            # scope yet, so those reads are globals. Folding rewrote a working
+            # self-referential table into reads of a nil global.
+            if _has_ident_reference(value, vars_[0]["name"]):
+                continue
             vs, ve = rng(value)
             name_s, name_e = rng(vars_[0])
             ds, de = rng(st)

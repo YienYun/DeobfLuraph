@@ -54,3 +54,14 @@ jobs:
       - name: Golden regression (deterministic engine)
         if: matrix.node == '20'
         run: npm run test:e2e
+
+      # A result that does not compile is not a result. The second step is a
+      # report, not a gate yet: two register reads in Lph6 are still unresolved
+      # (see TECHNICAL §3), and hiding them would be worse than showing them.
+      - name: Result compiles in Luau
+        if: matrix.node == '20'
+        run: node scripts/luac.js results/*.luau --verbose
+
+      - name: Unresolved register reads (report)
+        if: matrix.node == '20'
+        run: node scripts/freevars.js results/*.luau --report-only

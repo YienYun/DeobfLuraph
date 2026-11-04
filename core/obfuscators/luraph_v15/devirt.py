@@ -113,6 +113,9 @@ _WALK_HINTS = {}
 # --exec-rec / DEVIRT_EXECREC: the run recorded execution coverage
 EXEC_REC = False
 
+_IDENT = re.compile(r"^[A-Za-z_][A-Za-z_0-9]*$")
+
+
 class Program:
     def __init__(self, source_path, dump_path, chunk_paths=()):
         """source_path: the obfuscated script; chunk_paths: original sources of
@@ -887,6 +890,18 @@ class FunctionLifter:
                 return v
         return None
 
+    @staticmethod
+    def _parent_reg(parent_names, n):
+        """The identifier the parent gave register `n`, if it is one.
+
+        `parent_names` also holds expressions (`t3[1]`); those are fine inside
+        the body but cannot be an upvalue's name, so only identifiers pass.
+        """
+        nm = parent_names.get(n)
+        if isinstance(nm, str) and _IDENT.match(nm):
+            return nm
+        return None
+
     def closure(self, vm, vmobj, c, parent_names, depth, parent_lf=None):
         import codegen as CG
         proto = c.proto
@@ -896,7 +911,18 @@ class FunctionLifter:
             upnames = {}
             for i, e in enumerate(c.upvals, ub):
                 if isinstance(e, Reg):
-                    upnames[i] = capnames.get(e.n, "r%s" % e.n)
+                    # A plain function's upvalue is one of the parent's locals.
+                    # Naming it after the parent's register is right; inventing
+                    # `r<N>` when the parent has no name for that register was
+                    # not -- it printed an identifier nobody declares, so the
+                    # body read a host global (nil) instead of the table.
+                    nm = capnames.get(e.n) or self._parent_reg(parent_names, e.n)
+                    if nm is None:
+                        import os as _os
+                        if _os.environ.get("UPS_DEBUG"):
+                            with open("/tmp/ups.txt", "a") as _f:
+                                _f.write("miss reg=%r cap=%r parent=%r\n" % (e.n, capnames, dict(list(parent_names.items())[:15])))
+                    upnames[i] = nm if nm is not None else "upv%d" % i
             text = proto.render(capnames, upnames, fl=self, vm=vm, vmobj=vmobj, depth=depth, parent_lf=parent_lf)
             f = CG.FuncE(text.splitlines())
             f.captures = set(upnames.values())

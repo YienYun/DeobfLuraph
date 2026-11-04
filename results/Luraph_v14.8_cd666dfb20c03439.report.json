@@ -1,0 +1,32 @@
+{
+  "input": "/tmp/luraph-public-samples/v14.8/cd666dfb20c03439.lua",
+  "output": "/home/user/DeobfLuraph/results/Luraph_v14.8_cd666dfb20c03439.deobf.luau",
+  "obfuscator": "luraph_v14",
+  "confidence": 1,
+  "result_type": "trace",
+  "trace_status": "aborted: endless loop in the script's own code (no environment access)",
+  "lift_stats": {
+    "functions": 0,
+    "errors": 0,
+    "fallbacks": 0,
+    "guards": 0,
+    "runtime_stubs": 0,
+    "frame_bound": 0,
+    "ru_exec": 0,
+    "ru_unexec": 0,
+    "exec_covered": 0,
+    "exec_scrambled": 0,
+    "exec_no_arrays": 0,
+    "exec_runs": 0,
+    "exec_pcs_first": 0,
+    "exec_covered_first": 0,
+    "residual_unknown": 0,
+    "unknown_callee": 0,
+    "converged": true,
+    "pending_constant_requests": 0,
+    "run_status": "aborted: endless loop in the script's own code (no environment access)"
+  },
+  "warnings": [
+    "Trace did not finish normally: aborted: endless loop in the script's own code (no environment access)"
+  ]
+}

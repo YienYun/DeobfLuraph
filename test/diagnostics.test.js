@@ -107,7 +107,7 @@ test('no Python source builds an output message with an object repr', () => {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
       const full = path.join(dir, entry.name);
       if (entry.isDirectory()) {
-        if (['__pycache__', 'vendor', 'moonveil', 'moonveil21'].includes(entry.name)) continue;
+        if (['__pycache__', 'vendor'].includes(entry.name)) continue;
         walk(full);
         continue;
       }

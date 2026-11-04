@@ -4,15 +4,14 @@ Turns a Luraph-protected script back into readable Luau: it runs the file in an
 offline Roblox environment, records what the VM actually does, then rebuilds
 source from the recorded instructions.
 
-This build ships **Luraph** as the engine it is built for. **MoonVeil** and
-**Luarmor** are kept alongside it; every other obfuscator has been removed from
-the tree.
+This is a **Luraph-only build**: v15.0 / v15.1 as the primary engine, v14.7 –
+v14.9 lifted through the same backend, plus the Luarmor chain analyzer. Every
+other obfuscator — MoonVeil included — has been removed from the tree.
 
 | Family | Module | What it does |
 |---|---|---|
 | **Luraph v15.0 / v15.1+** | `core/obfuscators/luraph_v15/` | Sandbox run ➔ symbolic CFG / SSA lift ➔ Luau source |
 | **Luraph v14.7 – v14.9** | `core/obfuscators/luraph_v14/` | v14 VM mapper + symbolic lift on the same backend |
-| **MoonVeil 2.0.x / 2.1+** | `core/obfuscators/moonveil/` | Base64 + zstd unpack ➔ VM lift ➔ beautify |
 | **Luarmor v4** | `core/obfuscators/luarmor/`, `src/luarmor.js` | Client-chain analysis; when the file carries a Luraph chunk, that chunk is lifted by the v15 engine |
 
 About Luarmor: the licence check is **not** bypassed. The session payload lives
@@ -20,8 +19,10 @@ on Luarmor's server behind a key, so a bare `_bsdata0` client stub is reported �
 module id, hashes, build stamp, endpoints — instead of being faked into code.
 
 `src/detect.js` still recognises the signatures of the removed obfuscators, so a
-file can be named correctly. It cannot be deobfuscated here: the run stops with
-`<engine> is not part of this build` and writes no output.
+file can be named correctly (`--detect`). It cannot be deobfuscated here: the
+run stops with `<engine> is not part of this build` and writes no output. That
+includes MoonVeil: a MoonVeil file is named as such and refused, never
+half-processed by machinery that would only part-lift it.
 
 ---
 
@@ -44,7 +45,7 @@ node tools/oracle/compare.js original.lua out.lua   # compare what two files pri
 |---|---|
 | `-o, --output <file>` | write the result here (single input only) |
 | `--detect` | classify the file and stop; nothing is executed |
-| `--plugin <name>` | force an engine (`luraph_v15`, `luraph_v14`, `moonveil`, `luarmor`, `generic`) |
+| `--plugin <name>` | force an engine (`luraph_v15`, `luraph_v14`, `luarmor`, `generic`) |
 | `--no-devirt` | behaviour trace only: no lifting, no `--report`-free guessing |
 | `--report <file.json>` | machine-readable run report (schema `1`, includes `output_sha256`) |
 | `--rename` | extra Layer-2 pass: dead-code removal + scope-verified renaming |
@@ -115,7 +116,7 @@ DeobfLuraph/
 ├── src/                    # Node orchestration around the Python core
 │   ├── detect.js           # Signature / structural detector
 │   ├── driver.js           # Luraph v15: sandbox run + devirt bridge
-│   ├── engines.js          # Luraph v14 and MoonVeil runners
+│   ├── engines.js          # engine dispatch (Luraph v14) and refusals
 │   ├── luarmor.js          # Luarmor chain analysis + report
 │   ├── harness.js          # Offline Roblox sandbox builder
 │   ├── devirt_bridge.py    # JSON bridge between Node and the Python lifters
@@ -133,7 +134,7 @@ DeobfLuraph/
 │   ├── ast_polish.py       # Source cleanup after printing
 │   ├── codegen.py          # Luau emitter
 │   ├── backend.py          # The lowering pipeline, in order
-│   └── obfuscators/        # luraph_v15/ luraph_v14/ moonveil/ luarmor/
+│   └── obfuscators/        # luraph_v15/ luraph_v14/ luarmor/
 ├── renamer/                # Optional `--rename` pass (scope-verified renamer)
 ├── runtime/envlog.luau     # Offline Roblox VM + environment
 ├── bin/                    # luau, luau-ast (native; .exe for Windows)
@@ -173,5 +174,17 @@ node scripts/fixtures.js fetch --from ~/samples
 
 CI runs the syntax gate and unit suites on Node 18/20/22, then the golden
 regression on Node 20.
+
+`scripts/metrics.py` measures a result rather than describing it: lines, syntax,
+devirt markers, unresolved captures, bit32 chains — and how much of the code is
+still built from placeholder names (`value12`, `argument2`, `iterator3`):
+
+```bash
+python3 scripts/metrics.py out.lua other.lua
+```
+
+That last number (`placeholder_pct`, currently 57–67% of non-blank lines on the
+large samples) is the readability measurement. It is printed, not asserted, so a
+future change has to argue with a number instead of an impression.
 
 License: MIT.

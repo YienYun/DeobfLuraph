@@ -68,6 +68,16 @@ def bit32_chain(lines):
     return chain_lines, chain_calls
 
 
+# The names the lifter emits when it does not know what a value is: registers
+# (`value12`), parameters (`argument2`), loop temporaries (`iterator3`) and
+# closures (`callback9`). They are honest placeholders, and a result made mostly
+# of them is mechanically right and hard to read -- which is why the count is
+# the number the readability work is measured against, not a feeling.
+PLACEHOLDER = re.compile(
+    r"\b(?:value|val|data|number|num|text|list|item|obj|result|res|tmp|temp|var|"
+    r"tab|thing|entry|state|callback|argument|iterator)\d*\b"
+)
+
 HINT = re.compile(r"--\s*unresolved\b")
 DECL = re.compile(r"^\s*local\s+(?:unresolvedCapture\d+(?:\s*,\s*)?)+\s*$")
 
@@ -124,6 +134,9 @@ def measure(path):
     errs = DEVIRT_ERR.findall(text)
     comments = DEVIRT_COMMENT.findall(text)
     chain_lines, chain_calls = bit32_chain(lines)
+    placeholders = PLACEHOLDER.findall(text)
+    placeholder_lines = sum(1 for l in lines if PLACEHOLDER.search(l))
+    code_lines = sum(1 for l in lines if l.strip()) or 1
     return {
         "file": path,
         "lines": len(lines) - 1 if text.endswith("\n") else len(lines),
@@ -144,6 +157,10 @@ def measure(path):
         "bit32_chain_calls": chain_calls,
         "empty_while_true": len(re.findall(r"while true do\s*\n\s*end\b", text)),
         "blank_lines": sum(1 for l in lines if not l.strip()),
+        "placeholder_ids": len(placeholders),
+        "placeholder_names": len(set(placeholders)),
+        "placeholder_lines": placeholder_lines,
+        "placeholder_pct": round(100.0 * placeholder_lines / code_lines, 1),
     }
 
 
@@ -180,7 +197,8 @@ def main(argv):
         return 0
     keys = ["lines", "parses", "devirt_errors", "devirt_comments", "unresolved_uses",
             "unresolved_hints", "unresolved_unhinted", "bit32_calls", "bxor_calls", "bit32_lines", "bit32_chain_lines", "bit32_chain_calls",
-            "empty_while_true", "blank_lines"]
+            "empty_while_true", "blank_lines",
+            "placeholder_ids", "placeholder_names", "placeholder_lines", "placeholder_pct"]
     print("%-20s %s" % ("metric", "  ".join("r%d" % (i + 1) for i in range(len(results)))))
     for k in keys:
         print("%-20s %s" % (k, "  ".join(str(r[k]) for r in results)))

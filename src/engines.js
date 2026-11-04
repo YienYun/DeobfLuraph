@@ -1,8 +1,10 @@
 'use strict';
 
-// Dispatch for the engines this build ships besides Luraph v15 (which has its
-// own driver): Luraph v14 and MoonVeil. Everything here runs the file in the
-// offline harness, so a run costs real time.
+// Dispatch for the engine this build ships besides Luraph v15 (which has its
+// own driver): Luraph v14. This is a Luraph-only build -- other obfuscators are
+// recognised so a file can be named correctly, then refused with a reason.
+// Everything here runs the file in the offline harness, so a run costs real
+// time.
 //
 // Luarmor is not in this list because it is not an engine of its own: its files
 // are analysed by src/luarmor.js, and the Luraph chunk they carry is lifted by
@@ -17,31 +19,10 @@ const harness = require('./harness');
 const trace = require('./traceout');
 const tidy = require('./tidy');
 const { getPythonBin, pythonEnv } = require('./pyenv');
-const { isValidLuaSyntax } = require('./luau_check');
 const vmmap = require('./vmmap');
 
 const ROOT = path.resolve(__dirname, '..');
 const CORE = path.join(ROOT, 'core');
-const OBFUSCATORS = path.join(CORE, 'obfuscators');
-
-// Names as detect.js reports them. `luraph_v15` never reaches this file.
-function finalizeStaticResult(job, outPath, label) {
-    if (!outPath || !fs.existsSync(outPath) || fs.statSync(outPath).size === 0) {
-        throw new Error(`${label} produced an empty output`);
-    }
-    const code = fs.readFileSync(outPath, 'utf8');
-    if (!code.trim()) {
-        throw new Error(`${label} produced whitespace-only output`);
-    }
-    job.resultType = 'devirtualized';
-    job.traceStatus = 'static';
-    if (!isValidLuaSyntax(code)) {
-        const warn = `${label} output did not pass the Luau syntax check; Lua 5.1 constructs or partial recovery may be present.`;
-        process.stderr.write(`[!] ${warn}\n`);
-        job.warnings.push(warn);
-    }
-    return outPath;
-}
 
 // How many watchdog checks in a row without a new statement mean "pure VM
 // code spinning forever" (same value src/driver.js uses).
@@ -305,32 +286,8 @@ async function runLuraphV14(job) {
     return job.tracePath;
 }
 
-async function runMoonveil(job) {
-    const out = job.path('.moonveil.lua');
-    const mvDir = path.join(OBFUSCATORS, 'moonveil');
-    const mvTimeout = Math.max(job.args.timeout || 90, 120);
-    const r = spawnSync(
-        getPythonBin(),
-        ['-m', 'moonveil', 'deobfuscate', job.sourcePath, '-o', out, '--force', '--seconds', String(mvTimeout)],
-        {
-            cwd: mvDir,
-            encoding: 'utf8',
-            timeout: (mvTimeout + 30) * 1000,
-            maxBuffer: 64 * 1024 * 1024,
-            windowsHide: true,
-            env: pythonEnv({ PYTHONPATH: mvDir }),
-        }
-    );
-    if (!r.error && r.status === 0 && fs.existsSync(out) && fs.statSync(out).size > 0) {
-        return finalizeStaticResult(job, out, 'MoonVeil');
-    }
-    const detail = ((r.stderr || r.stdout || '') + '').trim().split('\n').pop() || `exit ${r.status}`;
-    throw new Error(`MoonVeil static engine unsupported/failed (${detail})`);
-}
-
 const RUNNERS = {
     luraph_v14: runLuraphV14,
-    moonveil: runMoonveil,
 };
 
 // Engines this build does not ship. Saying so is the honest answer: a behaviour
@@ -339,6 +296,7 @@ const RUNNERS = {
 const NOT_SHIPPED = {
     luraph_v15: 'handled by src/driver.js',
     luarmor_client: 'analysed by src/luarmor.js',
+    moonveil: 'MoonVeil (this build is Luraph-only)',
     moonsec: 'MoonSec V2 / V3',
     ironbrew1: 'IronBrew v1',
     ironbrew2: 'IronBrew v2 / AztupBrew',
@@ -364,7 +322,7 @@ async function runPlugin(pluginName, job) {
     if (!fn) {
         const label = NOT_SHIPPED[pluginName];
         throw new Error(`${label || pluginName} is not part of this build `
-            + '(it ships Luraph v14/v15, MoonVeil and the Luarmor analyzer)');
+            + '(it ships Luraph v14/v15 and the Luarmor analyzer)');
     }
     if (job.args.noDevirt) {
         return driver.runGeneric(job);

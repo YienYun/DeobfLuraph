@@ -46,6 +46,28 @@ function finalizeStaticResult(job, outPath, label) {
 // How many watchdog checks in a row without a new statement mean "pure VM
 // code spinning forever" (same value src/driver.js uses).
 const V14_SPIN_CHECKS = 24;
+// Keep v14's complete trace sequence bounded: the initial run plus one
+// chunk-aware rerun. Known aborted payloads can otherwise consume the timeout again.
+const V14_MAX_TRACES = 2;
+
+function getRunStatus(body) {
+    const match = /^-- run status: (.*)$/m.exec(body || '');
+    return match ? match[1].trim() : '';
+}
+
+function runWasAborted(body) {
+    return /^aborted\b/i.test(getRunStatus(body));
+}
+
+function recordTraceStatus(job, body) {
+    const status = getRunStatus(body);
+    if (!status) return '';
+    job.traceStatus = status;
+    if (status !== 'finished') {
+        job.warnings.push(`Trace did not finish normally: ${status}`);
+    }
+    return status;
+}
 
 /** Instrument one `loadstring`'d chunk with the v14 mapper.
  *
@@ -108,32 +130,33 @@ async function runLuraphV14(job) {
     if (args.noFold) cfg.fold = false;
     if (args.cfgJson) Object.assign(cfg, args.cfgJson);
 
-      // Turn the spin watchdog on for the first run. A v14 build whose payload is a
-  // compressed blob spends a long time in its own decoder before it reads
-  // anything from the environment, and without the counter its dispatch never
-  // reaches the runtime's budget check: the run then answers nothing at all and
-  // costs the full --timeout. Asking for the counter up front makes the budget
-  // the bound on the very first run. The patch only adds two table stores to
-  // each dispatch head, so what the script does is unchanged.
-  if (!args.noHooks) {
-    patched = vmmap.patchSpin(patched);
-    cfg.spin = V14_SPIN_CHECKS;
-  }
-  // Chunks arrive only when the script loadstring's its own payload, and the
-  // run that discovers one cannot see inside it: instrument the chunk as it
-  // appears and run again, up to four times (a build can nest two).
-  const chunks = {};
-  const rawChunks = {};
-  process.stderr.write(`[*] tracing Luraph v14 ${job.input}...\n`);
-  let res = await runner.run(patched, cfg, chunks);
+    // Turn the spin watchdog on for the first run. Compressed v14 payloads can
+    // spend a long time in their own decoder before touching the environment;
+    // without counters, such a dispatch may never reach the time-budget check.
+    if (!args.noHooks) {
+        patched = vmmap.patchSpin(patched);
+        cfg.spin = V14_SPIN_CHECKS;
+    }
+    // Chunks arrive through loadstring. Instrument them and make at most one
+    // chunk-aware rerun (two traces total); known aborted payloads have
+    // otherwise consumed the full timeout on further retries.
+    const chunks = {};
+    const rawChunks = {};
+    const collectChunks = found => {
+        let added = 0;
+        for (const [key, src] of found) {
+            if (chunks[key]) continue;
+            rawChunks[key] = src;
+            chunks[key] = args.noHooks ? src : vmmap.patchSpin(patchChunkV14(src, bridgePy));
+            added++;
+        }
+        return added;
+    };
+    process.stderr.write(`[*] tracing Luraph v14 ${job.input}...\n`);
+    let res = await runner.run(patched, cfg, chunks);
     if (!res.body) {
-        // A build that spins inside its own VM never reaches the runtime's budget
-        // check, so the run answers nothing at all and the whole file is lost. The
-        // runtime has a spin watchdog for exactly this (same one src/driver.js
-        // uses) but it only exists when the dispatch loop heads carry its counter,
-        // and this path never turned it on. Patch the heads, run once more, and let
-        // the watchdog end the run the way a budget abort does: with the trace it
-        // had already recorded.
+        // --no-hooks omits the dispatch counters. If that run hangs, enable the
+        // watchdog once; hooked runs already have it from their first execution.
         const stuck = /timed out|no reply|stalled|harness process exited/i.test(res.err || '');
         if (stuck && !cfg.spin) {
             process.stderr.write('[*] the run never answered (the script spins inside its own VM): '
@@ -147,31 +170,41 @@ async function runLuraphV14(job) {
         runner.finish();
         throw new Error(res.err || 'Luraph v14 trace failed without output');
     }
-      let body = harness.takeP2d(res.body);
-  // Instrument every chunk the run loadstring'd and run again, so the next
-  // trace sees inside the payload instead of only the line that loaded it.
-  for (let attempt = 2; attempt <= 4; attempt++) {
-    const { chunks: found, body: cleanBody } = harness.takeChunks(body);
-    body = cleanBody;
-    let added = 0;
-    for (const [key, src] of found) {
-      if (chunks[key]) continue;
-      rawChunks[key] = src;
-      chunks[key] = args.noHooks ? src : vmmap.patchSpin(patchChunkV14(src, bridgePy));
-      added++;
+
+    let body = harness.takeP2d(res.body);
+    for (let attempt = 2; attempt <= V14_MAX_TRACES; attempt++) {
+        const previousRunAborted = runWasAborted(body);
+        const { chunks: found, body: cleanBody } = harness.takeChunks(body);
+        body = cleanBody;
+        const added = collectChunks(found);
+        if (!added) break;
+        if (previousRunAborted) {
+            process.stderr.write('[!] previous Luraph v14 trace was aborted; '
+                + 'skipping the chunk-aware rerun and keeping captured chunks\n');
+            break;
+        }
+
+        process.stderr.write(`[*] script loadstring'd ${added} new VM chunk(s); instrumenting and re-running\n`);
+        const again = await runner.run(patched, cfg, chunks);
+        if (!again.body) {
+            process.stderr.write('[!] the re-run with the instrumented chunk produced nothing; '
+                + 'keeping what the previous run recorded\n');
+            break;
+        }
+        body = harness.takeP2d(again.body);
     }
-    if (!added) break;
-    process.stderr.write(`[*] script loadstring'd ${added} new VM chunk(s); instrumenting and re-running\n`);
-    const again = await runner.run(patched, cfg, chunks);
-    if (!again.body) {
-      process.stderr.write('[!] the re-run with the instrumented chunk produced nothing; '
-        + 'keeping what the first run recorded\n');
-      break;
+
+    // Preserve chunks discovered on the final allowed run even though there
+    // will be no third execution in which to trace their contents.
+    const finalChunks = harness.takeChunks(body);
+    body = finalChunks.body;
+    if (collectChunks(finalChunks.chunks)) {
+        const warning = 'Additional VM chunks were found after the final allowed v14 trace run; the result may be incomplete.';
+        process.stderr.write(`[!] ${warning}\n`);
+        job.warnings.push(warning);
     }
-    body = harness.takeP2d(again.body);
-  }
-  body = harness.takeChunks(body).body;
-  const runText = harness.traceText(body);
+    const runStatus = recordTraceStatus(job, body);
+    const runText = harness.traceText(body);
     body = harness.p2dMiss(body, cachePath);
 
     const [protosJson, b1] = trace.takeLine(body, 'PROTOS');
@@ -208,6 +241,7 @@ async function runLuraphV14(job) {
                     cfg,
                     chunks,
                     run_text: runText,
+                    run_status: runStatus,
                     ppath,
                     dpath,
                     stats_path: statsPath,

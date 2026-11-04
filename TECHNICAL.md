@@ -55,6 +55,41 @@ the same block, and substitution never touches an assignment target. When the
 loop finishes, the counter is left at the value that failed the check, and the
 pass writes that value back if anything after the loop can still read it.
 
+### The obfuscator's own arithmetic
+
+A v15 build seeds every protected function with a number it only ever hashes
+against itself:
+
+```lua
+local state = 135623784
+state = bit32.bxor(state, 279606389)
+state = u32Trunc(u32Mul(69228956, state) + 663714168)
+```
+
+None of that reaches the script — it is the integrity trail the VM used to check
+that its code had not been edited, lifted into ordinary statements that only feed
+themselves. Three passes take it apart, in this order:
+
+* `core/deadstore.py` removes stores nothing can read. Each block is walked
+  backwards keeping the locals still read ahead; a store whose target is not in
+  that set and whose value cannot fail (no call, no index) is deleted, which in
+  turn kills the reads that kept the store behind it alive. Loop bodies are
+  scanned to their own fixpoint, since what the next iteration reads on entry is
+  what this one leaves behind.
+* `core/seeds.py` removes the seed chains themselves, by the same argument
+  applied to a whole local at once: every write is literals, other seeds or the
+  u32 helpers, and every read sits inside text the pass is deleting.
+* `core/u32fold.py` folds the arithmetic that is left when it is genuinely
+  constant, with Luau's own bit32 semantics (shift counts mod 32, `u32Mul` is
+  `(a * b) mod 2**32`). An identity such as `band(x, 0xFFFFFFFF) -> x` is only
+  applied when the operand is provably already an integer.
+
+What survives is counted and left in place: on RideAPet that is the two helper
+definitions, one string decoder that really does use `bit32.bxor`, and register
+junk whose value is stored in the same statement as a real one and later read by
+a real expression, which cannot be removed without proving the reader never
+observes it.
+
 ## 2. Rules the engine does not break
 
 * **A value that was not recorded is printed as a hole**, never guessed:

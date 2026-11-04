@@ -184,6 +184,30 @@ def polish(text):
         text = localfuncs.rewrite(text)
     except Exception as ex:  
         print("[!] pre-localfuncs pass failed: %s" % ex, file=sys.stderr)
+    # The v15 build seeds every protected function with a number it only ever
+    # hashes against itself. Those chains are the obfuscator's integrity trail,
+    # never the script's logic: drop the ones nothing can read, then the seeds
+    # themselves, and repeat until neither has anything left to say.
+    try:
+        import deadstore
+        import seeds
+        totals = {"dead": 0, "seeds": 0, "statements": 0, "calls": 0}
+        for _round in range(4):
+            text, ds = deadstore.strip(text)
+            text, sd = seeds.strip(text)
+            totals["dead"] += ds.get("removed", 0)
+            totals["seeds"] += sd.get("seeds", 0)
+            totals["statements"] += sd.get("statements", 0)
+            totals["calls"] += sd.get("calls", 0)
+            if not ds.get("removed") and not sd.get("seeds"):
+                break
+        if totals["dead"] or totals["seeds"]:
+            print("[*] seed cleanup: %d dead store(s), %d seed(s), %d statement(s), "
+                  "%d u32 call(s) removed"
+                  % (totals["dead"], totals["seeds"], totals["statements"], totals["calls"]),
+                  file=sys.stderr)
+    except Exception as ex:
+        print("[!] seed cleanup failed: %s" % ex, file=sys.stderr)
     # The u32 arithmetic a v15 build leaves behind is exact: folding it turns a
     # state machine's seed chain into the constants it computes, which is what
     # the control-flow passes need in order to see what a branch tests.

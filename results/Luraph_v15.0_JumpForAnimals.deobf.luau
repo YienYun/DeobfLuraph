@@ -785,7 +785,6 @@ do
 
 	local function callback5(argument)
 		local list2 = {}
-		local now = os.clock()
 		local value6, value7, value8 = ipairs(humanoid.EggFolders())
 
 		for _, value9 in value7, value8 do
@@ -793,29 +792,25 @@ do
 
 			for _, value13 in value11, value12 do
 				local isModel = value13:IsA("Model") and humanoid.EggRoot(value13)
-				local modelEntry = modelMap[value13]
-				local condition
-				if isModel then
-					local modelEntry2 = modelEntry and modelEntry > now
-					condition = not modelEntry2
-				else
-					condition = isModel
+				local isModel2
+				if not (isModel) then
+					isModel2 = isModel
 				end
-				condition = condition and humanoid.EggPrompt(value13)
+				isModel2 = isModel2 and humanoid.EggPrompt(value13)
 
-				if condition then
+				if isModel2 then
 					local value14 = humanoid.EggRank(value13)
-					local condition2 = value14 >= number
-					local condition3
-					if condition2 then
-						condition2 = next(data5) == nil
-						condition3 = condition2 or data5[value13.Name]
+					local condition = value14 >= number
+					local condition2
+					if condition then
+						condition = next(data5) == nil
+						condition2 = condition or data5[value13.Name]
 					else
-						condition3 = condition2
+						condition2 = condition
 					end
-					condition3 = condition3 and humanoid.CanSteal(value13)
+					condition2 = condition2 and humanoid.CanSteal(value13)
 
-					if condition3 then
+					if condition2 then
 						table.insert(list2, {
 							Model = value13,
 							Folder = value9,
@@ -2025,18 +2020,12 @@ do
 					local text3, action, text4, text5
 
 					if kMap2[value31] or data3.Carried[value31] then
-						text3 = text2 .. "  |  In basket"
 						action = nil
 						text4 = "Bringing"
 						text5 = "Off"
 					elseif data3.Target == value31 then
 						text3 = text2 .. "  |  Stealing..."
-
-						if data3.TargetManual then
-							action = "Cancel"
-							text4 = "Cancel"
-							text5 = "Stop"
-						else
+						if not (data3.TargetManual) then
 							action = nil
 							text4 = "Stealing"
 							text5 = "Off"
@@ -2048,14 +2037,9 @@ do
 						local pos = table.find(data3.Manual, value31)
 
 						if pos then
-							text3 = text2 .. "  |  Queued #" .. pos
-							action = "Cancel"
-							text4 = "Cancel"
-							text5 = "Stop"
 						elseif value32 and not value32.Can then
 							text4 = string.format("Need %d JP", math.ceil(humanoid.EggNeed(value31) - humanoid.StealGrace()))
 							action = nil
-							text5 = "Off"
 							text3 = text2
 						else
 							action = "Steal"
@@ -3160,7 +3144,6 @@ do
 
 				for _, value14 in value11, value12 do
 					if value14:IsA("ProximityPrompt") and value14.Name == "DigPrompt" then
-						value13 = value14
 						break
 					else
 						value13 = nil
@@ -3704,9 +3687,8 @@ do
 	local number6 = -1
 	local number7 = -1
 	local condition = false
-	local number8 = 0
 	local condition2 = true
-	local number9 = 0
+	local number8 = 0
 	local condition3 = false
 	local spotlight = nil
 	local function requestEggRefresh()
@@ -3824,9 +3806,9 @@ do
 					growing.Percent = 100
 				else
 					growing.Remaining = serverTime2 - serverTime
-					local number10 = serverTime2 - serverTime3
-					if number10 > 0 then
-						growing.Percent = math.clamp(math.floor((1 - growing.Remaining / number10) * 100), 0, 100)
+					local number9 = serverTime2 - serverTime3
+					if number9 > 0 then
+						growing.Percent = math.clamp(math.floor((1 - growing.Remaining / number9) * 100), 0, 100)
 					end
 				end
 
@@ -3890,15 +3872,15 @@ do
 		return table.concat(parts, data4.Separator())
 	end
 
-	local number10 = 5
-	local number11 = number10 + 0.8
+	local number9 = 5
+	local number10 = number9 + 0.8
+	local number11 = 1.2
 	local number12 = 1.2
-	local number13 = 1.2
-	local number14 = 0.936
-	local number15 = 2.3
-	local number16 = 0.25
-	local number17 = number15 + 0.6
-	local number18 = 0.22
+	local number13 = 0.936
+	local number14 = 2.3
+	local number15 = 0.25
+	local number16 = number14 + 0.6
+	local number17 = 0.22
 	local function callback14(argument)
 		if string.upper(tostring(argument.Rarity)) == "SECRET" then
 			return data4.SecretGradient
@@ -3930,7 +3912,7 @@ do
 
 	local function callback16(argument)
 		argument8 = argument
-		argument:SetDock(5, { Gap = number18, DividerColor = Color3.fromRGB(170, 174, 184) })
+		argument:SetDock(5, { Gap = number17, DividerColor = Color3.fromRGB(170, 174, 184) })
 		local value2 = argument:Dock()
 
 		data7.Icon = argument:Model({
@@ -3938,8 +3920,8 @@ do
 			Parent = value2,
 			X = 0,
 			Y = 0,
-			Width = number10,
-			Height = number10,
+			Width = number9,
+			Height = number9,
 			Corner = 0.35,
 			Background = "#000000",
 			BackgroundTransparency = 0.26,
@@ -3950,10 +3932,10 @@ do
 
 		data7.Name = argument:Text({
 			Parent = value2,
-			X = number11,
+			X = number10,
 			Y = 0,
-			Height = number12,
-			Scale = number13,
+			Height = number11,
+			Scale = number12,
 			Wrap = false,
 			Gradient = data4.NameGradient,
 			TextStrokeTransparency = 1,
@@ -3962,10 +3944,10 @@ do
 
 		data7.Rarity = argument:Text({
 			Parent = value2,
-			X = number11,
+			X = number10,
 			Y = 0,
-			Height = number12,
-			Scale = number14,
+			Height = number11,
+			Scale = number13,
 			Wrap = false,
 			Font = data4.RarityFont,
 			TextStrokeTransparency = 1,
@@ -3973,14 +3955,14 @@ do
 			ZIndex = 9,
 		})
 
-		data7.Info = argument:Text({ Parent = value2, X = number11, Y = number12, Height = number10 - number12, Wrap = false, ZIndex = 9 })
+		data7.Info = argument:Text({ Parent = value2, X = number10, Y = number11, Height = number9 - number11, Wrap = false, ZIndex = 9 })
 
 		data7.Action = argument:Button({
 			Parent = value2,
 			X = 0,
 			Y = 0,
 			Width = 5,
-			Height = number12 - 0.1,
+			Height = number11 - 0.1,
 			Text = "",
 			Scale = 1,
 			Background = "#000000",
@@ -4006,7 +3988,6 @@ do
 				number7 = argument4
 				number3 = argument3 / math.max(argument4, 1)
 				number4 = argument4
-				number8 = 2
 				number5 = 0.9 / math.max(argument:TextSize(), 1)
 				data7.Rarity.Set({ StrokeThickness = number5 })
 				local value3, value4, value5 = ipairs(argumentMap)
@@ -4062,10 +4043,10 @@ do
 		data8.Icon = argument8:Model({
 			Spin = true,
 			Parent = data8.Frame,
-			X = number16,
+			X = number15,
 			Y = 0,
-			Width = number15,
-			Height = number15,
+			Width = number14,
+			Height = number14,
 			Corner = 0.35,
 			Background = "#000000",
 			BackgroundTransparency = 0.45,
@@ -4075,11 +4056,11 @@ do
 
 		data8.Name = argument8:Text({
 			Parent = data8.Frame,
-			X = number16 + number17,
+			X = number15 + number16,
 			Y = 0,
 			Width = 1,
-			Height = number12,
-			Scale = number13,
+			Height = number11,
+			Scale = number12,
 			Wrap = false,
 			Gradient = data4.NameGradient,
 			TextStrokeTransparency = 1,
@@ -4087,11 +4068,11 @@ do
 
 		data8.Rarity = argument8:Text({
 			Parent = data8.Frame,
-			X = number16 + number17,
+			X = number15 + number16,
 			Y = 0,
 			Width = 1,
-			Height = number12,
-			Scale = number14,
+			Height = number11,
+			Scale = number13,
 			Wrap = false,
 			Font = data4.RarityFont,
 			TextStrokeTransparency = 1,
@@ -4101,14 +4082,14 @@ do
 
 		data8.Detail = argument8:Text({
 			Parent = data8.Frame,
-			X = number16 + number17,
-			Y = number12,
-			Width = math.max(1, number3 - number17 - number16 * 2),
+			X = number15 + number16,
+			Y = number11,
+			Width = math.max(1, number3 - number16 - number15 * 2),
 			Height = 1,
 			Wrap = true,
 		})
 
-		data8.Status = argument8:Text({ Parent = data8.Frame, X = 0, Y = 0, Width = 1, Height = number12, Wrap = false, Align = "Right" })
+		data8.Status = argument8:Text({ Parent = data8.Frame, X = 0, Y = 0, Width = 1, Height = number11, Wrap = false, Align = "Right" })
 		local value2, value3, value4 = ipairs({ "Frame", "Icon", "Name", "Rarity", "Detail", "Status" })
 		for _, value5 in value3, value4 do
 			callback7(data8[value5])
@@ -4120,19 +4101,19 @@ do
 	local function callback19(argument)
 		local valueMap = { Ready = 0, Growing = 0, Inventory = 0 }
 		local value2, value3, value4 = ipairs(argument)
-		local number19 = 0
+		local number18 = 0
 		local value5 = nil
 
 		for _, value6 in value3, value4 do
 			local status = value6.Status
 			valueMap[status] = valueMap[status] + 1
-			number19 += value6.Income
+			number18 += value6.Income
 			if not value5 or value6.Income > value5.Income then
 				value5 = value6
 			end
 		end
 
-		return bold(paint(color.Text, tostring(#argument) .. " eggs")) .. data4.Separator() .. bold(paint(color.Ready, valueMap.Ready .. " ready")) .. data4.Separator() .. bold(paint(color.Growing, valueMap.Growing .. " growing")) .. data4.Separator() .. bold(paint(color.Inventory, valueMap.Inventory .. " in bag")) .. data4.Separator() .. paint(color.Text, "Total") .. " " .. bold(paint(color.Income, data4.FormatRate(number19))), value5
+		return bold(paint(color.Text, tostring(#argument) .. " eggs")) .. data4.Separator() .. bold(paint(color.Ready, valueMap.Ready .. " ready")) .. data4.Separator() .. bold(paint(color.Growing, valueMap.Growing .. " growing")) .. data4.Separator() .. bold(paint(color.Inventory, valueMap.Inventory .. " in bag")) .. data4.Separator() .. paint(color.Text, "Total") .. " " .. bold(paint(color.Income, data4.FormatRate(number18))), value5
 	end
 
 	local function callback20(argument, argument2)
@@ -4168,7 +4149,7 @@ do
 		local spotlight2 = data6.Spotlight and argument ~= nil
 		if spotlight ~= spotlight2 then
 			spotlight = spotlight2
-			argument8:SetDock(spotlight2 and 5 or 0, { Gap = number18 })
+			argument8:SetDock(spotlight2 and 5 or 0, { Gap = number17 })
 		end
 		data7.Icon.Set({ Visible = spotlight2 })
 		data7.Name.Set({ Visible = spotlight2 })
@@ -4218,22 +4199,21 @@ do
 		if not argument8 then
 			return
 		end
-		number8 = 2
 		local value9 = callback10()
 		table.clear(list)
-		local number19 = 0
+		local number18 = 0
 		local function registerItem2(argument, argument2)
-			number19 += 1
-			local value10 = callback17(number19)
+			number18 += 1
+			local value10 = callback17(number18)
 			value10.Set({ Visible = true, Text = argument })
 			table.insert(list, { Kind = "text", Handle = value10, Gap = argument2 })
 		end
-		local number20
+		local number19
 
 		if not value9 then
 			callback22(nil)
 			registerItem2(bold(paint(color.Hint, "Egg data is not available yet")), false)
-			number20 = 0
+			number19 = 0
 		else
 			callback11(value9)
 			local value10, value11 = callback19(value9)
@@ -4246,7 +4226,6 @@ do
 
 				for _, value16 in value14, value15 do
 					if value16.Id == id then
-						value12 = value16
 						break
 					else
 						value12 = nil
@@ -4267,10 +4246,9 @@ do
 
 			if #list2 == 0 then
 				registerItem2(paint(color.Hint, #value9 == 0 and "No eggs yet" or string.format("No results for \"%s\"", data4.Escape(text2))), false)
-				number20 = 0
 			else
 				local value16, value17, value18 = ipairs(data5)
-				number20 = 0
+				number19 = 0
 
 				for _, value19 in value17, value18 do
 					local list3 = {}
@@ -4286,8 +4264,8 @@ do
 						registerItem2(string.format("<b><font color=\"%s\">%s</font></b> <font color=\"#AAAAAA\">(%d)</font>", value19.Color, value19.Title, #list3), condition4)
 						local value23, value24, value25 = ipairs(list3)
 						for _, value26 in value24, value25 do
-							number20 += 1
-							local value27 = callback18(number20)
+							number19 += 1
+							local value27 = callback18(number19)
 							callback23(value27, value26)
 							table.insert(list, { Kind = "item", Item = value27, HasStatus = true })
 						end
@@ -4296,14 +4274,13 @@ do
 			end
 		end
 
-		for i = number19 + 1, #argumentMap2 do
+		for i = number18 + 1, #argumentMap2 do
 			argumentMap2[i].Set({ Visible = false })
 		end
-		for i = number20 + 1, #argumentMap do
+		for i = number19 + 1, #argumentMap do
 			argumentMap[i].Frame.Set({ Visible = false })
 		end
 		callback24()
-		number8 = 2
 	end
 
 	data4.RequestEggRefresh = requestEggRefresh
@@ -4366,10 +4343,10 @@ do
 			condition3 = value11
 
 			if value10 then
-				number9 += deltaTime
+				number8 += deltaTime
 
-				if value11 and condition2 or number9 >= number then
-					number9 = 0
+				if value11 and condition2 or number8 >= number then
+					number8 = 0
 					if value11 then
 						condition2 = false
 						pcall(callback25)
@@ -5826,20 +5803,17 @@ do
 		local position = nil
 
 		connections[#connections + 1] = frame.InputBegan:Connect(function(input2)
-			local condition = condition3
-			local condition2
-			if condition3 then
-				condition2 = condition
-			else
-				condition2 = input2.UserInputState ~= Enum.UserInputState.Begin
+			local condition4
+			if not (condition3) then
+				condition4 = input2.UserInputState ~= Enum.UserInputState.Begin
 			end
 
-			if not condition2 then
-				local condition4 = input2.UserInputType == Enum.UserInputType.Touch
+			if not condition4 then
+				local condition5 = input2.UserInputType == Enum.UserInputType.Touch
 
-				if not (not (input2.UserInputType == Enum.UserInputType.MouseButton1) and not condition4) then
+				if not (not (input2.UserInputType == Enum.UserInputType.MouseButton1) and not condition5) then
 					condition3 = true
-					input = condition4 and input2 or nil
+					input = condition5 and input2 or nil
 					vector2Zero = Vector2.new(input2.Position.X, input2.Position.Y)
 					position = frame.Position
 					return

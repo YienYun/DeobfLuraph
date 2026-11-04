@@ -27,7 +27,7 @@ local function compileChunk()
 	return bootstrapFn(table.concat(list))
 end
 
-local uiLibrary = compileChunk(488023178, 180544471)
+local uiLibrary = compileChunk()
 local condition = type(uiLibrary) == "table" and type(uiLibrary.CreateWindow) == "function"
 if condition then
 	local finalize = uiLibrary.Finalize

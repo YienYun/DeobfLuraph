@@ -90,3 +90,13 @@ print(not (flag), not (1 == 2))
   assert.match(out, /not flag/);
   assert.match(out, /not \(1 == 2\)/);
 });
+
+test('seed arguments handed to a function that takes none are dropped', () => {
+  const src = `local function build()
+	return 7
+end
+print(build(488023178, 180544471))
+`;
+  const out = same(src);
+  assert.match(out, /print\(build\(\)\)/);
+});

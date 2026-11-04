@@ -132,6 +132,11 @@ tighter than the operator around it. `(2 + 3) * 4` and `2 - (3 - 1)` keep theirs
 single value is expected -- `f((g()))` truncates `g()` while `f(g())` forwards
 it, so that one stays. RideAPet loses 816 groups.
 
+The seed numbers the VM passed to its own functions survive the arithmetic
+passes as arguments nobody reads, so a call to a function that takes none is
+trimmed back to its arity -- `compileChunk(488023178, 180544471)` becomes
+`compileChunk()` -- but only when the dropped arguments are side-effect free.
+
 The names themselves come from what the value does, never from a guess: a table
 handed named functions is the script's `module`, a value answering the Instance
 API is an `instance`, and a register that is refilled with different kinds of

@@ -3156,7 +3156,7 @@ do
 
 	local function callback16(argument)
 		if callback7() > 0 then
-			return callback14(argument)
+			return callback14()
 		end
 		number = os.clock() + 5
 		local value2 = callback13()[1]
@@ -3187,7 +3187,7 @@ do
 		if value3 then
 			module.FlyTo(value3.Position + Vector3.new(0, module.CruiseHeight, 0), nil, 3)
 		end
-		return callback14(argument)
+		return callback14()
 	end
 
 	local function callback17()

@@ -134,6 +134,76 @@ def strip_groups(text):
     return ast_polish._apply_edits(btext, edits).decode("utf-8"), len(edits)
 
 
+def _side_effect_free(e):
+    t = (e or {}).get("type") or ""
+    if t in ("AstExprConstantNumber", "AstExprConstantString", "AstExprConstantBool",
+             "AstExprConstantNil", "AstExprLocal", "AstExprGlobal", "AstExprTable"):
+        return True
+    if t == "AstExprIndexName":
+        return _side_effect_free(e.get("expr"))
+    return False
+
+
+def drop_extra_args(text):
+    """-> (text, dropped). The obfuscator's own seed numbers are still handed to
+    functions that take no arguments: `compileChunk(488023178, 180544471)`."""
+    import ast_polish
+
+    try:
+        root = ast_polish._parse_ast(text)
+    except Exception:
+        return text, 0
+    btext = text.encode("utf-8")
+    starts = ast_polish._line_starts(btext)
+    sigs = {}
+
+    def collect(node):
+        if isinstance(node, dict):
+            if node.get("type") == "AstStatLocalFunction":
+                fn = node["func"]
+                sigs[node["name"]["location"]] = (len(fn.get("args") or []), bool(fn.get("vararg")))
+            elif node.get("type") == "AstStatLocal":
+                vs, vals = node.get("vars") or [], node.get("values") or []
+                for v, val in zip(vs, vals):
+                    if val.get("type") == "AstExprFunction":
+                        sigs[v["location"]] = (len(val.get("args") or []), bool(val.get("vararg")))
+            for k, v in node.items():
+                if k != "location":
+                    collect(v)
+        elif isinstance(node, list):
+            for x in node:
+                collect(x)
+
+    collect(root)
+    edits = []
+
+    def walk(node):
+        if isinstance(node, dict):
+            if node.get("type") == "AstExprCall":
+                fn = node.get("func") or {}
+                args = node.get("args") or []
+                sig = sigs.get(fn["local"]["location"]) if fn.get("type") == "AstExprLocal" else None
+                if sig and not sig[1] and len(args) > sig[0] and all(
+                        _side_effect_free(a) for a in args[sig[0]:]):
+                    kept = b", ".join(
+                        btext[slice(*ast_polish._loc_bytes(a["location"], starts))]
+                        for a in args[:sig[0]])
+                    fs, fe = ast_polish._loc_bytes(fn["location"], starts)
+                    _cs, ce = ast_polish._loc_bytes(node["location"], starts)
+                    edits.append((fe, ce, b"(" + kept + b")"))
+            for k, v in node.items():
+                if k != "location":
+                    walk(v)
+        elif isinstance(node, list):
+            for x in node:
+                walk(x)
+
+    walk(root)
+    if not edits:
+        return text, 0
+    return ast_polish._apply_edits(btext, edits).decode("utf-8"), len(edits)
+
+
 def main(argv):
     import argparse
 
@@ -143,12 +213,14 @@ def main(argv):
     args = ap.parse_args(argv)
     text = sys.stdin.read() if args.file == "-" else open(args.file, encoding="utf-8").read()
     out, n = strip_groups(text)
+    out, extra = drop_extra_args(out)
     if args.output:
         with open(args.output, "w", encoding="utf-8", newline="\n") as fh:
             fh.write(out)
     else:
         sys.stdout.write(out)
-    print("[tidy] %d redundant group(s) removed" % n, file=sys.stderr)
+    print("[tidy] %d redundant group(s) removed, %d seed call(s) trimmed"
+          % (n, extra), file=sys.stderr)
     return 0
 
 

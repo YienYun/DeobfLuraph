@@ -271,6 +271,10 @@ def polish(text):
                 break
         if groups:
             print("[*] parentheses: %d redundant group(s) removed" % groups, file=sys.stderr)
+        text, extra = tidy.drop_extra_args(text)
+        if extra:
+            print("[*] seed arguments: %d call(s) trimmed to the function's arity"
+                  % extra, file=sys.stderr)
     except Exception as ex:
         print("[!] parenthesis tidy failed: %s" % ex, file=sys.stderr)
     if not os.environ.get("DEVIRT_NO_NAMES"):

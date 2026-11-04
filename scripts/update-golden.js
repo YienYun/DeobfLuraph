@@ -31,7 +31,11 @@ const INPUT = path.join(ROOT, 'fixtures', 'input');
 
 // Fixed so the table does not depend on the machine: the offline sandbox is
 // capped by these, not by wall-clock speed.
-const DEFAULT_ARGS = ['--budget', '30', '--timeout', '45'];
+// The wall-clock ceiling is a safety net, not a stopping condition: a row that
+// finishes inside it produces the same bytes as one that has all day. It is
+// set well above the slowest row (t15-1-2153 takes ~31 s here) so that a busy
+// machine cannot truncate a lift and make the table look like a code change.
+const DEFAULT_ARGS = ['--budget', '30', '--timeout', '90'];
 
 function parseArgs(argv) {
   const args = { tier: 'core', only: null };

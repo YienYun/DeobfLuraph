@@ -1,0 +1,1644 @@
+-- unresolved: 1 captured values the walk could not follow across scopes.
+-- They are nil here, so a function that needs one stops where the
+-- original had a value; each use below says what shape it expected.
+local unresolvedCapture1
+
+local value = ...
+local value2 = value[1]
+local value3 = value[169]
+local gmatch = value3.gmatch
+local format = value3.format
+local value4 = value[4]
+local value5 = value3[value[3]]
+local value6 = value3[value[5]]
+local value7 = value3[value[10]]
+local value8 = value[11]
+local value9 = value[9]
+local value10 = value3[value[7]]
+local gsub = value3.gsub
+local value11 = value3[value[6]]
+local value12 = value[8]
+local value13 = value12[value[12]]
+local value14 = value[13]
+local value15 = value3[value[17]]
+local value16 = value[14]
+local value17 = value[15]
+local value18 = value12[value[16]]
+local value19 = value3[value[18]]
+local argumentMap = {}
+local value20 = value17[value[19]]
+local value21 = value[20]
+local value22 = value[22]
+local value23 = value[25]
+local value24 = value12[value[23]]
+local value25 = value[24]
+local data = { [value[26]] = value[27], [value[27]] = value[26] }
+local value26 = value12[value[28]]
+local value27 = value12[value[31]]
+local value28 = value[29]
+local value29 = value[30]
+local value30 = value12[value[33]]
+local value31 = value12[value[34]]
+local value32 = value28[value[35]]
+local value33 = value[36]
+local value34 = value3[value[37]]
+local value35 = value28[value[39]]
+local value36 = value28[value[40]]
+local value37 = value28[value[44]]
+local value38 = value21(value[42], value[43])
+local value39 = value38[value[41]]
+local traceback = value38.traceback
+local value40 = value[45]
+local value41 = value[46]
+
+local function callback(argument)
+	local data = data
+	local condition = not argument
+	local iterator = 33
+	local iterator2 = 67
+	local iterator3 = 20 - iterator
+
+	while true do
+		iterator3 += iterator
+
+		if not (iterator <= 0) then
+			if not (iterator3 <= iterator2) then
+				break
+			end
+		elseif not (iterator3 >= iterator2) then
+			break
+		end
+
+		if not (iterator3 >= 53) then
+			data = data[condition]
+			continue
+		end
+		return data
+	end
+end
+
+local function callback2()
+	unresolvedCapture1 = value[2]  -- unresolved: #1 unknown
+
+	local function callback3()
+		local byte = string.byte
+		local text = string.rep(" ", 8)
+
+		local function callback4(argument, argument2)
+			local number = 1
+			local number2 = 0
+
+			if argument > 0 and argument2 > 0 then
+				while true do
+					local number3 = argument % 2
+					local number4 = argument2 % 2
+					if number3 ~= number4 then
+						number2 += number
+					end
+					argument = (argument - number3) / 2
+					argument2 = (argument2 - number4) / 2
+					number *= 2
+					if argument > 0 and argument2 > 0 then
+						continue
+					end
+					break
+				end
+			end
+
+			if argument < argument2 then
+				argument = argument2
+			end
+
+			while argument > 0 do
+				local number3 = argument % 2
+				if number3 > 0 then
+					number2 += number
+				end
+				argument = (argument - number3) / 2
+				number *= 2
+			end
+
+			return number2
+		end
+
+		local function callback5(argument, argument2, argument3)
+			if not argument3 then
+				local number = 2 ^ (argument2 - 1)
+				return argument % (number + number) >= number and 1 or 0
+			end
+			local number = argument / 2 ^ (argument2 - 1) % 2 ^ (argument3 - 1 - argument2 - 1 + 1)
+			return number - number % 1
+		end
+
+		local function callback6()
+			local value42, value43, value44, value45 = byte(text, 1, 4)
+			return callback4(value45, 64) * 16777216 + callback4(value44, 32) * 65536 + callback4(value43, 16) * 256 + callback4(value42, 8)
+		end
+
+		local function callback7()
+			local value42 = callback6()
+			local value43 = callback6()
+			local number = 1
+			local number2 = callback5(value43, 1, 20) * 4294967296 + value42
+			local number3 = callback5(value43, 21, 31)
+			local number4 = -1 ^ callback5(value43, 32)
+
+			if number3 == 0 then
+				if number2 == 0 then
+					return number4 * 0
+				end
+				number3 = 1
+				number = 0
+			elseif number3 == 2047 then
+				return number2 == 0 and number4 * 1 / 0 or number4 * 0 / 0
+			end
+
+			return number4 * 2 ^ (number3 - 1023) * (number + number2 / 4503599627370496)
+		end
+
+		local function callback8()
+			local iterator = 1
+			local iterator2 = callback6() + 0
+			local iterator3 = 1 - iterator
+			iterator3 += iterator
+			local data2, iterator4, iterator5, iterator6, exitTo, iterator7, iterator8, iterator9, value42, value43, value44, value45
+
+			if not (iterator <= 0) then
+				if iterator3 <= iterator2 then
+					data2 = {}
+					iterator4 = 1
+					iterator5 = 255
+					iterator6 = 0 - iterator4
+					iterator6 += iterator4
+
+					if not (iterator4 <= 0) then
+						if iterator6 <= iterator5 then
+							callback6()
+							callback6()
+							-- devirt: arith on packtop(12) 11 (at 0:23)
+						end
+					elseif iterator6 >= iterator5 then
+						callback6()
+						callback6()
+						-- devirt: arith on packtop(12) 11 (at 0:23)
+					end
+
+					iterator4 = 1
+					iterator5 = callback6() + 0
+					iterator6 = 1 - iterator4
+					exitTo = nil
+
+					while true do
+						iterator6 += iterator4
+
+						if not (iterator4 <= 0) then
+							if iterator6 <= iterator5 then
+								iterator7 = 1
+								iterator8 = 255
+								iterator9 = 0 - iterator7
+								iterator9 += iterator7
+
+								if not (iterator7 <= 0) then
+									if iterator9 <= iterator8 then
+										exitTo = 2
+										break
+									end
+									continue
+								end
+
+								if iterator9 >= iterator8 then
+									exitTo = 2
+									break
+								end
+								continue
+							end
+						elseif iterator6 >= iterator5 then
+							iterator7 = 1
+							iterator8 = 255
+							iterator9 = 0 - iterator7
+							iterator9 += iterator7
+							if not (iterator7 <= 0) then
+								if iterator9 <= iterator8 then
+									break
+								end
+								continue
+							end
+							if iterator9 >= iterator8 then
+								break
+							end
+							continue
+						end
+
+						data2 = {}
+						iterator4 = 1
+						iterator5 = 255
+						iterator6 = 0 - iterator4
+						iterator6 += iterator4
+
+						if not (iterator4 <= 0) then
+							if iterator6 <= iterator5 then
+								exitTo = 1
+								break
+							else
+								iterator4 = 1
+								iterator5 = callback6() + 0
+								iterator6 = 1 - iterator4
+							end
+						elseif iterator6 >= iterator5 then
+							exitTo = 1
+							break
+						else
+							iterator4 = 1
+							iterator5 = callback6() + 0
+							iterator6 = 1 - iterator4
+						end
+					end
+
+					if exitTo == 1 then
+						callback6()
+						callback6()
+						-- devirt: arith on packtop(12) 11 (at 0:23)
+					end
+
+					if exitTo == 2 then
+						value42 = callback7() and callback6()
+						value43 = data2[callback7()]
+						if not value43 then
+							callback7()
+							callback7()
+							-- devirt: arith on packtop(17) 16 (at 0:117)
+						end
+						data2[value42] = value43
+						value44 = callback6()
+						value45 = callback7() and callback7()
+						data2[value44] = value45
+						callback7()
+						callback6()
+						-- devirt: arith on packtop(16) 15 (at 0:97)
+					end
+
+					value42 = callback7() and callback6()
+					value43 = data2[callback7()]
+					if not value43 then
+						callback7()
+						callback7()
+						-- devirt: arith on packtop(17) 16 (at 0:117)
+					end
+					data2[value42] = value43
+					value44 = callback6()
+					value45 = callback7() and callback7()
+					data2[value44] = value45
+					callback7()
+					callback6()
+					-- devirt: arith on packtop(16) 15 (at 0:97)
+				end
+			elseif iterator3 >= iterator2 then
+				data2 = {}
+				iterator4 = 1
+				iterator5 = 255
+				iterator6 = 0 - iterator4
+				iterator6 += iterator4
+
+				if not (iterator4 <= 0) then
+					if iterator6 <= iterator5 then
+						callback6()
+						callback6()
+						-- devirt: arith on packtop(12) 11 (at 0:23)
+					end
+				elseif iterator6 >= iterator5 then
+					callback6()
+					callback6()
+					-- devirt: arith on packtop(12) 11 (at 0:23)
+				end
+
+				iterator4 = 1
+				iterator5 = callback6() + 0
+				iterator6 = 1 - iterator4
+				exitTo = nil
+
+				while true do
+					iterator6 += iterator4
+
+					if not (iterator4 <= 0) then
+						if iterator6 <= iterator5 then
+							iterator7 = 1
+							iterator8 = 255
+							iterator9 = 0 - iterator7
+							iterator9 += iterator7
+
+							if not (iterator7 <= 0) then
+								if iterator9 <= iterator8 then
+									exitTo = 2
+									break
+								end
+								continue
+							end
+
+							if iterator9 >= iterator8 then
+								exitTo = 2
+								break
+							end
+							continue
+						end
+					elseif iterator6 >= iterator5 then
+						iterator7 = 1
+						iterator8 = 255
+						iterator9 = 0 - iterator7
+						iterator9 += iterator7
+						if not (iterator7 <= 0) then
+							if iterator9 <= iterator8 then
+								break
+							end
+							continue
+						end
+						if iterator9 >= iterator8 then
+							break
+						end
+						continue
+					end
+
+					data2 = {}
+					iterator4 = 1
+					iterator5 = 255
+					iterator6 = 0 - iterator4
+					iterator6 += iterator4
+
+					if not (iterator4 <= 0) then
+						if iterator6 <= iterator5 then
+							exitTo = 1
+							break
+						else
+							iterator4 = 1
+							iterator5 = callback6() + 0
+							iterator6 = 1 - iterator4
+						end
+					elseif iterator6 >= iterator5 then
+						exitTo = 1
+						break
+					else
+						iterator4 = 1
+						iterator5 = callback6() + 0
+						iterator6 = 1 - iterator4
+					end
+				end
+
+				if exitTo == 1 then
+					callback6()
+					callback6()
+					-- devirt: arith on packtop(12) 11 (at 0:23)
+				end
+
+				if exitTo == 2 then
+					value42 = callback7() and callback6()
+					value43 = data2[callback7()]
+					if not value43 then
+						callback7()
+						callback7()
+						-- devirt: arith on packtop(17) 16 (at 0:117)
+					end
+					data2[value42] = value43
+					value44 = callback6()
+					value45 = callback7() and callback7()
+					data2[value44] = value45
+					callback7()
+					callback6()
+					-- devirt: arith on packtop(16) 15 (at 0:97)
+				end
+
+				value42 = callback7() and callback6()
+				value43 = data2[callback7()]
+				if not value43 then
+					callback7()
+					callback7()
+					-- devirt: arith on packtop(17) 16 (at 0:117)
+				end
+				data2[value42] = value43
+				data2[callback6()] = callback7() and callback7()
+				callback7()
+				callback6()
+				-- devirt: arith on packtop(16) 15 (at 0:97)
+			end
+
+			local callback = callback4
+			callback7()
+			callback6()
+			return callback()
+		end
+
+		while callback8() do
+			callback8()
+		end
+	end
+
+	callback3()
+end
+
+local value42 = value[48]
+local value43 = value[50]
+local value44 = value[51]
+
+local function callback3(argument)
+	local condition = value[2]
+	local iterator = 77
+	local iterator2 = 283
+	local iterator3 = 76 - iterator
+
+	while true do
+		iterator3 += iterator
+
+		if not (iterator <= 0) then
+			if not (iterator3 <= iterator2) then
+				break
+			end
+		elseif not (iterator3 >= iterator2) then
+			break
+		end
+
+		local iterator = iterator3
+
+		if not (iterator <= 76) then
+			if iterator == 153 then
+				condition = not condition
+				continue
+			end
+			return condition
+		end
+
+		argument = not argument
+		condition = data[argument]
+	end
+end
+
+local value45 = value[52]
+local value46 = value[49]
+
+local function callback4(argument)
+	local callback5 = callback3(argument)
+
+	if callback5 then
+		local iterator = 122
+		local iterator2 = 212
+		local iterator3 = 90 - iterator
+		iterator3 += iterator
+		local iterator4, exitTo, exitTo2, iterator5, exitTo3, exitTo4
+
+		if not (iterator <= 0) then
+			if iterator3 <= iterator2 then
+				iterator4 = iterator3
+
+				if not (iterator4 > 90) then
+					exitTo = nil
+
+					while true do
+						if iterator4 < 212 then
+							callback5 = callback2
+						end
+						iterator3 += iterator
+
+						if not (iterator <= 0) then
+							if iterator3 <= iterator2 then
+								iterator4 = iterator3
+								if not (iterator4 > 90) then
+									continue
+								else
+									exitTo = 1
+									break
+								end
+							end
+						elseif iterator3 >= iterator2 then
+							iterator4 = iterator3
+							if not (iterator4 > 90) then
+								continue
+							else
+								exitTo = 1
+								break
+							end
+						end
+
+						break
+					end
+
+					if exitTo == 1 then
+						while true do
+							callback5()
+							exitTo2 = nil
+
+							while true do
+								iterator3 += iterator
+
+								if not (iterator <= 0) then
+									if not (iterator3 <= iterator2) then
+										break
+									end
+								elseif not (iterator3 >= iterator2) then
+									break
+								end
+
+								iterator5 = iterator3
+
+								if not (iterator5 > 90) then
+									if not (iterator5 < 212) then
+										continue
+									end
+									callback5 = callback2
+								else
+									exitTo2 = 1
+									break
+								end
+							end
+
+							if exitTo2 == 1 then
+								continue
+							end
+							break
+						end
+					end
+				else
+					exitTo3 = nil
+
+					while true do
+						callback5()
+						iterator3 += iterator
+
+						if not (iterator <= 0) then
+							if not (iterator3 <= iterator2) then
+								break
+							end
+						elseif not (iterator3 >= iterator2) then
+							break
+						end
+
+						iterator5 = iterator3
+						if not (iterator5 > 90) then
+							exitTo3 = 1
+							break
+						end
+					end
+
+					if exitTo3 == 1 then
+						exitTo4 = nil
+
+						while true do
+							if iterator5 < 212 then
+								callback5 = callback2
+							end
+							iterator3 += iterator
+
+							if not (iterator <= 0) then
+								if iterator3 <= iterator2 then
+									iterator5 = iterator3
+									if not (iterator5 > 90) then
+										continue
+									else
+										exitTo4 = 1
+										break
+									end
+								end
+							elseif iterator3 >= iterator2 then
+								iterator5 = iterator3
+								if not (iterator5 > 90) then
+									continue
+								else
+									exitTo4 = 1
+									break
+								end
+							end
+
+							break
+						end
+
+						if exitTo4 == 1 then
+							while true do
+								callback5()
+								exitTo2 = nil
+
+								while true do
+									iterator3 += iterator
+
+									if not (iterator <= 0) then
+										if not (iterator3 <= iterator2) then
+											break
+										end
+									elseif not (iterator3 >= iterator2) then
+										break
+									end
+
+									iterator5 = iterator3
+
+									if not (iterator5 > 90) then
+										if not (iterator5 < 212) then
+											continue
+										end
+										callback5 = callback2
+									else
+										exitTo2 = 1
+										break
+									end
+								end
+
+								if exitTo2 == 1 then
+									continue
+								end
+								break
+							end
+						end
+					end
+				end
+			end
+		elseif iterator3 >= iterator2 then
+			iterator4 = iterator3
+
+			if not (iterator4 > 90) then
+				exitTo = nil
+
+				while true do
+					if iterator4 < 212 then
+						callback5 = callback2
+					end
+					iterator3 += iterator
+
+					if not (iterator <= 0) then
+						if iterator3 <= iterator2 then
+							iterator4 = iterator3
+							if not (iterator4 > 90) then
+								continue
+							else
+								exitTo = 1
+								break
+							end
+						end
+					elseif iterator3 >= iterator2 then
+						iterator4 = iterator3
+						if not (iterator4 > 90) then
+							continue
+						else
+							exitTo = 1
+							break
+						end
+					end
+
+					break
+				end
+
+				if exitTo == 1 then
+					while true do
+						callback5()
+						exitTo2 = nil
+
+						while true do
+							iterator3 += iterator
+
+							if not (iterator <= 0) then
+								if not (iterator3 <= iterator2) then
+									break
+								end
+							elseif not (iterator3 >= iterator2) then
+								break
+							end
+
+							iterator5 = iterator3
+
+							if not (iterator5 > 90) then
+								if not (iterator5 < 212) then
+									continue
+								end
+								callback5 = callback2
+							else
+								exitTo2 = 1
+								break
+							end
+						end
+
+						if exitTo2 == 1 then
+							continue
+						end
+						break
+					end
+				end
+			else
+				exitTo3 = nil
+
+				while true do
+					callback5()
+					iterator3 += iterator
+
+					if not (iterator <= 0) then
+						if not (iterator3 <= iterator2) then
+							break
+						end
+					elseif not (iterator3 >= iterator2) then
+						break
+					end
+
+					iterator5 = iterator3
+					if not (iterator5 > 90) then
+						exitTo3 = 1
+						break
+					end
+				end
+
+				if exitTo3 == 1 then
+					exitTo4 = nil
+
+					while true do
+						if iterator5 < 212 then
+							callback5 = callback2
+						end
+						iterator3 += iterator
+
+						if not (iterator <= 0) then
+							if iterator3 <= iterator2 then
+								iterator5 = iterator3
+								if not (iterator5 > 90) then
+									continue
+								else
+									exitTo4 = 1
+									break
+								end
+							end
+						elseif iterator3 >= iterator2 then
+							iterator5 = iterator3
+							if not (iterator5 > 90) then
+								continue
+							else
+								exitTo4 = 1
+								break
+							end
+						end
+
+						break
+					end
+
+					if exitTo4 == 1 then
+						while true do
+							callback5()
+							exitTo2 = nil
+
+							while true do
+								iterator3 += iterator
+
+								if not (iterator <= 0) then
+									if not (iterator3 <= iterator2) then
+										break
+									end
+								elseif not (iterator3 >= iterator2) then
+									break
+								end
+
+								iterator5 = iterator3
+
+								if not (iterator5 > 90) then
+									if not (iterator5 < 212) then
+										continue
+									end
+									callback5 = callback2
+								else
+									exitTo2 = 1
+									break
+								end
+							end
+
+							if exitTo2 == 1 then
+								continue
+							end
+							break
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+local value47 = value[53]
+local value48 = value[54]
+
+local function callback5(argument, argument2)
+	local value49 = value[27]
+	local argument3 = argument
+	local condition = callback3(argument3)
+	if condition then
+		argument3 = argument
+		condition = argument3 == value[2]
+	end
+	local iterator, iterator2, iterator3
+
+	if condition then
+		iterator = 69
+		iterator2 = 78
+		iterator3 = 9 - iterator
+
+		while true do
+			iterator3 += iterator
+
+			if not (iterator <= 0) then
+				if not (iterator3 <= iterator2) then
+					break
+				end
+			elseif not (iterator3 >= iterator2) then
+				break
+			end
+
+			if iterator3 == 9 then
+				condition = callback3
+			else
+				argument3 = argument2
+			end
+		end
+
+		local condition2 = condition(argument3)
+		condition2 = condition2 and argument2 == nil
+		if condition2 then
+			return value[27]
+		end
+		iterator = 3
+		iterator2 = 86
+		iterator3 = 58 - iterator
+		local exitTo = nil
+
+		while true do
+			iterator3 += iterator
+
+			if not (iterator <= 0) then
+				if not (iterator3 <= iterator2) then
+					exitTo = 1
+					break
+				end
+			elseif not (iterator3 >= iterator2) then
+				exitTo = 1
+				break
+			end
+
+			local iterator = iterator3
+
+			if not (iterator < 61) then
+				if not (iterator > 58) then
+					continue
+				end
+			else
+				condition2 = value[26]
+				continue
+			end
+
+			break
+		end
+
+		if exitTo ~= 1 then
+			return condition2
+		end
+	end
+
+	local argument3 = argument
+	argumentMap[argument3] = value49
+	local argumentMap2 = argumentMap
+	iterator = 71
+	iterator2 = 192
+	iterator3 = 36 - iterator
+
+	while true do
+		iterator3 += iterator
+
+		if not (iterator <= 0) then
+			if not (iterator3 <= iterator2) then
+				break
+			end
+		elseif not (iterator3 >= iterator2) then
+			break
+		end
+
+		local iterator = iterator3
+
+		if iterator ~= 36 then
+			if iterator == 107 then
+				argument3 = argument2
+			elseif iterator == 178 then
+				argumentMap2 = argumentMap2[argument3]
+				break
+			end
+		end
+	end
+
+	local argumentMap2 = argumentMap2
+	local argumentMap = argumentMap
+	iterator = 52
+	iterator2 = 199
+	iterator3 = 40 - iterator
+
+	while true do
+		iterator3 += iterator
+
+		if not (iterator <= 0) then
+			if not (iterator3 <= iterator2) then
+				break
+			end
+		elseif not (iterator3 >= iterator2) then
+			break
+		end
+
+		local iterator = iterator3
+
+		if not (iterator > 40) then
+			argument3 = argument
+		elseif iterator == 144 then
+			argumentMap[argument3] = value49
+			break
+		else
+			value49 = value[2]
+		end
+	end
+
+	return argumentMap2
+end
+
+local function callback6(argument, argument2)
+	return not callback5(argument, argument2)
+end
+
+local function callback7(argument, argument2)
+	local callback8 = value[2]
+	local argument3 = value[2]
+	local argument4 = value[2]
+	local iterator = 91
+	local iterator2 = 178
+	local iterator3 = 19 - iterator
+
+	while true do
+		iterator3 += iterator
+
+		if not (iterator <= 0) then
+			if not (iterator3 <= iterator2) then
+				break
+			end
+		elseif not (iterator3 >= iterator2) then
+			break
+		end
+
+		local iterator = iterator3
+
+		if not (iterator > 19) then
+			if not (iterator < 110) then
+				continue
+			end
+			callback8 = callback6
+			argument3 = argument
+		else
+			argument4 = argument2
+			break
+		end
+	end
+
+	local callback9 = callback8(argument3, argument4)
+
+	if callback9 then
+		iterator = 120
+		iterator2 = 231
+		iterator3 = 111 - iterator
+		iterator3 += iterator
+		local iterator4
+
+		if not (iterator <= 0) then
+			if iterator3 <= iterator2 then
+				iterator4 = iterator3
+
+				while true do
+					if iterator4 == 231 then
+						callback9()
+					elseif iterator4 == 111 then
+						callback9 = callback2
+					end
+					iterator3 += iterator
+
+					if not (iterator <= 0) then
+						if iterator3 <= iterator2 then
+							iterator4 = iterator3
+							continue
+						end
+					elseif iterator3 >= iterator2 then
+						iterator4 = iterator3
+						continue
+					end
+
+					break
+				end
+			end
+		elseif iterator3 >= iterator2 then
+			iterator4 = iterator3
+
+			while true do
+				if iterator4 == 231 then
+					callback9()
+				elseif iterator4 == 111 then
+					callback9 = callback2
+				end
+				iterator3 += iterator
+
+				if not (iterator <= 0) then
+					if iterator3 <= iterator2 then
+						iterator4 = iterator3
+						continue
+					end
+				elseif iterator3 >= iterator2 then
+					iterator4 = iterator3
+					continue
+				end
+
+				break
+			end
+		end
+	end
+end
+
+local value49 = value[55]
+local function callback8()
+	-- devirt: len of <luasym.RegFile object at 0x7faab0512710> (at 0:78)
+end
+
+local function callback9(argument)
+	callback4(argument)
+	local callback = callback7
+	local value50 = value[56]
+	local value51 = value43(argument)
+	callback(value50, value51)
+	local callback = callback7
+	local value52 = value[2]
+	local value53 = value40(argument)
+	callback(value52, value53)
+	value2(value4, argument, nil)
+end
+
+local function callback10(argument)
+	local number = value[2]
+	local value50 = value[2]
+	local iterator = 82
+	local iterator2 = 318
+	local iterator3 = 19 - iterator
+
+	while true do
+		iterator3 += iterator
+
+		if not (iterator <= 0) then
+			if not (iterator3 <= iterator2) then
+				break
+			end
+		elseif not (iterator3 >= iterator2) then
+			break
+		end
+
+		local iterator = iterator3
+
+		if not (iterator < 101) then
+			if iterator < 265 and iterator > 101 then
+				local iterator4 = 1
+				local iterator5 = #value50 + 0
+				local iterator6 = 1 - iterator4
+
+				while true do
+					iterator6 += iterator4
+
+					if not (iterator4 <= 0) then
+						if not (iterator6 <= iterator5) then
+							break
+						end
+					elseif not (iterator6 >= iterator5) then
+						break
+					end
+
+					local number2 = bit32.bxor(number, value50[iterator6])
+					if not (number2 < 134217728) then
+						local number3 = number2 % 65536
+						number = (((number2 - number3) / 65536 * 403 + number3 * 256) * 65536 + number3 * 403) % 4294967296
+					else
+						number = number2 * 16777619 % 4294967296
+					end
+				end
+
+				continue
+			end
+
+			if iterator < 183 and iterator > 19 then
+				value10(argument, 1, -1)
+				-- devirt: table.move count out of range: -7 (at 0:95)
+			end
+			if not (iterator > 183) then
+				continue
+			end
+			return (bit32.bxor(number, 1816370591))
+		end
+
+		number = 2166136261
+	end
+end
+
+local function callback11(argument, argument2)
+	local value50 = value[2]
+	local argument3 = value[2]
+	local iterator = 47
+	local iterator2 = 114
+	local iterator3 = 43 - iterator
+
+	while true do
+		iterator3 += iterator
+
+		if not (iterator <= 0) then
+			if not (iterator3 <= iterator2) then
+				break
+			end
+		elseif not (iterator3 >= iterator2) then
+			break
+		end
+
+		if iterator3 == 90 then
+			argument3 = argument
+			break
+		else
+			value50 = value29
+		end
+	end
+
+	local value51 = nil
+	local value2, argument, iterator5, iterator6, iterator4
+
+	while true do
+		value2 = value50
+		argument = argument3
+		local exitTo3 = nil
+
+		while true do
+			iterator3 = (function(iteratorFn, state, control) local value52 = coroutine.wrap(function() coroutine.yield(); for key, value52, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth in iteratorFn, state, control do coroutine.yield(true, key, value52, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth) end end); value52(); return value52 end)(value2, argument, value51)
+
+			for k in argument, value51 do
+				local argument4 = nil
+				local callback12 = value[2]
+				local k2 = value[2]
+				iterator5 = 30
+				iterator6 = 239
+				iterator4 = 116 - iterator5
+
+				while true do
+					iterator4 += iterator5
+
+					if not (iterator5 <= 0) then
+						if not (iterator4 <= iterator6) then
+							break
+						end
+					elseif not (iterator4 >= iterator6) then
+						break
+					end
+
+					local iterator = iterator4
+
+					if not (iterator < 146) then
+						if not (iterator > 146) then
+							if not (iterator > 176) then
+								if not (iterator > 116) then
+									continue
+								end
+
+								if not (iterator < 176) then
+									continue
+								end
+								callback12 = callback10
+								k2 = k
+							else
+								k2 = value[2]
+								break
+							end
+						elseif not (iterator < 206) then
+							if not (iterator > 176) then
+								if not (iterator > 116) then
+									continue
+								end
+
+								if not (iterator < 176) then
+									continue
+								end
+								callback12 = callback10
+								k2 = k
+							else
+								k2 = value[2]
+								break
+							end
+						else
+							callback12 = callback12(k2)
+						end
+					else
+						argument4 = argument2
+					end
+				end
+
+				argument4[callback12] = k2
+			end
+
+			value50 = value29
+			local exitTo2 = nil
+
+			while true do
+				local number = 34
+				argument3 = argument2
+				local exitTo = nil
+
+				while true do
+					if number < 25 and number > 15 then
+						exitTo = 1
+						break
+					end
+
+					if not (number > 34) then
+						if not (number < 112) then
+							if not (number < 21) then
+								if not (number < 34) then
+									continue
+								elseif not (number > 21) then
+									continue
+								end
+							else
+								exitTo = 3
+								break
+							end
+						elseif not (number > 25) then
+							if not (number < 21) then
+								if not (number < 34) then
+									continue
+								elseif not (number > 21) then
+									continue
+								end
+							else
+								exitTo = 3
+								break
+							end
+						else
+							value2 = value50
+							argument = argument3
+							number = 25
+							continue
+						end
+					else
+						exitTo = 2
+						break
+					end
+
+					break
+				end
+
+				if exitTo == 1 then
+					exitTo2 = 1
+					break
+				elseif exitTo == 2 then
+					exitTo2 = 2
+					break
+				elseif exitTo == 3 then
+					continue
+				end
+
+				break
+			end
+
+			if exitTo2 == 1 then
+				exitTo3 = 1
+				break
+			elseif exitTo2 == 2 then
+				continue
+			end
+			break
+		end
+
+		if exitTo3 == 1 then
+			continue
+		end
+		break
+	end
+
+	iterator3 = (function(iteratorFn, state, control) local value52 = coroutine.wrap(function() coroutine.yield(); for key, value52, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth in iteratorFn, state, control do coroutine.yield(true, key, value52, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth) end end); value52(); return value52 end)(value2, argument, value51)
+	local value52 = table.pack(iterator3())
+
+	if value52[1] then
+		local callback12 = nil
+		iterator5 = 82
+		iterator6 = 206
+		iterator4 = 124 - iterator5
+		local exitTo4 = nil
+
+		while true do
+			iterator4 += iterator5
+
+			if not (iterator5 <= 0) then
+				if iterator4 <= iterator6 then
+					exitTo4 = 1
+					break
+				end
+			elseif iterator4 >= iterator6 then
+				exitTo4 = 1
+				break
+			end
+
+			local value53 = table.pack(iterator3())
+
+			if value53[1] then
+				callback12 = nil
+				iterator5 = 82
+				iterator6 = 206
+				iterator4 = 124 - iterator5
+				continue
+			end
+
+			break
+		end
+
+		if exitTo4 == 1 then
+			local iterator = iterator4
+
+			while true do
+				if iterator == 124 then
+					callback12 = callback2
+				elseif iterator == 206 then
+					callback12()
+				end
+				local exitTo5 = nil
+
+				while true do
+					iterator4 += iterator5
+
+					if not (iterator5 <= 0) then
+						if iterator4 <= iterator6 then
+							exitTo5 = 1
+							break
+						end
+					elseif iterator4 >= iterator6 then
+						exitTo5 = 1
+						break
+					end
+
+					local value53 = table.pack(iterator3())
+
+					if value53[1] then
+						callback12 = nil
+						iterator5 = 82
+						iterator6 = 206
+						iterator4 = 124 - iterator5
+						continue
+					end
+
+					break
+				end
+
+				if exitTo5 == 1 then
+					iterator = iterator4
+					continue
+				end
+				break
+			end
+		end
+	end
+end
+
+local value50 = value[57]
+callback9(value16)
+callback9(value45)
+callback9(value23)
+callback9(value41)
+callback9(value48)
+local value51 = value[62]
+local value52 = value[63]
+local data2 = {}
+
+local function callback12(argument, argument2)
+	if callback(argument) then
+		local iterator = 15
+		local iterator2 = 171
+		local iterator3 = 48 - iterator
+
+		while true do
+			iterator3 += iterator
+
+			if not (iterator <= 0) then
+				if not (iterator3 <= iterator2) then
+					break
+				end
+			elseif not (iterator3 >= iterator2) then
+				break
+			end
+
+			if iterator3 == 63 then
+				callback8(value[58], value44, argument, data2)
+				break
+			else
+				local callback = callback7
+				local value53 = value[59]
+				local value54 = value43(argument)
+				callback(value53, value54)
+			end
+		end
+
+		local value53, value54, value55, value56, value57, value58 = value39(argument, value[60])
+		callback7(value[61], value53)
+		iterator = 23
+		iterator2 = 106
+		iterator3 = 37 - iterator
+
+		while true do
+			iterator3 += iterator
+
+			if not (iterator <= 0) then
+				if not (iterator3 <= iterator2) then
+					return
+				end
+			elseif not (iterator3 >= iterator2) then
+				return
+			end
+
+			if nil == 60 then
+				callback7(0, value56)
+				callback7(value[27], value57)
+				continue
+			end
+			-- This Source Was Generated by discord.gg/c3xVMnUUBv
+			if nil == 83 then
+				callback7(argument, value58)
+				continue
+			end
+
+			if nil == 37 then
+				callback7(-1, value54)
+				continue
+			end
+
+			if nil == 106 then
+				if argument2 then
+					callback7(argument2, value55)
+				end
+				if not value42 then
+					continue
+				end
+				break
+			end
+		end
+
+		value8(argument)
+		-- devirt: arith on packtop(16) 15 (at 0:172)
+	end
+end
+
+callback12(value40, value[76])
+callback12(value4, value[78])
+callback12(value33, value[77])
+callback12(value22, value[79])
+callback12(value47, value[81])
+local value53 = value17[value[80]]
+callback12(value50, value[82])
+callback12(value14, value[83])
+callback12(value46, value[84])
+callback12(value21, value[85])
+local value54 = value45[value[86]]
+callback12(value25, value[88])
+callback12(value2, "pcall")
+callback12(value43, value[87])
+callback12(value29, value[89])
+callback12(value52, value[90])
+callback12(value44, "setfenv")
+callback12(value51, value[92])
+callback12(gmatch, value[91])
+callback12(format, "format")
+local value55 = value[93]
+callback12(value5, value[3])
+local value56 = value28[value[94]]
+callback12(value6, value[5])
+callback12(value7, value[10])
+local value57 = value16[value[86]]
+callback12(value10, value[7])
+callback12(gsub, value[95])
+callback12(value11, value[6])
+callback12(value15, value[17])
+callback12(value19, value[18])
+callback12(value34, value[37])
+callback12(value20, value[19])
+callback12(value53, value[80])
+callback12(value13, value[12])
+callback12(value18, value[16])
+callback12(value24, value[23])
+callback12(value27, value[31])
+local wrap = value12.wrap
+callback12(value30, value[33])
+callback12(value31, value[34])
+callback12(value26, value[28])
+callback12(wrap, value[96])
+callback12(value32, value[35])
+callback12(value35, value[39])
+callback12(value36, value[40])
+local value58 = value23[value[86]]
+callback12(value37, value[44])
+callback12(value56, value[94])
+callback12(value9, value[18])
+callback12(value39, "info")
+callback12(traceback, value[97])
+callback12(value49)
+local number = value[2]
+local number2 = value[2]
+local iterator = 15
+local iterator2 = 166
+local iterator3 = 116 - iterator
+
+while true do
+	iterator3 += iterator
+
+	if not (iterator <= 0) then
+		if not (iterator3 <= iterator2) then
+			break
+		end
+	elseif not (iterator3 >= iterator2) then
+		break
+	end
+
+	if not (iterator3 < 131) then
+		number2 = 512672201
+		break
+	else
+		number = 285894652
+	end
+end
+
+local value59 = wrap(function()
+	value30(number)
+	value30(number2)
+end)
+callback7(value59(), number)
+callback7(value59(), number2)
+number = value[2]
+number2 = value35
+number2(function()
+	number = value18()
+end)
+number2 = callback3
+local value60 = value2(value31, number)
+number2 = number2(value60)
+if number2 then
+	number2 = callback2
+	number2()
+end
+number = value31
+number2 = value35
+number2 = number2(function()
+	value30()
+end)
+number(number2)
+number = value[98]
+number2 = value31
+local value61 = value37(53, callback2)
+number2(value61)
+number2 = function(argument)
+	return (value39(argument + 3, "f"))
+end
+local function callback13(argument)
+	if not callback(argument) then
+		return
+	end
+	-- devirt: len of <luasym.RegFile object at 0x7faab0702350> (at 0:42)
+end
+callback13(value52, -11867)
+callback13(value44, -8510)
+callback13(value40)
+callback13(value4)
+callback13(value33)
+callback13(value22)
+callback13(value47)
+callback13(value50)
+callback13(value21)
+callback13(value43)
+callback13(value29)
+callback13(value51)
+callback13(gmatch)
+callback13(format)
+callback13(value5)
+callback13(value6)
+callback13(value10)
+callback13(gsub)
+callback13(gsub)
+callback13(value15)
+callback13(value7, nil)
+local value62 = value[100]
+callback13(value19)
+callback13(value34)
+callback13(value20)
+callback13(value53)
+callback13(value24)
+callback13(value27)
+callback13(value31)
+callback13(value26)
+callback13(wrap)
+callback13(value32)
+callback13(value35)
+callback13(value36)
+callback13(value37)
+callback13(value56, {})
+callback13(value9)
+callback13(value39)
+callback13(value49)
+callback12(value57, value[86])
+callback13(value57, value[2])
+callback12(value54, value[86])
+callback12(value58, value[86])
+callback12(value62, value[86])
+callback12(value55, value[86])
+callback11(value[101], { [3999930550] = 2054155582, [2218639217] = 630405465, [1899217538] = 10823770 })
+value[102](value[103]):byte(1, -1)
+-- devirt: table.move count out of range: -97 (at 0:2525)
+print("Deobf By Zed")

@@ -249,6 +249,20 @@ def polish(text):
             text = ast_polish.polish_ast(text)
         except Exception as ex2:
             print("[!] ast polish pass failed: %s" % ex2, file=sys.stderr)
+    # Parentheses the lifter recorded around whole expressions say nothing; the
+    # tidier drops the ones no operator can rebind.
+    try:
+        import tidy
+        groups = 0
+        for _round in range(3):
+            text, removed = tidy.strip_groups(text)
+            groups += removed
+            if not removed:
+                break
+        if groups:
+            print("[*] parentheses: %d redundant group(s) removed" % groups, file=sys.stderr)
+    except Exception as ex:
+        print("[!] parenthesis tidy failed: %s" % ex, file=sys.stderr)
     if not os.environ.get("DEVIRT_NO_NAMES"):
         import names
         try:

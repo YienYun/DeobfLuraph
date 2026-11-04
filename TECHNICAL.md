@@ -122,6 +122,21 @@ The pass runs before naming on purpose: a register that is one long chain of
 copies gets named after the value that started the chain, so `module.RarityRank`
 reads as the field it is instead of `module2.RarityRank`.
 
+### Parentheses and longer names
+
+Two cosmetic passes finish the file. `core/tidy.py` drops a parenthesis group
+when no operator is left beside it to rebind what is inside: a condition, a
+return value, the value of an assignment, or an operand that already binds
+tighter than the operator around it. `(2 + 3) * 4` and `2 - (3 - 1)` keep theirs,
+`(a or b) and c` keeps its, and a group around a call is only removed where a
+single value is expected -- `f((g()))` truncates `g()` while `f(g())` forwards
+it, so that one stays. RideAPet loses 816 groups.
+
+The names themselves come from what the value does, never from a guess: a table
+handed named functions is the script's `module`, a value answering the Instance
+API is an `instance`, and a register that is refilled with different kinds of
+value keeps the generic word instead of inheriting the first one's name.
+
 ## 2. Rules the engine does not break
 
 * **A value that was not recorded is printed as a hole**, never guessed:

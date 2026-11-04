@@ -105,3 +105,35 @@ print("hi")
   assert.doesNotMatch(out, /local unused/);
   assert.equal(luau(out), luau(src));
 });
+
+test('a temporary that is used once, right below, is folded away', () => {
+  const src = `local function f()
+	return { n = 7 }
+end
+local t = f()
+print(t.n)
+`;
+  const out = clean(src);
+  assert.doesNotMatch(out, /local t = f\(\)/);
+  assert.match(out, /print\(f\(\)\.n\)/);
+  assert.equal(luau(out), luau(src));
+});
+
+test('a temporary holding an expression keeps its name', () => {
+  const src = `local a, b = 3, 4
+local sum = a + b
+print(sum * 2)
+`;
+  assert.match(clean(src), /local sum = a \+ b/);
+});
+
+test('a temporary read further down is left alone', () => {
+  const src = `local function f()
+	return 1
+end
+local t = f()
+print("x")
+print(t)
+`;
+  assert.match(clean(src), /local t = f\(\)/);
+});

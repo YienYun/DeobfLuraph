@@ -236,7 +236,7 @@ def propagate(text, rounds=4):
     """-> (text, stats). Inlines the copies, then looks again."""
     import ast_polish
 
-    stats = {"inlined": 0, "dropped": 0}
+    stats = {"inlined": 0, "dropped": 0, "temps": 0}
     for _ in range(max(1, rounds)):
         try:
             root, plan = find_copies(text)
@@ -272,8 +272,81 @@ def propagate(text, rounds=4):
                 edits.append((s, e, b""))
         text = ast_polish._apply_edits(btext, edits).decode("utf-8")
         stats["inlined"] += len(plan)
+    text, temps = inline_temps(text)
+    stats["temps"] = temps["inlined"]
     text, dropped = drop_unused_decls(text)
     stats["dropped"] = dropped
+    return text, stats
+
+
+# Only a value that reads the same wherever it is written is worth moving: a call,
+# a name, a literal. A bigger expression stays behind its temporary, because
+# paste-and-parenthesise makes the line it lands on harder to read, not easier.
+_ATOMIC = {"AstExprLocal", "AstExprGlobal", "AstExprConstantString", "AstExprConstantNumber",
+           "AstExprConstantBool", "AstExprConstantNil", "AstExprIndexName", "AstExprCall"}
+
+
+def inline_temps(text, rounds=3):
+    """-> (text, stats). A local written once and read once, right below, is a
+    temporary: naming it adds a word without saying anything."""
+    import ast_polish
+
+    stats = {"inlined": 0}
+    for _ in range(max(1, rounds)):
+        try:
+            root = ast_polish._parse_ast(text)
+        except Exception as ex:
+            print("[!] temp pass skipped: %s" % str(ex)[:160], file=sys.stderr)
+            return text, stats
+        writes, reads, _names, _order = _scan(root)
+        btext = text.encode("utf-8")
+        starts = ast_polish._line_starts(btext)
+        edits = []
+
+        def captured(key):
+            funcs = {func for _n, func in reads.get(key, [])}
+            funcs |= {w[3] for w in writes.get(key, [])}
+            return len(funcs) > 1
+
+        def scan_block(block):
+            body = block.get("body") or []
+            for i, stmt in enumerate(body[:-1]):
+                if stmt.get("type") != "AstStatLocal":
+                    continue
+                vars_, vals = stmt.get("vars") or [], stmt.get("values") or []
+                if len(vars_) != 1 or len(vals) != 1:
+                    continue
+                key = vars_[0].get("location")
+                if len(writes.get(key) or []) != 1 or captured(key):
+                    continue
+                rs = reads.get(key) or []
+                if len(rs) != 1:
+                    continue
+                nxt = body[i + 1]
+                ns, ne = ast_polish._loc_bytes(nxt["location"], starts)
+                rnode = rs[0][0]
+                rs_, re_ = ast_polish._loc_bytes(rnode["location"], starts)
+                if not (ns <= rs_ and re_ <= ne):
+                    continue                  # used somewhere further down
+                value = vals[0]
+                if value.get("type") not in _ATOMIC:
+                    continue
+                s0, e0 = ast_polish._loc_bytes(value["location"], starts)
+                body_src = btext[s0:e0]
+                edits.append((rs_, re_, body_src))
+                ds, de = ast_polish._loc_bytes(stmt["location"], starts)
+                ds, de = ast_polish._expand_full_line_delete(btext, ds, de)
+                edits.append((ds, de, b""))
+            for stmt in body:
+                for child in _child_blocks(stmt):
+                    scan_block(child)
+
+        scan_block(root)
+        if not edits:
+            break
+        text = ast_polish._apply_edits(btext, edits).decode("utf-8")
+        stats["inlined"] += len(edits) // 2
+        text, _dropped = drop_unused_decls(text)
     return text, stats
 
 
@@ -335,8 +408,9 @@ def main(argv):
             fh.write(out)
     else:
         sys.stdout.write(out)
-    print("[copies] %d copy(ies) inlined, %d unused declaration(s) dropped"
-          % (stats["inlined"], stats["dropped"]), file=sys.stderr)
+    print("[copies] %d copy(ies) inlined, %d temporary(ies) folded, "
+          "%d unused declaration(s) dropped"
+          % (stats["inlined"], stats["temps"], stats["dropped"]), file=sys.stderr)
     return 0
 
 

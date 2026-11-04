@@ -121,6 +121,18 @@ SIGNAL_PARAMS = {
 }
 
 
+INSTANCE_API = {
+    "IsA", "FindFirstChild", "WaitForChild", "FindFirstChildOfClass", "FindFirstAncestor",
+    "FindFirstAncestorOfClass", "FindFirstDescendant", "GetChildren", "GetDescendants",
+    "Destroy", "Clone", "GetAttribute", "SetAttribute", "GetAttributes", "GetPivot",
+    "PivotTo", "GetFullName", "IsDescendantOf", "GetPropertyChangedSignal",
+}
+INSTANCE_PROPS = {
+    "Name", "Parent", "ClassName", "Archivable", "Transparency", "Position", "Size",
+    "CFrame", "Anchored", "Color", "Material", "Visible",
+}
+
+
 def duck_type_members(members):
     """Infer a semantic Roblox/Luau name from the set of properties/methods accessed on a value."""
     if not members:
@@ -170,6 +182,10 @@ def duck_type_members(members):
         return "session"
     if m & {"tpOk", "inDim"} or ("cleanup" in m and len(m) >= 3):
         return "state"
+    # Anything else that answers the Instance API is an instance: a touched part,
+    # an egg from `DescendantAdded`, a child handed to a callback.
+    if len(m & INSTANCE_API) >= 2 or (m & INSTANCE_API and m <= INSTANCE_API | INSTANCE_PROPS):
+        return "instance"
     return None
 
 

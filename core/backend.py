@@ -214,8 +214,11 @@ def polish(text):
     try:
         import copies
         text, cp = copies.propagate(text)
-        if cp.get("inlined"):
-            print("[*] register copies: %d inlined" % cp["inlined"], file=sys.stderr)
+        if cp.get("inlined") or cp.get("temps"):
+            print("[*] registers: %d copy(ies) inlined, %d temporary(ies) folded, "
+                  "%d dead declaration(s) dropped"
+                  % (cp.get("inlined", 0), cp.get("temps", 0), cp.get("dropped", 0)),
+                  file=sys.stderr)
     except Exception as ex:
         print("[!] copy pass failed: %s" % ex, file=sys.stderr)
     # The u32 arithmetic a v15 build leaves behind is exact: folding it turns a

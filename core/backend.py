@@ -184,6 +184,19 @@ def polish(text):
         text = localfuncs.rewrite(text)
     except Exception as ex:  
         print("[!] pre-localfuncs pass failed: %s" % ex, file=sys.stderr)
+    # The u32 arithmetic a v15 build leaves behind is exact: folding it turns a
+    # state machine's seed chain into the constants it computes, which is what
+    # the control-flow passes need in order to see what a branch tests.
+    try:
+        import u32fold
+        folded, u32stats = u32fold.fold_text(text)
+        if u32stats.get("edits"):
+            print("[*] u32 fold: %d expression(s) -> constants (%d u32 call(s) left, was %d)"
+                  % (u32stats["edits"], u32stats.get("left", -1),
+                     len(u32fold._CALL_RE.findall(text))), file=sys.stderr)
+            text = folded
+    except Exception as ex:
+        print("[!] u32 fold pass failed: %s" % ex, file=sys.stderr)
     # Control flow the obfuscator flattened into a loop over constants is
     # unrolled first, then the AST cleanup drops the loop's dead prelude and
     # simplifies what the unrolling exposed -- twice, because the second round

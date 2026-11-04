@@ -118,6 +118,26 @@ the call -- and a `local x` nothing reads is dropped. On RideAPet that is 684
 copies inlined and 54 dead declarations gone, which is most of the `data2 =
 data3` traffic that made the lifted code hard to follow.
 
+What makes the fold safe is the list of things it refuses to do:
+
+* every read of the register must sit between the copy and the next write to it,
+  or after a *straight-line* refill in the same block. A read before the copy is
+  not dead weight: inside a loop it runs again after this very statement, and in
+  an `if`/`else` the other branch reaches it without the refill having happened;
+* a read inside a nested loop that also writes the register is left alone: it is
+  looking at what the previous pass through the body left there;
+* the read has to be in the copy's own block, and the name it is rewritten to has
+  to resolve to the same local there -- a `local a` declared in between would
+  make the new name mean something else;
+* a copy whose source is itself folded in the same round is deferred to the next
+  round, and a declaration is only removed when no statement names it any more
+  (dropping `local b` would turn a later `b = ...` into a write to an outer `b`).
+
+The dead-store pass follows the same rule for branches: the arms of an `if` are
+alternatives, so each is scanned from the same live-out and the results are
+unioned. Scanning one arm first used to let its stores mark the other arm's
+stores dead, which is how a register read after the `if` ended up nil.
+
 The pass runs before naming on purpose: a register that is one long chain of
 copies gets named after the value that started the chain, so `module.RarityRank`
 reads as the field it is instead of `module2.RarityRank`.
@@ -141,6 +161,25 @@ The names themselves come from what the value does, never from a guess: a table
 handed named functions is the script's `module`, a value answering the Instance
 API is an `instance`, and a register that is refilled with different kinds of
 value keeps the generic word instead of inheriting the first one's name.
+
+### How the text passes are tested
+
+Three kinds of check, because a compiler accepting the file says nothing about
+what it prints:
+
+* `test/copies.test.js`, `test/tidy.test.js`, `test/seeds.test.js` -- each case is
+  run under Luau before and after, so the two programs have to print the same
+  thing;
+* `test/passes_fuzz.test.js` -- generated programs full of register patterns
+  (copies, refills, loop back edges, branches, closures, nil stores) go through
+  the whole chain and are compared the same way, and the test also asserts the
+  corpus actually exercised the passes, so a green run cannot mean nothing was
+  tried;
+* `test/smoke.test.js` -- every file in `results/` is executed inside the same
+  stub environment the tracer uses (`scripts/smoke.js`, the runtime's own
+  `envlog.luau` harness). A register that lost its value shows up here as
+  `attempt to call a table value` or `attempt to index nil`, which is precisely
+  what the compile and free-variable gates cannot see.
 
 ## 2. Rules the engine does not break
 

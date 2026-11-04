@@ -93,6 +93,83 @@ def _scan(root):
     return writes, reads, names, order
 
 
+def _scope_index(root):
+    """Every block, with the locals its direct statements declare."""
+    scopes = []
+
+    def walk(node, inherited):
+        if isinstance(node, dict):
+            t = node.get("type")
+            if t == "AstStatBlock":
+                table = dict(inherited)
+                for stmt in node.get("body") or []:
+                    st = stmt.get("type")
+                    if st == "AstStatLocal":
+                        for v in stmt.get("vars") or []:
+                            table[v.get("name")] = v.get("location")
+                    elif st == "AstStatLocalFunction":
+                        nm = stmt.get("name") or {}
+                        table[nm.get("name")] = nm.get("location")
+                    elif st == "AstStatFor":
+                        var = stmt.get("var") or {}
+                        table[var.get("name")] = var.get("location")
+                    elif st == "AstStatForIn":
+                        for v in stmt.get("vars") or []:
+                            table[v.get("name")] = v.get("location")
+                s0, s1 = _pos(node["location"])
+                scopes.append((s0, s1, table))
+                for k, v in node.items():
+                    if k != "location":
+                        walk(v, table)
+                return
+            if t == "AstExprFunction":
+                params = {a.get("name"): a["location"] for a in node.get("args") or []}
+                for k, v in node.items():
+                    if k != "location":
+                        walk(v, params if k == "body" else inherited)
+                return
+            for k, v in node.items():
+                if k != "location":
+                    walk(v, inherited)
+        elif isinstance(node, list):
+            for x in node:
+                walk(x, inherited)
+
+    walk(root, {})
+    return scopes
+
+
+def _resolves(pos, name, key, scopes):
+    """Does `name` at this position mean the local `key` (and nothing else)?"""
+    best = None
+    for s0, s1, table in scopes:
+        if s0 <= pos <= s1 and name in table:
+            if best is None or (s1 - s0) < (best[1] - best[0]):
+                best = (s0, s1, table[name])
+    if best is None:
+        return False
+    return best[2] == key
+
+
+def _root_name(e):
+    while isinstance(e, dict):
+        t = e.get("type")
+        if t == "AstExprGlobal":
+            return e.get("name")
+        if t == "AstExprIndexName":
+            e = e.get("expr")
+            continue
+        return None
+    return None
+
+
+def _shadowed(pos, name, scopes):
+    for s0, s1, table in scopes:
+        if s0 <= pos <= s1 and name in table:
+            return True
+    return False
+
+
 def _pure_name(e):
     """A bare global, or a dotted path of them (`Color3.fromRGB`, `table.insert`)."""
     t = e.get("type")
@@ -153,7 +230,12 @@ def find_copies(text):
 
     def scan_block(block):
         body = block.get("body") or []
-        marks = [(_pos(stmt["location"])[0], _targets_of(stmt)) for stmt in body]
+        marks = []
+        for stmt in body:
+            s0, s1 = _pos(stmt["location"])
+            marks.append((s0, s1, _targets_of(stmt)))
+        blk_start = _pos(body[0]["location"])[0] if body else 0
+        blk_end = _pos(body[-1]["location"])[1] if body else 0
         for i, stmt in enumerate(body):
             if stmt.get("type") not in ("AstStatLocal", "AstStatAssign"):
                 continue
@@ -191,28 +273,115 @@ def find_copies(text):
                 if _pos(src_writes[0][0]["location"])[0] > here:
                     continue              # the source is assigned after the copy
             stop = None
-            for pos, targets in marks[i + 1:]:
-                if key in targets:
-                    stop = pos
+            stop_end = None
+            stop_simple = False
+            for j in range(i + 1, len(body)):
+                if key in marks[j][2]:
+                    stop, stop_end = marks[j][0], marks[j][1]
+                    # a straight-line store always runs once the copy has run; a
+                    # store inside an `if` may not, and the read after it would
+                    # still see the copied value
+                    stop_simple = not _child_blocks(body[j])
                     break
             reads_here = [_pos(node["location"])[0] for node, _f in reads.get(key, [])]
             if not reads_here:
                 continue                  # nothing to inline: deadstore's job
-            inside = [here < r and (stop is None or r < stop) for r in reads_here]
-            if not any(inside):
-                continue                  # nothing of this copy is used before the refill
-            # every read between the copy and the next write is substituted, and
-            # reads after that write see the refill, so the copy itself can go
+            # Every read has to be accounted for. It is either between the copy
+            # and the next write -- so it is substituted -- or after a plain
+            # straight-line write, which refills the register no matter what.
+            # A read before the copy is not dead weight: inside a loop it runs
+            # again after this very statement, and in an `if`/`else` the other
+            # branch reaches it without the refill having happened, so the read
+            # would see nil where the program expects the value from last time.
+            # ... and it has to be in this block: a copy inside an `if` branch
+            # only happens when that branch runs, so a read outside it may see
+            # whatever the register held before.
+            # A read inside a loop that also writes this register is looking at
+            # what the previous pass through the body left there, not at the copy.
+            loops = []
+            for j in range(i + 1, len(body)):
+                stmt_j = body[j]
+                if stmt_j.get("type") not in ("AstStatFor", "AstStatWhile", "AstStatRepeat"):
+                    continue
+                if key in _targets_of(stmt_j):
+                    s0, s1 = _pos(stmt_j["location"])
+                    loops.append((s0, s1))
+            ok = []
+            for r in reads_here:
+                if any(s0 <= r <= s1 for s0, s1 in loops):
+                    ok.append(None)
+                elif not (blk_start <= r <= blk_end):
+                    ok.append(None)
+                elif here < r and (stop is None or r < stop):
+                    ok.append(True)         # before the refill: it is the copy
+                elif stop is not None and stop <= r <= stop_end:
+                    ok.append(True)         # the refill's own right-hand side
+                elif stop is not None and stop_simple:
+                    ok.append(False)        # the refill always overwrote it
+                else:
+                    ok.append(None)
+            # The substituted name has to mean the same thing at the read: a
+            # `local a` declared in between would make the new name refer to a
+            # different variable.
+            scopes = _scope_index(root)
+            if src[0] == "local":
+                src_name = names.get(src[1])
+                for idx, r in enumerate(reads_here):
+                    if ok[idx] is True and not _resolves(r, src_name, src[1], scopes):
+                        ok[idx] = None
+            else:
+                src_name = _root_name(value)
+                for idx, r in enumerate(reads_here):
+                    if ok[idx] is True and _shadowed(r, src_name, scopes):
+                        ok[idx] = None
+            if any(x is None for x in ok):
+                continue
             is_decl = stmt.get("type") == "AstStatLocal"
-            writes_later = any(key in targets for _pos2, targets in marks[i + 1:])
-            keep_decl = is_decl and writes_later
-            plan.append((stmt, key, src, keep_decl, [r for r, ok in zip(reads_here, inside) if ok]))
+            writes_later = any(key in t for _p, _e, t in marks[i + 1:])
+            # a read that stays behind still names the register, so its
+            # declaration has to stay too -- dropping it would make that read
+            # resolve to an outer variable of the same name
+            keep_decl = is_decl and (writes_later or any(x is False for x in ok))
+            plan.append((stmt, key, src, keep_decl, [r for r, k in zip(reads_here, ok) if k]))
         for stmt in body:
             for child in _child_blocks(stmt):
                 scan_block(child)
 
     scan_block(root)
+    # A copy whose source is itself folded in this round would leave the name it
+    # writes pointing at a declaration that is about to disappear; the next round
+    # picks these up once the source is gone.
+    changed = True
+    while changed:
+        changed = False
+        gone = {entry[1] for entry in plan}
+        kept = [entry for entry in plan
+                if not (entry[2][0] == "local" and entry[2][1] in gone)]
+        if len(kept) != len(plan):
+            plan, changed = kept, True
     return root, plan
+
+
+def _inner_blocks(stmt, starts):
+    """Source span of every block nested inside this statement."""
+    import ast_polish
+
+    spans = []
+
+    def walk(node, top):
+        if isinstance(node, dict):
+            if node is not top and node.get("type") == "AstStatBlock":
+                spans.append(ast_polish._loc_bytes(node["location"], starts))
+                return
+            for k, v in node.items():
+                if k != "location":
+                    walk(v, top)
+        elif isinstance(node, list):
+            for x in node:
+                walk(x, top)
+
+    walk(stmt, stmt)
+    return spans
 
 
 def _child_blocks(stmt):
@@ -328,6 +497,11 @@ def inline_temps(text, rounds=3):
                 rs_, re_ = ast_polish._loc_bytes(rnode["location"], starts)
                 if not (ns <= rs_ and re_ <= ne):
                     continue                  # used somewhere further down
+                # ... and in the statement itself, not in a block it owns: moving
+                # a call into the body of an `if` would stop it running whenever
+                # the branch is not taken.
+                if any(bs <= rs_ and re_ <= be for bs, be in _inner_blocks(nxt, starts)):
+                    continue
                 value = vals[0]
                 if value.get("type") not in _ATOMIC:
                     continue
@@ -358,7 +532,7 @@ def drop_unused_decls(text):
         root = ast_polish._parse_ast(text)
     except Exception:
         return text, 0
-    _writes, reads, _names, _order = _scan(root)
+    writes, reads, _names, _order = _scan(root)
     btext = text.encode("utf-8")
     starts = ast_polish._line_starts(btext)
     edits = []
@@ -369,7 +543,11 @@ def drop_unused_decls(text):
         if isinstance(node, dict):
             if node.get("type") == "AstStatLocal" and not (node.get("values") or []):
                 vars_ = node.get("vars") or []
-                keep = [v for v in vars_ if reads.get(v["location"])]
+                # A declaration may only go when the name is not written again
+                # either: dropping `local b` would turn a later `b = ...` into a
+                # write to an outer `b`.
+                keep = [v for v in vars_
+                        if reads.get(v["location"]) or len(writes.get(v["location"]) or []) > 1]
                 if not keep:
                     s0, e0 = ast_polish._loc_bytes(node["location"], starts)
                     s0, e0 = ast_polish._expand_full_line_delete(btext, s0, e0)

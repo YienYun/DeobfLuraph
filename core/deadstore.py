@@ -206,7 +206,20 @@ def find_dead(text):
         for stmt in reversed(body):
             head = set()
             _reads_head(stmt, head)      # a loop's condition runs after its body
-            for child in reversed(nested_blocks(stmt)):
+            kids = nested_blocks(stmt)
+            if stmt.get("type") == "AstStatIf" and len(kids) > 1:
+                # The branches are alternatives, not a sequence: one branch
+                # storing to a local says nothing about whether the code after
+                # the statement needs the value the *other* branch left there.
+                # Scan each from the same live-out and take the union, including
+                # the fall-through path when there is no `else`.
+                base = set(live) | head
+                out = set(base)
+                for child in kids:
+                    out |= scan(child, set(base), sink)
+                live = out
+                kids = []
+            for child in reversed(kids):
                 if stmt.get("type") in LOOP_STAT:
                     cur = live | head
                     while True:          # the body's live-in is its own live-out

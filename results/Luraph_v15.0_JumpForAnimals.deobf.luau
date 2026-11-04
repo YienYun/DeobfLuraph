@@ -776,20 +776,52 @@ do
 	local modelMap = {}
 
 	local function callback5(argument)
-		local data4 = {}
+		local list3 = {}
+		local now = os.clock()
 		local value6, value7, value8 = ipairs(module.EggFolders())
 
 		for _, instance in value7, value8 do
 			local value9, value10, value11 = ipairs(instance:GetChildren())
+
 			for _, instance2 in value10, value11 do
 				local instance3 = instance2:IsA("Model") and module.EggRoot(instance2)
+				local modelEntry = modelMap[instance2]
+				local condition
 				if instance3 then
+					local modelEntry2 = modelEntry and modelEntry > now
+					condition = not modelEntry2
 				else
+					condition = instance3
+				end
+				condition = condition and module.EggPrompt(instance2)
+
+				if condition then
+					local instance4 = module.EggRank(instance2)
+					local condition2 = instance4 >= number
+					local condition3
+					if condition2 then
+						condition2 = next(data3) == nil
+						condition3 = condition2 or data3[instance2.Name]
+					else
+						condition3 = condition2
+					end
+					condition3 = condition3 and module.CanSteal(instance2)
+
+					if condition3 then
+						table.insert(list3, {
+							Model = instance2,
+							Folder = instance,
+							Root = instance3,
+							Rank = instance4,
+							Value = module.EggValue(instance2),
+							Distance = (instance3.Position - argument).Magnitude,
+						})
+					end
 				end
 			end
 		end
 
-		table.sort(data4, function(argument2, argument3)
+		table.sort(list3, function(argument2, argument3)
 			if text2 == nameList[3] then
 				return argument2.Distance < argument3.Distance
 			end
@@ -804,7 +836,7 @@ do
 			return argument2.Distance < argument3.Distance
 		end)
 
-		return data4
+		return list3
 	end
 
 	module2.Deliver = function(argument)
@@ -1978,12 +2010,18 @@ do
 					local text3, action, text4, text5
 
 					if kMap2[value31] or module2.Carried[value31] then
+						text3 = text2 .. "  |  In basket"
 						action = nil
 						text4 = "Bringing"
 						text5 = "Off"
 					elseif module2.Target == value31 then
 						text3 = text2 .. "  |  Stealing..."
-						if not module2.TargetManual then
+
+						if module2.TargetManual then
+							action = "Cancel"
+							text4 = "Cancel"
+							text5 = "Stop"
+						else
 							action = nil
 							text4 = "Stealing"
 							text5 = "Off"
@@ -1992,10 +2030,17 @@ do
 						if value32 then
 							text2 ..= string.format("  |  %dm", math.floor(value32.Distance))
 						end
+						local pos = table.find(module2.Manual, value31)
 
-						if table.find(module2.Manual, value31) then
+						if pos then
+							text3 = text2 .. "  |  Queued #" .. pos
+							action = "Cancel"
+							text4 = "Cancel"
+							text5 = "Stop"
 						elseif value32 and not value32.Can then
 							text4 = string.format("Need %d JP", math.ceil(module.EggNeed(value31) - module.StealGrace()))
+							action = nil
+							text5 = "Off"
 							text3 = text2
 						else
 							action = "Steal"
@@ -2170,20 +2215,22 @@ do
 		local value5, value6, value7 = ipairs(assets:GetChildren())
 		local number6 = -1
 		local number7 = -1
+		local instance = nil
 
-		for _, instance in value6, value7 do
-			if instance:IsA("Model") then
-				local name = module.AnimalData(instance.Name)
+		for _, instance2 in value6, value7 do
+			if instance2:IsA("Model") then
+				local name = module.AnimalData(instance2.Name)
 				local name2 = name and module.RarityRank[tostring(name.Rarity)] or 0
 				name = name and tonumber(name.CashPerSecond) or 0
 				if name2 > number6 or name2 == number6 and name > number7 then
 					number6 = name2
 					number7 = name
+					instance = instance2
 				end
 			end
 		end
 
-		return r4_1
+		return instance
 	end
 
 	local function callback23()
@@ -2578,20 +2625,22 @@ do
 		if not (not instance or not value5) then
 			local value6, value7, value8 = ipairs(callback8(argument2))
 			local number = -math.huge
+			local name = nil
 			local data3 = nil
 
 			for _, value9 in value7, value8 do
-				local name = value9.Name
+				local name2 = value9.Name
 				local settings_2 = value9.Settings or {}
-				local value10 = instance:FindFirstChild(name)
+				local value10 = instance:FindFirstChild(name2)
 				local number2 = tonumber(settings_2.Order) or 0
 
 				if value10 and value10.Value then
 					if number2 > number then
 						number = number2
+						name = name2
 					end
 				elseif not data3 then
-					data3 = { Name = name, Cost = tonumber(settings_2.Cost) or math.huge }
+					data3 = { Name = name2, Cost = tonumber(settings_2.Cost) or math.huge }
 				end
 			end
 
@@ -2606,8 +2655,8 @@ do
 				task.wait(1)
 				return
 			end
-			if r23_2 and value5.Value ~= r23_2 then
-				module.Fire(argument3, "Select", r23_2)
+			if name and value5.Value ~= name then
+				module.Fire(argument3, "Select", name)
 				task.wait(1)
 			end
 		end
@@ -2702,14 +2751,17 @@ do
 			for _, value9 in value7, value8 do
 				if not (not condition2 or not data2.Toggle(autoSellPetsToggle, false)) then
 					local condition3 = value9.Kind == "Pet" and value9.Sellable ~= false and value9.Equipped ~= true and value9.LockedInIncubator ~= true and value9.LockedInMutationMachine ~= true and data4[tostring(value9.Rarity)] and not data5[tostring(value9.Name)] and not module2.Reserved[tostring(value9.Name)]
+					local condition4
 					if condition3 then
-						r5_3 = not (keepMutatedPetsToggle2 and callback10(value9))
+						condition4 = not (keepMutatedPetsToggle2 and callback10(value9))
+					else
+						condition4 = condition3
 					end
-					if condition3 then
-						r5_3 = (tonumber(value9.CashPerSecond) or 0) <= huge
+					if condition4 then
+						condition4 = (tonumber(value9.CashPerSecond) or 0) <= huge
 					end
-					r5_3 = condition3 and nameMap[value9.Name] ~= value9
-					if condition3 and type(value9.Id) == "string" then
+					condition4 = condition4 and nameMap[value9.Name] ~= value9
+					if condition4 and type(value9.Id) == "string" then
 						module.Fire("PetInventory", "Sell", value9.Id)
 						number += 1
 						task.wait(0.35)
@@ -2843,23 +2895,25 @@ do
 		end
 		local value2, value3, value4 = pairs(argument)
 		local k = nil
+		local k2 = nil
 
-		for k2, value5 in value3, value4 do
-			if #value5 >= argument2 and (next(data3) == nil or data3[k2]) then
-				local k3 = module.AnimalData(k2)
-				k3 = k3 and tonumber(k3.CashPerSecond) or 0
+		for k3, value5 in value3, value4 do
+			if #value5 >= argument2 and (next(data3) == nil or data3[k3]) then
+				local k4 = module.AnimalData(k3)
+				k4 = k4 and tonumber(k4.CashPerSecond) or 0
 				if text2 == nameList2[2] then
-					k3 = #value5
+					k4 = #value5
 				elseif text2 ~= nameList2[3] then
-					k3 = -k3
+					k4 = -k4
 				end
-				if not k or k3 > k then
-					k = k3
+				if not k or k4 > k then
+					k = k4
+					k2 = k3
 				end
 			end
 		end
 
-		return r2_1
+		return k2
 	end
 
 	local function callback10(argument)
@@ -3079,18 +3133,19 @@ do
 
 			for _, instance2 in value6, value7 do
 				local value8, value9, value10 = ipairs(instance2:GetDescendants())
-				local value11 = nil
+				local instance3 = nil
 
-				for _, instance3 in value9, value10 do
-					if instance3:IsA("ProximityPrompt") and instance3.Name == "DigPrompt" then
+				for _, instance4 in value9, value10 do
+					if instance4:IsA("ProximityPrompt") and instance4.Name == "DigPrompt" then
+						instance3 = instance4
 						break
 					else
-						value11 = nil
+						instance3 = nil
 					end
 				end
 
 				local modelEntry = modelMap[instance2]
-				local enabled = value11 and value11.Enabled
+				local enabled = instance3 and instance3.Enabled
 				if enabled then
 					enabled = not (modelEntry and modelEntry > now)
 				end
@@ -3101,8 +3156,8 @@ do
 				if enabled and callback12(instance2) <= module.JumpPower() + module.StealGrace() then
 					table.insert(list, {
 						Model = instance2,
-						Prompt = value11,
-						Point = callback11(value11),
+						Prompt = instance3,
+						Point = callback11(instance3),
 						Fragments = tonumber(instance2:GetAttribute("Fragments")) or 0,
 					})
 				end
@@ -4039,12 +4094,18 @@ do
 		local valueMap = { Ready = 0, Growing = 0, Inventory = 0 }
 		local value2, value3, value4 = ipairs(argument)
 		local number18 = 0
-		for _, value5 in value3, value4 do
-			local status = value5.Status
+		local value5 = nil
+
+		for _, value6 in value3, value4 do
+			local status = value6.Status
 			valueMap[status] = valueMap[status] + 1
-			number18 += value5.Income
+			number18 += value6.Income
+			if not value5 or value6.Income > value5.Income then
+				value5 = value6
+			end
 		end
-		return bold(paint(color.Text, tostring(#argument) .. " eggs")) .. module3.Separator() .. bold(paint(color.Ready, valueMap.Ready .. " ready")) .. module3.Separator() .. bold(paint(color.Growing, valueMap.Growing .. " growing")) .. module3.Separator() .. bold(paint(color.Inventory, valueMap.Inventory .. " in bag")) .. module3.Separator() .. paint(color.Text, "Total") .. " " .. bold(paint(color.Income, module3.FormatRate(number18))), r3_1
+
+		return bold(paint(color.Text, tostring(#argument) .. " eggs")) .. module3.Separator() .. bold(paint(color.Ready, valueMap.Ready .. " ready")) .. module3.Separator() .. bold(paint(color.Growing, valueMap.Growing .. " growing")) .. module3.Separator() .. bold(paint(color.Inventory, valueMap.Inventory .. " in bag")) .. module3.Separator() .. paint(color.Text, "Total") .. " " .. bold(paint(color.Income, module3.FormatRate(number18))), value5
 	end
 
 	local function callback20(argument, argument2)
@@ -4156,6 +4217,7 @@ do
 
 				for _, value9 in value7, value8 do
 					if value9.Id == id then
+						value5 = value9
 						break
 					else
 						value5 = nil
@@ -4175,6 +4237,7 @@ do
 
 			if #list2 == 0 then
 				registerItem2(paint(color.Hint, #value2 == 0 and "No eggs yet" or string.format("No results for \"%s\"", module3.Escape(text2))), false)
+				number19 = 0
 			else
 				local value9, value10, value11 = ipairs(data3)
 				number19 = 0
@@ -4536,10 +4599,13 @@ do
 			connection4 = nil
 		end
 		local firstChild = findFirstChild()
+		local condition3
 		if firstChild then
-			r9 = (tonumber(firstChild:GetAttribute("GuardStunnedUntil")) or 0) >= number3
+			condition3 = (tonumber(firstChild:GetAttribute("GuardStunnedUntil")) or 0) >= number3
+		else
+			condition3 = firstChild
 		end
-		if firstChild then
+		if condition3 then
 			firstChild:SetAttribute("GuardStunnedUntil", 0)
 		end
 	end
@@ -5128,6 +5194,7 @@ end
 
 			if not (ok and type(text2) == "string" and text2 ~= "") then
 				local value3, value4, value5 = ipairs({ "Get", "GetValue", "GetText" })
+				local exitTo = nil
 
 				for _, value6 in value4, value5 do
 					local ok2, response2 = pcall(function()
@@ -5138,14 +5205,19 @@ end
 						local ok3
 						ok3, text2 = pcall(response2, jobIdInput)
 						if ok3 and type(text2) == "string" and text2 ~= "" then
+							exitTo = 1
 							break
 						end
 					end
 				end
+
+				if exitTo ~= 1 then
+					text2 = text
+				end
 			end
 		end
 
-		local value3 = callback13(text)
+		local value3 = callback13(text2)
 
 		if value3 == "" then
 			local ok, response = pcall(function()
@@ -5443,9 +5515,11 @@ do
 
 	local function callback12()
 		if not (not condition2 or #descendants == 0) then
+			local now = os.clock()
+
 			while #descendants > 0 do
 				callback9(table.remove(descendants))
-				if not (number2 < os.clock() - os.clock()) then
+				if not (number2 < os.clock() - now) then
 					continue
 				end
 				break
@@ -5608,12 +5682,11 @@ do
 		if not uiScale then
 			return
 		end
-		local currentCamera = workspace.CurrentCamera
-		currentCamera = currentCamera and currentCamera.ViewportSize or Vector2.new(1280, 720)
-		if currentCamera.X < 1 then
-			currentCamera = Vector2.new(1280, 720)
+				local viewportSize = workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize or Vector2.new(1280, 720)
+		if viewportSize.X < 1 then
+			viewportSize = Vector2.new(1280, 720)
 		end
-		uiScale.Scale = math.clamp(currentCamera.X * number3 / number2, 0.7, 1.4) * number6
+		uiScale.Scale = math.clamp(viewportSize.X * number3 / number2, 0.7, 1.4) * number6
 	end
 
 	local function disconnectAll()
@@ -5714,17 +5787,20 @@ do
 		local position = nil
 
 		connections[#connections + 1] = frame.InputBegan:Connect(function(input2)
-			local condition4
-			if not condition3 then
-				condition4 = input2.UserInputState ~= Enum.UserInputState.Begin
+			local condition = condition3
+			local condition2
+			if condition3 then
+				condition2 = condition
+			else
+				condition2 = input2.UserInputState ~= Enum.UserInputState.Begin
 			end
 
-			if not condition4 then
-				local condition5 = input2.UserInputType == Enum.UserInputType.Touch
+			if not condition2 then
+				local condition4 = input2.UserInputType == Enum.UserInputType.Touch
 
-				if not (not (input2.UserInputType == Enum.UserInputType.MouseButton1) and not condition5) then
+				if not (not (input2.UserInputType == Enum.UserInputType.MouseButton1) and not condition4) then
 					condition3 = true
-					input = condition5 and input2 or nil
+					input = condition4 and input2 or nil
 					vector2Zero = Vector2.new(input2.Position.X, input2.Position.Y)
 					position = frame.Position
 					return
@@ -6233,12 +6309,11 @@ do
 		if not uiScale then
 			return
 		end
-		local currentCamera = workspace.CurrentCamera
-		currentCamera = currentCamera and currentCamera.ViewportSize or Vector2.new(1280, 720)
-		if currentCamera.X < 1 then
-			currentCamera = Vector2.new(1280, 720)
+				local viewportSize = workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize or Vector2.new(1280, 720)
+		if viewportSize.X < 1 then
+			viewportSize = Vector2.new(1280, 720)
 		end
-		uiScale.Scale = math.clamp(currentCamera.X * number3 / number2, 0.7, 1.4)
+		uiScale.Scale = math.clamp(viewportSize.X * number3 / number2, 0.7, 1.4)
 	end
 
 	local function disconnectAll()

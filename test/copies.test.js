@@ -137,3 +137,49 @@ print(t)
 `;
   assert.match(clean(src), /local t = f\(\)/);
 });
+
+test('a copy a loop re-reads on its next pass is kept', () => {
+  const src = `local source = { X = 5 }
+local a
+for i = 1, 3 do
+	local seen = a
+	if seen then
+		print(seen.X)
+	end
+	a = source
+	print(a.X)
+end
+`;
+  assert.match(clean(src), /a = source/);
+  assert.equal(luau(clean(src)), luau(src));
+});
+
+test('a copy one branch reads without the other writing is kept', () => {
+  const src = `local source = { X = 1 }
+local a = source
+if math.random() > 2 then
+	a = { X = 9 }
+else
+	print(a.X)
+end
+`;
+  const out = clean(src);
+  assert.equal(luau(out), luau(src));
+});
+
+test('a temporary is not moved into a branch it did not run in', () => {
+  const src = `local calls = 0
+local function f()
+	calls += 1
+	return 1
+end
+local t = f()
+if false then
+	print(t)
+end
+print(calls)
+`;
+  const out = clean(src);
+  assert.match(out, /local t = f\(\)/);
+  assert.equal(luau(out), luau(src));
+});

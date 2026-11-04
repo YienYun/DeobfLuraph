@@ -1983,7 +1983,7 @@ do
 						text5 = "Off"
 					elseif module2.Target == value31 then
 						text3 = text2 .. "  |  Stealing..."
-						if not (module2.TargetManual) then
+						if not module2.TargetManual then
 							action = nil
 							text4 = "Stealing"
 							text5 = "Off"
@@ -5715,7 +5715,7 @@ do
 
 		connections[#connections + 1] = frame.InputBegan:Connect(function(input2)
 			local condition4
-			if not (condition3) then
+			if not condition3 then
 				condition4 = input2.UserInputState ~= Enum.UserInputState.Begin
 			end
 

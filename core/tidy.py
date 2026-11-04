@@ -112,6 +112,11 @@ def strip_groups(text):
                 for side in ("left", "right"):
                     if _is_group(node.get(side)):
                         fold_operand(node[side], node, side)
+            elif t == "AstExprUnary":
+                inner = node.get("expr")
+                # `not (x)` is `not x`; `not (a == b)` is not `not a == b`
+                if _is_group(inner) and inner["expr"].get("type") in ATOMIC:
+                    mark(inner, False)
             elif t == "AstExprIndexExpr":
                 for k in ("expr", "index"):
                     if _is_group(node.get(k)):

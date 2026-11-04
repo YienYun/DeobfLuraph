@@ -475,12 +475,12 @@ local function callback7()
 	nameList = nil
 
 	nameList, module.EggHeavyEnough = module, function(argument, argument2)
-		if not (argument2) then
+		if not argument2 then
 			argument2 = module.MinEggWeight
 		end
 		local condition2 = argument2 <= 0
 		local condition3
-		if not (condition2) then
+		if not condition2 then
 			condition3 = module.EggShownWeight(argument) >= argument2
 		end
 		return condition3
@@ -789,7 +789,7 @@ local function callback7()
 		local value3, number, module2 = nil, math.max(vector.Y, vector2.Y) + module.CruiseHeight, module
 		local vector3 = module2.InVolcanoArea(vector)
 		module2 = nil
-		if not (vector3) then
+		if not vector3 then
 			module2 = module.InVolcanoArea(vector2)
 		end
 		number = if module2 then math.max(number, callback8().Center.Y + 60) else number
@@ -966,7 +966,7 @@ local function callback7()
 	rarityColors, module.VolcanoApproach = module, function(argument, argument2, argument3)
 		local condition2 = localPlayer:GetAttribute("InVolcano") ~= true
 		local condition3
-		if not (condition2) then
+		if not condition2 then
 			condition3 = localPlayer:GetAttribute("VolcanoValidated") ~= true
 		end
 
@@ -1163,7 +1163,7 @@ local function callback10()
 
 			if condition2 then
 				k = attribute3 == nil
-				if not (k) then
+				if not k then
 					condition3 = attribute3 == localPlayer.UserId
 				end
 			else
@@ -1173,7 +1173,7 @@ local function callback10()
 			condition2, k = condition3 and not (nameEntry and nameEntry > now) and not callback11(attribute)
 
 			if condition2 then
-				if not (number4) then
+				if not number4 then
 					k = module.EggHeavyEnough(instance:GetAttribute("Weight"))
 				end
 			else
@@ -1262,7 +1262,7 @@ local function callback10()
 
 			if condition2 then
 				k = argument == nil
-				if not (k) then
+				if not k then
 					condition3 = argument == localPlayer.UserId
 				end
 			else
@@ -1488,7 +1488,7 @@ local function callback10()
 
 			if moduleMap2 then
 				local condition3 = attribute3 == nil
-				if not (condition3) then
+				if not condition3 then
 					condition2 = attribute3 == localPlayer.UserId
 				end
 			else
@@ -1650,7 +1650,7 @@ local function callback10()
 				module2 = module.VolcanoApproach
 			end
 			moduleMap2 = nil
-			if not (moduleMap) then
+			if not moduleMap then
 				moduleMap2 = module.FlyTo
 			end
 			module2, condition3 = moduleMap.InstantOn
@@ -1664,7 +1664,7 @@ local function callback10()
 			local function callback16()
 				local condition5 = argument() or value5.Config.Parent == nil
 				local condition6
-				if not (condition5) then
+				if not condition5 then
 					condition6 = moduleMap.Dropped == name
 				end
 				return condition6
@@ -1987,7 +1987,7 @@ local function callback10()
 
 		local petMountJoint = callback20(localPlayer:FindFirstChildOfClass("Backpack"))
 		character = nil
-		if not (petMountJoint) then
+		if not petMountJoint then
 			character = callback20(localPlayer.Character)
 		end
 		if character then
@@ -2402,7 +2402,7 @@ local function callback12()
 	local function callback14()
 		local value4, number = nil, tonumber(localPlayer:GetAttribute("MaxPets"))
 		local number2
-		if not (number) then
+		if not number then
 			number2 = tonumber(module.Saved("MaxPets"))
 		end
 		number = number2 or 5
@@ -2489,7 +2489,7 @@ local function callback12()
 		for i = 1, value4, 1 do
 			i = _()
 			local instance
-			if not (i) then
+			if not i then
 				instance = not moduleMap.PlaceWanted()
 			end
 			if instance then
@@ -2545,7 +2545,7 @@ local function callback12()
 			local condition3 = (k and tonumber(k.Value) or 1) > 0
 			if condition3 then
 				condition2 = next(data3) == nil
-				if not (condition2) then
+				if not condition2 then
 					k = data3
 				end
 			end
@@ -2663,7 +2663,7 @@ local function callback13()
 		local condition4
 		local value3 = moduleMap.AutoOn()
 		condition4 = nil
-		if not (value3) then
+		if not value3 then
 			condition4 = #moduleMap.Manual > 0
 		end
 		return condition4
@@ -2681,22 +2681,22 @@ local function callback13()
 		local hatch
 		local value3 = moduleMap.CollectActive() or callback14()
 		local plant, value4
-		if not (value3) then
+		if not value3 then
 			local data = data2
 			plant = data.Toggle(moduleMap.Plant, false)
 		end
 		hatch = nil
-		if not (plant) then
+		if not plant then
 			local data = data2
 			hatch = data.Toggle(moduleMap.Hatch, false)
 		end
 		plant = nil
-		if not (hatch) then
+		if not hatch then
 			local data = data2
 			plant = data.Toggle(moduleMap.Place, false)
 		end
 		hatch = nil
-		if not (plant) then
+		if not plant then
 			local data = data2
 			hatch = data.Toggle(moduleMap.Feed, false)
 		end
@@ -2712,7 +2712,7 @@ local function callback13()
 		local function callback18()
 			local value3 = callback16()
 			local condition4
-			if not (value3) then
+			if not value3 then
 				condition4 = not data2.Toggle(argument, false)
 			end
 			return condition4
@@ -2803,7 +2803,7 @@ local function callback13()
 						number2, value4 = u32Trunc(number3 + (u32Mul(3243753258, (bit32.bor(number2, 279668649))) + u32Mul(3243753256, (bit32.band(number2, 279668649))))), collectStep(function()
 							local value5 = callback16()
 							local condition8
-							if not (value5) then
+							if not value5 then
 								condition8 = not moduleMap.CollectActive()
 							end
 							return condition8
@@ -2999,7 +2999,7 @@ local function callback14()
 
 			open.Activated:Connect(function()
 				local value3, pos = nil, table.find(moduleMap.Manual, argument)
-				if not (pos) then
+				if not pos then
 					local condition5 = moduleMap.Target == argument
 					if condition5 then
 						KE = moduleMap.TargetManual
@@ -3895,7 +3895,7 @@ local function callback17()
 	local connection = heartbeat:Connect(function()
 		local vector = not data2.Toggle(speedBoostToggle, false)
 		local busy
-		if not (vector) then
+		if not vector then
 			busy = moduleMap.Busy
 		end
 		if busy then
@@ -4648,7 +4648,7 @@ local function callback23()
 
 		eggs = data4.Filter == eggsList[1]
 
-		if not (eggs) then
+		if not eggs then
 			children = data4.Filter == eggsList[2]
 
 			if children then
@@ -5067,7 +5067,7 @@ local function callback23()
 		local connection = RunService.Heartbeat:Connect(function(deltaTime)
 			local instance2 = not configMap.Container
 			local condition3
-			if not (instance2) then
+			if not instance2 then
 				condition3 = not configMap.Container:IsDescendantOf(game)
 			end
 			if condition3 then
@@ -5284,7 +5284,7 @@ local function callback24()
 		end
 
 		hopAvoid = callback31(2, true)
-		hopAvoid = if #(if #(if #hopAvoid == 0 then callback31(1, true) else hopAvoid) == 0 then callback31(2, false) else if #hopAvoid == 0 then callback31(1, true) else hopAvoid) == 0 then callback31(1, false) else if #(if #hopAvoid == 0 then callback31(1, true) else hopAvoid) == 0 then callback31(2, false) else if #hopAvoid == 0 then callback31(1, true) else hopAvoid
+		hopAvoid = if #if #if #hopAvoid == 0 then callback31(1, true) else hopAvoid == 0 then callback31(2, false) else if #hopAvoid == 0 then callback31(1, true) else hopAvoid == 0 then callback31(1, false) else if #if #hopAvoid == 0 then callback31(1, true) else hopAvoid == 0 then callback31(2, false) else if #hopAvoid == 0 then callback31(1, true) else hopAvoid
 		if #hopAvoid == 0 and next(argumentMap) ~= nil then
 			table.clear(argumentMap)
 			hopAvoid = (callback31(1))
@@ -5606,7 +5606,7 @@ local function callback25()
 		local fired, number3, fired2 = data3.Fired, u32Mul(466996281, value) + 425834795
 		fired2 = fired or data3.Option == nil
 		number3 = nil
-		if not (fired2) then
+		if not fired2 then
 			number3 = not data2.Toggle(data3.Option, false)
 		end
 		if number3 or callback26() then
@@ -6208,7 +6208,7 @@ local function callback27()
 	local function callback32()
 		local condition2 = module.BasketCount() > 0
 		local condition3
-		if not (condition2) then
+		if not condition2 then
 			condition3 = moduleMap.Target ~= nil
 		end
 		return condition3
@@ -6316,7 +6316,7 @@ local function callback27()
 			local condition2, module2 = false, module
 			local condition3 = not module2.Root()
 			local condition4
-			if not (condition3) then
+			if not condition3 then
 				condition4 = not module.Plot()
 			end
 
@@ -6368,7 +6368,7 @@ local function callback27()
 										text4, text5, now = "Night is about to start, staying here", "night", nil
 									else
 										if callback37(1) and not callback30() then
-											if not (callback36()) then
+											if not callback36() then
 												text4, text5 = "Turn on Auto Collect Eggs, hopping starts after it collects a matching egg", "wait"
 											end
 										else
@@ -6542,7 +6542,7 @@ local function callback27()
 			local best = survey and survey.Best or nil
 			local condition6 = not best
 			local condition7
-			if not (condition6) then
+			if not condition6 then
 				condition7 = data2.Toggle(data3.Handle, false) ~= true
 			end
 			if condition7 then
@@ -6834,7 +6834,7 @@ local function callback27()
 	local function callback46()
 		local condition = condition2
 		local condition4
-		if not (condition) then
+		if not condition then
 			condition4 = type(moduleMap.CollectFilters) ~= "function"
 		end
 		if condition4 then
@@ -7840,7 +7840,7 @@ local function callback32()
 	local httpRequest = syn
 	httpRequest = httpRequest and syn.request
 	local httpRequest2
-	if not (httpRequest) then
+	if not httpRequest then
 		httpRequest2 = http and http.request
 	end
 	local httpRequest3 = httpRequest2 or http_request

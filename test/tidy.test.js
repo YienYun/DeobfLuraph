@@ -82,3 +82,11 @@ print(count(two()), count((two())))
   const out = same(src);
   assert.match(out, /count\(\(two\(\)\)\)/);
 });
+
+test('a bare negation loses the brackets but a comparison keeps them', () => {
+  const out = same(`local flag = false
+print(not (flag), not (1 == 2))
+`);
+  assert.match(out, /not flag/);
+  assert.match(out, /not \(1 == 2\)/);
+});

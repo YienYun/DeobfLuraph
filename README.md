@@ -132,6 +132,7 @@ DeobfLuraph/
 │   ├── names.py            # Context-aware identifier naming
 │   ├── idioms.py           # Idiom folding (table.move, SETLIST, chains)
 │   ├── ast_polish.py       # Source cleanup after printing
+│   ├── flatten.py          # Unrolls constant-state dispatch loops
 │   ├── codegen.py          # Luau emitter
 │   ├── backend.py          # The lowering pipeline, in order
 │   └── obfuscators/        # luraph_v15/ luraph_v14/ luarmor/

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "input": "/home/user/DeobfLuraph/fixtures/input/392628e9da400b8a.lua",
   "output": "/home/user/DeobfLuraph/results/Luraph_v15.0_392628e9da400b8a.deobf.luau",
-  "output_sha256": "0532251083918dcd7202e95e0d707323e254e22bb899477843207f5e5c56f69d",
+  "output_sha256": "04bd059b8e1fb3ae75e6659a6f906b3a5263fec0df099e62bf4c1fc23bc625c6",
   "output_bytes": 715,
   "obfuscator": "luraph_v15",
   "engine": "Luraph v15",

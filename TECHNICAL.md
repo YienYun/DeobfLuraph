@@ -24,6 +24,37 @@ A lift runs in rounds: `devirt round N` walks and collects the constants it coul
 not decode, the sandbox decodes them, and the next round lifts again. Rounds stop
 when a full lift asks for nothing new.
 
+`polish` alternates two passes twice: `core/flatten.py` and the AST cleanup
+(`core/ast_polish.py`). The flattener is what turns the obfuscator's control-flow
+flattening back into straight-line code. Luraph encodes it as a loop over a
+constant range that dispatches on the counter:
+
+```lua
+local step, limit, counter = 67, 143, 76 - 67
+while true do
+    counter += step
+    ...                          -- the numeric-`for` break checks
+    local state = counter
+    if state ~= 115 then ... else ... end
+end
+```
+
+Nothing in that is unknown: the loop visits 76 then 143, so `state` is 76 on the
+first pass and 143 on the second, and each branch is decided by the constants
+alone. The pass enumerates the range, substitutes the counter, folds the
+comparisons, and emits the statements in the order they really run -- copied from
+the source spans, so comments survive. It also drops loops that provably run zero
+times, including the inverted-break shape whose setup sits inside the body.
+
+It is deliberately narrow. A loop is left alone -- and counted by reason, not
+silently skipped -- when a bound is a runtime value (`unknown-bounds`), when a
+`break`/`continue` is still conditional after folding (`conditional-jump`), or
+when an inverted loop would never terminate (`dead-loop-runs`). Two rules keep
+the rewrite exact: a variable is only folded when every write to it happens in
+the same block, and substitution never touches an assignment target. When the
+loop finishes, the counter is left at the value that failed the check, and the
+pass writes that value back if anything after the loop can still read it.
+
 ## 2. Rules the engine does not break
 
 * **A value that was not recorded is printed as a hole**, never guessed:

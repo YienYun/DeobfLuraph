@@ -3,7 +3,7 @@
 -- observed at that step, so a value computed at run time appears as its result.
 -- When a lift is available, `node deob.js` writes that script instead of this trace.
 -- run status: aborted: endless loop in the script's own code (no environment access)
--- 104 statements recorded in 30.14s
+-- 104 statements recorded in 30.11s
 
 --@1 
 -- loadstring() of 69197 bytes: "local k=...;return({ln=function(X,X,d,P)X=(P[d[42]()]);return X;end,d='\\114\\ead\\u{75}32',gn=function(X)end,A=function(X,d,P,L,B)local G;while true do G,d=X:Q(d,B,L,P);if G==46834 then break;else if G="

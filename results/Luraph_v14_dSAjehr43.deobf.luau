@@ -2,7 +2,6 @@
 -- unresolved: 1 captured values the walk could not follow across scopes.
 -- They are nil here, so a function that needs one stops where the
 -- original had a value; each use below says what shape it expected.
-local unresolvedCapture1
 
 local value = ...
 local value2 = value[1]
@@ -51,36 +50,15 @@ local value39 = value38[value[41]]
 local traceback = value38.traceback
 local value40 = value[45]
 local value41 = value[46]
-
 local function callback(argument)
 	local data = data
 	local condition = not argument
-	local iterator = 33
-	local iterator2 = 67
-	local iterator3 = 20 - iterator
-
-	while true do
-		iterator3 += iterator
-
-		if not (iterator <= 0) then
-			if not (iterator3 <= iterator2) then
-				break
-			end
-		elseif not (iterator3 >= iterator2) then
-			break
-		end
-
-		if not (iterator3 >= 53) then
-			data = data[condition]
-			continue
-		end
-		return data
-	end
+	data = data[condition]
+	return data
 end
 
 local function callback2()
-	unresolvedCapture1 = value[2]  -- unresolved: #1 unknown
-
+	  -- unresolved: #1 unknown
 	local function callback3()
 		local byte = string.byte
 		local text = string.rep(" ", 8)
@@ -440,34 +418,10 @@ local value44 = value[51]
 
 local function callback3(argument)
 	local condition = value[2]
-	local iterator = 77
-	local iterator2 = 283
-	local iterator3 = 76 - iterator
-
-	while true do
-		iterator3 += iterator
-
-		if not (iterator <= 0) then
-			if not (iterator3 <= iterator2) then
-				break
-			end
-		elseif not (iterator3 >= iterator2) then
-			break
-		end
-
-		local iterator = iterator3
-
-		if not (iterator <= 76) then
-			if iterator == 153 then
-				condition = not condition
-				continue
-			end
-			return condition
-		end
-
-		argument = not argument
-		condition = data[argument]
-	end
+	argument = not argument
+	condition = data[argument]
+	condition = not condition
+	return condition
 end
 
 local value45 = value[52]
@@ -1069,65 +1023,9 @@ end
 
 local function callback10(argument)
 	local number = value[2]
-	local value50 = value[2]
-	local iterator = 82
-	local iterator2 = 318
-	local iterator3 = 19 - iterator
-
-	while true do
-		iterator3 += iterator
-
-		if not (iterator <= 0) then
-			if not (iterator3 <= iterator2) then
-				break
-			end
-		elseif not (iterator3 >= iterator2) then
-			break
-		end
-
-		local iterator = iterator3
-
-		if not (iterator < 101) then
-			if iterator < 265 and iterator > 101 then
-				local iterator4 = 1
-				local iterator5 = #value50 + 0
-				local iterator6 = 1 - iterator4
-
-				while true do
-					iterator6 += iterator4
-
-					if not (iterator4 <= 0) then
-						if not (iterator6 <= iterator5) then
-							break
-						end
-					elseif not (iterator6 >= iterator5) then
-						break
-					end
-
-					local number2 = bit32.bxor(number, value50[iterator6])
-					if not (number2 < 134217728) then
-						local number3 = number2 % 65536
-						number = (((number2 - number3) / 65536 * 403 + number3 * 256) * 65536 + number3 * 403) % 4294967296
-					else
-						number = number2 * 16777619 % 4294967296
-					end
-				end
-
-				continue
-			end
-
-			if iterator < 183 and iterator > 19 then
-				value10(argument, 1, -1)
-				-- devirt: table.move count out of range: -7 (at 0:95)
-			end
-			if not (iterator > 183) then
-				continue
-			end
-			return (bit32.bxor(number, 1816370591))
-		end
-
-		number = 2166136261
-	end
+	number = 2166136261
+	value10(argument, 1, -1)
+	-- devirt: table.move count out of range: -7 (at 0:95)
 end
 
 local function callback11(argument, argument2)
@@ -1533,29 +1431,8 @@ callback12(traceback, value[97])
 callback12(value49)
 local number = value[2]
 local number2 = value[2]
-local iterator = 15
-local iterator2 = 166
-local iterator3 = 116 - iterator
-
-while true do
-	iterator3 += iterator
-
-	if not (iterator <= 0) then
-		if not (iterator3 <= iterator2) then
-			break
-		end
-	elseif not (iterator3 >= iterator2) then
-		break
-	end
-
-	if not (iterator3 < 131) then
-		number2 = 512672201
-		break
-	else
-		number = 285894652
-	end
-end
-
+number = 285894652
+number2 = 512672201
 local value59 = wrap(function()
 	value30(number)
 	value30(number2)
@@ -1641,4 +1518,5 @@ callback12(value55, value[86])
 callback11(value[101], { [3999930550] = 2054155582, [2218639217] = 630405465, [1899217538] = 10823770 })
 value[102](value[103]):byte(1, -1)
 -- devirt: table.move count out of range: -97 (at 0:2525)
+
 print("Deobf By Zed")

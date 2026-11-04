@@ -33,24 +33,7 @@ local value31 = value30[value[25]]
 local value32 = value30[value[26]]
 local value33 = value[28]
 local value34 = value14[value[34]]
-
 local function callback()
-	local iterator = 101
-	local iterator2 = 197
-	local iterator3 = 96 - iterator
-
-	while true do
-		iterator3 += iterator
-
-		if not (iterator <= 0) then
-			if not (iterator3 <= iterator2) then
-				break
-			end
-		elseif not (iterator3 >= iterator2) then
-			break
-		end
-	end
-
 	return nil --[[ constant not decoded ]]
 end
 
@@ -119,77 +102,6 @@ local function callback2()
 				return nil --[[ constant not decoded ]]
 			end
 
-			while true do
-				local data = {}
-				local iterator4 = 1
-				local iterator5 = 255
-				local iterator6 = 0 - iterator4
-				iterator6 += iterator4
-
-				if not (iterator4 <= 0) then
-					if iterator6 <= iterator5 then
-						break
-					end
-				elseif iterator6 >= iterator5 then
-					break
-				end
-
-				iterator4 = 1
-				iterator5 = callback6() + 0
-				iterator6 = 1 - iterator4
-				local exitTo = nil
-
-				while true do
-					iterator6 += iterator4
-
-					if not (iterator4 <= 0) then
-						if not (iterator6 <= iterator5) then
-							break
-						end
-					elseif not (iterator6 >= iterator5) then
-						break
-					end
-
-					local iterator7 = 1
-					local iterator8 = 255
-					local iterator9 = 0 - iterator7
-					iterator9 += iterator7
-
-					if not (iterator7 <= 0) then
-						if iterator9 <= iterator8 then
-							exitTo = 1
-							break
-						end
-					elseif iterator9 >= iterator8 then
-						exitTo = 1
-						break
-					end
-				end
-
-				if exitTo == 1 then
-					local value35 = callback7()
-					if value35 then
-						value35 = callback6()
-					end
-					callback7()
-					local value36 = data[nil]
-
-					if value36 then
-						data[value35] = value36
-						local value37 = callback6()
-						local value38 = callback7()
-						if value38 then
-							-- devirt: upvalue index nil (at 0:25)
-						end
-						-- devirt: arith on packtop(16) 15 (at 0:108)
-					end
-
-					callback7()
-					callback7()
-					-- devirt: arith on packtop(17) 16 (at 0:69)
-				end
-			end
-
 			callback6()
 			callback6()
 			-- devirt: arith on packtop(12) 11 (at 0:73)
@@ -211,22 +123,6 @@ local value41 = value[42]
 local argumentMap = {}
 
 local function callback3()
-	local iterator = 97
-	local iterator2 = 107
-	local iterator3 = 10 - iterator
-
-	while true do
-		iterator3 += iterator
-
-		if not (iterator <= 0) then
-			if not (iterator3 <= iterator2) then
-				break
-			end
-		elseif not (iterator3 >= iterator2) then
-			break
-		end
-	end
-
 	local number = 18
 
 	while true do
@@ -364,23 +260,7 @@ local function callback6(argument, argument2, argument3)
 		local iterator = 103
 		local iterator2 = 140
 		local iterator3 = 37 - iterator
-
-		while true do
-			iterator3 += iterator
-
-			if not (iterator <= 0) then
-				if not (iterator3 <= iterator2) then
-					break
-				end
-			elseif not (iterator3 >= iterator2) then
-				break
-			end
-
-			if iterator3 == 140 then
-				argument4 = argument3
-			end
-		end
-
+		argument4 = argument3
 		local condition = argument4 == 1
 		iterator = 22
 		iterator2 = 190
@@ -402,30 +282,9 @@ local function callback6(argument, argument2, argument3)
 				break
 			else
 				if condition then
-					local iterator4 = 31
-					local iterator5 = 71
-					local iterator6 = 40 - iterator4
-
-					while true do
-						iterator6 += iterator4
-
-						if not (iterator4 <= 0) then
-							if not (iterator6 <= iterator5) then
-								break
-							end
-						elseif not (iterator6 >= iterator5) then
-							break
-						end
-
-						local iterator = iterator6
-						if iterator ~= 71 and iterator == 40 then
-							condition = argument
-						end
-					end
-
+					condition = argument
 					continue
 				end
-
 				local number2 = 111
 
 				while true do
@@ -464,38 +323,10 @@ local function callback6(argument, argument2, argument3)
 		iterator = 23
 		iterator2 = 138
 		iterator3 = 23 - iterator
-
-		while true do
-			iterator3 += iterator
-
-			if not (iterator <= 0) then
-				if not (iterator3 <= iterator2) then
-					break
-				end
-			elseif not (iterator3 >= iterator2) then
-				break
-			end
-
-			local iterator = iterator3
-
-			if iterator ~= 115 then
-				if iterator ~= 138 then
-					if iterator ~= 46 then
-						if iterator ~= 69 then
-							if not (iterator ~= 92) then
-								value = 1
-							end
-						else
-							condition = number
-						end
-					end
-				else
-					number = condition
-				end
-			else
-				condition += value
-			end
-		end
+		condition = number
+		value = 1
+		condition += value
+		number = condition
 	end
 end
 
@@ -629,62 +460,15 @@ local function callback9(argument, argument2, argument3)
 		local iterator = 57
 		local iterator2 = 175
 		local iterator3 = 90 - iterator
-
-		while true do
-			iterator3 += iterator
-
-			if not (iterator <= 0) then
-				if not (iterator3 <= iterator2) then
-					break
-				end
-			elseif not (iterator3 >= iterator2) then
-				break
-			end
-
-			local iterator = iterator3
-
-			if not (iterator < 147) then
-				if iterator > 90 then
-					break
-				end
-			else
-				local callback = callback6
-				local value48 = value7(argument)
-				callback("function", value48)
-			end
-		end
-
+		local callback = callback6
+		local value48 = value7(argument)
+		callback("function", value48)
 		local value2 = value31
 		local argument = argument
 		iterator = 9
 		iterator2 = 17
 		iterator3 = 8 - iterator
-		local exitTo = nil
-
-		while true do
-			iterator3 += iterator
-
-			if not (iterator <= 0) then
-				if not (iterator3 <= iterator2) then
-					break
-				end
-			elseif not (iterator3 >= iterator2) then
-				break
-			end
-
-			local iterator = iterator3
-
-			if not (iterator < 17) then
-				if iterator > 8 then
-					exitTo = 2
-					break
-				end
-			else
-				exitTo = 1
-				break
-			end
-		end
-
+				local exitTo = 1
 		local iterator4
 
 		if exitTo == 1 then
@@ -838,35 +622,13 @@ callback9(value32, value[26])
 local number2 = value[1]
 local value51 = value[1]
 local iterator = 67
-local iterator2 = 143
 local iterator3 = 76 - iterator
-
-while true do
-	iterator3 += iterator
-
-	if not (iterator <= 0) then
-		if not (iterator3 <= iterator2) then
-			break
-		end
-	elseif not (iterator3 >= iterator2) then
-		break
-	end
-
-	local iterator = iterator3
-
-	if not (iterator < 143) then
-		if iterator > 76 then
-			value51()
-		end
-	else
-		number2 = 133337211
-		value51 = value44(function()
-			value28(1133583591)
-			value28(number2)
-		end)
-	end
-end
-
+number2 = 133337211
+value51 = value44(function()
+		value28(1133583591)
+		value28(number2)
+	end)
+value51()
 value51()
 number2 = nil
 local value52, value53, value54

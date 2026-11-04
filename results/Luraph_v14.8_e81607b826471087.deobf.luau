@@ -4,4 +4,5 @@ local value2 = value[40][value[22]]
 assert(value[45], value[46])
 value2(2048)
 -- devirt: read below the stack VM's frame (register 0) (at 0:1130)
+
 print("Deobf By Zed")

@@ -184,10 +184,21 @@ def polish(text):
         text = localfuncs.rewrite(text)
     except Exception as ex:  
         print("[!] pre-localfuncs pass failed: %s" % ex, file=sys.stderr)
+    # Control flow the obfuscator flattened into a loop over constants is
+    # unrolled first, then the AST cleanup drops the loop's dead prelude and
+    # simplifies what the unrolling exposed -- twice, because the second round
+    # sees bounds the first one could not (the prelude is gone, not overwritten).
     try:
-        text = ast_polish.polish_ast(text)
+        import flatten
+        for _ in range(2):
+            text, _fl = flatten.apply_text(text)
+            text = ast_polish.polish_ast(text)
     except Exception as ex:
-        print("[!] ast polish pass failed: %s" % ex, file=sys.stderr)
+        print("[!] flatten/ast polish pass failed: %s" % ex, file=sys.stderr)
+        try:
+            text = ast_polish.polish_ast(text)
+        except Exception as ex2:
+            print("[!] ast polish pass failed: %s" % ex2, file=sys.stderr)
     if not os.environ.get("DEVIRT_NO_NAMES"):
         import names
         try:

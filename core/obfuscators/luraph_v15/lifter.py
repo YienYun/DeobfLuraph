@@ -83,6 +83,14 @@ def _poison_stmt(st):
 class ProtoLifter:
     """Steps the instructions of one proto."""
     walk_only = False   
+    # Per-run annotations. Only the devirtualiser's own construction site fills
+    # these in; a lifter built anywhere else must still answer when they are
+    # read, so they default here instead of raising AttributeError. `exec_cov`
+    # is None when nothing was recorded for the proto, which is never read as
+    # "did not run".
+    exec_cov = None
+    trimmed = 0
+    trimmed_pcs = frozenset()
 
     def __init__(self, vm, dump, vmobj, proto, upvals, globals_tab, cap=None, shared=None):
         self.vm = vm

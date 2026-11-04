@@ -496,6 +496,14 @@ class Namer:
                 else:
                     self.visit_expr(var)
             for var, v in zip(st["vars"], vals):
+                if var.get("type") == "AstExprIndexName" \
+                        and var["expr"].get("type") == "AstExprLocal":
+                    # `T.Field = ...` says what T is, just as reading T.Field does
+                    t_info = self.locals.get(var["expr"]["local"]["location"])
+                    if t_info is not None:
+                        t_info["members"].add(var["index"])
+                        if v.get("type") == "AstExprFunction":
+                            t_info.setdefault("func_fields", set()).add(var["index"])
                 if var.get("type") == "AstExprIndexExpr" and var["expr"].get("type") == "AstExprLocal" \
                         and const_slot_int(var.get("index")) is None:
                     t_info = self.locals.get(var["expr"]["local"]["location"])
@@ -699,6 +707,22 @@ class Namer:
                         if isinstance(x.get("key"), dict):
                             self.visit_expr(x["key"])
                         self.visit_expr(x["value"])
+
+    @staticmethod
+    def _hint_kinds(info):
+        """What kind of value each write to a local produces (local, fn, table, ...)."""
+        kinds = set()
+        for expr, _idx in info.get("hints") or ():
+            t = (expr or {}).get("type") or "?"
+            if t == "AstExprLocal":
+                kinds.add("local:" + str(expr["local"].get("location")))
+            elif t == "AstExprFunction":
+                kinds.add("fn")
+            elif t == "AstExprTable":
+                kinds.add("tbl")
+            else:
+                kinds.add("value")
+        return kinds
 
     def callback_params(self, fn, params):
         """Name the parameters of a function (literal, or a local holding one) after the signal's."""
@@ -1427,6 +1451,11 @@ class Namer:
     def base_name(self, info, _seen=()):
         if info.get("spill"):
             return "ctx"
+        # A table that is handed named functions and state is the script's module:
+        # `module.EggData`, `module.Saved`, `module.WeightSlider`.
+        fields = info.get("func_fields") or ()
+        if len(fields) >= 2 and info["members"] and len(fields) / len(info["members"]) >= 0.4:
+            return "module"
         if len(info["refs"]) == 1 and (info.get("forin_first") or info.get("dup_param")):
             return "_"
         duck = None if (info.get("is_param") and info.get("reassigned")) else duck_type_members(info["members"])
@@ -1438,6 +1467,11 @@ class Namer:
                 return info.get("label") or info["prop"]
         if isinstance(h, tuple):
             key, base = h
+            # A register the VM refills with different kinds of value is not any
+            # one of them: inheriting the first write's name would call it
+            # `module2` while it is holding `ipairs`.
+            if info.get("reassigned") and len(self._hint_kinds(info)) > 1:
+                return duck or key
             if base is not None:
                 if base[0] == "local":
                     src = self.locals.get(base[1])

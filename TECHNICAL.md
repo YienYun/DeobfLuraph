@@ -90,6 +90,38 @@ junk whose value is stored in the same statement as a real one and later read by
 a real expression, which cannot be removed without proving the reader never
 observes it.
 
+### The VM's register copies
+
+Once the seeds are gone, what is left of the VM's bookkeeping is the moves:
+
+```lua
+local module2 = module
+module2.RarityOrder = nameList
+module2 = module
+module2.RarityRank = {}
+module2 = ipairs
+for k, v in module2(nameList) do
+```
+
+`core/copies.py` folds them. A copy is inlined only when nothing can observe the
+register: every read between the copy and the next write to that register is
+rewritten to name the source, the source itself is a local with at most one
+write (a parameter, or a local assigned once, possibly in an enclosing function),
+and neither side is captured by a closure that could run before the copy does.
+A plain assignment copy is deleted outright; a `local` keeps its declaration
+when the register is refilled later, so the later writes still have a target.
+Reads that sit after the refill are untouched, which is what makes the fold safe
+inside loops.
+
+Pure sources are folded too -- `local iterate = ipairs` becomes `ipairs(...)` at
+the call -- and a `local x` nothing reads is dropped. On RideAPet that is 684
+copies inlined and 54 dead declarations gone, which is most of the `data2 =
+data3` traffic that made the lifted code hard to follow.
+
+The pass runs before naming on purpose: a register that is one long chain of
+copies gets named after the value that started the chain, so `module.RarityRank`
+reads as the field it is instead of `module2.RarityRank`.
+
 ## 2. Rules the engine does not break
 
 * **A value that was not recorded is printed as a hole**, never guessed:

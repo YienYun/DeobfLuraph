@@ -208,6 +208,16 @@ def polish(text):
                   file=sys.stderr)
     except Exception as ex:
         print("[!] seed cleanup failed: %s" % ex, file=sys.stderr)
+    # Register copies (`data2 = data3` straight before the next use) are the VM
+    # refilling a slot, not a decision of the script; naming the source at the
+    # use sites takes the hop out.
+    try:
+        import copies
+        text, cp = copies.propagate(text)
+        if cp.get("inlined"):
+            print("[*] register copies: %d inlined" % cp["inlined"], file=sys.stderr)
+    except Exception as ex:
+        print("[!] copy pass failed: %s" % ex, file=sys.stderr)
     # The u32 arithmetic a v15 build leaves behind is exact: folding it turns a
     # state machine's seed chain into the constants it computes, which is what
     # the control-flow passes need in order to see what a branch tests.

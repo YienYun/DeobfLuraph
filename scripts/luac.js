@@ -5,7 +5,7 @@
  * result. This is the `luac` gate: a result that does not compile is not a
  * result, whatever it looks like.
  *
- *     node scripts/luac.js results/*.luau
+ *     node scripts/luac.js results          # every *.luau under a directory
  *     node scripts/luac.js results/foo.luau --verbose
  *
  * Each file is embedded in a long-bracket string and handed to `loadstring`,
@@ -59,12 +59,28 @@ function checkOne(bin, file) {
   return { ok: false, error: 'luau produced no verdict: ' + out.trim().split('\n')[0] };
 }
 
+function expand(args) {
+  const out = [];
+  for (const a of args) {
+    // A shell glob that matched nothing arrives verbatim; that is not a file.
+    if (!fs.existsSync(a)) continue;
+    if (fs.statSync(a).isDirectory()) {
+      for (const name of fs.readdirSync(a).sort()) {
+        if (name.endsWith('.luau') || name.endsWith('.lua')) out.push(path.join(a, name));
+      }
+    } else {
+      out.push(a);
+    }
+  }
+  return out;
+}
+
 function main(argv) {
   const verbose = argv.includes('--verbose');
-  const files = argv.slice(2).filter((a) => !a.startsWith('--'));
+  const files = expand(argv.slice(2).filter((a) => !a.startsWith('--')));
   if (!files.length) {
-    console.error('usage: node scripts/luac.js <file.luau> [...] [--verbose]');
-    return 2;
+    console.log('[i] no result files to compile yet (nothing under the given paths)');
+    return 0;
   }
   const bin = luauBin();
   if (!bin) {

@@ -6,9 +6,9 @@
  * those are the places where a register could not be resolved, and at run time
  * they are nil -- so `r4._unpack(...)` is a crash waiting for its code path.
  *
- *     node scripts/freevars.js results/*.luau
+ *     node scripts/freevars.js results          # every *.luau under a directory
  *     node scripts/freevars.js file.luau --verbose
- *     node scripts/freevars.js results/*.luau --report-only   # never fails
+ *     node scripts/freevars.js results          # every *.luau under a directory --report-only   # never fails
  *
  * Exit code 0 when every read resolves, 1 when something does not, 2 on usage.
  *
@@ -122,9 +122,28 @@ function collect(file) {
 function main(argv) {
   const verbose = argv.includes('--verbose');
   const reportOnly = argv.includes('--report-only');
-  const files = argv.slice(2).filter((a) => !a.startsWith('--'));
-  if (!files.length || !hasAst()) {
-    console.error('usage: node scripts/freevars.js <file.luau> [...] [--verbose]');
+  const targets = argv.slice(2).filter((a) => !a.startsWith('--'));
+  if (!targets.length) {
+    console.error('usage: node scripts/freevars.js <file.luau|dir> [...] [--verbose]');
+    return 2;
+  }
+  const files = [];
+  for (const t of targets) {
+    if (!fs.existsSync(t)) continue;         // a glob that matched nothing
+    if (fs.statSync(t).isDirectory()) {
+      for (const name of fs.readdirSync(t).sort()) {
+        if (name.endsWith('.luau') || name.endsWith('.lua')) files.push(path.join(t, name));
+      }
+    } else {
+      files.push(t);
+    }
+  }
+  if (!files.length) {
+    console.log('[i] no result files to check yet (nothing under the given paths)');
+    return 0;
+  }
+  if (!hasAst()) {
+    console.error('[!] bin/luau-ast not found; build it with `python build_luau.py`');
     return 2;
   }
   let bad = 0;

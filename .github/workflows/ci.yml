@@ -60,8 +60,8 @@ jobs:
       # (see TECHNICAL §3), and hiding them would be worse than showing them.
       - name: Result compiles in Luau
         if: matrix.node == '20'
-        run: node scripts/luac.js results/*.luau --verbose
+        run: node scripts/luac.js results --verbose
 
       - name: Unresolved register reads (report)
         if: matrix.node == '20'
-        run: node scripts/freevars.js results/*.luau --report-only
+        run: node scripts/freevars.js results --report-only

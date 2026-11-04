@@ -170,7 +170,7 @@ refusal is a fixture expectation in `test/golden.json`, not an untested path.
 ## 4. Checks
 
 ```bash
-npm test          # Luau compile gate over results/*.luau + watermark/detector/
+npm test          # Luau compile gate over results/ + watermark/detector/
                   # diagnostics/fixtures suites
 npm run test:e2e  # golden regression: exact bytes, run twice, Luau syntax gate,
                   # report sha256 matches the file, no internal repr, trace labelled

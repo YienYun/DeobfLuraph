@@ -196,3 +196,26 @@ end
   assert.match(out, /pending = n/);
   assert.equal(luau(out), luau(src));
 });
+
+test('a plain nil store nothing reads is removed', () => {
+  const src = `local state = 5
+for i = 1, 2 do
+	state = i
+	print(state)
+	state = nil
+end
+`;
+  const out = clean(src);
+  assert.doesNotMatch(out, /state = nil/);
+  assert.equal(luau(out), luau(src));
+});
+
+test('a nil store a later iteration reads is kept', () => {
+  const src = `local state
+for i = 1, 2 do
+	print(state)
+	state = nil
+end
+`;
+  assert.match(clean(src), /state = nil/);
+});

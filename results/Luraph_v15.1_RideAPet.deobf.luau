@@ -146,7 +146,6 @@ local function callback3(argument)
 			return
 		end
 		callback4(descendant)
-		isTextLabel = nil
 		isTextLabel = descendant:GetPropertyChangedSignal("Text")
 		local connection = isTextLabel:Connect(function()
 			callback4(descendant)
@@ -212,7 +211,6 @@ local data2 = { Toggle = function(argument, argument2)
 	response2 = {"Get", "GetValue"}
 
 	for i, value2 in ipairs(response2) do
-		ok = nil
 		i, response = pcall(function()
 			return argument[value2]
 		end)
@@ -301,7 +299,6 @@ local function callback7()
 			local owner = data3 and data3:FindFirstChild("Owner")
 			local _
 			if owner then
-				data3 = nil
 				_ = owner.Value == localPlayer
 			else
 				_ = owner
@@ -324,7 +321,6 @@ local function callback7()
 			local owner = parent and parent:FindFirstChild("Owner")
 			local condition2
 			if owner then
-				k = nil
 				k, condition2 = localPlayer, owner.Value == localPlayer
 			end
 			if owner then
@@ -406,7 +402,6 @@ local function callback7()
 		if not value3 or not value3:IsA("RemoteEvent") then
 			return false
 		end
-		O = nil
 		local value4 = table.pack(...)
 		return pcall(function()
 			value3:FireServer(table.unpack(value4, 1, value4.n))
@@ -666,7 +661,6 @@ local function callback7()
 		if argument.Parent == character then
 			return true
 		end
-		number = nil
 		pcall(function()
 			value3:EquipTool(argument)
 		end)
@@ -826,7 +820,6 @@ local function callback7()
 		if (value4.Position - argument).Magnitude <= argument3 then
 			return true
 		end
-		module2 = nil
 		module2 = callback9(value4.Position, argument)
 		local value5, number = nil, os.clock() + module.TravelTime(value4.Position, argument) + 6
 		setNoclip(true)
@@ -872,7 +865,6 @@ local function callback7()
 			end
 
 			local value6, number3 = nil, math.min(module3, math.max(module.FlySpeed, 20) * _)
-			condition3 = nil
 			module3 = Vector3.new(number2.X, 0, number2.Z)
 			local cframe = module3.Magnitude > 0.1 and CFrame.lookAt(Vector3.new(0, 0, 0), module3.Unit) or value4.CFrame.Rotation
 			pcall(function()
@@ -1023,7 +1015,7 @@ local function callback7()
 		if condition2 then
 			return false
 		end
-		A = nil
+
 		if typeof(fireproximityprompt) == "function" then
 			return pcall(fireproximityprompt, argument)
 		end
@@ -1109,7 +1101,6 @@ local function callback9()
 		end
 	end
 
-	eggs = nil
 	table.sort(data3, function(argument, argument2)
 		if argument.Rank ~= argument2.Rank then
 			return argument.Rank > argument2.Rank
@@ -1438,7 +1429,6 @@ local function callback10()
 			local condition2 = instance.Parent ~= nil
 			local condition3
 			if condition2 then
-				i = nil
 				condition3 = not table.find(moduleMap.Manual, instance.Name)
 			end
 			if condition2 then
@@ -1714,7 +1704,6 @@ local function callback10()
 				end
 				condition3 = os.clock() >= module and value5.Config.Parent ~= nil
 				if module then
-					number5 = nil
 					number5, moduleMap2 = moduleMap, os.clock() + (moduleMap.InstantOn and 0.3 or 0.1)
 					module.Fire("EggPickup", name)
 				end
@@ -2025,7 +2014,6 @@ local function callback10()
 					local condition2 = type(value5) == "table"
 					local condition3
 					if condition2 then
-						k = nil
 						k, condition3 = localPlayer, value5.OwnerUserId == localPlayer.UserId
 					end
 					if condition2 and value5.Model and value5.Model.Parent and value5.Model.Name == argument then
@@ -2219,8 +2207,7 @@ local function callback11()
 		pets = instance and instance:FindFirstChild("Pets")
 
 		if pets then
-			for i, child in ipairs(pets:GetChildren()) do
-				i = nil
+			for _, child in ipairs(pets:GetChildren()) do
 				local ok, response = pcall(function()
 					return child:GetPivot().Position
 				end)
@@ -2686,9 +2673,6 @@ local function callback13()
 		local condition4 = module.BasketCount() > 0
 		if condition4 then
 			local value3, condition5 = nil, next(moduleMap.Carried) ~= nil
-			if not (condition5) then
-				x = nil
-			end
 		end
 		return condition4
 	end
@@ -3329,7 +3313,6 @@ local function callback14()
 		if not plotEggsTracker or not egg or not callback25 then
 			return false
 		end
-		sideBar = nil
 		screenGui = Instance.new("ScreenGui")
 		local screenGui2 = screenGui
 		local instance2
@@ -3384,7 +3367,6 @@ local function callback14()
 			screenGui2.Name = generateRandomId()
 			plotEggsTracker.Size = UDim2.new(0.185, 0, plotEggsTracker.Size.Y.Scale, 0)
 			screenGui2.Size = plotEggsTracker.Size
-			uiListLayout = nil
 			plotEggsTracker.Position = UDim2.new(0.5175, 0, plotEggsTracker.Position.Y.Scale, 0)
 			screenGui2.Position = UDim2.new(0.9075, 0, plotEggsTracker.Position.Y.Scale, 0)
 			screenGui2.Parent = clone
@@ -3423,7 +3405,6 @@ local function callback14()
 				end
 				moduleMap.Wake()
 				condition3 = true
-				valueType = nil
 				task.delay(0.3, function()
 					condition3 = true
 				end)
@@ -4183,7 +4164,6 @@ local function callback21()
 		folder2.Name = value2
 		folder.Parent = value
 		local children = activeEggs:GetChildren()
-		N = nil
 
 		task.spawn(function()
 			local number2 = 1
@@ -4543,7 +4523,6 @@ local function callback23()
 
 	local function callback30()
 		local number5 = 1
-		D = nil
 		pcall(function()
 			local module, number6, value3, value4 = module, tonumber(module.Saved("HatchUpgrades")) or 0
 			number5 = value2.GetMultiplier(value2.EffectiveUpgrades(localPlayer, number6))
@@ -4569,8 +4548,6 @@ local function callback23()
 		local data6 = {Name = tostring(argument), Rarity = argument2 and tostring(argument2.Rarity) or "Common", Image = argument2 and tostring(argument2.Image or "") or "", Luck = 0, Pets = {}, Average = 0, Best = nil}
 
 		if argument2 and type(value2) == "table" then
-			value5 = nil
-
 			pcall(function()
 				local number5 = 220743288
 				data6.Luck = math.max((tonumber(argument2.Luck) or 1) * value3, 1)
@@ -5010,7 +4987,6 @@ local function callback23()
 
 		for i, egg in ipairs(eggsList) do
 			local value3, data7 = nil, {Key = egg}
-			data6 = nil
 			data6 = {AutoButtonColor = false, BackgroundColor3 = color, BorderSizePixel = 0, LayoutOrder = i, Size = UDim2.new(0.3333333333333333, -6, 1, 0), Text = ""}
 			data7.Button = hero("TextButton", data6, configMap.ChipRow)
 			hero("UICorner", {CornerRadius = UDim.new(0.35, 0)}, data7.Button)
@@ -5120,7 +5096,6 @@ local function callback23()
 
 		registerItem(function()
 			connection:Disconnect()
-			configMap = nil
 			pcall(function()
 				instance:Destroy()
 			end)
@@ -5216,7 +5191,7 @@ local function callback24()
 	end
 
 	local function callback29()
-								local teleportInitFailed = TeleportService.TeleportInitFailed
+				local teleportInitFailed = TeleportService.TeleportInitFailed
 
 		teleportInitFailed:Connect(function(argument, argument2, argument3)
 			argument = id
@@ -5245,7 +5220,6 @@ local function callback24()
 			local text9 = stringFormat("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=%s&excludeFullGames=true&limit=100", gameRef.PlaceId, text8)
 			local nextPageCursor2 = nextPageCursor and nextPageCursor ~= ""
 			if nextPageCursor2 then
-				gameRef = nil
 				text9 = text9 .. ("&cursor=" .. HttpService:UrlEncode(nextPageCursor))
 			end
 			gameRef, stringFormat = pcall(function()
@@ -5283,7 +5257,6 @@ local function callback24()
 		if data then
 			value2 = value
 		else
-			condition4 = nil
 			value2, condition4 = callback30(argument)
 			if not condition4 then
 				return "fetch"
@@ -5580,7 +5553,7 @@ local function callback25()
 	end
 
 	local function callback32()
-								local onTeleport = localPlayer.OnTeleport
+				local onTeleport = localPlayer.OnTeleport
 
 		local connection = onTeleport:Connect(function(argument)
 			if argument == Enum.TeleportState.Failed then
@@ -5690,7 +5663,7 @@ local function callback25()
 	end
 
 	local function callback35()
-								local errorMessageChanged = GuiService.ErrorMessageChanged
+				local errorMessageChanged = GuiService.ErrorMessageChanged
 		local connection = errorMessageChanged:Connect(function(argument)
 			task.wait(0.3)
 			if callback31() then
@@ -5731,7 +5704,6 @@ local function callback25()
 			end
 			descendants = text4 == ""
 			if descendants then
-				child = nil
 				pcall(function()
 					text4 = GuiService:GetErrorMessage()
 				end)
@@ -5950,7 +5922,6 @@ local function callback26()
 		uiElement.Name = generateRandomId()
 		uiElement.BackgroundTransparency = 1
 		uiElement.Position = UDim2.fromOffset(22, 68)
-		screenGui2 = nil
 		uiElement.Size = UDim2.fromOffset(386, 24)
 		uiElement.TextXAlignment = Enum.TextXAlignment.Left
 		uiElement.TextYAlignment = Enum.TextYAlignment.Center
@@ -6397,7 +6368,6 @@ local function callback27()
 										text4, text5, now = "Night is about to start, staying here", "night", nil
 									else
 										if callback37(1) and not callback30() then
-											now = nil
 											if not (callback36()) then
 												text4, text5 = "Turn on Auto Collect Eggs, hopping starts after it collects a matching egg", "wait"
 											end
@@ -6875,7 +6845,6 @@ local function callback27()
 		data3.MinRank = tonumber(value4) or 0
 		data3.Wanted = callback45(value5)
 		data3.MinWeight = tonumber(value6) or 0
-		value4 = nil
 		pcall(function()
 			value3:Set(module.WeightStep(data3.MinWeight))
 		end)
@@ -7051,7 +7020,6 @@ local function callback29()
 		end
 
 		if argumentMap[argument] == nil then
-			condition3 = nil
 			local ok, response = pcall(function()
 				return _[argument]
 			end)
@@ -7292,7 +7260,6 @@ local function callback29()
 				return
 			end
 			argumentMap[argument] = argument.Parent
-			condition4 = nil
 			pcall(function()
 				argument.Parent = folder
 			end)
@@ -7421,7 +7388,7 @@ local function callback30()
 	local color = Color3.fromRGB(58, 255, 55)
 	local color2 = Color3.fromRGB(255, 214, 84)
 	local color3 = Color3.fromRGB(255, 96, 96)
-	local color4, _, connections, screenGui, frame, uiScale, textLabel2, textLabel3 = Color3.fromRGB(150, 150, 158), false, {}
+	local color4, condition6, connections, screenGui, frame, uiScale, textLabel2, textLabel3 = Color3.fromRGB(150, 150, 158), false, {}
 	local number6, number7, number8, text3, text4, font = 1, 0, 0
 	pcall(function()
 		font = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.ExtraBold, Enum.FontStyle.Normal)
@@ -7456,8 +7423,7 @@ local function callback30()
 	end
 
 	local function disconnectAll()
-		for i, connection in ipairs(connections) do
-			i = nil
+		for _, connection in ipairs(connections) do
 			pcall(function()
 				connection:Disconnect()
 			end)
@@ -7608,7 +7574,7 @@ local function callback30()
 
 		local function callback35(argument)
 			local number11 = 165881902
-			local text5 = not _ or not textLabel2
+			local text5 = not condition6 or not textLabel2
 			if text5 then
 				return
 			end
@@ -7654,8 +7620,8 @@ local function callback30()
 	end
 
 	performanceSection:CreateSlider({Name = "FPS and Ping Size", Min = 60, Max = 160, Default = 100, AllowDecimals = false, Increment = 1, Unit = "%", SubOf = performanceSection:CreateToggle({Name = "FPS and Ping", Default = true, Callback = function(argument)
-		_ = argument == true
-		argument = _
+		condition6 = argument == true
+		argument = condition6
 		if argument then
 			callback34()
 		else
@@ -7697,16 +7663,14 @@ local function callback31()
 	local function callback35()
 		local value, value2 = ipairs, table.pack(callback34())
 
-		for k, value3 in value(table.unpack(value2, 1, value2.n)) do
+		for _, value3 in value(table.unpack(value2, 1, value2.n)) do
 			local value4, condition2 = nil, false
-			k = nil
 			pcall(function()
 				condition2 = value3.Function == callback33
 			end)
 			local condition3 = not condition2
 			local ok
 			if condition3 then
-				k = nil
 				ok = pcall(function()
 					value3:Disable()
 				end)
@@ -8582,8 +8546,7 @@ local function callback34()
 	end
 
 	local function disconnectAll()
-		for i, connection in ipairs(connections) do
-			i = nil
+		for _, connection in ipairs(connections) do
 			pcall(function()
 				connection:Disconnect()
 			end)
@@ -8757,7 +8720,6 @@ local function callback35()
 				autoHopTab:Select()
 			end)
 			if condition4 then
-				value = nil
 				pcall(function()
 					mainWindow:SelectTab(autoHopTab)
 				end)

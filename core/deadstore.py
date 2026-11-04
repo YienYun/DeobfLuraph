@@ -229,9 +229,15 @@ def find_dead(text):
                 live |= use
                 continue
             targets, aligned = info
+            # `x = nil` is a real store worth deleting when nothing reads x again;
+            # inside a declaration it is a no-op (`local a, b = nil, v` would be
+            # reprinted unchanged), so nil values are only dropped from a plain
+            # assignment.
+            is_decl = stmt.get("type") == "AstStatLocal"
             drop = [i for i, (key, val) in enumerate(targets)
                     if key not in live and not captured(key)
-                    and val is not None and not _is_nil(val) and _harmless(val)]
+                    and val is not None and not (_is_nil(val) and is_decl)
+                    and _harmless(val)]
             kept = [(key, val) for i, (key, val) in enumerate(targets) if i not in drop]
             if drop and aligned:
                 sink.append((stmt, drop))

@@ -1996,7 +1996,6 @@ do
 						if table.find(module2.Manual, value31) then
 						elseif value32 and not value32.Can then
 							text4 = string.format("Need %d JP", math.ceil(module.EggNeed(value31) - module.StealGrace()))
-							action = nil
 							text3 = text2
 						else
 							action = "Steal"

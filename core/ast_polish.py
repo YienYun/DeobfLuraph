@@ -1329,7 +1329,97 @@ def _declare_unresolved_captures(text):
     return "\n".join(lines[:at] + header.rstrip("\n").split("\n") + [""] + lines[at:])
 
 
-UNRESOLVED_USE = re.compile(r"\b(unresolvedCapture\d+)\b")
+# `variables.rename` splits a register into one variable per web, so a
+# leftover can be plain (`r6`) or suffixed (`r6_2`).
+REG_LEFTOVER = re.compile(r"r\d+(?:_\d+)?")
+LOC_RE = re.compile(r"(\d+),(\d+) - (\d+),(\d+)$")
+
+
+def _declare_unresolved_registers(text):
+    """Declare the register names the lift left behind.
+
+    A state machine block that read a register inside the loop it belonged to can
+    end up outside that loop once the CFG is structured again. The read survives
+    as `tostring(r6)` while the store that defined register 6 stayed behind, so
+    nothing declares the name -- and an undeclared name in Luau is a global read,
+    silently nil. The value is nil either way, but a global no script has is not
+    something a reader can tell apart from a bug in the output, so declare it.
+
+    The parser decides what is a hole: only a name the chunk reads as a *global*
+    counts, so a closure parameter legitimately called `r1` in one function is
+    never touched, and a hole in another function is never hidden by it.
+    """
+    if not REG_LEFTOVER.search(text):
+        return text
+    try:
+        root = _parse_ast(text)
+    except Exception:
+        return text
+
+    reads, writes = [], set()
+
+    def walk(node):
+        if isinstance(node, dict):
+            t = node.get("type") or ""
+            if t == "AstExprGlobal":
+                nm = node.get("global") or ""
+                if REG_LEFTOVER.fullmatch(nm):
+                    reads.append((nm, node.get("location") or ""))
+            elif t in ("AstStatAssign", "AstStatCompoundAssign"):
+                for var in node.get("vars") or []:
+                    if isinstance(var, dict) and var.get("type") == "AstExprGlobal" \
+                            and REG_LEFTOVER.fullmatch(var.get("global") or ""):
+                        writes.add(var["global"])
+            for k, v in node.items():
+                if k != "location":
+                    walk(v)
+        elif isinstance(node, list):
+            for x in node:
+                walk(x)
+
+    walk(root)
+
+    holes = []
+    for nm, loc in reads:
+        if nm in writes:
+            continue                       # the script assigns it: a real global
+        m = LOC_RE.search(loc)
+        if not m:
+            continue
+        holes.append((int(m.group(1)), int(m.group(2)), int(m.group(4)), nm))
+    if not holes:
+        return text
+
+    holes.sort()
+    alias = {}
+    for _ln, _c0, _c1, nm in holes:
+        if nm not in alias:
+            alias[nm] = "unresolvedRegister%d" % (len(alias) + 1)
+
+    lines = text.split("\n")
+    for ln, c0, c1, nm in sorted(holes, reverse=True):
+        if 0 <= ln < len(lines) and lines[ln][c0:c1] == nm:
+            lines[ln] = lines[ln][:c0] + alias[nm] + lines[ln][c1:]
+    text = "\n".join(lines)
+
+    n = len(alias)
+    decl = ["-- unresolved: %d register name%s the lift never declares; %s nil, so a"
+            % (n, "" if n == 1 else "s", "it reads as" if n == 1 else "they read as"),
+            "-- value the original held is missing where %s used."
+            % ("it is" if n == 1 else "they are"),
+            "-- Each use below says what shape that value had."]
+    names = sorted(alias.values())
+    for i in range(0, len(names), 6):
+        decl.append("local " + ", ".join(names[i:i + 6]))
+    header = "\n".join(decl) + "\n\n"
+    lines = text.split("\n")
+    at = 0
+    while at < len(lines) and (lines[at].startswith("--") or not lines[at].strip()):
+        at += 1
+    return "\n".join(lines[:at] + header.rstrip("\n").split("\n") + [""] + lines[at:])
+
+
+UNRESOLVED_USE = re.compile(r"\b(unresolvedCapture\d+|unresolvedRegister\d+)\b")
 
 
 def _use_hint(line, name):
@@ -1366,7 +1456,8 @@ def _hint_unresolved_captures(text):
     decl_only = re.compile(r"^\s*local\s+[A-Za-z_0-9\s,]+$")
     for line in text.split("\n"):
         m = UNRESOLVED_USE.search(line)
-        if not m or line.lstrip().startswith("--") or decl_only.match(line.split("--", 1)[0].rstrip()):
+        if not m or line.lstrip().startswith("--") or "-- unresolved:" in line \
+                or decl_only.match(line.split("--", 1)[0].rstrip()):
             out.append(line)
             continue
         code = line.split("--", 1)[0]
@@ -1374,7 +1465,8 @@ def _hint_unresolved_captures(text):
         for mm in UNRESOLVED_USE.finditer(code):
             if mm.group(1) not in names:
                 names.append(mm.group(1))
-        hints = ", ".join("#%s %s" % (nm.replace("unresolvedCapture", ""), _use_hint(code, nm))
+        hints = ", ".join("#%s %s" % (re.sub(r"^unresolved(?:Capture|Register)", "", nm),
+                                      _use_hint(code, nm))
                           for nm in names)
         note = "  -- unresolved: " + hints
         if _line_can_take_comment(code):
@@ -2589,6 +2681,26 @@ def _fold_constant_ifs(text, rounds=4):
     return text
 
 
+def _branch_targets(nodes, into=None):
+    """The local names a branch body stores into, at any depth."""
+    into = set() if into is None else into
+    for node in nodes or []:
+        if not isinstance(node, dict):
+            if isinstance(node, list):
+                _branch_targets(node, into)
+            continue
+        t = node.get("type") or ""
+        if t in ("AstStatAssign", "AstStatCompoundAssign", "AstStatLocal"):
+            for var in node.get("vars") or []:
+                loc = var.get("local") if isinstance(var, dict) and var.get("type") == "AstExprLocal" else var
+                if isinstance(loc, dict) and loc.get("name"):
+                    into.add(loc["name"])
+        for k, v in node.items():
+            if k != "location" and isinstance(v, (dict, list)):
+                _branch_targets(v if isinstance(v, list) else [v], into)
+    return into
+
+
 def _fold_constant_ifs_once(text):
     """`if nil then ... else ... end` is a branch the lift could not decide: the
     constant is what runs, so the taken block is what the code does. Keep it and
@@ -2620,6 +2732,11 @@ def _fold_constant_ifs_once(text):
         body = (taken or {}).get("body") or []
         other = (stmt.get("thenbody") if taken is stmt.get("elsebody")
                  else stmt.get("elsebody")) or {}
+        if _branch_targets(other.get("body")) - _branch_targets(body):
+            # the block that would go is the only place these values are set: a
+            # condition the lift lost prints as `nil`, and deleting the block it
+            # guards would leave the frame nil where the original had a value
+            continue
         note = b""
         if other.get("body"):
             # say it out loud: a branch that never ran is being dropped
@@ -2809,6 +2926,10 @@ def polish_ast(text, text_names=True):
         text = _declare_unresolved_captures(text)
     except Exception as ex:                        # never lose a working output
         print("[!] unresolved capture pass failed: %s" % ex, file=sys.stderr)
+    try:
+        text = _declare_unresolved_registers(text)
+    except Exception as ex:                        # never lose a working output
+        print("[!] unresolved register pass failed: %s" % ex, file=sys.stderr)
     try:
         text = _hint_unresolved_captures(text)
     except Exception as ex:                        # never lose a working output

@@ -302,3 +302,69 @@ test('an `if true` block is left to the local merge, not folded here', () => {
   assert.match(out, /print\("ran"\)/, out);
   assert.ok(!/-- devirt/.test(out), out);
 });
+
+// --- register names the lift left behind ---------------------------------
+// A state machine block that read a register inside a loop can end up outside it
+// once the CFG is structured again; the read survives and the store does not, so
+// the text says `r6` with nothing declaring it. That is a global read of a name
+// no script has, and the freevars gate flags it. Declaring it keeps the value
+// (nil either way) and tells the reader which register went missing.
+
+test('a register the lift never declares is declared, with its shape at each use', () => {
+  const out = same('local text = "stage " .. tostring(r6) .. " left"\nprint(text)\n');
+  assert.match(out, /^local unresolvedRegister1$/m, out);
+  assert.match(out, /-- unresolved: 1 register name the lift never declares/, out);
+  assert.match(out, /tostring\(unresolvedRegister1\)/, out);
+  assert.match(out, /-- unresolved: #1 string/, out);
+  assert.ok(!/=>/.test(out));
+});
+
+test('the note is written once per use, not once per pass', () => {
+  const out = same('print("a" .. tostring(r3) .. tostring(r3))\n');
+  for (const line of out.split('\n')) {
+    assert.ok((line.match(/-- unresolved: #/g) || []).length <= 1, line);
+  }
+});
+
+test('a parameter that happens to be called r1 is a parameter, not a hole', () => {
+  const out = same('local function f(r1, r2)\n\treturn r1 + r2\nend\nprint(f(1, 2))\n');
+  assert.match(out, /function f\(r1, r2\)/, out);
+  assert.ok(!/unresolvedRegister/.test(out), out);
+});
+
+test('a hole is not hidden by another function declaring the same name', () => {
+  const out = same('local function f(r6)\n\treturn r6\nend\n'
+    + 'local text = "stage " .. tostring(r6)\nprint(f(1), text)\n');
+  assert.match(out, /function f\(r6\)/, out);
+  assert.match(out, /tostring\(unresolvedRegister1\)/, out);
+});
+
+test('a name the script assigns itself stays a global', () => {
+  const out = same('r9 = 5\nprint(r9)\n');
+  assert.ok(!/unresolvedRegister/.test(out), out);
+  assert.match(out, /^r9 = 5$/m, out);
+});
+
+test('a register name inside a string is data, not a read', () => {
+  const out = same('print("r6")\n');
+  assert.match(out, /print\("r6"\)/, out);
+  assert.ok(!/unresolvedRegister/.test(out), out);
+});
+
+// --- a literal branch that holds the only assignment ----------------------
+// The condition prints as a literal, but when the body it guards is the only
+// place a value is set, the literal is a value the lift lost, not a decision the
+// run made. Dropping the block leaves the variable nil and the frame stops on
+// arithmetic the original performed (the f44daa11 callback, `argument % 256`).
+
+test('a literal-false branch that is the only initializer is kept', () => {
+  const out = same('local a\nif nil then\n\ta = 5\nend\nprint(type(a))\n');
+  assert.match(out, /if nil then/, out);
+  assert.match(out, /a = 5/, out);
+});
+
+test('a literal-false branch whose value the taken block also sets is folded', () => {
+  const out = same('local a\nif nil then\n\ta = 1\nelse\n\ta = 2\nend\nprint(a)\n');
+  assert.ok(!/if nil then/.test(out), out);
+  assert.match(out, /a = 2/, out);
+});

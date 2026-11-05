@@ -414,3 +414,39 @@ definition of `X` in the input (`X =`, `["X"] =`); if there is none, the diagnos
 says the capture looks incomplete rather than blaming the environment. The mapping
 lives in `diagnoseTrace` (`src/driver.js`) and is covered by
 `test/trace_status.test.js`.
+
+### Register names the lift cannot declare
+
+A state machine block can read a register inside the loop it belongs to and, after
+the CFG is structured again, end up outside that loop. The read survives as
+`tostring(r6)` while the store that filled register 6 stayed behind, so nothing in
+the output declares the name -- and in Luau an undeclared name is a global read,
+silently nil. `variables.rename` also splits a register into one variable per web,
+so the same hole can appear as `r6_2`.
+
+`ast_polish._declare_unresolved_registers` runs after the capture pass and asks the
+parser which of those names are really holes: only an `AstExprGlobal` whose name
+matches `r<digits>` (optionally `_<digits>`) counts. A closure parameter named `r1`
+is a parameter, a name the chunk assigns itself is a real global, and `"r6"` inside
+a string is data -- none of them are touched. Each hole is renamed to
+`unresolvedRegister<N>` at the exact source span the parser reported, declared at
+the top of the file, and annotated at every use with the shape the original value
+had (`_hint_unresolved_captures` handles both families). The runtime value does not
+change -- it was nil, it stays nil -- but the output stops reading a global that no
+script has, and the reader is told what went missing instead of finding a bare
+identifier.
+
+### A literal branch is not always a decided branch
+
+`_fold_constant_ifs` keeps the block a literal condition selects and drops the
+other one. The condition can be literal because the run decided it, or because the
+lift lost the value behind it -- a missing operand prints as `nil`. In the second
+case the dropped block can be the only place a variable is set, and deleting it
+leaves the frame nil where the original had a value (`f44daa11`: the decoder's
+`argument % 256`).
+
+`_fold_constant_ifs_once` therefore drops a branch only when the names it assigns
+are also assigned by the block that is kept (`_branch_targets`). A body that sets
+nothing new is still folded exactly as before, which is why the pinned results are
+byte-identical; a body that is the only initializer stays, and the file keeps the
+value it would otherwise have lost.

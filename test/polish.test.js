@@ -147,8 +147,8 @@ test('a parameter is named from the method it is given to', () => {
     + 'local function send(argument5, argument6)\n\treturn argument5:FireServer(argument6)\nend\n'
     + 'print(send(fakeRemote, 7))\n';
   const out = same(src);
-  assert.match(out, /local function send\(remote, argument6\)/, out);
-  assert.match(out, /return remote:FireServer\(argument6\)/, out);
+  assert.match(out, /local function send\(remote, payload\)/, out);
+  assert.match(out, /return remote:FireServer\(payload\)/, out);
 });
 
 test('a parameter is named from the call it is handed to', () => {
@@ -202,4 +202,55 @@ test('a function is named from what its body builds when it is only called', () 
     + 'print(callback7(1).Name)\n';
   const out = same(src);
   assert.match(out, /local function newFrame\(/, out);
+});
+
+// --- method tables and value locals --------------------------------------
+// A hub script defines its modules by hand, so a method body is the contract
+// for `module:method(x)`. And `local value7 = <something>` says what the value
+// is, which is worth a name when the local is written only once.
+
+test('a parameter is named from the method it is handed to', () => {
+  const src = 'local module = {}\nmodule.run = function(self, job)\n\treturn job + 1\nend\n'
+    + 'local function start(argument5)\n\treturn module:run(argument5)\nend\n'
+    + 'print(start(1), module:run(2))\n';
+  const out = same(src);
+  assert.match(out, /local function start\(job\)/, out);
+  assert.match(out, /return module:run\(job\)/, out);
+});
+
+test('a method written in a table literal is the same contract', () => {
+  const src = 'local module = {run = function(self, job)\n\treturn job * 2\nend}\n'
+    + 'local function start(argument5)\n\treturn module:run(argument5)\nend\n'
+    + 'print(start(2))\n';
+  const out = same(src);
+  assert.match(out, /local function start\(job\)/, out);
+});
+
+test('a value local is named from the field it was read from', () => {
+  const src = 'local part = {Position = {X = 1}}\nlocal value7 = part.Position\n'
+    + 'print(value7.X)\n';
+  const out = same(src);
+  assert.match(out, /^local position = part\.Position$/m, out);
+  assert.match(out, /print\(position\.X\)/, out);
+});
+
+test('a value local is named from the lookup it holds', () => {
+  const src = 'local character = {FindFirstChild = function(self, name) return {Name = name} end}\n'
+    + 'local value7 = character:FindFirstChild("Humanoid")\nprint(value7.Name)\n';
+  const out = same(src);
+  assert.match(out, /^local humanoid = character:FindFirstChild\("Humanoid"\)$/m, out);
+});
+
+test('a value local packed from varargs keeps a name that says so', () => {
+  const src = 'local function f(argument5, ...)\n\tlocal value8 = table.pack(...)\n'
+    + '\treturn argument5 + value8.n\nend\nprint(f(1, 2, 3))\n';
+  const out = same(src);
+  assert.match(out, /^\s*local packedValues = table\.pack\(\.\.\.\)$/m, out);
+});
+
+test('a value local written more than once takes no name from its first write', () => {
+  const src = 'local part = {Position = 1}\nlocal value7 = part.Position\n'
+    + 'value7 = value7 + 1\nprint(value7)\n';
+  const out = same(src);
+  assert.ok(!/^local position = part\.Position$/m.test(out), out);
 });

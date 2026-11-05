@@ -2077,6 +2077,87 @@ def _usage_function_handles(root):
     return handles
 
 
+def _usage_receiver(node):
+    """The name a method is called on, when it is a plain local or global."""
+    t = (node or {}).get("type")
+    if t == "AstExprLocal":
+        return (node.get("local") or {}).get("name")
+    if t == "AstExprGlobal":
+        return node.get("global")
+    return None
+
+
+def _usage_method_handles(root):
+    """The contract of a module method, both ways.
+
+    A hub script builds its modules by hand (`module.run = function(job) end`,
+    or `local module = {run = function(job) end}`), so `module:run(x)` is the
+    same contract a local function would be: the parameter name travels between
+    the definition and the call. A match on `receiver.field` wins; a field name
+    that only one definition uses is good enough on its own.
+    """
+    defs = {}
+
+    def add(receiver, field, value):
+        if not isinstance(field, str) or (value or {}).get("type") != "AstExprFunction":
+            return
+        defs.setdefault((receiver, field), []).append(value)
+
+    for stmt in _iter_nodes(root, "AstStatAssign"):
+        vars_, values = stmt.get("vars") or [], stmt.get("values") or []
+        if len(vars_) != len(values):
+            continue
+        for var, value in zip(vars_, values):
+            receiver = _usage_receiver(var.get("expr") or {})
+            if var.get("type") == "AstExprIndexName":
+                add(receiver, var.get("index"), value)
+            elif var.get("type") == "AstExprIndexExpr":
+                key = var.get("index") or {}
+                if key.get("type") == "AstExprConstantString":
+                    add(receiver, key.get("value"), value)
+    for stmt in _iter_nodes(root, "AstStatLocal"):
+        vars_, values = stmt.get("vars") or [], stmt.get("values") or []
+        for var, value in zip(vars_, values):
+            if value.get("type") != "AstExprTable":
+                continue
+            receiver = var.get("name")
+            for item in value.get("items") or []:
+                if item.get("type") != "AstExprTableItem":
+                    continue
+                key = item.get("key") or {}
+                if key.get("type") == "AstExprConstantString":
+                    add(receiver, key.get("value"), item.get("value"))
+
+    out, by_field = {}, {}
+    for (receiver, field), fns in defs.items():
+        signatures = {tuple(p.get("name") for p in (fn.get("args") or [])) for fn in fns}
+        if len(signatures) != 1:        # definitions that disagree say nothing
+            continue
+        if receiver:
+            out[(receiver, field)] = fns[0]
+        by_field.setdefault(field, []).append(fns[0])
+    for field, fns in by_field.items():
+        signatures = {tuple(p.get("name") for p in (fn.get("args") or [])) for fn in fns}
+        if len(signatures) == 1:
+            out[(None, field)] = fns[0]
+    return out
+
+
+def _usage_init_name(init):
+    """Name for `local value7 = <init>`, when the value says what it is."""
+    t = init.get("type")
+    if t == "AstExprFunction":
+        return _slot_function_name(init) or _usage_body_name(init)
+    if t == "AstExprIndexName":
+        # a value read out of a field *is* that field: `part.Position` -> position
+        return _slot_camel(init.get("index"))
+    if t == "AstExprCall":
+        if _slot_method_of(init) == "pack" or _usage_callee(init) == "pack":
+            return "packedValues"
+        return _slot_call_name(init)
+    return None
+
+
 def _usage_owner_names(root):
     """Function node id -> the name it is bound to, so a parameter never takes it.
 
@@ -2105,8 +2186,8 @@ def _usage_owner_names(root):
     return owners
 
 
-def _usage_evidence(binding_loc, parent, refs):
-    """Names the usages themselves suggest, best first."""
+def _usage_votes(binding_loc, parent, refs):
+    """What the usages suggest, heaviest first."""
     votes = []
     for ref in refs.get(binding_loc) or []:
         par, key = parent.get(id(ref)) or (None, None)
@@ -2166,10 +2247,14 @@ def _usage_evidence(binding_loc, parent, refs):
         elif kind == "AstStatIf" and key == "condition":
             votes.append((1, "object"))
     votes = [(w, n) for w, n in votes if n]
-    if not votes:
-        return None
     votes.sort(key=lambda v: -v[0])
-    return votes[0][1]
+    return votes
+
+
+def _usage_evidence(binding_loc, parent, refs):
+    """The strongest name the usages themselves suggest, if any."""
+    votes = _usage_votes(binding_loc, parent, refs)
+    return votes[0][1] if votes else None
 
 
 def _usage_closure_name(binding_loc, parent, refs):
@@ -2239,6 +2324,8 @@ def _usage_zone(bindings, name, location):
 
 
 _NUMBERED = re.compile(r"^(?:argument\d+|callback\d+)$")
+# a local the lifter filled from a register: `local value7 = ...`
+_VALUE_LOCAL = re.compile(r"^value\d+$")
 # the namer's own fallbacks: passing one of these on is not a name
 _GENERATEDISH = re.compile(
     r"^(?:argument\d+|callback\d+|value\d*|valueMap\d*|labelMap\d*|uidMap\d*"
@@ -2283,23 +2370,48 @@ def _usage_names(text):
         start, end = _loc_bytes(node["location"], starts)
         globals_by_name.setdefault(node.get("global"), []).append((start, end))
 
+    prop_fallback = {}
     owner_of_param = {}
     for fn in _iter_nodes(root, "AstExprFunction"):
         for param in fn.get("args") or []:
             owner_of_param[param.get("location")] = id(fn)
 
-    targets = {}
+    methods = _usage_method_handles(root)
+    targets = {}                        # binding location -> (node, kind)
     for node in _iter_nodes(root, "AstLocal"):
         name = node.get("name") or ""
+        if _VALUE_LOCAL.match(name):
+            targets.setdefault(node.get("location"), (node, "value"))
+            continue
         if not _PLACEHOLDER.match(name):
             continue
-        # `callback` on a parameter is a name this pass chose; only the lifter's
-        # numbered fallbacks are worth renaming
-        if name == "callback" and node.get("location") in owner_of_param:
-            continue
-        targets.setdefault(node.get("location"), node)
+        is_param = node.get("location") in owner_of_param
+        if name.startswith("callback"):
+            # `callback` on a parameter is a name this pass chose; only the
+            # lifter's numbered fallbacks are worth renaming
+            if is_param:
+                continue
+            targets.setdefault(node.get("location"), (node, "closure"))
+        elif is_param:
+            targets.setdefault(node.get("location"), (node, "param"))
+        else:
+            # an `argumentN` that is a plain local, not a parameter: it takes
+            # the same usage evidence, just without the parameter guards
+            targets.setdefault(node.get("location"), (node, "local"))
     if not targets:
         return text
+
+    # where a `value` local is initialised, and how many times it is written
+    init_of, writes = {}, {}
+    for stmt in _iter_nodes(root, "AstStatLocal"):
+        vars_, values = stmt.get("vars") or [], stmt.get("values") or []
+        for var, value in zip(vars_, values):
+            init_of.setdefault(var.get("location"), value)
+    for stmt in _iter_nodes(root, "AstStatAssign"):
+        for var in stmt.get("vars") or []:
+            if var.get("type") == "AstExprLocal":
+                loc = (var.get("local") or {}).get("location")
+                writes[loc] = writes.get(loc, 0) + 1
 
     def globals_within(zone):
         out = set()
@@ -2316,10 +2428,25 @@ def _usage_names(text):
         for call in _iter_nodes(root, "AstExprCall"):
             fn = call.get("func") or {}
             params = None
+            is_method_call = bool(call.get("self"))
             if fn.get("type") == "AstExprLocal":
                 target = handles.get((fn.get("local") or {}).get("location"))
                 if target is not None:
                     params = target.get("args") or []
+            elif fn.get("type") == "AstExprIndexName":
+                field = fn.get("index")
+                receiver = _usage_receiver(fn.get("expr") or {})
+                target = (methods.get((receiver, field)) if receiver else None) \
+                    or methods.get((None, field))
+                if target is not None:
+                    params = target.get("args") or []
+                if params and is_method_call:
+                    # `module:run(x)` hands the receiver in as `self`; align past
+                    # it, and say nothing when the method does not declare one
+                    if (params[0].get("name") or "") in ("self", "_self"):
+                        params = params[1:]
+                    else:
+                        params = []
             if not params:
                 continue
             for index, arg in enumerate(call.get("args") or []):
@@ -2332,36 +2459,62 @@ def _usage_names(text):
                 for loc, source in ((arg_loc, param_name), (param_loc, arg_name)):
                     if loc not in targets or loc in chosen:
                         continue
+                    if targets[loc][1] == "closure":
+                        # a handler says more about what it is than the name its
+                        # caller happens to use for it, so keep this only as a
+                        # fallback for a handler with no evidence of its own
+                        prop_fallback.setdefault(loc, source)
+                        continue
                     if _PLACEHOLDER.match(source or ""):
                         continue
-                    zone = _usage_zone(bindings, targets[loc].get("name"), loc)
+                    zone = _usage_zone(bindings, targets[loc][0].get("name"), loc)
                     if zone is None:
                         continue
                     if _usage_free(source, zone, bindings, globals_within(zone), assigned):
                         chosen[loc] = source
                         assigned.setdefault(source, []).append(zone)
                         changed = True
-        for loc, node in targets.items():
+        order = {"param": 0, "local": 1, "closure": 2, "value": 3}
+        for loc, (node, kind) in sorted(targets.items(), key=lambda kv: order[kv[1][1]]):
             if loc in chosen:
                 continue
             name = node.get("name") or ""
             zone = _usage_zone(bindings, name, loc)
             if zone is None:
                 continue
-            if name.startswith("callback"):
+            if kind == "closure":
                 candidate = (_usage_closure_name(loc, parent, refs)
-                             or _usage_body_name(handles.get(loc) or {}))
+                             or _usage_body_name(handles.get(loc) or {})
+                             or prop_fallback.get(loc))
+            elif kind == "value":
+                votes = _usage_votes(loc, parent, refs)
+                candidate = votes[0][1] if votes and votes[0][0] >= 2 else None
+                if candidate is None and not writes.get(loc):
+                    candidate = _usage_init_name(init_of.get(loc) or {})
+                if candidate is None and votes:
+                    candidate = votes[0][1]
             else:
                 candidate = _usage_evidence(loc, parent, refs)
-                holder = owner_of_param.get(loc)
+                holder = owner_of_param.get(loc) if kind == "param" else None
                 if holder is not None and candidate == owners.get(holder):
                     continue            # the function's own name is not the parameter's
             if not candidate or candidate == name:
                 continue
             if _usage_free(candidate, zone, bindings, globals_within(zone), assigned):
-                chosen[loc] = candidate
-                assigned.setdefault(candidate, []).append(zone)
-                changed = True
+                if not (kind == "value" and candidate == name):
+                    chosen[loc] = candidate
+                    assigned.setdefault(candidate, []).append(zone)
+                    changed = True
+                continue
+            # a live neighbour already owns the plain name: a numbered sibling
+            # keeps the meaning and stays distinct (`object` -> `object2`)
+            for n in range(2, 6):
+                alt = "%s%d" % (candidate, n)
+                if _usage_free(alt, zone, bindings, globals_within(zone), assigned):
+                    chosen[loc] = alt
+                    assigned.setdefault(alt, []).append(zone)
+                    changed = True
+                    break
         if not changed:
             break
 

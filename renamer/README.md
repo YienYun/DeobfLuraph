@@ -84,14 +84,33 @@ bukti, bukan dari kamus:
 | `pcall(p)` / `task.spawn(p)` | `callback` |
 | `map[p]` / `#p` / `p * 2` / `.. p` | `key` / `list` / `amount` / `text` |
 | `f(a, argument5)` dengan parameter `f` bernama `egg` | `egg` (dari kontrak callee) |
+| `module:run(argument5)` dengan `module.run = function(self, job)` | `job` (kontrak method table) |
 | `callback7` diberikan ke `:Connect` | `onHeartbeat`, `onChildAdded`, … |
 | `callback7` yang hanya dipanggil, badannya membuat `Instance.new("Frame")` | `newFrame` |
+| `local value7 = part.Position` | `position` (nilai itu memang field-nya) |
+| `local value7 = character:FindFirstChild("Humanoid")` | `humanoid` |
+| `local value7 = table.pack(...)` | `packedValues` |
+| `local value7` yang cuma dibaca `.Name` / `#` / `[k]` | `object` / `list` / `key` |
+
+Method table adalah kontrak dua arah: `module.run = function(self, job)` (atau
+`local module = {run = function(self, job) end}`) membuat `module:run(x)` sah
+sebagai bukti, dan sebaliknya nama parameter method bisa datang dari call site.
+Kalau method tidak mendeklarasikan `self`, argumen tidak dipasangkan sama sekali
+(ambigu, lebih baik tetap `argument5` daripada salah nama).
+
+`valueN` hanya dinamai dari initialiser-nya kalau local itu **ditulis tepat
+sekali** (`local value7 = part.Position`); yang ditulis ulang dianggap register
+bekas dan hanya boleh memakai bukti pemakaian.
 
 Aturan yang menjaga perilaku: nama yang **sudah hidup** di rentang yang sama
 tidak dipakai, nama fungsi tidak dipakai untuk parameternya sendiri, dua
 parameter satu fungsi tidak pernah dapat nama sama, nama fallback lifter
 (`value12`, `number8`) tidak dipakai sebagai nama baru, dan pass berhenti saat
-teks tidak berubah lagi (nama baru jadi bukti untuk putaran berikutnya).
+teks tidak berubah lagi (nama baru jadi bukti untuk putaran berikutnya). Kalau
+nama terbaik sudah dipegang tetangga yang hidup, dipakai saudara bernomor
+(`object` -> `object2`) supaya maknanya tetap dan tidak ada shadowing.
+Urutan pembagian nama: parameter, local `argumentN`, handler, lalu `valueN` --
+parameter lebih penting daripada local scratch.
 
 ### 5. Mode Full AI LLM (Opsional)
 Jika ingin memakai AI LLM eksternal (AI **hanya** mengirim daftar JSON nama & komentar, lalu diterapkan oleh Verified Scope Renamer sehingga AI **tidak pernah bisa merusak kode**):

@@ -120,8 +120,8 @@ local function callback3(argument)
 	if type(argument) ~= "table" then
 		return argument
 	end
-	local value2 = rawget(argument, "Instance")
-	if typeof(value2) ~= "Instance" then
+	local container = rawget(argument, "Instance")
+	if typeof(container) ~= "Instance" then
 		return argument
 	end
 	local condition2 = false
@@ -157,10 +157,10 @@ local function callback3(argument)
 		end)
 	end
 
-	for _, descendant in ipairs(value2:GetDescendants()) do
+	for _, descendant in ipairs(container:GetDescendants()) do
 		onDescendantAdded(descendant)
 	end
-	local connection = value2.DescendantAdded:Connect(onDescendantAdded)
+	local connection = container.DescendantAdded:Connect(onDescendantAdded)
 	registerItem(function()
 		pcall(function()
 			connection:Disconnect()
@@ -244,7 +244,7 @@ end
 
 local module = {}
 
-local function callback7()
+local function fireRemote2()
 	local nameList = {"Common", "Rare", "Epic", "Legendary", "Mythic", "Divine", "Ethereal"}
 	local module2
 	module.RarityOrder = nameList
@@ -347,26 +347,26 @@ local function callback7()
 	end
 
 	module.PlotTop = function()
-		local value2 = module.PlotBase()
-		if not value2 then
+		local part = module.PlotBase()
+		if not part then
 			return nil
 		end
-		return value2.Position + Vector3.new(0, value2.Size.Y / 2, 0)
+		return part.Position + Vector3.new(0, part.Size.Y / 2, 0)
 	end
 
 	module3 = nil
 
 	module3, module.RandomPlotPoint = module, function(argument, container, argument3)
-		local value2 = module.PlotBase()
-		if not value2 then
+		local part = module.PlotBase()
+		if not part then
 			return nil
 		end
-		local number, number2, number3, vector = math.max(1, value2.Size.X / 2 - argument), math.max(1, value2.Size.Z / 2 - argument), value2.Position.Y + value2.Size.Y / 2
+		local number, number2, number3, vector = math.max(1, part.Size.X / 2 - argument), math.max(1, part.Size.Z / 2 - argument), part.Position.Y + part.Size.Y / 2
 
 		for i = 1, 24, 1 do
 			argument = Vector3.new(rng:NextNumber(-number, number), 0, rng:NextNumber(-number2, number2))
-			local value3 = value2.CFrame:PointToWorldSpace(argument)
-			local vector2, condition2 = Vector3.new(value3.X, number3, value3.Z), true
+			local object = part.CFrame:PointToWorldSpace(argument)
+			local vector2, condition2 = Vector3.new(object.X, number3, object.Z), true
 
 			if container then
 				for _, value4 in ipairs(container) do
@@ -402,13 +402,13 @@ local function callback7()
 	module4 = nil
 
 	module4, module.Fire = module, function(argument, ...)
-		local value2 = game_:FindFirstChild(argument)
-		if not value2 or not value2:IsA("RemoteEvent") then
+		local remote = game_:FindFirstChild(argument)
+		if not remote or not remote:IsA("RemoteEvent") then
 			return false
 		end
-		local value3 = table.pack(...)
+		local packedValues = table.pack(...)
 		return pcall(function()
-			value2:FireServer(table.unpack(value3, 1, value3.n))
+			remote:FireServer(table.unpack(packedValues, 1, packedValues.n))
 		end)
 	end
 
@@ -486,16 +486,16 @@ local function callback7()
 	module.MinEggWeight = 0
 	nameList = nil
 
-	nameList, module.EggHeavyEnough = module, function(argument, argument2)
-		if not argument2 then
-			argument2 = module.MinEggWeight
+	nameList, module.EggHeavyEnough = module, function(argument, number)
+		if not number then
+			number = module.MinEggWeight
 		end
-		local condition2 = argument2 <= 0
+		local condition2 = number <= 0
 		local condition
 		if condition2 then
 			condition = condition2
 		else
-			condition = module.EggShownWeight(argument) >= argument2
+			condition = module.EggShownWeight(argument) >= number
 		end
 		return condition
 	end
@@ -513,20 +513,20 @@ local function callback7()
 			return math.floor(_ / number4 + 0.5) * number4
 		end
 
-		local function clampValue(argument3)
-			argument3 = math.clamp(tonumber(argument3) or 0, 0, number)
-			if argument3 <= 0 then
+		local function clampValue(text3)
+			text3 = math.clamp(tonumber(text3) or 0, 0, number)
+			if text3 <= 0 then
 				return 0
 			end
-			return roundSigFigs(10 ^ (number2 + ((number3 - number2) * argument3) / number))
+			return roundSigFigs(10 ^ (number2 + ((number3 - number2) * text3) / number))
 		end
 
-		local function roundSigFigs2(argument3)
-			argument3 = tonumber(argument3) or 0
-			if argument3 <= 0 then
+		local function roundSigFigs2(text3)
+			text3 = tonumber(text3) or 0
+			if text3 <= 0 then
 				return 0
 			end
-			local number4 = (math.log10(argument3) - number2) / (number3 - number2) * number
+			local number4 = (math.log10(text3) - number2) / (number3 - number2) * number
 			return math.clamp(math.floor(number4 * 100 + 0.5) / 100, 0, number)
 		end
 
@@ -540,8 +540,8 @@ local function callback7()
 			return text4
 		end
 
-		local function callback9(argument3)
-			local numVal = clampValue(argument3)
+		local function callback9(text3)
+			local numVal = clampValue(text3)
 
 			if numVal <= 0 then
 				return "Off"
@@ -570,8 +570,8 @@ local function callback7()
 			return roundSigFigs2(match * (unitMultipliers[match2] or 1))
 		end
 
-		options = {Name = object.Name, SubOf = object.SubOf, Min = 0, Max = number, Default = 0, AllowDecimals = true, Increment = 0.01, ValueFormat = callback9, ValueParse = callback10, Callback = function(argument3)
-			object.OnRaw(clampValue(argument3))
+		options = {Name = object.Name, SubOf = object.SubOf, Min = 0, Max = number, Default = 0, AllowDecimals = true, Increment = 0.01, ValueFormat = callback9, ValueParse = callback10, Callback = function(text3)
+			object.OnRaw(clampValue(text3))
 		end}
 		return argument:CreateSlider(options), roundSigFigs2
 	end
@@ -604,9 +604,9 @@ local function callback7()
 		return 1 + (type(mutation) == "table" and tonumber(mutation.StatMultiplier) or 0) / 100
 	end
 	module4 = nil
-	module4, module.PetScore = module, function(argument, argument2, argument3)
+	module4, module.PetScore = module, function(argument, text3, argument3)
 		local object, module = module.PetData(argument), module
-		return (object and tonumber(object.Income) or 1) * math.max(tonumber(argument2) or 1, 0.1) * module.MutationBonus(argument3)
+		return (object and tonumber(object.Income) or 1) * math.max(tonumber(text3) or 1, 0.1) * module.MutationBonus(argument3)
 	end
 
 	module.PetNameOf = function(instance2)
@@ -669,9 +669,9 @@ local function callback7()
 	module3, module.Equip = module, function(argument)
 		local character
 		local number
-		local value2 = module.Humanoid()
+		local object = module.Humanoid()
 		character = localPlayer.Character
-		if not value2 or not argument or not character then
+		if not object or not argument or not character then
 			return false
 		end
 
@@ -679,7 +679,7 @@ local function callback7()
 			return true
 		end
 		pcall(function()
-			value2:EquipTool(argument)
+			object:EquipTool(argument)
 		end)
 		number = os.clock() + 1
 		while argument.Parent ~= character and os.clock() < number do
@@ -689,10 +689,10 @@ local function callback7()
 	end
 
 	module.Unequip = function()
-		local value2 = module.Humanoid()
-		if value2 then
+		local object = module.Humanoid()
+		if object then
 			pcall(function()
-				value2:UnequipTools()
+				object:UnequipTools()
 			end)
 		end
 	end
@@ -794,13 +794,13 @@ local function callback7()
 	end
 
 	module.InVolcanoArea = function(argument)
-		local value2 = callback8()
-		local vector = Vector3.new(argument.X - value2.Center.X, 0, argument.Z - value2.Center.Z)
-		if argument.Y >= value2.Center.Y + 20 or argument.Y < value2.BaseY - 40 then
+		local object = callback8()
+		local vector = Vector3.new(argument.X - object.Center.X, 0, argument.Z - object.Center.Z)
+		if argument.Y >= object.Center.Y + 20 or argument.Y < object.BaseY - 40 then
 			return false
 		end
-		local number, number2 = math.min(value2.Half.X, value2.Half.Y), math.clamp((argument.Y - value2.BaseY) / math.max(1, value2.Center.Y - value2.BaseY), 0, 1)
-		argument = value2.BaseRadius + (number - value2.BaseRadius) * number2
+		local number, number2 = math.min(object.Half.X, object.Half.Y), math.clamp((argument.Y - object.BaseY) / math.max(1, object.Center.Y - object.BaseY), 0, 1)
+		argument = object.BaseRadius + (number - object.BaseRadius) * number2
 		return vector.Magnitude < argument - 30
 	end
 
@@ -823,29 +823,29 @@ local function callback7()
 
 	module5 = nil
 
-	module5, module.TravelTime = module, function(argument, vector2)
+	module5, module.TravelTime = module, function(argument, packages)
 		local amount, number = argument, 0
-		for _, value2 in ipairs(callback9(argument, vector2)) do
+		for _, value2 in ipairs(callback9(argument, packages)) do
 			amount, number = value2, number + (value2 - amount).Magnitude
 		end
-		vector2 = math.max(module.FlySpeed, 20)
-		return number / vector2
+		packages = math.max(module.FlySpeed, 20)
+		return number / packages
 	end
 
 	module2 = nil
 
-	module2, module.FlyTo = module, function(argument, argument2, amount)
+	module2, module.FlyTo = module, function(argument, object, amount)
 		local module2 = module
-		local value2 = module2.Root()
-		if not value2 or typeof(argument) ~= "Vector3" then
+		local part = module2.Root()
+		if not part or typeof(argument) ~= "Vector3" then
 			return false
 		end
 		amount = amount or 3
-		if (value2.Position - argument).Magnitude <= amount then
+		if (part.Position - argument).Magnitude <= amount then
 			return true
 		end
-		module2 = callback9(value2.Position, argument)
-		local number = os.clock() + module.TravelTime(value2.Position, argument) + 6
+		module2 = callback9(part.Position, argument)
+		local number = os.clock() + module.TravelTime(part.Position, argument) + 6
 		setNoclip(true)
 		local condition2
 
@@ -866,17 +866,17 @@ local function callback7()
 		callback10_2, condition2 = 1, false
 
 		while os.clock() < number do
-			if argument2 and argument2() then
+			if object and object() then
 				break
 			end
 			local condition3
 			local _, module3 = RunService.Heartbeat:Wait(), module
-			value2 = module3.Root()
-			if not value2 then
+			part = module3.Root()
+			if not part then
 				break
 			end
 			module3, condition3 = module2[callback10_2], callback10_2 == #module2
-			local number2 = module3 - value2.Position
+			local number2 = module3 - part.Position
 			module3 = number2.Magnitude
 
 			if module3 <= (condition3 and amount or 2) then
@@ -891,33 +891,33 @@ local function callback7()
 			local number3 = math.min(module3, math.max(module.FlySpeed, 20) * _)
 			condition3 = Vector3.new
 			module3 = condition3(number2.X, 0, number2.Z)
-			local cframe = module3.Magnitude > 0.1 and CFrame.lookAt(Vector3.new(0, 0, 0), module3.Unit) or value2.CFrame.Rotation
+			local cframe = module3.Magnitude > 0.1 and CFrame.lookAt(Vector3.new(0, 0, 0), module3.Unit) or part.CFrame.Rotation
 			pcall(function()
-				value2.CFrame = CFrame.new(value2.Position + number2.Unit * number3) * cframe
-				value2.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
-				value2.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+				part.CFrame = CFrame.new(part.Position + number2.Unit * number3) * cframe
+				part.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+				part.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
 			end)
 		end
 
 		connection:Disconnect()
 		setNoclip(false)
 		module2 = module
-		value2 = module2.Root()
-		if value2 then
+		part = module2.Root()
+		if part then
 			pcall(function()
-				value2.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+				part.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
 			end)
-			condition2 = if (value2.Position - argument).Magnitude <= amount + 1 then true else condition2
+			condition2 = if (part.Position - argument).Magnitude <= amount + 1 then true else condition2
 		end
 		return condition2
 	end
 
 	rarityColors = nil
 
-	rarityColors, module.MoveLine = module, function(argument, argument2, argument3)
+	rarityColors, module.MoveLine = module, function(argument, text3, object)
 		local module2 = module
-		local value2 = module2.Root()
-		if not value2 or typeof(argument) ~= "Vector3" then
+		local part = module2.Root()
+		if not part or typeof(argument) ~= "Vector3" then
 			return false
 		end
 		setNoclip(true)
@@ -934,28 +934,28 @@ local function callback7()
 					descendant.CanCollide = false
 				end
 			end
-		end), value2.Position
+		end), part.Position
 
-		local number, _, condition2 = math.max(0.05, (argument - position).Magnitude / math.max(tonumber(argument2) or 60, 1)), 0, true
+		local number, _, condition2 = math.max(0.05, (argument - position).Magnitude / math.max(tonumber(text3) or 60, 1)), 0, true
 
 		while _ < number do
-			if argument3 and argument3() then
+			if object and object() then
 				condition2 = false
 				break
 			end
 			stepped = RunService
 			_ += stepped.Heartbeat:Wait()
 			module2 = module
-			value2 = module2.Root()
-			if not value2 then
+			part = module2.Root()
+			if not part then
 				condition2 = false
 				break
 			end
 			local value3 = position:Lerp(argument, math.min(1, _ / number))
 			pcall(function()
-				value2.CFrame = CFrame.new(value3) * value2.CFrame.Rotation
-				value2.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
-				value2.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+				part.CFrame = CFrame.new(value3) * part.CFrame.Rotation
+				part.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+				part.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
 			end)
 		end
 
@@ -993,7 +993,7 @@ local function callback7()
 	end
 	rarityColors = nil
 
-	rarityColors, module.VolcanoApproach = module, function(argument, argument2, argument3)
+	rarityColors, module.VolcanoApproach = module, function(argument, object, amount)
 		local localPlayer2 = localPlayer
 		local condition2 = localPlayer2:GetAttribute("InVolcano") ~= true
 		local condition
@@ -1009,25 +1009,25 @@ local function callback7()
 			local module6, value2 = localPlayer2.VolcanoDoor()
 			condition2 = not module6
 			if condition2 then
-				return module.FlyTo(argument, argument2, argument3)
+				return module.FlyTo(argument, object, amount)
 			end
 			module.Status = "Going to the volcano door"
-			if not module.FlyTo(module6, argument2, 4) then
+			if not module.FlyTo(module6, object, 4) then
 				return false
 			end
 			module.Status = "Entering the lair through its door"
 			module6 = module
-			if not module6.MoveLine(value2, 40, argument2) then
+			if not module6.MoveLine(value2, 40, object) then
 				return false
 			end
 		end
 
 		module.Status = "Going down to the Volcanic Egg"
 		condition = module
-		condition.MoveLine(argument, 250, argument2)
+		condition.MoveLine(argument, 250, object)
 		localPlayer2 = module
 		condition2 = localPlayer2.Root()
-		return condition2 ~= nil and (condition2.Position - argument).Magnitude <= (argument3 or 3) + 2
+		return condition2 ~= nil and (condition2.Position - argument).Magnitude <= (amount or 3) + 2
 	end
 
 	module2 = nil
@@ -1069,7 +1069,7 @@ local function callback7()
 	end)
 end
 
-callback7()
+fireRemote2()
 local farmStatusSection = defaultTab:CreateSection({ Name = "Farm Status", Expanded = true })
 local autoCollectEggsSection = defaultTab:CreateSection({ Name = "Auto Collect Eggs", Expanded = true })
 local section = defaultTab:CreateSection({ Name = "Auto Place & Hatch", Expanded = false })
@@ -1097,7 +1097,7 @@ local module2 = {
 }
 
 local function callback8()
-	local value2 = farmStatusSection:CreateText({Name = "Farm Status", Text = "Idle"})
+	local object = farmStatusSection:CreateText({Name = "Farm Status", Text = "Idle"})
 	local status
 
 	local connection = RunService.Heartbeat:Connect(function()
@@ -1105,9 +1105,9 @@ local function callback8()
 
 		if condition2 then
 			status = module.Status
-			local value3 = value2 and type(value2.Set) == "function"
-			if value3 then
-				pcall(value2.Set, value2, status)
+			local object2 = object and type(object.Set) == "function"
+			if object2 then
+				pcall(object.Set, object, status)
 			end
 		end
 	end)
@@ -1189,7 +1189,7 @@ local function fireRemote()
 	callback12 = function(argument)
 		local number3 = 33160355
 		local data5, module3 = {}, module
-		local value2, now = module3.PlotTop(), os.clock()
+		local object3, now = module3.PlotTop(), os.clock()
 		local collect, value = data2.Toggle(module2.Collect, false), ipairs
 		module3 = activeEggs
 		local children = table.pack(module3:GetChildren())
@@ -1236,10 +1236,10 @@ local function fireRemote()
 
 				if k2 then
 					condition2 = nil
-					if value2 then
-						condition2 = module.TravelTime(attribute2, value2)
+					if object3 then
+						condition2 = module.TravelTime(attribute2, object3)
 					else
-						condition2 = value2
+						condition2 = object3
 					end
 					local condition3 = (condition2 or 0) < (module.EggBreakSeconds(attribute) - number2) - 2
 
@@ -1255,46 +1255,46 @@ local function fireRemote()
 			end
 		end
 
-		table.sort(data5, function(object, argument3)
-			if object.Rebirth ~= argument3.Rebirth then
-				return object.Rebirth > argument3.Rebirth
+		table.sort(data5, function(object, object2)
+			if object.Rebirth ~= object2.Rebirth then
+				return object.Rebirth > object2.Rebirth
 			end
 			local text = text3
 			if text == data3[5] then
-				if object.Weight ~= argument3.Weight then
-					return object.Weight > argument3.Weight
+				if object.Weight ~= object2.Weight then
+					return object.Weight > object2.Weight
 				end
-				return object.Distance < argument3.Distance
+				return object.Distance < object2.Distance
 			end
 			text = text3
 			local condition2 = text == data3[3]
 
 			if condition2 then
-				return object.Distance < argument3.Distance
+				return object.Distance < object2.Distance
 			else
 				text = text3
 				local condition3 = text == data3[4]
 
 				if condition3 then
-					return object.Distance > argument3.Distance
+					return object.Distance > object2.Distance
 				else
 					if text3 == data3[2] then
-						if object.Rank ~= argument3.Rank then
-							return object.Rank > argument3.Rank
+						if object.Rank ~= object2.Rank then
+							return object.Rank > object2.Rank
 						end
 
-						if object.Luck ~= argument3.Luck then
-							return object.Luck > argument3.Luck
+						if object.Luck ~= object2.Luck then
+							return object.Luck > object2.Luck
 						end
-						return object.Distance < argument3.Distance
+						return object.Distance < object2.Distance
 					end
 				end
 			end
 
-			if object.Luck ~= argument3.Luck then
-				return object.Luck > argument3.Luck
+			if object.Luck ~= object2.Luck then
+				return object.Luck > object2.Luck
 			end
-			return object.Distance < argument3.Distance
+			return object.Distance < object2.Distance
 		end)
 
 		return data5
@@ -1304,7 +1304,7 @@ local function fireRemote()
 
 	module3, module2.EggMatches = module2, function(argument, _, argument3)
 		local argument4, container, module2 = argument or number, _ or data4, module
-		local value2, value = module2.PlotTop(), ipairs
+		local object, value = module2.PlotTop(), ipairs
 		module2 = activeEggs
 		local children, number3, data5 = table.pack(module2:GetChildren()), 0
 
@@ -1339,10 +1339,10 @@ local function fireRemote()
 
 				if condition3 then
 					local attribute
-					if value2 then
-						attribute = module.TravelTime(module2, value2)
+					if object then
+						attribute = module.TravelTime(module2, object)
 					else
-						attribute = value2
+						attribute = object
 					end
 					local condition4 = (attribute or 0) < (module.EggBreakSeconds(_) - number2) - 2
 
@@ -1367,13 +1367,13 @@ local function fireRemote()
 
 	local function callback13(argument, module4, object)
 		local module3 = module
-		local value2 = module3.Root()
+		local part = module3.Root()
 		module3 = localPlayer
 		local basket = module3:FindFirstChild("Basket")
-		if not value2 or not basket then
+		if not part or not basket then
 			return
 		end
-		module3 = argument.CFrame:PointToObjectSpace(value2.Position)
+		module3 = argument.CFrame:PointToObjectSpace(part.Position)
 		local vector = Vector3.new(module3.X, 0, module3.Z)
 		vector = if vector.Magnitude < 1 then Vector3.new(0, 0, 1) else vector
 		local number4, RunService2, unit = argument.Size.X / 2, argument.Size.Z / 2, vector.Unit
@@ -1382,8 +1382,8 @@ local function fireRemote()
 		vector2 = Vector3.new(vector2.X, module4.Y + 4, vector2.Z)
 		module4 = module
 		module4.FlyTo(vector2, object, 4)
-		value2 = module.Root()
-		if not value2 or (value2.Position - vector2).Magnitude > 10 then
+		part = module.Root()
+		if not part or (part.Position - vector2).Magnitude > 10 then
 			return
 		end
 		module3 = module
@@ -1392,16 +1392,16 @@ local function fireRemote()
 
 		while os.clock() < number5 do
 			object = module
-			local value3 = object.Root()
+			local part2 = object.Root()
 
-			if value3 then
+			if part2 then
 				local number6 = 479750839
 				module4 = number6
 				unit, module3 = pcall, u32Trunc(number5)
 				number6 = u32Trunc(1870089403 + module4 + (u32Mul(1520699420, module3) + u32Mul(1520699420, (bit32.bnot(module3)))))
 				local function callback14()
-					value3.CFrame = CFrame.new(vector2) * value3.CFrame.Rotation
-					value3.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+					part2.CFrame = CFrame.new(vector2) * part2.CFrame.Rotation
+					part2.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
 				end
 				unit(callback14)
 			end
@@ -1612,12 +1612,12 @@ local function fireRemote()
 	local module4
 
 	module4, module2.InstantTo = module2, function(argument)
-		local value2 = module.Root()
-		if not value2 then
+		local part = module.Root()
+		if not part then
 			return false
 		end
-		value2.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
-		value2.CFrame = CFrame.new(argument)
+		part.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+		part.CFrame = CFrame.new(argument)
 		argument = RunService
 		argument.Heartbeat:Wait()
 		return true
@@ -1670,8 +1670,8 @@ local function fireRemote()
 
 	module4, module2.CollectStep = module2, function(argument)
 		local module3 = module
-		local value2 = module3.Root()
-		if not value2 then
+		local part = module3.Root()
+		if not part then
 			return false
 		end
 		module3 = module
@@ -1694,13 +1694,13 @@ local function fireRemote()
 			module5 = module6 and module4
 
 			if module5 then
-				value2 = module.Root()
+				part = module.Root()
 				local number6 = module6 - workspace:GetServerTimeNow()
 				local position
-				if value2 then
-					position = module.TravelTime(value2.Position, module4)
+				if part then
+					position = module.TravelTime(part.Position, module4)
 				else
-					position = value2
+					position = part
 				end
 				if number6 - (position or 0) < number2 + 4 then
 					break
@@ -1708,12 +1708,12 @@ local function fireRemote()
 			end
 
 			module5 = module
-			value2 = module5.Root()
-			if not value2 then
+			part = module5.Root()
+			if not part then
 				break
 			end
-			local value3 = callback14()
-			module4, module6 = not value3
+			local part2 = callback14()
+			module4, module6 = not part2
 			if module4 then
 				module5 = module2
 				module6 = module5.AutoOn()
@@ -1722,18 +1722,18 @@ local function fireRemote()
 			end
 
 			if module6 then
-				module5, module4 = ipairs, table.pack(callback12(value2.Position))
+				module5, module4 = ipairs, table.pack(callback12(part.Position))
 
 				for _, value4 in module5(table.unpack(module4, 1, module4.n)) do
 					local pos = table.find(module2.Manual, value4.Config.Name)
 					if not pos then
-						value3 = value4
+						part2 = value4
 						break
 					end
 				end
 			end
 
-			module6 = not value3
+			module6 = not part2
 
 			if module6 then
 				module5 = not module3
@@ -1744,19 +1744,19 @@ local function fireRemote()
 				break
 			end
 
-			local name, module7 = value3.Config.Name, module2
+			local name, module7 = part2.Config.Name, module2
 			module7.Target = name
 			module5 = module2
-			module5.TargetManual = value3.Manual == true
+			module5.TargetManual = part2.Manual == true
 			module5 = module2
 			module5.Dropped = nil
 			module7 = module
-			module7.Status = string.format("Collecting %s", value3.Name)
-			module6 = value3.Position + Vector3.new(0, 3, 0)
+			module7.Status = string.format("Collecting %s", part2.Name)
+			module6 = part2.Position + Vector3.new(0, 3, 0)
 			number5 = bit32.bxor(number, 510026178)
 			module7 = module
 			module5, number, module4 = module7.NeedsVolcano, u32Mul(1348794871, number5) + 734225022
-			module4 = module5(value3.Name)
+			module4 = module5(part2.Name)
 			module5 = nil
 			if module4 then
 				module7 = module
@@ -1775,7 +1775,7 @@ local function fireRemote()
 			module5, module4 = number.InstantOn
 			if module5 then
 				number = module
-				module4 = not number.NeedsVolcano(value3.Name)
+				module4 = not number.NeedsVolcano(part2.Name)
 			else
 				module4 = module5
 			end
@@ -1785,7 +1785,7 @@ local function fireRemote()
 			end
 
 			local function callback16()
-				local condition2 = argument() or value3.Config.Parent == nil
+				local condition2 = argument() or part2.Config.Parent == nil
 				local condition
 				if condition2 then
 					condition = condition2
@@ -1806,7 +1806,7 @@ local function fireRemote()
 				continue
 			end
 
-			module4 = value3.Config.Parent == nil and not number
+			module4 = part2.Config.Parent == nil and not number
 			if module4 then
 				callback15(name)
 				module5 = module2
@@ -1829,7 +1829,7 @@ local function fireRemote()
 			module4 = module6 == 0
 			if module4 then
 				callback16_2 = module2
-				callback16_2.PickupPos = value3.Position
+				callback16_2.PickupPos = part2.Position
 			end
 			callback16_2, module5 = os.clock() + 1.2, module2
 			module7 = module5.InstantOn and os.clock() + 0.15 or 0
@@ -1839,13 +1839,13 @@ local function fireRemote()
 				if not (module5.BasketCount() == module6) then
 					break
 				end
-				module4 = os.clock() >= module7 and value3.Config.Parent ~= nil
+				module4 = os.clock() >= module7 and part2.Config.Parent ~= nil
 				if module4 then
 					number, module7 = module2, os.clock() + (module2.InstantOn and 0.3 or 0.1)
 					module.Fire("EggPickup", name)
 				end
 				if os.clock() >= callback16_2 then
-					if value3.Config.Parent ~= nil or os.clock() >= callback16_2 + 1.5 then
+					if part2.Config.Parent ~= nil or os.clock() >= callback16_2 + 1.5 then
 						break
 					end
 				end
@@ -1859,9 +1859,9 @@ local function fireRemote()
 
 			if callback16_2 then
 				module5 = module2
-				module5.Carried[name] = value3.Config
+				module5.Carried[name] = part2.Config
 				number = module
-				module7 = number.NeedsVolcano(value3.Name)
+				module7 = number.NeedsVolcano(part2.Name)
 				if module7 then
 					module6 = module
 					module6.VolcanoExit(nil)
@@ -1966,10 +1966,10 @@ local function fireRemote()
 			ReplicatedStorage2 = packages
 		end
 		local reVolcanoDip, module3 = ReplicatedStorage2 and ReplicatedStorage2:FindFirstChild("RE/VolcanoDip"), module
-		local value2, module4 = module3.VolcanoHover(), module
+		local argument, module4 = module3.VolcanoHover(), module
 		packages, ReplicatedStorage2 = module4.PlotTop(), module
 		module3 = ReplicatedStorage2.Root()
-		if not reVolcanoDip or not value2 or not packages or not module3 or not callback16() then
+		if not reVolcanoDip or not argument or not packages or not module3 or not callback16() then
 			return
 		end
 		module4 = module
@@ -1977,7 +1977,7 @@ local function fireRemote()
 
 		if ReplicatedStorage2 then
 			module4 = module
-			local number5, module = module4.TravelTime(module3.Position, value2) + module.TravelTime(value2, packages) + number2, module2
+			local number5, module = module4.TravelTime(module3.Position, argument) + module.TravelTime(argument, packages) + number2, module2
 			number5 = if module.InstantOn then number2 + 12 else number5
 			if ReplicatedStorage2 - workspace:GetServerTimeNow() < number5 then
 				return
@@ -1991,10 +1991,10 @@ local function fireRemote()
 
 		if module4 then
 			ReplicatedStorage2 = module2
-			module3 = ReplicatedStorage2.InstantTo(value2)
+			module3 = ReplicatedStorage2.InstantTo(argument)
 		else
 			packages = module
-			module3 = packages.FlyTo(value2, nil, 6)
+			module3 = packages.FlyTo(argument, nil, 6)
 		end
 
 		if not module3 then
@@ -2012,16 +2012,16 @@ local function fireRemote()
 
 			while os.clock() - packages < 14 do
 				ReplicatedStorage2 = module
-				local value3 = ReplicatedStorage2.Root()
+				local part = ReplicatedStorage2.Root()
 
-				if value3 then
+				if part then
 					local number5 = 93202263
 					module4 = number5
 					local value, value4 = pcall, u32Trunc(i)
 					number5 = u32Trunc(3186609987 + module4 + (u32Mul(2904648934, value4) + u32Mul(2904648934, (bit32.bnot(value4)))))
 					value(function()
-						value3.CFrame = CFrame.new(value2) * value3.CFrame.Rotation
-						value3.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+						part.CFrame = CFrame.new(argument) * part.CFrame.Rotation
+						part.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
 					end)
 				end
 
@@ -2103,7 +2103,7 @@ local function fireRemote()
 		module.FlySpeed = math.clamp(tonumber(argument) or 1000, 100, 1300)
 	end})
 	module3 = autoCollectEggsSection
-	local value2, autoCollectEggsSection2 = module3:CreateText({Name = "Rebirth Pet Status", Text = "Off"}), autoCollectEggsSection
+	local object2, autoCollectEggsSection2 = module3:CreateText({Name = "Rebirth Pet Status", Text = "Off"}), autoCollectEggsSection
 
 	rebirth.Handle = autoCollectEggsSection2:CreateToggle({Name = "Steal Rebirth Pet Eggs", Note = "Steals eggs that can hatch the pet your next rebirth needs, until you own it", Default = false, Callback = function(argument)
 		local condition2 = type(argument) ~= "boolean"
@@ -2300,7 +2300,7 @@ local function fireRemote()
 	task.spawn(function()
 		local need
 
-		while value2 and value2.Instance and value2.Instance.Parent do
+		while object2 and object2.Instance and object2.Instance.Parent do
 			local number5
 			local condition2, condition = false, task
 			condition.spawn(function()
@@ -2318,8 +2318,8 @@ local function fireRemote()
 			end
 
 			number5 = rebirth.On and rebirth.Status or "Off  -  " .. tostring(rebirth.Status)
-			if type(value2.Set) == "function" then
-				pcall(value2.Set, value2, number5)
+			if type(object2.Set) == "function" then
+				pcall(object2.Set, object2, number5)
 			end
 			number5 = rebirth.Need ~= need
 
@@ -2651,8 +2651,8 @@ local function callback12()
 		if #callback13() < callback14() then
 			return true
 		end
-		local _, value3 = callback17()
-		return value2 > value3 * 1.05
+		local _, amount = callback17()
+		return value2 > amount * 1.05
 	end
 
 	local function callback18(_, argument)
@@ -2879,10 +2879,10 @@ local function callback13()
 
 	module2.CollectActive = function()
 		local condition4
-		local value2 = module2.AutoOn()
+		local object = module2.AutoOn()
 		condition4 = nil
-		if value2 then
-			condition4 = value2
+		if object then
+			condition4 = object
 		else
 			condition4 = #module2.Manual > 0
 		end
@@ -2909,10 +2909,10 @@ local function callback13()
 
 	local function callback15()
 		local plant
-		local value2 = module2.CollectActive() or callback14()
+		local object = module2.CollectActive() or callback14()
 		local value
-		if value2 then
-			value = value2
+		if object then
+			value = object
 		else
 			local data = data2
 			value = data.Toggle(module2.Plant, false)
@@ -2948,10 +2948,10 @@ local function callback13()
 
 	local function callback17(argument)
 		local function callback18()
-			local value2 = callback16()
+			local object = callback16()
 			local value
-			if value2 then
-				value = value2
+			if object then
+				value = object
 			else
 				value = not data2.Toggle(argument, false)
 			end
@@ -3014,8 +3014,8 @@ local function callback13()
 
 					if plant then
 						module3 = module2
-						local value2 = module3.PlantStep(callback17(module2.Plant))
-						if value2 then
+						local object = module3.PlantStep(callback17(module2.Plant))
+						if object then
 							condition4 = true
 						end
 					end
@@ -3025,8 +3025,8 @@ local function callback13()
 
 					if plant then
 						condition6 = module2
-						local value2 = condition6.HatchStep(callback17(module2.Hatch))
-						if value2 then
+						local object = condition6.HatchStep(callback17(module2.Hatch))
+						if object then
 							condition4 = true
 						end
 					end
@@ -3035,8 +3035,8 @@ local function callback13()
 
 					if module3 then
 						plant = module2
-						local value2 = plant.PlaceStep(callback17(module2.Place))
-						if value2 then
+						local object = plant.PlaceStep(callback17(module2.Place))
+						if object then
 							condition4 = true
 						end
 					end
@@ -3046,8 +3046,8 @@ local function callback13()
 
 					if plant then
 						condition6 = module2
-						local value2 = condition6.FeedStep(callback17(module2.Feed))
-						if value2 then
+						local object = condition6.FeedStep(callback17(module2.Feed))
+						if object then
 							condition4 = true
 						end
 					end
@@ -3060,20 +3060,20 @@ local function callback13()
 						condition6 = number2
 						plant = module2
 						number2 = bit32.bxor(condition6, 226555115)
-						local collectStep, number3, value2 = plant.CollectStep, u32Mul(1051214039, number2) + 3469102831
+						local collectStep, number3, object = plant.CollectStep, u32Mul(1051214039, number2) + 3469102831
 
-						number2, value2 = u32Trunc(number3 + (u32Mul(3243753258, (bit32.bor(number2, 279668649))) + u32Mul(3243753256, (bit32.band(number2, 279668649))))), collectStep(function()
-							local value3 = callback16()
+						number2, object = u32Trunc(number3 + (u32Mul(3243753258, (bit32.bor(number2, 279668649))) + u32Mul(3243753256, (bit32.band(number2, 279668649))))), collectStep(function()
+							local object2 = callback16()
 							local value
-							if value3 then
-								value = value3
+							if object2 then
+								value = object2
 							else
 								value = not module2.CollectActive()
 							end
 							return value
 						end)
 
-						if value2 then
+						if object then
 							condition4 = true
 						end
 					end
@@ -3346,7 +3346,7 @@ local function newScreenGui()
 		end
 	end
 
-	local function callback28(argument, argument2)
+	local function callback28(argument, text3)
 		if module2.Carried[argument] then
 			return "Bringing home", data3.Carry, nil
 		end
@@ -3359,8 +3359,8 @@ local function newScreenGui()
 			return "Queued #" .. condition5, data3.Queued, "Cancel"
 		end
 
-		if argument2 then
-			return "Auto #" .. argument2, data3.Auto, "Collect"
+		if text3 then
+			return "Auto #" .. text3, data3.Auto, "Collect"
 		end
 		return "", data3.Collect, "Collect"
 	end
@@ -3563,15 +3563,15 @@ local function newScreenGui()
 			else
 				callback16(callback29_2.Info, string.format("%s  |  %dm", callback29_2.Rarity, math.floor(activeEggs2[value3] or 0)))
 			end
-			local value4, value5, value6 = callback28(value3, module4[value3])
-			callback16(callback29_2.Status, value4)
+			local text3, value5, object = callback28(value3, module4[value3])
+			callback16(callback29_2.Status, text3)
 			callback29_2.Status.TextColor3 = value5
 
 			if callback29_2.Button then
-				callback29_2.Button.Visible = value6 ~= nil
-				if value6 then
-					callback16(callback29_2.ButtonText, value6)
-					callback29_2.Button.ImageColor3 = value6 == "Cancel" and data3.Cancel or data3.Collect
+				callback29_2.Button.Visible = object ~= nil
+				if object then
+					callback16(callback29_2.ButtonText, object)
+					callback29_2.Button.ImageColor3 = object == "Cancel" and data3.Cancel or data3.Collect
 				end
 			end
 		end
@@ -3970,8 +3970,8 @@ local function callback15()
 			end
 		end
 
-		table.sort(data5, function(object, argument3)
-			return object.Price < argument3.Price
+		table.sort(data5, function(object, object2)
+			return object.Price < object2.Price
 		end)
 		argument = {}
 		for _, value2 in ipairs(data5) do
@@ -4009,9 +4009,9 @@ local function callback15()
 	local connections, autoShopSection2, nameList = {}, ipairs, {"Restock", "ShopStock"}
 
 	for _, name in autoShopSection2(nameList) do
-		local value2 = game_:FindFirstChild(name)
-		if value2 and value2:IsA("RemoteEvent") then
-			table.insert(connections, value2.OnClientEvent:Connect(function(argument)
+		local object = game_:FindFirstChild(name)
+		if object and object:IsA("RemoteEvent") then
+			table.insert(connections, object.OnClientEvent:Connect(function(argument)
 				callback17(argument)
 			end))
 		end
@@ -4045,9 +4045,9 @@ local function callback15()
 		if not data2.Toggle(_, false) then
 			return
 		end
-		local value, value2, condition2 = ipairs, table.pack(callback16(argument)), false
+		local value, packedValues, condition2 = ipairs, table.pack(callback16(argument)), false
 
-		for k, value3 in value(table.unpack(value2, 1, value2.n)) do
+		for k, value3 in value(table.unpack(packedValues, 1, packedValues.n)) do
 			_ = configMap[argument][value3]
 
 			if _ then
@@ -4137,7 +4137,7 @@ end
 
 callback15()
 
-local function callback16()
+local function fireRemote3()
 	local autoRebirthToggle
 	local autoClaimIndexRewardToggle
 
@@ -4171,7 +4171,7 @@ local function callback16()
 		return ReplicatedStorage.GameData.HatchLuck
 	end), false
 
-	local function callback18()
+	local function fireRemote3()
 		local upgrades
 		local plot = game_:FindFirstChild("Plot")
 		upgrades = nil
@@ -4264,7 +4264,7 @@ local function callback16()
 			end
 			data = data2
 			if data.Toggle(autoUpgradeLuckToggle, false) then
-				pcall(callback18)
+				pcall(fireRemote3)
 			end
 			task.wait(1)
 		end
@@ -4275,7 +4275,7 @@ local function callback16()
 	end)
 end
 
-callback16()
+fireRemote3()
 local playerTab = mainWindow:CreateTab({ Name = "Player", SectionsExpanded = true })
 local movementSection = playerTab:CreateSection({ Name = "Movement", Expanded = true })
 local espSection = playerTab:CreateSection({ Name = "ESP", Expanded = true })
@@ -4334,10 +4334,10 @@ local function callback18()
 		if not data2.Toggle(infiniteJumpToggle, false) then
 			return
 		end
-		local value2 = module.Humanoid()
-		if value2 then
+		local object = module.Humanoid()
+		if object then
 			pcall(function()
-				value2:ChangeState(Enum.HumanoidStateType.Jumping)
+				object:ChangeState(Enum.HumanoidStateType.Jumping)
 			end)
 		end
 	end)
@@ -4599,12 +4599,12 @@ local function newFont()
 			end
 			number2 = 0
 			deltaTime = module
-			local value3 = deltaTime.Root()
-			if not value3 or not visible then
+			local part = deltaTime.Root()
+			if not part or not visible then
 				return
 			end
 			for _, child in pairs(childMap) do
-				deltaTime = (child.Position - value3.Position).Magnitude
+				deltaTime = (child.Position - part.Position).Magnitude
 				child.Info.Text = string.format("%s  %s  %dm", child.Rarity, child.Weight, math.floor(deltaTime))
 			end
 		end))
@@ -4639,7 +4639,7 @@ end
 
 newFont()
 
-local function callback22()
+local function newFont2()
 	local font = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.ExtraBold, Enum.FontStyle.Normal)
 	local color = Color3.fromRGB(255, 194, 77)
 	local color2 = Color3.fromRGB(170, 174, 188)
@@ -4816,7 +4816,7 @@ local function callback22()
 	module.RanchEspWeight = weightSlider(espSection, espMinWeight)
 end
 
-callback22()
+newFont2()
 
 local function newNumberSequenceKeypoint()
 	local eggPredictorSection
@@ -4955,18 +4955,18 @@ local function newNumberSequenceKeypoint()
 			return module3
 		end
 		module3 = module
-		local object = module3.EggData(argument)
-		local data6 = {Name = tostring(argument), Rarity = object and tostring(object.Rarity) or "Common", Image = object and tostring(object.Image or "") or "", Luck = 0, Pets = {}, Average = 0, Best = nil}
+		local object3 = module3.EggData(argument)
+		local data6 = {Name = tostring(argument), Rarity = object3 and tostring(object3.Rarity) or "Common", Image = object3 and tostring(object3.Image or "") or "", Luck = 0, Pets = {}, Average = 0, Best = nil}
 
-		if object and type(value2) == "table" then
+		if object3 and type(value2) == "table" then
 			module3 = pcall
 
 			module3(function()
 				local number5 = 220743288
-				data6.Luck = math.max((tonumber(object.Luck) or 1) * value4, 1)
+				data6.Luck = math.max((tonumber(object3.Luck) or 1) * value4, 1)
 				local getBoostedOdds, luck = value2.GetBoostedOdds, data6.Luck
 
-				for i, value6 in ipairs((getBoostedOdds(luck, value5, object))) do
+				for i, value6 in ipairs((getBoostedOdds(luck, value5, object3))) do
 					i = tonumber(value6.Chance) or 0
 
 					if i > 0 then
@@ -4980,11 +4980,11 @@ local function newNumberSequenceKeypoint()
 				end
 
 				luck = table.sort
-				luck(data6.Pets, function(argument3, argument4)
-					if argument3.Chance ~= argument4.Chance then
-						return argument3.Chance > argument4.Chance
+				luck(data6.Pets, function(object, object2)
+					if object.Chance ~= object2.Chance then
+						return object.Chance > object2.Chance
 					end
-					return argument3.Name < argument4.Name
+					return object.Name < object2.Name
 				end)
 			end)
 		end
@@ -5007,22 +5007,22 @@ local function newNumberSequenceKeypoint()
 			k = eggs == "Ready"
 			table.insert(list2, {Id = "plot:" .. tostring(child:GetAttribute("EggKey") or child.Name), Egg = child.Name, Badge = k and "READY" or (eggs ~= "" and eggs or "GROWING"), BadgeColor = k and Color3.fromRGB(77, 255, 122) or Color3.fromRGB(255, 194, 77), Note = "Placed", Mutation = type(child:GetAttribute("Mutation")) == "string" and child:GetAttribute("Mutation") ~= "" and child:GetAttribute("Mutation") or nil, Order = k and 0 or 1})
 			k = #list2
-			local value4 = list2[k]
-			child = value4.Mutation
+			local object = list2[k]
+			child = object.Mutation
 
 			if child then
 				local number5 = 426866428
 				local number = number5
-				value4.Factor = module.MutationBonus(value4.Mutation)
-				local stringFormat, mutation, value5, number2, value6 = string.format, value4.Mutation, table.pack(tostring(value4.Factor)), number, u32Trunc(k)
-				number5 = u32Trunc(204350477 + u32Mul(223057481, number2) + (u32Mul(223057480, value6) + (u32Mul(3848852336, (bit32.bor(number2, value6))) + u32Mul(223057480, (bit32.bxor(value6, number2))))))
-				value4.Note = stringFormat("%s x%s", mutation, table.unpack(value5, 1, value5.n))
-				value4.MutationColor = Color3.fromRGB(255, 194, 77)
+				object.Factor = module.MutationBonus(object.Mutation)
+				local stringFormat, mutation, packedValues, number2, module3 = string.format, object.Mutation, table.pack(tostring(object.Factor)), number, u32Trunc(k)
+				number5 = u32Trunc(204350477 + u32Mul(223057481, number2) + (u32Mul(223057480, module3) + (u32Mul(3848852336, (bit32.bor(number2, module3))) + u32Mul(223057480, (bit32.bxor(module3, number2))))))
+				object.Note = stringFormat("%s x%s", mutation, table.unpack(packedValues, 1, packedValues.n))
+				object.MutationColor = Color3.fromRGB(255, 194, 77)
 				number = pcall
 				local function callback34()
-					local mutation2 = data.Mutations.ColorFor(value4.Mutation)
+					local mutation2 = data.Mutations.ColorFor(object.Mutation)
 					if typeof(mutation2) == "Color3" then
-						value4.MutationColor = mutation2
+						object.MutationColor = mutation2
 					end
 				end
 				number(callback34)
@@ -5101,7 +5101,7 @@ local function newNumberSequenceKeypoint()
 	end
 
 	local configMap = {Cards = {}, Chips = {}, Tiles = {}, HeroPets = {}}
-	local object
+	local object2
 	local condition2, number5 = true, 0
 
 	local function callback34(argument)
@@ -5116,18 +5116,18 @@ local function newNumberSequenceKeypoint()
 		return data6
 	end
 
-	local function clampValue(argument, argument2)
-		callback29(argument.Frame, "Visible", argument2 ~= nil)
-		if not argument2 then
+	local function clampValue(argument, object)
+		callback29(argument.Frame, "Visible", object ~= nil)
+		if not object then
 			return
 		end
-		local rarityColor = getRarityColor(argument2.Rarity)
-		callback29(argument.Icon, "Image", argument2.Image)
-		callback29(argument.Name, "Text", argument2.Name)
+		local rarityColor = getRarityColor(object.Rarity)
+		callback29(argument.Icon, "Image", object.Image)
+		callback29(argument.Name, "Text", object.Name)
 		callback29(argument.Name, "TextColor3", rarityColor)
-		callback29(argument.Chance, "Text", callback30(argument2.Chance))
+		callback29(argument.Chance, "Text", callback30(object.Chance))
 		callback29(argument.Fill, "BackgroundColor3", rarityColor)
-		callback29(argument.Fill, "Size", UDim2.fromScale(math.clamp(argument2.Chance, 0.02, 1), 1))
+		callback29(argument.Fill, "Size", UDim2.fromScale(math.clamp(object.Chance, 0.02, 1), 1))
 	end
 
 	local function newNumberSequenceKeypoint(argument)
@@ -5192,14 +5192,14 @@ local function newNumberSequenceKeypoint()
 		end
 	end
 
-	local function callback37(argument, argument2)
-		argument.Id = argument2 and argument2.Id or nil
-		callback29(argument.Frame, "Visible", argument2 ~= nil)
-		if not argument2 then
+	local function callback37(argument, object)
+		argument.Id = object and object.Id or nil
+		callback29(argument.Frame, "Visible", object ~= nil)
+		if not object then
 			return
 		end
-		local info = argument2.Info
-		local rarityColor, condition3 = getRarityColor(info.Rarity), data4.Selected == argument2.Id
+		local info = object.Info
+		local rarityColor, condition3 = getRarityColor(info.Rarity), data4.Selected == object.Id
 		callback29(argument.Glow, "BackgroundColor3", rarityColor)
 		callback29(argument.Stroke, "Color", condition3 and Color3.fromRGB(255, 214, 90) or rarityColor:Lerp(color4, 0.55))
 		callback29(argument.Stroke, "Thickness", condition3 and math.max(2.5, data4.CardH * 0.012) or 1.5)
@@ -5207,19 +5207,19 @@ local function newNumberSequenceKeypoint()
 		callback29(argument.Name, "Text", info.Name)
 		callback29(argument.Name, "TextColor3", rarityColor)
 		callback29(argument.Luck, "Text", "LUCK " .. toNumberOrDefault(info.Luck))
-		callback29(argument.BadgeBack, "Visible", argument2.Badge ~= "")
-		callback29(argument.Badge, "Text", argument2.Badge)
-		callback29(argument.Badge, "TextColor3", argument2.BadgeColor)
-		callback29(argument.BadgeStroke, "Color", argument2.BadgeColor)
-		callback29(argument.Mutation, "Visible", argument2.Mutation ~= nil)
-		if argument2.Mutation then
-			callback29(argument.Mutation, "Text", argument2.Mutation)
-			callback29(argument.Mutation, "TextColor3", argument2.MutationColor)
+		callback29(argument.BadgeBack, "Visible", object.Badge ~= "")
+		callback29(argument.Badge, "Text", object.Badge)
+		callback29(argument.Badge, "TextColor3", object.BadgeColor)
+		callback29(argument.BadgeStroke, "Color", object.BadgeColor)
+		callback29(argument.Mutation, "Visible", object.Mutation ~= nil)
+		if object.Mutation then
+			callback29(argument.Mutation, "Text", object.Mutation)
+			callback29(argument.Mutation, "TextColor3", object.MutationColor)
 		end
 		for i, row in ipairs(argument.Rows) do
 			clampValue(row, info.Pets[i])
 		end
-		callback29(argument.Average, "Text", "AVG $" .. (toNumberOrDefault(info.Average * (argument2.Factor or 1)) .. "/s"))
+		callback29(argument.Average, "Text", "AVG $" .. (toNumberOrDefault(info.Average * (object.Factor or 1)) .. "/s"))
 	end
 
 	local function callback38(argument)
@@ -5228,7 +5228,7 @@ local function newNumberSequenceKeypoint()
 		if condition3 then
 			configMap.HeroShown = heroShown
 			pcall(function()
-				object:SetDock(heroShown and number or 0, {Gap = 0.35, Divider = false})
+				object2:SetDock(heroShown and number or 0, {Gap = 0.35, Divider = false})
 			end)
 		end
 		callback29(hero.Frame, "Visible", heroShown)
@@ -5303,11 +5303,11 @@ local function newNumberSequenceKeypoint()
 
 		if condition3 then
 			local response = response3
-			local value4
+			local object
 			for _, value5 in ipairs(response) do
-				value4 = if not value4 or value5.Info.Average > value4.Info.Average then value5 else value4
+				object = if not object or value5.Info.Average > object.Info.Average then value5 else object
 			end
-			data4.Selected = value4 and value4.Id or nil
+			data4.Selected = object and object.Id or nil
 		end
 
 		local value, cards, condition4 = ipairs, configMap.Cards
@@ -5383,8 +5383,8 @@ local function newNumberSequenceKeypoint()
 		condition2 = true
 	end
 
-	local function callback41(argument)
-		object = argument
+	local function newNumberSequenceKeypoint2(argument)
+		object2 = argument
 		configMap.Container = callback25("Frame", {AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1, Size = UDim2.fromScale(1, 0)}, nil)
 		callback25("UIListLayout", {SortOrder = Enum.SortOrder.LayoutOrder, FillDirection = Enum.FillDirection.Vertical}, configMap.Container)
 		configMap.TileRow = callback25("Frame", {BackgroundTransparency = 1, LayoutOrder = 1}, configMap.Container)
@@ -5465,9 +5465,9 @@ local function newNumberSequenceKeypoint()
 		configMap.Hero = callback
 		argument:Attach(callback.Frame, argument:Dock())
 		argument:Attach(configMap.Container, argument:Root())
-		local function callback42(_, argument2, argument3)
-			data4.Width = tonumber(argument2) or data4.Width
-			data4.Unit = math.max(8, tonumber(argument3) or data4.Unit)
+		local function callback42(_, text3, text4)
+			data4.Width = tonumber(text3) or data4.Width
+			data4.Unit = math.max(8, tonumber(text4) or data4.Unit)
 			pcall(callback40)
 		end
 		argument:OnResize(callback42)
@@ -5481,7 +5481,7 @@ local function newNumberSequenceKeypoint()
 	else
 		local eggPredictor = {Name = "Egg Predictor", ShowTitle = false, Layout = "free", Style = {TextScale = 0.84, LineHeight = 1.1, MinLines = 16, MaxLines = 34, BackgroundTransparency = 0.5, ScrollBarColor = Color3.fromRGB(170, 174, 184), TextColor = Color3.fromRGB(255, 255, 255), TextStrokeTransparency = 0.7}}
 		eggPredictor.Build = function(argument)
-			callback41(argument)
+			newNumberSequenceKeypoint2(argument)
 		end
 		local instance = eggPredictorSection:CreateCanvas(eggPredictor)
 		predictorTab = RunService
@@ -5679,17 +5679,17 @@ local function callback24()
 		local data = data2
 		local clock = os.clock
 		data.HopActiveUntil = clock() + 45
-		local value2
+		local container
 		data = value and text6 == argument and os.clock() - number6 < number7
 
 		if data then
-			value2 = value
+			container = value
 		else
-			value2, clock = callback30(argument)
+			container, clock = callback30(argument)
 			if not clock then
 				return "fetch"
 			end
-			value, text6 = value2, argument
+			value, text6 = container, argument
 			number6 = os.clock()
 		end
 
@@ -5705,7 +5705,7 @@ local function callback24()
 
 		local function callback31(argument2, argument3)
 			local list = {}
-			for _, value3 in ipairs(value2) do
+			for _, value3 in ipairs(container) do
 				if not argumentMap[value3.Id] and value3.Room >= argument2 and not (argument3 and condition5[value3.Id]) then
 					list[#list + 1] = value3
 				end
@@ -5733,11 +5733,11 @@ local function callback24()
 		else
 			local value = table
 			condition4 = value.sort
-			condition4(hopAvoid, function(object, argument3)
+			condition4(hopAvoid, function(object, object2)
 				if argument == "Least Players" then
-					return object.Playing < argument3.Playing
+					return object.Playing < object2.Playing
 				end
-				return object.Playing > argument3.Playing
+				return object.Playing > object2.Playing
 			end)
 			id2 = hopAvoid[1].Id
 		end
@@ -6158,7 +6158,7 @@ end
 
 callback25()
 
-local function callback26()
+local function newFont3()
 	local kMap = {}
 
 	local function callback27(argument)
@@ -6284,7 +6284,7 @@ local function callback26()
 		uiStroke.Thickness = math.max(1, textSize * 0.065)
 	end
 
-	local function callback33()
+	local function newScreenGui2()
 		local uiElement
 		local screenGui2 = screenGui
 		if screenGui2 then
@@ -6368,7 +6368,7 @@ local function callback26()
 		uiElement.TextColor3 = Color3.fromRGB(255, 72, 72)
 		createUIGradient(uiElement, ColorSequence.new(Color3.fromRGB(255, 132, 123), Color3.fromRGB(239, 28, 28)), 90)
 		callback28(uiElement, callback27("Warn"))
-		local textLabel, generateRandomId2, textLabel2, value4 = Instance.new("TextLabel"), generateRandomId
+		local textLabel, generateRandomId2, textLabel2, object = Instance.new("TextLabel"), generateRandomId
 		local number2
 		textLabel.Name = generateRandomId2()
 		textLabel.BackgroundTransparency = 1
@@ -6453,13 +6453,13 @@ local function callback26()
 			return textButton, parent2
 		end
 
-		value4, screenGui2 = newTextButton(22, 184, false)
+		object, screenGui2 = newTextButton(22, 184, false)
 		generateRandomId2, number2 = newTextButton(224, 184, true)
 		callback28(screenGui2, callback27("Cancel"))
 		callback28(number2, callback27("Accept"))
 		data3 = {{uiElement2, "Title"}, {uiElement, "Warn"}, {textLabel, "Body"}, {textLabel2, "Tip"}, {screenGui2, "Cancel"}, {number2, "Accept"}}
 		callback29()
-		connections[#connections + 1] = value4.MouseButton1Click:Connect(function()
+		connections[#connections + 1] = object.MouseButton1Click:Connect(function()
 			if value3 then
 				value3()
 			end
@@ -6480,7 +6480,7 @@ local function callback26()
 	end
 
 	local function callback34()
-		callback33()
+		newScreenGui2()
 		clampValue()
 		if screenGui then
 			screenGui.Enabled = true
@@ -6526,7 +6526,7 @@ local function callback26()
 	return data4
 end
 
-data2.HopPrompt = callback26()
+data2.HopPrompt = newFont3()
 
 local function cleanup()
 	local names2
@@ -6878,10 +6878,10 @@ local function cleanup()
 
 	local function cleanup()
 		if type(eggFinderSection.CreateCanvas) ~= "function" then
-			local value2 = eggFinderSection:CreateText({Name = "Hop Status", Text = "Idle"})
+			local object = eggFinderSection:CreateText({Name = "Hop Status", Text = "Idle"})
 			function data3.View()
-				if value2 and type(value2.Set) == "function" then
-					pcall(value2.Set, value2, data3.Status)
+				if object and type(object.Set) == "function" then
+					pcall(object.Set, object, data3.Status)
 				end
 			end
 			return
@@ -6935,7 +6935,7 @@ local function cleanup()
 			return string.gsub(text4, "%.0$", "") .. unitSuffixes[number8]
 		end
 
-		local number8, number9, number10, height, number11, number12, number13, number14, number15, configMap, configMap2, object = 2.6, 0.6, 3.3, 1.2, 2.6, 0.7, 0.3, 0.95, 0.0909, {idle = {Title = "IDLE", Color = "#9AA3B5"}, scan = {Title = "SCANNING", Color = "#7FD8FF"}, found = {Title = "EGG FOUND", Color = "#4DFF7A"}, collect = {Title = "AUTO COLLECT BUSY", Color = "#FFC24D"}, wait = {Title = "WAITING", Color = "#FF7AE0"}, night = {Title = "NIGHT", Color = "#9C8CFF"}, rare = {Title = "WAITING", Color = "#FF7AE0"}, steal = {Title = "AUTO STEAL BUSY", Color = "#FFC24D"}, hop = {Title = "HOPPING SOON", Color = "#FF9A3D"}, joining = {Title = "JOINING SERVER", Color = "#FF9A3D"}, retry = {Title = "RETRYING", Color = "#FF6B6B"}, boss = {Title = "BOSS FIGHT", Color = "#FF5C8A"}}, {Slot = {Text = "ON THE MAP", Color = "#4DFF7A"}, Dropped = {Text = "DROPPED", Color = "#FFC24D"}, Carried = {Text = "BEING CARRIED", Color = "#FF8A5C"}, Mine = {Text = "YOU CARRY", Color = "#7FD8FF"}}
+		local number8, number9, number10, height, number11, number12, number13, number14, number15, configMap, configMap2, object2 = 2.6, 0.6, 3.3, 1.2, 2.6, 0.7, 0.3, 0.95, 0.0909, {idle = {Title = "IDLE", Color = "#9AA3B5"}, scan = {Title = "SCANNING", Color = "#7FD8FF"}, found = {Title = "EGG FOUND", Color = "#4DFF7A"}, collect = {Title = "AUTO COLLECT BUSY", Color = "#FFC24D"}, wait = {Title = "WAITING", Color = "#FF7AE0"}, night = {Title = "NIGHT", Color = "#9C8CFF"}, rare = {Title = "WAITING", Color = "#FF7AE0"}, steal = {Title = "AUTO STEAL BUSY", Color = "#FFC24D"}, hop = {Title = "HOPPING SOON", Color = "#FF9A3D"}, joining = {Title = "JOINING SERVER", Color = "#FF9A3D"}, retry = {Title = "RETRYING", Color = "#FF6B6B"}, boss = {Title = "BOSS FIGHT", Color = "#FF5C8A"}}, {Slot = {Text = "ON THE MAP", Color = "#4DFF7A"}, Dropped = {Text = "DROPPED", Color = "#FFC24D"}, Carried = {Text = "BEING CARRIED", Color = "#FF8A5C"}, Mine = {Text = "YOU CARRY", Color = "#7FD8FF"}}
 		local options, number16, number17, number18 = {}, 0, 0, 0.06
 		local number19 = -1
 		local number20 = -1
@@ -7126,12 +7126,12 @@ local function cleanup()
 			data5 = math.abs(number26 - number21) > 0.01
 			if data5 then
 				number21 = number26
-				object:SetContentLines(number26)
+				object2:SetContentLines(number26)
 			end
 		end
 
 		local function callback52(argument)
-			object = argument
+			object2 = argument
 			options.Card = argument:Frame({X = 0, Y = 0, Width = 1, Height = number8, Corner = 0.35, Background = "#000000", BackgroundTransparency = 1})
 			options.Accent = argument:Frame({Parent = options.Card, X = 0, Y = 0, Width = 0.22, Height = number8, Corner = 0.11, Background = configMap.idle.Color, BackgroundTransparency = 0})
 			options.Title = argument:Text({Parent = options.Card, X = number12, Y = 0.3, Width = 1, Height = height, Scale = 1.2, Wrap = false, Font = json2, TextStrokeTransparency = 1})
@@ -7151,9 +7151,9 @@ local function cleanup()
 				callback47(options[value3])
 			end
 
-			local function _(argument2, amount, argument4)
-				argument2 = amount == number19 and argument4 == number20
-				if argument2 then
+			local function _(object, amount, argument4)
+				object = amount == number19 and argument4 == number20
+				if object then
 					return
 				end
 				number19, number20 = amount, argument4
@@ -7179,7 +7179,7 @@ local function cleanup()
 		local callback45_2 = RunService.Heartbeat
 
 		local function callback53(argument)
-			local condition6 = not object or not callback46(object:Root())
+			local condition6 = not object2 or not callback46(object2:Root())
 			if condition6 then
 				return
 			end
@@ -7297,7 +7297,7 @@ local function cleanup()
 		return kMap
 	end
 
-	local condition2, condition3, dropdown, value2, value3 = false, false
+	local condition2, condition3, dropdown, object, object2 = false, false
 
 	local function callback46()
 		local condition = condition2
@@ -7312,19 +7312,19 @@ local function cleanup()
 		end
 		condition2 = true
 		condition = module2
-		local value4, value5, value6 = condition.CollectFilters()
-		data3.MinRank = tonumber(value4) or 0
-		data3.Wanted = callback45(value5)
-		data3.MinWeight = tonumber(value6) or 0
-		value4 = pcall
-		value4(function()
-			value3:Set(module.WeightStep(data3.MinWeight))
+		local text5, argument, text4 = condition.CollectFilters()
+		data3.MinRank = tonumber(text5) or 0
+		data3.Wanted = callback45(argument)
+		data3.MinWeight = tonumber(text4) or 0
+		text5 = pcall
+		text5(function()
+			object2:Set(module.WeightStep(data3.MinWeight))
 		end)
 		pcall(function()
 			dropdown:Set(callback43(data3.MinRank))
 		end)
 		pcall(function()
-			value2:Set(callback44(data3.Wanted))
+			object:Set(callback44(data3.Wanted))
 		end)
 		condition2 = false
 	end
@@ -7396,7 +7396,7 @@ local function cleanup()
 	end
 
 	options2.Callback = callback48
-	value2 = callback(eggFinderSection:CreateMultiDropdown(options2))
+	object = callback(eggFinderSection:CreateMultiDropdown(options2))
 	local callback42_2
 	options2, callback42_2, autoHopTab = module.WeightSlider, eggFinderSection, {Name = "Min Egg Weight", SubOf = data3.Handle}
 
@@ -7409,7 +7409,7 @@ local function cleanup()
 	end
 
 	autoHopTab.OnRaw = onRaw
-	value3 = options2(callback42_2, autoHopTab)
+	object2 = options2(callback42_2, autoHopTab)
 	eggFinderSection:CreateLabel({Name = "Wait For Target Egg", Text = "Wait For Target Egg", SubOf = data3.Handle})
 	local options3, module3 = {Name = "Rarity To Wait For"}, module
 	options3.Options = module3.RarityChoices
@@ -7475,7 +7475,7 @@ local function newFolder()
 	local thread
 	local connections, list, performanceSection2, data3 = {}, {}
 	performanceSection2, data3 = setmetatable, {__mode = "k"}
-	local value2, descendants, connection = performanceSection2({}, data3), {}
+	local list2, descendants, connection = performanceSection2({}, data3), {}
 
 	local function callback30(argument, _, argument2)
 		local ok, response = pcall(argument)
@@ -7487,11 +7487,11 @@ local function newFolder()
 	end
 
 	local function callback31(_, argument, argument2)
-		local argumentMap = value2[_]
+		local argumentMap = list2[_]
 		local condition3 = not argumentMap
 		if condition3 then
 			argumentMap = {}
-			value2[_] = argumentMap
+			list2[_] = argumentMap
 		end
 
 		if argumentMap[argument] == nil then
@@ -7644,7 +7644,7 @@ local function newFolder()
 		local clock, value = os.clock, pairs
 		local now = clock()
 
-		for k, value3 in value(value2) do
+		for k, value3 in value(list2) do
 			if k.Parent then
 				for k2, value4 in pairs(value3) do
 					local number3 = 77944500
@@ -7657,7 +7657,7 @@ local function newFolder()
 				end
 			end
 
-			value2[k] = nil
+			list2[k] = nil
 			value3 = os.clock() - now > number
 			if value3 then
 				RunService.Heartbeat:Wait()
@@ -7851,13 +7851,13 @@ end
 
 newFolder()
 
-local function callback30()
+local function newFont4()
 	local Stats, number, number2, number3, number4 = game:GetService("Stats"), 132, 34, 0.085, 0.2
 	local number5 = 8
-	local value2 = mainWindow:CreateState({Name = "FPS and Ping Position", Default = {}})
+	local object2 = mainWindow:CreateState({Name = "FPS and Ping Position", Default = {}})
 
 	local function getUDim2()
-		local value3 = value2:Get()
+		local value3 = object2:Get()
 		if type(value3) == "table" and type(value3.XOffset) == "number" and type(value3.YOffset) == "number" then
 			return UDim2.new(tonumber(value3.XScale) or 0, value3.XOffset, tonumber(value3.YScale) or 0, value3.YOffset)
 		end
@@ -7865,7 +7865,7 @@ local function callback30()
 	end
 
 	local function callback31(argument)
-		value2:Set({XScale = argument.X.Scale, XOffset = argument.X.Offset, YScale = argument.Y.Scale, YOffset = argument.Y.Offset})
+		object2:Set({XScale = argument.X.Scale, XOffset = argument.X.Offset, YScale = argument.Y.Scale, YOffset = argument.Y.Offset})
 	end
 	local color = Color3.fromRGB(58, 255, 55)
 	local color2 = Color3.fromRGB(255, 214, 84)
@@ -7941,7 +7941,7 @@ local function callback30()
 		return textLabel
 	end
 
-	local function callback34()
+	local function newScreenGui2()
 		local number9 = 188577221
 		local number3 = number9
 		disconnectAll()
@@ -8109,7 +8109,7 @@ local function callback30()
 		condition6 = argument == true
 		argument = condition6
 		if argument then
-			callback34()
+			newScreenGui2()
 		else
 			disconnectAll()
 		end
@@ -8121,7 +8121,7 @@ local function callback30()
 	registerItem(disconnectAll)
 end
 
-callback30()
+newFont4()
 
 local function callback31()
 	local GuiService
@@ -8147,9 +8147,9 @@ local function callback31()
 	end
 
 	local function callback35()
-		local value, value2 = ipairs, table.pack(callback34())
+		local value, packedValues = ipairs, table.pack(callback34())
 
-		for k, value3 in value(table.unpack(value2, 1, value2.n)) do
+		for k, value3 in value(table.unpack(packedValues, 1, packedValues.n)) do
 			local condition2 = false
 			pcall(function()
 				condition2 = value3.Function == onIdled
@@ -8530,9 +8530,9 @@ local function callback32()
 		local text3 = tostring(argument.Egg or "Egg")
 		local text4 = module.EggRarity(text3)
 		local parts = { "**" .. text3 .. "**  -  " .. text4 }
-		local value2 = callback41(argument.Weight)
-		if value2 then
-			parts[#parts + 1] = "**Weight:** " .. toNumberOrDefault(value2)
+		local object = callback41(argument.Weight)
+		if object then
+			parts[#parts + 1] = "**Weight:** " .. toNumberOrDefault(object)
 		end
 		local mutation = argument.Mutation
 		if type(mutation) == "string" and mutation ~= "" then
@@ -8579,12 +8579,12 @@ local function callback32()
 		local number = 1
 
 		while number <= #labelMap.Gained do
-			local value2 = labelMap.Gained[number]
+			local object = labelMap.Gained[number]
 			local value3, value4, value5 = ipairs(labelMap.Removed)
 			local k = nil
 
 			for k2, value6 in value4, value5 do
-				if value6.Egg == value2.Egg then
+				if value6.Egg == object.Egg then
 					k = k2
 					break
 				else
@@ -8600,9 +8600,9 @@ local function callback32()
 				local removed = table.remove(labelMap.Removed, k)
 				table.remove(labelMap.Gained, number)
 				callback43({
-					Egg = removed.Egg or value2.Egg,
-					Weight = value2.Weight or removed.Weight,
-					Mutation = value2.Mutation or removed.Mutation,
+					Egg = removed.Egg or object.Egg,
+					Weight = object.Weight or removed.Weight,
+					Mutation = object.Mutation or removed.Mutation,
 				})
 			else
 				number += 1
@@ -9006,12 +9006,12 @@ end
 
 newColorSequenceKeypoint()
 
-local function callback34()
+local function newScreenGui2()
 	local assetId, number, number2, number3 = "rbxassetid://128961717706452", 56, 0.035, 8
 	local tweenInfo = TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-	local tweenInfoNew, value2
-	tweenInfoNew, value2 = TweenInfo.new, Enum
-	local value3 = tweenInfoNew(0.14, value2.EasingStyle.Back, Enum.EasingDirection.Out)
+	local tweenInfoNew, object2
+	tweenInfoNew, object2 = TweenInfo.new, Enum
+	local value3 = tweenInfoNew(0.14, object2.EasingStyle.Back, Enum.EasingDirection.Out)
 	local TweenService, connections, screenGui, uiScale, uiScale2 = game:GetService("TweenService"), {}
 
 	local function callback35()
@@ -9055,7 +9055,7 @@ local function callback34()
 		screenGui, uiScale, uiScale2 = nil, nil, nil
 	end
 
-	local function callback36()
+	local function newScreenGui2()
 		local uiScale3
 		disconnectAll()
 		screenGui = Instance.new("ScreenGui")
@@ -9189,11 +9189,11 @@ local function callback34()
 		screenGui.Parent = generateRandomId2
 	end
 
-	callback36()
+	newScreenGui2()
 	registerItem(disconnectAll)
 end
 
-callback34()
+newScreenGui2()
 uiLibrary:Finalize({ Window = mainWindow, MainTab = defaultTab, ShowMainTab = true })
 
 local function callback35()

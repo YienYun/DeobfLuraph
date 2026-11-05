@@ -27,9 +27,12 @@ when a full lift asks for nothing new.
 `polish` alternates two passes twice: `core/flatten.py` and the AST cleanup
 (`core/ast_polish.py`). Two AST passes run once everything else has settled: `name_context_slots` gives
 the script's own `data[k]` helper slots a name, and `name_from_usage` names the
-parameters (`argument5`) and handlers (`callback7`) the namer left as fallbacks,
-from the methods they are given to, the calls they are handed to, and the
-signature of the function that receives them. Both run after naming because the
+parameters (`argument5`), handlers (`callback7`) and register locals (`value7`)
+the namer left as fallbacks, from the methods they are given to, the calls they
+are handed to, the signature of the function that receives them (a local
+function *or* a method table -- `module.run = function(self, job)` makes
+`module:run(x)` evidence), and, for a `value7` written exactly once, from the
+initialiser itself (`part.Position` -> `position`). Both run after naming because the
 namer renames locals by use, and an alias it did not write would change what the
 namer decides; `name_from_usage` runs last so a slot's new name counts as
 evidence. The flattener is what turns the obfuscator's control-flow

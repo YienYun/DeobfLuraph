@@ -4,14 +4,14 @@
   "rename_stats": {
     "mode": "offline",
     "provider": "offline",
-    "renamed": 935,
+    "renamed": 645,
     "comments": 56,
     "formatter": "none",
-    "dead_lines_removed": 7,
+    "dead_lines_removed": 6,
     "darklua_applied": true,
     "deobf_ast_polished": true,
     "ast_valid": true,
-    "elapsed_ms": 17883
+    "elapsed_ms": 18251
   },
   "warnings": [
     "darklua remove_unused_variable skipped: the file declares multi-name locals without initializers, which darklua would delete entirely (writes would become globals)"

@@ -53,9 +53,12 @@ function announce(meta) {
     lines.push(`[*]   ${k.padEnd(13)}: ${iocs[k].slice(0, 2).join(', ')}`);
   }
   for (const note of meta.notes || []) lines.push(`[*]   note         : ${note}`);
+  const stubKind = meta.kind === 'client_stub' || meta.kind === 'hub_pointer';
   lines.push(meta.luraph_payload
     ? '[*] luarmor: devirtualizing the Luraph v15 chunk this file carries'
-    : '[*] luarmor: no payload in this file — the script is fetched after the licence handshake');
+    : stubKind
+      ? '[*] luarmor: no payload in this file — the script is fetched after the licence handshake'
+      : '[*] luarmor: nothing to lift here — the Luarmor url is a loader this script fetches');
   process.stderr.write(lines.join('\n') + '\n');
 }
 
@@ -183,8 +186,14 @@ async function chain(job, resultPath, deps = {}) {
   process.stderr.write('[*] the script the loader carried is Luarmor: ' + meta.label + '\n');
   announce(meta);
   if (!plan.lift) {
-    job.warnings.push(`The loader carries a Luarmor client stub, not the script: `
-      + 'the script is fetched at run time, so it is not in this file.');
+    // Two files can both mention Luarmor. Say which one this is: a stub that
+    // fetches the script at run time, or a script that names a Luarmor loader.
+    const stubKind = meta.kind === 'client_stub' || meta.kind === 'hub_pointer';
+    job.warnings.push(stubKind
+      ? `The loader carries a Luarmor client stub (${meta.kind}): the script is fetched `
+        + 'at run time, so it is not in this file.'
+      : `The script names a Luarmor-hosted loader (${meta.kind}); the code at that url is not `
+        + 'in this file, and nothing here needed lifting.');
     return null;
   }
   // The carried chunk is a Luraph build of its own: run the engine over it. The

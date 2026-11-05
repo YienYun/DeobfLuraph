@@ -76,19 +76,36 @@ def stub_source(names):
 
 
 def payload_note(text):
-    """Header lines for a carried script that is itself only a delivery stub."""
+    """Header lines describing what the carried script itself is.
+
+    Two very different files can both mention Luarmor: a client stub that fetches
+    the script at run time, and a whole script that merely names a Luarmor-hosted
+    loader for one of its own features. Saying the second is the first would be a
+    false claim about what the reader is holding, so the analyzer decides.
+    """
     try:
         from obfuscators.luarmor import probe
     except Exception:                                    # no Luarmor track loaded
         return []
-    hits, confidence = probe.detect(text)
-    if confidence < 0.9:
+    try:
+        meta = probe.analyze_bytes(text.encode("latin-1", "replace"), "<carried script>")
+    except Exception:
         return []
-    notes = ["-- What the loader carries is not the script itself but a Luarmor v4",
-             "-- client stub (%d signatures): the real script is fetched from Luarmor" % len(hits),
-             "-- after a licence handshake, so it is not in this file."]
-    io = probe.iocs(text)
+    if meta.get("confidence", 0) < 0.9:
+        return []
+    notes = []
+    if meta.get("luraph_payload"):
+        notes.append("-- The carried script holds a Luraph chunk of its own; the Luarmor track")
+        notes.append("-- lifts that chunk instead of printing it.")
+    elif meta.get("kind") in ("client_stub", "hub_pointer"):
+        notes += ["-- What the loader carries is a Luarmor v4 client stub (%d signatures):"
+                  % len(meta.get("signatures") or []),
+                  "-- the script it runs is fetched from Luarmor, so it is not in this file."]
+    else:
+        notes += ["-- This is the script itself. It names a Luarmor-hosted loader, which is",
+                  "-- fetched at run time and is not part of this file:"]
     for key, label in (("api_endpoint", "endpoint"), ("loader_id", "loader")):
-        if io.get(key):
-            notes.append("--   %-8s : %s" % (label, io[key][0]))
+        vals = (meta.get("iocs") or {}).get(key)
+        if vals:
+            notes.append("--   %-8s : %s" % (label, vals[0]))
     return notes

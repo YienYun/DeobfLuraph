@@ -6,9 +6,8 @@
 -- The loader hands this script the hub's UI library.  Fetch it the way the hub does;
 -- an object already in getgenv().ChilliLibrary wins, so a run inside the full hub is
 -- unaffected.
--- What the loader carries is not the script itself but a Luarmor v4
--- client stub (2 signatures): the real script is fetched from Luarmor
--- after a licence handshake, so it is not in this file.
+-- This is the script itself. It names a Luarmor-hosted loader, which is
+-- fetched at run time and is not part of this file:
 --   endpoint : https://api.luarmor.net/files/v4/loaders/130307ddb90b87125e0a381843ee1563.lua
 --   loader   : 130307ddb90b87125e0a381843ee1563
 -- deobf: needs the hub at run time

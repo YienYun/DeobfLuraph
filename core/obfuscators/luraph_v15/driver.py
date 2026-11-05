@@ -721,11 +721,11 @@ def payload_source(chunk_paths, require_script=False):
             # What the carrier holds decides how much of the header makes sense: a
             # stub that fetches its script at run time has to say so up front.
             notes = payload_note("\n".join(lines))
-            if notes:
-                # machine-readable: this file cannot finish outside the hub, and the
-                # runtime gate reads this line to know that is the expected end
-                notes.append("-- deobf: needs the hub at run time")
             if stub:
+                # machine-readable: the stub above stops the script at its first
+                # helper, so a run outside the hub cannot finish. The runtime gate
+                # reads this line to know that is the expected end.
+                notes.append("-- deobf: needs the hub at run time")
                 notes += ["-- The script also reaches into the loader's own helper table (%s);"
                           % ", ".join(helper_names),
                           "-- the stub at the bottom names the helper the first time one is used."]

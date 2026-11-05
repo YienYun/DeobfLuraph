@@ -274,7 +274,9 @@ async function run(job) {
       if (stats.errors || stats.fallbacks) {
         job.warnings.push(`Lift has ${stats.errors} unlifted blocks and ${stats.fallbacks} unstructured jumps.`);
       }
-      if (!stats.converged) {
+      // A file printed from the loader's own source never went through the
+      // constant rounds, so it has no `converged` flag to complain about.
+      if (!stats.payload_source && !stats.converged) {
         job.warnings.push('Constant resolution did not converge; the output may be incomplete.');
       }
       if (/error\(["'](?:devirt:|Luraph runtime function, not devirtualized)/.test(lifted)) {

@@ -11,7 +11,8 @@ output is read end to end.
 | Path | What it is |
 |---|---|
 | `*.deobf.luau` | result of a run over a pinned sample (`fixtures/manifest.json`), together with its `*.report.json` |
-| `*.report.json` | sidecar: `output_sha256`, `result_type`, lift stats, warnings |
+| `*.report.json` | sidecar: `output_sha256`, `result_type`, lift stats, warnings, and the `chain`/`luarmor` blocks when the run chained into the Luarmor track |
+| `*.luarmor.json` | sidecar from the Luarmor analyzer: kind, module id, cache key, client tag, build stamp, key link, endpoints |
 | `Luraph-public-sample-smoke-test.md` | the table those runs add up to, with the flags each one used |
 
 `Chilli_StealAnEggg.*` is a carrier sample, not a lift: the v15.1 loader holds the

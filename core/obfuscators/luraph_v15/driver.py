@@ -170,12 +170,20 @@ def emit_payload_source(job, dpath, chunk_paths, why=None, require_script=False)
         return None
     text, nfun = found[0], found[1]
     note = found[2] if len(found) > 2 else ""
+    carried = found[3] if len(found) > 3 else text
     print("[*] payload: printing the loadstring'd chunk as the script (%d lines, %d functions)%s%s"
           % (text.count("\n") + 1, nfun, (" -- " + note) if note else "",
              (" \u2014 " + why) if why else ""), file=sys.stderr)
     # The payload is plain Luau, so it gets the same whole-program passes the
     # lifted text gets: local function folding, dead-local cleanup and the
     # semantic local naming that makes the script's own logic readable.
+    # What the loader carried, on its own, next to the intermediates: the Node
+    # driver reads it to decide whether the script inside is itself a delivery
+    # stub (Luarmor), which would mean the real script is not in this file.
+    try:
+        job.write(job.path(".payload.luau"), carried, "latin-1")
+    except OSError:
+        pass
     import backend
     text = backend.polish(text)
     header = job.credit_header()
@@ -622,6 +630,7 @@ def payload_source(chunk_paths, require_script=False):
             whole.stat(st, 0)
         nfun = sum(1 for n in iter_nodes(root) if n.get("type") == "AstExprFunction")
         text, note = "\n".join(whole.lines), ""
+        carried = text
         # `return setmetatable({...}, {...}):method(...)`: a loader table.
         body = root.get("body") or []
         field_fn, nfields, runner_up, top_score = None, 0, (0, None), 0
@@ -731,11 +740,14 @@ def payload_source(chunk_paths, require_script=False):
                 out.append("entry = entry(%s)" % ("{ChilliLibrary}" if lvl == 2 else ""))
             out += ["entry()", ""]
             text = "\n".join(out)
+            carried = "\n".join(lines)
             note = "field %r of %d, %d wrapper level(s)" % (name, nfields, depth)
         if require_script and not note:
             continue   # no field reads as the script: this chunk is the machine
         if best is None or len(text) > len(best[0]):
-            best = (text, nfun, note)
+            # `carried` is the script on its own, without the header and the
+            # bootstrap this tool adds: the next track reads that, not the file.
+            best = (text, nfun, note, carried)
     return best
 
 

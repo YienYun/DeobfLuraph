@@ -198,6 +198,30 @@ Two things can then be true, and the header of the result says which:
   missing helper the first time one is used, instead of failing as "attempt to
   index nil" several frames inside code the reader is trying to follow.
 
+### Chaining into the Luarmor track
+
+When the engine prints a carrier's payload, the payload is handed to the Luarmor
+analyzer in the same command -- no second run (src/luarmor.js `chainPlan`/`chain`).
+The payload alone is what gets read: `emit_payload_source` writes it next to the
+intermediates without the header and bootstrap lines this tool adds, so the
+analysis is about the loader's script and not about our own comments.
+
+Two outcomes, decided by the analyzer rather than by a pattern match here:
+
+* **the payload carries a Luraph chunk** (a sephal init, or a loader Luarmor
+  served): the same engine runs over the payload and the lifted chunk becomes the
+  result, with the Luarmor metadata on top. This is the case worth the chain --
+  the code is in the file, and it is the code the chain says it is;
+* **the payload is only a client stub**: nothing is lifted, and the analysis
+  travels with the result as `results/<name>.luarmor.json`, mirrored into the
+  report under `chain` and `luarmor`. That is the module id, cache key, client
+  tag, build stamp, key link and endpoints -- what the file needs before it can
+  do anything, and where the script itself comes from.
+
+Nothing here fetches, decrypts or bypasses a licence check: only bytes that are
+already in the file are lifted, and `--no-devirt` turns the chain off with the
+rest of the lifting.
+
 ### How the text passes are tested
 
 Three kinds of check, because a compiler accepting the file says nothing about

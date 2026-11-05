@@ -137,6 +137,88 @@ function annotateStub(source, meta, stats) {
   return headerLines(meta, stats) + '\n' + notes.join('\n') + '\n\n' + source;
 }
 
+/**
+ * What the Luraph engine found inside a carrier: the loader's own field can hold
+ * a Luarmor file instead of the script. Deciding that is the analyzer's job, so
+ * this reads the payload the engine wrote out and asks it.
+ *
+ * -> { meta, lift } where `lift` says the payload carries a Luraph chunk of its
+ * own (a sephal init) and can therefore be devirtualized; null when the payload
+ * is not Luarmor at all.
+ */
+function chainPlan(payloadPath) {
+  if (!payloadPath || !fs.existsSync(payloadPath)) return null;
+  const text = fs.readFileSync(payloadPath, 'latin1');
+  const det = require('./detect').detect(text);
+  if (!det || det.plugin.name !== 'luarmor_client') return null;
+  const meta = analyze(payloadPath);
+  return { meta, lift: !!meta.luraph_payload, confidence: det.confidence };
+}
+
+/**
+ * Hand a carried Luarmor payload back to the Luraph engine, in place.
+ *
+ * A carrier build can hold a Luarmor client as its "script"; when that client
+ * carries the sephal init, the init is a Luraph v15 chunk and the same engine
+ * lifts it. Nothing is fetched and no licence check is bypassed: only the code
+ * that is actually in these bytes is lifted.
+ *
+ * -> the chained result path, or null when the payload has no chunk to lift.
+ */
+async function chain(job, resultPath, deps = {}) {
+  const payloadPath = job.path('.payload.luau');
+  const plan = chainPlan(payloadPath);
+  if (!plan) return null;
+  const meta = plan.meta;
+  // The payload lives in a temp file that is gone by the time anyone reads the
+  // report, so name it after the file it came out of instead.
+  meta.file = `${job.input}#payload`;
+  meta.carried_from = job.input;
+  if (!meta.luraph_payload) {
+    meta.notes.push('the script itself is downloaded after the licence handshake, so it is '
+      + 'not in this file');
+  }
+  job.luarmor = meta;
+  job.chain = (job.chain || []).concat([`luarmor:${meta.kind}`]);
+  process.stderr.write('[*] the script the loader carried is Luarmor: ' + meta.label + '\n');
+  announce(meta);
+  if (!plan.lift) {
+    job.warnings.push(`The loader carries a Luarmor client stub, not the script: `
+      + 'the script is fetched at run time, so it is not in this file.');
+    return null;
+  }
+  // The carried chunk is a Luraph build of its own: run the engine over it. The
+  // job points at the payload for that run and is put back afterwards.
+  const saved = {
+    input: job.input, source: job.source, sourcePath: job.sourcePath,
+    tracePath: job.tracePath,
+  };
+  job.input = payloadPath;
+  job.source = fs.readFileSync(payloadPath, 'latin1');
+  job.sourcePath = payloadPath;
+  job.tracePath = job.tracePath.replace(/(\.deobf\.luau)$/, '.carried$1');
+  job.resultType = null;
+  job.liftStats = null;
+  job.traceStatus = null;
+  const driver = deps.driver || require('./driver');
+  let lifted = null;
+  try {
+    lifted = await driver.run(job);
+  } catch (e) {
+    job.warnings.push(`The carried Luarmor payload could not be lifted: ${e.message}`);
+    process.stderr.write(`[!] carried Luarmor payload: ${e.message}\n`);
+  } finally {
+    job.input = saved.input;
+    job.source = saved.source;
+    job.sourcePath = saved.sourcePath;
+    job.tracePath = saved.tracePath;
+  }
+  if (!lifted || !fs.existsSync(lifted)) return null;
+  prependHeader(lifted, meta, job.liftStats || {});
+  job.chain = job.chain.concat(['luraph_v15']);
+  return lifted;
+}
+
 function reportPath(finalPath) {
   return finalPath.replace(/(\.(?:lua|luau|txt))?$/i, '') + '.luarmor.json';
 }
@@ -148,4 +230,5 @@ function writeReport(finalPath, meta) {
   return p;
 }
 
-module.exports = { analyze, announce, prependHeader, annotateStub, writeReport, reportPath, blockedStates, headerLines };
+module.exports = { analyze, announce, prependHeader, annotateStub, writeReport, reportPath,
+  blockedStates, headerLines, chainPlan, chain };

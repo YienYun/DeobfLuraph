@@ -360,10 +360,28 @@ async function processFile(absInput, args) {
       }
     } else if (plugin.name === 'luraph_v15') {
       result = await driver.run(job);
+      if (job.resultType === 'payload-source' && !args.noDevirt) {
+        // The loader may carry a script that is itself a delivery stub. When it
+        // is, the Luarmor track takes over without a second command: it reports
+        // the chain, and lifts the chunk if the payload carries one.
+        const chained = await require('./src/luarmor').chain(job, result);
+        if (chained) result = chained;
+      }
     } else if (plugin.name === 'generic') {
       result = await driver.runGeneric(job);
     } else {
       result = await engines.runPlugin(plugin.name, job);
+    }
+
+    if (job.luarmor && final) {
+      // The analysis of a carried Luarmor stub travels with the result, the same
+      // way it does when Luarmor is the input: a sidecar next to the file.
+      try {
+        const lp = require('./src/luarmor').writeReport(final, job.luarmor);
+        process.stderr.write(`[*] luarmor report: ${lp}\n`);
+      } catch (e) {
+        job.warnings.push(`Luarmor report could not be written: ${e.message}`);
+      }
     }
 
     if (final && result && fs.existsSync(result)) {
@@ -415,6 +433,8 @@ async function processFile(absInput, args) {
         result_type: job.resultType,
         trace_status: job.traceStatus,
         lift_stats: job.liftStats,
+        ...(job.chain ? { chain: job.chain } : {}),
+        ...(job.luarmor ? { luarmor: job.luarmor } : {}),
         ...(renameStats ? { rename_stats: renameStats } : {}),
         warnings: job.warnings,
       };

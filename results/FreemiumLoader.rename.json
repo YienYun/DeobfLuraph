@@ -1,0 +1,17 @@
+{
+  "input": "/home/user/DeobfLuraph/results/FreemiumLoader.deobf.luau",
+  "output": "/home/user/DeobfLuraph/results/FreemiumLoader.renamed.luau",
+  "rename_stats": {
+    "mode": "offline",
+    "provider": "offline",
+    "renamed": 0,
+    "comments": 0,
+    "formatter": "darklua",
+    "dead_lines_removed": 2,
+    "darklua_applied": true,
+    "deobf_ast_polished": false,
+    "ast_valid": true,
+    "elapsed_ms": 180
+  },
+  "warnings": []
+}

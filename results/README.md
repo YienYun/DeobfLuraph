@@ -16,6 +16,17 @@ output is read end to end.
 | `*.luarmor.json` | sidecar from the Luarmor analyzer: kind, module id, cache key, client tag, build stamp, key link, endpoints |
 | `Luraph-public-sample-smoke-test.md` | the table those runs add up to, with the flags each one used |
 
+`FreemiumLoader.*` and `Library-obfuscated.*` are a live test, not pinned
+fixtures: the first is `gather1231-source/Freemium/FreemiumLoader` (Luraph v15.1,
+319,924 B) and the second is `tienkhanh1/spicy/Library (2)-obfuscated.lua` (v15.0,
+183,544 B), both fetched by blob sha from GitHub on 2026-11-05 and written with
+`node deob.js <file> -o results/<name>.deobf.luau --report ...`. They are kept
+next to the pinned results because they are the two files a real user handed us,
+and because the first one shows the defect it shows: the lifted loader writes
+into the readonly `string` table at line 27 and errors at run time. A result that
+errors is a finding, not a reference -- do not read `FreemiumLoader.*` as a
+working deobfuscation.
+
 `Chilli_StealAnEggg.*` is a carrier sample, not a lift: the v15.1 loader holds the
 script as a function field, and what it holds is the script itself in plain Luau
 -- not a Luarmor stub. The Luarmor url in its header is the key system it asks

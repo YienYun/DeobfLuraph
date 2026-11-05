@@ -9,6 +9,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "core"))
 
+import ast_polish  # noqa: E402
 import copies      # noqa: E402
 import deadstore   # noqa: E402
 import seeds       # noqa: E402
@@ -31,7 +32,8 @@ def run(text):
             break
     text, _ = tidy.drop_extra_args(text)
     text, _ = deadstore.strip(text)
-    return text
+    # the AST cleanup runs last in the real chain, after every rewrite above
+    return ast_polish.polish_ast(text)
 
 
 def main():

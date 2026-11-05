@@ -114,9 +114,9 @@ Reads that sit after the refill are untouched, which is what makes the fold safe
 inside loops.
 
 Pure sources are folded too -- `local iterate = ipairs` becomes `ipairs(...)` at
-the call -- and a `local x` nothing reads is dropped. On RideAPet that is 684
-copies inlined and 54 dead declarations gone, which is most of the `data2 =
-data3` traffic that made the lifted code hard to follow.
+the call -- and a `local x` nothing reads is dropped. On RideAPet that is 402
+copies inlined and 57 temporaries folded, which is most of the `data2 = data3`
+traffic that made the lifted code hard to follow.
 
 What makes the fold safe is the list of things it refuses to do:
 
@@ -141,6 +141,18 @@ stores dead, which is how a register read after the `if` ended up nil.
 The pass runs before naming on purpose: a register that is one long chain of
 copies gets named after the value that started the chain, so `module.RarityRank`
 reads as the field it is instead of `module2.RarityRank`.
+
+The last sweep runs after every rewrite above, because they are what leaves a
+declaration holding a name nothing reads any more (`local a, b = nil, os.clock()`
+once the seed cleanup empties `a`). A slot is dropped when the local is never
+read, that declaration is its only write, and the value is a literal or a copy of
+another local -- so no call is lost and no read can be moved. What cannot be
+dropped is the slot that takes the *first* result of a multi-value call:
+`local first, second = f()` would hand `second` the wrong result the moment
+`first` goes. Those names stay, and are written `_`, which is what Lua writes for
+a value that is discarded on purpose. `_` is only used when the file has no live
+`_` of its own, since ours would capture or shadow it.
+
 
 ### Parentheses and longer names
 
@@ -167,12 +179,12 @@ value keeps the generic word instead of inheriting the first one's name.
 Three kinds of check, because a compiler accepting the file says nothing about
 what it prints:
 
-* `test/copies.test.js`, `test/tidy.test.js`, `test/seeds.test.js` -- each case is
-  run under Luau before and after, so the two programs have to print the same
-  thing;
+* `test/copies.test.js`, `test/tidy.test.js`, `test/seeds.test.js`,
+  `test/polish.test.js` -- each case is run under Luau before and after, so the
+  two programs have to print the same thing;
 * `test/passes_fuzz.test.js` -- generated programs full of register patterns
   (copies, refills, loop back edges, branches, closures, nil stores) go through
-  the whole chain and are compared the same way, and the test also asserts the
+  the whole chain, `ast_polish` included, and are compared the same way, and the test also asserts the
   corpus actually exercised the passes, so a green run cannot mean nothing was
   tried;
 * `test/smoke.test.js` -- every file in `results/` is executed inside the same

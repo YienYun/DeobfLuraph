@@ -70,6 +70,14 @@ _PURE_CALLEES = frozenset({
 })
 
 
+# Initial values that cost nothing to skip: a literal, or another local the
+# declaration was copying. A field read or a call is not in this set -- those
+# can raise, so the slot has to stay.
+_FREE_SLOT_VALUES = ("AstExprConstantNil", "AstExprConstantBool",
+                     "AstExprConstantNumber", "AstExprConstantString",
+                     "AstExprLocal")
+
+
 def _is_pure_expr(node, allow_func=False):
     if not isinstance(node, dict):
         return False
@@ -414,6 +422,38 @@ def _strip_unused_params_and_dead_locals(text):
             s0, e0 = _loc_bytes(st["location"], starts)
             s0, e0 = _expand_full_line_delete(btext, s0, e0)
             edits.append((s0, e0, b""))
+
+        # 1b. Dead slots inside a shared declaration. The seed cleanup empties one
+        # value of `local a, b = nil, os.clock()` and leaves the name behind; the
+        # slot is not a register the script uses, so the name goes with the value.
+        # Only slots carrying nothing or a literal move, so no call is lost.
+        dead_slots = {}
+        for vloc, (decl_st, idx) in local_decls.items():
+            vs = decl_st.get("vars", ())
+            if len(vs) < 2 or local_refs.get(vloc):
+                continue
+            vals = decl_st.get("values", ())
+            if idx < len(vals) and (vals[idx].get("type") or "") not in _FREE_SLOT_VALUES:
+                continue
+            dead_slots.setdefault(id(decl_st), (decl_st, set()))[1].add(idx)
+
+        for decl_st, drop_set in dead_slots.values():
+            vs = decl_st.get("vars", ())
+            vals = decl_st.get("values", ())
+            keep = [i for i in range(len(vs)) if i not in drop_set]
+            s0, e0 = _loc_bytes(decl_st["location"], starts)
+            if not keep:
+                s0, e0 = _expand_full_line_delete(btext, s0, e0)
+                edits.append((s0, e0, b""))
+                continue
+            names = b", ".join(btext[slice(*_loc_bytes(vs[i]["location"], starts))] for i in keep)
+            live_vals = [i for i in keep if i < len(vals)]
+            if live_vals:
+                values = b", ".join(btext[slice(*_loc_bytes(vals[i]["location"], starts))]
+                                    for i in live_vals)
+                edits.append((s0, e0, b"local " + names + b" = " + values))
+            else:
+                edits.append((s0, e0, b"local " + names))
 
         # 2. Unused dummy parameters on private direct-call-only local functions
         for vloc, (def_st, fn_node, kind) in local_funcs.items():
@@ -912,10 +952,9 @@ def _merge_local_decls(text):
             ds, de = rng(st)
             as0, ae0 = rng(nxt)
             as0, ae0 = _expand_full_line_delete(btext, as0, ae0)
-            # keep the indentation of the declaration line
-            line_start = btext.rfind(b"\n", 0, ds) + 1
-            indent = btext[line_start:ds]
-            new_decl = indent + b"local " + btext[name_s:name_e] + b" = " + btext[vs:ve]
+            # the declaration's own indentation is already in front of `ds`; emit
+            # only the statement, or the merge would double it
+            new_decl = b"local " + btext[name_s:name_e] + b" = " + btext[vs:ve]
             edits.append((ds, de, new_decl))
             edits.append((as0, ae0, b""))
         for st in body:
@@ -1525,6 +1564,63 @@ def _drop_empty_branches(text):
     return _apply_edits(btext, edits).decode("utf-8", "surrogateescape")
 
 
+def _discard_unread_slots(text):
+    """A name nothing reads can still be carrying a value.
+
+    `local first, second = f()` hands the call's first result to `first`. When
+    nothing reads `first` the name cannot go -- deleting it would slide `second`
+    onto the first result -- so it stays, and `_` is what Lua writes for "this
+    result is thrown away on purpose".
+
+    Only used when the file has no live `_` of its own -- a local one would be
+    captured by ours, a global one would be shadowed by it.
+    """
+    try:
+        root = _parse_ast(text)
+    except Exception:
+        return text
+    btext = text.encode("utf-8")
+    starts = _line_starts(btext)
+    refs = set()
+    underscore = set()
+    global_underscore = set()
+    slots = []
+
+    def walk(node):
+        if isinstance(node, dict):
+            t = node.get("type")
+            if t == "AstExprLocal":
+                refs.add(node["local"]["location"])
+            elif t == "AstExprGlobal" and node.get("global") == "_":
+                global_underscore.add(True)
+            elif t in ("AstStatLocal", "AstStatLocalFunction"):
+                for v in ([node["name"]] if t == "AstStatLocalFunction" else node.get("vars") or []):
+                    if v.get("name") == "_":
+                        underscore.add(v["location"])
+                    elif t == "AstStatLocal":
+                        slots.append(v)
+            for k, v in node.items():
+                if k != "location":
+                    walk(v)
+        elif isinstance(node, list):
+            for x in node:
+                walk(x)
+
+    walk(root)
+    if (underscore & refs) or global_underscore:   # this file already has a `_`
+        return text
+    edits = []
+    for v in slots:
+        loc = v["location"]
+        if loc in refs or v.get("name") == "_":
+            continue
+        s, e = _loc_bytes(loc, starts)
+        edits.append((s, e, b"_"))
+    if not edits:
+        return text
+    return _apply_edits(btext, edits).decode("utf-8", "surrogateescape")
+
+
 def polish_ast(text):
     text = _strip_unused_params_and_dead_locals(text)
     text = _unwrap_top_level_iife(text)
@@ -1581,4 +1677,34 @@ def polish_ast(text):
             text = bitfold.fold_chains(text)
         except Exception as ex:                    # never lose a working output
             print("[!] bit32 chain fold pass failed: %s" % ex, file=sys.stderr)
+    try:
+        # the passes above rewrite declarations, so the slots they emptied need one
+        # more sweep before the file is written out
+        text = _strip_unused_params_and_dead_locals(text)
+        # what is left is a name that has to stay, because it is holding a call's
+        # result apart from the ones the next slots take
+        text = _discard_unread_slots(text)
+    except Exception as ex:                        # never lose a working output
+        print("[!] final dead-slot pass failed: %s" % ex, file=sys.stderr)
     return text
+
+
+def main(argv):
+    import argparse
+
+    ap = argparse.ArgumentParser(description="apply the whole-program text passes")
+    ap.add_argument("file", help="file to polish, or - for stdin")
+    ap.add_argument("-o", "--output")
+    args = ap.parse_args(argv)
+    text = sys.stdin.read() if args.file == "-" else open(args.file, encoding="utf-8").read()
+    out = polish_ast(text)
+    if args.output:
+        with open(args.output, "w", encoding="utf-8", newline="\n") as fh:
+            fh.write(out)
+    else:
+        sys.stdout.write(out)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

@@ -14,7 +14,7 @@
     "fixtures:verify": "node scripts/fixtures.js verify",
     "golden": "node scripts/update-golden.js",
     "check": "node scripts/check.js && node scripts/luac.js results",
-    "test": "node scripts/check.js && node --test test/watermark.test.js test/detect.test.js test/diagnostics.test.js test/engines.test.js test/fixtures.test.js test/flatten.test.js test/u32fold.test.js test/seeds.test.js test/copies.test.js test/tidy.test.js test/passes_fuzz.test.js test/smoke.test.js",
+    "test": "node scripts/check.js && node --test test/watermark.test.js test/detect.test.js test/diagnostics.test.js test/engines.test.js test/fixtures.test.js test/flatten.test.js test/u32fold.test.js test/seeds.test.js test/copies.test.js test/tidy.test.js test/passes_fuzz.test.js test/polish.test.js test/smoke.test.js",
     "test:e2e": "node --test test/e2e.test.js",
     "test:all": "node scripts/check.js && node --test test/",
     "metrics": "python3 scripts/metrics.py",

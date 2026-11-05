@@ -4,6 +4,8 @@ import re
 import sys
 import time
 
+import carrier
+from carrier import payload_note
 import harness
 import traceout as trace
 
@@ -702,7 +704,29 @@ def payload_source(chunk_paths, require_script=False):
                     " the script cannot start without it\")",
                     "\treturn",
                     "end"]
-            out += [""] + lines + ["", "local entry = payload(...)"]
+            # The loader may hand this script its own table of helpers; a file run
+            # on its own cannot, so the bootstrap says which helper is missing
+            # instead of dying as "attempt to index nil" inside the script.
+            helper_names = carrier.helpers(fn)
+            stub = carrier.stub_source(helper_names)
+            # What the carrier holds decides how much of the header makes sense: a
+            # stub that fetches its script at run time has to say so up front.
+            notes = payload_note("\n".join(lines))
+            if notes:
+                # machine-readable: this file cannot finish outside the hub, and the
+                # runtime gate reads this line to know that is the expected end
+                notes.append("-- deobf: needs the hub at run time")
+            if stub:
+                notes += ["-- The script also reaches into the loader's own helper table (%s);"
+                          % ", ".join(helper_names),
+                          "-- the stub at the bottom names the helper the first time one is used."]
+            if notes:
+                # keep the notes with the rest of the header, after the last
+                # comment line and before the bootstrap the file starts with
+                at = next((i for i, line in enumerate(out) if not line.startswith("--")), len(out))
+                out[at:at] = notes
+            out += [""] + lines + [""] + stub + [""]
+            out.append("local entry = payload(%s)" % ("%s()" % carrier.STUB if stub else "..."))
             for lvl in range(2, depth + 1):
                 out.append("entry = entry(%s)" % ("{ChilliLibrary}" if lvl == 2 else ""))
             out += ["entry()", ""]

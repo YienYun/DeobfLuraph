@@ -14,6 +14,12 @@ output is read end to end.
 | `*.report.json` | sidecar: `output_sha256`, `result_type`, lift stats, warnings |
 | `Luraph-public-sample-smoke-test.md` | the table those runs add up to, with the flags each one used |
 
+`Chilli_StealAnEggg.*` is a carrier sample, not a lift: the v15.1 loader holds the
+script as a function field and what it holds is a Luarmor v4 client stub, so the
+file is the stub in source form. Its header names the endpoint the real script is
+fetched from; it says `-- deobf: needs the hub at run time`, which is why the
+runtime gate expects it to stop at that message instead of finishing.
+
 Three rules for this directory:
 
 1. **Every `.deobf.luau` has a `.report.json` next to it**, and the report's

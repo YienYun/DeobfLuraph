@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "input": "/home/user/DeobfLuraph/fixtures/input/StealAnEggg.lua",
+  "output": "/home/user/DeobfLuraph/results/Chilli_StealAnEggg.deobf.luau",
+  "output_sha256": "8ffd5898e9eb4bf50808f66c98c55beb1d3b1d1f8bdb19371218fc757309c443",
+  "output_bytes": 979678,
+  "obfuscator": "luraph_v15",
+  "engine": "Luraph v15",
+  "confidence": 1,
+  "result_type": "payload-source",
+  "trace_status": "finished",
+  "lift_stats": {
+    "functions": 2208,
+    "walked": 0,
+    "errors": 0,
+    "fallbacks": 0,
+    "payload_source": 25615
+  },
+  "warnings": [
+    "Constant resolution did not converge; the output may be incomplete."
+  ]
+}

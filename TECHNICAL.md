@@ -164,6 +164,12 @@ tighter than the operator around it. `(2 + 3) * 4` and `2 - (3 - 1)` keep theirs
 single value is expected -- `f((g()))` truncates `g()` while `f(g())` forwards
 it, so that one stays. RideAPet loses 816 groups.
 
+The base of an index is not an ordinary expression: `({a = 1})[k]` needs its
+brackets because `{a = 1}[k]` does not parse, and `(a or b)[k]` is not
+`a or b[k]`. Both are kept. A build that carried a table literal indexed on the
+spot is what made that rule visible -- dropping the group made the whole file
+stop parsing.
+
 The seed numbers the VM passed to its own functions survive the arithmetic
 passes as arguments nobody reads, so a call to a function that takes none is
 trimmed back to its arity -- `compileChunk(488023178, 180544471)` becomes
@@ -173,6 +179,24 @@ The names themselves come from what the value does, never from a guess: a table
 handed named functions is the script's `module`, a value answering the Instance
 API is an `instance`, and a register that is refilled with different kinds of
 value keeps the generic word instead of inheriting the first one's name.
+
+### Loaders that carry the script as a function
+
+Not every v15 build virtualises the script. Some keep it as one field of the
+loader's table and call that field with the table itself; the engine prints it
+rather than lifting it (`payload-source`) because it already reads as source.
+Two things can then be true, and the header of the result says which:
+
+* the carried text is itself a delivery stub -- a Luarmor v4 client, which
+  fetches the real script from `api.luarmor.net` after a licence handshake. The
+  script is not in the file, and no local pass will find it. The header names the
+  endpoint and the loader id, and `core/carrier.py` writes the marker line
+  `-- deobf: needs the hub at run time` so the runtime gate knows that stopping
+  at the stub is the expected end;
+* the script reaches into the loader's own helper table (`H2`, `g2`, `[72]`).
+  Those are the hub's private API, so the bootstrap passes a stub that names the
+  missing helper the first time one is used, instead of failing as "attempt to
+  index nil" several frames inside code the reader is trying to follow.
 
 ### How the text passes are tested
 

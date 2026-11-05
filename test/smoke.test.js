@@ -20,9 +20,19 @@ const files = fs.existsSync(DIR)
   : [];
 
 for (const file of files) {
+  // A carrier build whose script is fetched at run time cannot finish outside its
+  // hub. The file says so in its header, and the run has to stop at that message
+  // rather than somewhere inside code the reader is meant to follow.
+  const source = fs.readFileSync(path.join(DIR, file), 'utf8');
+  const delivered = /^-- deobf: needs the hub at run time$/m.test(source);
   test(`result runs without a runtime error: ${file}`, () => {
     const res = smoke(path.join(DIR, file), { timeout: 120 });
     assert.equal(res.status, 0, `luau exited ${res.status}: ${res.stderr.slice(0, 400)}`);
+    if (delivered) {
+      assert.match(res.runStatus, /\[deobf\] this script needs/,
+        `expected the delivery stub to report, got: ${res.runStatus}`);
+      return;
+    }
     assert.ok(!res.failed, `run stopped: ${res.runStatus}`);
     assert.match(res.runStatus, /finished/, `unexpected run status: ${res.runStatus}`);
   });

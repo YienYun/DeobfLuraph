@@ -91,6 +91,32 @@ print(not (flag), not (1 == 2))
   assert.match(out, /not \(1 == 2\)/);
 });
 
+test('a table literal indexed on the spot keeps its brackets', () => {
+  // `{a = 1}[k]` does not parse: the base of an index has to be a prefix
+  // expression, so the brackets are part of the syntax, not decoration
+  const out = same(`local k = "a"
+local v = ({a = 1, b = 2})[k] or "z"
+print(v, ({1, 2})[2])
+`);
+  assert.match(out, /\(\{a = 1, b = 2\}\)\[k\]/);
+  assert.match(out, /\(\{1, 2\}\)\[2\]/);
+});
+
+test('an index base that is already an expression loses its brackets', () => {
+  const out = same(`local t = {7, 8}
+local k = 2
+print((t)[k], ({1})[1]);
+`);
+  assert.match(out, /print\(t\[k\]/);
+});
+
+test('an operator under an index keeps the brackets that hold it together', () => {
+  const out = same(`local a, b = nil, {5}
+print((a or b)[1])
+`);
+  assert.ok(!/a or b\[1\]/.test(out), out);
+});
+
 test('seed arguments handed to a function that takes none are dropped', () => {
   const src = `local function build()
 	return 7

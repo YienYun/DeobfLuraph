@@ -25,6 +25,11 @@ ATOMIC = {"AstExprLocal", "AstExprGlobal", "AstExprConstantString", "AstExprCons
           "AstExprConstantBool", "AstExprConstantNil", "AstExprIndexName", "AstExprCall",
           "AstExprTable", "AstExprFunction", "AstExprIfElse"}
 
+# Only a prefix expression can start an index: `({a = 1})[k]` needs its brackets,
+# `{a = 1}[k]` does not parse, and `(a or b)[k]` is not `a or b[k]`.
+PREFIX_EXPR = {"AstExprLocal", "AstExprGlobal", "AstExprCall", "AstExprIndexExpr",
+               "AstExprIndexName", "AstExprGroup"}
+
 
 def _is_group(e):
     return isinstance(e, dict) and e.get("type") == "AstExprGroup"
@@ -118,9 +123,13 @@ def strip_groups(text):
                 if _is_group(inner) and inner["expr"].get("type") in ATOMIC:
                     mark(inner, False)
             elif t == "AstExprIndexExpr":
-                for k in ("expr", "index"):
-                    if _is_group(node.get(k)):
-                        mark(node[k], False)
+                # the base has to stay a prefix expression; the slot inside the
+                # brackets is a full expression, so its group can always go
+                base = node.get("expr")
+                if _is_group(base) and (base.get("expr") or {}).get("type") in PREFIX_EXPR:
+                    mark(base, False)
+                if _is_group(node.get("index")):
+                    mark(node["index"], False)
             for k, v in node.items():
                 if k != "location":
                     walk(v, False)

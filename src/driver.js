@@ -293,6 +293,14 @@ async function run(job) {
         process.stderr.write(`[!] ${warning}\n`);
         job.warnings.push(warning);
       }
+      try {
+        const written = fs.readFileSync(dpath, 'utf8');
+        const frozen = (written.match(/^.*-- devirt: \w+ is read-only.*$/gm) || []).length;
+        if (frozen) {
+          job.warnings.push(`The lift wrote into a read-only library global ${frozen} time(s); `
+            + 'the table that code builds is materialized as `{}` so the output still runs.');
+        }
+      } catch {}
       return dpath;
     }
     const warning = !lifted.trim() || !stats.functions

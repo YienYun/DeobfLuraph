@@ -21,11 +21,14 @@ fixtures: the first is `gather1231-source/Freemium/FreemiumLoader` (Luraph v15.1
 319,924 B) and the second is `tienkhanh1/spicy/Library (2)-obfuscated.lua` (v15.0,
 183,544 B), both fetched by blob sha from GitHub on 2026-11-05 and written with
 `node deob.js <file> -o results/<name>.deobf.luau --report ...`. They are kept
-next to the pinned results because they are the two files a real user handed us,
-and because the first one shows the defect it shows: the lifted loader writes
-into the readonly `string` table at line 27 and errors at run time. A result that
-errors is a finding, not a reference -- do not read `FreemiumLoader.*` as a
-working deobfuscation.
+next to the pinned results because they are the two files a real user handed us.
+
+`FreemiumLoader` is also the regression this tree was built around: the lift used
+to emit `data = string` and then write the whitelist into it, which Luau freezes,
+so the output died at line 27 with `attempt to modify a readonly table`. The
+read-only rewrite in `core/ast_polish.py` now materializes that table and says so
+in a `-- devirt:` note; the run finishes, and the report keeps the warning that
+it happened.
 
 `Chilli_StealAnEggg.*` is a carrier sample, not a lift: the v15.1 loader holds the
 script as a function field, and what it holds is the script itself in plain Luau

@@ -11,7 +11,7 @@
     "darklua_applied": true,
     "deobf_ast_polished": true,
     "ast_valid": true,
-    "elapsed_ms": 1590
+    "elapsed_ms": 1826
   },
   "warnings": [
     "darklua remove_unused_variable skipped: the file declares multi-name locals without initializers, which darklua would delete entirely (writes would become globals)"

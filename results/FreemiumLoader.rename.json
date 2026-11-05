@@ -7,11 +7,11 @@
     "renamed": 0,
     "comments": 0,
     "formatter": "darklua",
-    "dead_lines_removed": 2,
-    "darklua_applied": true,
+    "dead_lines_removed": 0,
+    "darklua_applied": false,
     "deobf_ast_polished": false,
     "ast_valid": true,
-    "elapsed_ms": 180
+    "elapsed_ms": 188
   },
   "warnings": []
 }

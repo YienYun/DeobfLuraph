@@ -2558,8 +2558,224 @@ def name_context_slots(text):
         return text
 
 
+def _align_comment_indent(text):
+    """A comment sits where the code it introduces sits. The passes above move
+    statements between blocks, and a note left at the old column reads like it
+    belongs to something else."""
+    lines = text.split("\n")
+    out = list(lines)
+    for i, line in enumerate(lines):
+        stripped = line.lstrip()
+        if not stripped.startswith("--"):
+            continue
+        indent = line[:len(line) - len(stripped)]
+        for j in range(i + 1, len(lines)):
+            nxt = lines[j]
+            if not nxt.strip():
+                continue
+            nindent = nxt[:len(nxt) - len(nxt.lstrip())]
+            if nindent != indent:
+                out[i] = nindent + stripped
+            break
+    return "\n".join(out)
+
+
+def _fold_constant_ifs(text, rounds=4):
+    for _ in range(rounds):
+        folded = _fold_constant_ifs_once(text)
+        if folded == text:
+            return text
+        text = folded
+    return text
+
+
+def _fold_constant_ifs_once(text):
+    """`if nil then ... else ... end` is a branch the lift could not decide: the
+    constant is what runs, so the taken block is what the code does. Keep it and
+    drop the rest, rather than leaving a branch no reader can explain."""
+    try:
+        root = _parse_ast(text)
+    except Exception:
+        return text
+    btext = text.encode("utf-8")
+    starts = _line_starts(btext)
+
+    def line_start(pos):
+        i = btext.rfind(b"\n", 0, pos)
+        return i + 1
+
+    edits = []
+    for stmt in _iter_nodes(root, "AstStatIf"):
+        cond = stmt.get("condition") or {}
+        kind = cond.get("type")
+        if kind == "AstExprConstantNil":
+            taken = stmt.get("elsebody")
+        elif kind == "AstExprConstantBool" and not cond.get("value"):
+            taken = stmt.get("elsebody")
+        else:
+            # `if true then ... end` is harmless and the local merge already
+            # looks through it; only a branch the run skipped is worth rewriting
+            continue
+        start, end = _loc_bytes(stmt["location"], starts)
+        body = (taken or {}).get("body") or []
+        other = (stmt.get("thenbody") if taken is stmt.get("elsebody")
+                 else stmt.get("elsebody")) or {}
+        note = b""
+        if other.get("body"):
+            # say it out loud: a branch that never ran is being dropped
+            line = btext.rfind(b"\n", 0, start) + 1
+            indent = btext[line:start]
+            indent = indent[:len(indent) - len(indent.lstrip())]
+            note = (indent + b"-- devirt: dropped a branch the run never took "
+                    b"(its condition was a literal)\n")
+        if not body:
+            edits.append((start, end, note))
+            continue
+        b0, _ = _loc_bytes(body[0]["location"], starts)
+        _, b1 = _loc_bytes(body[-1]["location"], starts)
+        chunk = btext[b0:b1]
+        stmt_indent = start - line_start(start)
+        body_indent = b0 - line_start(b0)
+        chunk = note + chunk if note else chunk
+        note = b""
+        drop = body_indent - stmt_indent
+        if drop > 0:
+            lines = chunk.split(b"\n")
+            fixed = [lines[0]] + [ln[drop:] if ln[:drop].strip() == b"" else ln
+                                  for ln in lines[1:]]
+            chunk = b"\n".join(fixed)
+        edits.append((start, end, note + chunk))
+
+    if not edits:
+        return text
+    edits.sort(key=lambda e: (e[0], -e[1]))
+    kept = []
+    for e in edits:
+        if any(e[0] >= k[0] and e[1] <= k[1] for k in kept):
+            continue                          # nested in a fold we already took
+        kept.append(e)
+    out = btext
+    for start, end, repl in sorted(kept, key=lambda e: -e[0]):
+        out = out[:start] + repl + out[end:]
+    return out.decode("utf-8")
+
+
+_LIB_TABLES = ("string", "table", "math", "os", "coroutine", "utf8", "bit32",
+               "debug", "buffer")
+_READONLY_NOTE = ("-- devirt: %s is read-only, so the table this code builds is "
+                  "materialized here")
+
+
+def _readonly_lib_rewrites(text):
+    """`x = string` followed by `x[k] = v` cannot be right: Luau freezes those
+    library tables, and the writes prove the code meant a table it builds. The
+    lift lost that table, so it is materialized, and the file says so.
+
+    Only a binding with nothing but field writes is touched -- one read and the
+    value could still be the library, and guessing would be worse than the crash.
+    """
+    try:
+        root = _parse_ast(text)
+    except Exception:
+        return text
+    btext = text.encode("utf-8")
+    starts = _line_starts(btext)
+    parent, refs, _funcs = _usage_index(root)
+
+    def par_of(node):
+        hit = parent.get(id(node))
+        return hit[0] if hit else None
+
+    def is_store_base(ref):
+        par = par_of(ref)
+        if (par or {}).get("type") not in ("AstExprIndexName", "AstExprIndexExpr"):
+            return False
+        if par.get("expr") is not ref:
+            return False
+        gp = par_of(par)
+        if (gp or {}).get("type") != "AstStatAssign":
+            return False
+        return any(v is par for v in (gp.get("vars") or []))
+
+    def is_index_base(ref):
+        par = par_of(ref)
+        if (par or {}).get("type") not in ("AstExprIndexName", "AstExprIndexExpr"):
+            return False
+        if par.get("expr") is not ref:
+            return False
+        gp = par_of(par)
+        # `x:find(...)` / `x.find(...)` needs the library itself, not a table
+        if (gp or {}).get("type") == "AstExprCall" and gp.get("func") is par:
+            return False
+        return True
+
+    def is_write_target(ref):
+        par = par_of(ref)
+        return (par or {}).get("type") == "AstStatAssign" and any(
+            v is ref for v in (par.get("vars") or []))
+
+    candidates = {}
+    for kind in ("AstStatAssign", "AstStatLocal"):
+        for stmt in _iter_nodes(root, kind):
+            vars_, values = stmt.get("vars") or [], stmt.get("values") or []
+            if len(vars_) != 1 or len(values) != 1:
+                continue
+            var, value = vars_[0], values[0]
+            if value.get("type") != "AstExprGlobal" or value.get("global") not in _LIB_TABLES:
+                continue
+            if var.get("type") == "AstExprLocal":
+                loc = (var.get("local") or {}).get("location")
+            elif var.get("type") == "AstLocal":
+                loc = var.get("location")
+            else:
+                continue
+            candidates.setdefault(loc, []).append(value)
+
+    edits = []
+    for loc, values in candidates.items():
+        uses = refs.get(loc) or []
+        if not any(is_store_base(ref) for ref in uses):
+            continue
+        # a field read is fine (the table is what holds those fields); being
+        # called, passed on or returned means the value really is the library
+        if any(not (is_index_base(ref) or is_write_target(ref)) for ref in uses):
+            continue
+        for value in values:
+            start, end = _loc_bytes(value["location"], starts)
+            if not start and not end:
+                continue
+            tail = btext[end:].split(b"\n", 1)[0]
+            if tail.strip():
+                continue                 # something else shares the line
+            lib = value.get("global")
+            line = btext.rfind(b"\n", 0, start) + 1
+            indent = btext[line:start]
+            indent = indent[:len(indent) - len(indent.lstrip())]
+            note = (_READONLY_NOTE % lib).encode("utf-8")
+            edits.append((start, end, b"{}"))
+            edits.append((line, line, indent + note + b"\n"))
+    if not edits:
+        return text
+    out = btext
+    for start, end, repl in sorted(edits, key=lambda e: (-e[0], -e[1])):
+        out = out[:start] + repl + out[end:]
+    return out.decode("utf-8")
+
+
 def polish_ast(text, text_names=True):
     text = _strip_unused_params_and_dead_locals(text)
+    try:
+        text = _align_comment_indent(text)
+    except Exception as ex:                        # never lose a working output
+        print("[!] comment indent pass failed: %s" % ex, file=sys.stderr)
+    try:
+        text = _fold_constant_ifs(text)
+    except Exception as ex:                        # never lose a working output
+        print("[!] constant-if fold failed: %s" % ex, file=sys.stderr)
+    try:
+        text = _readonly_lib_rewrites(text)
+    except Exception as ex:                        # never lose a working output
+        print("[!] read-only library rewrite failed: %s" % ex, file=sys.stderr)
     text = _unwrap_top_level_iife(text)
     text = _sugar_local_functions(text)
     if text_names:
@@ -2630,6 +2846,11 @@ def polish_ast(text, text_names=True):
         text = _discard_unread_slots(text)
     except Exception as ex:                        # never lose a working output
         print("[!] final dead-slot pass failed: %s" % ex, file=sys.stderr)
+    try:
+        # notes added while folding and materializing land at the right column
+        text = _align_comment_indent(text)
+    except Exception as ex:                        # never lose a working output
+        print("[!] comment indent pass failed: %s" % ex, file=sys.stderr)
     return text
 
 

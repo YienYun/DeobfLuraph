@@ -2,8 +2,8 @@
   "schema_version": 1,
   "input": "/tmp/new/FreemiumLoader.lua",
   "output": "/home/user/DeobfLuraph/results/FreemiumLoader.deobf.luau",
-  "output_sha256": "52c4444b5ea73eb7bfa5ed3bdc6a77f3d686221721ad42613b53472d6aa731d3",
-  "output_bytes": 2674,
+  "output_sha256": "1fb7883c644535ce70bd7cdb746333e2eeb44baa5db070fced863293b3a3b0c3",
+  "output_bytes": 2677,
   "obfuscator": "luraph_v15",
   "engine": "Luraph v15",
   "confidence": 1,
@@ -30,5 +30,7 @@
     "converged": true,
     "pending_constant_requests": 0
   },
-  "warnings": []
+  "warnings": [
+    "The lift wrote into a read-only library global 1 time(s); the table that code builds is materialized as `{}` so the output still runs."
+  ]
 }

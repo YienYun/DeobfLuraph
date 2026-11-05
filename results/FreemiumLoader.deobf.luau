@@ -18,68 +18,63 @@ if not string.find(string.lower(text), "solara") and not string.find(string.lowe
 	if not game:GetService("Players").LocalPlayer then
 		game:GetService("Players").PlayerAdded:Wait()
 	end
-	local value
-
-	if nil then
-		value = string
-	else
-		value = string
-		value["8008202756"] = true
-		value["8023712967"] = true
-		value["18895805393"] = true
-		value["94960960966233"] = true
-		value["78016658750794"] = true
-		value["121542246511405"] = true
-		value["10449761463"] = true
-		value["131048399685555"] = true
-		value["12360882630"] = true
-		value["130818724007978"] = true
-		value["16530963934"] = true
-		value["13927562399"] = true
-		value["86149966973442"] = true
-		value["131122113597361"] = true
-		value["128736949265057"] = true
-		value["13358463560"] = true
-		value["14486353847"] = true
-		value["15664627784"] = true
-		value["117294424977618"] = true
-		value["120572150304003"] = true
-		value["138305788155102"] = true
-		value["4588604953"] = true
-		value["8343259840"] = true
-		value["15169303036"] = true
-		value["15169306359"] = true
-		value["15169310267"] = true
-		value["15169316384"] = true
-		value["15169351413"] = true
-		value["80324896626095"] = true
-		value["82649733145132"] = true
-		value["91792475213200"] = true
-		value["112125110590385"] = true
-		value["17070462969"] = true
-		value["85358869901275"] = true
-		value["115019089181488"] = true
-		value["76606442853797"] = true
-		value["84873606343299"] = true
-		value["109381610102856"] = true
-		value["120500302070128"] = true
-		value["86544322519715"] = true
-		value["100096058035179"] = true
-		value["18852831741"] = true
-		value["90396046237359"] = true
-		value["94198423505227"] = true
-		value["104368713763076"] = true
-		value["117305039183091"] = true
-		value["140576252219916"] = true
-		value["77649408247578"] = true
-		value["85776757589518"] = true
-	end
-
-	value["115445507767090"] = true
-	value["6549794549"] = true
-	value["6585022145"] = true
-	value["6678600773"] = true
-	-- devirt: spin loop left out (its body has no effect: its only statement wrote a value nothing reads)
+	local data = {}
+	-- devirt: dropped a branch the run never took (its condition was a literal)
+	-- devirt: string is read-only, so the table this code builds is materialized here
+	data["8008202756"] = true
+	data["8023712967"] = true
+	data["18895805393"] = true
+	data["94960960966233"] = true
+	data["78016658750794"] = true
+	data["121542246511405"] = true
+	data["10449761463"] = true
+	data["131048399685555"] = true
+	data["12360882630"] = true
+	data["130818724007978"] = true
+	data["16530963934"] = true
+	data["13927562399"] = true
+	data["86149966973442"] = true
+	data["131122113597361"] = true
+	data["128736949265057"] = true
+	data["13358463560"] = true
+	data["14486353847"] = true
+	data["15664627784"] = true
+	data["117294424977618"] = true
+	data["120572150304003"] = true
+	data["138305788155102"] = true
+	data["4588604953"] = true
+	data["8343259840"] = true
+	data["15169303036"] = true
+	data["15169306359"] = true
+	data["15169310267"] = true
+	data["15169316384"] = true
+	data["15169351413"] = true
+	data["80324896626095"] = true
+	data["82649733145132"] = true
+	data["91792475213200"] = true
+	data["112125110590385"] = true
+	data["17070462969"] = true
+	data["85358869901275"] = true
+	data["115019089181488"] = true
+	data["76606442853797"] = true
+	data["84873606343299"] = true
+	data["109381610102856"] = true
+	data["120500302070128"] = true
+	data["86544322519715"] = true
+	data["100096058035179"] = true
+	data["18852831741"] = true
+	data["90396046237359"] = true
+	data["94198423505227"] = true
+	data["104368713763076"] = true
+	data["117305039183091"] = true
+	data["140576252219916"] = true
+	data["77649408247578"] = true
+	data["85776757589518"] = true
+	data["115445507767090"] = true
+	data["6549794549"] = true
+	data["6585022145"] = true
+	data["6678600773"] = true
+-- devirt: spin loop left out (its body has no effect: its only statement wrote a value nothing reads)
 end
 
 local number = 452473605

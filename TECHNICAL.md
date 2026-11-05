@@ -35,7 +35,14 @@ function *or* a method table -- `module.run = function(self, job)` makes
 initialiser itself (`part.Position` -> `position`). Both run after naming because the
 namer renames locals by use, and an alias it did not write would change what the
 namer decides; `name_from_usage` runs last so a slot's new name counts as
-evidence. The flattener is what turns the obfuscator's control-flow
+evidence. Two more rules keep a lift honest about what it could not see. A branch on a
+literal (`if nil then ... else ... end`) is a branch the run already decided, so
+the block that ran is kept and the other one is dropped with a `-- devirt:` note
+instead of being left for the reader to explain. And a write into a frozen
+library table (`data = string` followed by `data[k] = v`) is impossible in Luau:
+it means the lift lost the table the code builds, so that table is materialized
+as `{}`, noted in the file, and reported as a warning in the run report. The
+flattener is what turns the obfuscator's control-flow
 flattening back into straight-line code. Luraph encodes it as a loop over a
 constant range that dispatches on the counter:
 

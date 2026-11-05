@@ -254,3 +254,51 @@ test('a value local written more than once takes no name from its first write', 
   const out = same(src);
   assert.ok(!/^local position = part\.Position$/m.test(out), out);
 });
+
+// --- a write into a frozen library ---------------------------------------
+// Luau freezes `string`, `table`, `math` and friends. A lift that ends with
+// `x = string` followed by `x[k] = v` lost the table the code builds, so the
+// table is materialized -- and the file says so instead of dying at run time.
+
+test('a field write into a library global materializes the table', () => {
+  // the original cannot be run: it writes into the frozen `string` table
+  const src = 'local data\n\nif nil then\n\tdata = string\nelse\n\tdata = string\n'
+    + '\tdata["8008"] = true\nend\nprint(data["8008"] and "ok" or "no")\n';
+  const out = polish(src);
+  assert.match(luau(out), /^ok$/m, out);
+  assert.match(out, /^local data = \{\}$/m, out);
+  assert.match(out, /-- devirt: string is read-only/, out);
+  assert.match(out, /^data\["8008"\] = true$/m, out);
+});
+
+test('a library global that is only read is left alone', () => {
+  const src = 'local s = string\nprint(s.find("ab", "b"))\n';
+  const out = same(src);
+  assert.match(out, /^local s = string$/m, out);
+});
+
+test('a binding that is also called is not materialized', () => {
+  const src = 'local s = string\ns["a"] = true\nprint(s.find("ab", "b"))\n';
+  const out = polish(src);
+  assert.match(out, /^local s = string$/m, out);
+  assert.ok(!/local s = \{\}/.test(out), out);
+});
+
+// --- a branch whose condition is a literal -------------------------------
+// The run decided it, so the code that ran is the code to keep; a branch that
+// never ran is dropped with a note rather than left for the reader to puzzle out.
+
+test('a branch on a literal nil keeps the block that ran', () => {
+  const src = 'if nil then\n\tprint("lost")\nelse\n\tprint("ran")\nend\n';
+  const out = same(src);
+  assert.match(out, /print\("ran"\)/, out);
+  assert.ok(!/print\("lost"\)/.test(out), out);
+  assert.match(out, /-- devirt: dropped a branch/, out);
+});
+
+test('an `if true` block is left to the local merge, not folded here', () => {
+  const src = 'if true then\n\tprint("ran")\nend\nprint("after")\n';
+  const out = same(src);
+  assert.match(out, /print\("ran"\)/, out);
+  assert.ok(!/-- devirt/.test(out), out);
+});

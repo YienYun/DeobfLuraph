@@ -12,14 +12,17 @@ output is read end to end.
 |---|---|
 | `*.deobf.luau` | result of a run over a pinned sample (`fixtures/manifest.json`), together with its `*.report.json` |
 | `*.report.json` | sidecar: `output_sha256`, `result_type`, lift stats, warnings, and the `chain`/`luarmor` blocks when the run chained into the Luarmor track |
+| `*.renamed.luau` | the same result after Layer 2 (`node renamer/index.js`), plus its `*.rename.json` sidecar: names, comments, dead lines |
 | `*.luarmor.json` | sidecar from the Luarmor analyzer: kind, module id, cache key, client tag, build stamp, key link, endpoints |
 | `Luraph-public-sample-smoke-test.md` | the table those runs add up to, with the flags each one used |
 
 `Chilli_StealAnEggg.*` is a carrier sample, not a lift: the v15.1 loader holds the
-script as a function field and what it holds is a Luarmor v4 client stub, so the
-file is the stub in source form. Its header names the endpoint the real script is
-fetched from; it says `-- deobf: needs the hub at run time`, which is why the
-runtime gate expects it to stop at that message instead of finishing.
+script as a function field, and what it holds is the script itself in plain Luau
+-- not a Luarmor stub. The Luarmor url in its header is the key system it asks
+for later, and the code at that url is not in this file. It still says
+`-- deobf: needs the hub at run time`, because the script calls helpers the hub
+hands it (`H2`, `g2`, `[72]`); that marker is why the runtime gate expects it to
+stop at that message instead of finishing.
 
 Three rules for this directory:
 

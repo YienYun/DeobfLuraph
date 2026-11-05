@@ -87,3 +87,51 @@ test('a merged declaration keeps the indentation of the block it sits in', () =>
   assert.match(out, /^\tlocal t = 4$/m, out);
   assert.ok(!/^\t\tlocal t/.test(out), out);
 });
+
+// --- context slots --------------------------------------------------------
+// The script keeps its own helper table and indexes it by number. These cases
+// pin the rule that gives a slot a name: what was stored in it, and only where
+// that name really means the same value at the read.
+
+const GAME = 'local game = {GetService = function(_, name) return {Name = name} end}\n';
+
+test('a slot holding a service is named after the service', () => {
+  const src = GAME + 'local data = {}\ndata[58] = game:GetService("RunService")\nprint(data[58].Name)\n';
+  const out = same(src);
+  assert.match(out, /^local runService = data\[58\]$/m, out);
+  assert.match(out, /print\(runService\.Name\)/, out);
+});
+
+test('a slot copied from a local uses that local and adds no alias', () => {
+  const src = 'local state = {note = 0}\nlocal data = {}\ndata[20] = state\nstate.note = 1\n'
+    + 'print(data[20].note)\n';
+  const out = same(src);
+  assert.match(out, /print\(state\.note\)/, out);
+  assert.ok(!/local state = data\[20\]/.test(out), out);
+});
+
+test('a read the name would not reach keeps its number', () => {
+  // `state` inside f is a different binding that is read there, so the slot has
+  // to stay indexed: naming it would silently hand the inner table to the read
+  const src = 'local state = {note = 1}\nlocal data = {}\ndata[20] = state\n'
+    + 'local function f()\n\tlocal state = {note = 2}\n\treturn state.note, data[20].note\nend\n'
+    + 'print(f(), state.note)\n';
+  const out = same(src);
+  assert.match(out, /return state\.note, data\[20\]\.note/, out);
+  assert.match(out, /print\(f\(\), state\.note\)/, out);
+});
+
+test('a read above the write keeps its number, the ones below take the name', () => {
+  const src = GAME + 'local data = {}\nlocal early = data[7]\n'
+    + 'data[7] = game:GetService("TeleportService")\nprint(early, data[7].Name)\n';
+  const out = same(src);
+  assert.match(out, /local early = data\[7\]/, out);
+  assert.match(out, /^local teleportService = data\[7\]$/m, out);
+  assert.match(out, /print\(early, teleportService\.Name\)/, out);
+});
+
+test('naming a slot settles: a second polish changes nothing', () => {
+  const src = GAME + 'local data = {}\ndata[58] = game:GetService("RunService")\nprint(data[58].Name)\n';
+  const once = polish(src);
+  assert.equal(polish(once), once);
+});

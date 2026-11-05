@@ -75,14 +75,19 @@ local function payload(argument, argument2)
 			local Players = getService("Players")
 			local ReplicatedStorage = getService("ReplicatedStorage")
 			data[58] = getService("RunService")
+			local runService = data[58]
 			local TeleportService = getService("TeleportService")
 			local HttpService = getService("HttpService")
 			data[1] = Players.LocalPlayer
+			local localPlayer = data[1]
 			data[36] = ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Networking")
+			local networking = data[36]
 			data[28] = Vector3.new
+			local newVector3 = data[28]
 			data[27] = CFrame.new
+			local newCFrame = data[27]
 			data[41] = Vector3.new(0, 0, 0)
-			local heartbeat = data[58].Heartbeat
+			local heartbeat = runService.Heartbeat
 			local genv = getgenv and getgenv() or _G
 			if genv.ChilliHubSaeCleanup then
 				pcall(genv.ChilliHubSaeCleanup)
@@ -99,6 +104,7 @@ local function payload(argument, argument2)
 			data[23] = function()
 				return heartbeat:Wait()
 			end
+			local heartbeatWait = data[23]
 
 			local function callback(argument5, argument6)
 				local instance = Instance.new(argument5)
@@ -129,7 +135,7 @@ local function payload(argument, argument2)
 			end})
 
 			data[9] = function(argument5, ...)
-				local instance = data[36]
+				local instance = networking
 				local value2 = instance:FindFirstChild(argument5)
 				if not value2 then
 					return false
@@ -166,7 +172,7 @@ local function payload(argument, argument2)
 			end
 
 			local function callback2(argument5, ...)
-				local instance = data[36]
+				local instance = networking
 				local value2 = instance:FindFirstChild(argument5)
 				if value2 then
 					pcall(value2.FireServer, value2, ...)
@@ -193,11 +199,11 @@ local function payload(argument, argument2)
 			end
 
 			data[8] = function()
-				local value2 = data[1]
+				local value2 = localPlayer
 				local character = value2.Character
 				local humanoid
 				if character then
-					value2 = data[1]
+					value2 = localPlayer
 					humanoid = value2.Character:FindFirstChildOfClass("Humanoid")
 				else
 					humanoid = character
@@ -205,12 +211,14 @@ local function payload(argument, argument2)
 				return humanoid
 			end
 
+			local humanoid = data[8]
+
 			data[15] = function()
-				local value2 = data[1]
+				local value2 = localPlayer
 				local character = value2.Character
 				local humanoidRootPart
 				if character then
-					value2 = data[1]
+					value2 = localPlayer
 					humanoidRootPart = value2.Character:FindFirstChild("HumanoidRootPart")
 				else
 					humanoidRootPart = character
@@ -218,13 +226,15 @@ local function payload(argument, argument2)
 				return humanoidRootPart
 			end
 
+			local humanoidRootPart = data[15]
+
 			local function callback3()
-				local value2 = data[8]
+				local value2 = humanoid
 				local value3 = value2()
 				local condition2 = value3 ~= nil and value3.Health > 0
 				local condition3
 				if condition2 then
-					value2 = data[15]
+					value2 = humanoidRootPart
 					condition3 = value2() ~= nil
 				else
 					condition3 = condition2
@@ -236,19 +246,19 @@ local function payload(argument, argument2)
 				return workspace:GetServerTimeNow()
 			end
 			data[44] = function()
-				local value2, value3, ok, response = data[1], data[1], pcall(data[1].GetNetworkPing, data[1])
+				local value2, value3, ok, response = localPlayer, localPlayer, pcall(localPlayer.GetNetworkPing, localPlayer)
 				return ok and math.clamp(tonumber(response) or 0.2, 0, 1) or 0.2
 			end
 			local value2
 			data[13] = value2
 
 			data[26] = function(cFrame)
-				local value3 = data[15]
+				local value3 = humanoidRootPart
 				local value4 = value3()
 
 				if value4 then
 					if value4.Anchored then
-						value3 = data[20]
+						value3 = state
 
 						if (value3.hold or 0) == 0 then
 							if not data[13](function()
@@ -263,7 +273,7 @@ local function payload(argument, argument2)
 					return
 				end
 
-				value3 = data[15]
+				value3 = humanoidRootPart
 				local value5 = value3()
 				if not value5 then
 					return
@@ -279,7 +289,7 @@ local function payload(argument, argument2)
 			end
 
 			local function callback4()
-				local value3 = data[8]
+				local value3 = humanoid
 				local humanoid = value3()
 				return math.max(humanoid and humanoid.WalkSpeed or 16, 16)
 			end
@@ -292,11 +302,12 @@ local function payload(argument, argument2)
 				return world
 			end
 
+			local world = data[51]
 			local Areas
 
 			data[24] = function()
 				if not (Areas and Areas.Parent) then
-					local value3 = data[51]
+					local value3 = world
 					local Areas2 = value3("Areas", "SeparationLine")
 					Areas = Areas2 and Areas2:IsA("BasePart") and Areas2 or nil
 				end
@@ -305,19 +316,19 @@ local function payload(argument, argument2)
 				if position then
 					position2 = position
 				else
-					local value3 = data[28]
+					local value3 = newVector3
 					position2 = (value3(552.2, 67.67, 0))
 				end
 				return position2
 			end
 
 			data[43] = function()
-				local value3 = data[51]
+				local value3 = world
 				local Machines = value3("Machines", "RiftMachine", "Rift", "Meshes/VoidPortal_Cube.003")
 				local isBasePart = Machines and Machines:IsA("BasePart")
 				local isBasePart2
 				if isBasePart then
-					value3, isBasePart2 = data[28], Machines.CFrame:PointToWorldSpace(data[28](-26.776, 1.75, 18.665))
+					value3, isBasePart2 = newVector3, Machines.CFrame:PointToWorldSpace(newVector3(-26.776, 1.75, 18.665))
 				else
 					isBasePart2 = isBasePart
 				end
@@ -325,12 +336,13 @@ local function payload(argument, argument2)
 				if isBasePart2 then
 					isBasePart = isBasePart2
 				else
-					Machines = data[28]
+					Machines = newVector3
 					isBasePart = (Machines(528.7, 70.57, -364.11))
 				end
 				return isBasePart
 			end
 
+			local cFramePointToWorldSpace = data[43]
 			data[16] = function(argument5)
 				local value3, condition2 = data[24], argument5.X < data[24]().X and argument5.Y < 1000
 				return condition2
@@ -351,9 +363,10 @@ local function payload(argument, argument2)
 				pcall(firetouchinterest, argument5, argument6, 1)
 			end
 			data[29] = function()
-				local value3, number4 = data[1], tonumber(data[1]:GetAttribute("RagdollEndTime")) or 0
+				local value3, number4 = localPlayer, tonumber(localPlayer:GetAttribute("RagdollEndTime")) or 0
 				return number4 > getServerTimeNow()
 			end
+			local getServerTimeNow = data[29]
 			data[72] = function(argument5, ...)
 				local value3 = data[9]
 				local value4, value5 = value3(argument5, ...)
@@ -463,6 +476,8 @@ local function payload(argument, argument2)
 				return ok and type(response) == "table" and response or nil
 			end
 
+			local savePeek = data[64]
+
 			data[18] = function()
 				local ok, response = pcall(function()
 					local value3 = data[32]
@@ -471,14 +486,15 @@ local function payload(argument, argument2)
 				return ok and type(response) == "table" and response.Records or {}
 			end
 
+			local eggReadFieldEggs = data[18]
 			local function callback10()
-				local instance = data[1]
+				local instance = localPlayer
 				return instance:FindFirstChildOfClass("Backpack")
 			end
 
 			local function callback11()
 				local ok, response = pcall(function()
-					local value3, value4 = data[32], data[1]
+					local value3, value4 = data[32], localPlayer
 					return value3.Egg.ReadOwnerEggs(value4.UserId)
 				end)
 				return ok and type(response) == "table" and response or {}
@@ -606,7 +622,7 @@ local function payload(argument, argument2)
 
 			genv.ChilliHubSaeCleanup = function()
 				data[53] = false
-				local value3 = data[20]
+				local value3 = state
 				for _, value4 in ipairs(value3.cleanup) do
 					pcall(value4)
 				end
@@ -632,37 +648,37 @@ local function payload(argument, argument2)
 				end
 			end)
 
-			data[20].press = function(argument5)
+			state.press = function(argument5)
 				return argument5.UserInputType == Enum.UserInputType.MouseButton1 or argument5.UserInputType == Enum.UserInputType.Touch
 			end
-			data[20].log = {}
+			state.log = {}
 
 			data[11] = function(status, argument5)
-				local number6, value3 = data[20], data[20]
+				local number6, value3 = state, state
 				number6.noteAt = os.clock()
 				value3.status = status
-				number6 = data[20]
+				number6 = state
 
 				if number6.lastNote ~= status then
-					value3 = data[20]
+					value3 = state
 					value3.lastNote = status
-					local value4 = data[20]
+					local value4 = state
 					local value5
-					value5, value4.log[#data[20].log + 1] = data[20], ("%.1f %s"):format(os.clock(), tostring(status))
-					value5 = data[20]
+					value5, value4.log[#state.log + 1] = state, ("%.1f %s"):format(os.clock(), tostring(status))
+					value5 = state
 					if #value5.log > 40 then
-						table.remove(data[20].log, 1)
+						table.remove(state.log, 1)
 					end
 				end
 
-				number6, value3 = data[20], data[20]
+				number6, value3 = state, state
 				number6.warned = value3.warned or {}
 
 				if argument5 == "warn" or argument5 == "err" then
 					if not mainWindow.open then
-						value3, number6 = data[20], os.clock() - (data[20].warned[status] or -1000000000)
+						value3, number6 = state, os.clock() - (state.warned[status] or -1000000000)
 						if number6 > 60 then
-							local value4 = data[20]
+							local value4 = state
 							value4.warned[status] = os.clock()
 							value.Notify("Chilli Hub", status)
 						end
@@ -670,6 +686,7 @@ local function payload(argument, argument2)
 				end
 			end
 
+			local notify = data[11]
 			local function callback15(argument5, argument6)
 				value.Notify(argument5, argument6)
 			end
@@ -691,9 +708,9 @@ local function payload(argument, argument2)
 			end
 
 			local function callback18()
-				local value3 = data[20]
+				local value3 = state
 				if value3.poke then
-					local value4 = data[20]
+					local value4 = state
 					value4.poke()
 				end
 			end
@@ -718,9 +735,9 @@ local function payload(argument, argument2)
 						rarityMap[i] = name
 					end
 				end
-				local value3 = data[20]
+				local value3 = state
 				value3.AREAS = {"Forest", "Desert", "Snow", "Lake", "Jungle", "Volcano", "Prehistoric", "Cosmic", "Abyss Ocean", "Cherry Blossom", "Light Dark", "Titan Temple", "Enchanted Forest"}
-				local value4, number6, value5 = data[20], data[20], data[20]
+				local value4, number6, value5 = state, state, state
 				value4.RANY = {"Any"}
 				number6.RNUM = {}
 				value5.RIDX = {}
@@ -728,20 +745,20 @@ local function payload(argument, argument2)
 
 				for i = 1, number6, 1 do
 					if rarityMap[i] then
-						value5, value3 = data[20]
-						value3, value5.RANY[#data[20].RANY + 1] = data[20], rarityMap[i]
-						local value6 = data[20]
+						value5, value3 = state
+						value3, value5.RANY[#state.RANY + 1] = state, rarityMap[i]
+						local value6 = state
 						local value7
-						value7, value6.RNUM[#data[20].RNUM + 1] = data[20], i .. (" - " .. rarityMap[i])
-						value4 = data[20]
+						value7, value6.RNUM[#state.RNUM + 1] = state, i .. (" - " .. rarityMap[i])
+						value4 = state
 						value4.RIDX[rarityMap[i]] = i
-						value7 = data[20]
+						value7 = state
 						value7.RIDX[i .. (" - " .. rarityMap[i])] = i
 					end
 				end
 
 				local data3
-				local value6 = data[20]
+				local value6 = state
 
 				value6.eggList = function()
 					if data3 then
@@ -778,14 +795,14 @@ local function payload(argument, argument2)
 					return iMap
 				end
 
-				value4 = data[20]
+				value4 = state
 				value4.nostat = {Set = function()
 				end, Icon = function()
 				end}
-				local value7 = data[20]
+				local value7 = state
 
 				value7.minRar = function(argument5)
-					local value8 = data[20]
+					local value8 = state
 					local value9 = value8.RIDX[tostring(argument5)]
 					if not value9 then
 						return nil
@@ -797,10 +814,10 @@ local function payload(argument, argument2)
 					return argument5
 				end
 
-				local value8 = data[20]
+				local value8 = state
 
 				value8.maxRar = function(argument5)
-					local iMap = data[20]
+					local iMap = state
 					local value9 = iMap.RIDX[tostring(argument5)]
 					if not value9 then
 						return nil
@@ -812,7 +829,7 @@ local function payload(argument, argument2)
 					return iMap
 				end
 
-				local value9 = data[20]
+				local value9 = state
 
 				value9.names = function(argument5)
 					local data4
@@ -878,11 +895,11 @@ local function payload(argument, argument2)
 			local value3
 			data[4] = value3
 
-			data[20].ufoRun = function()
+			state.ufoRun = function()
 				local condition2 = data[4] ~= nil and data[4].name == "Steal"
 				local condition3
 				if condition2 then
-					local value4 = data[20]
+					local value4 = state
 					condition3 = value4.stealKind == "ufo"
 				else
 					condition3 = condition2
@@ -896,7 +913,7 @@ local function payload(argument, argument2)
 				return argument5
 			end
 
-			data[20].poke = function()
+			state.poke = function()
 				for _, value4 in ipairs(iMap) do
 					if value4.info then
 						if not value4.busy then
@@ -911,7 +928,7 @@ local function payload(argument, argument2)
 				argument5.at = 0
 			end
 			local now2 = os.clock()
-			trackConnection(data[1].CharacterAdded, function()
+			trackConnection(localPlayer.CharacterAdded, function()
 				now2 = os.clock()
 			end)
 			local data4, data5 = {on = false}, {last = "-", placed = 0, hatched = 0}
@@ -925,7 +942,7 @@ local function payload(argument, argument2)
 					local condition3 = argument5 == nil
 					local condition4
 					if condition3 then
-						local value4 = data[20]
+						local value4 = state
 						condition4 = not value4.rag
 					else
 						condition4 = condition3
@@ -955,20 +972,20 @@ local function payload(argument, argument2)
 			end)
 
 			data[50] = function(argument5, argument6, argument7)
-				local number6 = data[20]
+				local number6 = state
 				if number6.ready then
-					local value4 = data[20]
+					local value4 = state
 					value4.ready(argument6)
 				end
 				argument7 = argument7 or callback4() * 0.92
-				number6 = data[15]
-				local value4, clock = number6(), data[20]
+				number6 = humanoidRootPart
+				local value4, clock = number6(), state
 
 				if clock.hideTread then
 					if value4 then
-						number6 = data[43]
+						number6 = cFramePointToWorldSpace
 						if (argument5 - number6()).Magnitude < 30 then
-							local value5 = data[20]
+							local value5 = state
 							value5.hideTread((argument5 - value4.Position).Magnitude / argument7 + 2)
 						end
 					end
@@ -978,7 +995,7 @@ local function payload(argument, argument2)
 				local now3, condition2, number7 = clock(), false, 0.016666666666666666
 
 				while argument6() do
-					clock = data[15]
+					clock = humanoidRootPart
 					value4 = clock()
 					if not value4 then
 						return false
@@ -990,7 +1007,7 @@ local function payload(argument, argument2)
 					end
 					local number8 = argument5 - value4.Position
 					if number8.Magnitude < 3 then
-						local value5, value6 = data[26], data[27]
+						local value5, value6 = data[26], newCFrame
 						value5(value6(argument5) * value4.CFrame.Rotation)
 						return true
 					end
@@ -998,34 +1015,34 @@ local function payload(argument, argument2)
 					if number8.Magnitude < number6 - 3 then
 						number6, now3 = number8.Magnitude, os.clock()
 					else
-						local value5 = data[20]
+						local value5 = state
 
 						if not value5.ufoRun() then
 							local condition3 = os.clock() - now3 > 4
 							local respawn
 							if condition3 then
-								local value6 = data[20]
+								local value6 = state
 								respawn = value6.respawn
 							else
 								respawn = condition3
 							end
 
 							if respawn then
-								local value6, number9 = data[20], os.clock() - (data[20].respawnAt or -99)
+								local value6, number9 = state, os.clock() - (state.respawnAt or -99)
 								if number9 < 10 then
 									return false
 								end
-								condition3 = data[11]
+								condition3 = notify
 								condition3("Stuck in place, resetting the character")
-								number9 = data[20]
+								number9 = state
 								number9.respawn()
 								return false
 							elseif os.clock() - now3 > 1 then
 								if not condition2 then
 									local value6 = data[9]
 									value6("RF/Treadmill/AskDoff")
-									local value7, value8, value9 = data[26], data[27], data[43]
-									value7(value8(value9() + data[28](0, 3, 0)))
+									local value7, value8, value9 = data[26], newCFrame, cFramePointToWorldSpace
+									value7(value8(value9() + newVector3(0, 3, 0)))
 									condition2 = true
 								end
 							else
@@ -1033,37 +1050,39 @@ local function payload(argument, argument2)
 						end
 					end
 
-					local value5, value6 = data[26], data[27]
+					local value5, value6 = data[26], newCFrame
 					value5(value6(value4.Position + number8.Unit * math.min(argument7 * number7, number8.Magnitude)) * value4.CFrame.Rotation)
-					value6, number7 = data[23], math.clamp(data[23](), 0.004166666666666667, 0.05)
+					value6, number7 = heartbeatWait, math.clamp(heartbeatWait(), 0.004166666666666667, 0.05)
 				end
 
 				return false
 			end
 
+			local ready = data[50]
+
 			data[13] = function(argument5)
 				for i = 1, 4, 1 do
-					i = data[15]
+					i = humanoidRootPart
 					local value4 = i()
 					if not value4 then
 						return false
 					end
 					if not value4.Anchored then
-						i = data[20]
+						i = state
 						if not i.onAdmin then
 							return true
 						end
 					end
-					i = data[20]
+					i = state
 					local onAdmin, value5 = i.onAdmin, data[9]
 					local AskDoff, number6, value6 = value5("RF/Treadmill/AskDoff")
-					value5 = data[20]
+					value5 = state
 					value5.onAdmin = false
 
 					if onAdmin and not value4.Anchored then
 						i = os.clock() + 0.4
 						while os.clock() < i and argument5() do
-							value5 = data[23]
+							value5 = heartbeatWait
 							value5()
 						end
 						return argument5()
@@ -1081,7 +1100,7 @@ local function payload(argument, argument2)
 
 					onAdmin, number6 = data[44], os.clock() + 0.6 + data[44]() * 2
 					while value4.Parent and value4.Anchored and os.clock() < number6 and argument5() do
-						value6 = data[23]
+						value6 = heartbeatWait
 						value6()
 					end
 					if not argument5() then
@@ -1089,38 +1108,38 @@ local function payload(argument, argument2)
 					end
 				end
 
-				argument5 = data[15]
+				argument5 = humanoidRootPart
 				local value4 = argument5()
 				return value4 ~= nil and not value4.Anchored
 			end
 
 			data[14] = function(argument5, argument6)
-				local leaveTree = data[20]
+				local leaveTree = state
 
 				if leaveTree.inFuse then
-					local value4 = data[20]
+					local value4 = state
 					if value4.inFuse() then
-						local value5 = data[20]
+						local value5 = state
 						if not value5.leaveFuse() then
 							return false
 						end
 					end
 				end
 
-				leaveTree = data[1]
+				leaveTree = localPlayer
 				local attribute = leaveTree:GetAttribute("InEnchantedTree")
 				leaveTree = nil
 				if attribute then
-					local value4 = data[20]
+					local value4 = state
 					leaveTree = value4.leaveTree
 				else
 					leaveTree = attribute
 				end
 
 				if leaveTree then
-					attribute = data[11]
+					attribute = notify
 					attribute("Leaving the Enchanted Tree")
-					local number6 = data[20]
+					local number6 = state
 					number6.leaveTree()
 					number6 = os.clock() + 3
 
@@ -1128,7 +1147,7 @@ local function payload(argument, argument2)
 						local condition2 = os.clock() < number6 and argument5()
 						local attribute2
 						if condition2 then
-							local instance = data[1]
+							local instance = localPlayer
 							attribute2 = (instance:GetAttribute("InEnchantedTree"))
 						else
 							attribute2 = condition2
@@ -1136,24 +1155,24 @@ local function payload(argument, argument2)
 						if not attribute2 then
 							break
 						end
-						attribute2 = data[23]
+						attribute2 = heartbeatWait
 						attribute2()
 					end
 				end
 
-				attribute = data[15]
-				local value4, leaveTree2 = attribute(), data[43]
+				attribute = humanoidRootPart
+				local value4, leaveTree2 = attribute(), cFramePointToWorldSpace
 				attribute = leaveTree2()
 				if not value4 then
 					return false
 				end
-				leaveTree2 = data[20]
+				leaveTree2 = state
 
 				if leaveTree2.hideTread then
 					if not argument6 then
 						leaveTree = data[16]
 						if leaveTree(value4.Position) then
-							local value5 = data[20]
+							local value5 = state
 							value5.hideTread(3)
 						end
 					end
@@ -1168,22 +1187,22 @@ local function payload(argument, argument2)
 				end
 
 				if leaveTree2 and (value4.Position - attribute).Magnitude > 69 then
-					leaveTree = data[11]
+					leaveTree = notify
 					leaveTree("Moving to the safe zone")
-					local value5, value6 = data[50], data[28]
+					local value5, value6 = ready, newVector3
 					if not value5(attribute + value6(0, 3, 0), argument5, 250) then
 						return false
 					end
 					argument6 = os.clock() + 0.25
 
 					while os.clock() < argument6 and argument5() do
-						value5 = data[15]
+						value5 = humanoidRootPart
 						value4 = value5()
 						if value4 then
 							value6 = data[41]
 							value4.AssemblyLinearVelocity = value6
 						end
-						local value7 = data[23]
+						local value7 = heartbeatWait
 						value7()
 					end
 				end
@@ -1191,11 +1210,13 @@ local function payload(argument, argument2)
 				return true
 			end
 
+			local attribute2 = data[14]
+
 			local function callback24(argument5, argument6)
 				if not data[13](argument6) then
 					return false
 				end
-				local value4 = data[15]
+				local value4 = humanoidRootPart
 				local value5 = value4()
 				if not value5 then
 					return false
@@ -1205,28 +1226,28 @@ local function payload(argument, argument2)
 				if value4(value5.Position) then
 					local value6 = data[16]
 					if not value6(argument5) then
-						local value7 = data[14]
+						local value7 = attribute2
 						if not value7(argument6) then
 							return false
 						end
 					end
 				else
 					if value5.Position.Y > 1000 then
-						local value6 = data[14]
+						local value6 = attribute2
 						if not value6(argument6) then
 							return false
 						end
 					else
-						local instance = data[1]
+						local instance = localPlayer
 						if instance:GetAttribute("InEnchantedTree") then
-							local value6 = data[14]
+							local value6 = attribute2
 							if not value6(argument6) then
 								return false
 							end
 						end
 					end
 
-					local value6 = data[15]
+					local value6 = humanoidRootPart
 					value5 = value6()
 
 					if value5 then
@@ -1236,24 +1257,24 @@ local function payload(argument, argument2)
 							local value7 = data[16]
 
 							if value7(argument5) then
-								local value8 = data[43]
-								local value9, number6 = data[28], value8() + data[28](0, 3, 0)
+								local value8 = cFramePointToWorldSpace
+								local value9, number6 = newVector3, value8() + newVector3(0, 3, 0)
 
 								if (value5.Position - number6).Magnitude > 1500 then
 									if callback12() > 0 then
 										value8 = data[21]
 
 										if not value8() then
-											local value10 = data[20]
+											local value10 = state
 											if value10.ragTo then
-												local value11 = data[20]
+												local value11 = state
 												value11.ragTo(number6, argument6)
 											end
 										end
 									end
 								end
 
-								value8 = data[50]
+								value8 = ready
 								if not value8(number6, argument6, 400) then
 									return false
 								end
@@ -1262,7 +1283,7 @@ local function payload(argument, argument2)
 					end
 				end
 
-				value4 = data[50]
+				value4 = ready
 				return value4(argument5, argument6)
 			end
 
@@ -1271,13 +1292,13 @@ local function payload(argument, argument2)
 
 				if value4("Cycle", "IsNightPhase", serverTimeNow) then
 					local value5 = data[22]
-					local Cycle, value6 = value5("Cycle", "NextResetTime", serverTimeNow), data[20]
+					local Cycle, value6 = value5("Cycle", "NextResetTime", serverTimeNow), state
 					local Cycle2 = Cycle and Cycle + 5
 					local Cycle
 					if Cycle2 then
 						Cycle = Cycle2
 					else
-						value5 = data[20]
+						value5 = state
 						Cycle = value5.fieldAt
 					end
 					value6.fieldAt = Cycle
@@ -1285,10 +1306,10 @@ local function payload(argument, argument2)
 
 				value4 = data[22]
 				if value4("Wall", "IsSealed") then
-					local value5 = data[20]
+					local value5 = state
 					return math.max((value5.fieldAt or serverTimeNow) - serverTimeNow, 0.3)
 				end
-				value4 = data[20]
+				value4 = state
 				local number6 = (value4.fieldAt or 0) - serverTimeNow
 				return number6 > 0 and number6 or 0
 			end
@@ -1300,7 +1321,7 @@ local function payload(argument, argument2)
 						return true
 					end
 				end
-				attribute = data[1]
+				attribute = localPlayer
 				local playerGui = attribute:FindFirstChild("PlayerGui")
 				attribute = playerGui and playerGui:FindFirstChild("BottomUI")
 				attribute = attribute and attribute:FindFirstChild("BottomFrame")
@@ -1325,7 +1346,7 @@ local function payload(argument, argument2)
 								if not argument5() then
 									return false
 								end
-								local value5 = data[23]
+								local value5 = heartbeatWait
 								value5()
 							end
 						end
@@ -1334,14 +1355,14 @@ local function payload(argument, argument2)
 					end
 
 					condition2 = true
-					local value5 = data[15]
+					local value5 = humanoidRootPart
 					local value6 = value5()
 
 					if value6 then
 						position = position or value6.Position
 
 						if (value6.Position - position).Magnitude > 4 then
-							local value7, value8 = data[26], data[27]
+							local value7, value8 = data[26], newCFrame
 							value7(value8(position))
 						else
 							value5 = data[41]
@@ -1349,9 +1370,9 @@ local function payload(argument, argument2)
 						end
 					end
 
-					value6 = data[11]
+					value6 = notify
 					value6((argument6 or "Waiting") .. (" - field opens in " .. (math.ceil(value4) .. "s")))
-					value6 = data[23]
+					value6 = heartbeatWait
 					value6()
 				end
 
@@ -1359,15 +1380,15 @@ local function payload(argument, argument2)
 			end
 
 			local function callback27(argument5)
-				local humanoidRootPart = data[51]
+				local humanoidRootPart = world
 				local Areas2 = humanoidRootPart("Areas", "GuardAreas", tostring(argument5), "Guard")
 				humanoidRootPart = Areas2 and Areas2:FindFirstChild("HumanoidRootPart", true)
 				return humanoidRootPart and humanoidRootPart:IsA("BasePart") and humanoidRootPart or nil
 			end
 
 			local function callback28(argument5, argument6)
-				local value4 = data[1]
-				local text, value, uid = "FirstAreaEgg_" .. value4.UserId, pairs, data[18]
+				local value4 = localPlayer
+				local text, value, uid = "FirstAreaEgg_" .. value4.UserId, pairs, eggReadFieldEggs
 				value4 = argument[72](uid())
 				local magnitude, data6
 
@@ -1381,7 +1402,7 @@ local function payload(argument, argument2)
 						local Forest = match and (callback27(value5.AreaId) or condition2 and callback27("Forest"))
 
 						if Forest then
-							local position, value6 = value5.BottomCFrame.Position, data[28]
+							local position, value6 = value5.BottomCFrame.Position, newVector3
 							condition2 = value6(position.X - argument5.X, 0, position.Z - argument5.Z).Magnitude
 							if condition2 <= 600 and if magnitude then condition2 < magnitude else not magnitude then
 								magnitude, data6 = condition2, {uid = uid, slot = match, guard = Forest, at = position}
@@ -1394,8 +1415,8 @@ local function payload(argument, argument2)
 			end
 
 			local function ragTo(argument5, argument6)
-				local value4 = data[36]
-				local reGuardPatrolForestStrike, i = value4:FindFirstChild("RE/GuardPatrol/ForestStrike"), data[15]
+				local value4 = networking
+				local reGuardPatrolForestStrike, i = value4:FindFirstChild("RE/GuardPatrol/ForestStrike"), humanoidRootPart
 				value4 = i()
 
 				if reGuardPatrolForestStrike then
@@ -1408,7 +1429,7 @@ local function payload(argument, argument2)
 							if value5() then
 								return false
 							else
-								local value6 = data[29]
+								local value6 = getServerTimeNow
 								if value6() then
 									return false
 								end
@@ -1429,12 +1450,12 @@ local function payload(argument, argument2)
 				if not data[13](argument6) then
 					return false
 				end
-				local uidMap, value5 = {}, data[20]
+				local uidMap, value5 = {}, state
 				value5.rag = true
 				i = nil
 
 				for i2 = 1, 3, 1 do
-					value5 = data[15]
+					value5 = humanoidRootPart
 					i2 = callback28((value5() or value4).Position, uidMap)
 
 					if i2 then
@@ -1453,7 +1474,7 @@ local function payload(argument, argument2)
 						if not if anchored then not anchored else number6 < 2.5 and argument6() then
 							break
 						end
-						anchored = data[15]
+						anchored = humanoidRootPart
 						value6 = anchored()
 						anchored = nil
 
@@ -1462,7 +1483,7 @@ local function payload(argument, argument2)
 							if anchored2 then
 								anchored = anchored2
 							else
-								local value7 = data[20]
+								local value7 = state
 								anchored = value7.onAdmin
 							end
 						else
@@ -1471,20 +1492,20 @@ local function payload(argument, argument2)
 
 						if anchored then
 							if not data[13](argument6) then
-								value6 = data[20]
+								value6 = state
 								value6.rag = false
 								return false
 							end
 						end
 
-						value6, anchored = data[26], data[27]
-						value6(anchored(i2.at + data[28](0, 3, 0)))
+						value6, anchored = data[26], newCFrame
+						value6(anchored(i2.at + newVector3(0, 3, 0)))
 						local value7, ok, response, response2 = data[32], pcall(data[32].Egg.CarryFieldEgg, i2.uid, i2.slot)
 
 						if response ~= true then
 							if type(response2) == "string" then
 								if response2:lower():find("full") then
-									value6 = data[20]
+									value6 = state
 									value6.rag = false
 									return false
 								end
@@ -1501,7 +1522,7 @@ local function payload(argument, argument2)
 							end
 						end
 
-						response2 = data[23]
+						response2 = heartbeatWait
 						number6 += response2()
 					end
 
@@ -1514,17 +1535,17 @@ local function payload(argument, argument2)
 				end
 
 				if not i then
-					value5 = data[20]
+					value5 = state
 					value5.rag = false
 					return false
 				end
-				local condition2, condition3 = false, data[1]
+				local condition2, condition3 = false, localPlayer
 
 				local connection, value, fireServer, data6 = condition3:GetAttributeChangedSignal("RagdollEndTime"):Connect(function()
 					if condition2 then
 						return
 					else
-						local value6 = data[29]
+						local value6 = getServerTimeNow
 						if not value6() then
 							return
 						end
@@ -1533,7 +1554,7 @@ local function payload(argument, argument2)
 					local value6 = argument7()
 					if value6 then
 						condition2 = true
-						local value7, value8 = data[26], data[27]
+						local value7, value8 = data[26], newCFrame
 						value7(value8(value6))
 					end
 				end), pcall, reGuardPatrolForestStrike.FireServer, {EggUid = i.uid}
@@ -1547,7 +1568,7 @@ local function payload(argument, argument2)
 					if not (condition3 and argument6()) then
 						break
 					end
-					value4 = data[23]
+					value4 = heartbeatWait
 					reGuardPatrolForestStrike += value4()
 				end
 
@@ -1557,18 +1578,18 @@ local function payload(argument, argument2)
 					reGuardPatrolForestStrike = data[22]
 					reGuardPatrolForestStrike("Egg", "DropFieldEgg", "PlayerRequest")
 				end
-				value4 = data[20]
+				value4 = state
 				value4.rag = false
 
 				if condition2 then
-					data6 = data[20]
+					data6 = state
 					if data6.burst then
-						value5 = data[20]
+						value5 = state
 						value5.burst()
 					end
 
 					task.spawn(function()
-						local value6 = data[8]
+						local value6 = humanoid
 						local value7, number6, data7 = value6(), os.clock() + 1.5, {[Enum.HumanoidStateType.Freefall] = true, [Enum.HumanoidStateType.Physics] = true, [Enum.HumanoidStateType.Ragdoll] = true, [Enum.HumanoidStateType.FallingDown] = true, [Enum.HumanoidStateType.None] = true}
 
 						while value7 and value7.Parent and os.clock() < number6 do
@@ -1580,31 +1601,31 @@ local function payload(argument, argument2)
 									value7.PlatformStand = false
 								end
 							end
-							value6 = data[23]
+							value6 = heartbeatWait
 							value6()
 						end
 					end)
 				end
 
-				condition3, value5 = argument7(), data[15]
+				condition3, value5 = argument7(), humanoidRootPart
 				data6 = value5()
 				i = condition2 and condition3 ~= nil and data6 ~= nil and (data6.Position - condition3).Magnitude <= 30
 				return i
 			end
 
-			data[20].ragTo = ragTo
+			state.ragTo = ragTo
 
 			local function callback29(argument5, argument6, argument7, argument8, argument9)
-				local number6 = data[20]
+				local number6 = state
 				if number6.ready then
-					local value4 = data[20]
+					local value4 = state
 					value4.ready(argument6)
 				end
 				local number7, clock, number8 = os.clock() + (argument8 or 30), os.clock, 1 / 0
 				argument8, number6 = clock(), 1
 
 				while argument6() and os.clock() < number7 do
-					clock = data[15]
+					clock = humanoidRootPart
 					local value4 = clock()
 					if not value4 then
 						return false
@@ -1614,7 +1635,7 @@ local function payload(argument, argument2)
 							return false
 						end
 					end
-					local unit = data[28]
+					local unit = newVector3
 					local value5 = unit(argument5.X - value4.Position.X, 0, argument5.Z - value4.Position.Z)
 					if value5.Magnitude <= (argument7 or 6) then
 						unit = data[41]
@@ -1630,15 +1651,15 @@ local function payload(argument, argument2)
 					unit = value5.Unit
 
 					if os.clock() - argument8 > 2 then
-						local value6 = data[8]
+						local value6 = humanoid
 						local value7 = value6()
 						if value7 then
-							value6 = data[20]
+							value6 = state
 							if not value6.ufoRun() then
 								value7.Jump = true
 							end
 						end
-						value6 = data[28]
+						value6 = newVector3
 						unit = (unit + value6(-unit.Z, 0, unit.X) * number6).Unit
 						if os.clock() - argument8 > 3.5 then
 							argument8, number6 = (os.clock()), -number6
@@ -1646,12 +1667,12 @@ local function payload(argument, argument2)
 					end
 
 					local value6
-					value6, value4.AssemblyLinearVelocity = data[28], unit * math.min(callback4() * (argument9 or 0.95), value5.Magnitude / 0.05) + data[28](0, value4.AssemblyLinearVelocity.Y, 0)
-					value5 = data[23]
+					value6, value4.AssemblyLinearVelocity = newVector3, unit * math.min(callback4() * (argument9 or 0.95), value5.Magnitude / 0.05) + newVector3(0, value4.AssemblyLinearVelocity.Y, 0)
+					value5 = heartbeatWait
 					value5()
 				end
 
-				number7 = data[15]
+				number7 = humanoidRootPart
 				argument9 = number7()
 				if argument9 then
 					clock = data[41]
@@ -1851,7 +1872,7 @@ local function payload(argument, argument2)
 					local capture2 = capture.capture
 					local capSt
 					if capture2 then
-						capture = data[20]
+						capture = state
 						capSt = capture.capSt or "Waiting for Capture The Egg"
 					else
 						capSt = capture2
@@ -1867,7 +1888,7 @@ local function payload(argument, argument2)
 						if if angelicTreadmill then not angelicTreadmill else not adminTreadmill then
 							text2, text3 = "Waiting for the Admin Treadmill", "wait"
 						else
-							local value5 = data[20]
+							local value5 = state
 							if value5.onAdmin then
 								text2, text3 = "Running on the Admin Treadmill " .. (angelicTreadmill or "on"), "active"
 							else
@@ -1918,7 +1939,7 @@ local function payload(argument, argument2)
 				end)
 
 				callback34(iMap2["Minigame Eggs"], function()
-					local condition2, value4 = getAttribute("Event_RedLightGreenLight") == true and "Red Light Green Light" or getAttribute("Event_TrexRun") == true and "T-Rex Run", data[20]
+					local condition2, value4 = getAttribute("Event_RedLightGreenLight") == true and "Red Light Green Light" or getAttribute("Event_TrexRun") == true and "T-Rex Run", state
 					local mgSt, condition3, minigame = value4.mgSt or "Off", condition2 or "Minigame Egg", data[25]
 					local mgSt2, value5 = minigame.minigame and mgSt or "Turn on Auto Steal Minigame Egg below", data[25]
 					minigame = value5.minigame
@@ -1939,13 +1960,13 @@ local function payload(argument, argument2)
 				workspace.CurrentCamera.CameraSubject = cameraSubject
 				pcall(function()
 					local value4
-					value4, require(data[1].PlayerScripts.PlayerModule):GetControls().humanoid = data[1], cameraSubject
+					value4, require(localPlayer.PlayerScripts.PlayerModule):GetControls().humanoid = localPlayer, cameraSubject
 				end)
-				local value4 = data[1]
+				local value4 = localPlayer
 				local character = value4.Character
 				local animate
 				if character then
-					value4 = data[1]
+					value4 = localPlayer
 					animate = value4.Character:FindFirstChild("Animate")
 				else
 					animate = character
@@ -1960,26 +1981,28 @@ local function payload(argument, argument2)
 				end
 			end
 
+			local animate = data[6]
+
 			data[7] = function()
-				local value4 = data[3]
+				local value4 = rigState
 				for _, link in ipairs(value4.links) do
 					link:Disconnect()
 				end
-				table.clear(data[3].links)
-				local value5, value6 = data[3], data[3]
+				table.clear(rigState.links)
+				local value5, value6 = rigState, rigState
 				value5.o = nil
 				value6.c = nil
 			end
 
 			data[2] = function()
-				local value4 = data[3]
+				local value4 = rigState
 				local condition2 = value4.c ~= nil
 				local condition3
 
 				if condition2 then
-					local value5 = data[3]
+					local value5 = rigState
 					local value6
-					value6, condition3 = data[1], value5.c.Parent == data[1].Character
+					value6, condition3 = localPlayer, value5.c.Parent == localPlayer.Character
 				else
 					condition3 = condition2
 				end
@@ -1988,9 +2011,9 @@ local function payload(argument, argument2)
 			end
 
 			local function callback31()
-				local character = data[3]
-				local o, value4 = character.o, data[3]
-				local c, value5 = value4.c, data[1]
+				local character = rigState
+				local o, value4 = character.o, rigState
+				local c, value5 = value4.c, localPlayer
 				character, value4 = value5.Character, data[7]
 				value4()
 
@@ -1999,7 +2022,7 @@ local function payload(argument, argument2)
 						if character then
 							if c.Parent == character then
 								o.Parent = character
-								value5 = data[6]
+								value5 = animate
 								value5(o)
 								c:Destroy()
 							end
@@ -2020,7 +2043,7 @@ local function payload(argument, argument2)
 					if god then
 						god2 = god
 					else
-						value7 = data[20]
+						value7 = state
 						god2 = value7.godHunt
 					end
 					value(setStateEnabled, argument5, value6, not god2)
@@ -2060,35 +2083,35 @@ local function payload(argument, argument2)
 					argument5.ChildAdded:Connect(callback34)
 				end
 
-				local value5 = data[1]
+				local value5 = localPlayer
 				callback33(value5.Character)
-				value5 = data[1]
+				value5 = localPlayer
 				trackConnection(value5.CharacterRemoving, function()
 					condition3 = not condition2
 				end)
-				value5 = data[1]
+				value5 = localPlayer
 
 				trackConnection(value5.CharacterAdded, function(character)
 					local value6 = data[7]
 					value6()
 					callback33(character)
-					local value7, value8, value9, condition = data[3], data[3], data[3], condition3
+					local value7, value8, value9, condition = rigState, rigState, rigState, condition3
 					value7.gate, value8.body, value9.at = condition, os.clock(), os.clock() + 1
 					condition3 = false
 				end)
 
-				value5 = data[36]
+				value5 = networking
 				local reRigSyncRefresh = value5:FindFirstChild("RE/RigSync/Refresh")
 				if reRigSyncRefresh then
 					trackConnection(reRigSyncRefresh.OnClientEvent, function()
-						local value6 = data[3]
+						local value6 = rigState
 						value6.rig = os.clock()
 					end)
 				end
 			end)
 
 			local function callback33()
-				local steal = data[20]
+				local steal = state
 				local invisBusy = steal.invisBusy
 				local invisBusy2
 
@@ -2105,7 +2128,7 @@ local function payload(argument, argument2)
 						steal = condition2
 					end
 					if steal then
-						condition2 = data[20]
+						condition2 = state
 						invisBusy2 = not condition2.tpFT
 					else
 						invisBusy2 = steal
@@ -2117,10 +2140,10 @@ local function payload(argument, argument2)
 				if invisBusy2 then
 					steal = invisBusy2
 				else
-					invisBusy = data[20]
+					invisBusy = state
 					local condition2 = invisBusy.realHum ~= nil
 					if condition2 then
-						local value5 = data[20]
+						local value5 = state
 						steal = value5.realHum()
 					else
 						steal = condition2
@@ -2130,7 +2153,7 @@ local function payload(argument, argument2)
 				return steal
 			end
 
-			data[20].ready = function(argument5, argument6)
+			state.ready = function(argument5, argument6)
 				local number6 = os.clock() + (argument6 or 1.5)
 
 				while true do
@@ -2144,7 +2167,7 @@ local function payload(argument, argument2)
 					if value5() then
 						return true
 					end
-					value5 = data[23]
+					value5 = heartbeatWait
 					value5()
 				end
 
@@ -2157,7 +2180,7 @@ local function payload(argument, argument2)
 			end
 
 			module.fn = function()
-				local value5 = data[20]
+				local value5 = state
 				if value5.agBusy then
 					return
 				end
@@ -2172,7 +2195,7 @@ local function payload(argument, argument2)
 						value4()
 					end
 
-					local value6 = data[8]
+					local value6 = humanoid
 					local value7 = value6()
 					if value7 then
 						callback32(value7)
@@ -2190,10 +2213,10 @@ local function payload(argument, argument2)
 				if steal then
 					steal2 = steal
 				else
-					value6 = data[20]
+					value6 = state
 					local condition2 = value6.wispSteals ~= nil
 					if condition2 then
-						local value7 = data[20]
+						local value7 = state
 						steal2 = value7.wispSteals()
 					else
 						steal2 = condition2
@@ -2205,10 +2228,10 @@ local function payload(argument, argument2)
 				if steal2 then
 					steal = steal2
 				else
-					value6 = data[20]
+					value6 = state
 					local condition2 = value6.ufoSteals ~= nil
 					if condition2 then
-						local value7 = data[20]
+						local value7 = state
 						steal = value7.ufoSteals()
 					else
 						steal = condition2
@@ -2220,7 +2243,7 @@ local function payload(argument, argument2)
 
 			saveFile("10_steal#1", function()
 				local data10 = {}
-				local number6, moveToEgg = 0, data[36]
+				local number6, moveToEgg = 0, networking
 				data10[45] = number6
 				local reEggWorldFieldEggRedeemVerdict = moveToEgg:FindFirstChild("RE/EggWorld/FieldEggRedeemVerdict")
 
@@ -2253,9 +2276,9 @@ local function payload(argument, argument2)
 						value6.last = displayName or "Egg"
 						value6 = data[42]
 						value6.lastCat = type(argument5) == "table" and argument5.AssetCategory or nil
-						condition2 = data[20]
+						condition2 = state
 						if condition2.onSteal then
-							displayName = data[20]
+							displayName = state
 							displayName.onSteal(argument5)
 						end
 					end)
@@ -2266,58 +2289,58 @@ local function payload(argument, argument2)
 				callback34.pullSpd = 3300
 				autoSteal.thief = true
 				value6.carryK = 1
-				autoSteal, moveToEgg = iMap2["Auto Steal"], data[20]
+				autoSteal, moveToEgg = iMap2["Auto Steal"], state
 				moveToEgg.stealSec = autoSteal
-				local value7 = data[20]
+				local value7 = state
 
 				value7.stopSteal = function()
-					local plan, value8 = data[4] == value5 and value5.plan, data[20]
+					local plan, value8 = data[4] == value5 and value5.plan, state
 					local curUid = value8.curUid or type(plan) == "table" and not plan.carry and plan.Uid
 					if curUid then
-						value8 = data[20]
+						value8 = state
 						value8.skip[curUid] = true
 					end
 					callback23(value5)
-					value8 = data[20]
+					value8 = state
 					value8.curUid = nil
 				end
 
-				local value8 = data[20]
+				local value8 = state
 
 				value8.retarget = function()
-					local value9 = data[20]
+					local value9 = state
 					value9.fresh()
-					value9 = data[20]
+					value9 = state
 
 					if value9.curUid then
 						local value10 = data[21]
 						if not value10() then
 							callback23(value5)
-							local value11 = data[20]
+							local value11 = state
 							value11.curUid = nil
 						end
 					end
 				end
 
-				instantStealV3 = data[20]
+				instantStealV3 = state
 
 				instantStealV3.autoSteal = callback19(autoSteal, "Auto Steal", "steal", false, function(argument5)
 					if not argument5 then
 						callback23(value5)
-						local value9 = data[20]
+						local value9 = state
 						value9.curUid = nil
-						table.clear(data[20].pick)
+						table.clear(state.pick)
 					end
-					argument5 = data[20]
+					argument5 = state
 					if argument5.hud then
-						local value9 = data[20]
+						local value9 = state
 						value9.hud.Sync()
-						value9 = data[20]
+						value9 = state
 						value9.hud.Refresh()
 					end
 				end)
 
-				local value9, value10 = callback13({"Enchanted Forest", "Light Dark", "Titan Temple"}), data[20]
+				local value9, value10 = callback13({"Enchanted Forest", "Light Dark", "Titan Temple"}), state
 
 				value10.cmode = function(argument5)
 					local value11 = data[25]
@@ -2336,9 +2359,9 @@ local function payload(argument, argument2)
 					return condition or "Tween"
 				end
 
-				reEggWorldFieldEggRedeemVerdict = data[20]
+				reEggWorldFieldEggRedeemVerdict = state
 				reEggWorldFieldEggRedeemVerdict.TZ = {"Prehistoric", "Cosmic", "Cherry Blossom", "Titan Temple", "Light Dark", "Enchanted Forest"}
-				local value11 = data[20]
+				local value11 = state
 
 				value11.tpCodium = function()
 					local value12 = data[25]
@@ -2353,7 +2376,7 @@ local function payload(argument, argument2)
 					return condition
 				end
 
-				local value12 = data[20]
+				local value12 = state
 				value12.tpRapid = function()
 					local value13 = data[25]
 					return value13.tpDel == "Fast Tween"
@@ -2455,7 +2478,7 @@ local function payload(argument, argument2)
 				pcall(function()
 					value14.row.lb.Text = "Delivery"
 				end)
-				reEggWorldFieldEggRedeemVerdict = data[20]
+				reEggWorldFieldEggRedeemVerdict = state
 				callback20(autoSteal, "Teleport Zones", "tpZones", reEggWorldFieldEggRedeemVerdict.TZ, {"Titan Temple", "Light Dark", "Enchanted Forest"}, nil, true):When(moveToEgg, (callback35("Teleport")))
 				autoSteal:Slider("Delivery Speed", 80, 110, 100, function(argument5)
 					local value15 = data[25]
@@ -2463,7 +2486,7 @@ local function payload(argument, argument2)
 				end, "%", 1):When(value13, (callback35("Walk")))
 				callback21(autoSteal, "Step Count", "stepsN", 1, 6, 3, nil, 1):When(value13, (callback35("Instant Steps")))
 				callback21(autoSteal, "Fast Tween Speed", "pullSpd", 3000, 4500, 3300, nil, 50):When(value13, (callback35("Fast Tween")))
-				local stealFilter, areas = {}, data[20]
+				local stealFilter, areas = {}, state
 				areas.stealFilter = stealFilter
 				local bestMap, value15 = {["Best Rarity"] = "Best rarity", ["Biggest Weight"] = "Biggest", ["Best Mutation"] = "Best mutation", ["Highest Value"] = "Best value", ["Lowest Value"] = "Lowest value"}, data[25]
 				value15.order = "Best value"
@@ -2472,12 +2495,12 @@ local function payload(argument, argument2)
 					value16.order = bestMap[argument5] or "Best value"
 					callback18()
 				end)
-				value6 = data[20]
+				value6 = state
 
-				areas, value13, callback34 = value6.AREAS, data[20], function(argument5)
+				areas, value13, callback34 = value6.AREAS, state, function(argument5)
 					local value16 = data[25]
 					value16.zones = nil
-					value16 = data[20]
+					value16 = state
 
 					if #argument5 < #value16.AREAS then
 						for _, value17 in ipairs(argument5) do
@@ -2493,10 +2516,10 @@ local function payload(argument, argument2)
 					callback18()
 				end
 
-				autoSteal:Dropdown("Target Areas", areas, data[20].AREAS, callback34, true)
-				value15 = data[20]
+				autoSteal:Dropdown("Target Areas", areas, state.AREAS, callback34, true)
+				value15 = state
 				local function callback36(argument5)
-					local value16 = data[20]
+					local value16 = state
 					stealFilter.rar = value16.minRar(argument5)
 					callback18()
 				end
@@ -2505,9 +2528,9 @@ local function payload(argument, argument2)
 					stealFilter.minV = argument5 > 0 and argument5 or nil
 					callback18()
 				end, "log")
-				value15 = data[20]
+				value15 = state
 				local function callback37(argument5)
-					local value16 = data[20]
+					local value16 = state
 					stealFilter.sp = value16.names(argument5)
 					callback18()
 				end
@@ -2522,14 +2545,14 @@ local function payload(argument, argument2)
 				end
 
 				data10[19] = function(vector, argument5)
-					local humanoid = data[20]
+					local humanoid = state
 					humanoid.ready(argument5)
 					humanoid = data[8]
 					local value16, value17, humanoid2, clock, number7 = humanoid(), callback4(), os.clock() + 60, os.clock, 1 / 0
 					local now3, condition2, condition3, number8 = clock(), false, false, 0
 
 					while argument5() and os.clock() < humanoid2 do
-						clock = data[15]
+						clock = humanoidRootPart
 						local value18, magnitude = clock(), data[8]
 						humanoid = magnitude()
 
@@ -2546,7 +2569,7 @@ local function payload(argument, argument2)
 								break
 							end
 						end
-						magnitude = data[28]
+						magnitude = newVector3
 						local value19 = magnitude(vector.X - value18.Position.X, 0, vector.Z - value18.Position.Z)
 						magnitude = value19.Magnitude
 
@@ -2559,15 +2582,15 @@ local function payload(argument, argument2)
 								condition2 = true
 							else
 								if os.clock() - now3 > 3 then
-									local value20 = data[20]
+									local value20 = state
 
 									if value20.respawn then
-										local value21 = data[20]
+										local value21 = state
 
 										if not value21.ufoRun() then
-											local value22 = data[11]
+											local value22 = notify
 											value22("Stuck in place, resetting the character")
-											value22 = data[20]
+											value22 = state
 											value22.respawn(true)
 											break
 										end
@@ -2585,7 +2608,7 @@ local function payload(argument, argument2)
 
 						if os.clock() - now3 > 1 then
 							if humanoid.FloorMaterial ~= Enum.Material.Air then
-								magnitude = data[20]
+								magnitude = state
 								if not magnitude.ufoRun() then
 									humanoid.Jump = true
 								end
@@ -2594,12 +2617,12 @@ local function payload(argument, argument2)
 
 						if os.clock() >= number8 then
 							number8 = os.clock() + 0.25
-							magnitude = data[28]
+							magnitude = newVector3
 							humanoid:MoveTo(magnitude(vector.X, value18.Position.Y, vector.Z))
 						end
 						magnitude = nil
-						magnitude, value18.AssemblyLinearVelocity = data[28], value19.Unit * walkSpeed + data[28](0, value18.AssemblyLinearVelocity.Y, 0)
-						value19 = data[23]
+						magnitude, value18.AssemblyLinearVelocity = newVector3, value19.Unit * walkSpeed + newVector3(0, value18.AssemblyLinearVelocity.Y, 0)
+						value19 = heartbeatWait
 						value19()
 					end
 
@@ -2611,11 +2634,11 @@ local function payload(argument, argument2)
 							humanoid2.WalkSpeed = value17
 						end
 					end
-					clock = data[15]
+					clock = humanoidRootPart
 					humanoid2 = clock()
 					if humanoid2 then
 						if condition3 then
-							value17 = data[28]
+							value17 = newVector3
 							humanoid2.AssemblyLinearVelocity = value17(0, humanoid2.AssemblyLinearVelocity.Y, 0)
 						end
 					end
@@ -2623,11 +2646,11 @@ local function payload(argument, argument2)
 				end
 
 				local argumentMap, value, data11 = {}, setmetatable, {__mode = "k"}
-				local value16, value17 = value({}, data11), data[20]
+				local value16, value17 = value({}, data11), state
 				value17.camScr = false
 
 				local function camHome()
-					local currentCamera, value18 = workspace.CurrentCamera, data[8]
+					local currentCamera, value18 = workspace.CurrentCamera, humanoid
 					local value19 = value18()
 					if not (currentCamera and value19) then
 						return
@@ -2643,7 +2666,7 @@ local function payload(argument, argument2)
 					end)
 				end
 
-				callback34 = data[20]
+				callback34 = state
 				callback34.camHome = camHome
 
 				data10[38] = function(argument5)
@@ -2657,17 +2680,19 @@ local function payload(argument, argument2)
 
 					argument5.done = true
 					argumentMap[argument5] = nil
-					local value18, value19 = data[58], data[58]
-					pcall(data[58].UnbindFromRenderStep, data[58], argument5.n)
+					local value18, value19 = runService, runService
+					pcall(runService.UnbindFromRenderStep, runService, argument5.n)
 					if argument5.c then
 						pcall(argument5.c.Destroy, argument5.c)
 					end
 					camHome()
 				end
 
+				local camHome = data10[38]
+
 				data10[39] = function(argument5, argument6)
-					local currentCamera, value18 = workspace.CurrentCamera, data[1]
-					local character, value19 = value18.Character, data[15]
+					local currentCamera, value18 = workspace.CurrentCamera, localPlayer
+					local character, value19 = value18.Character, humanoidRootPart
 					local value20 = value19()
 
 					if currentCamera and character then
@@ -2720,14 +2745,14 @@ local function payload(argument, argument2)
 							local cframe
 							if argument6 then
 								local value21
-								value21, cframe = data[28], CFrame.lookAt(argument5, data[28](argument6.X, argument5.Y, argument6.Z))
+								value21, cframe = newVector3, CFrame.lookAt(argument5, newVector3(argument6.X, argument5.Y, argument6.Z))
 							else
 								cframe = argument6
 							end
 							if cframe then
 								archivable = cframe
 							else
-								local value21 = data[27]
+								local value21 = newCFrame
 								archivable = value21(argument5) * value20.CFrame.Rotation
 							end
 						else
@@ -2739,25 +2764,25 @@ local function payload(argument, argument2)
 						data12.c = clone
 					end)
 
-					value19, value18 = data[58], data[58]
+					value19, value18 = runService, runService
 
-					pcall(data[58].BindToRenderStep, data[58], data12.n, Enum.RenderPriority.Last.Value + 50, function()
+					pcall(runService.BindToRenderStep, runService, data12.n, Enum.RenderPriority.Last.Value + 50, function()
 						if os.clock() > data12.t then
-							local value21 = data10[38]
+							local value21 = camHome
 							return value21(data12)
 						elseif data12.c then
 							if data12.c.Parent then
-								local value21 = data[1]
+								local value21 = localPlayer
 								if value21.Character ~= data12.ch then
-									local value22 = data10[38]
+									local value22 = camHome
 									return value22(data12)
 								end
 							else
-								local value21 = data10[38]
+								local value21 = camHome
 								return value21(data12)
 							end
 						else
-							local value21 = data10[38]
+							local value21 = camHome
 							return value21(data12)
 						end
 
@@ -2779,7 +2804,7 @@ local function payload(argument, argument2)
 				module2.fn = function()
 					if next(argumentMap) and not (data[4] and data[4].name == "Steal") then
 						for k in pairs(argumentMap) do
-							local value18 = data10[38]
+							local value18 = camHome
 							value18(k)
 						end
 					end
@@ -2787,7 +2812,7 @@ local function payload(argument, argument2)
 					if next(argumentMap) then
 						return
 					else
-						local value18 = data[20]
+						local value18 = state
 						if value18.agBusy then
 							return
 						end
@@ -2796,7 +2821,7 @@ local function payload(argument, argument2)
 					local cameraSubject = workspace.CurrentCamera and workspace.CurrentCamera.CameraSubject
 
 					if workspace.CurrentCamera then
-						local value18 = data[8]
+						local value18 = humanoid
 						if not value18() then
 							return
 						end
@@ -2809,7 +2834,7 @@ local function payload(argument, argument2)
 					if condition2 then
 						condition = condition2
 					else
-						cameraSubject = data[20]
+						cameraSubject = state
 						condition = cameraSubject.camScr and workspace.CurrentCamera.CameraType == Enum.CameraType.Scriptable
 					end
 					if condition then
@@ -2818,11 +2843,11 @@ local function payload(argument, argument2)
 					end
 				end
 
-				reEggWorldFieldEggRedeemVerdict = data[1]
+				reEggWorldFieldEggRedeemVerdict = localPlayer
 
 				trackConnection(reEggWorldFieldEggRedeemVerdict.CharacterAdded, function()
 					for k in pairs(argumentMap) do
-						local value18 = data10[38]
+						local value18 = camHome
 						value18(k)
 					end
 					task.delay(0.5, function()
@@ -2833,25 +2858,25 @@ local function payload(argument, argument2)
 				end)
 
 				local function callback38()
-					local value18 = data[51]
+					local value18 = world
 					local Build = value18("Build", "FuseBiomeZone")
 					return Build and Build:FindFirstChild("ExitPart", true)
 				end
 				local function fireTouch2(argument5)
 					pcall(function()
-						firetouchinterest(data[15](), argument5, 0)
-						firetouchinterest(data[15](), argument5, 1)
+						firetouchinterest(humanoidRootPart(), argument5, 0)
+						firetouchinterest(humanoidRootPart(), argument5, 1)
 					end)
 				end
 
 				local function callback39()
-					local instance = data[1]
+					local instance = localPlayer
 					local condition2 = instance:GetAttribute("InEnchantedTree") == true
 					local condition
 					if condition2 then
 						condition = condition2
 					else
-						instance = data[1]
+						instance = localPlayer
 						condition = instance:GetAttribute("InBossArena") == true
 					end
 					instance = nil
@@ -2859,10 +2884,10 @@ local function payload(argument, argument2)
 					if condition then
 						instance = condition
 					else
-						condition2 = data[20]
+						condition2 = state
 						local condition3 = condition2.highOk ~= nil
 						if condition3 then
-							local value18 = data[20]
+							local value18 = state
 							instance = value18.highOk()
 						else
 							instance = condition3
@@ -2873,11 +2898,11 @@ local function payload(argument, argument2)
 				end
 
 				data10[10] = function()
-					local condition2 = data[15]
+					local condition2 = humanoidRootPart
 					local value18 = condition2()
 					condition2 = nil
 					if value18 then
-						local value19 = data[15]
+						local value19 = humanoidRootPart
 						condition2 = value19().Position.Y > 1000
 					else
 						condition2 = value18
@@ -2886,14 +2911,14 @@ local function payload(argument, argument2)
 				end
 
 				data10[12] = function(argument5)
-					local value18, value19 = callback38(), data[1]
+					local value18, value19 = callback38(), localPlayer
 					local character, number7 = value19.Character, os.clock() + 12
 
 					while true do
 						local value20 = value18 and data[53]
 						local condition2
 						if value20 then
-							value19 = data[1]
+							value19 = localPlayer
 							condition2 = value19.Character == character
 						else
 							condition2 = value20
@@ -2909,7 +2934,7 @@ local function payload(argument, argument2)
 						if not condition4 then
 							break
 						end
-						value20, condition2 = data[26], data[27]
+						value20, condition2 = data[26], newCFrame
 						value20(condition2(value18.Position))
 						fireTouch2(value18)
 						task.wait(argument5 or 0.1)
@@ -2919,13 +2944,14 @@ local function payload(argument, argument2)
 					return not argument5()
 				end
 
+				local fireTouch2 = data10[12]
 				local callback37_2
-				areas, callback37_2 = data[20], data[20]
+				areas, callback37_2 = state, state
 				areas.inFuse = data10[10]
-				callback37_2.leaveFuse = data10[12]
-				local value18 = data[20]
+				callback37_2.leaveFuse = fireTouch2
+				local value18 = state
 				value18.fuseZone = function()
-					local value19, value20 = callback38(), data[15]
+					local value19, value20 = callback38(), humanoidRootPart
 					local value21 = value20()
 					return value21 ~= nil and value19 ~= nil and (value21.Position - value19.Position).Magnitude < 1200
 				end
@@ -2936,7 +2962,7 @@ local function payload(argument, argument2)
 				end
 
 				module3.fn = function()
-					local value19 = data[20]
+					local value19 = state
 
 					if value19.fuseZone() then
 						now3 = now3 or os.clock()
@@ -2944,9 +2970,9 @@ local function payload(argument, argument2)
 							callback23(data[4])
 						end
 						if os.clock() - now3 > 600 then
-							local value20 = data[11]
+							local value20 = notify
 							value20("Leaving the portal zone")
-							value20 = data10[12]
+							value20 = fireTouch2
 							value20()
 						end
 						return
@@ -2992,7 +3018,7 @@ local function payload(argument, argument2)
 				end
 
 				module4.want = function()
-					local value19 = data[15]
+					local value19 = humanoidRootPart
 					local value20, value21 = value19(), data[22]
 
 					if module4.night == value21("Cycle", "NextResetTime", getServerTimeNow()) then
@@ -3009,7 +3035,7 @@ local function payload(argument, argument2)
 					value19 = data[16]
 					if not value19(value20.Position) then
 						if not callback39() then
-							local value22, value23 = data[43], data[28]
+							local value22, value23 = cFramePointToWorldSpace, newVector3
 							return value22() + value23(0, 3, 0)
 						end
 					end
@@ -3018,18 +3044,18 @@ local function payload(argument, argument2)
 				module4.run = function(argument5, argument6)
 					local value19 = data[22]
 					module4.night = value19("Cycle", "NextResetTime", getServerTimeNow())
-					value19 = data[11]
+					value19 = notify
 					value19("Night, back to the safe zone")
 					callback24(argument5, argument6)
 				end
 
-				local value19 = data[20]
+				local value19 = state
 
 				value19.legs = function()
-					local value20, value21 = data[51], data[20]
+					local value20, value21 = world, state
 					local Areas2 = value20("Areas", "GuardAreas", value21.curArea or "")
 					Areas2 = Areas2 and Areas2:GetAttribute("GuardEscapeSpeeds")
-					value20 = data[20]
+					value20 = state
 					return (value9[value20.curArea or ""] and 4 or (typeof(Areas2) == "Vector2" and callback4() * 0.9 < Areas2.Y * 1.05 and 2)) or 1
 				end
 
@@ -3042,7 +3068,7 @@ local function payload(argument, argument2)
 						local carryAreaEgg2 = instance.Name == "SmartPromptPart" and instance:IsA("BasePart") and instance:FindFirstChild("CarryAreaEgg")
 						local magnitude
 						if carryAreaEgg2 then
-							k = data[28]
+							k = newVector3
 							magnitude = k(instance.Position.X - argument5.X, 0, instance.Position.Z - argument5.Z).Magnitude
 						else
 							magnitude = carryAreaEgg2
@@ -3057,13 +3083,14 @@ local function payload(argument, argument2)
 					return carryAreaEgg
 				end
 
+				local carryAreaEgg = data10[31]
 				data10[30] = function(argument5)
 					local value21, ok, response = data[32], pcall(data[32].Egg.ReadFieldEgg, argument5)
 					return not (ok and type(response) == "table" and response.State == "GuardCarried")
 				end
 				local value21, data12, character = argument:t2(5, 6, {[20] = data, [21] = data, [22] = data, [23] = data, [15] = data, [24] = data, [25] = data, [26] = data, [27] = data, [28] = data, [1] = data, [29] = data, [30] = data10, [31] = data10, [8] = data}, argument2, argument3, nil), {}
 				data10[34] = data12
-				value17 = data[27]
+				value17 = newCFrame
 				local value22, number7, number8 = value17(5846, 17010.1, 15699.4), 0, 2
 				data10[37] = value22
 
@@ -3072,7 +3099,7 @@ local function payload(argument, argument2)
 					local condition3
 					if condition2 then
 						local value23
-						value23, condition3 = data[1], rawget(argument5, "Player") == data[1]
+						value23, condition3 = localPlayer, rawget(argument5, "Player") == localPlayer
 					else
 						condition3 = condition2
 					end
@@ -3081,16 +3108,16 @@ local function payload(argument, argument2)
 				end
 
 				data10[33] = function()
-					local character2, value23 = character, data[1]
-					if character2 == data[1].Character and #data10[34] > 0 then
+					local character2, value23 = character, localPlayer
+					if character2 == localPlayer.Character and #data10[34] > 0 then
 						return
 					elseif os.clock() < number7 then
 						return
 					end
-					local data13, value24 = {}, data[1]
+					local data13, value24 = {}, localPlayer
 					local character3, number9 = value24.Character, os.clock() + number8
 					data10[34], character, number7 = data13, character3, number9
-					character2, character3, data13 = data[58], pcall(getconnections, data[58].PostSimulation)
+					character2, character3, data13 = runService, pcall(getconnections, runService.PostSimulation)
 					value24, number9 = ipairs, character3 and data13 or {}
 
 					for k, value in value24(number9) do
@@ -3114,7 +3141,7 @@ local function payload(argument, argument2)
 								data10[34][#data10[34] + 1] = value25
 							end
 							if k % 40000 == 0 then
-								value25 = data[23]
+								value25 = heartbeatWait
 								value25()
 							end
 						end
@@ -3123,6 +3150,7 @@ local function payload(argument, argument2)
 					number8 = #data10[34] > 0 and 2 or math.min(number8 * 2, 120)
 				end
 
+				local g2 = data10[33]
 				local sampleList = {"CandidateGroundedSample", "CandidateGroundedStartedAt", "HighestYSinceGround", "LastConfirmedGroundSample", "LastGameplayTrustedSample", "LastGoodSample", "LastObservedSample", "LastSample", "LastSupportedAt", "LastValidatedGroundedSample", "LastValidatedSample", "SupportStartedAt", "ValidationStartedAt", "PreMovementSafeSample", "CorrectionContext", "FirstSuspiciousAt"}
 
 				local function trust()
@@ -3147,12 +3175,12 @@ local function payload(argument, argument2)
 					end
 				end
 
-				value15 = data[20]
+				value15 = state
 				value15.trust = trust
 				local condition2
 
 				local function callback41()
-					local value23 = data[20]
+					local value23 = state
 					local ufoPing = value23.ufoPing
 					local ufoPing2
 
@@ -3176,10 +3204,10 @@ local function payload(argument, argument2)
 							value23 = data[25]
 
 							if value23.ufoTp then
-								local value24 = data[20]
+								local value24 = state
 
 								if value24.ufoSteals then
-									local value25 = data[20]
+									local value25 = state
 									if not value25.ufoSteals() then
 										return
 									end
@@ -3192,14 +3220,14 @@ local function payload(argument, argument2)
 						end
 					end
 
-					ufoPing2, value23 = character, data[1]
+					ufoPing2, value23 = character, localPlayer
 
-					if ufoPing2 ~= data[1].Character or #data10[34] == 0 then
+					if ufoPing2 ~= localPlayer.Character or #data10[34] == 0 then
 						if not condition2 then
 							if os.clock() >= number7 then
 								condition2 = true
 								task.spawn(function()
-									local value24 = data10[33]
+									local value24 = g2
 									pcall(value24)
 									condition2 = false
 								end)
@@ -3212,29 +3240,29 @@ local function payload(argument, argument2)
 					trust()
 				end
 
-				instantStealV3 = data[58]
+				instantStealV3 = runService
 				trackConnection(instantStealV3.Heartbeat, callback41)
-				value17 = data[58]
+				value17 = runService
 				trackConnection(value17.Stepped, callback41)
-				reEggWorldFieldEggRedeemVerdict = data[58]
+				reEggWorldFieldEggRedeemVerdict = runService
 				trackConnection(reEggWorldFieldEggRedeemVerdict.PreSimulation, callback41)
-				value15 = data[20]
+				value15 = state
 				value15.tpFails = {}
 				local valueMap = {Prehistoric = 2300, Cosmic = 4300, ["Cherry Blossom"] = 4300}
 				data10[35] = valueMap
-				local value23, value24 = argument:t2(7, 8, {[13] = data, [14] = data, [32] = data, [25] = data, [20] = data, [11] = data, [23] = data, [33] = data10, [34] = data10, [27] = data, [28] = data, [35] = data10, [1] = data, [18] = data, [15] = data, [19] = data10, [36] = data, [37] = data10, [38] = data10, [26] = data, [39] = data10, [21] = data, [22] = data, [30] = data10, [24] = data, [8] = data, [9] = data, [40] = data10, [41] = data}, argument2, argument3, nil), data[20]
+				local value23, value24 = argument:t2(7, 8, {[13] = data, [14] = data, [32] = data, [25] = data, [20] = data, [11] = data, [23] = data, [33] = data10, [34] = data10, [27] = data, [28] = data, [35] = data10, [1] = data, [18] = data, [15] = data, [19] = data10, [36] = data, [37] = data10, [38] = data10, [26] = data, [39] = data10, [21] = data, [22] = data, [30] = data10, [24] = data, [8] = data, [9] = data, [40] = data10, [41] = data}, argument2, argument3, nil), state
 
 				value24.stepTo = function(vector, argument5)
-					local value25 = data[15]
+					local value25 = humanoidRootPart
 					local value26 = value25()
 					if not value26 then
 						return false
 					end
-					local number9, value27 = math.max(callback4() * 1.515, 40), data[28]
+					local number9, value27 = math.max(callback4() * 1.515, 40), newVector3
 					value25 = value27(value26.Position.X, math.max(value26.Position.Y, vector.Y), value26.Position.Z)
 
 					while argument5() do
-						value26 = data[28]
+						value26 = newVector3
 						value27 = value26(vector.X - value25.X, 0, vector.Z - value25.Z)
 						if value27.Magnitude <= number9 then
 							break
@@ -3242,9 +3270,9 @@ local function payload(argument, argument2)
 						value25 += value27.Unit * number9
 						local number10 = 0
 						while number10 < 0.1 and argument5() do
-							local value28, value29 = data[26], data[27]
+							local value28, value29 = data[26], newCFrame
 							value28(value29(value25))
-							value29 = data[23]
+							value29 = heartbeatWait
 							number10 += value29()
 						end
 					end
@@ -3252,7 +3280,7 @@ local function payload(argument, argument2)
 					if not argument5() then
 						return false
 					end
-					number9, value27, argument5 = data[26], data[27], data[28]
+					number9, value27, argument5 = data[26], newCFrame, newVector3
 					number9(value27(vector + argument5(0, 3, 0)))
 					return true
 				end
@@ -3262,27 +3290,27 @@ local function payload(argument, argument2)
 					if argument10 then
 						argument2 = argument10
 					else
-						local value25 = data[20]
+						local value25 = state
 						argument2 = value25.cmode()
 					end
 					local flyY = argument2 == "Tween"
 					local agBusy
 
 					if flyY then
-						argument10 = data[20]
+						argument10 = state
 						local agBusy2 = argument10.agBusy
 						if agBusy2 then
 							agBusy = agBusy2
 						else
 							local value25
-							value25, agBusy = data[20], os.clock() - (data[20].agAt or -99) < 3
+							value25, agBusy = state, os.clock() - (state.agAt or -99) < 3
 						end
 					else
 						agBusy = flyY
 					end
 
 					while true do
-						flyY = data[20]
+						flyY = state
 						local agBusy = flyY.agBusy
 						local agBusy2
 						if agBusy then
@@ -3294,16 +3322,16 @@ local function payload(argument, argument2)
 						if not (agBusy2 and argument6()) then
 							break
 						end
-						agBusy = data[23]
+						agBusy = heartbeatWait
 						agBusy()
 					end
 
-					flyY = data[15]
+					flyY = humanoidRootPart
 					local value25, number9 = flyY(), 0
 					if not value25 then
 						return
 					end
-					local number10, number11, iMap3 = argument7.X <= value25.Position.X and 1 or -1, data[20], data[20]
+					local number10, number11, iMap3 = argument7.X <= value25.Position.X and 1 or -1, state, state
 					argument10, flyY = iMap3.flyY
 
 					if argument10 then
@@ -3321,7 +3349,7 @@ local function payload(argument, argument2)
 					end
 
 					number11.flyY = flyY
-					number11 = data[20]
+					number11 = state
 					argument10 = number11.flyY
 
 					if agBusy then
@@ -3339,21 +3367,21 @@ local function payload(argument, argument2)
 							if not (condition4 and argument6()) then
 								break
 							end
-							condition3 = data[29]
+							condition3 = getServerTimeNow
 							condition4 = condition3()
 							condition3 = nil
 							if condition4 then
 								condition3 = condition4
 							else
-								local value26 = data[20]
+								local value26 = state
 								condition3 = value26.agBusy
 							end
 
 							if condition3 then
-								condition4 = data[23]
+								condition4 = heartbeatWait
 								number11, flyY = 0, flyY + condition4()
 							else
-								local value26 = data[23]
+								local value26 = heartbeatWait
 								number11 += value26()
 								if number11 >= 0.25 then
 									break
@@ -3375,14 +3403,14 @@ local function payload(argument, argument2)
 							if not (condition4 and argument6()) then
 								break
 							end
-							condition4 = data[15]
+							condition4 = humanoidRootPart
 							value25 = condition4()
 							if not value25 then
 								return
 							end
-							local number14, value26, value27 = number12 - value25.Position.Y, data[28]
+							local number14, value26, value27 = number12 - value25.Position.Y, newVector3
 							value27, value25.AssemblyLinearVelocity = data[25], value26(-number10 * callback4() * 0.57 * data[25].carryK, number13 < 0.6 and math.clamp(number14 / math.max(0.6 - number13, 0.1), -120, 120) or math.clamp(number14 / 0.2, -30, 30), 0)
-							condition4 = data[23]
+							condition4 = heartbeatWait
 							number13 = number13 + condition4()
 						end
 
@@ -3408,7 +3436,7 @@ local function payload(argument, argument2)
 
 							if iMap4[number14] then
 								if (x - iMap4[number14]) * number10 <= 0 then
-									local number15, number16, value27 = number14 + 1, data[26], data[27]
+									local number15, number16, value27 = number14 + 1, data[26], newCFrame
 									number16(value27(x, argument7.Y, argument8) * argument9)
 									number16 = 0
 
@@ -3425,7 +3453,7 @@ local function payload(argument, argument2)
 										if not condition4 then
 											break
 										end
-										condition3 = data[23]
+										condition3 = heartbeatWait
 										number16 += condition3()
 									end
 
@@ -3438,29 +3466,29 @@ local function payload(argument, argument2)
 										if not (value27(argument5) and number16 < 1.5) then
 											break
 										end
-										local value28 = data[23]
+										local value28 = heartbeatWait
 										number16 += value28()
 									end
 
 									value27 = data[21]
 									if not value27(argument5) then
-										local value28 = data[20]
+										local value28 = state
 										if not value28.stealChase(argument5, argument6) then
 											return
 										end
 									end
-									value27 = data[15]
+									value27 = humanoidRootPart
 									local value28 = value27()
 									x, number16 = if value28 then value28.Position.X else x, 0
 									while number16 < 0.1 do
-										value28 = data[23]
+										value28 = heartbeatWait
 										number16 += value28()
 									end
 									number14 = number15
 								end
 							end
 
-							local value27 = data[27]
+							local value27 = newCFrame
 							local number15, number16 = value27(x, number12, argument8) * argument9, 0
 
 							while true do
@@ -3477,14 +3505,14 @@ local function payload(argument, argument2)
 								end
 								condition3 = data[26]
 								condition3(number15)
-								condition4 = data[23]
+								condition4 = heartbeatWait
 								number16 += condition4()
 							end
 						end
 
 						iMap4 = data[21]
 						if iMap4(argument5) then
-							number14, number13 = data[26], data[27]
+							number14, number13 = data[26], newCFrame
 							number14(number13(argument7) * argument9)
 						end
 						return
@@ -3494,7 +3522,7 @@ local function payload(argument, argument2)
 					iMap3 = {}
 
 					if argument2 == "Fast tween" then
-						number11 = data[20]
+						number11 = state
 						flyY = number11.legs()
 						for i = 1, flyY - 1, 1 do
 							iMap3[i] = value25.Position.X - ((value25.Position.X - argument7.X) * i) / flyY
@@ -3508,15 +3536,15 @@ local function payload(argument, argument2)
 						if not (value26(argument5) and argument6()) then
 							break
 						end
-						value26 = data[15]
+						value26 = humanoidRootPart
 						value25 = value26()
 						if not value25 then
 							return
 						end
-						local value27, value = data[20], value25
+						local value27, value = state, value25
 
 						if value27.agBusy then
-							value26 = data[23]
+							value26 = heartbeatWait
 							value26()
 						else
 							if argument2 == "Tween" then
@@ -3525,13 +3553,13 @@ local function payload(argument, argument2)
 								end
 								local number12 = argument10 + 3
 								if math.abs(value.Position.Y - number12) > 2 then
-									local value28, value29, value30 = data[1], data[1], data[27]
-									pcall(data[1].Character.PivotTo, data[1].Character, data[27](value.Position.X, number12, value.Position.Z) * value.CFrame.Rotation)
+									local value28, value29, value30 = localPlayer, localPlayer, newCFrame
+									pcall(localPlayer.Character.PivotTo, localPlayer.Character, newCFrame(value.Position.X, number12, value.Position.Z) * value.CFrame.Rotation)
 								end
-								local value28 = data[28]
+								local value28 = newVector3
 								local value29
 								value29, value.AssemblyLinearVelocity = data[25], value28(-number10, 0, math.clamp((argument8 - value.Position.Z) * 0.03, -0.3, 0.3)).Unit * callback4() * 0.95 * data[25].carryK * (os.clock() < number9 and 0.6 or 1)
-								value28 = data[23]
+								value28 = heartbeatWait
 								value28()
 							else
 								local position = value.Position
@@ -3543,7 +3571,7 @@ local function payload(argument, argument2)
 
 								if iMap3[number11] and (position.X - iMap3[number11]) * number10 <= 0 then
 									number11 += 1
-									local condition3, condition4 = data[26], data[27]
+									local condition3, condition4 = data[26], newCFrame
 									condition3(condition4(position.X, argument7.Y, position.Z) * argument9)
 									local condition5, condition6, number12, number13 = false, false, 0, 0
 
@@ -3558,7 +3586,7 @@ local function payload(argument, argument2)
 										if not condition4 then
 											break
 										end
-										local value28 = data[23]
+										local value28 = heartbeatWait
 										number13 += value28()
 									end
 
@@ -3588,18 +3616,18 @@ local function payload(argument, argument2)
 										end
 
 										if condition5 and not condition4 then
-											local value, value28 = pairs, data[18]
+											local value, value28 = pairs, eggReadFieldEggs
 											condition7 = argument[72](value28())
 
 											for k, value29 in value(argument:g2(condition7)) do
 												if type(value29) == "table" and value29.Uid == argument5 and value29.State == "Dropped" and typeof(value29.BottomCFrame) == "CFrame" then
 													condition4 = true
-													k = data[15]
+													k = humanoidRootPart
 													value25 = k()
 													if value25 then
 														if (value29.BottomCFrame.Position - value25.Position).Magnitude > 6 then
-															local value30, value31 = data[26], data[27]
-															value30(value31(value29.BottomCFrame.Position + data[28](0, 3, 0)) * argument9)
+															local value30, value31 = data[26], newCFrame
+															value30(value31(value29.BottomCFrame.Position + newVector3(0, 3, 0)) * argument9)
 														end
 													end
 													break
@@ -3616,7 +3644,7 @@ local function payload(argument, argument2)
 											end)
 										end
 
-										condition7 = data[23]
+										condition7 = heartbeatWait
 										number13 = number13 + condition7()
 									end
 
@@ -3629,19 +3657,19 @@ local function payload(argument, argument2)
 										condition4 = condition6
 									end
 									if not condition4 then
-										condition3 = data[20]
+										condition3 = state
 										if not condition3.stealChase(argument5, argument6) then
 											return
 										end
 									end
-									condition3 = data[23]
+									condition3 = heartbeatWait
 									flyY = (condition3())
 									continue
 								end
 
-								local value28, value29, value30 = data[25], data[26], data[27]
+								local value28, value29, value30 = data[25], data[26], newCFrame
 								value29(value30(position.X - number10 * math.min(value28.pullSpd * flyY2, 250, (position.X - argument7.X) * number10), argument10, position.Z + (argument8 - position.Z) * 0.03) * argument9)
-								flyY2 = data[23]
+								flyY2 = heartbeatWait
 								flyY = (flyY2())
 							end
 						end
@@ -3658,14 +3686,14 @@ local function payload(argument, argument2)
 				end
 
 				data10[48] = function(argument5, argument6)
-					local value25 = data[1]
+					local value25 = localPlayer
 					local character, number9, number10 = value25.Character, os.clock() + 10, 0
 
 					while true do
 						value25 = argument6()
 						local instance
 						if value25 then
-							local value26 = data[1]
+							local value26 = localPlayer
 							instance = value26.Character == character
 						else
 							instance = value25
@@ -3681,7 +3709,7 @@ local function payload(argument, argument2)
 						if not condition3 then
 							break
 						end
-						instance, instance2 = workspace:FindFirstChild(argument5), data[15]
+						instance, instance2 = workspace:FindFirstChild(argument5), humanoidRootPart
 						condition3 = instance2()
 
 						if instance then
@@ -3696,19 +3724,19 @@ local function payload(argument, argument2)
 							return false
 						end
 
-						local position, value26 = instance:GetPivot().Position, data[28]
+						local position, value26 = instance:GetPivot().Position, newVector3
 						instance2 = value26(position.X - condition3.Position.X, 0, position.Z - condition3.Position.Z)
 						if instance2.Magnitude > 600 then
 							return false
 						end
-						instance, value26 = pairs, data[18]
+						instance, value26 = pairs, eggReadFieldEggs
 						local value27 = argument[72](value26())
 
 						for _, value28 in instance(argument:g2(value27)) do
 							if type(value28) == "table" then
 								if value28.Uid == argument5 then
 									if value28.State == "Carried" then
-										value26 = data[1]
+										value26 = localPlayer
 										if (tonumber(value28.CarrierUserId) or 0) ~= value26.UserId then
 											return false
 										end
@@ -3718,16 +3746,16 @@ local function payload(argument, argument2)
 							end
 						end
 
-						value26 = data[29]
+						value26 = getServerTimeNow
 
 						if value26() and instance2.Magnitude > 8 then
-							local value28, value29, value30 = data[26], data[27], data[28]
+							local value28, value29, value30 = data[26], newCFrame, newVector3
 							value28(value29(position + value30(0, 3, 0)))
 						elseif instance2.Magnitude > 2 then
-							instance = data[20]
+							instance = state
 							if not instance.agBusy then
 								value27 = nil
-								value27, condition3.AssemblyLinearVelocity = data[28], instance2.Unit * math.min(callback4() * 0.95, instance2.Magnitude / 0.05) + data[28](0, condition3.AssemblyLinearVelocity.Y, 0)
+								value27, condition3.AssemblyLinearVelocity = newVector3, instance2.Unit * math.min(callback4() * 0.95, instance2.Magnitude / 0.05) + newVector3(0, condition3.AssemblyLinearVelocity.Y, 0)
 							end
 						end
 
@@ -3740,7 +3768,7 @@ local function payload(argument, argument2)
 							end)
 						end
 
-						value26 = data[23]
+						value26 = heartbeatWait
 						value26()
 					end
 
@@ -3748,15 +3776,16 @@ local function payload(argument, argument2)
 					return number9(argument5)
 				end
 
-				moveToEgg = data[20]
-				moveToEgg.stealChase = data10[48]
+				local instance = data10[48]
+				moveToEgg = state
+				moveToEgg.stealChase = instance
 				local value25
 				data10[49] = value25
 				data10[47] = argument:t2(9, 10, {[11] = data, [42] = data, [26] = data, [27] = data, [43] = data, [19] = data10, [21] = data, [44] = data, [45] = data10, [23] = data}, argument2, argument3, nil)
 				local value26 = argument:t2(11, 12, {[20] = data, [21] = data, [23] = data, [1] = data, [24] = data, [15] = data, [11] = data, [42] = data, [28] = data, [25] = data, [46] = data10, [22] = data, [43] = data, [40] = data10, [16] = data, [47] = data10, [26] = data, [27] = data, [48] = data10, [44] = data, [39] = data10, [49] = data10, [38] = data10}, argument2, argument3, nil)
 
 				local function callback42(argument5)
-					local value27 = data[18]
+					local value27 = eggReadFieldEggs
 
 					for _, value28 in pairs(value27()) do
 						if type(value28) == "table" then
@@ -3771,7 +3800,7 @@ local function payload(argument, argument2)
 					if callback42(argument5) == "Slot" then
 						return false, "Egg went back to its nest"
 					end
-					local number9 = data[11]
+					local number9 = notify
 					number9("Taking the egg back")
 					local number10, number11, number12, number13, number14, number15, argument = os.clock() + 25, os.clock() + 1, 0, 0, 0, 0, argument8
 					number9 = 0
@@ -3782,7 +3811,7 @@ local function payload(argument, argument2)
 						if not if condition3 then not condition3 else os.clock() < number10 and argument6() then
 							break
 						end
-						condition3 = data[1]
+						condition3 = localPlayer
 						if condition3.Character ~= argument7 then
 							return false
 						end
@@ -3805,17 +3834,17 @@ local function payload(argument, argument2)
 							if condition3:IsA("Model") then
 								local ok, vector, response = pcall(condition3.GetBoundingBox, condition3)
 								if ok then
-									value27 = data[28]
+									value27 = newVector3
 									argument = value27(vector.X, vector.Y - response.Y / 2, vector.Z)
 								end
 							end
 						end
 
-						condition3 = data[28]
+						condition3 = newVector3
 						if condition3(argument.X - argument8.X, 0, argument.Z - argument8.Z).Magnitude > 400 then
 							return false, "Egg went back to its nest"
 						end
-						condition3 = data[15]
+						condition3 = humanoidRootPart
 						value27 = condition3()
 
 						if value27 and value27.Anchored then
@@ -3837,8 +3866,8 @@ local function payload(argument, argument2)
 								end, 3, 3, 0.95)
 							else
 								if value27 then
-									condition3 = data[8]
-									local humanoid, value28, value29, value30 = condition3(), data[26], data[27], data[28]
+									condition3 = humanoid
+									local humanoid, value28, value29, value30 = condition3(), data[26], newCFrame, newVector3
 									value28(value29(argument + value30(0, (humanoid and humanoid.HipHeight or 2) + 1, 0)) * argument9)
 								end
 							end
@@ -3849,7 +3878,7 @@ local function payload(argument, argument2)
 							local value = fireproximityprompt
 							local value28
 							if value then
-								condition3 = data10[31]
+								condition3 = carryAreaEgg
 								value28 = (condition3(argument))
 							else
 								value28 = value
@@ -3897,7 +3926,7 @@ local function payload(argument, argument2)
 
 						if os.clock() >= number11 then
 							number11 = os.clock() + 1
-							value27, condition3 = data[18], false
+							value27, condition3 = eggReadFieldEggs, false
 							for _, value28 in pairs(value27()) do
 								condition3 = if type(value28) == "table" then if value28.Uid == argument5 then value28.State ~= "Slot" else condition3 else condition3
 							end
@@ -3906,7 +3935,7 @@ local function payload(argument, argument2)
 							end
 						end
 
-						condition3 = data[23]
+						condition3 = heartbeatWait
 						condition3()
 					end
 
@@ -3914,11 +3943,11 @@ local function payload(argument, argument2)
 					if not number9(argument5) then
 						return false
 					end
-					argument = data[11]
+					argument = notify
 					argument("Crossing into base")
 
 					for i = 1, 2, 1 do
-						number9, i, argument, number10 = os.clock(), data[26], data[27], data[43]
+						number9, i, argument, number10 = os.clock(), data[26], newCFrame, cFramePointToWorldSpace
 						i(argument(number10()) * argument9)
 
 						while true do
@@ -3932,7 +3961,7 @@ local function payload(argument, argument2)
 							if not condition4 then
 								break
 							end
-							condition3 = data[23]
+							condition3 = heartbeatWait
 							condition3()
 						end
 
@@ -3943,9 +3972,9 @@ local function payload(argument, argument2)
 						if not argument7(argument5) then
 							return nil
 						end
-						i = data[11]
+						i = notify
 						i("Not counted yet, crossing again")
-						local value27, number16 = data[26], data[27]
+						local value27, number16 = data[26], newCFrame
 						value27(number16(argument8) * argument9)
 						number16 = 0
 
@@ -3954,7 +3983,7 @@ local function payload(argument, argument2)
 							if not (number16 < 0.3 + i()) then
 								break
 							end
-							value27 = data[23]
+							value27 = heartbeatWait
 							number16 += value27()
 						end
 					end
@@ -3962,7 +3991,7 @@ local function payload(argument, argument2)
 					return false
 				end
 
-				local value27, uidMap, data13, number9, categoryMap, number10, condition3, categoryMap2, number11, value28 = argument:t2(13, 14, {[1] = data, [15] = data, [20] = data, [16] = data, [13] = data, [10] = data10, [12] = data10, [11] = data, [26] = data, [27] = data, [23] = data, [50] = data, [32] = data, [21] = data, [22] = data, [51] = data}, argument2, argument3, nil), {}, {}, 0, {}, 0, false, {}, 0, data[20]
+				local value27, uidMap, data13, number9, categoryMap, number10, condition3, categoryMap2, number11, value28 = argument:t2(13, 14, {[1] = data, [15] = data, [20] = data, [16] = data, [13] = data, [10] = data10, [12] = data10, [11] = data, [26] = data, [27] = data, [23] = data, [50] = data, [32] = data, [21] = data, [22] = data, [51] = data}, argument2, argument3, nil), {}, {}, 0, {}, 0, false, {}, 0, state
 
 				value28.indexMissing = function()
 					if os.clock() > number11 then
@@ -4010,7 +4039,7 @@ local function payload(argument, argument2)
 						end)
 					end
 
-					local value29 = data[64]
+					local value29 = savePeek
 					local value30, kMap = value29(), {}
 					local index, categoryMap = value30 and type(value30.Index) == "table" and value30.Index or {}, categoryMap2
 					for k in next, categoryMap, nil do
@@ -4026,7 +4055,7 @@ local function payload(argument, argument2)
 						return categoryMap
 					end
 					number10, categoryMap = os.clock() + 5, {}
-					local categoryMap3 = data[64]
+					local categoryMap3 = savePeek
 					local value29 = categoryMap3()
 					if not value29 then
 						categoryMap3 = categoryMap
@@ -4075,9 +4104,9 @@ local function payload(argument, argument2)
 					return inventoryList
 				end
 
-				value15 = data[20]
+				value15 = state
 				value15.pick = {}
-				autoSteal = data[20]
+				autoSteal = state
 				autoSteal.skip = {}
 				local labelMap4, uidMap2 = {["Lowest value"] = "lo", ["Best rarity"] = "r", ["Best mutation"] = "mv", Biggest = "s", Closest = "near"}, {}
 				local areaEggSlotsClient = workspace:FindFirstChild("AreaEggSlotsClient")
@@ -4104,7 +4133,7 @@ local function payload(argument, argument2)
 						entry = {r = argument5, e = toNumberOrDefault2(argument5)}
 						uidMap2[uid] = entry
 					end
-					local e, value29, pos = entry.e, data[20], table.find(data[20].pick, uid)
+					local e, value29, pos = entry.e, state, table.find(state.pick, uid)
 					local pos2 = pos and "pick" or argument6 and argument6[e.cat] and "index" or argument7 and argument7(e)
 					local pos3
 
@@ -4128,10 +4157,10 @@ local function payload(argument, argument2)
 					if pos3 then
 						argument6 = pos3
 					else
-						argument7 = data[20]
+						argument7 = state
 						pos2 = argument7.ufoEgg
 						if pos2 then
-							local value30 = data[20]
+							local value30 = state
 							argument6 = value30.ufoEgg(e, uid)
 						else
 							argument6 = pos2
@@ -4150,7 +4179,7 @@ local function payload(argument, argument2)
 					if argument7 then
 						pos3 = argument7
 					else
-						argument6 = data[20]
+						argument6 = state
 						local value30 = argument6.skip[uid]
 						local condition4 = if value30 then not value30 else pos2
 
@@ -4178,7 +4207,7 @@ local function payload(argument, argument2)
 					e.kind = e.tg and pos2 or nil
 					pos3, argument6 = argument5.State == "Carried" and tonumber(argument5.CarrierUserId)
 					if pos3 then
-						argument7 = data[1]
+						argument7 = localPlayer
 						argument6 = pos3 ~= argument7.UserId
 					else
 						argument6 = pos3
@@ -4186,7 +4215,7 @@ local function payload(argument, argument2)
 					e.held = argument6 and Players:GetPlayerByUserId(pos3) or nil
 					local value30, name, tg, number12 = callback44(argument5), e.n, e.tg
 					if tg then
-						pos3 = data[20]
+						pos3 = state
 						number12 = (100 - (pos3.rank["Steal:" .. pos2] or 9)) * 1000 - (pos or 0)
 					else
 						number12 = tg
@@ -4200,7 +4229,7 @@ local function payload(argument, argument2)
 
 					if e.tg then
 						if pos2 == "ufo" then
-							pos = data[20]
+							pos = state
 							argument7 = pos.UFO.st.Ufo
 							e.b = e.b + (9000 - math.abs(e.Pos.X - (argument7 and argument7.Position.X or 0))) / 10
 						end
@@ -4209,7 +4238,7 @@ local function payload(argument, argument2)
 					if argument8 == "near" then
 						name = nil
 						if argument9 then
-							pos2 = data[28]
+							pos2 = newVector3
 							name = -pos2(e.Pos.X - argument9.X, 0, e.Pos.Z - argument9.Z).Magnitude
 						else
 							name = argument9
@@ -4242,7 +4271,7 @@ local function payload(argument, argument2)
 
 						if condition2 then
 							condition3, data13 = true, {}
-							condition, condition4 = pairs, data[18]
+							condition, condition4 = pairs, eggReadFieldEggs
 
 							for k, value29 in condition(argument:g2(argument[72](condition4()))) do
 								if type(value29) == "table" then
@@ -4263,19 +4292,19 @@ local function payload(argument, argument2)
 						condition3 = false
 					end
 					local position = data[25]
-					local index, uidMap3 = position.index and callback43(), data[20]
+					local index, uidMap3 = position.index and callback43(), state
 					local wantEgg, condition4 = uidMap3.wantEgg, data[25]
 					local entry = labelMap4[condition4.order] or "v"
-					condition4, uidMap3, position = now4 - number9 > 8, {}, data[15]
+					condition4, uidMap3, position = now4 - number9 > 8, {}, humanoidRootPart
 					local argument6 = position()
 					position = nil
 					if argument6 then
-						local value29 = data[15]
+						local value29 = humanoidRootPart
 						position = value29().Position
 					else
 						position = argument6
 					end
-					local value, uid = pairs, data[18]
+					local value, uid = pairs, eggReadFieldEggs
 					local value29, number12 = argument[72](uid()), 0
 
 					for k, value30 in value(argument:g2(value29)) do
@@ -4288,14 +4317,14 @@ local function payload(argument, argument2)
 							if condition5 then
 								condition = condition5
 							else
-								local value31 = data[20]
+								local value31 = state
 								condition = uid == value31.tpKeep and value30.State == "GuardCarried"
 							end
 							condition5 = nil
 							if condition then
 								condition5 = condition
 							else
-								local value31 = data[20]
+								local value31 = state
 								condition5 = uid == value31.mgUid and value30.State ~= "Carried" and value30.State ~= "Claimed"
 							end
 							condition = nil
@@ -4305,7 +4334,7 @@ local function payload(argument, argument2)
 							else
 								local condition6
 								if argument5 then
-									local value31 = data[20]
+									local value31 = state
 									condition6 = uid == value31.curUid
 								else
 									condition6 = argument5
@@ -4325,10 +4354,10 @@ local function payload(argument, argument2)
 									if condition5 then
 										condition = condition5
 									else
-										local value31 = data[1]
+										local value31 = localPlayer
 										condition = value31.UserId
 									end
-									local value31 = data[1]
+									local value31 = localPlayer
 									condition7 = condition ~= value31.UserId
 								else
 									condition7 = condition6
@@ -4346,7 +4375,7 @@ local function payload(argument, argument2)
 										argument6 = condition6
 									else
 										local value31
-										value31, argument6 = data[20], table.find(data[20].pick, uid)
+										value31, argument6 = state, table.find(state.pick, uid)
 									end
 								else
 									argument6 = condition7
@@ -4374,7 +4403,7 @@ local function payload(argument, argument2)
 												k = condition6
 											else
 												local value31
-												value31, k = data[20], table.find(data[20].pick, uid)
+												value31, k = state, table.find(state.pick, uid)
 											end
 										else
 											k = condition5
@@ -4406,7 +4435,7 @@ local function payload(argument, argument2)
 					end
 
 					if argument2 then
-						value = data[20]
+						value = state
 						value.fieldFresh = number12 <= 2
 					end
 					for k in next, uidMap2, nil do
@@ -4414,19 +4443,19 @@ local function payload(argument, argument2)
 							uidMap2[k] = nil
 						end
 					end
-					argument5 = data[20]
+					argument5 = state
 					now4 = #argument5.pick
 					for i = now4, 1, -1 do
-						argument5 = data[20]
+						argument5 = state
 						if not (uidMap3[argument5.pick[i]]) then
-							table.remove(data[20].pick, i)
+							table.remove(state.pick, i)
 						end
 					end
-					condition4, argument5 = next, data[20]
+					condition4, argument5 = next, state
 					argument2 = argument5.skip
 					for k in condition4, argument2, nil do
 						if not (uidMap3[k]) then
-							index = data[20]
+							index = state
 							index.skip[k] = nil
 						end
 					end
@@ -4445,12 +4474,12 @@ local function payload(argument, argument2)
 					return list3
 				end
 
-				local value29 = data[20]
+				local value29 = state
 				value29.sortKey = function()
 					local value30 = data[25]
 					return labelMap4[value30.order] or "v"
 				end
-				local value30 = data[20]
+				local value30 = state
 
 				value30.stealSort = function(argument5)
 					local value31 = data[25]
@@ -4486,25 +4515,25 @@ local function payload(argument, argument2)
 					return value31
 				end
 
-				local value31 = data[20]
+				local value31 = state
 				value31.fresh = function()
 					value2 = nil
 				end
-				local value32 = data[20]
+				local value32 = state
 				value32.targetsSoon = function()
 					return callback46(false, true)
 				end
-				local value33 = data[20]
+				local value33 = state
 				value33.allEggs = function()
 					return callback46(true)
 				end
-				value = data[20]
+				value = state
 				value.reach = value20
 				local bagMax = 115
 				pcall(function()
 					bagMax = tonumber(require(ReplicatedStorage.Shared.Types.Eggs).MAX_INVENTORY) or bagMax
 				end)
-				autoSteal = data[20]
+				autoSteal = state
 				autoSteal.bagMax = bagMax
 				local number13 = 0
 
@@ -4526,14 +4555,14 @@ local function payload(argument, argument2)
 					for k2, value35 in value(argument:g2(value34)) do
 						if type(value35) == "table" then
 							if not value35.Placement then
-								local value36 = data[20]
+								local value36 = state
 
 								if not (value36.reserved[k2]) then
-									local numVal = data[20]
+									local numVal = state
 									local protect = numVal.protect
 									local k3
 									if protect then
-										numVal = data[20]
+										numVal = state
 										k3 = numVal.protect(k2, value35)
 									else
 										k3 = protect
@@ -4561,13 +4590,13 @@ local function payload(argument, argument2)
 					end
 					callback2("RE/PetSatchel/SellSelection", {Eggs = {k}, Assets = {}})
 					number13 = os.clock()
-					value = data[11]
+					value = notify
 					value("Sold a cheap egg to make room", "ok")
 					return true
 				end
 
 				local condition4
-				local value34 = data[20]
+				local value34 = state
 
 				value34.bagCheck = function()
 					condition4 = nil
@@ -4588,14 +4617,14 @@ local function payload(argument, argument2)
 						value6 = data[32]
 
 						trackConnection(value6.Egg.OwnerRefreshed, function(argument5)
-							local value35 = data[1]
+							local value35 = localPlayer
 
 							if argument5 == value35.UserId then
 								local value36 = data[25]
 								if value36.bagSell then
 									if not condition4 then
 										condition4 = true
-										task.defer(data[20].bagCheck)
+										task.defer(state.bagCheck)
 									end
 								end
 							end
@@ -4613,25 +4642,25 @@ local function payload(argument, argument2)
 					if not value35 then
 						return nil
 					end
-					local value36 = data[20]
+					local value36 = state
 					value36.stealNext = value35.kind
-					value36 = data[20]
+					value36 = state
 					return value36.rank["Steal:" .. value35.kind] or 9
 				end
 
-				local value35 = data[20]
+				local value35 = state
 				value35.stealWants = function()
 					local condition5 = value5.inq == true or data[4] == value5
 					return condition5
 				end
 
 				function value5.want()
-					local value36 = data[20]
+					local value36 = state
 					value36.curUid = nil
 					value36 = callback12()
 					if value36 <= 0 then
 						callback47()
-						local value37 = data[11]
+						local value37 = notify
 						return value37("Waiting for daytime")
 					end
 					if os.clock() - now2 < 1.5 then
@@ -4639,13 +4668,13 @@ local function payload(argument, argument2)
 					end
 
 					if (value5.full or 0) > os.clock() then
-						value36 = data[11]
+						value36 = notify
 						return value36(value5.fullTx or "Bag full, retrying soon", "warn")
 					end
 					value36 = callback47()
 					value5.empty = #value36 == 0 and (value5.empty or os.clock()) or nil
 					if #value36 == 0 then
-						local value37 = data[11]
+						local value37 = notify
 						return value37("No egg matches your targets")
 					end
 					local value = ipairs
@@ -4656,7 +4685,7 @@ local function payload(argument, argument2)
 						local condition5 = not k
 						local condition6
 						if k then
-							local value40 = data[20]
+							local value40 = state
 							condition6 = value40.bat()
 						else
 							condition6 = condition5
@@ -4669,7 +4698,7 @@ local function payload(argument, argument2)
 
 					value37 = value38 or value37
 					if not value37 then
-						value36 = data[11]
+						value36 = notify
 						return value36("Matching eggs are in other players' hands")
 					end
 
@@ -4681,17 +4710,17 @@ local function payload(argument, argument2)
 							end
 						end
 						value5.full = os.clock() + 30
-						local value39, value40 = data[11], data[25]
+						local value39, value40 = notify, data[25]
 						return value39(value40.bagSell and "Bag is full, no cheaper egg to sell" or "Bag full, place or sell eggs", "warn")
 					end
 
-					value36, value = data[20]
-					value, value36.rank.Steal = data[20], data[20].rank["Steal:" .. value37.kind] or 9
+					value36, value = state
+					value, value36.rank.Steal = state, state.rank["Steal:" .. value37.kind] or 9
 					return value37
 				end
 
 				local function callback49(argument5)
-					local value36 = data[18]
+					local value36 = eggReadFieldEggs
 					local value37 = value36()
 					if type(value37[argument5]) == "table" then
 						return value37[argument5]
@@ -4711,7 +4740,7 @@ local function payload(argument, argument2)
 					local playerByUserId = humanoidRootPart and humanoidRootPart.State == "Carried" and Players:GetPlayerByUserId(tonumber(humanoidRootPart.CarrierUserId) or 0)
 					local condition5
 					if playerByUserId then
-						humanoidRootPart = data[1]
+						humanoidRootPart = localPlayer
 						condition5 = playerByUserId ~= humanoidRootPart
 					else
 						condition5 = playerByUserId
@@ -4734,7 +4763,7 @@ local function payload(argument, argument2)
 								local model = instance and not instance:IsDescendantOf(humanoidRootPart) and instance:FindFirstAncestorOfClass("Model")
 								local condition6
 								if model then
-									k2 = data[1]
+									k2 = localPlayer
 									condition6 = model ~= k2.Character
 								else
 									condition6 = model
@@ -4751,7 +4780,7 @@ local function payload(argument, argument2)
 					local position, value, value36, number14, value2 = playerByUserId and playerByUserId.Position or humanoidRootPart:GetPivot().Position, ipairs, argument[72](Players:GetPlayers()), 40
 
 					for _, value37 in value(argument:g2(value36)) do
-						playerByUserId = data[1]
+						playerByUserId = localPlayer
 						humanoidRootPart = value37 ~= playerByUserId and value37.Character and value37.Character:FindFirstChild("HumanoidRootPart")
 						if humanoidRootPart then
 							if (humanoidRootPart.Position - position).Magnitude < number14 then
@@ -4771,7 +4800,7 @@ local function payload(argument, argument2)
 					local value37 = value36 and value36.State == "Carried"
 					local condition5
 					if value37 then
-						argument5, condition5 = data[1], (tonumber(value36.CarrierUserId) or 0) ~= data[1].UserId
+						argument5, condition5 = localPlayer, (tonumber(value36.CarrierUserId) or 0) ~= localPlayer.UserId
 					else
 						condition5 = value37
 					end
@@ -4781,12 +4810,12 @@ local function payload(argument, argument2)
 				local uidMap3 = {}
 
 				local function callback51(argument5, argument6, argument7)
-					local uid, number14 = argument5.Uid, data[1]
-					local character, RunService = number14.Character, data[8]
+					local uid, number14 = argument5.Uid, localPlayer
+					local character, RunService = number14.Character, humanoid
 					local condition5, value36 = RunService(), data[25]
 
 					if value36.thief or argument5.kind == "pick" then
-						number14 = data[20]
+						number14 = state
 
 						if number14.bat() then
 							if (uidMap3[uid] or 0) > os.clock() then
@@ -4799,14 +4828,14 @@ local function payload(argument, argument2)
 						return false, "Taken by someone"
 					end
 
-					value36 = data[20]
+					value36 = state
 
 					if value36.invisible() then
-						number14 = data[11]
+						number14 = notify
 						number14("Turning visible to take " .. (argument5.Name .. " back"))
-						RunService = data[20]
+						RunService = state
 						RunService.keepVis = os.clock() + 120
-						local value37 = data[20]
+						local value37 = state
 
 						if value37.body(false) then
 							if not argument6() then
@@ -4818,7 +4847,7 @@ local function payload(argument, argument2)
 					end
 
 					if data[13](argument6) then
-						RunService = data[14]
+						RunService = attribute2
 						if not RunService(argument6) then
 							return false, "Stuck on treadmill"
 						end
@@ -4826,13 +4855,13 @@ local function payload(argument, argument2)
 						return false, "Stuck on treadmill"
 					end
 
-					value36, RunService = callback50(uid), data[15]
+					value36, RunService = callback50(uid), humanoidRootPart
 					number14 = RunService()
 
 					if value36 then
 						if number14 then
 							if (value36.Position - number14.Position).Magnitude > 700 then
-								RunService = data[11]
+								RunService = notify
 								RunService("Ragdoll jump to the carrier")
 
 								ragTo(function()
@@ -4840,7 +4869,7 @@ local function payload(argument, argument2)
 									local number15
 									if value37 then
 										local value38
-										value38, number15 = data[28], value37.Position + data[28](0, 3, 0)
+										value38, number15 = newVector3, value37.Position + newVector3(0, 3, 0)
 									else
 										number15 = value37
 									end
@@ -4850,13 +4879,13 @@ local function payload(argument, argument2)
 						end
 					end
 
-					RunService = data[20]
+					RunService = state
 					RunService.godHunt = true
 					local RunService2
-					RunService = data[58]
+					RunService = runService
 					local function callback52(deltaTime)
 						if RunService2 then
-							pcall(data[20].huntStep, RunService2[1], RunService2[2], deltaTime)
+							pcall(state.huntStep, RunService2[1], RunService2[2], deltaTime)
 						end
 					end
 					local connection, now4, condition6 = RunService.PreSimulation:Connect(callback52), os.clock(), false
@@ -4867,7 +4896,7 @@ local function payload(argument, argument2)
 						RunService = argument6()
 						local condition7
 						if RunService then
-							local value37 = data[1]
+							local value37 = localPlayer
 							condition7 = value37.Character == character
 						else
 							condition7 = RunService
@@ -4899,9 +4928,9 @@ local function payload(argument, argument2)
 							condition5.PlatformStand = false
 						end
 						number14 = value37 and 0 or number14
-						RunService3 = data[11]
+						RunService3 = notify
 						RunService3(value37 and (RunService2 and ("Chasing %s for %s"):format(condition7.DisplayName, argument5.Name) or "The carrier reached their base") or "Looking for the egg carrier")
-						RunService3 = data[23]
+						RunService3 = heartbeatWait
 						condition8 = RunService3()
 
 						if not value37 then
@@ -4923,14 +4952,14 @@ local function payload(argument, argument2)
 
 					RunService2 = nil
 					connection:Disconnect()
-					connection = data[20]
+					connection = state
 					connection.godHunt = false
 					if condition5 then
 						condition5.PlatformStand = false
 					end
 					now4, condition5 = condition6 and argument6()
 					if now4 then
-						value36 = data[1]
+						value36 = localPlayer
 						condition5 = value36.Character == character
 					else
 						condition5 = now4
@@ -4938,7 +4967,7 @@ local function payload(argument, argument2)
 
 					if condition5 then
 						local function callback53(argument8)
-							local value37 = data[11]
+							local value37 = notify
 							value37(argument5.Name .. " went back to its nest, going for it")
 							argument5.Pos = argument8.BottomCFrame.Position
 							argument8, value37 = value20(argument5, argument6)
@@ -4956,9 +4985,9 @@ local function payload(argument, argument2)
 						else
 							if not now4 then
 								if value36 then
-									number14 = data[11]
+									number14 = notify
 									number14("The egg fell, taking it")
-									local value37, value38, value39, value40 = callback44(value36), data[26], data[27], data[28]
+									local value37, value38, value39, value40 = callback44(value36), data[26], newCFrame, newVector3
 									value38(value39(value37 + value40(0, 3, 0)))
 									now4 = (value21(uid, argument6, value37))
 								end
@@ -4970,7 +4999,7 @@ local function payload(argument, argument2)
 								connection = 0
 
 								while true do
-									character = data[23]
+									character = heartbeatWait
 									connection += character()
 									value36 = callback49(uid)
 									local value37 = data[44]
@@ -5014,23 +5043,23 @@ local function payload(argument, argument2)
 				end
 
 				function value5.run(argument5, argument)
-					local player = data[20]
+					local player = state
 					player.stealKind = argument5.kind
 					if argument5.kind == "ufo" then
-						local value36 = data[20]
+						local value36 = state
 						local value37
-						value37, value36.UFO.d0 = data[20], data[20].UFO.st.Delivered or 0
+						value37, value36.UFO.d0 = state, state.UFO.st.Delivered or 0
 					end
-					player = data[20]
+					player = state
 					player.flyY = nil
-					player = data[20]
+					player = state
 					player.curArea = tostring(argument5.a)
 					value5.cv = argument5.v
-					player = data[20]
+					player = state
 					player.curUid = argument5.Uid
-					player = data[20]
+					player = state
 					if player.hud then
-						local value36 = data[20]
+						local value36 = state
 						value36.hud.Refresh()
 					end
 					player = data[21]
@@ -5053,21 +5082,21 @@ local function payload(argument, argument2)
 							if not (value36() and number15 < 1.5) then
 								break
 							end
-							value36 = data[23]
+							value36 = heartbeatWait
 							number15 += value36()
 						end
 					end
 
 					player = data[42]
 					player.cur = argument5.Name
-					player = data[20]
+					player = state
 					if player.greenLight then
-						number14 = data[20]
+						number14 = state
 						number14.greenLight(argument5.Uid, argument)
 					end
-					player = data[1]
+					player = localPlayer
 					local character, argument2, condition5, argument6, text, condition6 = player.Character, argument, false
-					number14 = data[20]
+					number14 = state
 					number14.tpKeep = argument5.Uid
 					number14 = data[25]
 					local adminSteal = number14.adminSteal
@@ -5075,7 +5104,7 @@ local function payload(argument, argument2)
 					if adminSteal then
 						adminSteal2 = adminSteal
 					else
-						player, adminSteal2 = data[20], argument5.Uid == data[20].mgUid
+						player, adminSteal2 = state, argument5.Uid == state.mgUid
 					end
 					adminSteal, player = adminSteal2 and callback26()
 					if adminSteal then
@@ -5088,7 +5117,7 @@ local function payload(argument, argument2)
 					if player then
 						argument6 = value27(argument5, argument)
 						if argument6 then
-							adminSteal2 = data[11]
+							adminSteal2 = notify
 							adminSteal2("Stole " .. argument5.Name, "ok")
 							return
 						end
@@ -5099,7 +5128,7 @@ local function payload(argument, argument2)
 						end
 
 						if argument() then
-							local value36 = data[1]
+							local value36 = localPlayer
 							if value36.Character ~= character then
 								return
 							end
@@ -5134,7 +5163,7 @@ local function payload(argument, argument2)
 					else
 						adminSteal2, adminSteal = argument5.kind == "ufo"
 						if adminSteal2 then
-							number14 = data[20]
+							number14 = state
 							adminSteal = number14.ufoTP(argument5)
 						else
 							adminSteal = adminSteal2
@@ -5155,7 +5184,7 @@ local function payload(argument, argument2)
 							condition7 = nil
 							if condition8 then
 								local value36
-								value36, condition7 = data[20], table.find(data[20].TZ, tostring(argument5.a))
+								value36, condition7 = state, table.find(state.TZ, tostring(argument5.a))
 							else
 								condition7 = condition8
 							end
@@ -5168,13 +5197,13 @@ local function payload(argument, argument2)
 							end
 							condition7 = nil
 							if condition8 then
-								local value36 = data[15]
+								local value36 = humanoidRootPart
 								condition7 = (value36())
 							else
 								condition7 = condition8
 							end
 							if condition7 then
-								condition8 = data[15]
+								condition8 = humanoidRootPart
 								player = (condition8().Position - argument5.Pos).Magnitude >= 600
 							else
 								player = condition7
@@ -5182,7 +5211,7 @@ local function payload(argument, argument2)
 						end
 
 						if player then
-							local value36 = data[20]
+							local value36 = state
 							condition6 = true
 							value36.tpKeep = argument5.Uid
 							local value37, value38 = value23(argument5, argument)
@@ -5194,14 +5223,14 @@ local function payload(argument, argument2)
 
 							if not argument6 then
 								if argument() then
-									value38 = data[1]
+									value38 = localPlayer
 
 									if value38.Character == character then
 										if toNumberOrDefault3(argument5.Uid) then
 											argument6, text = callback51(argument5, argument)
 										else
 											if text == "Dropped on the way" then
-												value36 = data10[48]
+												value36 = instance
 												if value36(argument5.Uid, argument) then
 													argument6, text = value26(argument5.Uid, argument)
 												end
@@ -5219,12 +5248,12 @@ local function payload(argument, argument2)
 								elseif value37 == "Taken by someone" then
 									break
 								else
-									i = data[1]
+									i = localPlayer
 
 									if i.Character ~= character then
 										break
 									elseif argument() then
-										local value38 = data[29]
+										local value38 = getServerTimeNow
 										if not value38() then
 											break
 										end
@@ -5233,13 +5262,13 @@ local function payload(argument, argument2)
 									end
 								end
 
-								i = data[11]
+								i = notify
 								i("Knocked down, trying again")
 								argument6, text = value36, value37
 							end
 
 							if argument6 then
-								local value36 = data[18]
+								local value36 = eggReadFieldEggs
 
 								for _, value37 in pairs(value36()) do
 									if type(value37) == "table" then
@@ -5303,9 +5332,9 @@ local function payload(argument, argument2)
 
 					if adminSteal then
 						if argument2() then
-							player = data[1]
+							player = localPlayer
 							if player.Character == character then
-								number14 = data[11]
+								number14 = notify
 								number14("Admin treadmill is up, switching to Instant steal")
 								return value5.run(argument5, argument2)
 							end
@@ -5315,7 +5344,7 @@ local function payload(argument, argument2)
 					player = data[21]
 
 					if player() then
-						adminSteal = data[1]
+						adminSteal = localPlayer
 
 						if adminSteal.Character == character then
 							if not argument6 then
@@ -5333,14 +5362,14 @@ local function payload(argument, argument2)
 					if number14.steal then
 						if not argument6 then
 							if argument5.kind ~= "ufo" then
-								player = data[20]
+								player = state
 								player.stealRetry = os.clock() + 6
 							end
 						end
 					end
 
 					if argument6 then
-						adminSteal = data[20]
+						adminSteal = state
 						adminSteal.tpKeep = nil
 					end
 
@@ -5349,14 +5378,14 @@ local function payload(argument, argument2)
 
 						if adminSteal2 then
 							if adminSteal2.State == "Carried" then
-								player = data[1]
+								player = localPlayer
 								if tonumber(adminSteal2.CarrierUserId) ~= player.UserId then
-									adminSteal = data[20]
+									adminSteal = state
 									adminSteal.tpKeep = nil
 								end
 							end
 						else
-							local value36 = data[20]
+							local value36 = state
 							value36.tpKeep = nil
 						end
 
@@ -5373,7 +5402,7 @@ local function payload(argument, argument2)
 						else
 							if adminSteal2 then
 								if adminSteal2.State == "GuardCarried" then
-									local value36 = data[11]
+									local value36 = notify
 									value36("Waiting for the guard to bring " .. (argument5.Name .. " back"))
 								end
 							end
@@ -5390,7 +5419,7 @@ local function payload(argument, argument2)
 								break
 							end
 
-							local value36 = data[23]
+							local value36 = heartbeatWait
 							number14 += value36()
 						end
 					end
@@ -5408,26 +5437,26 @@ local function payload(argument, argument2)
 							value5.again = nil
 						end
 					end
-					adminSteal2, number14 = data[20], table.find(data[20].pick, argument5.Uid)
+					adminSteal2, number14 = state, table.find(state.pick, argument5.Uid)
 
 					if argument6 then
 						if number14 then
-							table.remove(data[20].pick, number14)
+							table.remove(state.pick, number14)
 						end
-						local value36, value37 = data[11], data10[40]
+						local value36, value37 = notify, data10[40]
 						value36(value37() and "Dropped " .. (argument5.Name .. " at the safe zone") or "Stole " .. argument5.Name, "ok")
 						value36 = data10[40]
 						if value36() then
 							uidMap[argument5.Uid] = os.clock() + 300
 						end
 					elseif text == nil and argument6 == nil then
-						local value36 = data[11]
+						local value36 = notify
 						value36("Sent " .. (argument5.Name .. " home"), "ok")
 					else
 						local value36 = argument()
 						local condition7
 						if value36 then
-							local value37 = data[1]
+							local value37 = localPlayer
 							condition7 = value37.Character == character
 						else
 							condition7 = value36
@@ -5452,13 +5481,13 @@ local function payload(argument, argument2)
 								end
 							end
 
-							local number15 = data[11]
+							local number15 = notify
 							number15((text or "Steal failed") .. (" - " .. argument5.Name), "warn")
 
 							if player and os.clock() >= (value5.pingAt or 0) then
 								number15 = 0
 								for i = 1, 10, 1 do
-									i = data[23]
+									i = heartbeatWait
 									number15 += i()
 								end
 								local number16, ok, response = 10 / math.max(number15, 0.001), pcall(function()
@@ -5487,7 +5516,7 @@ local function payload(argument, argument2)
 
 			saveFile("10_steal#2", function()
 				local data10 = {}
-				local callback34 = data[20]
+				local callback34 = state
 				local stealSec, value6, value7 = callback34.stealSec, mainWindow:State("Anti Guard Enabled", false), data[25]
 				value7.antiGuard = value6.Value == true
 				value7, callback34 = value6.Value, function(argument5)
@@ -5505,14 +5534,14 @@ local function payload(argument, argument2)
 						argument5 = data[25]
 						value8:Set(argument5.antiGuard)
 					end
-					value9 = data[20]
+					value9 = state
 					if value9.hud then
-						argument5 = data[20]
+						argument5 = state
 						argument5.hud.Sync()
 					end
 				end}
 
-				callback34 = data[20]
+				callback34 = state
 				callback34.agT = value6
 				local dropEggsAtSafeZone
 
@@ -5547,9 +5576,9 @@ local function payload(argument, argument2)
 				data10[59] = condition2
 
 				data10[57] = function()
-					local value, data13, data14, value10 = ipairs, {}, {}, data[28]
+					local value, data13, data14, value10 = ipairs, {}, {}, newVector3
 					argument:H2(data14, 0, "GearGiver_Slap", "Podium", value10(-16.415, 21.072, -6.106))
-					local data15, value11 = {}, data[28]
+					local data15, value11 = {}, newVector3
 					argument:H2(data15, 0, "World", "Machines", "RiftMachine", "Rift", "Meshes/VoidPortal_Cube.003", value11(-26.776, 1.75, 18.665))
 					argument:H2(data13, 0, data14, data15)
 
@@ -5565,12 +5594,12 @@ local function payload(argument, argument2)
 						end
 					end
 
-					value11 = data[28]
+					value11 = newVector3
 					return value11(528.7, 70.57, -364.11)
 				end
 
 				data10[56] = function(argument5)
-					local value10 = data[51]
+					local value10 = world
 					local Areas2 = value10("Areas", "SeparationLine")
 
 					if Areas2 then
@@ -5581,13 +5610,13 @@ local function payload(argument, argument2)
 						return
 					end
 
-					local cFrame, number6 = Areas2.CFrame, data[28]
-					local value11, number7 = data[28], number6(0, 1, 0):Cross(Areas2.Size.X >= Areas2.Size.Z and cFrame.RightVector or cFrame.LookVector) * data[28](1, 0, 1)
+					local cFrame, number6 = Areas2.CFrame, newVector3
+					local value11, number7 = newVector3, number6(0, 1, 0):Cross(Areas2.Size.X >= Areas2.Size.Z and cFrame.RightVector or cFrame.LookVector) * newVector3(1, 0, 1)
 					if number7.Magnitude <= 0.001 then
 						return
 					end
 					number7 = number7.Unit
-					number6, Areas2 = cFrame.Position + ((argument5 - cFrame.Position):Dot(number7) >= 0 and -number7 or number7) * 8, data[28]
+					number6, Areas2 = cFrame.Position + ((argument5 - cFrame.Position):Dot(number7) >= 0 and -number7 or number7) * 8, newVector3
 					return Areas2(number6.X, argument5.Y + 0.5, number6.Z)
 				end
 
@@ -5611,17 +5640,17 @@ local function payload(argument, argument2)
 
 				local value10
 				data10[60] = value10
-				local value11 = data[20]
+				local value11 = state
 				value11.place = function(...)
 					local value12 = data10[60]
 					return value12(...)
 				end
 
 				data10[60] = function(instance, argument5, argument6, argument7)
-					pcall(instance.PivotTo, instance, data[27](argument6))
+					pcall(instance.PivotTo, instance, newCFrame(argument6))
 					if (argument5.Position - argument6).Magnitude > 3 then
 						pcall(function()
-							local value12 = data[27]
+							local value12 = newCFrame
 							argument5.CFrame = value12(argument6)
 						end)
 					end
@@ -5642,7 +5671,7 @@ local function payload(argument, argument2)
 				end
 
 				data10[62] = function()
-					local value12 = data[15]
+					local value12 = humanoidRootPart
 					local value13 = value12()
 
 					for _, instance in ipairs(value13 and workspace:GetChildren() or {}) do
@@ -5660,6 +5689,7 @@ local function payload(argument, argument2)
 					end
 				end
 
+				local hitbox = data10[62]
 				local classNames = {"LuaSourceContainer", "Sound", "ForceField", "JointInstance", "Constraint", "WeldConstraint", "BodyMover", "ProximityPrompt", "BillboardGui"}
 
 				local function callback36(instance, parent)
@@ -5714,8 +5744,8 @@ local function payload(argument, argument2)
 						return
 					end
 					data12.dis = nil
-					local value12, value13 = data[58], data[58]
-					pcall(data[58].UnbindFromRenderStep, data[58], "VenyxAG")
+					local value12, value13 = runService, runService
+					pcall(runService.UnbindFromRenderStep, runService, "VenyxAG")
 					dis.beat:Disconnect()
 					for _, value14 in ipairs(dis.hidden) do
 						pcall(function()
@@ -5728,9 +5758,9 @@ local function payload(argument, argument2)
 					pcall(function()
 						dis.cam.CameraType = dis.type == Enum.CameraType.Scriptable and Enum.CameraType.Custom or dis.type
 					end)
-					local value14 = data[20]
+					local value14 = state
 					value14.camScr = false
-					value14 = data[20]
+					value14 = state
 					value14.camHome()
 				end
 
@@ -5750,10 +5780,10 @@ local function payload(argument, argument2)
 					dis.cf = workspace.CurrentCamera.CFrame
 					dis.copies = {}
 					dis.hidden = {}
-					local RunService = data[20]
+					local RunService = state
 					data12.dis = dis
 					RunService.camScr = true
-					local data13, value12 = {}, data10[62]
+					local data13, value12 = {}, hitbox
 					argument:H2(data13, 0, argument5, value12())
 
 					for _, instance in ipairs(data13) do
@@ -5781,9 +5811,9 @@ local function payload(argument, argument2)
 					end
 
 					callback38()
-					argument5, value12 = data[58], data[58]
-					pcall(data[58].BindToRenderStep, data[58], "VenyxAG", Enum.RenderPriority.Last.Value + 1, callback38)
-					RunService = data[58]
+					argument5, value12 = runService, runService
+					pcall(runService.BindToRenderStep, runService, "VenyxAG", Enum.RenderPriority.Last.Value + 1, callback38)
+					RunService = runService
 					dis.beat = RunService.Heartbeat:Connect(callback38)
 
 					for _, value13 in ipairs(data13) do
@@ -5799,27 +5829,27 @@ local function payload(argument, argument2)
 
 				data10[52] = function()
 					callback37()
-					local value12 = data[8]
+					local value12 = humanoid
 					local value13 = value12()
 					if value13 and value13.PlatformStand then
 						pcall(function()
 							value13.PlatformStand = false
 						end)
 					end
-					value12 = data[20]
+					value12 = state
 					value12.agBusy = false
 				end
 
-				local value12, value13 = argument:t2(15, 16, {[1] = data, [15] = data, [8] = data, [20] = data, [52] = data10, [53] = data, [54] = data10, [55] = data10, [56] = data10, [57] = data10, [58] = data, [41] = data, [59] = data10, [60] = data10, [61] = data10, [51] = data, [62] = data10}, argument2, argument3, nil), data[20]
+				local value12, value13 = argument:t2(15, 16, {[1] = data, [15] = data, [8] = data, [20] = data, [52] = data10, [53] = data, [54] = data10, [55] = data10, [56] = data10, [57] = data10, [58] = data, [41] = data, [59] = data10, [60] = data10, [61] = data10, [51] = data, [62] = data10}, argument2, argument3, nil), state
 
 				value13.agKick = function()
-					local value14 = data[20]
+					local value14 = state
 					if value14.agBusy then
 						return
 					elseif not data[53] then
 						return
 					end
-					local value15, value16 = data[20], data[20]
+					local value15, value16 = state, state
 					value15.agBusy, data12.since, value16.agAt = true, os.clock(), os.clock()
 					task.spawn(function()
 						if not pcall(value12, os.clock()) then
@@ -5837,18 +5867,18 @@ local function payload(argument, argument2)
 					local condition8
 
 					if antiGuard then
-						condition7 = data[20]
+						condition7 = state
 						local condition9 = condition7.stealKind == "ufo"
 						local condition10
 						if condition9 then
-							local value14 = data[20]
+							local value14 = state
 							condition10 = value14.ufoNoAG()
 						else
 							condition10 = condition9
 						end
 						condition9 = nil
 						if condition10 then
-							local value14 = data[20]
+							local value14 = state
 							condition9 = not value14.ufoAG
 						else
 							condition9 = condition10
@@ -5861,7 +5891,7 @@ local function payload(argument, argument2)
 					condition7 = nil
 
 					if condition8 then
-						antiGuard = data[20]
+						antiGuard = state
 						local condition9 = antiGuard.stealKind ~= "ufo"
 						local condition10
 						if condition9 then
@@ -5879,7 +5909,7 @@ local function payload(argument, argument2)
 						end
 						condition10 = nil
 						if condition9 then
-							local value14 = data[20]
+							local value14 = state
 							condition10 = value14.tpCodium()
 						else
 							condition10 = condition9
@@ -5891,14 +5921,14 @@ local function payload(argument, argument2)
 
 					condition8 = nil
 					if condition7 then
-						antiGuard = data[20]
+						antiGuard = state
 						condition8 = not antiGuard.agBusy
 					else
 						condition8 = condition7
 					end
 					condition7 = nil
 					if condition8 then
-						antiGuard = data[20]
+						antiGuard = state
 						condition7 = not antiGuard.rag
 					else
 						condition7 = condition8
@@ -5915,10 +5945,10 @@ local function payload(argument, argument2)
 							if antiGuard then
 								antiGuard2 = antiGuard
 							else
-								local value15 = data[20]
+								local value15 = state
 								local condition9 = value15.cmode(true) ~= "Tween"
 								if condition9 then
-									value15 = data[20]
+									value15 = state
 									antiGuard2 = value15.cmode(true) ~= "Teleport"
 								else
 									antiGuard2 = condition9
@@ -5943,20 +5973,20 @@ local function payload(argument, argument2)
 					if condition6 then
 						if not condition then
 							if callback38() then
-								local value14 = data[20]
+								local value14 = state
 								value14.agKick()
 							end
 						end
 					end
 				end
 
-				local value14, text = data[1], tostring(data[1].UserId)
+				local value14, text = localPlayer, tostring(localPlayer.UserId)
 
 				local function callback40()
 					local area = data12.area
 					local Areas2
 					if area then
-						local value15 = data[51]
+						local value15 = world
 						Areas2 = value15("Areas", "GuardAreas", data12.area)
 					else
 						Areas2 = area
@@ -5989,10 +6019,10 @@ local function payload(argument, argument2)
 					end)
 				end)
 
-				local number6, RunService = 0, data[58]
+				local number6, RunService = 0, runService
 
 				trackConnection(RunService.Heartbeat, function(deltaTime)
-					local value15 = data[20]
+					local value15 = state
 
 					if value15.agBusy then
 						local number7, value16, value17, number8 = os.clock() - data12.since, data10[54], data10[54], math.max(data10[54]().busy, data10[54]().rel + 1)
@@ -6013,7 +6043,7 @@ local function payload(argument, argument2)
 								if callback38() then
 									if callback40() then
 										data12.kAt = os.clock()
-										value15 = data[20]
+										value15 = state
 										value15.agKick()
 									end
 								end
@@ -6033,7 +6063,7 @@ local function payload(argument, argument2)
 					end
 
 					number6 = 0
-					value15 = data10[62]
+					value15 = hitbox
 					deltaTime = value15() ~= nil
 					if deltaTime ~= condition5 then
 						condition5 = deltaTime
@@ -6041,7 +6071,7 @@ local function payload(argument, argument2)
 					end
 				end)
 
-				table.insert(data[20].cleanup, data10[52])
+				table.insert(state.cleanup, data10[52])
 			end)
 
 			data7 = {Golden = Color3.fromRGB(255, 206, 84), Silver = Color3.fromRGB(205, 216, 236), Rainbow = Color3.fromRGB(255, 120, 220), Scrambled = Color3.fromRGB(186, 120, 255), Boss = Color3.fromRGB(255, 104, 104), Enchanted = Color3.fromRGB(104, 236, 255), Sakura = Color3.fromRGB(255, 166, 214), GreatBloom = Color3.fromRGB(176, 255, 166), Monstrous = Color3.fromRGB(150, 255, 110), Nitro = Color3.fromRGB(255, 150, 64), Spectral = Color3.fromRGB(110, 235, 220), Alien = Color3.fromRGB(181, 255, 165), Musical = Color3.fromRGB(255, 130, 210)}
@@ -6076,7 +6106,7 @@ local function payload(argument, argument2)
 				end
 
 				local function callback36()
-					local uids, uidMap, number6, value6 = {}, {}, 0, data[20]
+					local uids, uidMap, number6, value6 = {}, {}, 0, state
 					for _, value7 in ipairs(value6.pick) do
 						if not (uidMap[value7]) then
 							uidMap[value7] = true
@@ -6086,7 +6116,7 @@ local function payload(argument, argument2)
 					value6 = data[25]
 
 					if value6.steal then
-						local value7, value8 = data[20], data[20]
+						local value7, value8 = state, state
 
 						for i, value9 in ipairs(value7.stealSort(value8.allEggs())) do
 							if value9.tg then
@@ -6104,10 +6134,10 @@ local function payload(argument, argument2)
 						end
 					end
 
-					value6 = data[20]
+					value6 = state
 					uidMap, number6 = value6.stealKind ~= "ufo"
 					if uidMap then
-						value6 = data[20]
+						value6 = state
 						number6 = value6.curUid
 					else
 						number6 = uidMap
@@ -6116,37 +6146,37 @@ local function payload(argument, argument2)
 				end
 
 				local function callback37()
-					local value6 = data[20]
+					local value6 = state
 					value6.rank.Steal = 0
-					value6 = data[20]
+					value6 = state
 					if value6.order then
-						local value7 = data[20]
+						local value7 = state
 						value7.order()
 					end
 				end
 
 				local function callback38(argument5)
-					local value6, pos = data[20], table.find(data[20].pick, argument5)
+					local value6, pos = state, table.find(state.pick, argument5)
 					if pos then
-						table.remove(data[20].pick, pos)
+						table.remove(state.pick, pos)
 					end
 				end
 
 				local function callback39(argument5)
 					callback38(argument5)
-					table.insert(data[20].pick, 1, argument5)
-					local value6 = data[20]
+					table.insert(state.pick, 1, argument5)
+					local value6 = state
 					value6.skip[argument5] = nil
 					callback37()
-					argument5 = data[20]
+					argument5 = state
 					argument5.retarget()
 				end
 
 				local function callback40(argument5)
 					callback38(argument5)
-					local value6 = data[20]
+					local value6 = state
 					if value6.curUid == argument5 then
-						local value7 = data[20]
+						local value7 = state
 						value7.stopSteal()
 					end
 				end
@@ -6155,9 +6185,9 @@ local function payload(argument, argument2)
 					local value6 = data[25]
 
 					if not value6.steal then
-						local value7 = data[20]
+						local value7 = state
 						if value7.autoSteal then
-							local value8 = data[20]
+							local value8 = state
 							value8.autoSteal:Set(true)
 						end
 					end
@@ -6179,10 +6209,10 @@ local function payload(argument, argument2)
 					value6[pos], value6[argument5] = value6[argument5], value6[pos]
 					local number6, number7 = math.max(pos, argument5), #value6
 					for i = 1, number7, 1 do
-						argument6, number6 = data[20], if table.find(data[20].pick, value6[i]) then math.max(number6, i) else number6
+						argument6, number6 = state, if table.find(state.pick, value6[i]) then math.max(number6, i) else number6
 					end
-					table.clear(data[20].pick)
-					table.move(value6, 1, number6, 1, data[20].pick)
+					table.clear(state.pick)
+					table.move(value6, 1, number6, 1, state.pick)
 					callback37()
 				end
 
@@ -6309,7 +6339,7 @@ local function payload(argument, argument2)
 				end
 
 				local function callback55()
-					local instance8 = data[1]
+					local instance8 = localPlayer
 					local playerGui = instance8:FindFirstChildOfClass("PlayerGui")
 					local instance9, instance10 = getInstance(playerGui, "HUD"), getInstance(playerGui, "ActivePets")
 					instance8 = getInstance(instance9, "GameHUD")
@@ -6482,7 +6512,7 @@ local function payload(argument, argument2)
 						if not condition10 then
 							break
 						end
-						condition10 = data[23]
+						condition10 = heartbeatWait
 						condition10()
 					end
 
@@ -6579,8 +6609,8 @@ local function payload(argument, argument2)
 					if not data2 then
 						return
 					end
-					local value13 = data[20]
-					local value14, value15 = callback35(value13.autoSteal), data[20]
+					local value13 = state
+					local value14, value15 = callback35(value13.autoSteal), state
 					value13 = callback35(value15.agT)
 					callback70(data2.Toggle, value14, value14 and data11.Steal or data11.Cancel, value14 and "Auto Steal: ON" or "Auto Steal: OFF")
 					callback70(data2.Guard, value13, value13 and data11.Steal or data11.Cancel, value13 and "Anti Guard: ON" or "Anti Guard: OFF")
@@ -6760,11 +6790,11 @@ local function payload(argument, argument2)
 
 					callback74(data15.Steal, function()
 						if data15.Rank == nil then
-							local value13 = data[20]
+							local value13 = state
 							value13.skip[argument5] = nil
-							value13 = data[20]
+							value13 = state
 							if not table.find(value13.pick, argument5) then
-								table.insert(data[20].pick, argument5)
+								table.insert(state.pick, argument5)
 							end
 							callback37()
 							callback41()
@@ -6876,7 +6906,7 @@ local function payload(argument, argument2)
 						end
 
 						if os.clock() - now3 > 0.002 then
-							state = data[23]
+							state = heartbeatWait
 							state()
 							now3 = os.clock()
 							if argument5 ~= number6 then
@@ -6971,7 +7001,7 @@ local function payload(argument, argument2)
 					end
 
 					if callback67() then
-						argument5 = data[23]
+						argument5 = heartbeatWait
 						argument5()
 
 						if condition5 then
@@ -7249,10 +7279,10 @@ local function payload(argument, argument2)
 					end
 
 					data12 = {Toggle = callback89(1, function()
-						local value13 = data[20]
+						local value13 = state
 						callback88(value13.autoSteal)
 					end), Guard = callback89(2, function()
-						local value13 = data[20]
+						local value13 = state
 						callback88(value13.agT)
 					end)}
 
@@ -7304,7 +7334,7 @@ local function payload(argument, argument2)
 						end
 						instance16.Activated:Connect(callback90)
 						local function callback91(input)
-							local value13 = data[20]
+							local value13 = state
 							if value13.press(input) then
 								callback90()
 							end
@@ -7497,7 +7527,7 @@ local function payload(argument, argument2)
 						task.spawn(callback80)
 					end
 					local absolutePosition
-					local number11, RunService = 0, data[58]
+					local number11, RunService = 0, runService
 
 					callback54(RunService.RenderStepped, function(argument)
 						number11 += argument
@@ -7587,7 +7617,7 @@ local function payload(argument, argument2)
 					task.spawn(pcall, runUntilTimeout, number)
 				end
 
-				table.insert(data[20].cleanup, function()
+				table.insert(state.cleanup, function()
 					callback87()
 					if value7 then
 						value7:Destroy()
@@ -7597,7 +7627,7 @@ local function payload(argument, argument2)
 				end)
 
 				task.defer(callback52)
-				value2 = data[20]
+				value2 = state
 				value2.hud = {Sync = function()
 					q(callback71)
 				end, Refresh = callback53}
@@ -7627,7 +7657,7 @@ local function payload(argument, argument2)
 				local labelMap4, module2 = {EggState = "Egg", EggRecords = "Rec", Assets = "Assets", FuseKernel = "Fuse", Mutations = "Mut"}, {}
 				local color, data10, rarityGradients = Color3.fromRGB(255, 255, 255), {}
 
-				local value6, value7, value, data11, value8 = data[20], data[20], setmetatable, {__index = function(argument5, argument6)
+				local value6, value7, value, data11, value8 = state, state, setmetatable, {__index = function(argument5, argument6)
 					if argument6 == "Save" then
 						argument5 = data[32]
 						local save = argument5.Save
@@ -7850,22 +7880,22 @@ local function payload(argument, argument2)
 				local idMap, number7, condition2, list, id, callback35 = {}, 0, false
 
 				trackConnection(TeleportService.TeleportInitFailed, function(argument5)
-					local value6 = data[1]
+					local value6 = localPlayer
 
 					if argument5 == value6 then
-						local value7 = data[20]
+						local value7 = state
 
 						if value7.hopping then
 							condition2 = false
 							if id then
 								idMap[id] = true
 							end
-							task.spawn(callback35, data[20].hopping)
+							task.spawn(callback35, state.hopping)
 						end
 					end
 				end)
 
-				number6 = data[1]
+				number6 = localPlayer
 
 				trackConnection(number6.OnTeleport, function(argument5)
 					if argument5 == Enum.TeleportState.Started then
@@ -7948,13 +7978,13 @@ local function payload(argument, argument2)
 								visited[id2] = value6
 								id, condition2 = k, false
 								callback34()
-								value = data[20]
+								value = state
 								value.beforeTeleport()
 								callback15("Server Hop", ("Joining a server with %d players"):format(value7.playing or 0))
-								pcall(TeleportService.TeleportToPlaceInstance, TeleportService, game.PlaceId, value7.id, data[1])
+								pcall(TeleportService.TeleportToPlaceInstance, TeleportService, game.PlaceId, value7.id, localPlayer)
 
 								task.delay(6, function()
-									local value8 = data[20]
+									local value8 = state
 
 									if value8.hopping then
 										if id == value7.id then
@@ -7973,19 +8003,19 @@ local function payload(argument, argument2)
 						idMap, list = {}, nil
 					end
 
-					local value6 = data[20]
+					local value6 = state
 					value6.hopping = nil
 					return false
 				end
 
-				local value6 = data[20]
+				local value6 = state
 
 				value6.hop = function(argument5)
-					local value7 = data[20]
+					local value7 = state
 					if value7.hopping then
 						return true
 					end
-					local value8 = data[20]
+					local value8 = state
 					local argument
 					if argument5 then
 						argument = argument5
@@ -7994,7 +8024,7 @@ local function payload(argument, argument2)
 						argument = value7.hopMode
 					end
 					value8.hopping = argument or "Least Players"
-					argument5 = data[20]
+					argument5 = state
 					return callback35(argument5.hopping)
 				end
 
@@ -8018,7 +8048,7 @@ local function payload(argument, argument2)
 					end})
 				end, "Joins new servers to find eggs that match the filters below")
 
-				number6 = data[20]
+				number6 = state
 				local ps = number6.PS
 				local paint = ps.Paint
 				local bold = ps.Bold
@@ -8255,7 +8285,7 @@ local function payload(argument, argument2)
 					value7.hopWhen = hopWhen
 				end, false, "When to move on to the next server", autoHop)
 
-				data15, number6 = {}, data[20]
+				data15, number6 = {}, state
 				argument:H2(data15, 0, table.unpack(number6.RANY, 2))
 				callback20(eggFinder, "Rarity To Wait For", "hopRare", data15, "Cosmic", nil, false, "For After A Rare Spawns: this rarity or higher", autoHop)
 				local syncWithAutoStealFilters, list3 = callback19(eggFinder, "Sync With Auto Steal Filters", "hopSync", true, nil, "Changing a filter here also changes it in Auto Steal, and back", autoHop), {}
@@ -8296,16 +8326,16 @@ local function payload(argument, argument2)
 					list3[#list3 + 1] = {argument5, value7}
 				end
 
-				data15 = data[20]
+				data15 = state
 				callback42(eggFinder:Dropdown("Min Rarity", data15.RANY, "Any", function(argument5)
-					local value7 = data[20]
+					local value7 = state
 					data10.rar = value7.minRar(argument5)
 				end, false, "Find eggs of the chosen rarity and every rarity above it", autoHop), "Min Rarity")
-				number6 = data[20]
+				number6 = state
 
-				callback42(eggFinder:Dropdown("Target Areas", number6.AREAS, data[20].AREAS, function(argument5)
+				callback42(eggFinder:Dropdown("Target Areas", number6.AREAS, state.AREAS, function(argument5)
 					data11 = nil
-					local value7 = data[20]
+					local value7 = state
 
 					if #argument5 < #value7.AREAS then
 						data11 = {}
@@ -8316,9 +8346,9 @@ local function payload(argument, argument2)
 					end
 				end, true, nil, autoHop), "Target Areas")
 
-				number6 = data[20]
+				number6 = state
 				local eggList, callback43 = number6.eggList, function(argument5)
-					local value7 = data[20]
+					local value7 = state
 					data10.sp = value7.names(argument5)
 				end
 				callback42(eggFinder:Dropdown("Target Specific Eggs", eggList, {}, callback43, true, "Only look for these eggs (empty = all)", autoHop), "Target Specific Eggs")
@@ -8341,7 +8371,7 @@ local function payload(argument, argument2)
 					local hopSync = value7.hopSync
 					local stealFilter
 					if hopSync then
-						value7 = data[20]
+						value7 = state
 						stealFilter = value7.stealFilter
 					else
 						stealFilter = hopSync
@@ -8358,8 +8388,8 @@ local function payload(argument, argument2)
 					local value7 = data[22]
 					text2.Window = value7("Cycle", "NextNightTime", getServerTimeNow()) or getServerTimeNow() + 300
 				end
-				eggList = data[20]
-				local onSteal, value7 = eggList.onSteal, data[20]
+				eggList = state
+				local onSteal, value7 = eggList.onSteal, state
 
 				value7.onSteal = function(argument5)
 					local value8 = data[25]
@@ -8404,20 +8434,20 @@ local function payload(argument, argument2)
 						end
 					end
 
-					numVal = data[20]
+					numVal = state
 					if numVal.lock() then
 						return callback37("Busy with an event, hop waits", "race")
 					end
-					numVal = data[20]
+					numVal = state
 					if numVal.starWants then
-						local value9 = data[20]
+						local value9 = state
 						if value9.starWants() then
 							return callback37("Catching a Shooting Star, hop waits", "star")
 						end
 					end
-					numVal = data[20]
+					numVal = state
 					if numVal.ufoWants then
-						local value9 = data[20]
+						local value9 = state
 						if value9.ufoWants() then
 							return callback37("UFO in this server, hop waits", "star")
 						end
@@ -8441,7 +8471,7 @@ local function payload(argument, argument2)
 						hopSync = if hopSync2 then not hopSync2 else data11
 					end
 
-					zones, numVal = pairs, data[18]
+					zones, numVal = pairs, eggReadFieldEggs
 					local value11, condition5, number13, number14, data16 = argument[72](numVal()), false, 0, 0
 
 					for k, value12 in zones(argument:g2(value11)) do
@@ -8513,14 +8543,14 @@ local function payload(argument, argument2)
 						end
 					end
 					callback37("Hopping", "joining")
-					hopSync2 = data[20]
+					hopSync2 = state
 					if not hopSync2.hop("Least Players") then
 						task.wait(1.5)
 					end
 				end
 			end)
 
-			data[20].reserved = {}
+			state.reserved = {}
 
 			local function callback34(argument5)
 				local data10 = {}
@@ -8531,24 +8561,24 @@ local function payload(argument, argument2)
 			end
 
 			local function callback35()
-				local tool = data[1]
+				local tool = localPlayer
 				local character = tool.Character
 				tool = character and character:FindFirstChildOfClass("Tool")
 				return tool and tool:GetAttribute("UID")
 			end
 
 			local function callback36(argument5)
-				local placedEggRenders, placedEggRenders2 = workspace:FindFirstChild("PlacedEggRenders"), data[1]
+				local placedEggRenders, placedEggRenders2 = workspace:FindFirstChild("PlacedEggRenders"), localPlayer
 				local text = placedEggRenders2.UserId .. ("_" .. argument5)
 				argument5, placedEggRenders2 = placedEggRenders and placedEggRenders:FindFirstChild(text)
 
 				if argument5 then
 					placedEggRenders2 = argument5
 				else
-					placedEggRenders = data[20]
+					placedEggRenders = state
 					local hidden = placedEggRenders.hidden
 					if hidden then
-						local value6 = data[20]
+						local value6 = state
 						placedEggRenders2 = value6.hidden:FindFirstChild(text)
 					else
 						placedEggRenders2 = hidden
@@ -8558,7 +8588,7 @@ local function payload(argument, argument2)
 				return placedEggRenders2
 			end
 
-			data[20].eggPos = function(argument5)
+			state.eggPos = function(argument5)
 				local instance, localCFrame = callback36(argument5), data[63]
 				local value6, value7 = localCFrame(), callback11()[argument5]
 				localCFrame = type(value7) == "table" and type(value7.Placement) == "table" and value7.Placement.LocalCFrame
@@ -8615,11 +8645,11 @@ local function payload(argument, argument2)
 					local value7 = data[25]
 					value7.placeFirst = labelMap4[argument5] or "Best value"
 				end, false, nil, autoPlaceEgg2)
-				local data10, list3, value7 = {}, {}, data[20]
+				local data10, list3, value7 = {}, {}, state
 				number6 = #value7.RANY
 				for i = 2, number6, 1 do
 					value6 = nil
-					value6, list3[#list3 + 1] = data[20], data[20].RANY[i]
+					value6, list3[#list3 + 1] = state, state.RANY[i]
 				end
 
 				local function callback39(argument5)
@@ -8627,16 +8657,16 @@ local function payload(argument, argument2)
 					local rar
 					for k, value8 in value(argument5) do
 						rar = rar or {}
-						k = data[20]
+						k = state
 						rar[k.RIDX[value8] or 0] = true
 					end
 					data10.rar = rar
 				end
 
 				autoPlaceEgg:Dropdown("Place Rarities", list3, {}, callback39, true, "Only place eggs of the picked rarities (empty = all)", autoPlaceEgg2)
-				local callback39_2 = data[20]
+				local callback39_2 = state
 				local function callback40(argument5)
-					local value8 = data[20]
+					local value8 = state
 					data10.sp = value8.names(argument5)
 				end
 				autoPlaceEgg:Dropdown("Place Specific Eggs", callback39_2.eggList, {}, callback40, true, "Only place these eggs (empty = all)", autoPlaceEgg2)
@@ -8646,8 +8676,8 @@ local function payload(argument, argument2)
 				autoPlaceEgg:Slider("Max Place Value", 0, 0, 1000, function(argument5)
 					data10.maxV = argument5 > 0 and argument5 < 1000000000000 and argument5 or nil
 				end, "log", nil, "Only place eggs worth less than this, keep the better ones (far right = no limit)", autoPlaceEgg2)
-				local number7, value8 = 0, data[20]
-				local onSteal, value9 = value8.onSteal, data[20]
+				local number7, value8 = 0, state
+				local onSteal, value9 = value8.onSteal, state
 				value9.onSteal = function(argument5)
 					number7 = os.clock()
 					if onSteal then
@@ -8657,7 +8687,7 @@ local function payload(argument, argument2)
 
 				local function callback41()
 					local value10 = data[63]
-					local value11, value12, value, data11, number8 = value10(), data[41], next, {}, data[20]
+					local value11, value12, value, data11, number8 = value10(), data[41], next, {}, state
 					argument:H2(data11, 0, workspace:FindFirstChild("PlacedEggRenders"), number8.hidden)
 					number8 = 0
 
@@ -8666,7 +8696,7 @@ local function payload(argument, argument2)
 
 						for k2, instance2 in value10(argument:g2(k)) do
 							if instance2:IsA("Model") then
-								instance, k2 = data[1], instance2.Name:find(data[1].UserId .. "_", 1, true)
+								instance, k2 = localPlayer, instance2.Name:find(localPlayer.UserId .. "_", 1, true)
 								if k2 == 1 then
 									local number9, number10 = number8 + 1, value12 + instance2:GetPivot().Position
 									number8, value12 = number9, number10
@@ -8699,8 +8729,8 @@ local function payload(argument, argument2)
 							local value, children = ipairs, callback10() and callback10():GetChildren() or {}
 							for _, child in value(children) do
 								if child:GetAttribute("UID") == argument5 then
-									local value11, value12 = data[8], data[8]
-									pcall(data[8]().EquipTool, data[8](), child)
+									local value11, value12 = humanoid, humanoid
+									pcall(humanoid().EquipTool, humanoid(), child)
 								end
 							end
 						end
@@ -8711,7 +8741,7 @@ local function payload(argument, argument2)
 					return false
 				end
 
-				value6 = data[20]
+				value6 = state
 				value6.wear = wear
 
 				local function callback42()
@@ -8738,7 +8768,7 @@ local function payload(argument, argument2)
 					local placeIdx = value12.placeIdx
 					local placeIdx2
 					if placeIdx then
-						value12 = data[20]
+						value12 = state
 						placeIdx2 = value12.indexMissing()
 					else
 						placeIdx2 = placeIdx
@@ -8761,10 +8791,10 @@ local function payload(argument, argument2)
 						if type(value13) == "table" then
 							if not value13.Placement then
 								if (module2.bad[k] or 0) < os.clock() then
-									value12 = data[20]
+									value12 = state
 
 									if not (value12.reserved[k]) then
-										placeIdx2 = data[20]
+										placeIdx2 = state
 
 										if not placeIdx2.protect(k, value13) then
 											local numVal = toNumberOrDefault2(value13)
@@ -8789,7 +8819,7 @@ local function payload(argument, argument2)
 						end
 					end
 
-					assetCategoryMap = data[64]
+					assetCategoryMap = savePeek
 					local value13, number9 = assetCategoryMap(), 0
 					for k in next, value13 and type(value13.EquippedAssets) == "table" and value13.EquippedAssets or {}, nil do
 						number9 += 1
@@ -8841,9 +8871,9 @@ local function payload(argument, argument2)
 					if not value12 then
 						return
 					end
-					local value13 = data[11]
+					local value13 = notify
 					value13("Walking to your pen")
-					value13 = data[28]
+					value13 = newVector3
 					if not callback24(value12 + value13(0, 3, 0), argument6) then
 						return
 					end
@@ -8887,7 +8917,7 @@ local function payload(argument, argument2)
 					argument6 = data[22]
 					argument6("Egg", "DoffEggTool")
 					if number10 > 0 then
-						value14 = data[11]
+						value14 = notify
 						value14("Placed " .. (number10 .. " egg(s)"), "ok")
 					end
 				end
@@ -8909,10 +8939,10 @@ local function payload(argument, argument2)
 			saveFile("20_farm#2", function()
 				local module2 = callback22({name = "Hatch", gap = 2, bad = {}, info = true})
 				local autoHatchEquip = iMap2["Auto Hatch & Equip"]
-				local autoHatch, value6 = callback19(autoHatchEquip, "Auto Hatch", "hatch", false), data[20]
-				local nostat, data10, value7 = value6.nostat, {}, data[20]
+				local autoHatch, value6 = callback19(autoHatchEquip, "Auto Hatch", "hatch", false), state
+				local nostat, data10, value7 = value6.nostat, {}, state
 				local function callback39(argument5)
-					local value8 = data[20]
+					local value8 = state
 					data10.rar = value8.minRar(argument5)
 				end
 				autoHatchEquip:Dropdown("Hatch Min Rarity", value7.RANY, "Any", callback39, false, "Hatch eggs of the chosen rarity and every rarity above it", autoHatch)
@@ -8922,9 +8952,9 @@ local function payload(argument, argument2)
 				autoHatchEquip:Slider("Max Hatch Value", 0, 0, 1000, function(argument5)
 					data10.maxV = argument5 > 0 and argument5 < 1000000000000 and argument5 or nil
 				end, "log", nil, "Only hatch eggs worth less than this, keep the better ones (far right = no limit)", autoHatch)
-				value6 = data[20]
+				value6 = state
 				local function callback40(argument5)
-					local value8 = data[20]
+					local value8 = state
 					data10.sp = value8.names(argument5)
 				end
 				autoHatchEquip:Dropdown("Hatch Specific Eggs", value6.eggList, {}, callback40, true, "Only hatch these eggs (empty = all)", autoHatch)
@@ -8972,7 +9002,7 @@ local function payload(argument, argument2)
 					if data11.hatch then
 						if data10.maxV then
 							if data10.maxV <= (data10.minV or 0) then
-								placeIdx = data[11]
+								placeIdx = notify
 								placeIdx("Max Hatch Value must be above Min Hatch Value, nothing will hatch", "warn")
 							end
 						end
@@ -8982,7 +9012,7 @@ local function payload(argument, argument2)
 					local placeIdx2 = placeIdx.placeIdx
 					local placeIdx3
 					if placeIdx2 then
-						data11 = data[20]
+						data11 = state
 						placeIdx3 = data11.indexMissing()
 					else
 						placeIdx3 = placeIdx2
@@ -9013,7 +9043,7 @@ local function payload(argument, argument2)
 						end
 
 						if hatch then
-							condition2 = data[20]
+							condition2 = state
 
 							if not condition2.protect(k, value8[2]) then
 								local number6 = placeIdx2 + 1
@@ -9051,11 +9081,11 @@ local function payload(argument, argument2)
 			saveFile("20_farm#3", function()
 				local keepEggs = iMap2["Keep Eggs"]
 				local value, condition2
-				local list3, keepMatchingEggs = {}, data[20]
+				local list3, keepMatchingEggs = {}, state
 				local number6 = #keepMatchingEggs.RANY
 				for i = number6, 2, -1 do
 					keepMatchingEggs = nil
-					keepMatchingEggs, list3[#list3 + 1] = data[20], data[20].RANY[i]
+					keepMatchingEggs, list3[#list3 + 1] = state, state.RANY[i]
 				end
 				keepEggs:Text("Keep Eggs Info", "Kept eggs are never placed, hatched or sold, in your bag or your pen.")
 				keepMatchingEggs = callback19(keepEggs, "Keep Matching Eggs", "keepOn", true)
@@ -9065,7 +9095,7 @@ local function payload(argument, argument2)
 					local data10
 					for k, value6 in value2(argument5) do
 						data10 = data10 or {}
-						k = data[20]
+						k = state
 						data10[k.RIDX[value6] or 0] = true
 					end
 					value = data10
@@ -9077,7 +9107,7 @@ local function payload(argument, argument2)
 					condition2 = argument5 > 0 and argument5 or nil
 					callback18()
 				end, "log", nil, nil, keepMatchingEggs)
-				local value6 = data[20]
+				local value6 = state
 
 				value6.protect = function(argument5, argument)
 					argument5 = data[25]
@@ -9140,9 +9170,9 @@ local function payload(argument, argument2)
 					end
 				end)
 
-				local data10, data11, value7 = {}, {}, data[20]
+				local data10, data11, value7 = {}, {}, state
 				local function callback39(argument5)
-					local value8 = data[20]
+					local value8 = state
 					data10.rar = value8.minRar(argument5)
 					callback18()
 				end
@@ -9151,9 +9181,9 @@ local function payload(argument, argument2)
 					data10.minV = argument5 > 0 and argument5 or nil
 					callback18()
 				end, "log", nil, "Skip eggs worth less than this (0 = off)", autoMutate)
-				value7 = data[20]
+				value7 = state
 				local function callback40(argument5)
-					local value8 = data[20]
+					local value8 = state
 					data10.sp = value8.names(argument5)
 					callback18()
 				end
@@ -9164,11 +9194,11 @@ local function payload(argument, argument2)
 					local value9 = data[25]
 					value9.mutFirst = rarityMap[argument5] or "Best value"
 				end, false, "Which egg gets mutated first", autoMutate)
-				autoMutation = data[20]
+				autoMutation = state
 				local nostat = autoMutation.nostat
 
 				local function callback41()
-					local attributeMap, valueMap, value, data12, attribute, value9 = {}, {Boss = 0, Scrambled = 0, Enchanted = 0, Nitro = 0, Spectral = 0, Alien = 0}, ipairs, {}, data[1], data[1]
+					local attributeMap, valueMap, value, data12, attribute, value9 = {}, {Boss = 0, Scrambled = 0, Enchanted = 0, Nitro = 0, Spectral = 0, Alien = 0}, ipairs, {}, localPlayer, localPlayer
 					argument:H2(data12, 0, attribute.Character or callback10(), value9.Character and callback10())
 
 					for _, instance in value(data12) do
@@ -9207,7 +9237,7 @@ local function payload(argument, argument2)
 						local placement = type(value10) == "table" and value10.Placement
 						local condition2
 						if placement then
-							local value11 = data[20]
+							local value11 = state
 							condition2 = not value11.reserved[k]
 						else
 							condition2 = placement
@@ -9256,7 +9286,7 @@ local function payload(argument, argument2)
 				end
 
 				module2.want = function()
-					local numVal = data[20]
+					local numVal = state
 					local mutPick = numVal.mutPick
 
 					if mutPick then
@@ -9275,7 +9305,7 @@ local function payload(argument, argument2)
 							end
 						end
 
-						value9 = data[20]
+						value9 = state
 						value9.mutPick = nil
 						module2.urgent = nil
 						module2.soft = true
@@ -9302,13 +9332,13 @@ local function payload(argument, argument2)
 				end)
 
 				local function callback43(argument5, argument6)
-					local instance, value9 = callback36(argument5.uid), data[20]
+					local instance, value9 = callback36(argument5.uid), state
 					local uid = value9.eggPos(argument5.uid)
 
 					if not instance then
 						if uid then
 							mst("Going to " .. argument5.n)
-							value9 = data[28]
+							value9 = newVector3
 							if not callback24(uid + value9(0, 3, 4), argument6) then
 								return
 							end
@@ -9330,27 +9360,27 @@ local function payload(argument, argument2)
 						module2.bad[argument5.uid .. argument5.k] = os.clock() + 30
 						return mst(argument5.n .. " is not in your pen")
 					end
-					uid = data[20]
+					uid = state
 					if not uid.needBody() then
 						return mst("Turning visible to use " .. labelMap4[argument5.k])
 					end
 					mst("Mutating " .. (argument5.n .. (" with " .. labelMap4[argument5.k])))
-					uid = data[11]
+					uid = notify
 					uid("Mutating " .. argument5.n)
-					value9, uid = data[28], instance:GetPivot().Position + data[28](0, 3, 4)
+					value9, uid = newVector3, instance:GetPivot().Position + newVector3(0, 3, 4)
 					if not callback24(uid, argument6) then
 						return
 					end
-					uid = data[8]
+					uid = humanoid
 					argument6 = uid()
 					if argument6 then
 						pcall(argument6.EquipTool, argument6, argument5.tool)
 					end
-					uid = data[1]
+					uid = localPlayer
 					if argument5.tool.Parent ~= uid.Character then
 						pcall(function()
 							local value10
-							value10, argument5.tool.Parent = data[1], data[1].Character
+							value10, argument5.tool.Parent = localPlayer, localPlayer.Character
 						end)
 					end
 					task.wait(0.3)
@@ -9395,7 +9425,7 @@ local function payload(argument, argument2)
 					if mutate then
 						mutate2 = mutate
 					else
-						value9 = data[20]
+						value9 = state
 						mutate2 = value9.mutPick ~= nil
 					end
 					return mutate2
@@ -9414,14 +9444,14 @@ local function payload(argument, argument2)
 						callback23(module2)
 					end
 				end)
-				local reTreadmillAssignedBeltShifted = data[20]
+				local reTreadmillAssignedBeltShifted = state
 				local nostat, treadAt, number6, number7, leaderstats = reTreadmillAssignedBeltShifted.nostat, 0, 0, 0
 
 				local function callback39()
 					treadAt = os.clock()
-					local value6 = data[20]
+					local value6 = state
 					value6.treadAt = treadAt
-					value6 = data[20]
+					value6 = state
 					if value6.onAdmin then
 						number7 = 0
 					end
@@ -9433,11 +9463,11 @@ local function payload(argument, argument2)
 				end
 
 				module3.fn = function()
-					local leaderstats2 = data[64]
+					local leaderstats2 = savePeek
 					local leaderstats3 = leaderstats2()
 					leaderstats2 = leaderstats3 and tonumber(leaderstats3.Money)
 					callback17("tst", nostat, {["Speed power"] = leaderstats3 and callback6(leaderstats3.SpeedPower) or "--", Cash = leaderstats2 and "$" .. callback6(leaderstats2) or "--"})
-					leaderstats2 = data[1]
+					leaderstats2 = localPlayer
 					leaderstats3 = leaderstats2:FindFirstChild("leaderstats")
 					leaderstats3 = leaderstats3 and leaderstats3:FindFirstChild("Speed")
 					leaderstats3 = leaderstats3 and tonumber(leaderstats3.Value)
@@ -9464,7 +9494,7 @@ local function payload(argument, argument2)
 						if position then
 							position2 = position
 						else
-							local value6 = data[28]
+							local value6 = newVector3
 							position2 = (value6(540.05, 68.6, -369.7))
 						end
 						return position2, true
@@ -9475,7 +9505,7 @@ local function payload(argument, argument2)
 					local treadmillBottom = pad.tread and adminTreadmill2 and adminTreadmill2.PlotFolder:FindFirstChild("TreadmillBottom")
 					local treadmillBottom2
 					if treadmillBottom then
-						pad = data[28]
+						pad = newVector3
 						treadmillBottom2 = pad(treadmillBottom.Position.X, 72, treadmillBottom.Position.Z)
 					else
 						treadmillBottom2 = treadmillBottom
@@ -9483,8 +9513,8 @@ local function payload(argument, argument2)
 					return treadmillBottom2
 				end
 
-				reTreadmillAssignedBeltShifted = data[36]
-				local reTreadmillSpeedGained, instance = reTreadmillAssignedBeltShifted:FindFirstChild("RE/Treadmill/SpeedGained"), data[36]
+				reTreadmillAssignedBeltShifted = networking
+				local reTreadmillSpeedGained, instance = reTreadmillAssignedBeltShifted:FindFirstChild("RE/Treadmill/SpeedGained"), networking
 				reTreadmillAssignedBeltShifted = instance:FindFirstChild("RE/Treadmill/AssignedBeltShifted")
 				if reTreadmillSpeedGained then
 					trackConnection(reTreadmillSpeedGained.OnClientEvent, callback39)
@@ -9492,12 +9522,12 @@ local function payload(argument, argument2)
 
 				if reTreadmillAssignedBeltShifted then
 					trackConnection(reTreadmillAssignedBeltShifted.OnClientEvent, function(argument5, argument, _, argument6, argument7, argument8)
-						argument6 = data[20]
-						argument, argument7 = argument6.onAdmin, data[20]
+						argument6 = state
+						argument, argument7 = argument6.onAdmin, state
 						argument7.onAdmin = argument5 ~= nil and argument8 == true
 
 						if argument then
-							argument7 = data[20]
+							argument7 = state
 
 							if not argument7.onAdmin then
 								argument5 = data[25]
@@ -9512,7 +9542,7 @@ local function payload(argument, argument2)
 				end
 
 				module2.want = function()
-					local value6 = data[15]
+					local value6 = humanoidRootPart
 					local value7, value8, value9 = value6(), callback40()
 
 					if value7 then
@@ -9524,7 +9554,7 @@ local function payload(argument, argument2)
 					end
 
 					if value9 then
-						value6 = data[20]
+						value6 = state
 						local onAdmin = value6.onAdmin
 						local condition2 = if onAdmin then os.clock() - treadAt > 5 else not onAdmin and value8 or nil
 						return condition2
@@ -9541,24 +9571,24 @@ local function payload(argument, argument2)
 					local value6, value7 = callback40()
 
 					if value7 then
-						local value8 = data[20]
+						local value8 = state
 
 						if value8.onAdmin then
 							number7 += 1
 
 							if number7 >= 3 then
-								local value9 = data[20]
+								local value9 = state
 
 								if value9.respawn then
 									number7 = 0
-									local value10 = data[11]
+									local value10 = notify
 									value10("Admin treadmill will not take you, respawning", "warn")
-									value10 = data[20]
+									value10 = state
 									return value10.respawn()
 								end
 							end
 
-							local value9 = data[11]
+							local value9 = notify
 							value9("Admin treadmill speed is not going up, getting back on", "warn")
 							if not data[13](argument6) then
 								return
@@ -9566,13 +9596,13 @@ local function payload(argument, argument2)
 						end
 					end
 
-					local number8 = data[11]
+					local number8 = notify
 					number8(value7 and "Going to the admin treadmill" or "Going to the treadmill")
-					number8 = data[28]
+					number8 = newVector3
 					if not callback24(argument5 + number8(0, 1, 0), argument6) then
 						return
 					end
-					argument5, number8 = data[20], data[20]
+					argument5, number8 = state, state
 					argument5.hold = (number8.hold or 0) + 1
 					number8 = os.clock() + (value7 and 2.5 or 3)
 					treadAt = 0
@@ -9580,27 +9610,27 @@ local function payload(argument, argument2)
 
 					while os.clock() < number8 and argument6() and not argument5 do
 						if value7 then
-							local value8 = data[20]
+							local value8 = state
 							argument5 = value8.onAdmin == true
 
 							if not argument5 then
 								if os.clock() > number8 - 0.1 then
 									value8 = data[9]
 									local AskWearStill, value9, value10 = value8("RF/Treadmill/AskWearStill")
-									local pos, value11, value12 = (AskWearStill and (value9 == true or type(value10) == "string" and value10:lower():find("already")) and true) or false, data[20], data[20]
+									local pos, value11, value12 = (AskWearStill and (value9 == true or type(value10) == "string" and value10:lower():find("already")) and true) or false, state, state
 									value11.onAdmin = value12.onAdmin or pos
 									argument5 = pos
 								end
 							end
 
 							if not argument5 then
-								value8 = data[23]
+								value8 = heartbeatWait
 								value8()
 							end
 						else
 							local anchored = data[9]
 							local AskWearStill, value8, value9 = anchored("RF/Treadmill/AskWearStill")
-							anchored = data[15]
+							anchored = humanoidRootPart
 							local value10 = anchored()
 							anchored = value10 and value10.Anchored or AskWearStill and (value8 == true or type(value9) == "string" and value9:lower():find("already"))
 							argument5 = anchored or os.clock() - treadAt < 3
@@ -9610,7 +9640,7 @@ local function payload(argument, argument2)
 						end
 					end
 
-					number8 = data[20]
+					number8 = state
 					number8.hold = number8.hold - 1
 					if not argument6() then
 						number8 = data[13]
@@ -9624,26 +9654,26 @@ local function payload(argument, argument2)
 						if value7 then
 							treadAt = os.clock()
 						end
-						argument6 = data[11]
+						argument6 = notify
 						return argument6(value7 and "Training on the admin treadmill" or "Training speed", "ok")
 					end
 
 					number6 += 1
 
 					if number6 >= 2 then
-						number8 = data[20]
+						number8 = state
 
 						if number8.respawn then
 							number6 = 0
-							value7 = data[11]
+							value7 = notify
 							value7("Treadmill will not take you, respawning", "warn")
-							argument6 = data[20]
+							argument6 = state
 							argument6.respawn()
 						end
 					end
 				end
 
-				local value6 = data[20]
+				local value6 = state
 				value6.treadOn = function()
 					return module2.on()
 				end
@@ -9662,11 +9692,11 @@ local function payload(argument, argument2)
 				end
 
 				module2.ready = function()
-					local value7 = data[20]
+					local value7 = state
 					local ufoBusy = value7.ufoBusy
 					local ufoBusy2
 					if ufoBusy then
-						value7 = data[20]
+						value7 = state
 						ufoBusy2 = value7.ufoBusy()
 					else
 						ufoBusy2 = ufoBusy
@@ -9747,7 +9777,7 @@ local function payload(argument, argument2)
 				local eggPresets = {{"LimitedEgg", "GravityDisruptor", "LimitedEgg", "MechaReroll"}, {"BrainrotEgg", "BeeLauncher", "BrainrotEgg"}, {"MonsterEgg", "BeeLauncher", "MonsterEgg", "Mecha"}}
 
 				module4.fn = function()
-					local value7 = data[64]
+					local value7 = savePeek
 					local value8 = value7()
 					if not value8 then
 						return
@@ -9909,10 +9939,10 @@ local function payload(argument, argument2)
 					if type(value7) == "table" then
 						if not value7.Placement then
 							if k ~= value6 then
-								argument5 = data[20]
+								argument5 = state
 
 								if not (argument5.reserved[k]) then
-									local value8 = data[20]
+									local value8 = state
 									if not value8.protect(k, value7) then
 										local numVal = toNumberOrDefault2(value7)
 										numVal.uid = k
@@ -9927,6 +9957,8 @@ local function payload(argument, argument2)
 				return numVals, numVals2
 			end
 
+			local protect = data[65]
+
 			saveFile("20_farm#6", function()
 				local value6, autoSell, onlyList = callback22({name = "Sell", gap = 5, info = true}), iMap2["Auto Sell"], {"Rarity Only", "Value Only", "Rarity And Value", "Rarity Or Value"}
 
@@ -9936,7 +9968,7 @@ local function payload(argument, argument2)
 
 					autoSell:Button("Sell " .. (argument5 .. "s Now"), "Sell", function()
 						task.spawn(function()
-							local value9 = data[20]
+							local value9 = state
 							local value10, value11 = value9.sellRun(argument6 == "sellPets" and "pets" or "eggs")
 							callback15("Sold", (argument6 == "sellPets" and value10 or value11) .. (" " .. (argument5:lower() .. "(s)")))
 						end)
@@ -9947,17 +9979,17 @@ local function payload(argument, argument2)
 					end
 					autoSell:Dropdown("Sell " .. text, onlyList, "Rarity And Value", callback40, false, "Which checks must pass to sell", value8)
 					local callback40_2
-					callback40_2, argument8 = argument5 .. " Max Rarity", data[20]
-					local rnum, text2 = argument8.RNUM, data[20]
+					callback40_2, argument8 = argument5 .. " Max Rarity", state
+					local rnum, text2 = argument8.RNUM, state
 					argument8, text = text2.RNUM[argument7]
 					if argument8 then
 						text = argument8
 					else
-						text2 = data[20]
+						text2 = state
 						text = text2.RNUM[1]
 					end
 					local function callback41(argument9)
-						local value9 = data[20]
+						local value9 = state
 						data10.mx = value9.RIDX[argument9] or argument7
 					end
 					text2 = argument5:lower() .. "s at or below this rarity"
@@ -9966,8 +9998,8 @@ local function payload(argument, argument2)
 						data10.v = value9
 					end, "log", nil, "Sell " .. (argument5:lower() .. "s worth less than this (0 = off)"), value8)
 					callback19(autoSell, "Keep Mutated " .. (argument5 .. "s"), argument6 .. "Keep", argument5 ~= "Egg", nil, "Never sell mutated " .. (argument5:lower() .. "s"), value8)
-					callback40_2, text2, text, argument8, rnum = "Blacklist Sell " .. (argument5 .. "s"), data[20], data[20].eggList, function(argument9)
-						local value9 = data[20]
+					callback40_2, text2, text, argument8, rnum = "Blacklist Sell " .. (argument5 .. "s"), state, state.eggList, function(argument9)
+						local value9 = state
 						data10.no = value9.names(argument9)
 					end, argument5:lower() .. "s are never sold"
 					autoSell:Dropdown(callback40_2, text, {}, argument8, true, "These " .. rnum, value8)
@@ -10009,12 +10041,12 @@ local function payload(argument, argument2)
 				end
 
 				local function callback41(argument5)
-					local value9 = data[64]
+					local value9 = savePeek
 					local response = value9()
 					if not response then
 						return 0, 0
 					end
-					value9 = data[65]
+					value9 = protect
 					local ok, response2 = value9(response)
 					local data11, data12 = callback40(ok, Pet, "sellPetsKeep"), callback40(response2, Egg, "sellEggsKeep")
 					local number6 = #data11
@@ -10086,7 +10118,7 @@ local function payload(argument, argument2)
 				end
 
 				value6.fn = callback41
-				local callback39_3 = data[20]
+				local callback39_3 = state
 				callback39_3.sellRun = callback41
 			end)
 
@@ -10096,7 +10128,7 @@ local function payload(argument, argument2)
 				local favTx, data10, data11 = callback16("favTx", autoFavorite:Text("Favorite Preview", "Favorite matches  -  0 pets")), {}, {}
 				local autoFavoritePet = callback19(autoFavorite, "Auto Favorite Pet", "fav", false, nil, "Favorite pets matching the rules below")
 				autoFavorite:Button("Favorite Pets Now", "Favorite", function()
-					local value6 = data[20]
+					local value6 = state
 					value6.favNow = "rules"
 					module2.at = 0
 				end, "Favorite matching pets once", "Done!", autoFavoritePet)
@@ -10106,12 +10138,12 @@ local function payload(argument, argument2)
 					local value6 = data[25]
 					value6.favMatch = argument5 == "Match Any" and "Any picked rule" or "All picked rules"
 				end, false, "Pass any check or all checks", autoFavoritePet)
-				local list4, value6 = {"Off"}, data[20]
+				local list4, value6 = {"Off"}, state
 				for _, value7 in ipairs(value6.RNUM) do
 					list4[#list4 + 1] = value7
 				end
 				autoFavorite:Dropdown("Favorite Min Rarity", list4, "Off", function(argument5)
-					local value7 = data[20]
+					local value7 = state
 					data10.rar = value7.minRar(argument5)
 				end, false, "Favorite pets of the chosen rarity and every rarity above it (Off = skip)", autoFavoritePet)
 				list3 = {"Any Mutation"}
@@ -10134,21 +10166,21 @@ local function payload(argument, argument2)
 				autoFavorite:Slider("Min Favorite Value", 0, 0, 0, function(argument5)
 					data10.minV = argument5 > 0 and argument5 or nil
 				end, "log", nil, "Value check (0 = skip)", autoFavoritePet)
-				value6 = data[20]
+				value6 = state
 				list4, list3 = value6.eggList, function(argument5)
-					local value7 = data[20]
+					local value7 = state
 					data11 = value7.names(argument5) or {}
 				end
 				autoFavorite:Dropdown("Always Favorite Species", list4, {}, list3, true, "Always favorite these species", autoFavoritePet)
 				callback19(autoFavorite, "Auto Favorite Equipped", "favEq", false, nil, "Keep equipped pets favorited")
 				callback19(autoFavorite, "Auto Unfavorite Equipped", "unfav", false, nil, "Unfavorite equipped pets not in the rules")
 				autoFavorite:Button("Favorite Equipped Now", "Favorite", function()
-					local value7 = data[20]
+					local value7 = state
 					value7.favNow = "eq"
 					module2.at = 0
 				end, "Favorite all equipped pets once", "Done!")
 				autoFavorite:Button("Unfavorite Equipped Now", "Unfavorite", function()
-					local value7 = data[20]
+					local value7 = state
 					value7.favNow = "uneq"
 					module2.at = 0
 				end, "Unfavorite all equipped pets once", "Done!")
@@ -10174,7 +10206,7 @@ local function payload(argument, argument2)
 					if favEq then
 						fav2 = favEq
 					else
-						fav = data[20]
+						fav = state
 						fav2 = fav.favNow ~= nil
 					end
 					return fav2 or getOpen("Farm")
@@ -10234,13 +10266,13 @@ local function payload(argument, argument2)
 				end
 
 				module2.fn = function()
-					local number6 = data[64]
+					local number6 = savePeek
 					local favEq = number6()
 					if not favEq then
 						return
 					end
-					local value7, rar, value8 = callback34(favEq), data10.rar or data10.mut or data10.any or (data10.minV or 0) > 0 or next(data11) ~= nil, data[20]
-					local favNow, favEq2 = value8.favNow, data[20]
+					local value7, rar, value8 = callback34(favEq), data10.rar or data10.mut or data10.any or (data10.minV or 0) > 0 or next(data11) ~= nil, state
+					local favNow, favEq2 = value8.favNow, state
 					favEq2.favNow = nil
 					local value, inventory, number7, number8, number9, number10 = next, type(favEq.Inventory) == "table" and favEq.Inventory or {}, 0, 0, 0, 0
 
@@ -10340,18 +10372,18 @@ local function payload(argument, argument2)
 					local value8 = data[25]
 					value8.fuseUse = argument5 == "Highest To Lowest" and "Highest value first" or "Lowest value first"
 				end, false, nil, autoFuseMachine2)
-				local data11, value8, value9 = {}, data[20]
+				local data11, value8, value9 = {}, state
 				data10[68] = data11
-				value9, data10[68].rar = data[20], value8.maxRar(data[20].RNUM[6])
-				value6 = data[20]
-				local rnum, value10, rnum2, callback39 = value6.RNUM, data[20], data[20].RNUM, function(argument5)
-					local value10, value11 = data10[68], data[20]
+				value9, data10[68].rar = state, value8.maxRar(state.RNUM[6])
+				value6 = state
+				local rnum, value10, rnum2, callback39 = value6.RNUM, state, state.RNUM, function(argument5)
+					local value10, value11 = data10[68], state
 					value10.rar = value11.maxRar(argument5)
 				end
 				autoFuseMachine:Dropdown("Max Rarity to Fuse", rnum, rnum2[6], callback39, false, nil, autoFuseMachine2)
-				rnum2 = data[20]
+				rnum2 = state
 				local function callback40(argument5)
-					local value11, value12 = data10[68], data[20]
+					local value11, value12 = data10[68], state
 					value11.sp = value12.names(argument5)
 				end
 				autoFuseMachine:Dropdown("Specific Species to Fuse", rnum2.eggList, {}, callback40, true, "Only fuse these species (empty = all)", autoFuseMachine2)
@@ -10377,7 +10409,7 @@ local function payload(argument, argument2)
 			end)
 
 			saveFile("21_eggs#1", function()
-				local floor, uiStroke, value6 = math.floor, Enum, data[20]
+				local floor, uiStroke, value6 = math.floor, Enum, state
 				local ps = value6.PS
 				local color = Color3.new(1, 1, 1)
 				local position
@@ -10395,7 +10427,7 @@ local function payload(argument, argument2)
 					return position
 				end
 				module2.run = function(argument5, argument6)
-					local value7 = data[28]
+					local value7 = newVector3
 					callback24(argument5 + value7(0, 3, 4), argument6)
 					position = nil
 				end
@@ -10675,7 +10707,7 @@ local function payload(argument, argument2)
 						local value12 = data[32]
 						local egg = value12.Egg
 						local ok, response = pcall(function()
-							local value13 = data[1]
+							local value13 = localPlayer
 							return egg.ReadOwnerEggs(value13.UserId)
 						end)
 
@@ -11359,7 +11391,7 @@ local function payload(argument, argument2)
 					end
 
 					local function callback51()
-						local value9 = data[64]
+						local value9 = savePeek
 						local value10 = value9()
 						if not value10 then
 							return
@@ -11778,7 +11810,7 @@ local function payload(argument, argument2)
 				for i, value9 in ipairs(data14) do
 					iMap3[i], data18[value9[1]] = value9[1], value9
 				end
-				local rank, value9 = {}, data[20]
+				local rank, value9 = {}, state
 				value9.rank = rank
 
 				local function callback39(argument5)
@@ -11787,7 +11819,7 @@ local function payload(argument, argument2)
 					end
 					rank["Steal:pick"], rank["Steal:ufo"], rank.Combat = 0, rank.UFO - 0.1, rank.Treadmill - 0.5
 					rank.Machine, rank.WispGo = rank.Bloom + 0.1, rank["Steal:wisp"] + 0.1
-					argument5 = data[20]
+					argument5 = state
 					rank.Steal = #argument5.pick > 0 and 0 or math.min(rank["Steal:index"], rank["Steal:wisp"], rank["Steal:filter"])
 				end
 
@@ -11958,9 +11990,9 @@ local function payload(argument, argument2)
 
 					pcall(function()
 						callback39(list3)
-						local value10 = data[20]
+						local value10 = state
 						if value10.order then
-							local value11 = data[20]
+							local value11 = state
 							value11.order()
 						end
 					end)
@@ -12091,7 +12123,7 @@ local function payload(argument, argument2)
 						if argument6 then
 							argument = argument6
 						else
-							local value10 = data[20]
+							local value10 = state
 							argument = value10.stealKind
 						end
 						return "Steal " .. (eggMap[argument] or "egg")
@@ -12115,15 +12147,15 @@ local function payload(argument, argument2)
 				end
 
 				module2.fn = function()
-					local lastMV = data[20]
+					local lastMV = state
 					local queue, next_, lastMV2, lastMV3 = lastMV.queue or {}, {}, data[4]
 
 					if lastMV2 then
 						lastMV3 = lastMV2
 					else
-						local value10, condition3 = data[20], os.clock() - (data[20].mvEnd or 0) < 2
+						local value10, condition3 = state, os.clock() - (state.mvEnd or 0) < 2
 						if condition3 then
-							lastMV = data[20]
+							lastMV = state
 							lastMV3 = lastMV.lastMV
 						else
 							lastMV3 = condition3
@@ -12138,7 +12170,7 @@ local function payload(argument, argument2)
 								if value10.name ~= "NightHome" then
 									local number8, condition3, stealNext = #next_ + 1, value10.name == "Steal"
 									if condition3 then
-										k = data[20]
+										k = state
 										stealNext = k.stealNext
 									else
 										stealNext = condition3
@@ -12153,9 +12185,9 @@ local function payload(argument, argument2)
 					if lastMV then
 						queue = lastMV
 					else
-						lastMV2, queue = data[20], os.clock() - (data[20].treadAt or 0) < 3 and "Treadmill"
+						lastMV2, queue = state, os.clock() - (state.treadAt or 0) < 3 and "Treadmill"
 					end
-					lastMV2, lastMV, lastMV3 = queue or "Idle", data[20], data[20]
+					lastMV2, lastMV, lastMV3 = queue or "Idle", state, state
 					lastMV.doing = lastMV2
 					lastMV3.next = next_
 					prio("Doing now: " .. (lastMV2 .. (" | Next 1: " .. ((next_[1] or "Nothing") .. (" | Next 2: " .. ((next_[2] or "--") .. (" | Next 3: " .. ((next_[3] or "--") .. (#next_ > 3 and " +" .. #next_ - 3 or "")))))))))
@@ -12165,7 +12197,7 @@ local function payload(argument, argument2)
 			end)
 
 			local function callback39(argument5)
-				local value, data10, value6 = ipairs, {}, data[1]
+				local value, data10, value6 = ipairs, {}, localPlayer
 				argument:H2(data10, 0, value6.Character or callback10(), callback10())
 
 				for _, instance in value(data10) do
@@ -12181,18 +12213,18 @@ local function payload(argument, argument2)
 
 			local argumentMap3, arguments = {}, {}
 			local number6, condition2 = -1000000000, false
-			data[20].weaponId, data[20].weaponName = {}, {}
-			data[20].wVer = 0
+			state.weaponId, state.weaponName = {}, {}
+			state.wVer = 0
 
 			local function callback40(argument5, argument6, argument7)
 				if argumentMap3[argument5] == nil then
 					arguments[#arguments + 1] = argument5
 				end
 				argumentMap3[argument5] = argument6
-				local value6 = data[20]
+				local value6 = state
 				local value7
-				value7, value6.weaponName[argument5], data[20].weaponId[argument7] = data[20], argument7, argument5
-				argument5 = data[20]
+				value7, value6.weaponName[argument5], state.weaponId[argument7] = state, argument7, argument5
+				argument5 = state
 				argument5.wVer = argument5.wVer + 1
 			end
 
@@ -12232,11 +12264,11 @@ local function payload(argument, argument2)
 				return instance:GetAttribute("GearName") or instance.Name
 			end
 
-			data[20].ownedWeapons = function()
+			state.ownedWeapons = function()
 				callback41()
-				local value6 = data[64]
+				local value6 = savePeek
 				local value7 = value6()
-				local clonedTbl, list3, value, data10, value8 = type(value7) == "table" and type(value7.GearInventory) == "table" and table.clone(value7.GearInventory) or {}, {}, ipairs, {}, data[1]
+				local clonedTbl, list3, value, data10, value8 = type(value7) == "table" and type(value7.GearInventory) == "table" and table.clone(value7.GearInventory) or {}, {}, ipairs, {}, localPlayer
 				argument:H2(data10, 0, value8.Character, callback10())
 
 				for k, instance in value(data10) do
@@ -12257,7 +12289,7 @@ local function payload(argument, argument2)
 				for _, argument5 in value7(arguments) do
 					if clonedTbl[argument5] then
 						value = nil
-						value, list3[#list3 + 1] = data[20], data[20].weaponName[argument5]
+						value, list3[#list3 + 1] = state, state.weaponName[argument5]
 					end
 				end
 				return list3
@@ -12275,7 +12307,7 @@ local function payload(argument, argument2)
 				return condition
 			end
 
-			data[20].scrambler = function(argument5)
+			state.scrambler = function(argument5)
 				return argument5 and argumentMap3[getAttribute(argument5)] == -1
 			end
 			local function callback43(instance)
@@ -12283,9 +12315,9 @@ local function payload(argument, argument2)
 			end
 			local valueMap = {i = 1, at = 0}
 
-			data[20].bat = function()
+			state.bat = function()
 				callback41()
-				local attributeMap, attributeEntries, data10, instance = {}, ipairs, {}, data[1]
+				local attributeMap, attributeEntries, data10, instance = {}, ipairs, {}, localPlayer
 				argument:H2(data10, 0, instance.Character or callback10(), callback10())
 				instance = nil
 				local number7 = -2
@@ -12434,7 +12466,7 @@ local function payload(argument, argument2)
 				local idMap, sapphireList, nameList2 = {}, ipairs, {"Spawned", "Escaped"}
 
 				for _, value6 in sapphireList(nameList2) do
-					autoButterflyBloom = data[36]
+					autoButterflyBloom = networking
 					butterflyBloom = autoButterflyBloom:FindFirstChild("RE/Butterflies/" .. value6)
 
 					if butterflyBloom then
@@ -12449,7 +12481,7 @@ local function payload(argument, argument2)
 					end
 				end
 
-				sapphireList = data[36]
+				sapphireList = networking
 				nameList2 = sapphireList:FindFirstChild("RE/Butterflies/Removed")
 				if nameList2 then
 					trackConnection(nameList2.OnClientEvent, function(argument5)
@@ -12470,14 +12502,14 @@ local function payload(argument, argument2)
 				end
 
 				local function callback46()
-					local value6 = data[15]
+					local value6 = humanoidRootPart
 					local value7, condition3, condition = value6(), callback45() > 25
 
 					if condition3 then
 						condition = condition3
 					else
 						if value7 then
-							value6, condition = data[28], (value7.Position - data[28](6700, 74, -364)).Magnitude < 300
+							value6, condition = newVector3, (value7.Position - newVector3(6700, 74, -364)).Magnitude < 300
 						else
 							condition = value7
 						end
@@ -12487,11 +12519,11 @@ local function payload(argument, argument2)
 				end
 
 				local function callback47()
-					local value6 = data[51]
+					local value6 = world
 					return value6("Areas", "ButterflyBloom", "Bounds")
 				end
 				local function callback48()
-					local value6 = data[64]
+					local value6 = savePeek
 					local value7 = value6()
 					return value7 and type(value7.Butterflies) == "table" and value7.Butterflies or {}
 				end
@@ -12502,19 +12534,19 @@ local function payload(argument, argument2)
 					if condition3 then
 						condition = condition3
 					else
-						local instance = data[1]
+						local instance = localPlayer
 						condition = instance:GetAttribute("EnchantedTreeUnlocked") == true
 					end
 					return condition
 				end
 
-				local value6 = data[20]
+				local value6 = state
 				value6.bloomWants = function()
 					local value7 = data[25]
 					return value7.bloom and callback44() and callback46() and callback49()
 				end
 				local function callback50(bfSay)
-					local value7 = data[20]
+					local value7 = state
 					value7.bfSay = bfSay
 				end
 				local function callback51(instance)
@@ -12524,14 +12556,14 @@ local function payload(argument, argument2)
 				raycastParams.FilterType = Enum.RaycastFilterType.Exclude
 
 				local function raycastGround(argument5)
-					local filterDescendantsInstances, humanoid = {}, data[1]
+					local filterDescendantsInstances, humanoid = {}, localPlayer
 					argument:H2(filterDescendantsInstances, 0, humanoid.Character, workspace:FindFirstChild("ButterflyBloomSwarm"))
 					raycastParams.FilterDescendantsInstances = filterDescendantsInstances
-					local value7, value8, hit, value9 = data[28], data[28], workspace:Raycast(argument5 + data[28](0, 25, 0), data[28](0, -120, 0), raycastParams), data[8]
+					local value7, value8, hit, value9 = newVector3, newVector3, workspace:Raycast(argument5 + newVector3(0, 25, 0), newVector3(0, -120, 0), raycastParams), data[8]
 					humanoid = value9()
 					filterDescendantsInstances = nil
 					if hit then
-						value9 = data[28]
+						value9 = newVector3
 						filterDescendantsInstances = value9(argument5.X, hit.Position.Y + (humanoid and humanoid.HipHeight or 2) + 1, argument5.Z)
 					else
 						filterDescendantsInstances = hit
@@ -12540,35 +12572,35 @@ local function payload(argument, argument2)
 				end
 
 				local function callback52(argument5)
-					local value7 = data[51]
+					local value7 = world
 					local Machines = value7("Machines", "ButterflyStation", argument5)
 					argument5 = Machines and (Machines:FindFirstChild("Anchor") or Machines)
 					return argument5 and (argument5:IsA("BasePart") and argument5.Position or argument5:IsA("Model") and argument5:GetPivot().Position)
 				end
 
 				local function runUntilTimeout(argument5, argument6)
-					local value7, value8 = data[1], data[1]
-					pcall(data[1].RequestStreamAroundAsync, data[1], argument5)
-					local value9, value10, number9 = data[26], data[27], data[28]
+					local value7, value8 = localPlayer, localPlayer
+					pcall(localPlayer.RequestStreamAroundAsync, localPlayer, argument5)
+					local value9, value10, number9 = data[26], newCFrame, newVector3
 					value9(value10(argument5 + number9(0, 3, 4)))
 					number9 = os.clock() + 0.6
 					while os.clock() < number9 and argument6() do
-						local value11, value12, value13 = data[26], data[27], data[28]
+						local value11, value12, value13 = data[26], newCFrame, newVector3
 						value11(value12(argument5 + value13(0, 3, 4)))
-						value11 = data[23]
+						value11 = heartbeatWait
 						value11()
 					end
 				end
 
 				local function callback53(argument5)
-					local value7 = data[20]
+					local value7 = state
 					if value7.hideTread then
-						local value8 = data[20]
+						local value8 = state
 						value8.hideTread(20)
 					end
 
 					if data[13](argument5) then
-						value7 = data[14]
+						value7 = attribute2
 						if not value7(argument5) then
 							return false
 						end
@@ -12576,15 +12608,15 @@ local function payload(argument, argument2)
 						return false
 					end
 
-					value7 = data[15]
-					local value8, value9 = value7(), data[43]
-					local value10, number9 = data[28], value9() + data[28](0, 3, 0)
+					value7 = humanoidRootPart
+					local value8, value9 = value7(), cFramePointToWorldSpace
+					local value10, number9 = newVector3, value9() + newVector3(0, 3, 0)
 
 					if value8 then
 						value9 = data[16]
 						if value9(value8.Position) then
 							if (value8.Position - number9).Magnitude > 6 then
-								value7 = data[50]
+								value7 = ready
 								return value7(number9, argument5, 250)
 							end
 						end
@@ -12594,14 +12626,14 @@ local function payload(argument, argument2)
 				end
 
 				local function callback54(argument5, argument6)
-					local value7 = data[1]
+					local value7 = localPlayer
 					local character = value7.Character
 
 					local function callback55()
 						local value8 = argument6()
 						local condition3
 						if value8 then
-							local value9 = data[1]
+							local value9 = localPlayer
 							condition3 = value9.Character == character
 						else
 							condition3 = value8
@@ -12609,7 +12641,7 @@ local function payload(argument, argument2)
 						return condition3
 					end
 
-					value7 = data[15]
+					value7 = humanoidRootPart
 					local value8 = value7()
 
 					if value8 then
@@ -12621,7 +12653,7 @@ local function payload(argument, argument2)
 						end
 					end
 
-					value7 = data[20]
+					value7 = state
 					return value7.reach(argument5, callback55)
 				end
 
@@ -12629,7 +12661,7 @@ local function payload(argument, argument2)
 					local NetStand = callback52("NetStand")
 
 					if NetStand then
-						local value7 = data[20]
+						local value7 = state
 						if not value7.enterTree(argument5) then
 							return false
 						end
@@ -12653,7 +12685,7 @@ local function payload(argument, argument2)
 						task.wait(0.8)
 					end
 
-					argument5 = data[20]
+					argument5 = state
 					argument5.leaveTree()
 					return condition3 or callback48().NetClaimed == true
 				end
@@ -12717,7 +12749,7 @@ local function payload(argument, argument2)
 						local ok2 = ok and typeof(response) == "Vector3"
 						local ok3
 						if ok2 then
-							ok = data[28]
+							ok = newVector3
 							ok3 = ok(response.X, 0, response.Z)
 						else
 							ok3 = ok2
@@ -12755,18 +12787,18 @@ local function payload(argument, argument2)
 				end
 
 				module2.run = function(argument5, argument6)
-					local normalWalk = data[20]
+					local normalWalk = state
 
 					if not normalWalk.needBody() then
-						local value7 = data[20]
+						local value7 = state
 						if value7.hideTread then
-							local value8 = data[20]
+							local value8 = state
 							value8.hideTread(20)
 						end
 						return
 					end
 
-					normalWalk = data[8]
+					normalWalk = humanoid
 					local humanoid = normalWalk()
 
 					if not callback48().NetClaimed then
@@ -12786,10 +12818,10 @@ local function payload(argument, argument2)
 					if position then
 						position2 = position
 					else
-						argument5 = data[28]
+						argument5 = newVector3
 						position2 = (argument5(6700, 74, -364))
 					end
-					argument5 = data[15]
+					argument5 = humanoidRootPart
 					local value7 = argument5()
 					local value
 
@@ -12801,7 +12833,7 @@ local function payload(argument, argument2)
 						if not callback53(argument6) then
 							return callback50("Stuck on treadmill")
 						end
-						normalWalk = data[15]
+						normalWalk = humanoidRootPart
 						value7 = normalWalk()
 
 						if value7 then
@@ -12817,15 +12849,15 @@ local function payload(argument, argument2)
 						if not callback53(argument6) then
 							return callback50("Stuck on treadmill")
 						end
-						local value8 = data[28]
-						local value9, condition3 = raycastGround(position2 + value8(0, 0, 6)), data[1]
+						local value8 = newVector3
+						local value9, condition3 = raycastGround(position2 + value8(0, 0, 6)), localPlayer
 						local character = condition3.Character
 
 						local function callback57()
 							local value10 = argument6()
 							local condition4
 							if value10 then
-								local value11 = data[1]
+								local value11 = localPlayer
 								condition4 = value11.Character == character
 							else
 								condition4 = value10
@@ -12848,12 +12880,12 @@ local function payload(argument, argument2)
 							task.wait(0.5)
 						end
 
-						value8 = data[1]
+						value8 = localPlayer
 						if value8.Character ~= character then
 							return callback50("Reset, going back to the safe zone")
 						end
 						condition3 = condition3 or if argument6() then if callback54({Pos = value9, Name = "the bloom"}, argument6) then true else condition3 else condition3
-						value8 = data[1]
+						value8 = localPlayer
 						if value8.Character ~= character then
 							return callback50("Reset, going back to the safe zone")
 						end
@@ -12867,7 +12899,7 @@ local function payload(argument, argument2)
 						value = value7
 					end
 
-					local now3, now4, number9, number10 = os.clock(), os.clock(), 0, data[58]
+					local now3, now4, number9, number10 = os.clock(), os.clock(), 0, runService
 
 					local value8, huge = trackConnection(number10.Stepped, function()
 						local value8 = data[25]
@@ -12880,7 +12912,7 @@ local function payload(argument, argument2)
 						local value, value9 = ipairs, argument[72](Players:GetPlayers())
 
 						for k, value10 in value(argument:g2(value9)) do
-							k = data[1]
+							k = localPlayer
 
 							for _, value11 in ipairs(value10 ~= k and value10.Character and value10.Character:GetChildren() or {}) do
 								if value11:IsA("BasePart") then
@@ -12903,8 +12935,8 @@ local function payload(argument, argument2)
 						end
 						if os.clock() - now5 > 1.5 then
 							huge = 1 / 0
-							local value9, value10 = data[26], data[27]
-							value9(value10(value.Position + argument7.Unit * math.min(30, argument7.Magnitude) + data[28](0, 6, 0)))
+							local value9, value10 = data[26], newCFrame
+							value9(value10(value.Position + argument7.Unit * math.min(30, argument7.Magnitude) + newVector3(0, 6, 0)))
 						end
 					end
 
@@ -12914,7 +12946,7 @@ local function payload(argument, argument2)
 					number10, normalWalk = 0
 
 					while argument6() and callback44() and callback12() > 0 do
-						local vector = data[15]
+						local vector = humanoidRootPart
 						value = vector()
 						vector = data[8]
 						humanoid = vector()
@@ -12936,7 +12968,7 @@ local function payload(argument, argument2)
 							argument5, position = os.clock() + 0.5, (callback39(callback51))
 						end
 						if position then
-							vector = data[1]
+							vector = localPlayer
 							if position.Parent ~= vector.Character then
 								pcall(humanoid.EquipTool, humanoid, position)
 							end
@@ -12973,18 +13005,18 @@ local function payload(argument, argument2)
 							if vector22 then
 								vector2 = vector22
 							else
-								local value10 = data[28]
+								local value10 = newVector3
 								vector2 = raycastGround(position2 + value10(0, 0, 6))
 							end
-							local value10 = data[28]
+							local value10 = newVector3
 							local value11, assemblyLinearVelocity = value10(vector2.X - value.Position.X, 0, vector2.Z - value.Position.Z), value.AssemblyLinearVelocity
 
 							if not normalWalk then
-								value10 = data[20]
+								value10 = state
 								local normalWalk2 = value10.normalWalk
 								local humanoid2
 								if normalWalk2 then
-									local value12 = data[20]
+									local value12 = state
 									humanoid2 = value12.normalWalk(humanoid)
 								else
 									humanoid2 = normalWalk2
@@ -12993,15 +13025,15 @@ local function payload(argument, argument2)
 							end
 
 							if value9 and value11.Magnitude <= 40 then
-								value10 = data[28]
+								value10 = newVector3
 								local value12, unit, unit2 = value10(vector2.X, math.max(raycastGround(vector2).Y, vector2.Y - number7 + 4), vector2.Z), value9.v.Magnitude > 1 and value9.v.Unit or value11.Magnitude > 0.5 and value11.Unit
 								if unit then
 									unit2 = unit
 								else
-									local value13 = data[28]
+									local value13 = newVector3
 									unit2 = value13(value.CFrame.LookVector.X, 0, value.CFrame.LookVector.Z)
 								end
-								local value13, value14 = data[26], data[27]
+								local value13, value14 = data[26], newCFrame
 								value13(value14(value12, value12 + unit2))
 								value.AssemblyLinearVelocity = value9.v
 								humanoid.WalkSpeed = math.max(value9.v.Magnitude, 16)
@@ -13013,8 +13045,8 @@ local function payload(argument, argument2)
 									humanoid.WalkSpeed = walkSpeed
 									humanoid:MoveTo(value.Position + value11)
 									local value13
-									value13, value.AssemblyLinearVelocity = data[28], value11.Unit * walkSpeed + data[28](0, assemblyLinearVelocity.Y, 0)
-									value13 = data[28]
+									value13, value.AssemblyLinearVelocity = newVector3, value11.Unit * walkSpeed + newVector3(0, assemblyLinearVelocity.Y, 0)
+									value13 = newVector3
 									now4 = if value13(assemblyLinearVelocity.X, 0, assemblyLinearVelocity.Z).Magnitude > walkSpeed * 0.3 then os.clock() else now4
 								else
 									humanoid:MoveTo(value.Position)
@@ -13027,21 +13059,21 @@ local function payload(argument, argument2)
 								humanoid.Jump = true
 							end
 							runUntilTimeout2(value11)
-							value11 = data[23]
+							value11 = heartbeatWait
 							value11()
 							continue
 						end
 
 						humanoid.PlatformStand = true
-						vector22 = data[28]
+						vector22 = newVector3
 						local value10, number12 = raycastGround(position2 + vector22(0, 0, 6)), os.clock() - now3
 
 						if vector == "Patrol" then
-							vector2, vector22 = data[28]
+							vector2, vector22 = newVector3
 							vector22, value10 = data[25], raycastGround(position2 + vector2(math.sin((number12 * data[25].bfSpeed) / 180) * 170, 0, 0))
 						else
 							if vector == "Circle" then
-								local value11 = data[28]
+								local value11 = newVector3
 								local value12, value13
 								value12, value13, value10 = data[25], data[25], raycastGround(position2 + value11(math.cos(((number12 * data[25].bfSpeed) / 25) / 4) * 25, 0, math.sin(((number12 * data[25].bfSpeed) / 25) / 4) * 25))
 							end
@@ -13056,11 +13088,11 @@ local function payload(argument, argument2)
 							vector = nil
 							vector, value.AssemblyLinearVelocity = data[25], vector22.Unit * math.min(data[25].bfSpeed, vector22.Magnitude / 0.05)
 						else
-							vector2, number12 = data[26], data[27]
+							vector2, number12 = data[26], newCFrame
 							vector2(number12(value10))
 						end
 
-						number12 = data[23]
+						number12 = heartbeatWait
 						number12()
 					end
 
@@ -13081,7 +13113,7 @@ local function payload(argument, argument2)
 					return value7.bloom
 				end
 				module2.ready = function()
-					local value7 = data[20]
+					local value7 = state
 					return value7.bloomWants() and callback12() > 0
 				end
 				local module3 = callback22({name = "BloomInfo", gap = 1})
@@ -13091,7 +13123,7 @@ local function payload(argument, argument2)
 
 				module3.fn = function()
 					local value7 = callback48()
-					local counts, bloom = value7.Counts or {}, data[20]
+					local counts, bloom = value7.Counts or {}, state
 					local bfRec = bloom.bfRec or {}
 					local function callback57(argument5)
 						argument5 = math.max(0, math.floor(argument5 + 0.5))
@@ -13108,13 +13140,13 @@ local function payload(argument, argument2)
 					else
 						condition3, number9 = data[4] == module2
 						if condition3 then
-							bloom = data[20]
+							bloom = state
 							number9 = bloom.bfSay
 						else
 							number9 = condition3
 						end
 						if number9 then
-							local value8 = data[20]
+							local value8 = state
 							serverTimeNow = value8.bfSay .. ("  |  " .. number10)
 						else
 							serverTimeNow = number9
@@ -13187,7 +13219,7 @@ local function payload(argument, argument2)
 					end
 				end)
 
-				sapphireList = data[20]
+				sapphireList = state
 				sapphireList.bfRec = valueMap4
 
 				local function callback58(argument5)
@@ -13238,7 +13270,7 @@ local function payload(argument, argument2)
 					if callback44() then
 						return
 					else
-						local instance = data[1]
+						local instance = localPlayer
 						if instance:GetAttribute("EnchantedTreeUnlocked") ~= true then
 							return
 						end
@@ -13269,25 +13301,25 @@ local function payload(argument, argument2)
 				end
 
 				local function enterTree(argument5)
-					local parent = data[1]
+					local parent = localPlayer
 					if parent:GetAttribute("InEnchantedTree") then
 						return true
 					end
-					parent = data[51]
+					parent = world
 					local Build = parent("Build", "EnchantedTreeInterior", "Markers", "EnterTrigger", "EnchantedTreeEntrance", "EnchantedTreePrompt")
 					parent = Build and Build.Parent
 					local worldPosition = parent and (parent:IsA("Attachment") and parent.WorldPosition or parent:IsA("BasePart") and parent.Position)
 					if not worldPosition then
 						return false
 					end
-					parent = data[1]
+					parent = localPlayer
 					local character = parent.Character
 
 					local function callback60()
 						local value8 = argument5()
 						local condition5
 						if value8 then
-							local value9 = data[1]
+							local value9 = localPlayer
 							condition5 = value9.Character == character
 						else
 							condition5 = value8
@@ -13298,7 +13330,7 @@ local function payload(argument, argument2)
 					if not callback53(callback60) then
 						return false
 					end
-					parent = data[15]
+					parent = humanoidRootPart
 					local number9 = parent()
 
 					if number9 then
@@ -13314,11 +13346,11 @@ local function payload(argument, argument2)
 					if not callback53(callback60) then
 						return false
 					end
-					parent = data[28]
+					parent = newVector3
 					number9 = worldPosition + parent(0, 0, -12)
 
 					for i = 1, 2, 1 do
-						parent = data[15]
+						parent = humanoidRootPart
 						i = parent()
 
 						if i then
@@ -13337,17 +13369,17 @@ local function payload(argument, argument2)
 							break
 						end
 
-						i = data[11]
+						i = notify
 						i("Ragdoll TP to the Enchanted Tree")
-						i = data[28]
+						i = newVector3
 						ragTo(number9 + i(0, 3, 0), callback60)
 					end
 
-					parent = data[1]
+					parent = localPlayer
 					if parent.Character ~= character then
 						return false
 					end
-					parent = data[15]
+					parent = humanoidRootPart
 					local value8 = parent()
 
 					if value8 then
@@ -13359,7 +13391,7 @@ local function payload(argument, argument2)
 					end
 
 					for i = 1, 4, 1 do
-						i, number9, value8 = data[26], data[27], data[28]
+						i, number9, value8 = data[26], newCFrame, newVector3
 						i(number9(worldPosition + value8(0, 3, -6)))
 						pcall(fireproximityprompt, Build)
 						parent = os.clock() + 4
@@ -13368,7 +13400,7 @@ local function payload(argument, argument2)
 							local callback60_2
 							i, callback60_2 = os.clock() < parent
 							if i then
-								local instance = data[1]
+								local instance = localPlayer
 								callback60_2 = not instance:GetAttribute("InEnchantedTree")
 							else
 								callback60_2 = i
@@ -13376,11 +13408,11 @@ local function payload(argument, argument2)
 							if not callback60_2 then
 								break
 							end
-							local value9 = data[23]
+							local value9 = heartbeatWait
 							value9()
 						end
 
-						i = data[1]
+						i = localPlayer
 						if i:GetAttribute("InEnchantedTree") then
 							return true
 						end
@@ -13389,17 +13421,17 @@ local function payload(argument, argument2)
 					return false
 				end
 
-				autoButterflyBloom = data[20]
+				autoButterflyBloom = state
 				autoButterflyBloom.enterTree = enterTree
-				local value8 = data[20]
+				local value8 = state
 
 				value8.leaveTree = function()
-					local instance = data[51]
+					local instance = world
 					local Build = instance("Build", "EnchantedTreeInterior", "Markers", "ExitTrigger")
 
 					if Build then
 						if Build:IsA("BasePart") then
-							instance = data[1]
+							instance = localPlayer
 							if not instance:GetAttribute("InEnchantedTree") then
 								return
 							end
@@ -13410,26 +13442,26 @@ local function payload(argument, argument2)
 						return
 					end
 
-					local value9, number9 = data[26], data[27]
+					local value9, number9 = data[26], newCFrame
 					value9(number9(Build.Position + Build.CFrame.LookVector * (Build.Size.Z / 2 + 3)))
-					value9 = data[23]
+					value9 = heartbeatWait
 					value9()
 					number9 = data[26]
 					number9(Build.CFrame)
 					number9 = os.clock() + 1.5
 
 					while true do
-						instance = data[1]
+						instance = localPlayer
 						if not (instance:GetAttribute("InEnchantedTree") and os.clock() < number9) then
 							break
 						end
-						value9 = data[23]
+						value9 = heartbeatWait
 						value9()
 					end
 
-					instance = data[1]
+					instance = localPlayer
 					if instance:GetAttribute("InEnchantedTree") then
-						value9 = data[15]
+						value9 = humanoidRootPart
 						fireTouch(value9(), Build)
 					end
 				end
@@ -13458,18 +13490,18 @@ local function payload(argument, argument2)
 				end
 
 				module4.run = function(argument5, argument6)
-					argument5 = data[20]
+					argument5 = state
 					if not argument5.needBody() then
 						return
 					end
 
 					if data[13](argument6) then
 						if not enterTree(argument6) then
-							argument5 = data[11]
+							argument5 = notify
 							return argument5("Could not enter the tree", "warn")
 						end
 					else
-						local value9 = data[11]
+						local value9 = notify
 						return value9("Could not enter the tree", "warn")
 					end
 
@@ -13544,7 +13576,7 @@ local function payload(argument, argument2)
 						task.wait(0.3)
 					end
 
-					value = data[20]
+					value = state
 					value.leaveTree()
 				end
 			end)
@@ -13554,9 +13586,9 @@ local function payload(argument, argument2)
 				local wt = callback16("wt", butterflyBloom:Text("Wisp Status", "Off"))
 				callback19(butterflyBloom, "Auto Wisp", "wisp", false)
 				callback19(butterflyBloom, "Auto Banjo Cricket", "banjo", false)
-				butterflyBloom = data[20]
+				butterflyBloom = state
 				butterflyBloom.wispSay = wt
-				butterflyBloom = data[20]
+				butterflyBloom = state
 				local nostat = butterflyBloom.nostat
 				module2.on = function()
 					local value6 = data[25]
@@ -13565,7 +13597,7 @@ local function payload(argument, argument2)
 				butterflyBloom = data[32]
 				local wisp = butterflyBloom.Wisp
 				local function callback44()
-					local wispCompanion = data[64]
+					local wispCompanion = savePeek
 					local value6 = wispCompanion()
 					wispCompanion = value6 and value6.WispCompanion
 					return value6, type(wispCompanion) == "table" and wispCompanion or nil
@@ -13617,7 +13649,7 @@ local function payload(argument, argument2)
 							return data10
 						end
 					end
-					local condition3 = data[64]
+					local condition3 = savePeek
 					local data11, data12 = condition3(), callback47(type(argument.Match) == "table" and argument.Match.AreaId)
 					local condition4, conditionMap, conditionMap2 = callback34(data11 or {}), {}, {}
 
@@ -13714,7 +13746,7 @@ local function payload(argument, argument2)
 					return true
 				end
 
-				local value6 = data[20]
+				local value6 = state
 
 				value6.wispSteals = function()
 					local value7 = data[25]
@@ -13738,8 +13770,8 @@ local function payload(argument, argument2)
 					return value7.Event == "PetFused" and callback48(value7).supply < 3
 				end
 
-				butterflyBloom = data[20]
-				local wantEgg, value7 = butterflyBloom.wantEgg, data[20]
+				butterflyBloom = state
+				local wantEgg, value7 = butterflyBloom.wantEgg, state
 
 				value7.wantEgg = function(argument5)
 					local value8 = data[25]
@@ -13752,13 +13784,13 @@ local function payload(argument, argument2)
 				end
 
 				local function callback50(...)
-					local value8 = data[51]
+					local value8 = world
 					local Build = value8("Build", ...)
 					return Build and (Build:IsA("BasePart") and Build.Position or Build:IsA("Model") and Build:GetPivot().Position)
 				end
 
 				local function callback51(argument5)
-					local value8 = data[64]
+					local value8 = savePeek
 					local value9 = value8()
 					if not value9 then
 						return
@@ -13847,7 +13879,7 @@ local function payload(argument, argument2)
 						if (tonumber(value8.SpeedPower) or 0) < number8 then
 							return wt("Needs " .. (callback6(number8) .. " speed power to meet the wisp"))
 						end
-						local value10 = data[51]
+						local value10 = world
 						local Build = value10("Build")
 
 						if Build then
@@ -13858,7 +13890,7 @@ local function payload(argument, argument2)
 							return wt("Waiting for the Enchanted Forest to open")
 						end
 
-						value10 = data[20]
+						value10 = state
 						value10.wispGo = {callback50("EnchantedForestZone", "WispSpawn"), "Accept"}
 						return wt("Going to accept the quest")
 					end
@@ -13880,7 +13912,7 @@ local function payload(argument, argument2)
 							value8 = data[9]
 							value8("RF/WispCompanion/Request", "BeginReturn")
 						end
-						local value10 = data[20]
+						local value10 = state
 						value10.wispGo = {callback50("EnchantedForestZone", "Zone13Props", "EnchantedTree", "WispAnchor") or callback50("EnchantedForestZone", "WispAnchor"), "Return"}
 						return wt("Returning the wisp")
 					end
@@ -13902,18 +13934,18 @@ local function payload(argument, argument2)
 				end
 
 				module3.want = function()
-					local wispGo = data[20]
+					local wispGo = state
 					local wispGo2 = wispGo.wispGo
 					local wispGo3
 					if wispGo2 then
-						wispGo = data[20]
+						wispGo = state
 						wispGo3 = wispGo.wispGo[1]
 					else
 						wispGo3 = wispGo2
 					end
 					wispGo = nil
 					if wispGo3 then
-						wispGo2 = data[20]
+						wispGo2 = state
 						wispGo = wispGo2.wispGo
 					else
 						wispGo = wispGo3
@@ -13925,7 +13957,7 @@ local function payload(argument, argument2)
 					local value8 = argument5[1]
 
 					if data[13](argument6) then
-						local value9 = data[14]
+						local value9 = attribute2
 						if not value9(argument6) then
 							return
 						end
@@ -13933,7 +13965,7 @@ local function payload(argument, argument2)
 						return
 					end
 
-					local value9 = data[15]
+					local value9 = humanoidRootPart
 					local value10 = value9()
 
 					if value10 then
@@ -13946,46 +13978,46 @@ local function payload(argument, argument2)
 						end
 					end
 
-					value10, value9 = data[1], data[1]
-					pcall(data[1].RequestStreamAroundAsync, data[1], value8)
-					local value11 = data[15]
+					value10, value9 = localPlayer, localPlayer
+					pcall(localPlayer.RequestStreamAroundAsync, localPlayer, value8)
+					local value11 = humanoidRootPart
 					local value12 = value11()
 					if not value12 then
 						return
 					end
 					if (value12.Position - value8).Magnitude > 1200 then
 						if callback12() > 0 then
-							value11 = data[28]
+							value11 = newVector3
 							ragTo(value8 + value11(0, 3, 3), argument6)
 						end
 					end
-					value11 = data[15]
+					value11 = humanoidRootPart
 					value12 = value11()
 
 					if value12 then
 						if (value12.Position - value8).Magnitude > 40 then
-							local value13, value14 = data[20], data[28]
+							local value13, value14 = state, newVector3
 							if not value13.stepTo(value8 + value14(0, 0, 3), argument6) then
 								return
 							end
 						end
 					end
 
-					value11 = data[8]
+					value11 = humanoid
 					local value13, number7 = value11(), 0
 
 					while true do
 						local value14 = value13 and argument6() and number7 < 3
 						local value15
 						if value14 then
-							value11 = data[15]
+							value11 = humanoidRootPart
 							value15 = (value11())
 						else
 							value15 = value14
 						end
 						value14 = nil
 						if value15 then
-							local value16 = data[15]
+							local value16 = humanoidRootPart
 							value14 = (value16().Position - value8).Magnitude > 6
 						else
 							value14 = value15
@@ -14000,24 +14032,24 @@ local function payload(argument, argument2)
 					task.wait(0.5)
 					value13 = data[9]
 					value13("RF/WispCompanion/Request", argument5[2])
-					value11 = data[20]
+					value11 = state
 					value11.wispGo = nil
 				end
 			end)
 
 			saveFile("33_hollow#1", function()
-				local valueMap2, value6 = {drop = 0, n = 0}, data[20]
+				local valueMap2, value6 = {drop = 0, n = 0}, state
 				value6.HL = valueMap2
 				local CollectionService = game:GetService("CollectionService")
 				local function findFirstChild()
 					return workspace:FindFirstChild("TheHollowTrack")
 				end
 				local function inRace()
-					local instance = data[1]
+					local instance = localPlayer
 					return instance:GetAttribute("RaceId") == "TheHollowTrack"
 				end
 				local function callback44()
-					local firstChild, instance = findFirstChild(), data[1]
+					local firstChild, instance = findFirstChild(), localPlayer
 					local attribute = instance:GetAttribute("RaceHeat")
 					return firstChild and attribute and firstChild:FindFirstChild("RaceHeats") and firstChild.RaceHeats:FindFirstChild(attribute)
 				end
@@ -14026,11 +14058,11 @@ local function payload(argument, argument2)
 					return instance and instance:GetAttribute("RacePhase")
 				end
 				local function callback45()
-					local instance = data[1]
+					local instance = localPlayer
 					return instance:GetAttribute("RaceFinishPlace") ~= nil
 				end
 				local function toNumberOrDefault3()
-					local value7 = data[64]
+					local value7 = savePeek
 					local value8 = value7()
 					return value8 and type(value8.TheHollow) == "table" and tonumber(value8.TheHollow.Wins) or 0
 				end
@@ -14064,7 +14096,7 @@ local function payload(argument, argument2)
 					local ok, response = pcall(function()
 						return require(ReplicatedStorage.Shared.Modules.RaceTrackPath).new(firstChild.AttachmentTrack)
 					end)
-					local number7 = data[15]
+					local number7 = humanoidRootPart
 					local data10 = number7()
 
 					if ok then
@@ -14082,12 +14114,12 @@ local function payload(argument, argument2)
 					number7 = response.Length / 2
 					local number8 = response:Project(data10.Position, number7, number7, number7)
 					ok = response:FrameAt(number8)
-					local number9, instance = math.max((data10.Position - ok.Position):Dot(ok.UpVector), 2), data[36]
+					local number9, instance = math.max((data10.Position - ok.Position):Dot(ok.UpVector), 2), networking
 					local reMountRacePowerUp, number10, number11, now3 = instance:FindFirstChild("RE/MountRace/PowerUp"), 0, 0
 					data10 = {}
 
 					local function callback48()
-						local cframe, value7 = response:FrameAt(number8), data[15]
+						local cframe, value7 = response:FrameAt(number8), humanoidRootPart
 						local value8 = value7()
 						if not value8 then
 							return
@@ -14104,7 +14136,7 @@ local function payload(argument, argument2)
 									if os.clock() - now3 < 6 then
 										if toNumberOrDefault4() > 140 then
 											valueMap2.drop = valueMap2.drop + 20
-											value7 = data[11]
+											value7 = notify
 											value7("Pulled back, racing at " .. toNumberOrDefault4(), "warn")
 										end
 									end
@@ -14121,7 +14153,7 @@ local function payload(argument, argument2)
 					end
 
 					local function fireRemote()
-						local serverTime, instance2 = workspace:GetServerTimeNow(), data[15]
+						local serverTime, instance2 = workspace:GetServerTimeNow(), humanoidRootPart
 						local value7 = instance2()
 
 						if reMountRacePowerUp then
@@ -14132,17 +14164,17 @@ local function payload(argument, argument2)
 							return
 						end
 
-						instance2 = data[1]
+						instance2 = localPlayer
 						local attribute = instance2:GetAttribute("RacePowerUp")
 
 						if type(attribute) == "string" then
 							if attribute ~= "" then
-								local value8, number12 = data[1], tonumber(data[1]:GetAttribute("RacePowerUpRollEndsAt")) or 0
+								local value8, number12 = localPlayer, tonumber(localPlayer:GetAttribute("RacePowerUpRollEndsAt")) or 0
 
 								if number12 <= serverTime then
-									local value9, number13 = data[1], tonumber(data[1]:GetAttribute("RacePowerUpEffectEndsAt")) or 0
+									local value9, number13 = localPlayer, tonumber(localPlayer:GetAttribute("RacePowerUpEffectEndsAt")) or 0
 									if number13 <= serverTime then
-										local value10, number14 = data[1], tonumber(data[1]:GetAttribute("RacePowerUpStunEndsAt")) or 0
+										local value10, number14 = localPlayer, tonumber(localPlayer:GetAttribute("RacePowerUpStunEndsAt")) or 0
 										if number14 <= serverTime then
 											reMountRacePowerUp:FireServer("Use", value7.Position, response:FrameAt(number8).LookVector)
 										end
@@ -14186,7 +14218,7 @@ local function payload(argument, argument2)
 						end
 					end)
 
-					ok = data[58]
+					ok = runService
 
 					data10[2] = ok.PreSimulation:Connect(function()
 						if inRace() then
@@ -14196,11 +14228,11 @@ local function payload(argument, argument2)
 						end
 					end)
 
-					instance = data[1]
+					instance = localPlayer
 					ok, number7 = (instance:GetAttribute("RaceLap")), os.clock()
 
 					while argument5() and inRace() and not callback45() do
-						instance = data[1]
+						instance = localPlayer
 						local attribute = instance:GetAttribute("RaceLap")
 
 						if attribute ~= ok then
@@ -14211,19 +14243,19 @@ local function payload(argument, argument2)
 								if toNumberOrDefault4() > 140 then
 									valueMap2.drop = valueMap2.drop + 20
 								end
-								local value7 = data[15]
+								local value7 = humanoidRootPart
 								local value8 = value7()
 								if value8 then
 									number8 = response:Project(value8.Position, number8, 600, 600)
 								end
-								value7 = data[11]
+								value7 = notify
 								value7("Lap did not count, racing at " .. toNumberOrDefault4(), "warn")
 							end
 						end
 
 						attribute = nil
-						attribute, valueMap2.say = data[1], ("Racing lap %s, %d studs/s"):format(tostring(data[1]:GetAttribute("RaceLap") or 1), toNumberOrDefault4())
-						attribute = data[11]
+						attribute, valueMap2.say = localPlayer, ("Racing lap %s, %d studs/s"):format(tostring(localPlayer:GetAttribute("RaceLap") or 1), toNumberOrDefault4())
+						attribute = notify
 						attribute(valueMap2.say)
 						task.wait(0.25)
 					end
@@ -14238,12 +14270,12 @@ local function payload(argument, argument2)
 					argument5 = os.clock()
 
 					if not inRace() then
-						local value7 = data[11]
+						local value7 = notify
 						value7("Joining The Hollow race")
 						value7 = data[9]
 						local AskEnter, value8, value9 = value7("RF/TheHollow/AskEnter")
 						if if AskEnter then value8 == false else not AskEnter then
-							value7 = data[11]
+							value7 = notify
 							value7("The Hollow: " .. tostring(value9 or "could not join"), "warn")
 							module2.at = os.clock() + 15
 							return
@@ -14266,9 +14298,9 @@ local function payload(argument, argument2)
 
 					while argument6() and inRace() and phase() ~= "Racing" and not callback45() do
 						if phase() == "Joining" then
-							local value7 = data[20]
+							local value7 = state
 							if value7.better(module2) then
-								local value8 = data[11]
+								local value8 = notify
 								value8("A higher task goes first, leaving The Hollow")
 								return callback46()
 							end
@@ -14277,7 +14309,7 @@ local function payload(argument, argument2)
 						local instance = callback44()
 						local instance2 = instance and (tonumber(instance:GetAttribute("RaceGoAt")) or tonumber(instance:GetAttribute("RaceJoinEndsAt")))
 						valueMap2.say = "Waiting at the start" .. (instance2 and (", go in %ds"):format(math.max(math.ceil(instance2 - workspace:GetServerTimeNow()), 0)) or "")
-						instance = data[11]
+						instance = notify
 						instance(valueMap2.say)
 						task.wait(0.25)
 					end
@@ -14294,14 +14326,14 @@ local function payload(argument, argument2)
 					local condition3 = if instance then not instance else callback47(argument6)
 
 					if callback45() then
-						instance = data[1]
-						local attribute, value7, time = instance:GetAttribute("RaceFinishPlace"), data[1], tonumber(data[1]:GetAttribute("RaceFinishTime"))
+						instance = localPlayer
+						local attribute, value7, time = instance:GetAttribute("RaceFinishPlace"), localPlayer, tonumber(localPlayer:GetAttribute("RaceFinishTime"))
 						valueMap2.n = valueMap2.n + 1
 						task.wait(1.5)
 						callback46()
 						valueMap2.time, valueMap2.cycle = time, os.clock() - argument5
 						valueMap2.last = ("Finished #%s in %s, round trip %ds"):format(tostring(attribute), time and ("%.1fs"):format(time) or "?", math.floor(valueMap2.cycle))
-						time = data[11]
+						time = notify
 						time("The Hollow: " .. (valueMap2.last .. (", wins " .. toNumberOrDefault3())), "ok")
 						return true
 					end
@@ -14316,7 +14348,7 @@ local function payload(argument, argument2)
 
 				callback19(theHollow, "Auto Race The Hollow", "hollow", false, function(argument5)
 					if not argument5 then
-						local value6, value7 = data[4], data[20]
+						local value6, value7 = data[4], state
 						if value6 == value7.HL.job then
 							callback23(data[4])
 						end
@@ -14326,7 +14358,7 @@ local function payload(argument, argument2)
 				local value6 = data[25]
 				value6.hlSpeed = 300
 				theHollow:Slider("Hollow Race Speed", 140, 400, 300, function(argument5)
-					local value7, value8 = data[25], data[20]
+					local value7, value8 = data[25], state
 					value7.hlSpeed, value8.HL.drop = math.clamp(tonumber(argument5) or 300, 140, 400), 0
 				end, " st/s", 1).Quick = false
 				callback19(theHollow, "Use Race Power-Ups", "hlPower", true)
@@ -14336,7 +14368,7 @@ local function payload(argument, argument2)
 				end
 
 				module2.fn = function()
-					local value7 = data[20]
+					local value7 = state
 					local hl = value7.HL
 					local say = hl.inRace() and (hl.say or "In race")
 					local say2
@@ -14351,7 +14383,7 @@ local function payload(argument, argument2)
 			end)
 
 			saveFile("34_star#1", function()
-				local ss, shootingStar = {pay = nil, caught = 0, slipped = 0, askAt = 0, jumped = {}}, data[20]
+				local ss, shootingStar = {pay = nil, caught = 0, slipped = 0, askAt = 0, jumped = {}}, state
 				shootingStar.SS = ss
 				local module2 = callback22({name = "Star", mover = true, gap = 0.5, pri = 2})
 				shootingStar = iMap2["Shooting Star"]
@@ -14396,7 +14428,7 @@ local function payload(argument, argument2)
 				end
 
 				local function callback46(argument5, argument6)
-					local instance = data[36]
+					local instance = networking
 					local value7 = instance:FindFirstChild(argument5)
 					if value7 then
 						if value7:IsA("RemoteEvent") then
@@ -14467,7 +14499,7 @@ local function payload(argument, argument2)
 								local number8, number9 = number7 > 0 and math.clamp((shootingStarClient - serverTimeNow) / number7, 0, 1) or 1, buddy.To - buddy.From
 								local value7, condition3, unit = buddy.From:Lerp(buddy.To, number8), number8 < 1 and number9.Magnitude > 0.5
 								if condition3 then
-									number7 = data[28]
+									number7 = newVector3
 									unit = number7(number9.X, 0, number9.Z).Unit
 								else
 									unit = condition3
@@ -14488,7 +14520,7 @@ local function payload(argument, argument2)
 					local serverTimeNow = getServerTimeNow()
 					return argument5 and serverTimeNow >= (tonumber(argument5.LandAt) or serverTimeNow) and (tonumber(argument5.ExpiresAt) or 1 / 0) > serverTimeNow
 				end
-				local value7 = data[20]
+				local value7 = state
 				value7.starWants = function()
 					local value8 = data[25]
 					return value8.star and toNumberOrDefault3(ss.pay)
@@ -14516,14 +14548,14 @@ local function payload(argument, argument2)
 				end
 
 				module2.run = function(argument5, argument6)
-					local number7 = data[1]
+					local number7 = localPlayer
 					local character = number7.Character
 
 					local function callback48()
 						local condition3 = argument6() and ss.pay == argument5
 						local condition4
 						if condition3 then
-							local value8 = data[1]
+							local value8 = localPlayer
 							condition4 = value8.Character == character
 						else
 							condition4 = condition3
@@ -14532,7 +14564,7 @@ local function payload(argument, argument2)
 					end
 
 					if data[13](callback48) then
-						number7 = data[14]
+						number7 = attribute2
 						if not number7(callback48) then
 							return
 						end
@@ -14540,7 +14572,7 @@ local function payload(argument, argument2)
 						return
 					end
 
-					number7 = data[15]
+					number7 = humanoidRootPart
 					local value8 = number7()
 					number7 = nil
 					if value8 then
@@ -14560,7 +14592,7 @@ local function payload(argument, argument2)
 						local value9 = callback47(argument5)
 						local number8
 						if value9 then
-							local value10 = data[28]
+							local value10 = newVector3
 							number8 = value9 + value10(0, 3, 3)
 						else
 							number8 = value9
@@ -14569,7 +14601,7 @@ local function payload(argument, argument2)
 					end
 
 					local function callback50()
-						local value9, value10 = callback49(), data[15]
+						local value9, value10 = callback49(), humanoidRootPart
 						local value11 = value10()
 						return value9 and value11 and (value11.Position - value9).Magnitude or 1 / 0
 					end
@@ -14577,7 +14609,7 @@ local function payload(argument, argument2)
 					if callback50() > 40 then
 						if not (ss.jumped[argument5.Id]) then
 							ss.jumped[argument5.Id] = true
-							number7 = data[11]
+							number7 = notify
 							number7("Ragdoll jump to the star")
 							ragTo(callback49, callback48)
 						end
@@ -14585,7 +14617,7 @@ local function payload(argument, argument2)
 
 					if callback48() then
 						if callback50() > 40 then
-							number7 = data[11]
+							number7 = notify
 							number7("Running to the star")
 							local value9 = callback49()
 							local value
@@ -14608,9 +14640,9 @@ local function payload(argument, argument2)
 
 					while callback48() do
 						local value9, value10 = callback47(argument5)
-						local number10 = data[15]
+						local number10 = humanoidRootPart
 						value8 = number10()
-						number10 = data[8]
+						number10 = humanoid
 						local value11 = number10()
 
 						if value9 then
@@ -14628,12 +14660,12 @@ local function payload(argument, argument2)
 						if value8.Anchored then
 							data[13](callback48)
 						end
-						number10 = data[28]
+						number10 = newVector3
 						local number11, value12, value = value9 + number10(0, 3, 0), value10 and value10 * 2
 						if value12 then
 							value = value12
 						else
-							number10 = data[28]
+							number10 = newVector3
 							value = (number10(0, 0, 3))
 						end
 						number10 = (number11 + value) - value8.Position
@@ -14641,7 +14673,7 @@ local function payload(argument, argument2)
 							return
 						end
 						value11.PlatformStand = true
-						local assemblyLinearVelocity, value13 = number10 * 10, data[28]
+						local assemblyLinearVelocity, value13 = number10 * 10, newVector3
 						local value14 = value13(value9.X - value8.Position.X, 0, value9.Z - value8.Position.Z)
 						if assemblyLinearVelocity.Magnitude > 200 then
 							assemblyLinearVelocity = assemblyLinearVelocity.Unit * 200
@@ -14650,7 +14682,7 @@ local function payload(argument, argument2)
 						pcall(function()
 							if value14.Magnitude > 0.05 then
 								local value15
-								value15, value8.CFrame = data[27], data[27](value8.Position, value8.Position + value14.Unit)
+								value15, value8.CFrame = newCFrame, newCFrame(value8.Position, value8.Position + value14.Unit)
 							end
 							local value15
 							value15, value8.AssemblyLinearVelocity, value8.AssemblyAngularVelocity = data[41], assemblyLinearVelocity, data[41]
@@ -14662,7 +14694,7 @@ local function payload(argument, argument2)
 									number9 += 1
 									now4 = os.clock()
 									callback2("RE/ShootingStar/Catch", argument5.Id)
-									value13 = data[11]
+									value13 = notify
 									value13("Catching the star (try " .. (number9 .. ")"))
 								else
 									if now4 then
@@ -14678,19 +14710,19 @@ local function payload(argument, argument2)
 							else
 								now4, ss.hold = nil, os.clock()
 								callback2("RE/ShootingStar/Hold", argument5.Id, true)
-								value = data[11]
+								value = notify
 								value("Holding the star" .. (ss.slipped > 0 and " (slipped " .. (ss.slipped .. ")") or ""))
 							end
 						else
 							now3 = if number10.Magnitude > 8 then os.clock() else now3
 							callback50_2 = os.clock() - now3 >= number8
 							if not callback50_2 then
-								value11 = data[11]
+								value11 = notify
 								value11("At the star, letting the server catch up")
 							end
 						end
 
-						number10 = data[23]
+						number10 = heartbeatWait
 						number10()
 					end
 
@@ -14735,11 +14767,11 @@ local function payload(argument, argument2)
 				local module2 = callback22({name = "Stage", mover = true, gap = 0.5, pri = 50, soft = true, aux = true})
 
 				local function callback44()
-					local starWants = data[20]
+					local starWants = state
 					local starWants2 = starWants.starWants
 					local starWants3
 					if starWants2 then
-						starWants = data[20]
+						starWants = state
 						starWants3 = starWants.starWants()
 					else
 						starWants3 = starWants2
@@ -14749,10 +14781,10 @@ local function payload(argument, argument2)
 					if starWants3 then
 						starWants = starWants3
 					else
-						starWants2 = data[20]
+						starWants2 = state
 						local bloomWants = starWants2.bloomWants
 						if bloomWants then
-							local value6 = data[20]
+							local value6 = state
 							starWants = value6.bloomWants()
 						else
 							starWants = bloomWants
@@ -14762,21 +14794,21 @@ local function payload(argument, argument2)
 					if starWants then
 						return "field"
 					else
-						starWants2 = data[20]
+						starWants2 = state
 						if starWants2.ufoWants then
-							starWants3 = data[20]
+							starWants3 = state
 							if starWants3.ufoWants() then
 								return "field"
 							end
 						end
 					end
 
-					starWants, starWants3, starWants2 = data[20], pcall(data[20].targetsSoon)
+					starWants, starWants3, starWants2 = state, pcall(state.targetsSoon)
 					local value6 = data[25]
 					local ok = value6.steal and starWants3 and type(starWants2) == "table"
 					local fieldFresh
 					if ok then
-						value6 = data[20]
+						value6 = state
 						fieldFresh = value6.fieldFresh
 					else
 						fieldFresh = ok
@@ -14795,9 +14827,9 @@ local function payload(argument, argument2)
 						stage = data[22]
 						condition = stage("Wall", "IsSealed") == true
 					end
-					stage, Cycle = condition and 0.5 or 50, data[20]
+					stage, Cycle = condition and 0.5 or 50, state
 					if Cycle.rank.Stage ~= stage then
-						condition3 = data[20]
+						condition3 = state
 						condition3.rank.Stage = stage
 					end
 					return condition and callback44() ~= nil
@@ -14806,7 +14838,7 @@ local function payload(argument, argument2)
 				module2.want = function()
 					local value6 = data[21]
 					if not value6() then
-						local value7 = data[15]
+						local value7 = humanoidRootPart
 						if value7() then
 							return callback44()
 						end
@@ -14814,14 +14846,14 @@ local function payload(argument, argument2)
 				end
 
 				module2.run = function(argument5, argument6)
-					argument5 = data[20]
+					argument5 = state
 
 					if argument5.inFuse then
-						local value6 = data[20]
+						local value6 = state
 						if value6.inFuse() then
-							local value7 = data[11]
+							local value7 = notify
 							value7("Leaving the portal zone before the field opens")
-							value7 = data[20]
+							value7 = state
 							value7.leaveFuse()
 						end
 					end
@@ -14829,18 +14861,18 @@ local function payload(argument, argument2)
 					if not data[13](argument6) then
 						return
 					end
-					argument5 = data[15]
-					local value6, value7 = argument5(), data[43]
-					local value8, number7 = data[28], value7() + data[28](0, 3, 0)
+					argument5 = humanoidRootPart
+					local value6, value7 = argument5(), cFramePointToWorldSpace
+					local value8, number7 = newVector3, value7() + newVector3(0, 3, 0)
 
 					if value6 then
 						argument5 = data[16]
 
 						if argument5(value6.Position) then
 							if (value6.Position - number7).Magnitude > 8 then
-								value7 = data[11]
+								value7 = notify
 								value7("To the safe zone before the field opens")
-								local value9 = data[50]
+								local value9 = ready
 								if not value9(number7, argument6, 250) then
 									return
 								end
@@ -14850,7 +14882,7 @@ local function payload(argument, argument2)
 
 					argument5 = data[17]
 					argument5(argument6, "Ready in the safe zone", 0)
-					value7 = data[11]
+					value7 = notify
 					value7("Field open, the top task goes first")
 				end
 			end)
@@ -14866,7 +14898,7 @@ local function payload(argument, argument2)
 							return response
 						end
 					end
-					response = data[18]
+					response = eggReadFieldEggs
 					ok = response()
 					if type(ok[argument5]) == "table" then
 						return ok[argument5]
@@ -14889,7 +14921,7 @@ local function payload(argument, argument2)
 					local value, spawnList = ipairs, {"CaptureTheEggSpawn", "AdminAbuseEggSpawn"}
 
 					for k, spawn in value(spawnList) do
-						k = data[51]
+						k = world
 						local Areas2 = k("Areas", spawn)
 						if Areas2 then
 							if Areas2:IsA("BasePart") then
@@ -14915,14 +14947,14 @@ local function payload(argument, argument2)
 					if value6 then
 						condition3 = value6
 					else
-						argument5, condition3 = data[1], toNumberOrDefault3(argument6) == data[1].UserId
+						argument5, condition3 = localPlayer, toNumberOrDefault3(argument6) == localPlayer.UserId
 					end
 					return condition3
 				end
 
 				local function callback48(argument, argument5, argument6)
-					local number7 = data[15]
-					local value6, value7 = number7(), data[8]
+					local number7 = humanoidRootPart
+					local value6, value7 = number7(), humanoid
 					number7 = value7()
 					if not value6 then
 						return
@@ -14931,13 +14963,13 @@ local function payload(argument, argument2)
 						number7.PlatformStand = true
 					end
 					number7 = argument - value6.Position
-					local argument7, cframe = (number7.Magnitude > argument5 * argument6 and value6.Position + number7.Unit * argument5 * argument6) or argument, data[28]
+					local argument7, cframe = (number7.Magnitude > argument5 * argument6 and value6.Position + number7.Unit * argument5 * argument6) or argument, newVector3
 					value6, argument6 = cframe(number7.X, 0, number7.Z), data[26]
 					cframe, argument = value6.Magnitude > 0.5 and CFrame.lookAt(argument7, argument7 + value6)
 					if cframe then
 						argument = cframe
 					else
-						value7 = data[27]
+						value7 = newCFrame
 						argument = (value7(argument7))
 					end
 					argument6(argument)
@@ -14951,7 +14983,7 @@ local function payload(argument, argument2)
 
 						if k then
 							if k:IsA("ProximityPrompt") then
-								local value7 = data[28]
+								local value7 = newVector3
 								local magnitude = value7(instance2.Position.X - argument6.X, 0, instance2.Position.Z - argument6.Z).Magnitude
 								if magnitude < number7 then
 									number7, carryAreaEgg, instance = magnitude, k, instance2
@@ -14966,7 +14998,7 @@ local function payload(argument, argument2)
 					for k, value7 in value6(argument6) do
 						k = value7.Name ~= argument5 and getPosition(value7)
 						if k then
-							value7 = data[28]
+							value7 = newVector3
 							if value7(k.X - instance.Position.X, 0, k.Z - instance.Position.Z).Magnitude + 1.5 < number7 then
 								return
 							end
@@ -14977,8 +15009,8 @@ local function payload(argument, argument2)
 				end
 
 				local function callback50(argument5, argument6)
-					local character = data[8]
-					local number7, number8 = character(), data[1]
+					local character = humanoid
+					local number7, number8 = character(), localPlayer
 					character = number8.Character
 
 					if number7 then
@@ -15003,7 +15035,7 @@ local function payload(argument, argument2)
 						local value6 = callback46(argument5, character)
 
 						if value6 then
-							local value7, value8, value9 = data[26], data[27], data[28]
+							local value7, value8, value9 = data[26], newCFrame, newVector3
 							value7(value8(value6 + value9(0, 2.5, 0)))
 
 							if os.clock() >= number7 then
@@ -15021,7 +15053,7 @@ local function payload(argument, argument2)
 							end
 						end
 
-						value6 = data[23]
+						value6 = heartbeatWait
 						value6()
 					end
 
@@ -15030,7 +15062,7 @@ local function payload(argument, argument2)
 
 				local captureTheEgg = iMap2["Capture The Egg"]
 				local function callback51(capSt)
-					local value6 = data[20]
+					local value6 = state
 					value6.capSt = capSt
 				end
 				local module2 = callback22({name = "Capture", mover = true, gap = 0.25, pri = -1, urgent = true, ev = function()
@@ -15058,20 +15090,20 @@ local function payload(argument, argument2)
 					local now3
 					now3, data10 = os.clock(), {}
 					number7 = now3
-					now3 = data[51]
+					now3 = world
 					local Areas2, value = now3("Areas", "EggCarryBounds"), ipairs
 					now3 = Areas2 and Areas2:GetChildren() or {}
 
 					for k, instance in value(now3) do
 						if (instance:IsA("BasePart") and instance.Name ~= "SafeZone" and instance.Position.Y > 0 and instance.Size.X > 60) and instance.Size.Z > 60 then
-							Areas2 = data[28]
-							local value6, data11 = Areas2(1000000000, 0, 1000000000), data[28]
+							Areas2 = newVector3
+							local value6, data11 = Areas2(1000000000, 0, 1000000000), newVector3
 							local value7, vector, data2, data12 = data11(-1000000000, 0, -1000000000), instance.Size / 2, ipairs, {-1, 1}
 
 							for k2, value8 in data2(data12) do
 								data11, k = ipairs, {-1, 1}
 								for k3, value9 in data11(k) do
-									k2, k3 = data[28], instance.CFrame:PointToWorldSpace(data[28](vector.X * value8, 0, vector.Z * value9))
+									k2, k3 = newVector3, instance.CFrame:PointToWorldSpace(newVector3(vector.X * value8, 0, vector.Z * value9))
 									value6, value7 = (value6:Min(k3)), (value7:Max(k3))
 								end
 							end
@@ -15105,11 +15137,11 @@ local function payload(argument, argument2)
 				local function callback55(argument5)
 					local value, children, number8 = ipairs, argument[72](Players:GetPlayers()), 1 / 0
 					for k, value6 in value(argument:g2(children)) do
-						k = data[1]
+						k = localPlayer
 						local humanoidRootPart, humanoid = value6 ~= k and value6.Character and value6.Character:FindFirstChild("HumanoidRootPart"), value6.Character and value6.Character:FindFirstChildOfClass("Humanoid")
 						number8 = if humanoidRootPart then if humanoid then if humanoid.Health > 0 then math.min(number8, (humanoidRootPart.Position - argument5).Magnitude) else number8 else number8 else number8
 					end
-					value = data[51]
+					value = world
 					local Areas2, value = value("Areas", "GuardAreas"), ipairs
 					children = Areas2 and Areas2:GetChildren() or {}
 
@@ -15117,7 +15149,7 @@ local function payload(argument, argument2)
 						k = child:FindFirstChild("Guard") and child.Guard:FindFirstChild("HumanoidRootPart", true)
 						if k then
 							child, Areas2 = nil
-							child, Areas2, number8 = data[28], data[25], math.min(number8, (data[28](k.Position.X - argument5.X, 0, k.Position.Z - argument5.Z).Magnitude * data[25].capAway) / 32)
+							child, Areas2, number8 = newVector3, data[25], math.min(number8, (newVector3(k.Position.X - argument5.X, 0, k.Position.Z - argument5.Z).Magnitude * data[25].capAway) / 32)
 						end
 					end
 
@@ -15137,7 +15169,7 @@ local function payload(argument, argument2)
 							k, number11 = ipairs, {number10 - number12, number10, number10 + number12}
 
 							for k2, value8 in k(number11) do
-								k2 = data[28]
+								k2 = newVector3
 								local value9, value10 = data[25], k2(i, value7.y + data[25].capH, value8)
 								local value11, magnitude, value12 = callback55(value10), (value10 - argument5).Magnitude, data[25]
 								if value11 >= value12.capAway + 10 then
@@ -15165,7 +15197,7 @@ local function payload(argument, argument2)
 				end
 
 				local value6
-				local number8, text, instance = 0, "", data[36]
+				local number8, text, instance = 0, "", networking
 				autoCaptureEventEgg = instance:FindFirstChild("RE/EggCapture/StandingsRefreshed")
 
 				if autoCaptureEventEgg then
@@ -15179,7 +15211,7 @@ local function payload(argument, argument2)
 
 						for k, entry in argument(entries) do
 							if type(entry) == "table" then
-								local value7 = data[1]
+								local value7 = localPlayer
 								if tonumber(entry.UserId) == value7.UserId then
 									text = ("  %.1fs  #%d"):format(tonumber(entry.Seconds) or 0, tonumber(entry.Rank) or k)
 									break
@@ -15202,12 +15234,12 @@ local function payload(argument, argument2)
 					if not data[13](argument6) then
 						return
 					end
-					local value7 = data[20]
+					local value7 = state
 					value7.ready(argument6, 3)
 					local number9, number10 = 0.016666666666666666, 0
 
 					while argument6() do
-						local value8, value9 = callback44(argument5), data[15]
+						local value8, value9 = callback44(argument5), humanoidRootPart
 						value7 = value9()
 
 						if value8 then
@@ -15218,7 +15250,7 @@ local function payload(argument, argument2)
 							break
 						end
 
-						local numVal, condition3 = toNumberOrDefault3(value8), data[20]
+						local numVal, condition3 = toNumberOrDefault3(value8), state
 						condition3.godHunt = false
 
 						if callback47(argument5, value8) then
@@ -15253,7 +15285,7 @@ local function payload(argument, argument2)
 							if value then
 								value2 = value
 							else
-								condition5, condition4 = data[28]
+								condition5, condition4 = newVector3
 								condition4, value2 = data[25], condition5(value7.Position.X, (value10 and value10.y or value7.Position.Y) + data[25].capH, value7.Position.Z)
 							end
 							callback48(value2, 220, number9)
@@ -15271,28 +15303,28 @@ local function payload(argument, argument2)
 								end
 								local playerByUserId2
 								if capTake then
-									local value10 = data[20]
+									local value10 = state
 									playerByUserId2 = value10.bat()
 								else
 									playerByUserId2 = capTake
 								end
 								capTake = nil
 								if playerByUserId2 then
-									local value10 = data[20]
+									local value10 = state
 									capTake = value10.chase(playerByUserId, true)
 								else
 									capTake = playerByUserId2
 								end
 
 								if capTake then
-									playerByUserId2 = data[20]
+									playerByUserId2 = state
 									playerByUserId2.godHunt = true
 									callback51("Taking the event egg from " .. playerByUserId.DisplayName)
 								else
 									local value10 = callback46(argument5, value8)
 									if value10 then
 										if callback54(value10) then
-											local value11 = data[28]
+											local value11 = newVector3
 											callback48(value10 + value11(0, 25, 0), 400, number9)
 										end
 									end
@@ -15300,7 +15332,7 @@ local function payload(argument, argument2)
 									local capTake = value11.capTake
 									local condition4
 									if capTake then
-										value10 = data[20]
+										value10 = state
 										condition4 = not value10.bat()
 									else
 										condition4 = capTake
@@ -15315,7 +15347,7 @@ local function payload(argument, argument2)
 									if not value10 then
 										break
 									end
-									local Wall = data[28]
+									local Wall = newVector3
 									local magnitude, condition4 = Wall(value10.X - value7.Position.X, 0, value10.Z - value7.Position.Z).Magnitude, data[16]
 									Wall = condition4(value7.Position)
 									condition4 = nil
@@ -15351,7 +15383,7 @@ local function payload(argument, argument2)
 												local value11 = callback46(argument5, callback44(argument5))
 												local number11
 												if value11 then
-													local value12 = data[28]
+													local value12 = newVector3
 													number11 = value11 + value12(0, 3, 0)
 												else
 													number11 = value11
@@ -15381,7 +15413,7 @@ local function payload(argument, argument2)
 										else
 											if condition4 then
 												callback51("Leaving the base for the event egg")
-												local value11, value12 = data[50], data[28]
+												local value11, value12 = ready, newVector3
 												value11(value10 + value12(0, 2.5, 0), function()
 													return argument6() and not callback47(argument5, callback44(argument5))
 												end, 400)
@@ -15389,7 +15421,7 @@ local function payload(argument, argument2)
 												callback51("Grabbing the event egg")
 												callback50(argument5, argument6)
 											else
-												local value11 = data[28]
+												local value11 = newVector3
 												callback48(value10 + value11(0, 2.5, 0), 400, number9)
 												callback51(("Going for the event egg  %d studs"):format(magnitude))
 											end
@@ -15399,32 +15431,32 @@ local function payload(argument, argument2)
 							end
 						end
 
-						numVal, number9 = data[23], math.clamp(data[23](), 0.004166666666666667, 0.05)
+						numVal, number9 = heartbeatWait, math.clamp(heartbeatWait(), 0.004166666666666667, 0.05)
 					end
 
-					local value8 = data[20]
+					local value8 = state
 					value6 = nil
 					value8.godHunt = false
-					value8 = data[15]
+					value8 = humanoidRootPart
 					value7 = value8()
 					value8 = value7 and callback54(value7.Position, -4)
 
 					if value8 and value7.Position.Y > value8.y + 8 then
-						local value9 = data[28]
+						local value9 = newVector3
 						local value10, number11 = value9(value7.Position.X, value8.y + 3.5, value7.Position.Z), os.clock() + 1.5
 
 						while true do
 							local condition3 = os.clock() < number11
 							local condition4
 							if condition3 then
-								value9 = data[15]
+								value9 = humanoidRootPart
 								condition4 = (value9())
 							else
 								condition4 = condition3
 							end
 							condition3 = nil
 							if condition4 then
-								local value11 = data[15]
+								local value11 = humanoidRootPart
 								condition3 = (value11().Position - value10).Magnitude > 1
 							else
 								condition3 = condition4
@@ -15433,11 +15465,11 @@ local function payload(argument, argument2)
 								break
 							end
 							callback48(value10, 160, number9)
-							condition3, number9 = data[23], math.clamp(data[23](), 0.004166666666666667, 0.05)
+							condition3, number9 = heartbeatWait, math.clamp(heartbeatWait(), 0.004166666666666667, 0.05)
 						end
 					end
 
-					value8 = data[8]
+					value8 = humanoid
 					value7 = value8()
 					if value7 then
 						value7.PlatformStand = false
@@ -15477,7 +15509,7 @@ local function payload(argument, argument2)
 
 				autoCaptureEventEgg = iMap2["Minigame Eggs"]
 				local function callback57(mgSt)
-					local value7 = data[20]
+					local value7 = state
 					value7.mgSt = mgSt
 				end
 				callback19(autoCaptureEventEgg, "Auto Steal Minigame Egg", "minigame", true, nil, "Red Light Green Light, T-Rex Run")
@@ -15485,14 +15517,14 @@ local function payload(argument, argument2)
 				local module4, condition3, number9 = callback22({name = "Minigame", gap = 0.5}), false, 0
 
 				local function callback58()
-					local value7 = data[20]
+					local value7 = state
 
 					if value7.mgUid then
-						local value8, value9, pos = data[20], data[20], table.find(data[20].pick, data[20].mgUid)
+						local value8, value9, pos = state, state, table.find(state.pick, state.mgUid)
 						if pos then
-							table.remove(data[20].pick, pos)
+							table.remove(state.pick, pos)
 						end
-						pos = data[20]
+						pos = state
 						pos.mgUid = nil
 					end
 
@@ -15500,12 +15532,12 @@ local function payload(argument, argument2)
 						value7 = data[21]
 
 						if not value7() then
-							local value8 = data[20]
+							local value8 = state
 
 							if value8.autoSteal then
 								condition3 = false
 								callback14("mgSteal", function()
-									local value9 = data[20]
+									local value9 = state
 									value9.autoSteal:Set(false)
 								end)
 							end
@@ -15520,7 +15552,7 @@ local function payload(argument, argument2)
 					if minigame then
 						minigame2 = minigame
 					else
-						value7 = data[20]
+						value7 = state
 						minigame2 = value7.mgUid ~= nil
 					end
 					return minigame2
@@ -15540,14 +15572,14 @@ local function payload(argument, argument2)
 						local value8 = data[25]
 						return callback57(value8.minigame and "Waiting for Red Light Green Light or T-Rex Run" or "Off")
 					end
-					local attribute, attribute2, bottomCFrame = workspace:GetAttribute(value7 .. "_CarrierUserId"), workspace:GetAttribute(value7 .. "_EggPosition"), data[1]
+					local attribute, attribute2, bottomCFrame = workspace:GetAttribute(value7 .. "_CarrierUserId"), workspace:GetAttribute(value7 .. "_EggPosition"), localPlayer
 					if attribute == bottomCFrame.UserId then
 						return callback57("Carrying the egg home")
 					end
 
 					if type(attribute) == "number" then
 						if attribute > 0 then
-							condition4 = data[20]
+							condition4 = state
 							condition4.mgUid = nil
 							return callback57("Another player has the egg")
 						end
@@ -15557,14 +15589,14 @@ local function payload(argument, argument2)
 						callback58()
 						return callback57("Waiting for the egg to land")
 					end
-					attribute, bottomCFrame = pairs, data[18]
+					attribute, bottomCFrame = pairs, eggReadFieldEggs
 					local now3, number10, uid = argument[72](bottomCFrame()), 40
 
 					for k, value8 in attribute(argument:g2(now3)) do
 						bottomCFrame = type(value8) == "table" and value8.State ~= "Carried" and value8.State ~= "Claimed" and (value8.BottomCFrame or value8.BoundsCFrame)
 						condition4, k = typeof(bottomCFrame) == "CFrame"
 						if condition4 then
-							local value9 = data[28]
+							local value9 = newVector3
 							k = value9(bottomCFrame.Position.X - attribute2.X, 0, bottomCFrame.Position.Z - attribute2.Z).Magnitude
 						else
 							k = condition4
@@ -15580,28 +15612,28 @@ local function payload(argument, argument2)
 						callback58()
 						return callback57("Egg landed, looking for it")
 					end
-					attribute = data[20]
+					attribute = state
 
 					if uid ~= attribute.mgUid or os.clock() - number9 > 2 then
-						condition4, now3 = data[20], os.clock()
+						condition4, now3 = state, os.clock()
 						condition4.mgUid = uid
 						number9 = now3
-						bottomCFrame, attribute2 = data[20], table.find(data[20].pick, uid)
+						bottomCFrame, attribute2 = state, table.find(state.pick, uid)
 
 						if attribute2 ~= 1 then
 							if attribute2 then
-								table.remove(data[20].pick, attribute2)
+								table.remove(state.pick, attribute2)
 							end
-							table.insert(data[20].pick, 1, uid)
-							local value8 = data[20]
+							table.insert(state.pick, 1, uid)
+							local value8 = state
 							value8.rank.Steal = 0
-							value8 = data[20]
+							value8 = state
 							value8.order()
 						end
 
 						if data[4] then
 							if data[4].name == "Steal" then
-								local value8 = data[20]
+								local value8 = state
 								if value8.curUid ~= uid then
 									local value9 = data[21]
 									if not value9() then
@@ -15614,12 +15646,12 @@ local function payload(argument, argument2)
 						local value8 = data[25]
 
 						if not value8.steal then
-							local value9 = data[20]
+							local value9 = state
 
 							if value9.autoSteal then
 								condition3 = true
 								callback14("mgSteal", function()
-									local value10 = data[20]
+									local value10 = state
 									value10.autoSteal:Set(true)
 								end)
 							end
@@ -15629,38 +15661,38 @@ local function payload(argument, argument2)
 					callback57("Going for the " .. ((value7 == "RLGL" and "Red Light Green Light" or "T-Rex Run") .. " egg"))
 				end
 
-				local value7 = data[20]
+				local value7 = state
 
 				value7.greenLight = function(argument5, argument6)
 					local number10 = os.clock() + 20
 
 					while true do
-						local value8 = data[20]
+						local value8 = state
 						if not ((argument5 == value8.mgUid and workspace:GetAttribute("Event_RedLightGreenLight") == true and workspace:GetAttribute("RLGL_Light") ~= "Green" and os.clock() < number10) and argument6()) then
 							break
 						end
-						value8 = data[11]
+						value8 = notify
 						value8("Waiting for the green light")
-						value8 = data[23]
+						value8 = heartbeatWait
 						value8()
 					end
 				end
 			end)
 
 			saveFile("37_banjo#1", function()
-				local data10, data11, value6, reBanjoCricketEffect, value7, instance, value8 = {listen = 0, wrong = 0, acks = {}, next = 0}, {}, data[28], data[28], data[28], data[28], data[28]
+				local data10, data11, value6, reBanjoCricketEffect, value7, instance, value8 = {listen = 0, wrong = 0, acks = {}, next = 0}, {}, newVector3, newVector3, newVector3, newVector3, newVector3
 				argument:H2(data11, 0, value6(6218.93, 17159.02, 16903.8), reBanjoCricketEffect(6257.93, 17159.02, 16912.8), value7(6270.93, 17159.02, 16903.8), instance(6244.93, 17159.02, 16918.8), value8(6231.93, 17159.02, 16912.8))
-				reBanjoCricketEffect = data[28]
-				local value9, value10 = reBanjoCricketEffect(6244.93, 17159.02, 16880), data[28]
-				local value11, value12 = value10(6272.46, 17164.04, 16958.18), data[28]
-				local value13, value14 = value12(6246.9, 17161, 16887), data[28]
-				local value15, value16 = value14(6246.9, 17165, 16881.6), data[28]
-				local value17, value18 = value16(5905.63, 17027.3, 15610.83), data[28]
-				local value19, value20 = value18(6248.72, 17163, 16928), data[28]
+				reBanjoCricketEffect = newVector3
+				local value9, value10 = reBanjoCricketEffect(6244.93, 17159.02, 16880), newVector3
+				local value11, value12 = value10(6272.46, 17164.04, 16958.18), newVector3
+				local value13, value14 = value12(6246.9, 17161, 16887), newVector3
+				local value15, value16 = value14(6246.9, 17165, 16881.6), newVector3
+				local value17, value18 = value16(5905.63, 17027.3, 15610.83), newVector3
+				local value19, value20 = value18(6248.72, 17163, 16928), newVector3
 				local value21 = value20(6248.72, 17163, 16944)
 				local CollectionService = getService("CollectionService")
 				local function callback44()
-					local value22 = data[64]
+					local value22 = savePeek
 					local value23 = value22()
 					return value23 and type(value23.BanjoCricket) == "table" and value23.BanjoCricket or {}
 				end
@@ -15670,7 +15702,7 @@ local function payload(argument, argument2)
 					end)
 					return ok and tonumber(response) or argument5 * 0.65 + 0.5
 				end
-				instance = data[36]
+				instance = networking
 				reBanjoCricketEffect = instance:FindFirstChild("RE/BanjoCricket/Effect")
 
 				if reBanjoCricketEffect then
@@ -15722,24 +15754,24 @@ local function payload(argument, argument2)
 					return ok and response or value11
 				end
 				local function callback48(...)
-					local value22 = data[51]
+					local value22 = world
 					local Build = value22("Build", "EnchantedTreeInterior", "Markers", ...)
 					return Build and Build:IsA("BasePart") and Build.Position
 				end
 				local function callback49()
-					local value22 = data[15]
+					local value22 = humanoidRootPart
 					local value23 = value22()
 					return value23 ~= nil and (value23.Position - (callback48("Passages", "SecretRoomSpawn") or callback48("SecretRoomSpawn") or value13)).Magnitude < 120
 				end
 
 				local function raycastGround(argument5)
-					local raycastParams, filterDescendantsInstances, value22 = RaycastParams.new(), {}, data[1]
+					local raycastParams, filterDescendantsInstances, value22 = RaycastParams.new(), {}, localPlayer
 					argument:H2(filterDescendantsInstances, 0, value22.Character)
 					raycastParams.FilterDescendantsInstances, raycastParams.FilterType = filterDescendantsInstances, Enum.RaycastFilterType.Exclude
-					local value23, value24, hit = data[28], data[28], workspace:Raycast(argument5 + data[28](0, 20, 0), data[28](0, -80, 0), raycastParams)
+					local value23, value24, hit = newVector3, newVector3, workspace:Raycast(argument5 + newVector3(0, 20, 0), newVector3(0, -80, 0), raycastParams)
 					raycastParams = nil
 					if hit then
-						value22, raycastParams = data[28], hit.Position + data[28](0, 3, 0)
+						value22, raycastParams = newVector3, hit.Position + newVector3(0, 3, 0)
 					else
 						raycastParams = hit
 					end
@@ -15747,31 +15779,31 @@ local function payload(argument, argument2)
 				end
 
 				local function callback50(argument5)
-					local value22 = data[15]
+					local value22 = humanoidRootPart
 					local value23 = value22()
 					if value23 then
 						value22 = data[26]
-						value22(CFrame.lookAt(value23.Position, data[28](argument5.X, value23.Position.Y, argument5.Z)))
+						value22(CFrame.lookAt(value23.Position, newVector3(argument5.X, value23.Position.Y, argument5.Z)))
 					end
 				end
 
 				local function callback51(argument5, argument6)
-					local value22, unit = callback46(argument5), data[28]
+					local value22, unit = callback46(argument5), newVector3
 					local unit2 = unit(value22.X - value9.X, 0, value22.Z - value9.Z)
 					unit = unit2.Magnitude > 0.1 and unit2.Unit
 					if unit then
 						unit2 = unit
 					else
-						local value23 = data[28]
+						local value23 = newVector3
 						unit2 = (value23(0, 0, 1))
 					end
-					unit = data[50]
+					unit = ready
 					if not unit(raycastGround(value22 + unit2 * 6.5), argument6, 60) then
 						return false
 					end
 					callback50(value22)
-					unit = data[20]
-					argument6, value22 = unit.bat(), data[8]
+					unit = state
+					argument6, value22 = unit.bat(), humanoid
 					unit = value22()
 
 					if argument6 then
@@ -15782,7 +15814,7 @@ local function payload(argument, argument2)
 						return false
 					end
 
-					value22 = data[1]
+					value22 = localPlayer
 					if argument6.Parent ~= value22.Character then
 						pcall(unit.EquipTool, unit, argument6)
 						task.wait(0.25)
@@ -15822,7 +15854,7 @@ local function payload(argument, argument2)
 					local number8, number9 = 0, 0
 
 					while argument5() and os.clock() < number7 do
-						local notes = data[1]
+						local notes = localPlayer
 
 						if notes:GetAttribute("InEnchantedTree") then
 							if not callback49() then
@@ -15845,7 +15877,7 @@ local function payload(argument, argument2)
 							else
 								number9 = 0
 								data10.notes = nil
-								local value22 = data[11]
+								local value22 = notify
 								value22(("Playing back %d notes"):format(#notes))
 								value22 = ipairs
 
@@ -15864,7 +15896,7 @@ local function payload(argument, argument2)
 									end
 
 									if k ~= "ok" then
-										note = data[11]
+										note = notify
 										note("Missed a note, starting over", "warn")
 										break
 									end
@@ -15876,11 +15908,11 @@ local function payload(argument, argument2)
 							if os.clock() - number8 > 4 then
 								number9 += 1
 								if number9 > 12 then
-									local value22 = data[11]
+									local value22 = notify
 									value22("The mushrooms do not answer", "warn")
 									return false
 								end
-								local value22 = data[11]
+								local value22 = notify
 								value22("Waking the mushrooms")
 								callback51(4, argument5)
 								number8 = os.clock()
@@ -15899,19 +15931,19 @@ local function payload(argument, argument2)
 					end
 
 					for i = 1, 2, 1 do
-						i = data[51]
+						i = world
 						local Build = i("Build", "EnchantedTreeInterior", "SecretLeapHint", "Streaks")
-						local position, value22 = Build and Build:IsA("BasePart") and Build.Position or value17, data[15]
+						local position, value22 = Build and Build:IsA("BasePart") and Build.Position or value17, humanoidRootPart
 						i = value22()
 						if not i then
 							return false
 						end
-						value22 = data[11]
+						value22 = notify
 						value22("Flying to the Secret Leap")
-						Build, value22 = data[50], data[28]
+						Build, value22 = ready, newVector3
 
 						if Build(value22(i.Position.X, position.Y + 18, i.Position.Z), argument5, 120) then
-							local value23, value24 = data[50], data[28]
+							local value23, value24 = ready, newVector3
 							if not value23(position + value24(0, 18, 0), argument5, 120) then
 								return false
 							end
@@ -15919,7 +15951,7 @@ local function payload(argument, argument2)
 							return false
 						end
 
-						i = data[11]
+						i = notify
 						i("Taking the Secret Leap")
 						Build = os.clock() + 8
 						while os.clock() < Build and argument5() and not callback49() do
@@ -15938,24 +15970,24 @@ local function payload(argument, argument2)
 					task.wait(5)
 
 					for i = 1, 3, 1 do
-						local value22, AskClaim = callback47(), data[15]
+						local value22, AskClaim = callback47(), humanoidRootPart
 						i = AskClaim()
 
 						if i and (i.Position - value22).Magnitude > 9 then
-							AskClaim = data[11]
+							AskClaim = notify
 							AskClaim("Going to Jitterbug")
-							local unit = data[28]
+							local unit = newVector3
 							local unit2 = unit(value21.X - value22.X, 0, value21.Z - value22.Z)
 							unit = unit2.Magnitude > 0.1 and unit2.Unit
 							if unit then
 								unit2 = unit
 							else
-								local value23 = data[28]
+								local value23 = newVector3
 								unit2 = (value23(0, 0, -1))
 							end
 							local value, data12 = ipairs, {raycastGround(value19), raycastGround(value21), raycastGround(value22 + unit2 * 6)}
 							for _, value23 in value(data12) do
-								unit = data[50]
+								unit = ready
 								if not unit(value23, argument5, 60) then
 									return false
 								end
@@ -15963,7 +15995,7 @@ local function payload(argument, argument2)
 							callback50(value22)
 						end
 
-						value22 = data[11]
+						value22 = notify
 						value22("Claiming Cricket's Banjo")
 						value22 = data[9]
 						AskClaim, i = value22("RF/BanjoCricket/AskClaim")
@@ -15979,7 +16011,7 @@ local function payload(argument, argument2)
 				end
 
 				local function callback56()
-					local Passages = data[8]
+					local Passages = humanoid
 					local value22 = Passages()
 					local function callback57()
 						return true
@@ -15989,17 +16021,17 @@ local function payload(argument, argument2)
 					end
 
 					if callback49() then
-						Passages, value22 = callback48("Passages", "SecretRoomExit") or value15, data[50]
+						Passages, value22 = callback48("Passages", "SecretRoomExit") or value15, ready
 						value22(Passages, callback57, 60)
 						local number7 = os.clock() + 5
 						while os.clock() < number7 and callback49() do
-							local value23, value24 = data[26], data[27]
+							local value23, value24 = data[26], newCFrame
 							value23(value24(Passages))
 							task.wait(0.1)
 						end
 					end
 
-					value22 = data[20]
+					value22 = state
 					value22.leaveTree()
 				end
 
@@ -16010,9 +16042,9 @@ local function payload(argument, argument2)
 				end
 
 				local function callback57(banjoCricket)
-					local value22 = data[20]
+					local value22 = state
 					if value22.wispSay then
-						local value23 = data[20]
+						local value23 = state
 						value23.wispSay("Banjo cricket: " .. banjoCricket)
 					end
 				end
@@ -16022,11 +16054,11 @@ local function payload(argument, argument2)
 						data10.done = true
 						return callback57("done, Cricket's Banjo is yours")
 					end
-					local value22 = data[1]
+					local value22 = localPlayer
 					if value22:GetAttribute("EnchantedTreeUnlocked") ~= true then
 						return callback57("needs the Enchanted Tree open (finish the wisp quest)")
 					end
-					value22 = data[20]
+					value22 = state
 					if not value22.bat() then
 						return callback57("needs a bat in your bag")
 					end
@@ -16038,14 +16070,14 @@ local function payload(argument, argument2)
 				end
 
 				module2.run = function(argument5, argument6)
-					argument5 = data[20]
+					argument5 = state
 					if not argument5.needBody() then
 						return callback57("leaving invisibility first")
 					end
 					data10.next = os.clock() + 15
 
 					if data[13](argument6) then
-						argument5 = data[20]
+						argument5 = state
 						if not argument5.enterTree(argument6) then
 							return callback57("could not get into the Enchanted Tree")
 						end
@@ -16090,12 +16122,12 @@ local function payload(argument, argument2)
 					return false
 				end
 
-				local value6 = data[20]
+				local value6 = state
 				value6.dawnNow = function()
 					local number7 = os.clock() - (now3 or -99)
 					return number7 < 20
 				end
-				local value7 = data[20]
+				local value7 = state
 
 				value7.stealDawn = function(argument5, argument6)
 					local number7, argument7 = os.clock() - (now3 or -99), data[25]
@@ -16115,7 +16147,7 @@ local function payload(argument, argument2)
 								if condition4 then
 									argument = condition4
 								else
-									local value8 = data[20]
+									local value8 = state
 									argument = value8.stealWants()
 								end
 							else
@@ -16128,7 +16160,7 @@ local function payload(argument, argument2)
 
 					number7 = nil
 					if argument then
-						steal = data[20]
+						steal = state
 						number7 = (steal.rank["Steal:filter"] or 9) < argument5
 					else
 						number7 = argument
@@ -16137,7 +16169,7 @@ local function payload(argument, argument2)
 				end
 
 				local function callback44(argument5)
-					local value8 = data[28]
+					local value8 = newVector3
 					return value8(argument5.X, 0, argument5.Z)
 				end
 
@@ -16157,26 +16189,26 @@ local function payload(argument, argument2)
 					return instance.Parent and callback45(instance.Parent)
 				end
 
-				local value8 = data[20]
+				local value8 = state
 
 				value8.normalWalk = function(humanoid)
 					if humanoid.WalkSpeed >= 16 then
 						return humanoid.WalkSpeed
 					end
 					local ok, response = pcall(function()
-						local value9 = data[1]
+						local value9 = localPlayer
 						return require(ReplicatedStorage.Shared.Util.TreadmillUtil).SpeedPowerToWalkSpeed(value9.leaderstats.Speed.Value)
 					end)
 					return ok and tonumber(response) and response >= 16 and response or 16
 				end
 
 				local function callback46(argument5)
-					local value9 = data[8]
+					local value9 = humanoid
 					local value10 = value9()
 
 					if argument5 then
 						if value10 then
-							value9 = data[1]
+							value9 = localPlayer
 							if argument5.Parent ~= value9.Character then
 								pcall(value10.EquipTool, value10, argument5)
 							end
@@ -16187,14 +16219,14 @@ local function payload(argument, argument2)
 				end
 
 				local function callback47(argument5)
-					local value9 = data[15]
+					local value9 = humanoidRootPart
 					local value10 = value9()
 
 					if value10 and argument5 then
 						local value11 = callback44(argument5 - value10.Position)
 						if value11.Magnitude > 0.1 then
 							pcall(function()
-								local value12 = data[27]
+								local value12 = newCFrame
 								value10.CFrame = value12(value10.Position, value10.Position + value11.Unit)
 							end)
 						end
@@ -16202,7 +16234,7 @@ local function payload(argument, argument2)
 				end
 
 				local function callback48(argument5, argument6)
-					local instance = data[36]
+					local instance = networking
 					local value9 = instance:FindFirstChild(argument5)
 					if value9 then
 						if value9:IsA("RemoteEvent") then
@@ -16223,7 +16255,7 @@ local function payload(argument, argument2)
 
 					for k, entry in value(entries) do
 						if type(entry) == "table" then
-							k = data[1]
+							k = localPlayer
 							if entry.UserId == k.UserId then
 								return entry
 							end
@@ -16235,17 +16267,17 @@ local function payload(argument, argument2)
 					local snap = data10.snap
 					return snap ~= nil and enabledFlags2[snap.Phase] == true and os.clock() - data10.at < 30 and data10.me() ~= nil
 				end
-				local value9 = data[20]
+				local value9 = state
 
 				value9.lock = function()
-					local value10 = data[20]
+					local value10 = state
 					if value10.fuseZone then
-						local value11 = data[20]
+						local value11 = state
 						if value11.fuseZone() then
 							return "FuseZone"
 						end
 					end
-					value10 = data[1]
+					value10 = localPlayer
 					if value10:GetAttribute("RaceId") == "TheHollowTrack" then
 						return "Hollow"
 					end
@@ -16253,16 +16285,16 @@ local function payload(argument, argument2)
 					if data10.held() then
 						return "IslandWars"
 					end
-					value10 = data[20]
+					value10 = state
 					if value10.ufoIn then
-						local value11 = data[20]
+						local value11 = state
 						if value11.ufoIn() then
 							return "UFO"
 						end
 					end
 				end
 
-				local value10 = data[20]
+				local value10 = state
 
 				value10.realHum = function()
 					local condition4 = data10.held()
@@ -16270,7 +16302,7 @@ local function payload(argument, argument2)
 					if condition4 then
 						condition = condition4
 					else
-						local instance = data[1]
+						local instance = localPlayer
 						condition = instance:GetAttribute("RaceId") ~= nil
 					end
 					condition4 = nil
@@ -16278,10 +16310,10 @@ local function payload(argument, argument2)
 					if condition then
 						condition4 = condition
 					else
-						local value11 = data[20]
+						local value11 = state
 						local condition3 = value11.ufoIn ~= nil
 						if condition3 then
-							value11 = data[20]
+							value11 = state
 							condition4 = value11.ufoIn()
 						else
 							condition4 = condition3
@@ -16291,13 +16323,13 @@ local function payload(argument, argument2)
 					return condition4
 				end
 
-				local value11 = data[20]
+				local value11 = state
 				value11.highOk = function()
-					local value12 = data[20]
+					local value12 = state
 					return (value12.lock() or "FuseZone") ~= "FuseZone"
 				end
 				local list
-				local number7, value12 = 0, data[20]
+				local number7, value12 = 0, state
 
 				value12.hideTread = function(argument5)
 					number7 = math.max(number7, os.clock() + argument5)
@@ -16341,9 +16373,9 @@ local function payload(argument, argument2)
 					end)
 				end
 
-				local cursedIslandWars = data[1]
+				local cursedIslandWars = localPlayer
 				trackConnection(cursedIslandWars.CharacterAdded, function()
-					local value13 = data[20]
+					local value13 = state
 					value13.hideTread(6)
 				end)
 				local function callback49()
@@ -16408,12 +16440,12 @@ local function payload(argument, argument2)
 					end)
 				end
 
-				table.insert(data[20].cleanup, function()
+				table.insert(state.cleanup, function()
 					callback50(false)
 				end)
 
 				local function raycastGround()
-					local raycastParams = data[15]
+					local raycastParams = humanoidRootPart
 					local value14 = raycastParams()
 
 					if value14 then
@@ -16431,7 +16463,7 @@ local function payload(argument, argument2)
 					raycastParams = RaycastParams.new()
 					raycastParams.FilterType = Enum.RaycastFilterType.Include
 					raycastParams.FilterDescendantsInstances = data10.col
-					local value15, hit = data[28], workspace:Raycast(value14.Position, data[28](0, -14, 0), raycastParams)
+					local value15, hit = newVector3, workspace:Raycast(value14.Position, newVector3(0, -14, 0), raycastParams)
 					return hit ~= nil
 				end
 
@@ -16453,7 +16485,7 @@ local function payload(argument, argument2)
 					callback50(true)
 
 					while argument6() do
-						local snap, sd, humanoidRootPart = data10.snap, data10.me(), data[15]
+						local snap, sd, humanoidRootPart = data10.snap, data10.me(), humanoidRootPart
 						argument5 = humanoidRootPart()
 
 						if snap then
@@ -16482,10 +16514,10 @@ local function payload(argument, argument2)
 
 						if sd then
 							if callback44(argument5.Position - humanoidRootPart).Magnitude > 18 then
-								local value14 = data[11]
+								local value14 = notify
 								value14("Island Wars: moving to the centre")
 								value14 = nil
-								value14, argument5.AssemblyLinearVelocity = data[28], callback44(humanoidRootPart - argument5.Position).Unit * math.max(callback4(), 30) + data[28](0, argument5.AssemblyLinearVelocity.Y, 0)
+								value14, argument5.AssemblyLinearVelocity = newVector3, callback44(humanoidRootPart - argument5.Position).Unit * math.max(callback4(), 30) + newVector3(0, argument5.AssemblyLinearVelocity.Y, 0)
 							end
 						end
 
@@ -16508,7 +16540,7 @@ local function payload(argument, argument2)
 							local Bat, PumpkinLauncher = callback51("Bat"), callback51("PumpkinLauncher")
 
 							if humanoidRootPart and sd <= 10 and Bat and serverTimeNow >= (data10.cd.Bat or 0) then
-								value14 = data[11]
+								value14 = notify
 								value14("Island Wars: hitting an enemy")
 								callback46(Bat)
 								callback47(humanoidRootPart.Position)
@@ -16520,7 +16552,7 @@ local function payload(argument, argument2)
 									local humanoidRootPart2 = (humanoidRootPart and humanoidRootPart.Position + humanoidRootPart.AssemblyLinearVelocity * (sd / 110) or (barrier and (tonumber(barrier.Health) or 0) > 0 and typeof(barrier.Model) == "Instance" and callback45(barrier.Model:FindFirstChild("Hitbox") or barrier.Model))) or (crystal and (tonumber(crystal.Health) or 0) > 0 and typeof(crystal.Model) == "Instance" and callback45(crystal.Model:FindFirstChild("Pivot", true) or crystal.Model))
 
 									if humanoidRootPart2 then
-										crystal = data[11]
+										crystal = notify
 										crystal(humanoidRootPart and "Island Wars: shooting an enemy" or "Island Wars: shooting the enemy base")
 										callback46(PumpkinLauncher)
 										callback47(humanoidRootPart2)
@@ -16531,7 +16563,7 @@ local function payload(argument, argument2)
 											worldPosition2 = worldPosition
 										else
 											local value15
-											value15, worldPosition2 = data[28], argument5.Position + data[28](0, 1.5, 0)
+											value15, worldPosition2 = newVector3, argument5.Position + newVector3(0, 1.5, 0)
 										end
 										if (humanoidRootPart2 - worldPosition2).Magnitude > 1 then
 											data10.shot = data10.shot + 1
@@ -16543,7 +16575,7 @@ local function payload(argument, argument2)
 							end
 						end
 
-						humanoidRootPart = data[23]
+						humanoidRootPart = heartbeatWait
 						humanoidRootPart()
 					end
 
@@ -16576,7 +16608,7 @@ local function payload(argument, argument2)
 			end)
 
 			saveFile("39_ufo#1", function()
-				local ufo, ufoSightings = {st = {}, sus = {}, eggs = 0, agF = {}}, data[20]
+				local ufo, ufoSightings = {st = {}, sus = {}, eggs = 0, agF = {}}, state
 				ufoSightings.UFO = ufo
 				local module2 = callback22({name = "UFO", mover = true, gap = 1, pri = 3, soft = true, vis = function(argument5)
 					return argument5 ~= "hold"
@@ -16612,13 +16644,13 @@ local function payload(argument, argument2)
 					end
 				end
 
-				ufoSightings = data[36]
+				ufoSightings = networking
 				local reUFOSightingsState = ufoSightings:FindFirstChild("RE/UFOSightings/State")
 				if reUFOSightingsState then
 					trackConnection(reUFOSightingsState.OnClientEvent, callback44)
 				end
 				task.spawn(callback45)
-				local value6 = data[20]
+				local value6 = state
 
 				value6.ufoIn = function()
 					local interior = ufo.st.Interior
@@ -16632,7 +16664,7 @@ local function payload(argument, argument2)
 						end
 					end
 
-					local rareUFOInterior, value7 = workspace:FindFirstChild("RareUFOInterior"), data[15]
+					local rareUFOInterior, value7 = workspace:FindFirstChild("RareUFOInterior"), humanoidRootPart
 					interior = value7()
 					return rareUFOInterior ~= nil and interior ~= nil and interior.Position.Y > 1000 and (interior.Position - rareUFOInterior:GetPivot().Position).Magnitude < 800
 				end
@@ -16645,57 +16677,57 @@ local function payload(argument, argument2)
 					local st = ufo.st
 					return st.Event and st.Decoded and not st.Complete and st.Event.Variant ~= "Rare"
 				end
-				local value7 = data[20]
+				local value7 = state
 				value7.ufoSteals = function()
 					local value8 = data[25]
 					return value8.ufo and callback47()
 				end
-				local value8 = data[20]
+				local value8 = state
 				value8.ufoWants = function()
 					local st, value9 = ufo.st, data[25]
 					return value9.ufo and (st.Event ~= nil and not st.Complete or st.Reward ~= nil or callback46() ~= nil)
 				end
-				reUFOSightingsState = data[20]
-				local cmode, value9 = reUFOSightingsState.cmode, data[20]
+				reUFOSightingsState = state
+				local cmode, value9 = reUFOSightingsState.cmode, state
 
 				value9.cmode = function(argument5)
-					local value10 = data[20]
+					local value10 = state
 					if value10.stealKind == "ufo" then
 						return "Tween"
 					end
 					return cmode(argument5)
 				end
 
-				local value10 = data[20]
+				local value10 = state
 
 				value10.ufoTP = function(argument5)
-					local value11 = data[15]
+					local value11 = humanoidRootPart
 					local value12, value13 = value11(), data[25]
 					local condition3 = value13.ufoTp == true and value12 ~= nil
 					local condition4
 					if condition3 then
-						value13, condition4 = data[20], table.find(data[20].TZ, tostring(argument5.a)) ~= nil
+						value13, condition4 = state, table.find(state.TZ, tostring(argument5.a)) ~= nil
 					else
 						condition4 = condition3
 					end
 					return condition4 and (value12.Position - argument5.Pos).Magnitude >= 1000
 				end
 
-				local value11 = data[20]
+				local value11 = state
 
 				value11.ufoNoAG = function()
-					local value12 = data[20]
+					local value12 = state
 					local condition3 = value12.curArea == tostring(ufo.st.Biome)
 					local condition
 					if condition3 then
 						condition = condition3
 					else
-						value12, condition = data[20], (ufo.agF[data[20].curUid] or 0) >= 2
+						value12, condition = state, (ufo.agF[state.curUid] or 0) >= 2
 					end
 					return condition
 				end
 
-				local value12 = data[20]
+				local value12 = state
 
 				value12.ufoEgg = function(argument5, argument6)
 					local value13 = data[25]
@@ -16731,7 +16763,7 @@ local function payload(argument, argument2)
 						return
 					end
 
-					local condition3 = data[20]
+					local condition3 = state
 					if condition3.ufoIn() then
 						return "inside"
 					end
@@ -16786,14 +16818,14 @@ local function payload(argument, argument2)
 				end
 
 				local function callback49(argument5, argument6, argument7, argument8)
-					local value13 = data[1]
+					local value13 = localPlayer
 					local character = value13.Character
 
 					local function callback50()
 						local value14 = argument6()
 						local condition3
 						if value14 then
-							local value15 = data[1]
+							local value15 = localPlayer
 							condition3 = value15.Character == character
 						else
 							condition3 = value14
@@ -16802,7 +16834,7 @@ local function payload(argument, argument2)
 					end
 
 					if data[13](callback50) then
-						value13 = data[14]
+						value13 = attribute2
 						if not value13(callback50) then
 							return false
 						end
@@ -16810,7 +16842,7 @@ local function payload(argument, argument2)
 						return false
 					end
 
-					value13 = data[15]
+					value13 = humanoidRootPart
 					local value14 = value13()
 
 					if value14 then
@@ -16823,11 +16855,11 @@ local function payload(argument, argument2)
 						end
 					end
 
-					value13 = data[15]
+					value13 = humanoidRootPart
 					value14 = value13()
 					if value14 then
 						if (value14.Position - argument5).Magnitude > (argument8 or 300) then
-							value13 = data[28]
+							value13 = newVector3
 							ragTo(argument5 + value13(0, 3, 0), callback50)
 						end
 					end
@@ -16841,7 +16873,7 @@ local function payload(argument, argument2)
 						if not argument6() then
 							return false
 						end
-						argument5 = data[23]
+						argument5 = heartbeatWait
 						argument5()
 					end
 
@@ -16851,9 +16883,9 @@ local function payload(argument, argument2)
 				local function callback51(argument5, argument6)
 					local number7 = os.clock() + 1.2
 					while os.clock() < number7 and argument6() do
-						local value13, value14, value15 = data[26], data[27], data[28]
+						local value13, value14, value15 = data[26], newCFrame, newVector3
 						value13(value14(argument5 + value15(0, 1, 2)))
-						value14 = data[23]
+						value14 = heartbeatWait
 						value14()
 					end
 					return argument6()
@@ -16981,7 +17013,7 @@ local function payload(argument, argument2)
 						return
 					end
 
-					Repair = data[11]
+					Repair = notify
 					Repair(select(2, data[9]("RF/UFOSightings/Repair", "Finish", {Id = value14.Id, Rotations = value13})) and "UFO decoder ready" or "UFO repair failed")
 					callback45()
 					return true
@@ -17019,7 +17051,7 @@ local function payload(argument, argument2)
 						if not argument5() then
 							return
 						end
-						k = data[15]
+						k = humanoidRootPart
 						local value15 = k()
 						if value15 then
 							if (value15.Position - value14.Position).Magnitude > 20 then
@@ -17067,7 +17099,7 @@ local function payload(argument, argument2)
 				end
 
 				module3.decode = function(argument5)
-					local value13, value14 = callback54(), data[8]
+					local value13, value14 = callback54(), humanoid
 					local value15 = value14()
 					value14 = value13 and value15
 					local condition3 = if value14 then not data[13](argument5) else not value14
@@ -17075,14 +17107,14 @@ local function payload(argument, argument2)
 					if condition3 then
 						condition = condition3
 					else
-						value14 = data[14]
+						value14 = attribute2
 						condition = not value14(argument5)
 					end
 					if condition then
 						module2.at = os.clock() + 2
 						return
 					end
-					value14 = data[15]
+					value14 = humanoidRootPart
 					condition3 = value14()
 
 					if condition3 then
@@ -17102,7 +17134,7 @@ local function payload(argument, argument2)
 						local event = argument5() and os.clock() < condition3 and ufo.st.Event and not ufo.st.Decoded
 						local condition4
 						if event then
-							condition = data[20]
+							condition = state
 							condition4 = not condition.better(module2)
 						else
 							condition4 = event
@@ -17110,7 +17142,7 @@ local function payload(argument, argument2)
 						if not condition4 then
 							break
 						end
-						condition4 = data[15]
+						condition4 = humanoidRootPart
 						event = condition4()
 						if not event then
 							return
@@ -17118,9 +17150,9 @@ local function payload(argument, argument2)
 
 						if os.clock() >= value14 then
 							value14, value13 = os.clock() + 0.5, callback54() or value13
-							condition4 = data[8]
+							condition4 = humanoid
 							value15 = condition4() or value15
-							local value16 = data[1]
+							local value16 = localPlayer
 							if value13.Parent ~= value16.Character then
 								pcall(value15.EquipTool, value15, value13)
 							end
@@ -17146,13 +17178,13 @@ local function payload(argument, argument2)
 							end
 						end
 
-						x = data[28]
+						x = newVector3
 						event.AssemblyLinearVelocity = x(number10, event.AssemblyLinearVelocity.Y, (-365 - event.Position.Z) * 5)
-						signal = data[23]
+						signal = heartbeatWait
 						signal()
 					end
 
-					condition = data[8]
+					condition = humanoid
 					value15 = condition()
 					if value15 then
 						pcall(value15.UnequipTools, value15)
@@ -17161,7 +17193,7 @@ local function payload(argument, argument2)
 				end
 
 				module3.hold = function(argument5)
-					local assemblyLinearVelocity = data[15]
+					local assemblyLinearVelocity = humanoidRootPart
 					local value13 = assemblyLinearVelocity()
 					if value13 then
 						assemblyLinearVelocity = data[41]
@@ -17171,7 +17203,7 @@ local function payload(argument, argument2)
 					while true do
 						value13, assemblyLinearVelocity = argument5() and callback47()
 						if value13 then
-							local value14 = data[20]
+							local value14 = state
 							assemblyLinearVelocity = not value14.better(module2)
 						else
 							assemblyLinearVelocity = value13
@@ -17179,7 +17211,7 @@ local function payload(argument, argument2)
 						if not assemblyLinearVelocity then
 							break
 						end
-						local value14 = data[23]
+						local value14 = heartbeatWait
 						value14()
 					end
 
@@ -17190,7 +17222,7 @@ local function payload(argument, argument2)
 					local position = ufo.st.Ufo and ufo.st.Ufo.Position
 
 					if position then
-						local value13 = data[28]
+						local value13 = newVector3
 						if not callback49(position - value13(0, 85, 0), argument5, 20, 400) then
 							return
 						end
@@ -17204,7 +17236,7 @@ local function payload(argument, argument2)
 						local condition3 = argument5() and os.clock() < position
 						local condition4
 						if condition3 then
-							local value13 = data[20]
+							local value13 = state
 							condition4 = not value13.ufoIn()
 						else
 							condition4 = condition3
@@ -17212,7 +17244,7 @@ local function payload(argument, argument2)
 						if not condition4 then
 							break
 						end
-						condition3 = data[23]
+						condition3 = heartbeatWait
 						condition3()
 					end
 
@@ -17231,10 +17263,10 @@ local function payload(argument, argument2)
 				module3.inside = function(argument5)
 					local rareUFOInterior = workspace:FindFirstChild("RareUFOInterior")
 					local capsules, data11, number7 = rareUFOInterior and rareUFOInterior.Interactables:FindFirstChild("Capsules"), {}
-					local keypad = data[58]
+					local keypad = runService
 
 					callback30("ufoClip", keypad.Stepped, function()
-						local value13 = data[1]
+						local value13 = localPlayer
 						local character = value13.Character
 
 						for _, value14 in ipairs(character and character:GetDescendants() or {}) do
@@ -17249,7 +17281,7 @@ local function payload(argument, argument2)
 
 					callback30("ufoPin", heartbeat, function()
 						if number7 then
-							local value13 = data[20]
+							local value13 = state
 							if value13.ufoIn() then
 								local value14 = data[26]
 								value14(number7)
@@ -17263,7 +17295,7 @@ local function payload(argument, argument2)
 						keypad = argument5()
 						local keypad2
 						if keypad then
-							local value13 = data[20]
+							local value13 = state
 							keypad2 = value13.ufoIn()
 						else
 							keypad2 = keypad
@@ -17271,7 +17303,7 @@ local function payload(argument, argument2)
 						if not keypad2 then
 							break
 						end
-						local number8, data13, number9 = callback46(), {}, data[20]
+						local number8, data13, number9 = callback46(), {}, state
 						keypad2 = number9.bat()
 						for _, value13 in ipairs(number8 and number8.List or {}) do
 							callback2("RE/UFOSightings/CollectRock", number8.Id, value13.Index)
@@ -17279,7 +17311,7 @@ local function payload(argument, argument2)
 						for _, value13 in ipairs(ufo.st.Interior and ufo.st.Interior.Broken or {}) do
 							data13[tostring(value13)] = true
 						end
-						number8, number9 = 1 / 0, data[15]
+						number8, number9 = 1 / 0, humanoidRootPart
 						local boundsCFrame, data14 = number9(), {}
 
 						for _, value13 in ipairs(capsules and capsules:GetChildren() or {}) do
@@ -17320,13 +17352,13 @@ local function payload(argument, argument2)
 							break
 						end
 						number8[data13] = (number8[data13] or 0) + 1
-						boundsCFrame = data[8]
+						boundsCFrame = humanoid
 						number8 = boundsCFrame()
 
 						if keypad2 and number8 then
 							boundsCFrame, number9 = data13:GetBoundingBox()
-							local position, value13, number10 = data14[data13], callback55(data13), data[15]
-							local value14, value15 = number10(), data[28]
+							local position, value13, number10 = data14[data13], callback55(data13), humanoidRootPart
+							local value14, value15 = number10(), newVector3
 							number10 = (value15())
 							for _, value16 in ipairs(value13) do
 								number10 += value16 / #value13
@@ -17335,7 +17367,7 @@ local function payload(argument, argument2)
 							if #value13 < 2 then
 								value15 = nil
 								if value14 then
-									local value16 = data[28]
+									local value16 = newVector3
 									value15 = value16(value14.Position.X - position.X, 0, value14.Position.Z - position.Z)
 								else
 									value15 = value14
@@ -17345,31 +17377,31 @@ local function payload(argument, argument2)
 								if unit then
 									unit2 = unit
 								else
-									local value16 = data[28]
+									local value16 = newVector3
 									unit2 = (value16(0, 0, 1))
 								end
 								number10 = position + unit2 * (math.max(number9.X, number9.Z) / 2 + 2)
 							end
 
-							value13 = data[28]
-							local position2, value16 = value13(position.X, number10.Y, position.Z), data[27]
+							value13 = newVector3
+							local position2, value16 = value13(position.X, number10.Y, position.Z), newCFrame
 							position, value15 = (position2 - number10).Magnitude > 0.5 and position2
 							if position then
 								value15 = position
 							else
-								value13 = data[28]
+								value13 = newVector3
 								value15 = number10 + value13(0, 0, -1)
 							end
 							value13, position2, position = value16(number10, value15), number7 and number7.Position or value14 and value14.Position or number10, os.clock()
 							value15 = (number10 - position2).Magnitude / math.max(callback4() * 0.95, 16)
 							while argument5() and os.clock() - position < value15 do
-								value16 = data[27]
+								value16 = newCFrame
 								number7 = value16(position2:Lerp(number10, (os.clock() - position) / value15)) * value13.Rotation
-								value14 = data[23]
+								value14 = heartbeatWait
 								value14()
 							end
 							number7 = value13
-							value16 = data[1]
+							value16 = localPlayer
 							if keypad2.Parent ~= value16.Character then
 								pcall(number8.EquipTool, number8, keypad2)
 							end
@@ -17425,7 +17457,7 @@ local function payload(argument, argument2)
 					keypad = rareUFOInterior and rareUFOInterior:FindFirstChild("LeavePart")
 					instance, rareUFOInterior = keypad and argument5()
 					if instance then
-						capsules = data[20]
+						capsules = state
 						rareUFOInterior = capsules.ufoIn()
 					else
 						rareUFOInterior = instance
@@ -17440,7 +17472,7 @@ local function payload(argument, argument2)
 							capsules = argument5()
 							local interior
 							if capsules then
-								local value13 = data[20]
+								local value13 = state
 								interior = value13.ufoIn()
 							else
 								interior = capsules
@@ -17448,7 +17480,7 @@ local function payload(argument, argument2)
 							if not (interior and os.clock() < instance) then
 								break
 							end
-							interior = data[23]
+							interior = heartbeatWait
 							interior()
 						end
 					end
@@ -17463,7 +17495,7 @@ local function payload(argument, argument2)
 					return true
 				end
 
-				local value13 = data[20]
+				local value13 = state
 
 				value13.ufoDone = function(argument5, argument6)
 					local d0 = ufo.d0 or 0
@@ -17503,13 +17535,13 @@ local function payload(argument, argument2)
 						if not condition4 then
 							break
 						end
-						condition3 = data[23]
+						condition3 = heartbeatWait
 						condition3()
 					end
 
 					ufo2 = 0
 					while ufo2 < 1.5 and (ufo.st.Delivered or 0) <= d0 do
-						local value14 = data[23]
+						local value14 = heartbeatWait
 						ufo2 += value14()
 					end
 					if (ufo.st.Delivered or 0) > d0 then
@@ -17526,19 +17558,19 @@ local function payload(argument, argument2)
 				end
 
 				local function callback55()
-					local condition3 = data[20]
+					local condition3 = state
 					local value14 = condition3.stealWants()
 					condition3 = nil
 					if value14 then
 						local value15
-						value15, condition3 = data[20], os.clock() < (data[20].stealRetry or 0)
+						value15, condition3 = state, os.clock() < (state.stealRetry or 0)
 					else
 						condition3 = value14
 					end
 					return condition3
 				end
 
-				local value14 = data[20]
+				local value14 = state
 				value14.ufoBusy = function()
 					local value15 = data[25]
 					return value15.ufo and callback48() ~= nil
@@ -17576,11 +17608,11 @@ local function payload(argument, argument2)
 				module4.fn = function()
 					local st, serverTimeNow = ufo.st, getServerTimeNow()
 					ufo.tick = (ufo.tick or 0) + 1
-					local ufo3 = data[20]
+					local ufo3 = state
 					if ufo3.ufoWants() then
-						local value15 = data[20]
+						local value15 = state
 						local value16
-						value16, value15.keepVis = data[20], math.max(data[20].keepVis, os.clock() + 3)
+						value16, value15.keepVis = state, math.max(state.keepVis, os.clock() + 3)
 					end
 					if ufo.tick % 20 == 1 then
 						callback45()
@@ -17710,7 +17742,7 @@ local function payload(argument, argument2)
 						end
 					end
 
-					table.insert(data[20].cleanup, function()
+					table.insert(state.cleanup, function()
 						condition5 = true
 						argument7()
 					end)
@@ -17742,7 +17774,7 @@ local function payload(argument, argument2)
 					data17.Monstrous = callback45(Color3.fromRGB(192, 139, 255))
 					data17.Silver = {t = callback44(0, 255, 255, 255, 0.45, 214, 222, 232, 1, 150, 160, 175), s = callback44(0, 60, 66, 78, 0.55, 30, 33, 40, 1, 10, 11, 14)}
 					data17.Rainbow = {t = callback44(0, 255, 107, 107, 0.2, 255, 179, 107, 0.4, 255, 240, 107, 0.6, 107, 255, 138, 0.8, 107, 200, 255, 1, 185, 107, 255), s = callback44(0, 20, 20, 30, 1, 8, 8, 12), r = 0}
-					local espEggs = data[36]
+					local espEggs = networking
 					local rfEggWorldAskFieldEggSnapshot, number8, number9, number10, enabledFlags, number11, condition3, condition4, condition5, kMap, argumentMap, connections3, kMap2 = espEggs:FindFirstChild("RF/EggWorld/AskFieldEggSnapshot"), 0, 5, 0, {Icon = true, Name = true, Value = true}, 0.75, false, true, false, {}, {}, {}
 					local condition6, number12, number13, condition7, parent = false, 0, 0, false
 					local condition8, condition9 = false, false
@@ -17898,7 +17930,7 @@ local function payload(argument, argument2)
 							if argument5.a ~= distance2 or argument5.cf ~= bottomCFrame then
 								argument5.a, argument5.cf, argument5.b.Adornee = distance2, bottomCFrame, distance2
 								local value9
-								value9, argument5.b.StudsOffsetWorldSpace = data[28], bottomCFrame.Position - distance2.Position + data[28](0, (distance and distance.Position.Y - bottomCFrame.Position.Y or 1) + 0.8, 0)
+								value9, argument5.b.StudsOffsetWorldSpace = newVector3, bottomCFrame.Position - distance2.Position + newVector3(0, (distance and distance.Position.Y - bottomCFrame.Position.Y or 1) + 0.8, 0)
 							end
 						end
 
@@ -17970,7 +18002,7 @@ local function payload(argument, argument2)
 						local callback63_2
 						callback63_2, distance = enabledFlags.Distance and condition10
 						if callback63_2 then
-							condition11 = data[15]
+							condition11 = humanoidRootPart
 							distance = (condition11())
 						else
 							distance = callback63_2
@@ -18042,7 +18074,7 @@ local function payload(argument, argument2)
 							end
 
 							if os.clock() - now3 > 0.002 then
-								k = data[23]
+								k = heartbeatWait
 								k()
 								now3 = os.clock()
 
@@ -18058,7 +18090,7 @@ local function payload(argument, argument2)
 
 						if condition6 then
 							if condition4 then
-								argument5 = data[1]
+								argument5 = localPlayer
 								callback65(argument5, "Your Base", "base:")
 							end
 						end
@@ -18066,7 +18098,7 @@ local function payload(argument, argument2)
 						if condition6 and condition5 then
 							value, argument6 = ipairs, argument[72](Players:GetPlayers())
 							for _, value9 in next(argument:g2(argument6)) do
-								argument5 = data[1]
+								argument5 = localPlayer
 								if value9 ~= argument5 then
 									callback65(value9, value9.DisplayName .. " Base", "base" .. (value9.UserId .. ":"))
 								end
@@ -18112,7 +18144,7 @@ local function payload(argument, argument2)
 										condition8 = true
 									end
 								end
-								ok = data[23]
+								ok = heartbeatWait
 								ok()
 							end
 
@@ -18248,7 +18280,7 @@ local function payload(argument, argument2)
 							for k, value9 in next, kMap2, nil do
 								value9.b:Destroy()
 								if os.clock() - now3 > 0.002 then
-									k = data[23]
+									k = heartbeatWait
 									k()
 									now3 = os.clock()
 								end
@@ -18334,7 +18366,7 @@ local function payload(argument, argument2)
 						end
 
 						if attribute == "Chasing" then
-							local value6, text = data[1], tostring(data[1].UserId)
+							local value6, text = localPlayer, tostring(localPlayer.UserId)
 							if attribute2 == text then
 								return "Chasing You"
 							end
@@ -18377,7 +18409,7 @@ local function payload(argument, argument2)
 						parent = getParent(parent)
 						local highlight, ok, response, response2 = getHighlight(instance, parent), pcall(instance.GetBoundingBox, instance)
 						local number9, value6, value7 = if ok then if typeof(response) == "CFrame" then (response.Position.Y + response2.Y * 0.5) - humanoidRootPart.Position.Y + 1 else 6 else 6, callback47(parent)
-						response = data[28]
+						response = newVector3
 						value6.Adornee, value6.StudsOffsetWorldSpace = humanoidRootPart, response(0, number9, 0)
 						response, ok = callback50(value7, font2, 1, 0.45), callback50(value7, font2, 2, 0.55)
 						callback51(response, tostring(argument5) .. " Guard", data14)
@@ -18397,7 +18429,7 @@ local function payload(argument, argument2)
 					end
 
 					espGuards = callback52("ESP Guards", function()
-						local value6 = data[51]
+						local value6 = world
 						local Areas2 = value6("Areas", "GuardAreas")
 						if not Areas2 then
 							return
@@ -18519,7 +18551,7 @@ local function payload(argument, argument2)
 
 					local function callback60(argument5, argument6, argument7, argument8)
 						local highlight, argument9 = getHighlight(argument6, parent, Color3.fromRGB(0, 67, 148), Color3.fromRGB(72, 207, 255)), argument8 or argument7
-						argument8, argument6 = {Parent = parent, Adornee = argument9, AlwaysOnTop = true, LightInfluence = 0, MaxDistance = number7, Size = UDim2.fromOffset(1, 1)}, data[28]
+						argument8, argument6 = {Parent = parent, Adornee = argument9, AlwaysOnTop = true, LightInfluence = 0, MaxDistance = number7, Size = UDim2.fromOffset(1, 1)}, newVector3
 						argument8.StudsOffsetWorldSpace = argument6(0, argument9 ~= argument7 and math.clamp(argument7.Position.Y - argument9.Position.Y + 3.1, 3.8, 6) or 3.1, 0)
 						argument6 = callback("BillboardGui", argument8)
 						argument9 = callback("Frame", {Parent = argument6, Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1})
@@ -18690,7 +18722,7 @@ local function payload(argument, argument2)
 					end
 
 					local function callback67(player)
-						local value8 = data[1]
+						local value8 = localPlayer
 						if player == value8 then
 							return
 						elseif playerMap[player] then
@@ -18793,7 +18825,7 @@ local function payload(argument, argument2)
 				end
 				callback44()
 				local condition3 = false
-				table.insert(data[20].cleanup, function()
+				table.insert(state.cleanup, function()
 					condition3 = true
 					ScreenGui:Destroy()
 				end)
@@ -18851,7 +18883,7 @@ local function payload(argument, argument2)
 				end
 
 				local function callback47()
-					local backpack = data[1]
+					local backpack = localPlayer
 					local backpackGui = backpack.PlayerGui:FindFirstChild("BackpackGui")
 					backpack = backpackGui and backpackGui:FindFirstChild("Backpack")
 
@@ -18966,7 +18998,7 @@ local function payload(argument, argument2)
 					return argument == argument5
 				end
 
-				RunService = data[58]
+				RunService = runService
 
 				trackConnection(RunService.RenderStepped, function()
 					if condition3 then
@@ -18976,7 +19008,7 @@ local function payload(argument, argument2)
 						pcall(ScreenGui.Destroy, ScreenGui)
 						callback44()
 					end
-					local absolutePosition = data[1]
+					local absolutePosition = localPlayer
 					local playerGui = absolutePosition:FindFirstChildOfClass("PlayerGui")
 					local backpackGui, udim2 = playerGui and playerGui:FindFirstChild("BackpackGui"), data[25]
 					if not (udim2.espInv and backpackGui and backpackGui:IsA("ScreenGui") and backpackGui.Enabled) then
@@ -19063,8 +19095,8 @@ local function payload(argument, argument2)
 
 				callback19(movement, "Speed Boost", "boostOn", false, function(argument5)
 					callback30("boost", argument5 and heartbeat, function()
-						local value6 = data[8]
-						local value7, value8 = value6(), data[15]
+						local value6 = humanoid
+						local value7, value8 = value6(), humanoidRootPart
 						value6 = value8()
 
 						if data[4] then
@@ -19082,7 +19114,7 @@ local function payload(argument, argument2)
 									condition3 = false
 									return
 								else
-									value8 = data[29]
+									value8 = getServerTimeNow
 									if value8() then
 										condition3 = false
 										return
@@ -19100,11 +19132,11 @@ local function payload(argument, argument2)
 						local moveDirection, y = value7.MoveDirection, value6.AssemblyLinearVelocity.Y
 
 						if moveDirection.Magnitude > 0.1 then
-							local value9, x, value10, value11, assemblyLinearVelocity = data[28], moveDirection.X, data[25], data[28]
-							assemblyLinearVelocity, condition3 = value9(x, 0, moveDirection.Z).Unit * data[25].boost + data[28](0, y, 0), true
+							local value9, x, value10, value11, assemblyLinearVelocity = newVector3, moveDirection.X, data[25], newVector3
+							assemblyLinearVelocity, condition3 = value9(x, 0, moveDirection.Z).Unit * data[25].boost + newVector3(0, y, 0), true
 							value6.AssemblyLinearVelocity = assemblyLinearVelocity
 						elseif condition3 then
-							value7, value8 = data[28]
+							value7, value8 = newVector3
 							value8, condition3 = value7(0, y, 0), false
 							value6.AssemblyLinearVelocity = value8
 						end
@@ -19115,8 +19147,8 @@ local function payload(argument, argument2)
 				local condition4, number7 = false, 0
 
 				trackConnection(heartbeat, function()
-					local jump = data[8]
-					local value6, jump2 = jump(), data[15]
+					local jump = humanoid
+					local value6, jump2 = jump(), humanoidRootPart
 					local value7, jump3 = jump2(), value6 and value6.Jump or false
 					jump2, jump = jump3 and value7
 
@@ -19138,7 +19170,7 @@ local function payload(argument, argument2)
 						local anchored = value7.Anchored and not data[4]
 						local condition5
 						if anchored then
-							jump2 = data[20]
+							jump2 = state
 							condition5 = (jump2.hold or 0) == 0
 						else
 							condition5 = anchored
@@ -19146,13 +19178,13 @@ local function payload(argument, argument2)
 						anchored = nil
 						if condition5 then
 							local value8
-							value8, anchored = data[20], os.clock() > (data[20].doffAt or 0) + 0.6
+							value8, anchored = state, os.clock() > (state.doffAt or 0) + 0.6
 						else
 							anchored = condition5
 						end
 
 						if anchored then
-							condition5 = data[20]
+							condition5 = state
 							condition5.doffAt = os.clock()
 							task.spawn(data[9], "RF/Treadmill/AskDoff")
 						else
@@ -19178,15 +19210,15 @@ local function payload(argument, argument2)
 				physicsMap[Enum.HumanoidStateType.FallingDown] = true
 
 				local function callback44()
-					local value6 = data[1]
-					local character, value7 = value6.Character, data[8]
-					local value8, assemblyLinearVelocity = value7(), data[15]
+					local value6 = localPlayer
+					local character, value7 = value6.Character, humanoid
+					local value8, assemblyLinearVelocity = value7(), humanoidRootPart
 					value7 = assemblyLinearVelocity()
 
 					if character then
 						if value8 then
 							if value7 then
-								assemblyLinearVelocity = data[20]
+								assemblyLinearVelocity = state
 								if assemblyLinearVelocity.agBusy then
 									return
 								end
@@ -19200,10 +19232,10 @@ local function payload(argument, argument2)
 						return
 					end
 
-					assemblyLinearVelocity, value6 = value7.AssemblyLinearVelocity, data[28]
+					assemblyLinearVelocity, value6 = value7.AssemblyLinearVelocity, newVector3
 					local number8, number9 = value6(assemblyLinearVelocity.X, 0, assemblyLinearVelocity.Z), callback4() + 5
 					number8 = if number8.Magnitude > number9 then number8.Unit * number9 else number8
-					value6 = data[28]
+					value6 = newVector3
 					value7.AssemblyLinearVelocity = value6(number8.X, math.min(assemblyLinearVelocity.Y, 0), number8.Z)
 					if ok then
 						pcall(response.ClearClientRagdoll)
@@ -19238,7 +19270,7 @@ local function payload(argument, argument2)
 				end
 
 				local function burst()
-					local value6 = data[20]
+					local value6 = state
 					if value6.rag then
 						return
 					end
@@ -19250,15 +19282,15 @@ local function payload(argument, argument2)
 					end)
 				end
 
-				movement = data[20]
+				movement = state
 				movement.burst = burst
-				local character, value6 = iMap2.Character, data[20]
+				local character, value6 = iMap2.Character, state
 				value6.prot = character
 
 				callback19(character, "Invisibility", "invis", false, function(argument5)
-					local value7 = data[20]
+					local value7 = state
 					if value7.invPin then
-						local value8 = data[20]
+						local value8 = state
 						value8.invPin(argument5)
 					end
 				end, "Makes you invisible to other players")
@@ -19266,13 +19298,13 @@ local function payload(argument, argument2)
 				callback19(character, "Anti Ragdoll", "antiRag", true, function(argument5)
 					local attributeChangedSignal
 					if argument5 then
-						local value7 = data[1]
+						local value7 = localPlayer
 						attributeChangedSignal = (value7:GetAttributeChangedSignal("RagdollEndTime"))
 					else
 						attributeChangedSignal = argument5
 					end
 					callback30("ragAttr", attributeChangedSignal, function()
-						local value7 = data[29]
+						local value7 = getServerTimeNow
 						if value7() then
 							burst()
 						end
@@ -19283,7 +19315,7 @@ local function payload(argument, argument2)
 				local data10 = {}
 
 				local function callback45(instance)
-					local value7 = data[1]
+					local value7 = localPlayer
 					if instance:GetAttribute("Owner") == value7.Name then
 						return
 					end
@@ -19365,7 +19397,7 @@ local function payload(argument, argument2)
 								if not (number8 < (parent(value8.HoldSeconds) or 1.6) + 0.3) then
 									break
 								end
-								value7 = data[15]
+								value7 = humanoidRootPart
 								number8, parent = value7(), argument5.Parent
 								local isBasePart = number8 and parent and parent:IsA("BasePart")
 								if if isBasePart then (number8.Position - parent.Position).Magnitude > argument5.MaxActivationDistance + 2 else not isBasePart then
@@ -19409,7 +19441,7 @@ local function payload(argument, argument2)
 
 				local function callback48()
 					data13.act = {}
-					local value7, ok2, response2 = data[1], pcall(getconnections, data[1].Idled)
+					local value7, ok2, response2 = localPlayer, pcall(getconnections, localPlayer.Idled)
 
 					for _, value8 in ipairs(ok2 and response2 or {}) do
 						local ok3, response3 = pcall(debug.getupvalues, value8.Function)
@@ -19454,7 +19486,7 @@ local function payload(argument, argument2)
 						local value, value2, value7 = ipairs, getconnections
 						if value2 then
 							local value8
-							value8, value7 = data[1], getconnections(data[1].Idled)
+							value8, value7 = localPlayer, getconnections(localPlayer.Idled)
 						else
 							value7 = value2
 						end
@@ -19474,7 +19506,7 @@ local function payload(argument, argument2)
 				end
 
 				callback19(iMap2.Utility, "Anti AFK", "afk", true, callback49)
-				table.insert(data[20].cleanup, function()
+				table.insert(state.cleanup, function()
 					callback49(false)
 				end)
 				local module2 = callback22({name = "Afk", gap = 120, at = os.clock() + 60})
@@ -19493,7 +19525,7 @@ local function payload(argument, argument2)
 					end
 				end
 
-				character = data[1]
+				character = localPlayer
 				trackConnection(character.CharacterAdded, function()
 					local value7 = data[25]
 					if value7.afk then
@@ -19506,21 +19538,21 @@ local function payload(argument, argument2)
 				local callback44
 				local invisBusy = false
 				local argument
-				local value6 = data[20]
+				local value6 = state
 				value6.invPin = function(argument5)
 					callback30("invisPin", argument5 and heartbeat, callback44)
 				end
 				local function invisible()
-					local value7 = data[1]
+					local value7 = localPlayer
 					local character = value7.Character
 					return character ~= nil and character:GetAttribute("InvisApplied") == true
 				end
-				local value7, value8 = data[20], data[20]
+				local value7, value8 = state, state
 				value7.invisible = invisible
 				value8.keepVis = 0
 
 				local function callback45(instance)
-					local value9 = data[8]
+					local value9 = humanoid
 					local value10 = value9()
 					if value10 then
 						pcall(value10.UnequipTools, value10)
@@ -19535,19 +19567,19 @@ local function payload(argument, argument2)
 					end
 
 					for i = 1, 3, 1 do
-						value9 = data[23]
+						value9 = heartbeatWait
 						value9()
 					end
 				end
 
 				local function respawn()
-					local number7 = data[1]
-					local character, value9 = number7.Character, data[8]
+					local number7 = localPlayer
+					local character, value9 = number7.Character, humanoid
 					local value10 = value9()
 					if not (character and value10) then
 						return
 					end
-					value9, number7 = data[20], data[20]
+					value9, number7 = state, state
 					value9.invisBusy, number7.respawnAt = true, os.clock()
 					callback31()
 					callback45(character)
@@ -19566,7 +19598,7 @@ local function payload(argument, argument2)
 					number7 = os.clock() + 60
 
 					while true do
-						value9 = data[1]
+						value9 = localPlayer
 						if not (value9.Character == character and os.clock() < number7) then
 							break
 						end
@@ -19574,7 +19606,7 @@ local function payload(argument, argument2)
 						local number8 = os.clock() + 8
 
 						while true do
-							local value11 = data[1]
+							local value11 = localPlayer
 							if not (value11.Character == character and os.clock() < number8) then
 								break
 							end
@@ -19582,11 +19614,11 @@ local function payload(argument, argument2)
 						end
 					end
 
-					value9 = data[20]
+					value9 = state
 					value9.invisBusy = invisBusy
 				end
 
-				value7 = data[20]
+				value7 = state
 				value7.respawn = respawn
 				local condition3 = false
 
@@ -19598,7 +19630,7 @@ local function payload(argument, argument2)
 					local value, nameList2 = ipairs, {"RE/GearSatchel/Lost", "RE/GearSatchel/Gained", "RE/RigSync/ProbeSatchel", "RE/RigSync/SeedSatchel", "RE/RigSync/CorrectionBegan", "RE/RigSync/Refresh", "RE/ToolTrigger/Trigger", "RE/BatSwing/Trigger"}
 
 					for k, value9 in value(nameList2) do
-						k = data[36]
+						k = networking
 						local value10 = k:FindFirstChild(value9)
 						if value10 then
 							trackConnection(value10.OnClientEvent, function()
@@ -19616,20 +19648,20 @@ local function payload(argument, argument2)
 				end
 
 				local function callback47(instance)
-					local value9 = data[20]
+					local value9 = state
 					value9.invisBusy = true
 					local humanoid, humanoidRootPart = instance:WaitForChild("Humanoid", 10), instance:WaitForChild("HumanoidRootPart", 10)
 					instance:WaitForChild("Head", 10)
 
 					if humanoid then
 						if not humanoidRootPart then
-							value9 = data[20]
+							value9 = state
 							invisBusy = false
 							value9.invisBusy = false
 							return
 						end
 					else
-						local value10 = data[20]
+						local value10 = state
 						invisBusy = false
 						value10.invisBusy = false
 						return
@@ -19658,7 +19690,7 @@ local function payload(argument, argument2)
 					end
 
 					task.wait(0.12)
-					humanoid, value9 = Instance.new("Part"), data[28]
+					humanoid, value9 = Instance.new("Part"), newVector3
 					humanoid.Name, humanoid.Size = "RightHand", value9(0.2, 0.2, 0.2)
 					humanoid.Transparency = 1
 					humanoid.CanCollide = false
@@ -19666,7 +19698,7 @@ local function payload(argument, argument2)
 					humanoid.CanQuery = false
 					humanoid.Massless = true
 					humanoid.Parent = instance
-					local rightWrist, value10 = Instance.new("Motor6D"), data[27]
+					local rightWrist, value10 = Instance.new("Motor6D"), newCFrame
 					rightWrist.Name, rightWrist.C0 = "RightWrist", value10(1.2, 0, 0)
 					rightWrist.Part0 = humanoidRootPart
 					rightWrist.Part1 = humanoid
@@ -19691,9 +19723,9 @@ local function payload(argument, argument2)
 					humanoidRootPart.AssemblyLinearVelocity = value10
 					humanoidRootPart.Anchored = false
 					instance:SetAttribute("InvisApplied", true)
-					value10 = data[20]
+					value10 = state
 					value10.invisSettle = os.clock() + 1
-					cFrame = data[20]
+					cFrame = state
 					invisBusy = false
 					cFrame.invisBusy = false
 					task.delay(1, callback46)
@@ -19706,10 +19738,10 @@ local function payload(argument, argument2)
 					if value9 then
 						_ = value9
 					else
-						local value10 = data[20]
+						local value10 = state
 						local queue = value10.queue
 						if queue then
-							value10 = data[20]
+							value10 = state
 							_ = value10.queue[1]
 						else
 							_ = queue
@@ -19719,14 +19751,14 @@ local function payload(argument, argument2)
 					local condition4 = _ ~= nil
 					local condition5
 					if condition4 then
-						value9 = data[20]
+						value9 = state
 						condition5 = value9.needVis ~= nil
 					else
 						condition5 = condition4
 					end
 					condition4 = nil
 					if condition5 then
-						value9 = data[20]
+						value9 = state
 						condition4 = value9.needVis(_, _.plan)
 					else
 						condition4 = condition5
@@ -19739,24 +19771,24 @@ local function payload(argument, argument2)
 					local invis = value9.invis
 					local condition4
 					if invis then
-						value9, condition4 = data[20], os.clock() >= data[20].keepVis
+						value9, condition4 = state, os.clock() >= state.keepVis
 					else
 						condition4 = invis
 					end
 					invis = nil
 					if condition4 then
-						value9, invis = data[20], os.clock() - (data[20].flipAt or -99) > 20
+						value9, invis = state, os.clock() - (state.flipAt or -99) > 20
 					else
 						invis = condition4
 					end
 					condition4 = nil
 
 					if invis then
-						value9 = data[20]
+						value9 = state
 						local lock = value9.lock
 						local lock2
 						if lock then
-							local value10 = data[20]
+							local value10 = state
 							lock2 = value10.lock()
 						else
 							lock2 = lock
@@ -19769,16 +19801,16 @@ local function payload(argument, argument2)
 					return condition4 and not callback48()
 				end
 
-				value7 = data[20]
+				value7 = state
 				value7.invisWant = invisWant
-				local value9 = data[20]
+				local value9 = state
 				value9.needBody = function()
-					local value10 = data[20]
+					local value10 = state
 					local value11
-					value11, value10.keepVis = data[20], math.max(data[20].keepVis, os.clock() + (invisible() and 25 or 5))
+					value11, value10.keepVis = state, math.max(state.keepVis, os.clock() + (invisible() and 25 or 5))
 					return not invisible()
 				end
-				local nows, value10 = {}, data[20]
+				local nows, value10 = {}, state
 
 				value10.body = function(argument5)
 					if invisible() == argument5 then
@@ -19808,10 +19840,10 @@ local function payload(argument, argument2)
 					end
 
 					condition4 = nil
-					condition4, nows[#nows + 1] = data[20], now3
+					condition4, nows[#nows + 1] = state, now3
 					argument = argument5
 					condition4.flipAt = now3
-					now3 = data[11]
+					now3 = notify
 					now3(argument5 and "Turning invisible" or "Turning visible")
 					respawn()
 					condition4 = os.clock() + 15
@@ -19821,13 +19853,13 @@ local function payload(argument, argument2)
 						local invisBusy2
 
 						if condition5 then
-							now3 = data[20]
+							now3 = state
 							local invisBusy3 = now3.invisBusy or invisBusy
 							if invisBusy3 then
 								invisBusy2 = invisBusy3
 							else
 								local value11
-								value11, invisBusy2 = data[20], os.clock() < (data[20].invisSettle or 0)
+								value11, invisBusy2 = state, os.clock() < (state.invisSettle or 0)
 							end
 						else
 							invisBusy2 = condition5
@@ -19842,24 +19874,24 @@ local function payload(argument, argument2)
 					return invisible() == argument5
 				end
 
-				value7 = data[1]
+				value7 = localPlayer
 
 				trackConnection(value7.CharacterAdded, function(character)
-					local value11 = data[20]
+					local value11 = state
 					local argument5
-					argument5, value11.invisSettle = data[20], math.max(data[20].invisSettle or 0, os.clock() + 1)
+					argument5, value11.invisSettle = state, math.max(state.invisSettle or 0, os.clock() + 1)
 					argument5 = argument
 					argument = nil
 					argument5 = if argument5 == nil then (invisWant()) else argument5
 
 					if argument5 then
-						value11 = data[20]
+						value11 = state
 						invisBusy = true
 						value11.invisBusy = true
 
 						task.defer(function()
 							if not pcall(callback47, character) then
-								local value12 = data[20]
+								local value12 = state
 								invisBusy = false
 								value12.invisBusy = false
 							end
@@ -19868,7 +19900,7 @@ local function payload(argument, argument2)
 				end)
 
 				callback44 = function()
-					local value11 = data[1]
+					local value11 = localPlayer
 					local character = value11.Character
 
 					if character then
@@ -19896,8 +19928,8 @@ local function payload(argument, argument2)
 						character.AssemblyLinearVelocity = tool
 					end
 
-					rightHand = data[8]
-					value11, tool = rightHand(), data[15]
+					rightHand = humanoid
+					value11, tool = rightHand(), humanoidRootPart
 					rightHand = tool()
 
 					if value11 then
@@ -19936,7 +19968,7 @@ local function payload(argument, argument2)
 					if value11 then
 						value = value11
 					else
-						local value12 = data[20]
+						local value12 = state
 						value = value12.invisBusy
 					end
 					local invisBusy2 = value or invisBusy or carrying()
@@ -19945,10 +19977,10 @@ local function payload(argument, argument2)
 					if invisBusy2 then
 						invisBusy = invisBusy2
 					else
-						value11 = data[20]
+						value11 = state
 						value = value11.lock
 						if value then
-							local value12 = data[20]
+							local value12 = state
 							invisBusy = value12.lock()
 						else
 							invisBusy = value
@@ -19958,12 +19990,12 @@ local function payload(argument, argument2)
 					if invisBusy then
 						return
 					else
-						value11, value = data[20], os.clock() - (data[20].mvEnd or 0)
+						value11, value = state, os.clock() - (state.mvEnd or 0)
 
 						if value < 1 then
 							return
 						else
-							local value12, value13 = data[20], data[20]
+							local value12, value13 = state, state
 							if (value12.queueAt or 0) < (value13.mvEnd or 0) + 0.2 then
 								return
 							end
@@ -19974,21 +20006,21 @@ local function payload(argument, argument2)
 						invisBusy2 = data[25]
 
 						if invisBusy2.invis then
-							invisBusy = data[20]
+							invisBusy = state
 
 							if os.clock() < invisBusy.keepVis then
-								value = data[20]
+								value = state
 								value.body(false)
 							elseif callback48() then
-								local value12 = data[20]
+								local value12 = state
 								value12.body(false)
 							end
 						else
-							local value12 = data[20]
+							local value12 = state
 							value12.body(false)
 						end
 					elseif invisWant() then
-						local value12 = data[20]
+						local value12 = state
 						value12.body(true)
 					end
 				end
@@ -20004,7 +20036,7 @@ local function payload(argument, argument2)
 				local number7, number8, number9 = 0, 0, 0
 
 				local function callback44(argument5, argument6)
-					local character = data[1]
+					local character = localPlayer
 					if argument5 == character then
 						return
 					elseif argument5.Parent ~= Players then
@@ -20044,7 +20076,7 @@ local function payload(argument, argument2)
 
 				local function callback45(argument)
 					if not argument then
-						local value9 = data[20]
+						local value9 = state
 						local value10, value11 = value9.bat()
 						argument = value11
 					end
@@ -20055,14 +20087,14 @@ local function payload(argument, argument2)
 					if workspace:GetAttribute("PvPDisabled") then
 						return
 					end
-					local value9 = data[20]
+					local value9 = state
 					local value10, value11 = value9.bat()
-					value9 = data[15]
+					value9 = humanoidRootPart
 					local value12, value13 = value9(), callback45(value11)
 
 					if value10 then
 						if value12 then
-							value9 = data[20]
+							value9 = state
 							if not value9.needBody() then
 								return
 							end
@@ -20073,18 +20105,18 @@ local function payload(argument, argument2)
 						return
 					end
 
-					value9 = data[8]
-					local number10, value14 = value9(), data[1]
+					value9 = humanoid
+					local number10, value14 = value9(), localPlayer
 					if value10.Parent ~= value14.Character then
 						if number10 then
 							pcall(number10.EquipTool, number10, value10)
 						end
 					end
-					value11 = data[1]
+					value11 = localPlayer
 					if value10.Parent ~= value11.Character then
 						return
 					end
-					value14 = data[20]
+					value14 = state
 
 					if value14.scrambler(value10) then
 						if os.clock() - number9 > 0.3 then
@@ -20110,16 +20142,16 @@ local function payload(argument, argument2)
 					end
 					number8 = os.clock()
 					number7 += 1
-					value9 = data[1]
+					value9 = localPlayer
 					callback2("RE/BatSwing/Trigger", argument5, ("%d:%d:%d"):format(value9.UserId, number7, math.floor(getServerTimeNow() * 1000)))
 					pcall(value10.Activate, value10)
 				end
 
-				local value9 = data[20]
+				local value9 = state
 
 				value9.chase = function(argument5, argument6)
-					local value10, value11 = callback44(argument5, argument6), data[15]
-					local value12, value13 = value11(), data[8]
+					local value10, value11 = callback44(argument5, argument6), humanoidRootPart
+					local value12, value13 = value11(), humanoid
 					value11 = value13()
 
 					if value10 then
@@ -20135,13 +20167,13 @@ local function payload(argument, argument2)
 					end
 
 					value11.PlatformStand = true
-					value11, value13, argument6 = data[44], data[28], value10.Position + value10.AssemblyLinearVelocity * (data[44]() + 0.2) + data[28](0, 1.5, 0)
+					value11, value13, argument6 = data[44], newVector3, value10.Position + value10.AssemblyLinearVelocity * (data[44]() + 0.2) + newVector3(0, 1.5, 0)
 					local assemblyLinearVelocity, value14 = value10.AssemblyLinearVelocity + (argument6 - value12.Position) / 0.12, data[25]
 					if assemblyLinearVelocity.Magnitude > value14.chase * 1.8 then
 						argument6, assemblyLinearVelocity = data[25], assemblyLinearVelocity.Unit * data[25].chase * 1.8
 					end
 					value14 = nil
-					value14, value12.CFrame = data[28], CFrame.lookAt(value12.Position, data[28](value10.Position.X, value12.Position.Y, value10.Position.Z))
+					value14, value12.CFrame = newVector3, CFrame.lookAt(value12.Position, newVector3(value10.Position.X, value12.Position.Y, value10.Position.Z))
 					value14 = data[41]
 					value12.AssemblyLinearVelocity = assemblyLinearVelocity
 					value12.AssemblyAngularVelocity = value14
@@ -20150,11 +20182,11 @@ local function payload(argument, argument2)
 				end
 
 				value8, data10 = setmetatable, {__mode = "k"}
-				local value10, value11 = value8({}, data10), data[20]
+				local value10, value11 = value8({}, data10), state
 
 				value11.huntStep = function(argument5, argument6, argument7)
-					local unit = data[15]
-					local value12, data12 = unit(), data[8]
+					local unit = humanoidRootPart
+					local value12, data12 = unit(), humanoid
 					unit = data12()
 
 					if value12 then
@@ -20168,12 +20200,12 @@ local function payload(argument, argument2)
 					unit.PlatformStand = true
 					data12 = value10[argument5] or {}
 					value10[argument5] = data12
-					local value13, number10 = data[28], argument6.AssemblyLinearVelocity * data[28](1, 0, 1)
+					local value13, number10 = newVector3, argument6.AssemblyLinearVelocity * newVector3(1, 0, 1)
 					data12.s = data12.s and data12.s:Lerp(number10, 0.25) or number10
 					if data12.s.Magnitude > 1 then
 						data12.hd = (data12.hd and data12.hd:Lerp(data12.s.Unit, 0.25) or data12.s.Unit).Unit
 					end
-					local magnitude, value14, number11, hd, hd2 = data12.s.Magnitude, data[28], (value12.Position - argument6.Position) * data[28](1, 0, 1), data12.hd
+					local magnitude, value14, number11, hd, hd2 = data12.s.Magnitude, newVector3, (value12.Position - argument6.Position) * newVector3(1, 0, 1), data12.hd
 
 					if hd then
 						hd2 = hd
@@ -20182,7 +20214,7 @@ local function payload(argument, argument2)
 						if unit then
 							hd2 = unit
 						else
-							number10 = data[28]
+							number10 = newVector3
 							hd2 = (number10(0, 0, 1))
 						end
 					end
@@ -20195,11 +20227,11 @@ local function payload(argument, argument2)
 						number10 = data[41]
 						condition = number10
 					end
-					number10, unit = number12 + condition, data[28]
+					number10, unit = number12 + condition, newVector3
 					hd = unit(-hd2.Z, 0, hd2.X)
 					hd = if hd:Dot(value12.Position - number10) < 0 then -hd else hd
 					condition = os.clock() * 2 * 3.141592653589793
-					local value15, value16, number13, value17 = data[25], data[28], ((number10 + ((hd2 * (math.sin(condition / 1.1) * 0.5 + 0.5) * math.max(5, math.min(callback45() * 0.7, 6 + magnitude * 0.07)) * data[25].hitSweep) / 100)) + hd * (magnitude < 35 and 3 or 1.5)) + data[28](0, math.sin(condition / 0.8) * 2.5, 0), data[29]
+					local value15, value16, number13, value17 = data[25], newVector3, ((number10 + ((hd2 * (math.sin(condition / 1.1) * 0.5 + 0.5) * math.max(5, math.min(callback45() * 0.7, 6 + magnitude * 0.07)) * data[25].hitSweep) / 100)) + hd * (magnitude < 35 and 3 or 1.5)) + newVector3(0, math.sin(condition / 0.8) * 2.5, 0), getServerTimeNow
 					number10, unit = value17() and 1500 or number11.Magnitude > 60 and 1000
 					if number10 then
 						unit = number10
@@ -20209,11 +20241,11 @@ local function payload(argument, argument2)
 					end
 					hd2 = data12.s + (number13 - value12.Position) / math.max(0.12, argument7)
 					hd2 = if hd2.Magnitude > unit then hd2.Unit * unit else hd2
-					value17, number11 = data[28], (argument6.Position - value12.Position) * data[28](1, 0, 1)
+					value17, number11 = newVector3, (argument6.Position - value12.Position) * newVector3(1, 0, 1)
 					if number11.Magnitude > 0.05 then
 						value12.CFrame = CFrame.lookAt(value12.Position, value12.Position + number11.Unit)
 					end
-					unit, magnitude = data[28]
+					unit, magnitude = newVector3
 					magnitude, value12.AssemblyLinearVelocity = data[41], hd2 + unit(0, workspace.Gravity * argument7 * 0.5, 0)
 					value12.AssemblyAngularVelocity = magnitude
 					callback46(argument5, argument6)
@@ -20223,7 +20255,7 @@ local function payload(argument, argument2)
 				local value12 = value7({}, data11)
 				local function callback47(argument5)
 					task.spawn(function()
-						local value13, value14, ok, response = data[1], data[1], pcall(data[1].IsFriendsWith, data[1], argument5.UserId)
+						local value13, value14, ok, response = localPlayer, localPlayer, pcall(localPlayer.IsFriendsWith, localPlayer, argument5.UserId)
 						value12[argument5] = ok and response
 					end)
 				end
@@ -20237,7 +20269,7 @@ local function payload(argument, argument2)
 				end
 
 				local function callback49(argument, argument5)
-					local player = data[15]
+					local player = humanoidRootPart
 					local value13, argument6 = player(), argument or 1 / 0
 					if not value13 then
 						return
@@ -20329,7 +20361,7 @@ local function payload(argument, argument2)
 				local function callback53()
 					local names, value, value13 = {}, ipairs, argument[72](Players:GetPlayers())
 					for k, value14 in value(argument:g2(value13)) do
-						k = data[1]
+						k = localPlayer
 						if value14 ~= k then
 							names[#names + 1] = value14.Name
 						end
@@ -20373,7 +20405,7 @@ local function payload(argument, argument2)
 				end)
 
 				iMap3[4] = value13
-				value7 = data[20]
+				value7 = state
 
 				local function callback54(argument5)
 					local value14 = data[25]
@@ -20385,7 +20417,7 @@ local function payload(argument, argument2)
 							local value16, value17 = data[25], data[25]
 							value16.weap = value17.weap or {}
 							value16, value17 = data[25]
-							value17, value16.weap[data[20].weaponId[value15] or value15] = data[20], true
+							value17, value16.weap[state.weaponId[value15] or value15] = state, true
 						end
 					end
 				end
@@ -20460,12 +20492,12 @@ local function payload(argument, argument2)
 				end
 
 				local function isCarried()
-					local playerByUserIdMap, value, condition3 = {}, pairs, data[18]
+					local playerByUserIdMap, value, condition3 = {}, pairs, eggReadFieldEggs
 
 					for k, value14 in value(argument:g2(argument[72](condition3()))) do
 						condition3, k = type(value14) == "table" and value14.State == "Carried" and tonumber(value14.CarrierUserId)
 						if condition3 then
-							value14 = data[1]
+							value14 = localPlayer
 							k = condition3 ~= value14.UserId
 						else
 							k = condition3
@@ -20501,11 +20533,11 @@ local function payload(argument, argument2)
 				end
 
 				module2.run = function(argument5, argument6)
-					local now3 = data[20]
+					local now3 = state
 
 					if now3.needBody() then
 						if data[13](argument6) then
-							local value14 = data[14]
+							local value14 = attribute2
 							if not value14(argument6) then
 								return
 							end
@@ -20525,15 +20557,15 @@ local function payload(argument, argument2)
 								break
 							end
 						end
-						local value14 = data[20]
+						local value14 = state
 						if not value14.chase(argument5) then
 							break
 						end
-						value14 = data[23]
+						value14 = heartbeatWait
 						value14()
 					end
 
-					now3 = data[8]
+					now3 = humanoid
 					argument6 = now3()
 					if argument6 then
 						argument6.PlatformStand = false
@@ -20598,7 +20630,7 @@ local function payload(argument, argument2)
 					return ("%02d:%02d:%02d"):format(argument5 // 3600, (argument5 % 3600) // 60, argument5 % 60)
 				end
 				local function callback50()
-					local instance = data[1]
+					local instance = localPlayer
 					local playerGui = instance:FindFirstChild("PlayerGui")
 					return playerGui and playerGui:FindFirstChild("HUD")
 				end
@@ -20640,7 +20672,7 @@ local function payload(argument, argument2)
 				end
 
 				local function callback52(argument5)
-					local leaderstats = data[1]
+					local leaderstats = localPlayer
 					local leaderstats2 = leaderstats:FindFirstChild("leaderstats")
 					leaderstats = leaderstats2 and leaderstats2:FindFirstChild(argument5)
 					return leaderstats and value2(leaderstats.Value)
@@ -20700,7 +20732,7 @@ local function payload(argument, argument2)
 				end)
 
 				local reEggWorldFieldEggRedeemVerdict = data[32]
-				local egg, instance = reEggWorldFieldEggRedeemVerdict.Egg, data[36]
+				local egg, instance = reEggWorldFieldEggRedeemVerdict.Egg, networking
 				reEggWorldFieldEggRedeemVerdict = instance:FindFirstChild("RE/EggWorld/FieldEggRedeemVerdict")
 
 				if egg then
@@ -20719,7 +20751,7 @@ local function payload(argument, argument2)
 							local uid = argument5.Uid
 
 							task.spawn(function()
-								local value13 = data[18]
+								local value13 = eggReadFieldEggs
 								local value14 = value13()
 								value13 = value14[uid]
 
@@ -20807,11 +20839,11 @@ local function payload(argument, argument2)
 							local readOwnedEgg = egg2 and egg2.ReadOwnedEgg
 							local userId
 							if readOwnedEgg then
-								value13, userId = data[1], egg2.ReadOwnedEgg(data[1].UserId, argument5)
+								value13, userId = localPlayer, egg2.ReadOwnedEgg(localPlayer.UserId, argument5)
 							else
 								userId = readOwnedEgg
 							end
-							local readOwnedEgg2, number10, serverTimeNow, value14 = callback44(userId) and userId.Placement and userId or argument6, callback44(userId) and value2(userId.GrowthSpeedMultiplier) or 1, getServerTimeNow(), data[1]
+							local readOwnedEgg2, number10, serverTimeNow, value14 = callback44(userId) and userId.Placement and userId or argument6, callback44(userId) and value2(userId.GrowthSpeedMultiplier) or 1, getServerTimeNow(), localPlayer
 							return rec.WallSecondsRemaining(readOwnedEgg2, serverTimeNow, number10, rec.CurrentNightCredit(readOwnedEgg2, serverTimeNow, number10, value14))
 						end)
 					end)
@@ -20897,7 +20929,7 @@ local function payload(argument, argument2)
 						return data12
 					end
 					data12.At = os.clock()
-					local placed = data[64]
+					local placed = savePeek
 					local value13 = placed()
 					if not value13 then
 						return data12
@@ -20975,24 +21007,24 @@ local function payload(argument, argument2)
 				end
 
 				local function callback66()
-					local condition5 = data[20]
+					local condition5 = state
 					local doing, name, status, status2 = condition5.doing or "Idle", data[4] and data[4].name, data[4]
 					if status then
-						condition5 = data[20]
+						condition5 = state
 						status2 = condition5.status
 					else
 						status2 = status
 					end
 					condition5 = nil
 					if status2 then
-						status = data[20]
+						status = state
 						condition5 = status.status ~= ""
 					else
 						condition5 = status2
 					end
 					status = nil
 					if condition5 then
-						status2 = data[20]
+						status2 = state
 						status = status2.status
 					else
 						status = condition5
@@ -21020,7 +21052,7 @@ local function payload(argument, argument2)
 					if name == "Combat" then
 						return "Fighting a player", "Combat", "rbxassetid://135238935953633"
 					end
-					condition = data[20]
+					condition = state
 					if condition.invisBusy then
 						return "Turning invisible", "Invisibility", labelMap3.night
 					end
@@ -21028,7 +21060,7 @@ local function payload(argument, argument2)
 					if status2 then
 						status = status2
 					else
-						condition, status = data[20], os.clock() - (data[20].treadAt or 0) < 3
+						condition, status = state, os.clock() - (state.treadAt or 0) < 3
 					end
 					if status then
 						condition6 = callback52("Speed")
@@ -21088,7 +21120,7 @@ local function payload(argument, argument2)
 				end), (formatCompact("Session Time", labelMap3.night, 255, 255, 255, 215, 215, 230, function()
 					return callback49(os.clock() - now3), #Players:GetPlayers() .. " players"
 				end))), formatCompact2("Status", "Center", 255, 204, 0, 255, 150, 30, (formatCompact("Activity", labelMap3.egg, 255, 240, 170, 255, 170, 60, callback66, true))), formatCompact2("Events", "Right", 255, 212, 82, 255, 150, 40, (formatCompact("Shooting Star", "rbxassetid://118070800707365", 255, 250, 200, 255, 220, 90, function()
-					local serverTimeNow = data[20]
+					local serverTimeNow = state
 					local ss = serverTimeNow.SS
 					local text2, pay = (ss.caught or 0) > 0 and ss.caught .. " caught" or "", ss.pay
 					if not pay then
@@ -21242,7 +21274,7 @@ local function payload(argument, argument2)
 						elseif argument7.UserInputState ~= Enum.UserInputState.Begin then
 							return
 						else
-							local value15 = data[20]
+							local value15 = state
 							if not value15.press(argument7) then
 								return
 							end
@@ -21520,9 +21552,9 @@ local function payload(argument, argument2)
 					end
 
 					task.defer(function()
-						local value15 = data[23]
+						local value15 = heartbeatWait
 						value15()
-						value15 = data[23]
+						value15 = heartbeatWait
 						value15()
 						if number ~= number14 then
 							return
@@ -21530,7 +21562,7 @@ local function payload(argument, argument2)
 							return
 						end
 						callback92()
-						value15 = data[23]
+						value15 = heartbeatWait
 						value15()
 						if number ~= number14 then
 							return
@@ -21600,7 +21632,7 @@ local function payload(argument, argument2)
 						callback68(workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"), callback93)
 					end
 					local number15, number16, number17, number18, condition2, condition4 = 0, 0, 0, 0
-					RunService = data[58]
+					RunService = runService
 
 					callback68(RunService.RenderStepped, function(argument5)
 						argument5 = math.clamp(argument5, 0.001, 1)
@@ -21669,15 +21701,15 @@ local function payload(argument, argument2)
 				end
 
 				local function callback95()
-					local value15 = data[20]
+					local value15 = state
 					value15.hideUI(condition6 and condition5)
 				end
-				local value15 = data[20]
+				local value15 = state
 
 				value15.hudUI = function(argument5)
 					local farmHud = callback19(argument5, "Farm HUD", "farmHud", false, function(argument6)
 						condition5 = argument6
-						local value, value16 = pcall, data[20]
+						local value, value16 = pcall, state
 						local fpsShow, condition7, condition = value16.fpsShow, not argument6
 						if argument6 then
 							condition = condition7
@@ -21723,7 +21755,7 @@ local function payload(argument, argument2)
 					end, false, "Picture used for Top Eggs and Steal History", farmHud):When(farmHud)
 				end
 
-				table.insert(data[20].cleanup, function()
+				table.insert(state.cleanup, function()
 					condition5 = false
 					disconnectAll()
 					callback95()
@@ -21759,21 +21791,21 @@ local function payload(argument, argument2)
 					end
 				end)
 
-				local value6 = data[20]
+				local value6 = state
 				value6.beforeTeleport = function()
 					local value7 = data[25]
 					callback44(value7.autoExec)
 				end
-				local value7 = data[1]
+				local value7 = localPlayer
 				trackConnection(value7.OnTeleport, function(argument5)
 					if argument5 == Enum.TeleportState.Started then
-						local value8 = data[20]
+						local value8 = state
 						value8.beforeTeleport()
 					end
 				end)
 				callback20(server, "Server Hop Mode", "hopMode", {"Most Players", "Random", "Least Players"}, "Least Players")
 				server:Button("Server Hop", "Hop", function()
-					task.spawn(data[20].hop)
+					task.spawn(state.hop)
 				end)
 				local value8 = server:Input("Job ID", "Paste a server Job ID...")
 				value8.Skip = true
@@ -21781,7 +21813,7 @@ local function payload(argument, argument2)
 				server:Button("Join Job ID", "Join", function()
 					local match = tostring(value8.Value):match("%x+%-%x+%-%x+%-%x+%-%x+")
 					if match then
-						pcall(TeleportService.TeleportToPlaceInstance, TeleportService, game.PlaceId, match, data[1])
+						pcall(TeleportService.TeleportToPlaceInstance, TeleportService, game.PlaceId, match, localPlayer)
 					else
 						callback15("Join Job ID", "Paste a valid Job ID first")
 					end
@@ -21792,14 +21824,14 @@ local function payload(argument, argument2)
 					callback15("Job ID Copied", game.JobId)
 				end)
 				server:Button("Rejoin Server", "Rejoin", function()
-					pcall(TeleportService.TeleportToPlaceInstance, TeleportService, game.PlaceId, game.JobId, data[1])
+					pcall(TeleportService.TeleportToPlaceInstance, TeleportService, game.PlaceId, game.JobId, localPlayer)
 				end)
 				local condition3, number7 = false, 0
 				local function toNumberOrDefault3()
 					local ok, response = pcall(TeleportService.GetTeleportSetting, TeleportService, "__ChilliFinderAt")
 					return ok and tonumber(response) and os.time() - response < 120
 				end
-				value7 = data[1]
+				value7 = localPlayer
 				trackConnection(value7.OnTeleport, function()
 					number7 = os.clock()
 				end)
@@ -21811,7 +21843,7 @@ local function payload(argument, argument2)
 						if condition3 then
 							return
 						else
-							local value9 = data[20]
+							local value9 = state
 
 							if value9.hopping then
 								return
@@ -21859,9 +21891,9 @@ local function payload(argument, argument2)
 									return
 								end
 								if pos or i > 2 then
-									pcall(TeleportService.Teleport, TeleportService, game.PlaceId, data[1])
+									pcall(TeleportService.Teleport, TeleportService, game.PlaceId, localPlayer)
 								else
-									pcall(TeleportService.TeleportToPlaceInstance, TeleportService, game.PlaceId, game.JobId, data[1])
+									pcall(TeleportService.TeleportToPlaceInstance, TeleportService, game.PlaceId, game.JobId, localPlayer)
 								end
 								task.wait(pos and 5 or 4)
 							end
@@ -21882,7 +21914,7 @@ local function payload(argument, argument2)
 					end
 				end
 				callback19(discordWebhook, "Ping @everyone", "whPing", false)
-				txt = data[20]
+				txt = state
 				local nostat = txt.nostat
 				local function getMatch()
 					return (tostring(value6.Value):match("^%s*(.-)%s*$"))
@@ -21895,18 +21927,18 @@ local function payload(argument, argument2)
 					local value9, value10, value11 = data[25], data[25], data[25]
 					value9.whSteal, value10.whFuse, value11.whFull = table.find(argument5, "Egg Stolen") ~= nil, table.find(argument5, "Egg Fused") ~= nil, table.find(argument5, "Inventory Full") ~= nil
 				end, true, "Pick which events post to the webhook")
-				value7 = data[20]
+				value7 = state
 				local function callback44(argument5)
-					local value9 = data[20]
+					local value9 = state
 					data10.rar = value9.minRar(argument5)
 				end
 				discordWebhook:Dropdown("Webhook Min Rarity", value7.RANY, "Any", callback44, false, "Only post eggs of this rarity and above")
 				discordWebhook:Slider("Webhook Min Value", 0, 0, 0, function(argument5)
 					data10.minV = argument5 > 0 and argument5 or nil
 				end, "log", nil, "Only post eggs worth at least this. Drag or type 250k, 50m, 1.5b")
-				value8 = data[20]
+				value8 = state
 				local function callback45(argument5)
-					local value9 = data[20]
+					local value9 = state
 					data10.sp = value9.names(argument5)
 				end
 				discordWebhook:Dropdown("Webhook Eggs", value8.eggList, {}, callback45, true, "Only post these eggs (empty = all)")
@@ -22037,7 +22069,7 @@ local function payload(argument, argument2)
 
 				local function callback51()
 					if condition4 == nil then
-						local value9 = data[1]
+						local value9 = localPlayer
 						condition4 = callback49("https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=" .. (value9.UserId .. "&size=150x150&format=Png&isCircular=false")) or false
 					end
 					local condition5 = condition4 or nil
@@ -22118,7 +22150,7 @@ local function payload(argument, argument2)
 				end
 
 				local function callback55(argument5, argument6)
-					local author, value9 = {}, data[1]
+					local author, value9 = {}, localPlayer
 					author.name = value9.DisplayName
 					author.icon_url = callback51()
 					argument5.author = author
@@ -22144,7 +22176,7 @@ local function payload(argument, argument2)
 					task.spawn(callback52)
 				end
 
-				local value9 = data[20]
+				local value9 = state
 
 				value9.post = function(argument5, argument6, argument7, argument8)
 					if not getMatch2() then
@@ -22208,18 +22240,18 @@ local function payload(argument, argument2)
 				end
 
 				module2.fn = function()
-					local value10 = data[64]
+					local value10 = savePeek
 					local condition6, number8 = value10(), 0
 					for k in next, condition6 and type(condition6.EggInventory) == "table" and condition6.EggInventory or {}, nil do
 						number8 += 1
 					end
-					value10 = data[20]
+					value10 = state
 					condition6 = number8 >= (value10.bagMax or 115)
 
 					if condition6 then
 						if not condition5 then
 							if getMatch2() then
-								local data12, value11 = {title = "Egg Bag Full!", color = 16732245}, data[20]
+								local data12, value11 = {title = "Egg Bag Full!", color = 16732245}, state
 								data12.description = ("**Eggs:** %d / %d\nPlace, hatch or sell to make room."):format(number8, value11.bagMax or 115)
 								callback55(data12)
 							end
@@ -22255,7 +22287,7 @@ local function payload(argument, argument2)
 					if #list4 == 0 then
 						return
 					end
-					numVal = data[64]
+					numVal = savePeek
 					value10 = numVal()
 					local uid, value = value10 and type(value10.FusionEggReward) == "table" and value10.FusionEggReward.Uid, ipairs
 
@@ -22266,7 +22298,7 @@ local function payload(argument, argument2)
 							data11 = nil
 							numVal, value10 = toNumberOrDefault2(value11[2]), data[67]
 							if value10(data10, numVal) then
-								local value12 = data[20]
+								local value12 = state
 								value12.post("Egg Stolen!", numVal, data2.area or value11[2].AreaId)
 							end
 							return
@@ -22281,17 +22313,17 @@ local function payload(argument, argument2)
 				end
 
 				module4.fn = function()
-					local egg = data[64]
+					local egg = savePeek
 					local numVal = egg()
 					local fusionEggReward = numVal and type(numVal.FusionEggReward) == "table" and numVal.FusionEggReward
 					local fusionEggReward2
 					if fusionEggReward then
 						fusionEggReward2 = fusionEggReward
 					else
-						egg = data[20]
+						egg = state
 						fusionEggReward2 = egg.fuseRw
 					end
-					numVal = data[20]
+					numVal = state
 					numVal.fuseRw = nil
 					fusionEggReward = fusionEggReward2 and fusionEggReward2.Uid
 
@@ -22309,7 +22341,7 @@ local function payload(argument, argument2)
 					if type(egg) == "table" then
 						numVal, fusionEggReward2 = toNumberOrDefault2(egg), data[67]
 						if fusionEggReward2(data10, numVal) then
-							fusionEggReward = data[20]
+							fusionEggReward = state
 							fusionEggReward.post("Egg Fused!", numVal, "Fuse machine", true)
 						end
 					end
@@ -22427,7 +22459,7 @@ local function payload(argument, argument2)
 					if connection then
 						return
 					end
-					local RunService = data[58]
+					local RunService = runService
 
 					connection = RunService.Heartbeat:Connect(function()
 						local now3 = os.clock()
@@ -22498,7 +22530,7 @@ local function payload(argument, argument2)
 					end
 
 					for i, _ in ipairs(nameList2) do
-						local value9, ok, response = data[58], pcall(getconnections, data[58][_])
+						local value9, ok, response = runService, pcall(getconnections, runService[_])
 
 						for i2, value10 in ipairs(ok and response or {}) do
 							_ = value10.Function
@@ -22519,7 +22551,7 @@ local function payload(argument, argument2)
 				end
 
 				local function callback52(argument5, argument6)
-					local currentCamera, position = workspace.CurrentCamera, data[1]
+					local currentCamera, position = workspace.CurrentCamera, localPlayer
 					local character, position2 = position.Character, currentCamera and currentCamera.CFrame.Position
 
 					for k in next, value7, nil do
@@ -22648,8 +22680,8 @@ local function payload(argument, argument2)
 					module2.at = 0
 				end
 
-				table.insert(data[20].cleanup, callback53)
-				local value9 = data[20]
+				table.insert(state.cleanup, callback53)
+				local value9 = state
 				value9.optLeft = function()
 					local number9 = #data13 - number8
 					return number9 + 1
@@ -22665,26 +22697,26 @@ local function payload(argument, argument2)
 				end, false, nil, data10):When(data10)
 
 				local function callback55(argument5)
-					local value10 = data[20]
+					local value10 = state
 					if value10.fpsShow then
-						local value11 = data[20]
+						local value11 = state
 						value11.fpsShow(argument5)
 					end
 				end
 
 				performance:Slider("FPS and Ping Size", 60, 160, 100, function(argument5)
-					local value10 = data[20]
+					local value10 = state
 					if value10.fpsSize then
-						local value11 = data[20]
+						local value11 = state
 						value11.fpsSize(argument5)
 					end
 				end, "%", 1, nil, (callback19(performance, "FPS and Ping", "fpsHud", true, callback55)))
 
 				local Folder, value, data14 = callback("Folder", {Name = "ChilliHidden"}), setmetatable, {__mode = "k"}
-				local value10, enabledFlags, value11 = value({}, data14), {ClientRenderedAssets = true, PlacedEggRenders = true}, data[20]
+				local value10, enabledFlags, value11 = value({}, data14), {ClientRenderedAssets = true, PlacedEggRenders = true}, state
 				value11.hidden = Folder
 				local function callback56(instance)
-					local value12 = data[1]
+					local value12 = localPlayer
 					return tonumber(instance:GetAttribute("OwnerUserId") or instance.Name:match("^(%d+)_")) == value12.UserId
 				end
 
@@ -22762,25 +22794,25 @@ local function payload(argument, argument2)
 					end)
 				end
 
-				table.insert(data[20].cleanup, function()
+				table.insert(state.cleanup, function()
 					local value12, value13 = data[25], data[25]
 					value12.hideMine = false
 					value13.hideOthers = false
 					callback59()
 				end)
-				data2, data12 = {Name = "ChilliBlack", ResetOnSpawn = false, IgnoreGuiInset = true, DisplayOrder = -1000, Enabled = false}, data[1]
+				data2, data12 = {Name = "ChilliBlack", ResetOnSpawn = false, IgnoreGuiInset = true, DisplayOrder = -1000, Enabled = false}, localPlayer
 				data2.Parent = data12:FindFirstChildOfClass("PlayerGui")
 				local ScreenGui = callback("ScreenGui", data2)
 				local Frame = callback("Frame", {Parent = ScreenGui, Size = UDim2.fromScale(1, 1), BackgroundColor3 = Color3.new(0, 0, 0), BorderSizePixel = 0})
-				table.insert(data[20].cleanup, function()
+				table.insert(state.cleanup, function()
 					ScreenGui:Destroy()
 				end)
 				local module3 = callback22({name = "Render", gap = 180, at = 1 / 0})
 				local qualityLevel
 
 				data14 = callback19(performance, "Disable 3D Render", "no3d", false, function(enabled)
-					local value12, value13 = data[58], data[58]
-					pcall(data[58].Set3dRenderingEnabled, data[58], not enabled)
+					local value12, value13 = runService, runService
+					pcall(runService.Set3dRenderingEnabled, runService, not enabled)
 					local value, value2, number9 = pcall, setfpscap
 					if enabled then
 						local value14
@@ -22826,13 +22858,13 @@ local function payload(argument, argument2)
 				end
 
 				module3.fn = function()
-					local value12, value13 = data[58], data[58]
-					pcall(data[58].Set3dRenderingEnabled, data[58], true)
+					local value12, value13 = runService, runService
+					pcall(runService.Set3dRenderingEnabled, runService, true)
 					task.wait(2)
 					local value14 = data[25]
 					if value14.no3d then
-						local value15, value16 = data[58], data[58]
-						pcall(data[58].Set3dRenderingEnabled, data[58], false)
+						local value15, value16 = runService, runService
+						pcall(runService.Set3dRenderingEnabled, runService, false)
 					end
 				end
 
@@ -22886,7 +22918,7 @@ local function payload(argument, argument2)
 					end
 				end
 
-				local value14 = data[20]
+				local value14 = state
 
 				value14.hideUI = function(hideUI)
 					local data17 = data[25]
@@ -22895,7 +22927,7 @@ local function payload(argument, argument2)
 					end
 					data17 = data[25]
 					data17.hideUI = hideUI
-					data17 = data[1]
+					data17 = localPlayer
 					local playerGui = data17:FindFirstChildOfClass("PlayerGui")
 					callback30("hideUI", hideUI and playerGui and playerGui.ChildAdded, callback61)
 
@@ -22940,9 +22972,9 @@ local function payload(argument, argument2)
 
 				value2 = data[25]
 				value2.hideUI = false
-				value = data[20]
+				value = state
 				if value.hudUI then
-					data12 = data[20]
+					data12 = state
 					data12.hudUI(performance)
 				end
 				local font = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.ExtraBold)
@@ -22996,7 +23028,7 @@ local function payload(argument, argument2)
 					Frame2.InputBegan:Connect(function(input2)
 						if not condition3 then
 							if input2.UserInputState == Enum.UserInputState.Begin then
-								local value18 = data[20]
+								local value18 = state
 								if value18.press(input2) then
 									local input3, vector22, position2 = input2.UserInputType == Enum.UserInputType.Touch and input2 or nil, Vector2.new(input2.Position.X, input2.Position.Y), Frame2.Position
 									condition3, input, vector2, position = true, input3, vector22, position2
@@ -23029,13 +23061,13 @@ local function payload(argument, argument2)
 				if workspace.CurrentCamera then
 					trackConnection(workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"), clampValue)
 				end
-				table.insert(data[20].cleanup, destroyAll)
-				local value18 = data[20]
+				table.insert(state.cleanup, destroyAll)
+				local value18 = state
 				value18.fpsSize = function(argument5)
 					number9 = math.clamp((tonumber(argument5) or 100) / 100, 0.6, 1.6)
 					clampValue()
 				end
-				local value19 = data[20]
+				local value19 = state
 
 				value19.fpsShow = function(argument5)
 					if argument5 then
@@ -23045,7 +23077,7 @@ local function payload(argument, argument2)
 					end
 				end
 
-				RunService = data[58]
+				RunService = runService
 
 				callback30("fpsC", RunService.RenderStepped, function(argument5)
 					if not value16 then
@@ -23083,7 +23115,7 @@ local function payload(argument, argument2)
 					end
 				end)
 
-				data2 = data[20]
+				data2 = state
 				data2.fpsShow(data[25].fpsHud ~= false)
 			end)
 
@@ -27735,12 +27767,12 @@ local function payload(argument, argument2)
 			end)
 
 			genv.ChilliFinderBeforeTeleport = function()
-				local value6 = data[20]
+				local value6 = state
 				if value6.beforeTeleport then
-					pcall(data[20].beforeTeleport)
+					pcall(state.beforeTeleport)
 				end
 			end
-			table.insert(data[20].cleanup, function()
+			table.insert(state.cleanup, function()
 				if genv.ChilliFinderPanelCleanup then
 					genv.ChilliFinderPanelCleanup()
 				end
@@ -28115,7 +28147,7 @@ local function payload(argument, argument2)
 					end
 				end
 				local function rank2(argument5)
-					local value6 = data[20]
+					local value6 = state
 					return value6.rank[argument5.name] or argument5.pri or 9
 				end
 				local function callback44(argument5)
@@ -28133,17 +28165,17 @@ local function payload(argument, argument2)
 					end)
 				end
 
-				local value6, value7 = data[20], data[20]
+				local value6, value7 = state, state
 				value6.order = order
 				value7.rank2 = rank2
 				order()
 
 				local function callback45(argument5)
-					local value8 = data[20]
+					local value8 = state
 					local lock = value8.lock
 					local lock2
 					if lock then
-						value8 = data[20]
+						value8 = state
 						lock2 = value8.lock()
 					else
 						lock2 = lock
@@ -28152,34 +28184,34 @@ local function payload(argument, argument2)
 				end
 
 				local function callback46()
-					local value8 = data[20]
+					local value8 = state
 
 					if value8.invisBusy then
-						local number7, value9 = data[20], data[20]
+						local number7, value9 = state, state
 						number7.busyAt = value9.busyAt or os.clock()
-						value9, number7 = data[20], os.clock() - data[20].busyAt
+						value9, number7 = state, os.clock() - state.busyAt
 						if number7 > 20 then
-							local value10, value11 = data[20], data[20]
+							local value10, value11 = state, state
 							value10.invisBusy = false
 							value11.busyAt = nil
 						end
 					else
-						local value9 = data[20]
+						local value9 = state
 						value9.busyAt = nil
 					end
 
-					value8 = data[20]
+					value8 = state
 					local invisBusy = value8.invisBusy
 					local invisBusy2
 					if invisBusy then
 						invisBusy2 = invisBusy
 					else
-						value8, invisBusy2 = data[20], os.clock() < (data[20].invisSettle or 0)
+						value8, invisBusy2 = state, os.clock() < (state.invisSettle or 0)
 					end
 					return invisBusy2
 				end
 
-				local value8 = data[20]
+				local value8 = state
 				value8.needVis = function(argument5, argument6)
 					local vis = argument5.vis
 					return if type(vis) == "function" then vis(argument6) else vis == true
@@ -28187,10 +28219,10 @@ local function payload(argument, argument2)
 				local function getRank(argument5)
 					return argument5.rank or rank2(argument5)
 				end
-				local value9 = data[20]
+				local value9 = state
 
 				value9.better = function(argument5)
-					local value10 = data[20]
+					local value10 = state
 
 					for _, value11 in ipairs(value10.queue or {}) do
 						if value11 ~= argument5 then
@@ -28204,15 +28236,15 @@ local function payload(argument, argument2)
 				end
 
 				local function callback47(argument5, argument6, argument7)
-					local value10 = data[20]
+					local value10 = state
 					local argument8 = value10.needVis(argument5, argument6)
 
 					if argument8 then
-						value10 = data[20]
+						value10 = state
 
 						if value10.invisible() then
 							argument5.flipped = true
-							argument6 = data[20]
+							argument6 = state
 							if not argument6.body(false) then
 								return false
 							end
@@ -28220,12 +28252,12 @@ local function payload(argument, argument2)
 					end
 
 					if not argument8 then
-						value10 = data[20]
+						value10 = state
 
 						if value10.invisWant() then
-							argument5 = data[20]
+							argument5 = state
 							if not argument5.invisible() then
-								argument6 = data[20]
+								argument6 = state
 								argument6.body(true)
 							end
 						end
@@ -28273,7 +28305,7 @@ local function payload(argument, argument2)
 						end)
 						lastMV.acted = ok and response == true
 						if not ok then
-							local value11 = data[11]
+							local value11 = notify
 							value11(lastMV.name .. (": " .. tostring(response):sub(1, 60)), "err")
 						end
 						if response == "prep" then
@@ -28289,16 +28321,16 @@ local function payload(argument, argument2)
 						end
 
 						lastMV.flipped = nil
-						response = data[8]
-						local value11, value12 = response(), data[15]
+						response = humanoid
+						local value11, value12 = response(), humanoidRootPart
 						response = value12()
 
 						if value11 then
 							if value11.PlatformStand then
-								ok = data[20]
+								ok = state
 
 								if ok.lock then
-									value12 = data[20]
+									value12 = state
 									if not value12.lock() then
 										value11.PlatformStand = false
 									end
@@ -28314,7 +28346,7 @@ local function payload(argument, argument2)
 								response.AssemblyLinearVelocity = ok
 							end
 						end
-						response, value11 = data[20], data[20]
+						response, value11 = state, state
 						lastMV.busy, lastMV.idle, lastMV.plan, response.mvEnd = false, nil, nil, os.clock()
 						value11.lastMV = lastMV
 						if data[4] == lastMV then
@@ -28340,14 +28372,14 @@ local function payload(argument, argument2)
 				end
 
 				local function callback51()
-					local schedTok, value10 = {}, data[20]
+					local schedTok, value10 = {}, state
 					value10.schedTok = schedTok
 
 					while true do
 						local ok = data[53]
 						local schedErr
 						if ok then
-							value10 = data[20]
+							value10 = state
 							schedErr = value10.schedTok == schedTok
 						else
 							schedErr = ok
@@ -28384,7 +28416,7 @@ local function payload(argument, argument2)
 
 							table.sort(list3, callback50)
 							table.sort(list4, callback50)
-							local condition3, busy = data[20], data[20]
+							local condition3, busy = state, state
 							condition3.queue = list3
 							busy.queueAt = now3
 							busy = callback46()
@@ -28419,13 +28451,13 @@ local function payload(argument, argument2)
 													local condition6 = value11.name == "Steal"
 													local dawnNow
 													if condition6 then
-														k = data[20]
+														k = state
 														dawnNow = k.dawnNow
 													else
 														dawnNow = condition6
 													end
 													if dawnNow then
-														condition6 = data[20]
+														condition6 = state
 														preempt2 = condition6.dawnNow()
 													else
 														preempt2 = dawnNow
@@ -28457,9 +28489,9 @@ local function payload(argument, argument2)
 
 									if condition then
 										if not value11.aux then
-											k = data[20]
+											k = state
 											if k.stealDawn then
-												condition4 = data[20]
+												condition4 = state
 												if condition4.stealDawn(getRank(value11)) then
 													break
 												end
@@ -28526,9 +28558,9 @@ local function payload(argument, argument2)
 						end, debug.traceback)
 
 						if not ok then
-							local value11 = data[20]
+							local value11 = state
 							value11.schedErr = schedErr
-							value11 = data[11]
+							value11 = notify
 							value11("Scheduler: " .. tostring(schedErr):sub(1, 60), "err")
 						end
 						task.wait(0.25)
@@ -28538,7 +28570,7 @@ local function payload(argument, argument2)
 				local function callback52()
 					local ok, response = xpcall(callback51, debug.traceback)
 					if not ok then
-						local value10 = data[20]
+						local value10 = state
 						value10.schedErr = "outer: " .. tostring(response)
 					end
 				end
@@ -28547,15 +28579,15 @@ local function payload(argument, argument2)
 
 				trackConnection(heartbeat, function()
 					if data[53] then
-						local value10, number7 = data[20], os.clock() - (data[20].queueAt or os.clock())
+						local value10, number7 = state, os.clock() - (state.queueAt or os.clock())
 
 						if number7 > 15 then
-							local value11, number8 = data[20], os.clock() - (data[20].schedAt or 0)
+							local value11, number8 = state, os.clock() - (state.schedAt or 0)
 
 							if number8 > 15 then
-								local value12 = data[20]
+								local value12 = state
 								value12.schedAt = os.clock()
-								value12 = data[11]
+								value12 = notify
 								value12("Scheduler restarted", "warn")
 								task.spawn(callback52)
 							end
@@ -28569,14 +28601,14 @@ local function payload(argument, argument2)
 					local condition3 = data[4] ~= nil and data[4].name ~= "Treadmill"
 					local condition4
 					if condition3 then
-						local value10 = data[20]
+						local value10 = state
 						condition4 = (value10.hold or 0) == 0
 					else
 						condition4 = condition3
 					end
 					condition3 = nil
 					if condition4 then
-						local value10 = data[20]
+						local value10 = state
 						condition3 = not value10.lock()
 					else
 						condition3 = condition4
@@ -28585,7 +28617,7 @@ local function payload(argument, argument2)
 				end
 
 				module2.fn = function()
-					local value10 = data[15]
+					local value10 = humanoidRootPart
 					local value11 = value10()
 
 					if value11 then
@@ -28611,26 +28643,26 @@ local function payload(argument, argument2)
 				end
 
 				module3.fn = function()
-					local value10 = data[20]
+					local value10 = state
 					if value10.tick then
-						local value11 = data[20]
+						local value11 = state
 						callback14("tick", value11.tick)
 					end
 				end
 			end)
 
 			genv.ChilliHubSaeCleanup = function()
-				local value6 = data[1]
+				local value6 = localPlayer
 				local character = value6.Character
 				local attribute
 				if character then
-					value6 = data[1]
+					value6 = localPlayer
 					attribute = value6.Character:GetAttribute("InvisApplied")
 				else
 					attribute = character
 				end
 				data[53] = false
-				character = data[20]
+				character = state
 				for _, value7 in ipairs(character.cleanup or {}) do
 					pcall(value7)
 				end
@@ -28640,9 +28672,9 @@ local function payload(argument, argument2)
 				character = data[25]
 				character.god = false
 				pcall(callback31)
-				character = data[8]
+				character = humanoid
 				if character() then
-					pcall(callback32, data[8]())
+					pcall(callback32, humanoid())
 				end
 				pcall(mainWindow.Destroy, mainWindow)
 				if genv.StopChilliLink then
@@ -28657,7 +28689,7 @@ local function payload(argument, argument2)
 						i("RF/Treadmill/AskDoff")
 					end
 					if attribute then
-						local value7 = data[20]
+						local value7 = state
 						value7.respawn(true)
 					end
 				end)

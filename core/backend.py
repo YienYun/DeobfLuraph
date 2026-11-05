@@ -252,11 +252,11 @@ def polish(text):
         import flatten
         for _ in range(2):
             text, _fl = flatten.apply_text(text)
-            text = ast_polish.polish_ast(text)
+            text = ast_polish.polish_ast(text, slot_names=False)
     except Exception as ex:
         print("[!] flatten/ast polish pass failed: %s" % ex, file=sys.stderr)
         try:
-            text = ast_polish.polish_ast(text)
+            text = ast_polish.polish_ast(text, slot_names=False)
         except Exception as ex2:
             print("[!] ast polish pass failed: %s" % ex2, file=sys.stderr)
     # Parentheses the lifter recorded around whole expressions say nothing; the
@@ -308,6 +308,12 @@ def polish(text):
         text = localfuncs.rewrite(text)
     except Exception as ex:  
         print("[!] local function pass failed: %s" % ex, file=sys.stderr)
+    # Last, because it names what the script stores in its own `data[k]` helper
+    # table from what is stored there: the passes above rename locals by use, and
+    # giving them an alias to reason about first would change their result.
+    # DEVIRT_NO_SLOTNAMES keeps the numbered slots, for bisecting a diff.
+    if not os.environ.get("DEVIRT_NO_SLOTNAMES"):
+        text = ast_polish.name_context_slots(text)
     return text
 
 def finish_text(text):

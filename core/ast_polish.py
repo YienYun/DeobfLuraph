@@ -1564,6 +1564,352 @@ def _drop_empty_branches(text):
     return _apply_edits(btext, edits).decode("utf-8", "surrogateescape")
 
 
+# --- context slots -------------------------------------------------------
+# The lifter keeps the script's own helper table (`local data = {}` filled with
+# `data[15] = <function>`), because the script really does index it by number.
+# A number says nothing to a reader, so a slot that is written exactly once gets
+# a name: either the local it was copied from (`data[20] = state` -> `state`) or,
+# for a stored function, what that function looks up or waits on
+# (`FindFirstChild("HumanoidRootPart")` -> `humanoidRootPart`). Reads are only
+# rewritten where that name really resolves to the same binding -- a slot whose
+# name is shadowed somewhere keeps its `data[k]` form there.
+
+_SLOT_METHODS = ("GetService", "WaitForChild", "FindFirstChild", "FindFirstChildOfClass")
+# methods that say how a value is used, not what it is
+_SLOT_STRUCTURAL = {
+    "IsA", "Clone", "Destroy", "Connect", "Disconnect", "GetChildren", "GetDescendants",
+    "FindFirstChild", "FindFirstChildOfClass", "FindFirstChildWhichIsA", "WaitForChild",
+    "GetService", "GetAttribute", "SetAttribute", "pairs", "Get", "Set",
+    # string/table utilities: a slot that formats a line is a logger, not a `format`
+    "format", "sub", "gsub", "find", "match", "split", "rep", "upper", "lower",
+    "insert", "remove", "concat", "pack", "unpack", "sort", "freeze", "tostring",
+    "tonumber", "type", "print", "warn", "spawn", "defer", "delay",
+    "gmatch", "byte", "char", "len", "clone", "keys", "values",
+}
+# a name made only of these words describes the type, not the value
+_SLOT_BORING = {"new", "value", "name", "wait", "call", "self", "data", "get", "set"}
+# a call on one of these says what the language does, not what the slot is for
+_SLOT_NAMESPACES = {
+    "os", "math", "table", "string", "task", "coroutine", "utf8", "bit32", "debug",
+    "game", "workspace", "script", "Instance", "Enum", "Color3", "UDim2", "UDim",
+    "Vector2", "Vector3", "CFrame", "Rect", "NumberRange", "NumberSequence",
+    "ColorSequence", "Ray", "Region3", "TweenInfo", "BrickColor", "Random",
+}
+# a local the lifter invented says no more than the number it replaced
+_SLOT_GENERATED = re.compile(
+    r"^(?:data|value|valueMap|labelMap|uidMap|condition|response|number|callback|argument"
+    r"|toNumberOrDefault|now|value\d*|slot)\d*$"
+)
+_LUA_KEYWORDS = {
+    "and", "break", "do", "else", "elseif", "end", "false", "for", "function",
+    "if", "in", "local", "nil", "not", "or", "repeat", "return", "then", "true",
+    "until", "while", "continue", "export", "type",
+}
+
+
+def _iter_nodes(node, type_name):
+    """Every node of one type, in source order."""
+    out = []
+    stack = [node]
+    while stack:
+        cur = stack.pop()
+        if isinstance(cur, dict):
+            if cur.get("type") == type_name:
+                out.append(cur)
+            stack.extend(v for k, v in cur.items() if k != "location")
+        elif isinstance(cur, list):
+            stack.extend(cur)
+    out.sort(key=lambda n: n["location"])
+    return out
+
+
+def _line_indent(btext, pos):
+    line = btext.rfind(b"\n", 0, pos) + 1
+    end = line
+    while end < len(btext) and btext[end:end + 1] in (b"\t", b" "):
+        end += 1
+    return btext[line:end].decode("utf-8")
+
+
+def _slot_camel(word):
+    """`RunService` -> `runService`, `field_egg_records` -> `fieldEggRecords`."""
+    word = re.sub(r"[^0-9A-Za-z]+", "_", str(word)).strip("_")
+    parts = [p for p in word.split("_") if p]
+    if not parts:
+        return None
+    out = parts[0][:1].lower() + parts[0][1:]
+    for p in parts[1:]:
+        out += p[:1].upper() + p[1:]
+    return out or None
+
+
+def _slot_string_arg(node):
+    """The single string literal a call was given, if that is all it was given."""
+    args = node.get("args") or []
+    if len(args) != 1 or args[0].get("type") != "AstExprConstantString":
+        return None
+    value = args[0].get("value")
+    return value if isinstance(value, str) else None
+
+
+def _slot_method_of(node):
+    fn = node.get("func") or {}
+    if fn.get("type") == "AstExprIndexName":
+        return fn.get("index")
+    if fn.get("type") == "AstExprLocal":
+        return (fn.get("local") or {}).get("name")
+    return None
+
+
+def _slot_call_name(node):
+    """Name for a stored value: `game:GetService("RunService")` -> runService."""
+    if node.get("type") == "AstExprIndexName":
+        index = node.get("index")
+        base = node.get("expr") or {}
+        if index == "new" and base.get("type") == "AstExprGlobal":
+            name = _slot_camel(base.get("global"))
+            return ("new" + name[:1].upper() + name[1:]) if name else None
+        return _slot_camel(index)
+    if node.get("type") == "AstExprCall":
+        literal = _slot_string_arg(node)
+        if not literal:
+            return None
+        method = _slot_method_of(node)
+        if method in _SLOT_METHODS or method in ("getService", "service", "child", "find"):
+            return _slot_camel(literal)
+        return None
+    if node.get("type") == "AstExprGlobal":
+        return _slot_camel(node.get("global"))
+    return None
+
+
+def _slot_function_name(node):
+    """Name for a stored function, from what it looks up or waits on.
+
+    A body that only calls a helper it was handed (`callback7(...)`) or a string
+    utility says nothing about the slot, and is left unnamed.
+
+    `function() return character:FindFirstChild("HumanoidRootPart") end` -> humanoidRootPart,
+    `function() return heartbeat:Wait() end` -> heartbeatWait.
+    """
+    literal_name = None
+    method_name = None
+    params = {p.get("name") for p in node.get("params") or []}
+    for call in _iter_nodes(node.get("body") or {}, "AstExprCall"):
+        literal = _slot_string_arg(call)
+        method = _slot_method_of(call)
+        if literal and method in _SLOT_METHODS and literal_name is None:
+            literal_name = _slot_camel(literal)
+            continue
+        if not method or method in _SLOT_STRUCTURAL or method_name is not None:
+            continue
+        fn_node = call.get("func") or {}
+        if fn_node.get("type") == "AstExprLocal":
+            callee = (fn_node.get("local") or {}).get("name") or ""
+            if callee in params or _SLOT_GENERATED.match(callee):
+                continue
+        base = fn_node.get("expr") or {}
+        if base.get("type") == "AstExprGlobal":
+            if base.get("global") in _SLOT_NAMESPACES:
+                continue
+            base_name = None
+        elif base.get("type") == "AstExprLocal":
+            base_name = _slot_camel((base.get("local") or {}).get("name"))
+        elif base.get("type") == "AstExprIndexName":
+            base_name = _slot_camel(base.get("index"))
+        else:
+            base_name = None
+        call_name = _slot_camel(method)
+        if not call_name:
+            continue
+        if base_name and not _SLOT_GENERATED.match((base.get("local") or {}).get("name") or ""):
+            if base_name.lower() in _SLOT_BORING:
+                method_name = call_name
+            else:
+                method_name = base_name + call_name[:1].upper() + call_name[1:]
+        else:
+            method_name = call_name
+    return literal_name or method_name
+
+
+def _slot_name_from(node):
+    t = node.get("type")
+    if t == "AstExprFunction":
+        return _slot_function_name(node) or _slot_call_name(node)
+    name = _slot_call_name(node)
+    if name and name.lower() not in _SLOT_BORING:
+        return name
+    return None
+
+
+def _slot_bindings(root, starts, total, wanted):
+    """Where each name of interest is bound, and how far that binding reaches.
+
+    Returns name -> [(decl_start, decl_end, block_end, location)], so a read can
+    be tested against the binding that would really win at that spot: a name
+    declared again inside a nested function covers that function, a name declared
+    earlier in the same block is overwritten the moment the slot is named.
+    """
+    found = {}
+
+    def walk(node, block_end, depth=0):
+        if not isinstance(node, dict) or depth > 400:
+            return
+        t = node.get("type")
+        if t == "AstStatBlock":
+            _, block_end = _loc_bytes(node["location"], starts)
+        if t == "AstExprFunction":
+            fn_start, fn_end = _loc_bytes(node["location"], starts)
+            for param in node.get("params") or []:
+                name = param.get("name")
+                if name in wanted:
+                    found.setdefault(name, []).append(
+                        (fn_start, fn_start, fn_end, param.get("location")))
+        if t == "AstStatLocal":
+            decl_start, decl_end = _loc_bytes(node["location"], starts)
+            for var in node.get("vars") or []:
+                name = var.get("name")
+                if name in wanted:
+                    found.setdefault(name, []).append(
+                        (decl_start, decl_end, block_end, var.get("location")))
+        for k, v in node.items():
+            if k == "location":
+                continue
+            if isinstance(v, dict):
+                walk(v, block_end, depth + 1)
+            elif isinstance(v, list):
+                for x in v:
+                    walk(x, block_end, depth + 1)
+
+    walk(root, total)
+    return found
+
+
+def _slot_shadow_ranges(bindings, target_location, alias_at):
+    """The ranges where a read would resolve to a binding other than the slot's."""
+    ranges = []
+    for decl_start, decl_end, block_end, location in bindings:
+        if target_location is not None and location == target_location:
+            continue
+        if decl_start < alias_at:
+            # declared above the name: it stops applying where the slot is named
+            ranges.append((decl_end, alias_at))
+        else:
+            ranges.append((decl_end, block_end))
+    return ranges
+
+
+def _name_context_slots(text):
+    root = _parse_ast(text)
+    btext = text.encode("utf-8")
+    starts = _line_starts(btext)
+
+    def span(node):
+        return _loc_bytes(node["location"], starts)
+
+    tables = set()
+    for stmt in _iter_nodes(root, "AstStatLocal"):
+        vars_, values = stmt.get("vars") or [], stmt.get("values") or []
+        if len(vars_) == 1 and len(values) == 1 and values[0].get("type") == "AstExprTable":
+            if not (values[0].get("items") or []):
+                tables.add(vars_[0].get("name"))
+    if not tables:
+        return text
+
+    def key_of(node):
+        base = node.get("expr") or {}
+        if base.get("type") != "AstExprLocal":
+            return None, None
+        table = (base.get("local") or {}).get("name")
+        index = node.get("index") or {}
+        if table not in tables or index.get("type") != "AstExprConstantNumber":
+            return None, None
+        return table, index.get("value")
+
+    # the statement that stores each slot, and the value it stores
+    staged = {}
+    for assign in _iter_nodes(root, "AstStatAssign"):
+        vars_ = assign.get("vars") or []
+        if len(vars_) != 1 or vars_[0].get("type") != "AstExprIndexExpr":
+            continue
+        table, key = key_of(vars_[0])
+        if table is None:
+            continue
+        staged.setdefault((table, key), []).append((vars_[0], assign))
+
+    targets_ = {id(var) for stores in staged.values() for var, _ in stores}
+    reads = {}
+    for node in _iter_nodes(root, "AstExprIndexExpr"):
+        if id(node) in targets_:
+            continue
+        table, key = key_of(node)
+        if table is not None:
+            reads.setdefault((table, key), []).append(node)
+
+    taken = set(re.findall(r"[A-Za-z_][A-Za-z0-9_]*", btext.decode("utf-8", "replace")))
+    # `local runService = data[58]` is the alias this pass writes; reading it as
+    # a use of the slot would write the alias twice
+    alias_echo = set()
+    for stmt in _iter_nodes(root, "AstStatLocal"):
+        vars_, values = stmt.get("vars") or [], stmt.get("values") or []
+        if len(vars_) == 1 and len(values) == 1 and values[0].get("type") == "AstExprIndexExpr":
+            alias_echo.add((vars_[0].get("name"), id(values[0])))
+
+    plans = []
+    for (table, key), stores in sorted(staged.items(), key=lambda kv: (kv[0][0], kv[0][1])):
+        if len(stores) != 1:
+            continue
+        assign = stores[0][1]
+        values = assign.get("values") or []
+        if len(values) != 1:
+            continue
+        slot_reads = reads.get((table, key)) or []
+        if not slot_reads:
+            continue
+        write_start, write_end = span(assign)
+        value = values[0]
+        origin = None
+        if value.get("type") == "AstExprLocal":
+            # `data[20] = state`: the name is already there, so the reads can use
+            # it directly and no alias line is written
+            source = value.get("local") or {}
+            name = source.get("name")
+            if not name or _SLOT_GENERATED.match(name) or name in _LUA_KEYWORDS:
+                continue
+            origin = source.get("location")
+        else:
+            name = _slot_name_from(value)
+            if not name or name in _LUA_KEYWORDS:
+                continue
+        plans.append({"table": table, "key": key, "assign": assign, "name": name,
+                      "alias": origin is None, "origin": origin,
+                      "reads": slot_reads, "at": write_end})
+    if not plans:
+        return text
+
+    bindings = _slot_bindings(root, starts, len(btext), {p["name"] for p in plans})
+    edits = []
+    for plan in plans:
+        shadows = _slot_shadow_ranges(bindings.get(plan["name"]) or [], plan["origin"], plan["at"])
+        # a read above the write sees nil in the slot, so it keeps its `data[k]`
+        usable = [r for r in plan["reads"] if span(r)[0] >= plan["at"]]
+        usable = [r for r in usable
+                  if (plan["name"], id(r)) not in alias_echo
+                  and not any(a <= span(r)[0] < b for a, b in shadows)]
+        if not usable:
+            continue
+        if plan["alias"]:
+            indent = _line_indent(btext, span(plan["assign"])[0])
+            line = "\n%slocal %s = %s[%d]" % (indent, plan["name"], plan["table"], plan["key"])
+            edits.append((plan["at"], plan["at"], line.encode("utf-8")))
+        for node in usable:
+            start, end = span(node)
+            edits.append((start, end, plan["name"].encode("utf-8")))
+    if not edits:
+        return text
+    return _apply_edits(btext, edits).decode("utf-8")
+
+
 def _discard_unread_slots(text):
     """A name nothing reads can still be carrying a value.
 
@@ -1621,10 +1967,23 @@ def _discard_unread_slots(text):
     return _apply_edits(btext, edits).decode("utf-8", "surrogateescape")
 
 
-def polish_ast(text):
+def name_context_slots(text):
+    """Give the script's own `data[k]` helper slots a name. Never raises."""
+    try:
+        return _name_context_slots(text)
+    except Exception as ex:                        # never lose a working output
+        print("[!] context slot naming pass failed: %s" % ex, file=sys.stderr)
+        return text
+
+
+def polish_ast(text, slot_names=True):
     text = _strip_unused_params_and_dead_locals(text)
     text = _unwrap_top_level_iife(text)
     text = _sugar_local_functions(text)
+    if slot_names:
+        # the script's own helper table is indexed by number; give each slot the
+        # name of the thing stored in it before anything else looks at the code
+        text = name_context_slots(text)
     try:
         text = _merge_local_decls(text)
     except Exception as ex:                        # never lose a working output

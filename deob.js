@@ -388,7 +388,10 @@ async function processFile(absInput, args) {
       let content = fs.readFileSync(result, 'utf8');
       content = content.replace(/^(\s*--(?:[ \t]*(?:Deobfuscated by|Detected obfuscation|Local names are inferred|source:|NOTE: reconstructed|during the trace|Input SHA-256:Constants decoded;|Names\/comments lost|This is not a claim)[^\n]*\n?|\s*\n))+/, '');
       let renameStats = undefined;
-      if (args.rename && job.resultType === 'devirtualized') {
+      // `payload-source` is the same job one layer out: the script the loader
+      // carries, printed rather than devirtualized. It is plain Luau with the
+      // same placeholder names, so the renamer has just as much to work with.
+      if (args.rename && (job.resultType === 'devirtualized' || job.resultType === 'payload-source')) {
         process.stderr.write(`[*] running Layer-2 renamer & dead-code cleaner (comments=${args.comments})...\n`);
         const renamer = require('./renamer');
         const r2 = renamer.cleanAndRename(content, {

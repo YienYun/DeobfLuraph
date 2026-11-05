@@ -1,0 +1,19 @@
+{
+  "input": "/home/user/DeobfLuraph/results/Chilli_StealAnEggg.deobf.luau",
+  "output": "/home/user/DeobfLuraph/results/Chilli_StealAnEggg.renamed.luau",
+  "rename_stats": {
+    "mode": "offline",
+    "provider": "offline",
+    "renamed": 918,
+    "comments": 56,
+    "formatter": "none",
+    "dead_lines_removed": 7,
+    "darklua_applied": true,
+    "deobf_ast_polished": true,
+    "ast_valid": true,
+    "elapsed_ms": 14679
+  },
+  "warnings": [
+    "darklua remove_unused_variable skipped: the file declares multi-name locals without initializers, which darklua would delete entirely (writes would become globals)"
+  ]
+}

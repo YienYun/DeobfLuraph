@@ -26,6 +26,9 @@ Jalankan Layer 1 (Devirtualizer Luraph v15.0/v15.1) + Layer 2 (Garbage Cleaner +
 node deob.js protected.lua -o renamed.lua --rename
 ```
 
+`--rename` berlaku untuk hasil `devirtualized` maupun `payload-source` (skrip yang
+diprint dari carrier), jadi satu perintah menghasilkan file yang sudah dinamai.
+
 Opsi tambahan pada `deob.js`:
 - `--comments light` *(default)* | `--comments detailed` | `--comments none`
 - `--ai-provider <openai|gemini|anthropic|groq|deepseek|openrouter|xai|ollama|lmstudio>`
@@ -41,7 +44,30 @@ node renamer/index.js out.lua -o renamed.lua
 npm run rename -- out.lua -o renamed.lua --comments detailed
 ```
 
-### 3. Mode Full AI LLM (Opsional)
+### 3. Slot konteks: `data[k]` jadi bernama
+
+Skrip hasil deobf sering membawa tabel helper miliknya sendiri (`local data = {}`
+lalu `data[15] = function() ... end`), karena skripnya memang mengindeks tabel itu
+dengan angka. Pass `ast_polish._name_context_slots` memberi tiap slot nama dari
+apa yang disimpan di dalamnya, dan **hanya** menulis nama di tempat nama itu
+benar-benar menunjuk nilai yang sama:
+
+| isi slot | nama |
+|---|---|
+| `game:GetService("RunService")` | `runService` |
+| `ReplicatedStorage:WaitForChild("Networking")` | `networking` |
+| `Vector3.new` / `CFrame.new` | `newVector3` / `newCFrame` |
+| `function() ... FindFirstChild("HumanoidRootPart") ...` | `humanoidRootPart` |
+| `function() return heartbeat:Wait() end` | `heartbeatWait` |
+| `local state` (salinan) | `state`, tanpa alias baru |
+
+Baca yang berada **di atas** penulisan slot, atau di dalam scope yang punya nama
+sama (shadowing), tetap memakai `data[k]` -- itu bukan kosmetik, itu yang menjaga
+perilaku. Pass ini jalan di Layer 1 (akhir pipeline) dan di Layer 2 (lewat
+`polish_ast`), idempoten, dan setiap kasusnya diuji di `test/polish.test.js`
+dengan perbandingan output Luau sebelum/sesudah.
+
+### 4. Mode Full AI LLM (Opsional)
 Jika ingin memakai AI LLM eksternal (AI **hanya** mengirim daftar JSON nama & komentar, lalu diterapkan oleh Verified Scope Renamer sehingga AI **tidak pernah bisa merusak kode**):
 
 ```bash

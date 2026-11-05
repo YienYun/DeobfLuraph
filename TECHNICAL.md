@@ -25,7 +25,10 @@ not decode, the sandbox decodes them, and the next round lifts again. Rounds sto
 when a full lift asks for nothing new.
 
 `polish` alternates two passes twice: `core/flatten.py` and the AST cleanup
-(`core/ast_polish.py`). The flattener is what turns the obfuscator's control-flow
+(`core/ast_polish.py`). A last AST pass (`name_context_slots`) gives the script's
+own `data[k]` helper slots a name once everything else has settled; it runs after
+naming because the namer renames locals by use, and an alias it did not write
+would change what the namer decides. The flattener is what turns the obfuscator's control-flow
 flattening back into straight-line code. Luraph encodes it as a loop over a
 constant range that dispatches on the counter:
 

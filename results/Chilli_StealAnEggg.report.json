@@ -2,8 +2,8 @@
   "schema_version": 1,
   "input": "/home/user/DeobfLuraph/fixtures/input/StealAnEggg.lua",
   "output": "/home/user/DeobfLuraph/results/Chilli_StealAnEggg.deobf.luau",
-  "output_sha256": "78f7220881ab15cff67a4d339d9af3d52e28e73052813c6d5a6215ecca3c0c57",
-  "output_bytes": 979607,
+  "output_sha256": "c31da09974c2c84338e0a32f6945a76631f3d50c77e86dc516fad57e8932052e",
+  "output_bytes": 980722,
   "obfuscator": "luraph_v15",
   "engine": "Luraph v15",
   "confidence": 1,
@@ -14,7 +14,7 @@
     "walked": 0,
     "errors": 0,
     "fallbacks": 0,
-    "payload_source": 25614
+    "payload_source": 25638
   },
   "chain": [
     "luarmor:keysystem_script"

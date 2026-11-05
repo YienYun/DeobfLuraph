@@ -402,3 +402,15 @@ unlifted blocks / unstructured jumps / new constant requests`,
 `frame_propagation: bound= residual_unknown= unknown_callee=`, and with
 `--exec-rec` also `[execrec] runs= covered= ... pcs_visited=`, plus
 `poison_pc_covered=` when a call is dropped.
+
+### Naming why a run stopped
+
+A trace that stops early carries `-- run status: ...` in its header, and the
+report repeats it in `trace_status`. When that status is an error, the report also
+gets a `diagnosis` sentence, because two very different situations produce the
+same message: the sandbox meeting a call it cannot answer, and the input not being
+self-contained. For `attempt to call missing method 'X'`, the driver looks for a
+definition of `X` in the input (`X =`, `["X"] =`); if there is none, the diagnosis
+says the capture looks incomplete rather than blaming the environment. The mapping
+lives in `diagnoseTrace` (`src/driver.js`) and is covered by
+`test/trace_status.test.js`.

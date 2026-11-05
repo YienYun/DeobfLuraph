@@ -423,6 +423,7 @@ async function processFile(absInput, args) {
       writeAtomically(final, content);
       if (job.resultType === 'trace') {
         job.warnings.push('Result is a behaviour trace, not reconstructed source (see the file header).');
+        if (job.diagnosis) process.stderr.write(`[!] why: ${job.diagnosis}\n`);
       }
       const report = {
         schema_version: 1,
@@ -435,6 +436,7 @@ async function processFile(absInput, args) {
         confidence,
         result_type: job.resultType,
         trace_status: job.traceStatus,
+        ...(job.diagnosis ? { diagnosis: job.diagnosis } : {}),
         lift_stats: job.liftStats,
         ...(job.chain ? { chain: job.chain } : {}),
         ...(job.luarmor ? { luarmor: job.luarmor } : {}),

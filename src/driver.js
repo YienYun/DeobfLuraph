@@ -9,12 +9,41 @@ const tidy = require('./tidy');
 
 const SPIN_CHECKS = 24;
 
+// A run that stops early is usually the sandbox meeting a call it cannot
+// answer, but the same message also shows up when the captured file itself is
+// incomplete (it calls a method that nothing in the file defines). Say which
+// one it is, so a dead sample is not mistaken for a hole in the emulation.
+function diagnoseTrace(status, source) {
+  if (!status || status === 'finished') return null;
+  let m = /attempt to call missing method '([^']*)' of (\w+)/.exec(status);
+  if (m) {
+    // A table built by the file itself cannot be answered by the sandbox: if the
+    // name is never assigned anywhere in the input, the file is not self-contained
+    // and no amount of environment work will lift it.
+    const name = m[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const defines = new RegExp(`(^|[^\\w.])${name}\\s*=|\\[\\s*['"]${name}['"]\\s*\\]`).test(source || '');
+    if (!defines) {
+      return `the run stopped calling method '${m[1]}', which nothing in the file defines ` +
+        `— the capture looks incomplete (it also reads globals it never sets)`;
+    }
+    return `the run stopped on a call of method '${m[1]}' on a ${m[2]} that does not answer it`;
+  }
+  m = /attempt to index nil with '([^']*)'/.exec(status);
+  if (m) return `the run stopped indexing a nil value ('${m[1]}')`;
+  m = /attempt to (?:call|perform arithmetic on|concatenate) (?:a )?nil value/.exec(status);
+  if (m) return 'the run stopped on a nil value where the script expected one';
+  m = /stack overflow/.exec(status);
+  if (m) return 'the run overflowed the stack (recursion the script expects to be bounded)';
+  return null;
+}
+
 function addTraceStatus(job, body) {
   const status = /^-- run status: (.*)$/m.exec(body);
   if (status) {
     job.traceStatus = status[1].trim();
     if (job.traceStatus !== 'finished') {
       job.warnings.push(`Trace did not finish normally: ${job.traceStatus}`);
+      job.diagnosis = diagnoseTrace(job.traceStatus, job.source);
     }
   }
 }
@@ -366,4 +395,4 @@ async function runGeneric(job) {
   return job.tracePath;
 }
 
-module.exports = { run, runGeneric };
+module.exports = { run, runGeneric, diagnoseTrace };

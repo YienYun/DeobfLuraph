@@ -49,6 +49,25 @@ Three rules for this directory:
    Luau compile gate over this directory) and `node scripts/freevars.js results`
    (no undeclared register reads).
 
+## Samples that cannot be lifted
+
+`fixtures/input/392628e9da400b8a.lua` (Luraph v15.0, `t15-0-392628`) is a pinned
+sample that produces a trace, and the trace stops on
+
+```
+Script:3: attempt to call missing method 'pW' of table
+```
+
+That is not the sandbox failing to answer a proxy: the file itself ends with
+`setmetatable({...}, {}):pW()(...)`, and the table literal it builds defines 310
+named plus 141 integer keys -- none of them `pW`. Nothing in the file defines the
+name (checked textually and by the report's `diagnosis` field), and it reads 129
+globals it never sets (free globals such as `C`, `z`, `EVEDGU`, `ELW29`), so the
+payload it decodes is split across chunks that this capture does not contain.
+Vanilla Luau agrees: `bin/luau` stops on the same line with
+`attempt to index nil with 'IFKI'`. The capture is incomplete, so it is filed as
+such instead of being counted as a hole in the emulation.
+
 ## Regenerating an entry
 
 ```bash

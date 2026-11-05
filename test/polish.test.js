@@ -135,3 +135,71 @@ test('naming a slot settles: a second polish changes nothing', () => {
   const once = polish(src);
   assert.equal(polish(once), once);
 });
+
+// --- usage names ----------------------------------------------------------
+// A parameter the lifter called `argument5` is named from what is done with
+// it; a handler it called `callback7` from the event or the body it is given.
+// Each case prints values, so the Luau comparison in `same()` has something to
+// compare and a rename that changed behaviour shows up.
+
+test('a parameter is named from the method it is given to', () => {
+  const src = 'local fakeRemote = {FireServer = function(self, payload) return payload end}\n'
+    + 'local function send(argument5, argument6)\n\treturn argument5:FireServer(argument6)\nend\n'
+    + 'print(send(fakeRemote, 7))\n';
+  const out = same(src);
+  assert.match(out, /local function send\(remote, argument6\)/, out);
+  assert.match(out, /return remote:FireServer\(argument6\)/, out);
+});
+
+test('a parameter is named from the call it is handed to', () => {
+  const src = 'local function run(argument5)\n\treturn pcall(argument5)\nend\n'
+    + 'print(run(function() return "ran" end))\n';
+  const out = same(src);
+  assert.match(out, /local function run\(callback\)/, out);
+  assert.match(out, /return pcall\(callback\)/, out);
+});
+
+test('a parameter is named from how it is read: index, count, arithmetic', () => {
+  const src = 'local map = {a = 1}\n'
+    + 'local function lookup(argument5)\n\treturn map[argument5]\nend\n'
+    + 'local function count(argument6)\n\treturn #argument6\nend\n'
+    + 'local function twice(argument7)\n\treturn argument7 * 2\nend\n'
+    + 'print(lookup("a"), count({1, 2, 3}), twice(4))\n';
+  const out = same(src);
+  assert.match(out, /local function lookup\(key\)/, out);
+  assert.match(out, /local function count\(list\)/, out);
+  assert.match(out, /local function twice\(amount\)/, out);
+});
+
+test('a parameter takes the name the function it is passed to uses', () => {
+  const src = 'local function place(egg)\n\treturn egg\nend\n'
+    + 'local function outer(argument5)\n\treturn place(argument5)\nend\n'
+    + 'print(outer("e"))\n';
+  const out = same(src);
+  assert.match(out, /local function outer\(egg\)/, out);
+  assert.match(out, /return place\(egg\)/, out);
+});
+
+test('a name already live in that function is not reused for a parameter', () => {
+  const src = 'local function f(argument5)\n\tlocal amount = 1\n\treturn amount + argument5 * 2\nend\n'
+    + 'print(f(3))\n';
+  const out = same(src);
+  assert.match(out, /local amount = 1/, out);
+  assert.ok(!/local function f\(amount\)/.test(out), out);
+});
+
+test('a handler passed to Connect is named after the event', () => {
+  const src = 'local signal = {Connect = function(self, fn) self.fn = fn return fn end}\n'
+    + 'local callback7 = function() return 1 end\n'
+    + 'signal:Connect(callback7)\nprint(signal.fn())\n';
+  const out = same(src);
+  assert.match(out, /local function onSignal\(/, out);
+});
+
+test('a function is named from what its body builds when it is only called', () => {
+  const src = 'Instance = {new = function(name) return {Name = name} end}\n'
+    + 'local callback7 = function(argument5)\n\treturn Instance.new("Frame"), argument5\nend\n'
+    + 'print(callback7(1).Name)\n';
+  const out = same(src);
+  assert.match(out, /local function newFrame\(/, out);
+});

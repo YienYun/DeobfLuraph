@@ -67,7 +67,33 @@ perilaku. Pass ini jalan di Layer 1 (akhir pipeline) dan di Layer 2 (lewat
 `polish_ast`), idempoten, dan setiap kasusnya diuji di `test/polish.test.js`
 dengan perbandingan output Luau sebelum/sesudah.
 
-### 4. Mode Full AI LLM (Opsional)
+### 4. Nama parameter & handler dari pemakaian
+
+Lifter menyebut parameter yang tidak bisa diikutinya `argument5`, dan fungsi
+tanpa nama `callback7`. Keduanya biasanya **dipakai** dengan cara yang
+menjelaskan dirinya sendiri, jadi `ast_polish.name_from_usage` menamainya dari
+bukti, bukan dari kamus:
+
+| bukti di AST | nama |
+|---|---|
+| `p:FireServer(x)` / `p:InvokeServer(x)` | `remote` |
+| `p:Connect(fn)` | `signal` |
+| `p:GetAttribute("X")` | `object` (parameter itu objeknya, bukan atributnya) |
+| `p:FindFirstChildOfClass("Humanoid")` | `character` |
+| `p.UserInputType` / `p.Position` / `p.Character` | `input` / `part` / `player` |
+| `pcall(p)` / `task.spawn(p)` | `callback` |
+| `map[p]` / `#p` / `p * 2` / `.. p` | `key` / `list` / `amount` / `text` |
+| `f(a, argument5)` dengan parameter `f` bernama `egg` | `egg` (dari kontrak callee) |
+| `callback7` diberikan ke `:Connect` | `onHeartbeat`, `onChildAdded`, … |
+| `callback7` yang hanya dipanggil, badannya membuat `Instance.new("Frame")` | `newFrame` |
+
+Aturan yang menjaga perilaku: nama yang **sudah hidup** di rentang yang sama
+tidak dipakai, nama fungsi tidak dipakai untuk parameternya sendiri, dua
+parameter satu fungsi tidak pernah dapat nama sama, nama fallback lifter
+(`value12`, `number8`) tidak dipakai sebagai nama baru, dan pass berhenti saat
+teks tidak berubah lagi (nama baru jadi bukti untuk putaran berikutnya).
+
+### 5. Mode Full AI LLM (Opsional)
 Jika ingin memakai AI LLM eksternal (AI **hanya** mengirim daftar JSON nama & komentar, lalu diterapkan oleh Verified Scope Renamer sehingga AI **tidak pernah bisa merusak kode**):
 
 ```bash

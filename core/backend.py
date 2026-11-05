@@ -252,11 +252,11 @@ def polish(text):
         import flatten
         for _ in range(2):
             text, _fl = flatten.apply_text(text)
-            text = ast_polish.polish_ast(text, slot_names=False)
+            text = ast_polish.polish_ast(text, text_names=False)
     except Exception as ex:
         print("[!] flatten/ast polish pass failed: %s" % ex, file=sys.stderr)
         try:
-            text = ast_polish.polish_ast(text, slot_names=False)
+            text = ast_polish.polish_ast(text, text_names=False)
         except Exception as ex2:
             print("[!] ast polish pass failed: %s" % ex2, file=sys.stderr)
     # Parentheses the lifter recorded around whole expressions say nothing; the
@@ -314,6 +314,7 @@ def polish(text):
     # DEVIRT_NO_SLOTNAMES keeps the numbered slots, for bisecting a diff.
     if not os.environ.get("DEVIRT_NO_SLOTNAMES"):
         text = ast_polish.name_context_slots(text)
+        text = ast_polish.name_from_usage(text)
     return text
 
 def finish_text(text):

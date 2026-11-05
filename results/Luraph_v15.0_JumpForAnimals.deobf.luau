@@ -111,15 +111,15 @@ do
 			if typeof(value2) == "Instance" then
 				local condition = false
 
-				local function callback3(argument2)
-					if not condition and argument2.Text == "None" then
+				local function callback3(descendant)
+					if not condition and descendant.Text == "None" then
 						condition = true
-						argument2.Text = text2
+						descendant.Text = text2
 						condition = false
 					end
 				end
 
-				local function callback4(descendant)
+				local function onDescendantAdded(descendant)
 					if not descendant:IsA("TextLabel") or descendant.Name ~= "Value" then
 						return
 					end
@@ -136,9 +136,9 @@ do
 
 				local _, value3, value4 = ipairs(value2:GetDescendants())
 				for _, value5 in value3, value4 do
-					callback4(value5)
+					onDescendantAdded(value5)
 				end
-				local connection = value2.DescendantAdded:Connect(callback4)
+				local connection = value2.DescendantAdded:Connect(onDescendantAdded)
 				registerItem(function()
 					pcall(function()
 						connection:Disconnect()
@@ -165,9 +165,9 @@ do
 end
 
 local callback3
-callback3 = function(argument, argument2)
+callback3 = function(argument, text5)
 	if type(uiLibrary.Notify) == "function" then
-		pcall(uiLibrary.Notify, argument, argument2, 5)
+		pcall(uiLibrary.Notify, argument, text5, 5)
 	end
 end
 
@@ -556,11 +556,11 @@ do
 		return data4
 	end
 
-	module.TravelTime = function(argument, argument2)
+	module.TravelTime = function(argument, vector2)
 		if module.TravelMode == "Teleport" then
 			return 0.4
 		end
-		local _, value2, value3 = ipairs(callback5(argument, argument2))
+		local _, value2, value3 = ipairs(callback5(argument, vector2))
 		local number = 0
 		for _, value4 in value2, value3 do
 			number += (value4 - argument).Magnitude
@@ -573,8 +573,8 @@ do
 		local value2 = module.Root()
 
 		if not (not value2 or typeof(argument) ~= "Vector3") then
-			local argument4 = argument3 or 3
-			if (value2.Position - argument).Magnitude <= argument4 then
+			local amount = argument3 or 3
+			if (value2.Position - argument).Magnitude <= amount then
 				return true
 			end
 
@@ -613,7 +613,7 @@ do
 								local condition2 = number2 == #value3
 								local number3 = value3[number2] - value4.Position
 								local magnitude = number3.Magnitude
-								local argument6 = condition2 and argument4 or 2
+								local argument6 = condition2 and amount or 2
 
 								if magnitude <= argument6 then
 									if condition2 then
@@ -651,7 +651,7 @@ do
 					pcall(function()
 						value4.AssemblyLinearVelocity = Vector3.zero
 					end)
-					if (value4.Position - argument).Magnitude <= argument4 + 1 then
+					if (value4.Position - argument).Magnitude <= amount + 1 then
 						condition = true
 					end
 				end
@@ -668,15 +668,15 @@ do
 				end)
 				module.Hold(argument, 0.25)
 				value2 = module.Root()
-				return value2 ~= nil and (value2.Position - argument).Magnitude <= argument4 + 8
+				return value2 ~= nil and (value2.Position - argument).Magnitude <= amount + 8
 			end
 		end
 
 		return false
 	end
 
-	module.Hold = function(argument, argument2)
-		local number = os.clock() + argument2
+	module.Hold = function(argument, amount)
+		local number = os.clock() + amount
 
 		while os.clock() < number do
 			local value2 = module.Root()
@@ -754,15 +754,15 @@ do
 		end
 	end
 
-	table.sort(list, function(argument, argument2)
-		if argument.Rank ~= argument2.Rank then
-			return argument.Rank > argument2.Rank
+	table.sort(list, function(argument, object)
+		if argument.Rank ~= object.Rank then
+			return argument.Rank > object.Rank
 		end
 
-		if argument.Value ~= argument2.Value then
-			return argument.Value > argument2.Value
+		if argument.Value ~= object.Value then
+			return argument.Value > object.Value
 		end
-		return argument.Name < argument2.Name
+		return argument.Name < object.Name
 	end)
 
 	local _, value3, value4 = ipairs(list)
@@ -821,19 +821,19 @@ do
 			end
 		end
 
-		table.sort(list3, function(argument2, argument3)
+		table.sort(list3, function(object, argument3)
 			if text2 == nameList[3] then
-				return argument2.Distance < argument3.Distance
+				return object.Distance < argument3.Distance
 			end
 
-			if text2 == nameList[2] and argument2.Rank ~= argument3.Rank then
-				return argument2.Rank > argument3.Rank
+			if text2 == nameList[2] and object.Rank ~= argument3.Rank then
+				return object.Rank > argument3.Rank
 			end
 
-			if argument2.Value ~= argument3.Value then
-				return argument2.Value > argument3.Value
+			if object.Value ~= argument3.Value then
+				return object.Value > argument3.Value
 			end
-			return argument2.Distance < argument3.Distance
+			return object.Distance < argument3.Distance
 		end)
 
 		return list3
@@ -1618,7 +1618,7 @@ end
 
 local TweenService = game:GetService("TweenService")
 local nameList = { "Value", "Rarity", "Distance" }
-local uiGridLayout, callback5, color, screenGui, main, scrollingFrame
+local uiGridLayout, newUIScale, color, screenGui, main, scrollingFrame
 
 do
 	local number = 150
@@ -1626,7 +1626,7 @@ do
 	local number3 = 4.6
 	local number4 = 0.485
 	uiGridLayout = nil
-	callback5 = nil
+	newUIScale = nil
 	local unitSuffixes = { "", "K", "M", "B", "T", "Qa", "Qi", "Sx" }
 	color = Color3.fromRGB(196, 110, 255)
 	local color2 = Color3.fromRGB(112, 40, 214)
@@ -1679,7 +1679,7 @@ do
 		end
 	end
 
-	local function callback8(argument, argument2)
+	local function callback8(argument, text5)
 		if not argument then
 			return
 		end
@@ -1687,15 +1687,15 @@ do
 		local equip = bgImage and bgImage:FindFirstChild("Equip")
 		local unequip = bgImage and bgImage:FindFirstChild("Unequip")
 		if equip then
-			equip.Enabled = argument2 == "Go"
+			equip.Enabled = text5 == "Go"
 		end
 		if unequip then
-			unequip.Enabled = argument2 == "Stop"
+			unequip.Enabled = text5 == "Stop"
 		end
 		if bgImage then
-			bgImage.BackgroundColor3 = argument2 == "Off" and color3 or Color3.fromRGB(255, 255, 255)
+			bgImage.BackgroundColor3 = text5 == "Off" and color3 or Color3.fromRGB(255, 255, 255)
 		end
-		argument.AutoButtonColor = argument2 ~= "Off"
+		argument.AutoButtonColor = text5 ~= "Off"
 	end
 
 	local function callback9()
@@ -1727,7 +1727,7 @@ do
 		return math.max(40, math.floor((scrollingFrame and scrollingFrame.AbsoluteSize.X or 0) * number4 / number3))
 	end
 
-	local function callback12(workspaceRef, instance)
+	local function newWorldModel(workspaceRef, instance)
 		local condition4 = not workspaceRef or not instance
 
 		if not condition4 then
@@ -1771,7 +1771,7 @@ do
 		end
 	end
 
-	local function callback13(argument, argument2, argument3)
+	local function callback13(argument, instance, object)
 		local clone3 = clone:Clone()
 		clone3.Name = generateRandomId()
 		clone3.Visible = true
@@ -1788,9 +1788,9 @@ do
 		end
 		local buy = clone3:FindFirstChild("Buy")
 		local title = buy and buy:FindFirstChild("Title")
-		local rarityColor = module.RarityColors[argument3.Rarity] or Color3.fromRGB(255, 255, 255)
+		local rarityColor = module.RarityColors[object.Rarity] or Color3.fromRGB(255, 255, 255)
 		if petName then
-			petName.Text = argument3.Name .. " Egg"
+			petName.Text = object.Name .. " Egg"
 			petName.TextColor3 = rarityColor
 		end
 
@@ -1806,15 +1806,15 @@ do
 		if info then
 			info.TextColor3 = Color3.fromRGB(255, 255, 255)
 		end
-		if argument2 then
-			callback12(clone3:FindFirstChild("Viewport"), argument2)
+		if instance then
+			newWorldModel(clone3:FindFirstChild("Viewport"), instance)
 		end
 
 		local data3 = {
 			Frame = clone3,
 			Key = argument,
-			Model = argument2,
-			Info = argument3,
+			Model = instance,
+			Info = object,
 			Time = info,
 			Button = buy,
 			ButtonTitle = title,
@@ -1822,8 +1822,8 @@ do
 		}
 
 		if buy then
-			if callback5 then
-				callback5(buy, buy)
+			if newUIScale then
+				newUIScale(buy, buy)
 			end
 
 			buy.Activated:Connect(function()
@@ -1921,22 +1921,22 @@ do
 		end
 		local value11 = nameList[number5]
 
-		table.sort(list, function(argument, argument2)
-			if argument.Can ~= argument2.Can then
+		table.sort(list, function(argument, object)
+			if argument.Can ~= object.Can then
 				return argument.Can
 			end
 
 			if value11 ~= "Distance" then
-				if value11 == "Rarity" and argument.Rank ~= argument2.Rank then
-					return argument.Rank > argument2.Rank
+				if value11 == "Rarity" and argument.Rank ~= object.Rank then
+					return argument.Rank > object.Rank
 				end
 
-				if argument.Value ~= argument2.Value then
-					return argument.Value > argument2.Value
+				if argument.Value ~= object.Value then
+					return argument.Value > object.Value
 				end
 			end
 
-			return argument.Distance < argument2.Distance
+			return argument.Distance < object.Distance
 		end)
 
 		local modelMap = {}
@@ -2104,7 +2104,7 @@ do
 		end
 	end
 
-	callback5 = function(instance, argument)
+	newUIScale = function(instance, argument)
 		local condition4 = not instance or not argument or not argument:IsA("GuiButton")
 		if condition4 then
 			return
@@ -2180,7 +2180,7 @@ do
 		tween:Play()
 	end
 
-	local function callback20()
+	local function onActivated()
 		if not condition or not clone3 then
 			return
 		end
@@ -2202,7 +2202,7 @@ do
 		clone4.Position = UDim2.fromScale(argument, 0.068)
 		clone4.ZIndex = 5
 		clone4.Parent = main
-		callback5(clone4, clone4)
+		newUIScale(clone4, clone4)
 		return clone4, clone4:FindFirstChild("Title")
 	end
 
@@ -2233,7 +2233,7 @@ do
 		return instance
 	end
 
-	local function callback23()
+	local function newScreenGui()
 		local value5 = callback7()
 		local pages = value5 and value5:FindFirstChild("Pages")
 		local eggs = pages and pages:FindFirstChild("Eggs")
@@ -2315,8 +2315,8 @@ do
 
 		local close = main:FindFirstChild("Close")
 		if close and close:IsA("GuiButton") then
-			callback5(close, close)
-			close.Activated:Connect(callback20)
+			newUIScale(close, close)
+			close.Activated:Connect(onActivated)
 		end
 		local buy = clone:FindFirstChild("Buy")
 
@@ -2383,7 +2383,7 @@ do
 			viewportFrame.Ambient = Color3.fromRGB(200, 200, 210)
 			viewportFrame.Parent = clone2
 			imageLabel.Visible = false
-			callback12(viewportFrame, value12)
+			newWorldModel(viewportFrame, value12)
 			local worldModel = viewportFrame:FindFirstChildOfClass("WorldModel")
 			model = worldModel and worldModel:FindFirstChildOfClass("Model")
 			if model then
@@ -2398,11 +2398,11 @@ do
 		local detector = clone2:FindFirstChild("Detector")
 
 		if detector and detector:IsA("GuiButton") then
-			callback5(clone2, detector)
+			newUIScale(clone2, detector)
 
 			detector.Activated:Connect(function()
 				if condition then
-					callback20()
+					onActivated()
 				else
 					playTween()
 				end
@@ -2417,7 +2417,7 @@ do
 			if open and open:IsA("BoolValue") then
 				table.insert(connections, open.Changed:Connect(function(argument)
 					if argument then
-						callback20()
+						onActivated()
 					end
 				end))
 			end
@@ -2447,7 +2447,7 @@ do
 	end
 
 	local function callback25()
-		if not screenGui and callback23() then
+		if not screenGui and newScreenGui() then
 			local _, value5, value6 = ipairs(module.EggFolders())
 
 			for _, value7 in value5, value6 do
@@ -2488,7 +2488,7 @@ do
 		end
 	end
 
-	local function callback26()
+	local function cleanup()
 		local _, value5, value6 = ipairs(connections)
 		for _, value7 in value5, value6 do
 			value7:Disconnect()
@@ -2524,7 +2524,7 @@ do
 
 	registerItem(function()
 		condition3 = false
-		callback26()
+		cleanup()
 	end)
 end
 
@@ -2553,15 +2553,15 @@ do
 		end
 	end
 
-	table.sort(list, function(argument, argument2)
-		if argument.Rank ~= argument2.Rank then
-			return argument.Rank > argument2.Rank
+	table.sort(list, function(argument, object)
+		if argument.Rank ~= object.Rank then
+			return argument.Rank > object.Rank
 		end
 
-		if argument.Value ~= argument2.Value then
-			return argument.Value > argument2.Value
+		if argument.Value ~= object.Value then
+			return argument.Value > object.Value
 		end
-		return argument.Name < argument2.Name
+		return argument.Name < object.Name
 	end)
 
 	local _, value2, value3 = ipairs(list)
@@ -3164,8 +3164,8 @@ do
 			end
 		end
 
-		table.sort(list, function(argument, argument2)
-			return argument.Fragments > argument2.Fragments
+		table.sort(list, function(argument, object)
+			return argument.Fragments > object.Fragments
 		end)
 		return list
 	end
@@ -3425,7 +3425,7 @@ do
 	local predictorTab = mainWindow:CreateTab({ Name = "Predictor", SectionsExpanded = true })
 	eggPredictorSection = predictorTab:CreateSection({ Name = "Egg Predictor", Expanded = true })
 
-	local function callback7(argument)
+	local function newColorSequenceKeypoint(argument)
 		local kMap = {}
 		local _, value2, value3 = ipairs(argument)
 		for k, value4 in value2, value3 do
@@ -3465,7 +3465,7 @@ do
 	data3[1] = data4
 	data3[2] = data5
 	data3[3] = data6
-	module3.NameGradient = callback7(data3)
+	module3.NameGradient = newColorSequenceKeypoint(data3)
 	local data7 = {}
 	local data8 = { 0, Color3.fromRGB(255, 255, 255) }
 	local data9 = { 0.2, Color3.fromRGB(206, 212, 224) }
@@ -3479,7 +3479,7 @@ do
 	data7[4] = data11
 	data7[5] = data12
 	data7[6] = data13
-	module3.SecretGradient = callback7(data7)
+	module3.SecretGradient = newColorSequenceKeypoint(data7)
 	module3.SecretRotation = 90
 	module3.Paint = function(argument, argument2)
 		return string.format("<font color=\"%s\">%s</font>", argument, argument2)
@@ -3670,7 +3670,7 @@ do
 	data4 = { Sort = nameList2[1], Spotlight = true }
 	local id = nil
 	local number2 = 0.0909
-	local argument8 = nil
+	local object = nil
 	local data5 = {}
 	local argumentMap = {}
 	local argumentMap2 = {}
@@ -3903,7 +3903,7 @@ do
 	end
 
 	local function callback16(argument)
-		argument8 = argument
+		object = argument
 		argument:SetDock(5, { Gap = number17, DividerColor = Color3.fromRGB(170, 174, 184) })
 		local value2 = argument:Dock()
 
@@ -3974,11 +3974,11 @@ do
 			end,
 		})
 
-		argument:OnResize(function(argument2, argument3, argument4)
-			if not (argument3 == number6 and argument4 == number7) then
-				number6 = argument3
+		argument:OnResize(function(argument2, amount, argument4)
+			if not (amount == number6 and argument4 == number7) then
+				number6 = amount
 				number7 = argument4
-				number3 = argument3 / math.max(argument4, 1)
+				number3 = amount / math.max(argument4, 1)
 				number4 = argument4
 				number5 = 0.9 / math.max(argument:TextSize(), 1)
 				data5.Rarity.Set({ StrokeThickness = number5 })
@@ -3998,7 +3998,7 @@ do
 	local function callback17(argument)
 		local argumentEntry = argumentMap2[argument]
 		if not argumentEntry then
-			argumentEntry = argument8:Text({ Name = "Line", X = 0, Y = 0, Width = 1, Height = 1, Wrap = true, Visible = false })
+			argumentEntry = object:Text({ Name = "Line", X = 0, Y = 0, Width = 1, Height = 1, Wrap = true, Visible = false })
 			argumentMap2[argument] = callback7(argumentEntry)
 		end
 		return argumentEntry
@@ -4011,7 +4011,7 @@ do
 		end
 		local data6 = {}
 
-		data6.Frame = argument8:Button({
+		data6.Frame = object:Button({
 			Name = "Entry",
 			Text = "",
 			Background = "#000000",
@@ -4032,7 +4032,7 @@ do
 			end,
 		})
 
-		data6.Icon = argument8:Model({
+		data6.Icon = object:Model({
 			Spin = true,
 			Parent = data6.Frame,
 			X = number15,
@@ -4046,7 +4046,7 @@ do
 			StrokeTransparency = 0,
 		})
 
-		data6.Name = argument8:Text({
+		data6.Name = object:Text({
 			Parent = data6.Frame,
 			X = number15 + number16,
 			Y = 0,
@@ -4058,7 +4058,7 @@ do
 			TextStrokeTransparency = 1,
 		})
 
-		data6.Rarity = argument8:Text({
+		data6.Rarity = object:Text({
 			Parent = data6.Frame,
 			X = number15 + number16,
 			Y = 0,
@@ -4072,7 +4072,7 @@ do
 			StrokeThickness = number5,
 		})
 
-		data6.Detail = argument8:Text({
+		data6.Detail = object:Text({
 			Parent = data6.Frame,
 			X = number15 + number16,
 			Y = number11,
@@ -4081,7 +4081,7 @@ do
 			Wrap = true,
 		})
 
-		data6.Status = argument8:Text({ Parent = data6.Frame, X = 0, Y = 0, Width = 1, Height = number11, Wrap = false, Align = "Right" })
+		data6.Status = object:Text({ Parent = data6.Frame, X = 0, Y = 0, Width = 1, Height = number11, Wrap = false, Align = "Right" })
 		local _, value2, value3 = ipairs({ "Frame", "Icon", "Name", "Rarity", "Detail", "Status" })
 		for _, value4 in value2, value3 do
 			callback7(data6[value4])
@@ -4141,7 +4141,7 @@ do
 		local spotlight2 = data4.Spotlight and argument ~= nil
 		if spotlight ~= spotlight2 then
 			spotlight = spotlight2
-			argument8:SetDock(spotlight2 and 5 or 0, { Gap = number17 })
+			object:SetDock(spotlight2 and 5 or 0, { Gap = number17 })
 		end
 		data5.Icon.Set({ Visible = spotlight2 })
 		data5.Name.Set({ Visible = spotlight2 })
@@ -4187,7 +4187,7 @@ do
 	end
 
 	local function callback25()
-		if not argument8 then
+		if not object then
 			return
 		end
 		local value2 = callback10()
@@ -4226,7 +4226,7 @@ do
 			end
 
 			callback22(value5 or value4)
-			local text2 = string.lower(argument8:Query())
+			local text2 = string.lower(object:Query())
 			local list2 = {}
 			local _, value6, value7 = ipairs(value2)
 			for _, value8 in value6, value7 do
@@ -4328,7 +4328,7 @@ do
 
 		local connection = RunService.Heartbeat:Connect(function(deltaTime)
 			local value2 = module3.PageVisible()
-			local value3 = value2 and (argument8 == nil or module3.IsShown(argument8:Root()))
+			local value3 = value2 and (object == nil or module3.IsShown(object:Root()))
 			if value3 and not condition3 then
 				condition2 = true
 			end
@@ -4471,7 +4471,7 @@ do
 	local argumentMap = {}
 	local connections = {}
 
-	local function callback8(argument)
+	local function onPromptShown(argument)
 		if argument:IsA("ProximityPrompt") then
 			if argumentMap[argument] == nil then
 				argumentMap[argument] = argument.HoldDuration
@@ -4506,15 +4506,15 @@ do
 		local _, value2, value3 = ipairs(workspace:GetDescendants())
 		for _, instance in value2, value3 do
 			if instance:IsA("ProximityPrompt") then
-				callback8(instance)
+				onPromptShown(instance)
 			end
 		end
 		table.insert(connections, workspace.DescendantAdded:Connect(function(descendant)
 			if descendant:IsA("ProximityPrompt") then
-				task.defer(callback8, descendant)
+				task.defer(onPromptShown, descendant)
 			end
 		end))
-		table.insert(connections, ProximityPromptService.PromptShown:Connect(callback8))
+		table.insert(connections, ProximityPromptService.PromptShown:Connect(onPromptShown))
 	end
 
 	registerItem(disconnectAll)
@@ -4708,7 +4708,7 @@ do
 		return string.gsub(text2, "%.0$", "") .. unitSuffixe
 	end
 
-	local function callback7(parent, argument)
+	local function newUIStroke(parent, argument)
 		parent.BackgroundTransparency = 1
 		parent.FontFace = font
 		parent.TextScaled = true
@@ -4735,7 +4735,7 @@ do
 		end
 	end
 
-	local function callback8(instance)
+	local function newBillboardGui(instance)
 		if not (childMap[instance] or not folder or not instance:IsA("Model")) then
 			local instance2 = module.EggRoot(instance)
 
@@ -4762,14 +4762,14 @@ do
 				local textLabel = Instance.new("TextLabel")
 				textLabel.Name = generateRandomId()
 				textLabel.LayoutOrder = 1
-				callback7(textLabel, 24)
+				newUIStroke(textLabel, 24)
 				textLabel.Text = instance.Name
 				textLabel.TextColor3 = module.RarityColors[instance3] or Color3.fromRGB(255, 255, 255)
 				textLabel.Parent = frame
 				local textLabel2 = Instance.new("TextLabel")
 				textLabel2.Name = generateRandomId()
 				textLabel2.LayoutOrder = 2
-				callback7(textLabel2, 18)
+				newUIStroke(textLabel2, 18)
 				textLabel2.Parent = frame
 				billboardGui.Parent = folder
 
@@ -4805,7 +4805,7 @@ do
 		end
 	end
 
-	local function callback9()
+	local function newFolder()
 		disconnectAll()
 		folder = Instance.new("Folder")
 		folder.Name = generateRandomId()
@@ -4815,10 +4815,10 @@ do
 		for _, value4 in value2, value3 do
 			local _, value5, value6 = ipairs(value4:GetChildren())
 			for _, value7 in value5, value6 do
-				callback8(value7)
+				newBillboardGui(value7)
 			end
 			table.insert(connections, value4.ChildAdded:Connect(function(child)
-				task.delay(0.2, callback8, child)
+				task.delay(0.2, newBillboardGui, child)
 			end))
 			table.insert(connections, value4.ChildRemoved:Connect(destroyAll))
 		end
@@ -4858,7 +4858,7 @@ do
 		Default = false,
 		Callback = function(argument)
 			if argument then
-				callback9()
+				newFolder()
 			else
 				disconnectAll()
 			end
@@ -4873,7 +4873,7 @@ do
 		Callback = function(argument)
 			number2 = module.RarityRank[tostring(argument)] or 0
 			if data2.Toggle(espEggsToggle, false) then
-				callback9()
+				newFolder()
 			end
 		end,
 	})
@@ -5092,11 +5092,11 @@ end
 		if argument == "Random" then
 			id2 = value4[math.random(1, #value4)].Id
 		else
-			table.sort(value4, function(argument2, argument3)
+			table.sort(value4, function(object, argument3)
 				if argument == "Least Players" then
-					return argument2.Playing < argument3.Playing
+					return object.Playing < argument3.Playing
 				end
-				return argument2.Playing > argument3.Playing
+				return object.Playing > argument3.Playing
 			end)
 			id2 = value4[1].Id
 		end
@@ -5381,25 +5381,25 @@ do
 		pcall(argument2, argument3)
 	end
 
-	local function callback8(argument, argument2, argument3)
+	local function callback8(argument, key, argument3)
 		local argumentMap = weakCache[argument]
 		if not argumentMap then
 			argumentMap = {}
 			weakCache[argument] = argumentMap
 		end
 
-		if argumentMap[argument2] == nil then
+		if argumentMap[key] == nil then
 			local ok, response = pcall(function()
-				return argument[argument2]
+				return argument[key]
 			end)
 			if not ok then
 				return
 			end
-			argumentMap[argument2] = { Value = response }
+			argumentMap[key] = { Value = response }
 		end
 
 		pcall(function()
-			argument[argument2] = argument3
+			argument[key] = argument3
 		end)
 	end
 
@@ -5465,11 +5465,11 @@ do
 	local function callback10()
 		local rendering = settings().Rendering
 
-		local function callback11(argument, argument2, argument3)
+		local function callback11(argument, key, argument3)
 			callback7(function()
-				return argument[argument2]
+				return argument[key]
 			end, function(argument4)
-				argument[argument2] = argument4
+				argument[key] = argument4
 			end, argument3)
 		end
 
@@ -5731,7 +5731,7 @@ do
 		return textLabel
 	end
 
-	local function callback10()
+	local function newScreenGui()
 		disconnectAll()
 		screenGui2 = Instance.new("ScreenGui")
 		screenGui2.Name = generateRandomId()
@@ -5877,7 +5877,7 @@ do
 			Callback = function(argument)
 				condition2 = argument == true
 				if condition2 then
-					callback10()
+					newScreenGui()
 				else
 					disconnectAll()
 				end
@@ -6242,8 +6242,8 @@ do
 		})
 
 		argument:SetContentLines(number15)
-		argument:OnResize(function(argument2, argument3, argument4)
-			callback8(argument3 / math.max(argument4, 1))
+		argument:OnResize(function(argument2, amount, argument4)
+			callback8(amount / math.max(argument4, 1))
 		end)
 		callback8(argument:Width() / math.max(argument:Unit(), 1))
 	end
@@ -6334,7 +6334,7 @@ do
 		uiScale2 = nil
 	end
 
-	local function callback8()
+	local function newScreenGui()
 		disconnectAll()
 		screenGui2 = Instance.new("ScreenGui")
 		screenGui2.Name = generateRandomId()
@@ -6455,7 +6455,7 @@ do
 		screenGui2.Parent = value
 	end
 
-	callback8()
+	newScreenGui()
 	registerItem(disconnectAll)
 end
 

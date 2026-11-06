@@ -324,12 +324,25 @@ pins/fuel, four different dump md5s) decode exactly the same cell set:
 So a block with no coverage is not "code the program skips", it is code no
 offline run reached.
 
-**Replaying undecoded cells was tried and rejected.** Asking the live VM to
-decode the cells behind the dropped call returns a value derived from an
-already-decoded word (those arrays carry no per-cell coverage at all), so the
-second lift has no trustworthy denominator: it lost 4 blocks and moved 265 lines
-of the reference output. What a sound version needs first is a per-array
-"decoded in place" flag from the runtime, so `unrecorded` can become `no`.
+**Replaying undecoded cells was tried again with the per-array flag, and
+rejected for a sharper reason.** With `scan` in the dump (see §5) the engine can
+say, per array, whether the recorder walked it. Two rules were measured on that:
+
+* *Replace what the walk read.* Every cell of a never-executed pc whose arrays
+  were all walked (state 1) was decoded by the live VM and written back. On
+  `Lph1-v15.0` that replaced 680 cells and the lift collapsed from 275 lines to
+  14: the words were there, and the VM's answer for an instruction that never
+  ran is not the word the walk had decoded.
+* *Fill only what the dump does not hold.* Same guard, but a cell is requested
+  only when the array carries no value at that slot. `Lph1`: 0 candidates, every
+  cell already present. `Lph6-V15.0`: 65 candidates, the VM decoded 0 of them.
+  The other 1,195 pc(s) were refused outright because at least one array the
+  instruction reads is not walkable (never registered, or rewound).
+
+So on this VM the arrays always carry their words; what is missing is not the
+word but whether the instruction it decodes to is the one the program would
+have run there, and no post-hoc decode can answer that. Replay was reverted;
+what stayed is the flag that makes `unrecorded` mean what it says.
 
 **One file can carry two scripts, and the wrapper is not the script.** The
 Chilli-hub build in the fixture set (`StealAnEggg`, pinned as `lph-v15-1-5`) is a

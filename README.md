@@ -103,10 +103,19 @@ node deob.js protected.lua -o out.lua --studio
    engine waits `--studio-wait` seconds per run (default: the `--timeout` value);
    a run with no answer fails that run instead of hanging.
 
-What `--studio` actually buys is fidelity, not more code: real Instances, real
-datatypes, real `game:HttpGet` traffic, real `require` of the hub's own modules.
-A sample that only needs the VM (the common case) traces identically either way —
-see [`TECHNICAL.md` §6](TECHNICAL.md#6-online-runs) for the measured difference.
+What `--studio` buys is fidelity, not more code: real Instances, real datatypes,
+real `game:HttpGet` traffic, real `require` of the hub's own modules. Measured
+offline, the model answered **30** calls in RideAPet's whole run and **14** in
+StealAnEggg's — every one of them `Path2D` curve geometry from a UI animation,
+none of them a branch the VM takes. That is why the lift comes out identical
+either way. The number is printed on
+every run (`DEOBF_P2D_KEYS=1` names the keys). See
+[`TECHNICAL.md` §6](TECHNICAL.md#6-online-runs).
+
+A loader for the exact bridge settings is checked in as
+`output/current/RideAPet.studio_loader.luau`, so the paste can be tried without a
+run in flight; the engine rewrites the same file next to the input on every
+`--studio` job.
 
 Studio gives the loader `HttpService` for the duration of the bridge and turns it
 back off around each harness, so the harness sees the place's own setting. A

@@ -664,6 +664,45 @@ so the end-to-end numbers above are still offline numbers. The claim this sectio
 makes is deliberately narrow — the bridge is the real transport, the harness is
 real, and the only unrun link is Studio itself.
 
+### What the model actually answers, measured
+
+The join above is only worth making if the model's answers are counted. Every
+`Path2D` key the sandbox answers itself is tagged `model` in the trace, and
+`DEOBF_P2D_KEYS=1` names them. RideAPet's whole run:
+
+```
+30 Path2D answers computed by the offline engine model
+  GetLength x4                 GetBoundingRect x3
+  GetPositionOnCurve|0.3136... x3    GetTangentOnCurve|0.0960... x3
+  GetPositionOnCurveArcLength|0.3365... x3
+  GetTangentOnCurveArcLength|0.8282... x3
+  + 12 one-off curve lookups at 0.142857, 0.166667, 0.2, 0.222222, 0.5,
+    0.533333, 0.6, 0.833333, 0.875
+```
+
+StealAnEggg, same treatment: **14** answers, the same five methods
+(`GetPositionOnCurve`, `GetTangentOnCurve`, `GetLength`, and the two `ArcLength`
+variants), all on UI frames.
+
+Thirty answers, and every one of them is curve geometry from one UI animation.
+Nothing else in 1 999 executed program counters needed the model: instances,
+datatypes, property reads and `HttpGet` all resolved without a guess (the hub's
+own library body is what the cache experiment broke on, not the model). That is
+the honest size of the prize `--studio` offers for this sample — thirty
+deprecated `Path2D` method results that move a frame on screen, not a branch the
+VM takes. It is why the lift is the same size offline and online, and why the
+`--http-cache` route (a different body, so a different control flow) is the one
+that changes the *count* — downwards.
+
+Both hub scripts come down to UI geometry alone — 30 and 14 model answers, none
+of them load-bearing.
+
+So: `--studio` is for a sample whose behaviour turns on something the sandbox
+cannot know — a real `require`, real remote traffic, a property whose value the
+dump does not carry. For the two hub scripts in `output/current/` the divergence
+is 30 UI-geometry answers and the result is bit-for-bit the same; run it anyway
+when the sample is new, because the alternative is wondering.
+
 ### Why not answer calls one at a time
 
 The tempting shortcut is to keep the offline run and ask Studio only for the calls

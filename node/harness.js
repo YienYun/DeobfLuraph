@@ -150,7 +150,20 @@ function takeP2d(body) {
     return '';
   });
   const nmodel = p2d.filter(([, v]) => v.endsWith('\tmodel')).length;
-  if (nmodel) process.stderr.write(`[*] ${nmodel} Path2D answers computed by the offline engine model\n`);
+  if (nmodel) {
+    process.stderr.write(`[*] ${nmodel} Path2D answers computed by the offline engine model\n`);
+    // DEOBF_P2D_KEYS=1 names them: every key the model answered is a point where
+    // a real place could have answered differently.
+    if (process.env.DEOBF_P2D_KEYS) {
+      const seen = new Map();
+      for (const [k] of p2d.filter(([, v]) => v.endsWith('\tmodel'))) {
+        seen.set(k, (seen.get(k) || 0) + 1);
+      }
+      const top = [...seen].sort((a, b) => b[1] - a[1]).slice(0, 40);
+      for (const [k, n] of top) process.stderr.write(`    [model] ${k} x${n}\n`);
+      if (seen.size > top.length) process.stderr.write(`    [model] ... ${seen.size - top.length} more\n`);
+    }
+  }
   return body;
 }
 

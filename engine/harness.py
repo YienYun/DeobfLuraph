@@ -495,7 +495,7 @@ local ok0, err0 = pcall(function()
                 local ok, out = false, err
                 if f then ok, out = pcall(f) end
                 HS.HttpEnabled = true
-                out = ok and tostring(out) or ("\0ENVLOG-FAIL\n" .. tostring(out))
+                out = ok and tostring(out) or ("\000ENVLOG-FAIL\n" .. tostring(out))
                 -- HttpService posts are limited to 1 MB: send in parts
                 local n = math.max(1, math.ceil(#out / 900000))
                 for i = 1, n do

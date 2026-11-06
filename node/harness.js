@@ -451,7 +451,7 @@ local ok0, err0 = pcall(function()
 \t\tlocal ok, out = false, err
 \t\tif f then ok, out = pcall(f) end
 \t\tHS.HttpEnabled = true
-\t\tout = ok and tostring(out) or ("\0ENVLOG-FAIL\\n" .. tostring(out))
+\t\tout = ok and tostring(out) or ("\\000ENVLOG-FAIL\\n" .. tostring(out))
 \t\tlocal n = math.max(1, math.ceil(#out / 900000))
 \t\tfor i = 1, n do
 \t\t\tHS:PostAsync(base .. "/result?part=" .. i .. "&of=" .. n,

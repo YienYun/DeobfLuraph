@@ -94,7 +94,14 @@ test('the generated loader names the port and turns HttpService off around the r
     const trace = path.join(dir, 'job.trace.luau');
     const file = harness.studioHarnessPath(trace, 34999);
     const text = fs.readFileSync(file, 'utf8');
+
+    // the loader is pasted into Studio by hand, so it has to compile: an escape
+    // Luau rejects ("\0" instead of "\000") turns the whole online path into a
+    // syntax error at paste time, with no engine around to report it
+    // parse it, do not run it: `game` does not exist outside Roblox
+    const ok = require(path.join(ROOT, 'node', 'luau_check')).isValidLuaSyntax(text);
     fs.rmSync(dir, { recursive: true, force: true });
+    assert.ok(ok, 'the loader does not parse; Studio would refuse it at paste time');
 
     assert.match(text, /127\.0\.0\.1:34999/);
     assert.match(text, /HS\.HttpEnabled = false/);

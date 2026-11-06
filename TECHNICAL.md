@@ -655,8 +655,13 @@ path before it starts waiting.
 
 Verified without Roblox (`dev/test/studio.test.js`, 4 cases): a harness round-trips
 through the bridge and comes back parsed, a second run reuses the same loader,
-a silent peer times out instead of hanging, and the written loader names the port
-and restores `HttpService.HttpEnabled`. Verified by hand: the CLI prints the
+a silent peer times out instead of hanging, and the written loader parses,
+names the port and restores `HttpService.HttpEnabled`.
+
+That last one is not ceremony. The loader's failure prefix was written
+`"\0ENVLOG-FAIL"`, which Lua 5.3 accepts and **Luau does not** — pasted into
+Studio it would have been a syntax error, with no engine on that side to say so.
+It is `\000` now, and the test parses the generated file instead of trusting it. Verified by hand: the CLI prints the
 loader path, waits, and fails the run cleanly when nothing answers.
 
 Not verified: an actual Studio run. There is no Roblox in this build environment,

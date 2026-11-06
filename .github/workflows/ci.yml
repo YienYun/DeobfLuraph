@@ -37,16 +37,16 @@ jobs:
       - name: Cache fixtures
         uses: actions/cache@v4
         with:
-          path: fixtures/input
-          key: fixtures-${{ hashFiles('fixtures/manifest.json') }}
+          path: dev/fixtures/input
+          key: fixtures-${{ hashFiles('dev/fixtures/manifest.json') }}
 
       - name: Fetch fixtures
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node scripts/fixtures.js fetch
+        run: node dev/scripts/fixtures.js fetch
 
       - name: Verify fixtures
-        run: node scripts/fixtures.js verify
+        run: node dev/scripts/fixtures.js verify
 
       - name: Syntax gate and unit tests
         run: npm test
@@ -60,8 +60,8 @@ jobs:
       # (see TECHNICAL §3), and hiding them would be worse than showing them.
       - name: Result compiles in Luau
         if: matrix.node == '20'
-        run: node scripts/luac.js results --verbose
+        run: node dev/scripts/luac.js results --verbose
 
       - name: Unresolved register reads (report)
         if: matrix.node == '20'
-        run: node scripts/freevars.js results --report-only
+        run: node dev/scripts/freevars.js results --report-only

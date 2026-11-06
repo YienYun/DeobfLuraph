@@ -9,24 +9,24 @@ cannot lift — with the numbers, so nothing here has to be taken on trust.
 input.lua ──▶ offline Roblox sandbox (runtime/envlog.luau)
                  │  runs the VM, dumps every reachable proto as JSON
                  ▼
-             dump ──▶ symbolic walk (core/obfuscators/luraph_v15/lifter.py)
+             dump ──▶ symbolic walk (engine/obfuscators/luraph_v15/lifter.py)
                  │     decodes instruction cells through the VM model,
                  │     builds a CFG, lifts statements
                  ▼
              IR ──▶ backend.lower ──▶ Luau text ──▶ polish ──▶ output
 ```
 
-`src/` is the Node orchestration (`driver.js`, `harness.js`, `detect.js`, …).
-`core/*.py` is the shared compiler backend (IR, CFG structuring, SSA/names,
-idioms, codegen), and `core/obfuscators/<family>/` holds the per-family front
-ends that feed it. `runtime/envlog.luau` is the sandbox and the dump protocol.
+`node/` is the Node orchestration (`driver.js`, `harness.js`, `detect.js`, …).
+`engine/*.py` is the shared compiler backend (IR, CFG structuring, SSA/names,
+idioms, codegen), and `engine/obfuscators/<family>/` holds the per-family front
+ends that feed it. `dev/` holds the test suite, fixtures and gate scripts. `runtime/envlog.luau` is the sandbox and the dump protocol.
 
 A lift runs in rounds: `devirt round N` walks and collects the constants it could
 not decode, the sandbox decodes them, and the next round lifts again. Rounds stop
 when a full lift asks for nothing new.
 
-`polish` alternates two passes twice: `core/flatten.py` and the AST cleanup
-(`core/ast_polish.py`). Two AST passes run once everything else has settled: `name_context_slots` gives
+`polish` alternates two passes twice: `engine/flatten.py` and the AST cleanup
+(`engine/ast_polish.py`). Two AST passes run once everything else has settled: `name_context_slots` gives
 the script's own `data[k]` helper slots a name, and `name_from_usage` names the
 parameters (`argument5`), handlers (`callback7`) and register locals (`value7`)
 the namer left as fallbacks, from the methods they are given to, the calls they
@@ -88,16 +88,16 @@ None of that reaches the script — it is the integrity trail the VM used to che
 that its code had not been edited, lifted into ordinary statements that only feed
 themselves. Three passes take it apart, in this order:
 
-* `core/deadstore.py` removes stores nothing can read. Each block is walked
+* `engine/deadstore.py` removes stores nothing can read. Each block is walked
   backwards keeping the locals still read ahead; a store whose target is not in
   that set and whose value cannot fail (no call, no index) is deleted, which in
   turn kills the reads that kept the store behind it alive. Loop bodies are
   scanned to their own fixpoint, since what the next iteration reads on entry is
   what this one leaves behind.
-* `core/seeds.py` removes the seed chains themselves, by the same argument
+* `engine/seeds.py` removes the seed chains themselves, by the same argument
   applied to a whole local at once: every write is literals, other seeds or the
   u32 helpers, and every read sits inside text the pass is deleting.
-* `core/u32fold.py` folds the arithmetic that is left when it is genuinely
+* `engine/u32fold.py` folds the arithmetic that is left when it is genuinely
   constant, with Luau's own bit32 semantics (shift counts mod 32, `u32Mul` is
   `(a * b) mod 2**32`). An identity such as `band(x, 0xFFFFFFFF) -> x` is only
   applied when the operand is provably already an integer.
@@ -121,7 +121,7 @@ module2 = ipairs
 for k, v in module2(nameList) do
 ```
 
-`core/copies.py` folds them. A copy is inlined only when nothing can observe the
+`engine/copies.py` folds them. A copy is inlined only when nothing can observe the
 register: every read between the copy and the next write to that register is
 rewritten to name the source, the source itself is a local with at most one
 write (a parameter, or a local assigned once, possibly in an enclosing function),
@@ -174,7 +174,7 @@ a value that is discarded on purpose. `_` is only used when the file has no live
 
 ### Parentheses and longer names
 
-Two cosmetic passes finish the file. `core/tidy.py` drops a parenthesis group
+Two cosmetic passes finish the file. `engine/tidy.py` drops a parenthesis group
 when no operator is left beside it to rebind what is inside: a condition, a
 return value, the value of an assignment, or an operand that already binds
 tighter than the operator around it. `(2 + 3) * 4` and `2 - (3 - 1)` keep theirs,
@@ -208,7 +208,7 @@ Two things can then be true, and the header of the result says which:
 * the carried text is itself a delivery stub -- a Luarmor v4 client, which
   fetches the real script from `api.luarmor.net` after a licence handshake. The
   script is not in the file, and no local pass will find it. The header names the
-  endpoint and the loader id, and `core/carrier.py` writes the marker line
+  endpoint and the loader id, and `engine/carrier.py` writes the marker line
   `-- deobf: needs the hub at run time` so the runtime gate knows that stopping
   at the stub is the expected end;
 * the script reaches into the loader's own helper table (`H2`, `g2`, `[72]`).
@@ -219,7 +219,7 @@ Two things can then be true, and the header of the result says which:
 ### Chaining into the Luarmor track
 
 When the engine prints a carrier's payload, the payload is handed to the Luarmor
-analyzer in the same command -- no second run (core/luarmor.js `chainPlan`/`chain`).
+analyzer in the same command -- no second run (node/luarmor.js `chainPlan`/`chain`).
 The payload alone is what gets read: `emit_payload_source` writes it next to the
 intermediates without the header and bootstrap lines this tool adds, so the
 analysis is about the loader's script and not about our own comments.
@@ -245,16 +245,16 @@ rest of the lifting.
 Three kinds of check, because a compiler accepting the file says nothing about
 what it prints:
 
-* `test/copies.test.js`, `test/tidy.test.js`, `test/seeds.test.js`,
-  `test/polish.test.js` -- each case is run under Luau before and after, so the
+* `dev/test/copies.test.js`, `dev/test/tidy.test.js`, `dev/test/seeds.test.js`,
+  `dev/test/polish.test.js` -- each case is run under Luau before and after, so the
   two programs have to print the same thing;
-* `test/passes_fuzz.test.js` -- generated programs full of register patterns
+* `dev/test/passes_fuzz.test.js` -- generated programs full of register patterns
   (copies, refills, loop back edges, branches, closures, nil stores) go through
   the whole chain, `ast_polish` included, and are compared the same way, and the test also asserts the
   corpus actually exercised the passes, so a green run cannot mean nothing was
   tried;
-* `test/smoke.test.js` -- every file in `results/` is executed inside the same
-  stub environment the tracer uses (`scripts/smoke.js`, the runtime's own
+* `dev/test/smoke.test.js` -- every file in `results/` is executed inside the same
+  stub environment the tracer uses (`dev/scripts/smoke.js`, the runtime's own
   `envlog.luau` harness). A register that lost its value shows up here as
   `attempt to call a table value` or `attempt to index nil`, which is precisely
   what the compile and free-variable gates cannot see.
@@ -271,7 +271,7 @@ what it prints:
   `0.94743997235392186` into `0.9474399723539219`; a changed constant changes the
   lift. Extra data (e.g. the coverage union) goes to a sidecar file instead.
 * **Output is deterministic**: the same input and flags produce the same bytes.
-  This is enforced, not hoped for — `test/e2e.test.js` runs every golden sample
+  This is enforced, not hoped for — `dev/test/e2e.test.js` runs every golden sample
   twice and compares the two files byte for byte.
 * **No internal identity reaches the output.** Diagnostic text that ends up in
   a file (`-- devirt: ...`, `error("devirt: ...")`) is formatted through
@@ -369,7 +369,7 @@ rewrites dispatch-loop heads; a build whose loop shape it does not know (the
 14.0/14.4/14.6 samples in the fixture set) matches nothing. Rather than spend a
 full trace budget on it, the runner probes once with a bounded 15 s trace, then
 reports that no dispatch loop matched and that older builds are not lifted. The
-refusal is a fixture expectation in `test/golden.json`, not an untested path.
+refusal is a fixture expectation in `dev/test/golden.json`, not an untested path.
 
 ## 4. Checks
 
@@ -384,15 +384,15 @@ npm run gate      # both of the above, strict -- this is what a release must pas
 npm run test:all  # test + test:e2e
 ```
 
-**Compiling is not enough, and the gates say so.** `scripts/luac.js` feeds each
-output to the real Luau compiler; `scripts/freevars.js` parses it with
+**Compiling is not enough, and the gates say so.** `dev/scripts/luac.js` feeds each
+output to the real Luau compiler; `dev/scripts/freevars.js` parses it with
 `bin/luau-ast` and separates two things that look alike in a diff: a register the
 lifter could not name (`r4`, `r34` — a hole, exit 1) and a global the payload or
 the executor owns (`syn`, `fluxus`, `Webhook` — a note). `npm run gate` is strict
 about the first and silent about the second. CI runs the compile gate as a test
 and the free-variable gate as a report until the remaining notes are understood.
 
-`test/golden.json` pins the result of each fast-tier sample: sha256, md5, line
+`dev/test/golden.json` pins the result of each fast-tier sample: sha256, md5, line
 count, result type and lifted function count. A deterministic engine makes such
 a table meaningful, so a regression is a diff rather than a judgement call.
 
@@ -414,7 +414,7 @@ self-contained. For `attempt to call missing method 'X'`, the driver looks for a
 definition of `X` in the input (`X =`, `["X"] =`); if there is none, the diagnosis
 says the capture looks incomplete rather than blaming the environment. The mapping
 lives in `diagnoseTrace` (`core/driver.js`) and is covered by
-`test/trace_status.test.js`.
+`dev/test/trace_status.test.js`.
 
 ### Register names the lift cannot declare
 
@@ -470,7 +470,7 @@ Two things had to be right for this to be safe:
   hang decision can move on the next pass (`}, {}` joining), so one pass is not
   stable. `formatLuau` repeats (at most 4 passes, each with a fresh `Config`, since
   the wasm Config is consumed by the call) until the text stops changing.
-  `test/format.test.js` pins that formatting a formatted result moves no bytes.
+  `dev/test/format.test.js` pins that formatting a formatted result moves no bytes.
 
 Nothing else in the pipeline is allowed to depend on the layout: the passes that
 run after the lift work on parsed structure, and the gates (`luac`, `freevars`,

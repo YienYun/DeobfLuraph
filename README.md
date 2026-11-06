@@ -8,23 +8,24 @@ This is a **Luraph-only build**: v15.0 / v15.1 as the primary engine, v14.7 –
 v14.9 lifted through the same backend, plus the Luarmor chain analyzer. Every
 other obfuscator — MoonVeil included — has been removed from the tree.
 
-**Where things live:** `core/obfuscators/luraph_v15/` is the v15 engine,
-`core/obfuscators/luraph_v14/` the v14 engine, `core/obfuscators/luarmor/` the
-Luarmor analyzer. `core/*.py` is the compiler backend all three feed into,
-`src/*.js` the Node side (detect, sandbox, CLI plumbing), `renamer/` the
-optional `--rename` pass.
+**Where things live:** `engine/obfuscators/luraph_v15/` is the v15 engine,
+`engine/obfuscators/luraph_v14/` the v14 engine, `engine/obfuscators/luarmor/`
+the Luarmor analyzer. `engine/*.py` is the compiler backend all three feed into,
+`node/*.js` the Node side (detection, offline sandbox, formatting, CLI glue),
+`renamer/` the optional `--rename` pass. `dev/` holds the test suite, fixtures
+and gate scripts — development only, never part of a lift.
 
 | Family | Module | What it does |
 |---|---|---|
-| **Luraph v15.0 / v15.1+** | `core/obfuscators/luraph_v15/` | Sandbox run ➔ symbolic CFG / SSA lift ➔ Luau source |
-| **Luraph v14.7 – v14.9** | `core/obfuscators/luraph_v14/` | v14 VM mapper + symbolic lift on the same backend |
-| **Luarmor v4** | `core/obfuscators/luarmor/`, `src/luarmor.js` | Client-chain analysis; when the file carries a Luraph chunk, that chunk is lifted by the v15 engine |
+| **Luraph v15.0 / v15.1+** | `engine/obfuscators/luraph_v15/` | Sandbox run ➔ symbolic CFG / SSA lift ➔ Luau source |
+| **Luraph v14.7 – v14.9** | `engine/obfuscators/luraph_v14/` | v14 VM mapper + symbolic lift on the same backend |
+| **Luarmor v4** | `engine/obfuscators/luarmor/`, `node/luarmor.js` | Client-chain analysis; when the file carries a Luraph chunk, that chunk is lifted by the v15 engine |
 
 About Luarmor: the licence check is **not** bypassed. The session payload lives
 on Luarmor's server behind a key, so a bare `_bsdata0` client stub is reported —
 module id, hashes, build stamp, endpoints — instead of being faked into code.
 
-`src/detect.js` still recognises the signatures of the removed obfuscators, so a
+`node/detect.js` still recognises the signatures of the removed obfuscators, so a
 file can be named correctly (`--detect`). It cannot be deobfuscated here: the
 run stops with `<engine> is not part of this build` and writes no output. That
 includes MoonVeil: a MoonVeil file is named as such and refused, never
@@ -42,7 +43,7 @@ npm install
 node deob.js protected.lua -o out.lua     # one file
 node deob.js folder/                      # a whole folder, recursively
 node deob.js protected.lua --detect       # identify the obfuscator, run nothing
-node scripts/smoke.js out.lua             # run the result in the offline sandbox
+node dev/scripts/smoke.js out.lua             # run the result in the offline sandbox
 ```
 
 ### Flags
@@ -82,7 +83,7 @@ call arguments wrapped at 100 columns, quotes normalised. The renamed copy from
 `--rename` and the renamer's own CLI go through the same pass, so both copies of a
 script match.
 
-* The settings live in `core/format.js` and are mirrored in `.stylua.toml`, so an
+* The settings live in `node/format.js` and are mirrored in `.stylua.toml`, so an
   editor or a `stylua` on `PATH` formats the same way the engine does.
 * StyLua is run to a fixed point (at most 4 passes): formatting is stable, and
   formatting a result a second time moves no bytes.
@@ -120,10 +121,10 @@ What a run cannot recover stays visible instead of being invented:
 `-- unresolved:` header when names are missing. `TECHNICAL.md` lists the two
 holes that are still open in the reference sample, with the numbers behind them.
 
-`scripts/metrics.py` prints the numbers used in a report:
+`dev/scripts/metrics.py` prints the numbers used in a report:
 
 ```bash
-python3 scripts/metrics.py out.lua other.lua
+python3 dev/scripts/metrics.py out.lua other.lua
 ```
 
 ---
@@ -133,17 +134,7 @@ python3 scripts/metrics.py out.lua other.lua
 ```text
 DeobfLuraph/
 ├── deob.js                 # CLI: single file, or a folder processed recursively
-├── test/                   # node:test suites + golden.json (pinned results)
-├── fixtures/
-│   ├── manifest.json       # samples pinned by repo, blob id and sha256
-│   └── input/              # downloaded fixtures (gitignored)
-├── scripts/
-│   ├── fixtures.js         # fetch / verify / import fixtures
-│   ├── update-golden.js    # regenerate test/golden.json (intended changes only)
-│   ├── check.js            # syntax gate (no dependencies)
-│   └── metrics.py          # the metrics table a report quotes
-├── .github/workflows/ci.yml
-├── core/                   # Python compiler backend
+├── engine/                 # Python: the deobfuscation engine
 │   ├── obfuscators/        # one folder per protected format
 │   │   ├── luraph_v15/     # Luraph v15.0 / v15.1  <- the main engine
 │   │   │   ├── driver.py   # sandbox run + devirt rounds
@@ -173,7 +164,7 @@ DeobfLuraph/
 │   ├── luauast.py          # Luau AST -> text
 │   ├── carrier.py          # payload extraction from a host file
 │   └── harness.py / tidy.py / traceout.py
-├── src/                    # Node orchestration around the Python core
+├── node/                   # Node: detection, sandbox, formatting, CLI glue
 │   ├── detect.js           # Signature / structural detector
 │   ├── driver.js           # Luraph v15: sandbox run + devirt bridge
 │   ├── engines.js          # Engine dispatch (Luraph v14) and refusals
@@ -184,9 +175,16 @@ DeobfLuraph/
 │   ├── watermark.js        # Attribution comment + `print("Deobf By Zed")`
 │   ├── luau_check.js       # Syntax gate on `bin/luau-ast`
 │   └── vmmap.js / traceout.js / pyenv.js / tidy.js
+├── runtime/                # Offline Roblox VM + environment (Luau)
 ├── renamer/                # Optional `--rename` pass (scope-verified renamer)
-├── runtime/envlog.luau     # Offline Roblox VM + environment
 ├── bin/                    # luau, luau-ast (native; .exe for Windows)
+├── results/                # Deobfuscated output + its report
+├── dev/                    # Development only -- nothing here ships or runs in a lift
+│   ├── test/               # node:test suites + golden.json (pinned output)
+│   ├── scripts/            # gates: luac, freevars, smoke, fixtures, golden
+│   ├── fixtures/           # manifest.json + input/ (downloaded, gitignored)
+│   └── build_luau.py       # builds bin/luau from upstream source
+├── .github/workflows/ci.yml
 ├── TECHNICAL.md            # How the lift works, what is checked, what is missing
 └── package.json
 ```
@@ -196,39 +194,39 @@ DeobfLuraph/
 ```bash
 npm test                  # syntax gate + unit suites (no fixtures needed)
 npm run fixtures          # download + verify the pinned samples (9 MB, needs network)
-npm run test:e2e          # golden regression over fixtures/input, run twice each
+npm run test:e2e          # golden regression over dev/fixtures/input, run twice each
 npm run test:all          # everything
 ```
 
-`test/golden.json` is a table of exact outputs (sha256, md5, line count, lifted
+`dev/test/golden.json` is a table of exact outputs (sha256, md5, line count, lifted
 function count) for the fast fixture tier. Because the engine is deterministic,
 a row is a fact rather than an opinion: a change either moves a byte or it does
 not. Regenerate it only for an intended change, in the same commit as the
 engine change:
 
 ```bash
-node scripts/update-golden.js --tier core     # or --tier all
+node dev/scripts/update-golden.js --tier core     # or --tier all
 ```
 
-Fixtures are third-party files and are never committed. `fixtures/manifest.json`
+Fixtures are third-party files and are never committed. `dev/fixtures/manifest.json`
 pins each one by repository, path, blob id, size and sha256; the fetcher
 verifies all of that before a file is written, and `fixtures:verify` re-hashes
 what is already on disk. Behind a TLS-inspecting proxy (or offline), import
 copies you already have:
 
 ```bash
-node scripts/fixtures.js fetch --from ~/samples
+node dev/scripts/fixtures.js fetch --from ~/samples
 ```
 
 CI runs the syntax gate and unit suites on Node 18/20/22, then the golden
 regression on Node 20.
 
-`scripts/metrics.py` measures a result rather than describing it: lines, syntax,
+`dev/scripts/metrics.py` measures a result rather than describing it: lines, syntax,
 devirt markers, unresolved captures, bit32 chains — and how much of the code is
 still built from placeholder names (`value12`, `argument2`, `iterator3`):
 
 ```bash
-python3 scripts/metrics.py out.lua other.lua
+python3 dev/scripts/metrics.py out.lua other.lua
 ```
 
 That last number (`placeholder_pct`, currently 57–67% of non-blank lines on the

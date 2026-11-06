@@ -4,13 +4,13 @@
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
-const detectModule = require('./src/detect');
-const driver = require('./src/driver');
-const engines = require('./src/engines');
-const harness = require('./src/harness');
-const { injectWatermark } = require('./src/watermark');
-const format = require('./src/format');
-const { isValidLuaSyntax } = require('./src/luau_check');
+const detectModule = require('./node/detect');
+const driver = require('./node/driver');
+const engines = require('./node/engines');
+const harness = require('./node/harness');
+const { injectWatermark } = require('./node/watermark');
+const format = require('./node/format');
+const { isValidLuaSyntax } = require('./node/luau_check');
 
 const DIRECTORY_EXTENSIONS = ['.lua', '.luau'];
 const FILE_EXTENSIONS = ['.lua', '.luau', '.txt'];
@@ -306,7 +306,7 @@ async function processFile(absInput, args) {
 
     let result;
     if (plugin.name === 'luarmor_client') {
-      const luarmor = require('./src/luarmor');
+      const luarmor = require('./node/luarmor');
       const meta = luarmor.analyze(job.sourcePath);
       job.luarmor = meta;
       luarmor.announce(meta);
@@ -354,7 +354,7 @@ async function processFile(absInput, args) {
     } else if (plugin.name === 'luraph_v15') {
       result = await driver.run(job);
       if (job.resultType === 'payload-source' && !args.noDevirt) {
-        const chained = await require('./src/luarmor').chain(job, result);
+        const chained = await require('./node/luarmor').chain(job, result);
         if (chained) result = chained;
       }
     } else if (plugin.name === 'generic') {
@@ -365,7 +365,7 @@ async function processFile(absInput, args) {
 
     if (job.luarmor && final) {
       try {
-        const lp = require('./src/luarmor').writeReport(final, job.luarmor);
+        const lp = require('./node/luarmor').writeReport(final, job.luarmor);
         process.stderr.write(`[*] luarmor report: ${lp}\n`);
       } catch (e) {
         job.warnings.push(`Luarmor report could not be written: ${e.message}`);

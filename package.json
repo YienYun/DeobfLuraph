@@ -10,17 +10,17 @@
   "scripts": {
     "start": "node deob.js",
     "rename": "node renamer/index.js",
-    "fixtures": "node scripts/fixtures.js fetch",
-    "fixtures:verify": "node scripts/fixtures.js verify",
-    "golden": "node scripts/update-golden.js",
-    "check": "node scripts/check.js && node scripts/luac.js results",
-    "test": "node scripts/check.js && node --test test/watermark.test.js test/detect.test.js test/diagnostics.test.js test/engines.test.js test/fixtures.test.js test/flatten.test.js test/u32fold.test.js test/seeds.test.js test/copies.test.js test/tidy.test.js test/carrier.test.js test/chain.test.js test/passes_fuzz.test.js test/polish.test.js test/smoke.test.js test/trace_status.test.js test/format.test.js",
-    "test:e2e": "node --test test/e2e.test.js",
-    "test:all": "node scripts/check.js && node --test test/",
-    "metrics": "python3 scripts/metrics.py",
-    "luac": "node scripts/luac.js results --verbose",
-    "freevars": "node scripts/freevars.js results",
-    "gate": "node scripts/luac.js results --verbose && node scripts/freevars.js results"
+    "fixtures": "node dev/scripts/fixtures.js fetch",
+    "fixtures:verify": "node dev/scripts/fixtures.js verify",
+    "golden": "node dev/scripts/update-golden.js",
+    "check": "node dev/scripts/check.js && node dev/scripts/luac.js results",
+    "test": "node dev/scripts/check.js && node --test dev/test/watermark.test.js dev/test/detect.test.js dev/test/diagnostics.test.js dev/test/engines.test.js dev/test/fixtures.test.js dev/test/flatten.test.js dev/test/u32fold.test.js dev/test/seeds.test.js dev/test/copies.test.js dev/test/tidy.test.js dev/test/carrier.test.js dev/test/chain.test.js dev/test/passes_fuzz.test.js dev/test/polish.test.js dev/test/smoke.test.js dev/test/trace_status.test.js dev/test/format.test.js",
+    "test:e2e": "node --test dev/test/e2e.test.js",
+    "test:all": "node dev/scripts/check.js && node --test dev/test/",
+    "metrics": "python3 dev/scripts/metrics.py",
+    "luac": "node dev/scripts/luac.js results --verbose",
+    "freevars": "node dev/scripts/freevars.js results",
+    "gate": "node dev/scripts/luac.js results --verbose && node dev/scripts/freevars.js results"
   },
   "engines": {
     "node": ">=18"

@@ -12,7 +12,7 @@ Sesuai prinsip *zero fragile regex*, sistem ini dibangun langsung di atas **3 fo
 2. **[`officialmelon/BetterDecompiler` v2.0.0](https://github.com/officialmelon/BetterDecompiler)** (`renamer/vendor/betterdecompiler` -> `renamer/bin/betterdecompiler`)
    - Lexer + Scope-Resolving Luau Parser + **Verified Renamer (`sameResolution`)**: setiap perubahan nama variabel di-parse ulang dan diverifikasi bahwa 100% referensi token tetap menunjuk ke binding yang persis sama (mustahil terjadi *variable shadowing* atau perubahan perilaku!).
    - Diperluas khusus untuk mengenali pola variabel/fungsi DeobfLuraph, API Roblox & Executor (`getgenv`, `gethui`, `readfile`, `writefile`, `request`, `WebSocket`, `Drawing`, `fireproximityprompt`, dll.), serta **Smart Contextual Commenter** (offline instan maupun berbasis AI LLM).
-3. **Official Roblox Luau AST (`./bin/luau-ast`) + Deobf Chaff Polisher (`core/ast_polish.py`)**
+3. **Official Roblox Luau AST (`./bin/luau-ast`) + Deobf Chaff Polisher (`engine/ast_polish.py`)**
    - Menyapu sisa artefak VM Luraph (argumen dummy state-key, cabang *opaque predicate* konstan, rantai `bit32`/`table.pack` mati, IIFE pembungkus) dan memvalidasi sintaks Luau akhir.
 
 ---

@@ -4,10 +4,10 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
-const { getPythonBin } = require('../core/pyenv');
+const { getPythonBin } = require('../engine/pyenv');
 
 const ROOT = path.resolve(__dirname, '..');
-const CORE_DIR = path.join(ROOT, 'core');
+const CORE_DIR = path.join(ROOT, 'engine');
 const DARKLUA_PATH = path.join(__dirname, 'vendor', 'darklua', 'darklua_wasm.js');
 
 // Safe, behavior-preserving Luau AST simplification & dead-code rules from seaofvoices/darklua.

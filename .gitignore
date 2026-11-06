@@ -9,8 +9,11 @@ __pycache__/
 *.py[cod]
 .local-bin/
 
-# Generated analysis output
-/output/
+# Generated analysis output (scratch). The delivered pair in output/current/ is
+# tracked on purpose: the numbers in TECHNICAL.md have to stay checkable against
+# the exact file they were measured on.
+/output/*
+!/output/current/
 *.path2d
 .deobf-write-*/
 coverage/

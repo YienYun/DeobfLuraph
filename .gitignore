@@ -26,3 +26,6 @@ coverage/
 *.deobf.luau
 *.chunk_*.luau
 *.union.json
+
+# Regenerated fixture outputs (written by dev/scripts/fixtures.js)
+/dev/fixtures/output/

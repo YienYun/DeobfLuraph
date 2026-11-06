@@ -38,6 +38,7 @@ function parseArgs(argv) {
     executor: 'Wave',
     inputText: null,
     report: null,
+    stats: false,
     rename: false,
     comments: 'light',
     aiProvider: null,
@@ -69,6 +70,7 @@ function parseArgs(argv) {
     else if (a === '--keep-preamble') { args.keepPreamble = true; }
     else if (a === '-o' || a === '--output') { args.output = valueAt(++i, a); }
     else if (a === '--report') { args.report = valueAt(++i, a); }
+    else if (a === '--stats') { args.stats = true; }
     else if (a === '--timeout') { args.timeout = Number(valueAt(++i, a)); }
     else if (a === '--prelude-file') { args.preludeFile = valueAt(++i, a); }
     else if (a === '--budget') { args.budget = Number(valueAt(++i, a)); }
@@ -196,6 +198,46 @@ function collectInputFiles(rawPaths) {
   }
 
   return files;
+}
+
+// The numbered fallback names the engine hands out when a register's role is
+// not recoverable (engine/names.py has the same family list). Counted rather
+// than hidden: it is the readable measure of "how much of this is still
+// machine-named", which no other counter reports.
+const MECHANICAL_NAME = /\b(?:value|val|data|number|num|text|list|item|obj|result|res|tmp|temp|var|condition|callback|handler|flag|fn|func)[0-9]+\b/g;
+const UNEXECUTED_FOOTER = /^-- devirt: (\d+) function\(s\) contain (\d+) pc\(s\)/m;
+
+function statsDigest(content, job, outputPath) {
+  const stats = job.liftStats || {};
+  const lines = content.split('\n').length - (content.endsWith('\n') ? 1 : 0);
+  const functions = (content.match(/\bfunction\b/g) || []).length;
+  const names = Object.create(null);
+  let uses = 0;
+  for (const m of content.matchAll(MECHANICAL_NAME)) { names[m[0]] = true; uses++; }
+  const unexec = content.match(UNEXECUTED_FOOTER);
+  const rows = [];
+  const row = (label, value) => rows.push(`    ${label.padEnd(12)} ${value}`);
+
+  row('result', `${job.resultType}${job.traceStatus ? ` (trace: ${job.traceStatus})` : ''}`);
+  row('source', `${lines} lines, ${(Buffer.byteLength(content, 'utf8') / 1024).toFixed(1)} KB, ${functions} function(s)`);
+  if (stats.payload_source) row('payload', `${stats.payload_source} line(s) printed from source, not lifted`);
+  if (stats.functions || stats.walked) {
+    row('lift', `${stats.functions || 0} function(s), ${stats.walked || 0} walked, `
+      + `${stats.fallbacks || 0} fallback(s), ${stats.errors || 0} error(s)`);
+  }
+  if (stats.exec_runs || stats.exec_covered) {
+    const window = stats.exec_window ? ` of ${stats.exec_window}` : '';
+    row('coverage', `runs ${stats.exec_runs || 0}, ${stats.exec_covered || 0} array(s) covered, `
+      + `${stats.exec_no_arrays || 0} with no arrays, pcs ${stats.exec_pcs || 0}${window}`);
+  }
+  row('unexecuted', unexec
+    ? `${unexec[1]} function(s) / ${unexec[2]} pc(s) — the walk's value there, not the program's`
+    : 'none flagged by the lift');
+  const named = Object.keys(names).length;
+  row('naming', `${named} numbered identifier(s), ${uses} use(s) — ${named ? 'run --rename to shrink that' : 'none left'}`);
+  if (stats.residual_unknown) row('residual', `${stats.residual_unknown} unknown register read(s) kept`);
+  for (const warning of job.warnings || []) row('warning', String(warning).split('\n')[0]);
+  return `[i] stats: ${path.basename(outputPath)}\n${rows.join('\n')}\n`;
 }
 
 function resolveDefaultOutdir(absInput) {
@@ -446,6 +488,7 @@ async function processFile(absInput, args) {
       };
       if (args.report) writeAtomically(path.resolve(args.report), JSON.stringify(report, null, 2) + '\n');
       process.stderr.write(`[+] result (${job.resultType}): ${final}\n`);
+      if (args.stats) process.stderr.write(statsDigest(content, job, final));
       return report;
     }
     process.stderr.write(`[!] no result for ${path.basename(absInput)}\n`);
@@ -460,11 +503,12 @@ async function processFile(absInput, args) {
 async function main() {
   const args = parseArgs(process.argv.slice(2));
 
-  const usage = 'Usage: node deob.js <input.lua | folder> [more_files_or_folders...] [-o <output.lua>] [--rename] [--comments none|light|detailed] [--plugin <name>] [--no-devirt] [--no-format] [--debug] [--detect] [--exec-rec] [--report <report.json>]';
+  const usage = 'Usage: node deob.js <input.lua | folder> [more_files_or_folders...] [-o <output.lua>] [--rename] [--comments none|light|detailed] [--plugin <name>] [--no-devirt] [--no-format] [--debug] [--detect] [--exec-rec] [--report <report.json>] [--stats]';
   if (args.help) {
     console.log(usage);
     console.log('Use --detect to classify without executing, or --no-devirt for a behaviour trace.');
     console.log('Use --exec-rec (or DEVIRT_EXECREC=1) to record which program counters the sample executed.');
+    console.log('Use --stats to print what the output still cannot promise (coverage, unexecuted pcs, naming).');
     return;
   }
   if (args.inputs.length === 0) {
@@ -527,4 +571,5 @@ if (require.main === module) {
 
 module.exports = {
   parseArgs, collectInputFiles, processFile, sameExistingFile, writeAtomically, resolveDefaultOutdir,
+  statsDigest,
 };

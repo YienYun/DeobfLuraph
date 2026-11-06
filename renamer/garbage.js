@@ -4,7 +4,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
-const { getPythonBin } = require('../engine/pyenv');
+const { getPythonBin } = require('../node/pyenv');
 
 const ROOT = path.resolve(__dirname, '..');
 const CORE_DIR = path.join(ROOT, 'engine');

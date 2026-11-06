@@ -399,6 +399,25 @@ full trace budget on it, the runner probes once with a bounded 15 s trace, then
 reports that no dispatch loop matched and that older builds are not lifted. The
 refusal is a fixture expectation in `dev/test/golden.json`, not an untested path.
 
+**Before / after: what running the live hub scripts changed.** The fixtures were
+the reference samples for a long time, and they flattered the engine: small,
+self-contained, one script per file. Two builds from the Chilli hub
+(`StealAnEggg`, `RideAPet`, both Luraph v15.1) are the first inputs that behave
+like what the engine is used for, and they broke something the tests never
+touched.
+
+| | before (samples only) | after (live hub builds) |
+|---|---|---|
+| `--rename` | crashed at startup: `renamer/garbage.js` still required `../engine/pyenv`, a path that moved to `node/` when the helpers were split. No test loaded the renamer, so the gate stayed green. | runs: `RideAPet` gets 59 raised names and 58 comments (11,034 → 13,282 lines, comments only). Guarded by `dev/test/requires.test.js`, which resolves every literal relative `require()` in the tree (40 files). |
+| "is it maxed?" | answered by reading the log | `--stats` prints one digest per output: result type, size, coverage, unexecuted pcs, numbered identifiers, residual reads, warnings |
+| coverage | 64 % of the decoded pc window on `Lph1` was read as headroom for more runs | 1,999 pcs of 328,377 (0.6 %) on `RideAPet`, unchanged at `DEVIRT_EXECRUNS=4` and `=8`; cell union 113,791 either way, code byte-identical |
+| shape | one obfuscated chunk per file | `StealAnEggg` is a loader that carries the hub script as plain Luau: 26,073 printed lines / 2,204 functions, `result_type: payload-source`; the VM wrapper is 5,055 lines of UI library and is deliberately not the answer |
+
+The two numbers that matter for trust: `RideAPet` compiles 1/1 under Luau and
+leaves 0 unresolved register reads across 11,034 lines, and the 21 functions that
+contain the 590 pcs no offline run reached are named in the footer instead of
+being presented as decoded.
+
 ## 4. Checks
 
 ```bash

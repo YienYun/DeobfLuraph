@@ -7,7 +7,7 @@ const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 
 const ROOT = path.resolve(__dirname, '..');
-const harness = require(path.join(ROOT, 'core', 'harness'));
+const harness = require(path.join(ROOT, 'src', 'harness'));
 
 function smoke(file, opts = {}) {
   const source = fs.readFileSync(file, 'latin1');

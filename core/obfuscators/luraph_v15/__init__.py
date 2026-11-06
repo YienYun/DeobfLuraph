@@ -1,7 +1,7 @@
 import re
 import sys
 
-from obf_base import Obfuscator
+from obfuscators.base import Obfuscator
 
 HEADER = re.compile(r"This file was protected using Luraph Obfuscator v(\d+)(?:\.(\d+))?")
 HEADER_LINE = re.compile(r"\s*--[ \t]*This file was protected using Luraph Obfuscator v[\d.]+[ \t]*"
@@ -33,7 +33,7 @@ class LuraphV15(Obfuscator):
                             "constants turn up)")
 
     def deobfuscate(self, job):
-        import v15_driver as driver
+        from obfuscators.luraph_v15 import driver
         fixed = restore_header_newline(job.source)
         if fixed != job.source:
 

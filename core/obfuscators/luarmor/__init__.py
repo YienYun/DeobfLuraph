@@ -7,10 +7,9 @@ Luraph track uses, and the Luarmor metadata is attached to the result.
 
 Command line (JSON for the Node driver, human text otherwise):
 
-    python3 core/lm_analyze.py <file> [--json]
+    python3 core/obfuscators/luarmor/analyze.py <file> [--json]
 """
-import lm_probe as probe
-import lm_stub as stub  # noqa: F401  (public surface)
+from . import probe, stub  # noqa: F401  (public surface)
 
 __all__ = ["probe", "stub", "analyze", "report_text"]
 

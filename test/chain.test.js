@@ -1,10 +1,5 @@
 'use strict';
 
-// A Luraph carrier can hold a script that is itself Luarmor's: the loader's
-// "script" field may be a client stub, and a stub may carry a Luraph v15 chunk of
-// its own (the sephal init). The chain decides from the payload the engine wrote
-// out, so these cases feed it payload files directly -- no engine run, no
-// network, and no licence check anywhere in sight.
 
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -13,7 +8,7 @@ const path = require('node:path');
 const test = require('node:test');
 
 const ROOT = path.resolve(__dirname, '..');
-const luarmor = require(path.join(ROOT, 'core', 'luarmor'));
+const luarmor = require(path.join(ROOT, 'src', 'luarmor'));
 
 const STUB = `local _bsdata0 = { module_id = "abc", cache_key = "def" }
 local url = "https://api.luarmor.net/files/v4/loaders/0123456789abcdef0123456789abcdef.lua"
@@ -24,8 +19,6 @@ writefile("luarmor-error-log.txt", "")
 kick("no")
 `;
 
-// The sephal init is a Luraph chunk: reading `[1]=bit32.bxor` style fields is
-// what makes the engine treat it as liftable.
 const WITH_CHUNK = `local _bsdata0 = { module_id = "abc", cache_key = "def" }
 local superflow_bytecode = { [1] = 0, [2] = 0, [3] = 1 }
 local url = "https://cdn.luarmor.net/v4_init_0123.lua"

@@ -3,7 +3,7 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
 
-const detect = require('../core/detect');
+const detect = require('../src/detect');
 
 const V15_HEADER = '-- This file was protected using Luraph Obfuscator v15.0 [https://lura.ph/]\nreturn setmetatable({},{})';
 const V14_HEADER = '-- This file was protected using Luraph Obfuscator v14.8 [https://lura.ph/]\nreturn({})';

@@ -8,12 +8,8 @@ const test = require('node:test');
 
 const ROOT = path.resolve(__dirname, '..');
 const CORE = path.join(ROOT, 'core');
-const { getPythonBin, pythonEnv } = require('../core/pyenv');
+const { getPythonBin, pythonEnv } = require('../src/pyenv');
 
-// Diagnostic text ends up inside the output (`-- devirt: ...`). If it carries
-// an object address, two runs over one input produce different bytes; that is
-// exactly the bug this suite exists to keep out. The values are formatted in
-// Python, so the check runs there.
 const PROBE = String.raw`
 import json, sys
 import luasym as S
@@ -100,8 +96,6 @@ test('scrub_addresses rewrites addresses and leaves real hex constants alone', (
 });
 
 test('no Python source builds an output message with an object repr', () => {
-  // Guards the class of bug rather than one site: `%r` of a VM value in a
-  // message that reaches the output. Internal debug prints are fine.
   const offenders = [];
   const walk = (dir) => {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {

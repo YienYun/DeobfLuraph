@@ -40,11 +40,11 @@ def _run_luraph_pipeline(config_file, v14=False):
     with open(config_file, "r", encoding="utf-8") as f:
         c = json.load(f)
 
-    from obf_base import Job
+    from obfuscators.base import Job
     if v14:
-        import v14_driver as driver
+        from obfuscators.luraph_v14 import driver
     else:
-        import v15_driver as driver
+        from obfuscators.luraph_v15 import driver
     import harness
 
     class DummyArgs:
@@ -108,14 +108,14 @@ if cmd == "patch-entries":
     source_path = sys.argv[2]
     with open(source_path, "rb") as f:
         source = f.read().decode("latin-1")
-    import v15_driver as driver
+    from obfuscators.luraph_v15 import driver
     sys.stdout.buffer.write(driver.patch_entries(source, source_path).encode("latin-1"))
 
 elif cmd == "patch-entries-v14":
     source_path = sys.argv[2]
     with open(source_path, "rb") as f:
         source = f.read().decode("latin-1")
-    import v14_driver as driver
+    from obfuscators.luraph_v14 import driver
     sys.stdout.buffer.write(driver.patch_entries(source, source_path).encode("latin-1"))
 
 elif cmd == "pipeline":

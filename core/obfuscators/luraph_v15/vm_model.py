@@ -12,7 +12,7 @@ import sys
 import time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = HERE
+ROOT = os.path.dirname(os.path.dirname(HERE))
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
@@ -31,11 +31,11 @@ from ir import (
     ForPrep, Close, Opaque, Vec, Missing, fmt_expr, fmt_any, fmt_tail, fmt_multi,
     fmt_const, fmt_stmt, fmt_node,
 )
-from v15_dump import OpaqueFn, JitFrame
-from v15_dataflow import BoxProxy, UpList
+from obfuscators.luraph_v15.dump import OpaqueFn, JitFrame
+from obfuscators.luraph_v15.dataflow import BoxProxy, UpList
 
 def _get_vmmap():
-    import v15_devirt as _d
+    from obfuscators.luraph_v15 import devirt as _d
     return _d.vmmap
 
 def _classify_vm_method(vmobj, fn_node):

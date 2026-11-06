@@ -3,11 +3,8 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
 
-const { diagnoseTrace } = require('../core/driver');
+const { diagnoseTrace } = require('../src/driver');
 
-// A trace can stop for two very different reasons: the sandbox met a call it has
-// no answer for, or the captured file is not self-contained. The report has to
-// tell them apart, or a dead sample is filed as a hole in the emulation.
 test('a finished run has nothing to diagnose', () => {
   assert.equal(diagnoseTrace('finished', ''), null);
   assert.equal(diagnoseTrace(undefined, ''), null);

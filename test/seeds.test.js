@@ -1,10 +1,5 @@
 'use strict';
 
-// Two passes clean out what a Luraph v15 build leaves behind: the per-function
-// state seed it only ever hashes against itself, and the stores nothing can
-// read. Deleting code is the one thing a deobfuscator must never get wrong, so
-// every case here is run under Luau before and after -- the two programs have
-// to print the same thing.
 
 const assert = require('node:assert/strict');
 const { spawnSync } = require('node:child_process');
@@ -14,7 +9,7 @@ const path = require('node:path');
 const test = require('node:test');
 
 const ROOT = path.resolve(__dirname, '..');
-const { getPythonBin, pythonEnv } = require('../core/pyenv');
+const { getPythonBin, pythonEnv } = require('../src/pyenv');
 
 const LUAU = path.join(ROOT, 'bin', 'luau');
 
@@ -40,7 +35,6 @@ function run(script, src) {
   return r.stdout;
 }
 
-// Both passes, in the order the pipeline runs them, until neither has work left.
 function clean(src) {
   let text = src;
   for (let i = 0; i < 4; i += 1) {
@@ -74,7 +68,6 @@ print(f())
 `;
   const out = clean(src);
   const body = out.slice(out.indexOf('local function f()'));
-  // the leftover `local state` is only a declaration; the later polish drops it
   assert.doesNotMatch(body, /state\s*=|bit32\.|u32Trunc/);
   assert.equal(luau(out), luau(src));
 });
@@ -89,7 +82,6 @@ print(f())
 `;
   const out = clean(src);
   const body = out.slice(out.indexOf('local function f()'));
-  // the call stays (it runs code), only the seed's value goes
   assert.match(body, /pcall\(function\(\) return 7 end\)/);
   assert.doesNotMatch(body, /u32Trunc|state\s*=/);
   assert.equal(luau(out), luau(src));
@@ -192,7 +184,6 @@ while n < 3 do
 end
 `;
   const out = clean(src);
-  // dropping `pending = n` would change what the next iteration prints
   assert.match(out, /pending = n/);
   assert.equal(luau(out), luau(src));
 });

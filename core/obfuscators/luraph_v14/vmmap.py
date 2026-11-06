@@ -13,7 +13,7 @@ import subprocess
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = HERE
+ROOT = os.path.dirname(os.path.dirname(HERE))
 BIN_DIR = os.path.join(ROOT, "..", "bin") if os.path.exists(os.path.join(ROOT, "..", "bin")) else os.path.join(ROOT, "bin")
 
 def _normalize(n):

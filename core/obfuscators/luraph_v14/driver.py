@@ -3,7 +3,7 @@ import harness
 
 
 def patch_entries(source, path):
-    import v14_vmmap as vmmap
+    from obfuscators.luraph_v14 import vmmap
     root = vmmap.load_ast(path)
     lines = source.split("\n")
     edits = []
@@ -33,10 +33,10 @@ def patch_entries(source, path):
 
 
 def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths):
-    import v15 as pkg15
-    import v15_driver as v15_driver
-    import v15_devirt as v15_devirt
-    import v14_devirt as v14_devirt
+    import obfuscators.luraph_v15 as pkg15
+    from obfuscators.luraph_v15 import driver as v15_driver
+    from obfuscators.luraph_v15 import devirt as v15_devirt
+    from obfuscators.luraph_v14 import devirt as v14_devirt
 
     pkg15.devirt = v14_devirt
     v14_devirt._set_v14_active(True)

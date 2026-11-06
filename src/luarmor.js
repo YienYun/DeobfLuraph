@@ -8,7 +8,7 @@ const { execFileSync } = require('child_process');
 const { getPythonBin, pythonEnv } = require('./pyenv');
 
 const CORE = path.join(__dirname, '..', 'core');
-const ANALYZER = path.join(CORE, 'lm_analyze.py');
+const ANALYZER = path.join(CORE, 'obfuscators', 'luarmor', 'analyze.py');
 
 function analyze(sourcePath) {
   const out = execFileSync(getPythonBin(), [ANALYZER, sourcePath, '--json'], {

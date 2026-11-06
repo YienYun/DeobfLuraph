@@ -1,9 +1,5 @@
 'use strict';
 
-// The lifter records parentheses around whole expressions: `if (a == b) then`,
-// `local x = (y)`, `(a and b) or c`. Removing one is only safe when no operator
-// is waiting to rebind what is inside, so each case here is compared by running
-// the program under Luau before and after.
 
 const assert = require('node:assert/strict');
 const { spawnSync } = require('node:child_process');
@@ -13,7 +9,7 @@ const path = require('node:path');
 const test = require('node:test');
 
 const ROOT = path.resolve(__dirname, '..');
-const { getPythonBin, pythonEnv } = require('../core/pyenv');
+const { getPythonBin, pythonEnv } = require('../src/pyenv');
 
 const LUAU = path.join(ROOT, 'bin', 'luau');
 
@@ -92,8 +88,6 @@ print(not (flag), not (1 == 2))
 });
 
 test('a table literal indexed on the spot keeps its brackets', () => {
-  // `{a = 1}[k]` does not parse: the base of an index has to be a prefix
-  // expression, so the brackets are part of the syntax, not decoration
   const out = same(`local k = "a"
 local v = ({a = 1, b = 2})[k] or "z"
 print(v, ({1, 2})[2])

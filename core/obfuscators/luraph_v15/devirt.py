@@ -12,7 +12,7 @@ import sys
 import time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = HERE
+ROOT = os.path.dirname(os.path.dirname(HERE))
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
@@ -32,32 +32,32 @@ from ir import (
     ForPrep, Close, Opaque, Vec, Missing, fmt_expr, fmt_any, fmt_tail, fmt_multi,
     fmt_const, fmt_stmt, fmt_node,
 )
-import v15_vmmap as vmmap
-from v15_dump import (
+from obfuscators.luraph_v15 import vmmap
+from obfuscators.luraph_v15.dump import (
     PatchLog, Dump, OpaqueFn, FrameArg, RuntimeMaker, SharedFn, JitFrame,
     REG_PREFIX, REG_ARRAY, LAST_DUMP,
 )
-from v15_dataflow import (
+from obfuscators.luraph_v15.dataflow import (
     OpenUps, OPENUPS, MaybeBox, UpList, REGFILE, FRAME, FrameProxy, BoxProxy, BoxPart,
     walk_expr, meet, fact_of, eval_fact, truth_of, edge_facts, _replace_dict_fact,
     _upval_open_reg, _single_const_fact, _capture_closure_up_facts, apply_stmt_facts,
     frame_call, drop_idle_closes, apply_frame_calls, materialise_read_jump_regs, _check_cff_bin,
     propagate, expr_regs,
 )
-from v15_vm_model import (
+from obfuscators.luraph_v15.vm_model import (
     _classify_vm_method, _PlainPrinter, PlainProto, iter_nodes, VMModel, find_ctor_funcs,
     VMCrash, Overlay, _differs, _hv, _pack_sig, State,
     WALK_MAX_ERRORS, WALK_RESTARTS, WALK_SECONDS,
     WALK_LIMIT, _carry_key, MAX_STACK_DEPTHS, STACK_WALK_MAX, _locs_lt,
 )
-from v15_stepper import (
+from obfuscators.luraph_v15.stepper import (
     GenIterMaker, _AccessLog, _disp_fetch_expr, Stepper, JIT_ENTRY, JIT_TMP,
     jit_maker_parts, JitModel, JIT_BOTTOM, JitProto, _JIT_NESTED, _JIT_TAGGED,
     _jit_nested_model, _declared_in, _jit_live_in, _fixed_value, JitStepper,
     _jit_forloop, make_stepper, _BT_WARNED, build_tree,
 )
-from v15_lifter import ProtoLifter, lst_nkey, pad
-from v15_patches import (
+from obfuscators.luraph_v15.lifter import ProtoLifter, lst_nkey, pad
+from obfuscators.luraph_v15.patches import (
     buffer_patches, stable_patches, format_patches, same_patches,
     WalkCache, PathResolver, collect_requests, _walk_one, _translate,
 )
@@ -887,7 +887,7 @@ class FunctionLifter:
         if not c.upvals:
             ups_tbl = getattr(c, "_ups_tbl", None)
             if isinstance(ups_tbl, LTable) and ups_tbl.h:
-                from v15_lifter import extract_upvals_table
+                from obfuscators.luraph_v15.lifter import extract_upvals_table
                 entries, base = extract_upvals_table(ups_tbl, False)
                 if entries:
                     c.upvals[:] = entries
@@ -970,7 +970,7 @@ class FunctionLifter:
                             if isinstance(u, (BoxProxy, Upval)):
                                 parent_lf.__dict__.setdefault("mutated_upvals", set()).add(u.idx)
                             else:
-                                from v15_dataflow import _upval_open_reg
+                                from obfuscators.luraph_v15.dataflow import _upval_open_reg
                                 ureg = _upval_open_reg(u)
                                 if ureg is not None:
                                     parent_lf.__dict__.setdefault("rcf_post_cap_poisoned", set()).add(ureg)

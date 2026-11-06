@@ -1,10 +1,5 @@
 'use strict';
 
-// A result is printed through StyLua before it is written, so what a reader opens
-// is laid out the way the formatter lays it out. These cases pin the three things
-// that can go wrong: it changes what the program does, it is not stable (running
-// the formatter over its own output moves bytes again), or it costs a result when
-// the text does not parse.
 
 const assert = require('node:assert/strict');
 const { spawnSync } = require('node:child_process');
@@ -14,8 +9,8 @@ const path = require('node:path');
 const test = require('node:test');
 
 const ROOT = path.resolve(__dirname, '..');
-const { formatLuau, available } = require('../core/format');
-const { isValidLuaSyntax } = require('../core/luau_check');
+const { formatLuau, available } = require('../src/format');
+const { isValidLuaSyntax } = require('../src/luau_check');
 
 const LUAU = path.join(ROOT, 'bin', 'luau');
 

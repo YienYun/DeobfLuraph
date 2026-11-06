@@ -84,7 +84,7 @@ def payload_note(text):
     false claim about what the reader is holding, so the analyzer decides.
     """
     try:
-        import lm_probe as probe
+        from obfuscators.luarmor import probe
     except Exception:
         return []
     try:

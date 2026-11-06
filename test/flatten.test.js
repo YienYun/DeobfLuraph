@@ -1,9 +1,5 @@
 'use strict';
 
-// The flattener turns a loop over constants back into the statements it runs.
-// These cases pin the behaviour down one shape at a time, including the shapes
-// it must refuse. Each one is a small program whose original form is obvious,
-// so the expected text can be read and argued with.
 
 const assert = require('node:assert/strict');
 const { spawnSync } = require('node:child_process');
@@ -11,7 +7,7 @@ const path = require('node:path');
 const test = require('node:test');
 
 const ROOT = path.resolve(__dirname, '..');
-const { getPythonBin, pythonEnv } = require('../core/pyenv');
+const { getPythonBin, pythonEnv } = require('../src/pyenv');
 
 const PY = path.join(ROOT, 'core', 'flatten.py');
 
@@ -23,7 +19,6 @@ function flatten(src) {
   return JSON.parse(r.stdout);
 }
 
-// One function, one dispatch loop at two tabs, body statements at three.
 const OPEN = '\t\twhile true do\n';
 const CLOSE = '\t\tend\n';
 const HEAD =
@@ -42,10 +37,8 @@ test('a constant range is unrolled in the order it runs', () => {
   assert.equal(stats.dispatch_loops_unrolled, 1);
   assert.equal(stats.dispatch_iterations, 3);
   assert.deepEqual(prints(text), ['1', '2', '3']);
-  // the loop, and with it the counter arithmetic, is gone
   assert.doesNotMatch(text, /while true/);
   assert.doesNotMatch(text, /c \+= a/);
-  // and the statements landed one level up, where the loop was
   assert.match(text, /\n\t\tprint\(1\)\n\t\tprint\(2\)\n\t\tprint\(3\)\n\tend\n$/);
 });
 
@@ -72,17 +65,14 @@ test('a branch that returns ends the function and stops the unroll', () => {
   const { text } = flatten(wrap(body));
   assert.match(text, /return 2/);
   assert.doesNotMatch(text, /print\(3\)/);
-  // `return` has to stay last in its block or the result is not Luau at all
   assert.match(text, /\t\treturn 2\n\tend\n$/);
 });
 
 test('the counter keeps its post-loop value when anything still reads it', () => {
   const plain = flatten(wrap('\t\t\tprint(c)\n')).text;
-  // nothing reads the counter afterwards, so no restore line is invented
   assert.doesNotMatch(plain, /\n\tc = \d/);
   const reading = flatten(
     `local function f()\n\tlocal a, b, c = 1, 3, 0\n${OPEN}${HEAD}\n\t\t\tprint(c)\n${CLOSE}\treturn c\nend\n`);
-  // states 1,2,3 run; the check then fails at 4, which is the value `return c` sees
   assert.match(reading.text, /\tc = 4\n\treturn c\n/);
 });
 
@@ -134,8 +124,6 @@ test('an inverted loop that would never end is left alone', () => {
 });
 
 test('substitution never rewrites an assignment target', () => {
-  // Regression: a nested loop reusing the outer counter used to come out as
-  // `0 += 1`, which is not Luau.
   const body = '\t\t\tlocal s = c\n\t\t\tlocal i = 1\n\t\t\ti += 1\n\t\t\tprint(s + i)\n';
   const { text } = flatten(wrap(body));
   assert.doesNotMatch(text, /\d+ \+=/);

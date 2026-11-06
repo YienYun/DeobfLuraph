@@ -4,7 +4,7 @@ import subprocess
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = HERE
+ROOT = os.path.dirname(os.path.dirname(HERE))
 BIN_DIR = os.path.join(ROOT, "..", "bin") if os.path.exists(os.path.join(ROOT, "..", "bin")) else os.path.join(ROOT, "bin")
 
 def load_ast(path):
@@ -320,7 +320,7 @@ def decl_key(local):
 def _free_names(fn):
     """Names used inside `fn` whose declaration lives outside it (free
     upvalues): every AstExprLocal the function's own decl map does not know.
-    Mirrors _freeNames in core/vmmap.js (the capture hook uses the same list)."""
+    Mirrors _freeNames in src/vmmap.js (the capture hook uses the same list)."""
     own = set(_decls_in(fn))
     names = set()
 
@@ -344,7 +344,7 @@ def _register_dispatch_local(out, stack):
     to the walked node). Hook after the dispatcher's first local instead: the
     first local is the live proto/register state, and the free upvalues
     (A/V/x/W ... VM state) are what a capture needs. Same shape and tag
-    positions as the JS side (core/vmmap.js makerInfo v3), so dump tags made
+    positions as the JS side (src/vmmap.js makerInfo v3), so dump tags made
     by either match."""
     if not stack:
         return False

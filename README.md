@@ -8,17 +8,23 @@ This is a **Luraph-only build**: v15.0 / v15.1 as the primary engine, v14.7 –
 v14.9 lifted through the same backend, plus the Luarmor chain analyzer. Every
 other obfuscator — MoonVeil included — has been removed from the tree.
 
+**Where things live:** `core/obfuscators/luraph_v15/` is the v15 engine,
+`core/obfuscators/luraph_v14/` the v14 engine, `core/obfuscators/luarmor/` the
+Luarmor analyzer. `core/*.py` is the compiler backend all three feed into,
+`src/*.js` the Node side (detect, sandbox, CLI plumbing), `renamer/` the
+optional `--rename` pass.
+
 | Family | Module | What it does |
 |---|---|---|
-| **Luraph v15.0 / v15.1+** | `core/v15.py`, `core/v15_*.py` | Sandbox run ➔ symbolic CFG / SSA lift ➔ Luau source |
-| **Luraph v14.7 – v14.9** | `core/v14.py`, `core/v14_*.py` | v14 VM mapper + symbolic lift on the same backend |
-| **Luarmor v4** | `core/lm.py`, `core/lm_*.py`, `core/luarmor.js` | Client-chain analysis; when the file carries a Luraph chunk, that chunk is lifted by the v15 engine |
+| **Luraph v15.0 / v15.1+** | `core/obfuscators/luraph_v15/` | Sandbox run ➔ symbolic CFG / SSA lift ➔ Luau source |
+| **Luraph v14.7 – v14.9** | `core/obfuscators/luraph_v14/` | v14 VM mapper + symbolic lift on the same backend |
+| **Luarmor v4** | `core/obfuscators/luarmor/`, `src/luarmor.js` | Client-chain analysis; when the file carries a Luraph chunk, that chunk is lifted by the v15 engine |
 
 About Luarmor: the licence check is **not** bypassed. The session payload lives
 on Luarmor's server behind a key, so a bare `_bsdata0` client stub is reported —
 module id, hashes, build stamp, endpoints — instead of being faked into code.
 
-`core/detect.js` still recognises the signatures of the removed obfuscators, so a
+`src/detect.js` still recognises the signatures of the removed obfuscators, so a
 file can be named correctly (`--detect`). It cannot be deobfuscated here: the
 run stops with `<engine> is not part of this build` and writes no output. That
 includes MoonVeil: a MoonVeil file is named as such and refused, never
@@ -137,31 +143,47 @@ DeobfLuraph/
 │   ├── check.js            # syntax gate (no dependencies)
 │   └── metrics.py          # the metrics table a report quotes
 ├── .github/workflows/ci.yml
-├── core/                   # the whole engine, one flat directory
-│   ├── detect.js           # Signature / structural detector
-│   ├── driver.js           # Luraph v15: sandbox run + devirt bridge
-│   ├── harness.js          # Offline Roblox sandbox builder
-│   ├── engines.js          # Engine dispatch (Luraph v14) and refusals
-│   ├── luarmor.js          # Luarmor chain analysis + report
-│   ├── format.js           # StyLua pass, applied to every result
-│   ├── watermark.js        # Attribution comment + `print("Deobf By Zed")`
-│   ├── luau_check.js       # Syntax gate on `bin/luau-ast`
-│   ├── vmmap.js / traceout.js / pyenv.js / tidy.js
-│   ├── v15.py, v15_*.py    # v15 driver, sandbox stepper, VM model, lifter
-│   ├── v14.py, v14_*.py    # v14 VM mapper + devirt driver
-│   ├── lm.py, lm_*.py      # Luarmor probe, stub, analyzer
-│   ├── obf.py / obf_base.py # Engine registry + shared base
-│   ├── devirt_bridge.py    # JSON bridge between Node and the Python lifters
+├── core/                   # Python compiler backend
+│   ├── obfuscators/        # one folder per protected format
+│   │   ├── luraph_v15/     # Luraph v15.0 / v15.1  <- the main engine
+│   │   │   ├── driver.py   # sandbox run + devirt rounds
+│   │   │   ├── stepper.py  # the recorded instruction stepper
+│   │   │   ├── vm_model.py # decodes instruction cells back to operations
+│   │   │   ├── lifter.py   # CFG + statement lifting
+│   │   │   ├── dataflow.py # dataflow recovery for the lifted body
+│   │   │   ├── dump.py     # dump protocol (proto -> JSON)
+│   │   │   ├── patches.py  # targeted fixes for known VM shapes
+│   │   │   └── vmmap.py    # VM dispatch map recovery
+│   │   ├── luraph_v14/     # Luraph v14.7 - v14.9 (devirt, driver, vmmap)
+│   │   ├── luarmor/        # Luarmor v4 client chain (probe, stub, analyze)
+│   │   ├── base.py         # plugin interface
+│   │   └── __init__.py     # plugin registry (PLUGINS)
+│   ├── backend.py          # the lowering pipeline, in order
 │   ├── ir.py / luasym.py   # IR values and symbolic expressions
 │   ├── structure.py        # CFG structuring, guard/trap pruning, poisoning
 │   ├── loops.py            # Loop recognition
 │   ├── variables.py        # SSA webs, frame propagation, naming input
 │   ├── names.py            # Context-aware identifier naming
+│   ├── namesplit.py / localfuncs.py / deadline.py / deadstore.py
 │   ├── idioms.py           # Idiom folding (table.move, SETLIST, chains)
-│   ├── ast_polish.py       # Source cleanup after printing
 │   ├── flatten.py          # Unrolls constant-state dispatch loops
+│   ├── bitfold.py / u32fold.py / copies.py / seeds.py / spacing.py
+│   ├── ast_polish.py       # Source cleanup after printing
 │   ├── codegen.py          # Luau emitter
-│   └── backend.py          # The lowering pipeline, in order
+│   ├── luauast.py          # Luau AST -> text
+│   ├── carrier.py          # payload extraction from a host file
+│   └── harness.py / tidy.py / traceout.py
+├── src/                    # Node orchestration around the Python core
+│   ├── detect.js           # Signature / structural detector
+│   ├── driver.js           # Luraph v15: sandbox run + devirt bridge
+│   ├── engines.js          # Engine dispatch (Luraph v14) and refusals
+│   ├── luarmor.js          # Luarmor chain analysis + report
+│   ├── harness.js          # Offline Roblox sandbox builder
+│   ├── devirt_bridge.py    # JSON bridge between Node and the Python lifters
+│   ├── format.js           # StyLua pass, applied to every result
+│   ├── watermark.js        # Attribution comment + `print("Deobf By Zed")`
+│   ├── luau_check.js       # Syntax gate on `bin/luau-ast`
+│   └── vmmap.js / traceout.js / pyenv.js / tidy.js
 ├── renamer/                # Optional `--rename` pass (scope-verified renamer)
 ├── runtime/envlog.luau     # Offline Roblox VM + environment
 ├── bin/                    # luau, luau-ast (native; .exe for Windows)

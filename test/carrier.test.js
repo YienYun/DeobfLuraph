@@ -1,10 +1,5 @@
 'use strict';
 
-// Some Luraph builds carry the script as a function field of the loader and call
-// it with the loader's own table, so the script reaches for helpers on its first
-// argument (`H2`, `g2`, `[72]`). A file printed on its own cannot supply them;
-// what it can do is say which one is missing instead of failing as "attempt to
-// index nil" somewhere inside the script.
 
 const assert = require('node:assert/strict');
 const { spawnSync } = require('node:child_process');
@@ -14,7 +9,7 @@ const path = require('node:path');
 const test = require('node:test');
 
 const ROOT = path.resolve(__dirname, '..');
-const { getPythonBin, pythonEnv } = require('../core/pyenv');
+const { getPythonBin, pythonEnv } = require('../src/pyenv');
 
 const LUAU = path.join(ROOT, 'bin', 'luau');
 

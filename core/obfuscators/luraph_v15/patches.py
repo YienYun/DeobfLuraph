@@ -12,7 +12,7 @@ import sys
 import time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = HERE
+ROOT = os.path.dirname(os.path.dirname(HERE))
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
@@ -30,13 +30,13 @@ from ir import (
     ForPrep, Close, Opaque, Vec, Missing, fmt_expr, fmt_any, fmt_tail, fmt_multi,
     fmt_const, fmt_stmt, fmt_node,
 )
-from v15_dump import (
+from obfuscators.luraph_v15.dump import (
     PatchLog, LAST_DUMP, buffer_patches, stable_patches, format_patches, same_patches, PathResolver,
 )
-from v15_dataflow import UpList
-from v15_vm_model import WALK_LIMIT, WALK_RESTARTS
-from v15_stepper import _JIT_TAGGED, make_stepper
-from v15_lifter import ProtoLifter
+from obfuscators.luraph_v15.dataflow import UpList
+from obfuscators.luraph_v15.vm_model import WALK_LIMIT, WALK_RESTARTS
+from obfuscators.luraph_v15.stepper import _JIT_TAGGED, make_stepper
+from obfuscators.luraph_v15.lifter import ProtoLifter
 
 class WalkCache:
     """Results of walking single protos (collect_requests), kept across
@@ -53,7 +53,7 @@ def collect_requests(source, protos_path, chunk_paths=(), cache=None, fetch=None
     the structuring/codegen/naming: every proto lift_program would lift is
     walked (SCCP, which is where requests and in-place decryption happen),
     its closures followed. -> (stats, requests, buffer patches)."""
-    import v15_devirt as _d
+    from obfuscators.luraph_v15 import devirt as _d
     prog = _d.Program(source, protos_path, chunk_paths)
     LAST_DUMP[:] = [prog.dump]
     dump = prog.dump

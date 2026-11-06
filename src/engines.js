@@ -254,8 +254,8 @@ const RUNNERS = {
 };
 
 const NOT_SHIPPED = {
-    luraph_v15: 'handled by core/driver.js',
-    luarmor_client: 'analysed by core/luarmor.js',
+    luraph_v15: 'handled by src/driver.js',
+    luarmor_client: 'analysed by src/luarmor.js',
     moonveil: 'MoonVeil (this build is Luraph-only)',
     moonsec: 'MoonSec V2 / V3',
     ironbrew1: 'IronBrew v1',

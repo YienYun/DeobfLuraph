@@ -48,7 +48,7 @@ def patch_entries(source, path):
     calls, no locals), so the stack looks exactly as it would without it: it numbers
     protos in first-entry order, logs recent entries and returns early for the
     protos listed in __SKIPP."""
-    import v15_vmmap as vmmap
+    from obfuscators.luraph_v15 import vmmap
     root = vmmap.load_ast(path)
     lines = source.split("\n")
     edits = []
@@ -143,7 +143,7 @@ def write_dump(ppath, text, exec_rec_on, seen=None):
         seen.append(text)
     elif text not in seen:
         seen.append(text)
-    import v15_dump as dump_mod
+    from obfuscators.luraph_v15 import dump as dump_mod
     union, info = dump_mod.union_exec_runs(seen, base_text=text)
     if not union:
         return
@@ -162,7 +162,7 @@ def emit_payload_source(job, dpath, chunk_paths, why=None, require_script=False)
     build can keep the script readable and virtualize only the wrapper;
     printing the payload is then the faithful output (names aside) and the only
     route that reaches the code the VM never carries.  -> stats, or None."""
-    import v15_devirt as devirt
+    from obfuscators.luraph_v15 import devirt
     found = payload_source(chunk_paths, require_script=require_script)
     if not found:
         return None
@@ -192,7 +192,7 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None, exec_
     constants, each needed to find the next, then takes one round instead
     of one round per link)."""
     exec_rec_on = bool(os.environ.get("DEVIRT_EXECREC") or getattr(job.args, "exec_rec", False))
-    import v15_devirt as devirt
+    from obfuscators.luraph_v15 import devirt
     import deadline
     if not os.environ.get("DEVIRT_PREFER_VM"):
         out_stats = emit_payload_source(job, dpath, chunk_paths,
@@ -508,7 +508,7 @@ SCRIPT_GLOBALS = ("getgenv", "warn", "Instance", "writefile", "makefolder", "rea
 
 def _script_score(node):
     """How much of a function reads like the script itself, not like a VM."""
-    from v15_vm_model import iter_nodes
+    from obfuscators.luraph_v15.vm_model import iter_nodes
     score = 0
     for n in iter_nodes(node):
         t = n.get("type")
@@ -566,8 +566,8 @@ def payload_source(chunk_paths, require_script=False):
     machine around it.  A chunk that is not shaped that way is printed whole.
     -> (text, functions, note) or None when no chunk parses as source."""
     import luauast as LA
-    import v15_vmmap as vmmap
-    from v15_vm_model import iter_nodes
+    from obfuscators.luraph_v15 import vmmap
+    from obfuscators.luraph_v15.vm_model import iter_nodes
     best = None
     for path in chunk_paths or ():
         try:
@@ -692,7 +692,7 @@ def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths)
     states = sorted(set(re.findall(r"State\d{2,4}", run_text or "")))
     if states:
         job.luarmor_states = states
-    import v15_devirt as devirt
+    from obfuscators.luraph_v15 import devirt
     import deadline
 
     if os.environ.get("DEVIRT_PAYLOAD_SRC"):
@@ -703,7 +703,7 @@ def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths)
     exec_rec_on = bool(os.environ.get("DEVIRT_EXECREC") or getattr(args, "exec_rec", False))
     exec_seen = []
     if exec_rec_on:
-        import v15_dump as dump_mod
+        from obfuscators.luraph_v15 import dump as dump_mod
         try:
             with open(ppath, encoding="utf-8", errors="replace") as f:
                 texts = [f.read()]

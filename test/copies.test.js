@@ -1,9 +1,5 @@
 'use strict';
 
-// The lifter writes out every register move the VM performs. Folding a copy is
-// only safe when nothing can observe the register between the copy and the next
-// write to it, so every case here is checked by running the program under Luau
-// before and after: the two have to print the same thing.
 
 const assert = require('node:assert/strict');
 const { spawnSync } = require('node:child_process');
@@ -13,7 +9,7 @@ const path = require('node:path');
 const test = require('node:test');
 
 const ROOT = path.resolve(__dirname, '..');
-const { getPythonBin, pythonEnv } = require('../core/pyenv');
+const { getPythonBin, pythonEnv } = require('../src/pyenv');
 
 const LUAU = path.join(ROOT, 'bin', 'luau');
 

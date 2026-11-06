@@ -12,7 +12,7 @@ import sys
 import time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = HERE
+ROOT = os.path.dirname(os.path.dirname(HERE))
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
@@ -30,9 +30,9 @@ from ir import (
     ForPrep, Close, Opaque, Vec, Missing, fmt_expr, fmt_any, fmt_tail, fmt_multi,
     fmt_const, fmt_stmt, fmt_node,
 )
-from v15_dump import OpaqueFn, JitFrame
-from v15_dataflow import BoxProxy, BoxPart, FrameProxy, UpList
-from v15_vm_model import Overlay, PackTop, State, VMCrash, VMModel, iter_nodes
+from obfuscators.luraph_v15.dump import OpaqueFn, JitFrame
+from obfuscators.luraph_v15.dataflow import BoxProxy, BoxPart, FrameProxy, UpList
+from obfuscators.luraph_v15.vm_model import Overlay, PackTop, State, VMCrash, VMModel, iter_nodes
 
 class GenIterMaker:
     """coroutine.wrap(helper) of Luraph's generic-for: called once with

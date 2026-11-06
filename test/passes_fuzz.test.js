@@ -1,14 +1,5 @@
 'use strict';
 
-// A differential test for the text passes. Lifted code is full of register
-// patterns -- a value copied into a scratch local, the same local refilled two
-// lines later, a temporary read once, a store of nil -- and every pass that
-// touches them has to leave the program meaning what it meant. Generated
-// programs in that shape go through the whole chain and the two versions are run
-// under Luau; anything that prints differently, or fails on one side only, is a
-// bug in a pass.
-//
-// The generator is seeded, so a failure can be replayed as-is.
 
 const assert = require('node:assert/strict');
 const { spawnSync } = require('node:child_process');
@@ -18,7 +9,7 @@ const path = require('node:path');
 const test = require('node:test');
 
 const ROOT = path.resolve(__dirname, '..');
-const { getPythonBin, pythonEnv } = require('../core/pyenv');
+const { getPythonBin, pythonEnv } = require('../src/pyenv');
 
 const LUAU = path.join(ROOT, 'bin', 'luau');
 
@@ -41,7 +32,6 @@ function generate(seed) {
     'local u = { X = 1 }',
     'local n = 3',
     'local a, b, c, d',
-    // one temporary every program, so the temp fold is always exercised
     'local probe = t.X',
     'print("probe", probe ~= nil)',
   ];
@@ -66,8 +56,6 @@ function generate(seed) {
       const name = pick(locals);
       const roll = rnd();
       if (roll < 0.16) {
-        // the shape the copy pass folds: a register carrying one value, read a
-        // couple of times, then refilled
         const v = `s${uid}`;
         uid += 1;
         lines.push(`${pad}local ${v} = ${pick(['t', 'u', 'n'])}`);
@@ -77,7 +65,6 @@ function generate(seed) {
       } else if (roll < 0.3) {
         lines.push(`${pad}${name} = ${pick(VALUES)}`);
       } else if (roll < 0.4) {
-        // a copy: this is the pattern the copy pass folds
         lines.push(`${pad}${name} = ${pick(['t', 'u', 'a', 'b', 'n'])}`);
       } else if (roll < 0.5) {
         lines.push(`${pad}local ${name} = ${pick(VALUES)}`);
@@ -99,8 +86,6 @@ function generate(seed) {
         lines.push(`${pad}\t${name} = ${pick(['t', 'u', 'n', '1', 'nil'])}`);
         lines.push(`${pad}end`);
       } else if (roll < 0.86 && depth < 2) {
-        // while-loop: the body runs again, so a store at the bottom is read at
-        // the top on the next pass
         lines.push(`${pad}local w${depth} = 2`);
         lines.push(`${pad}while w${depth} > 0 do`);
         lines.push(`${pad}\tlocal seen = ${name}`);
@@ -110,16 +95,13 @@ function generate(seed) {
         lines.push(`${pad}\tw${depth} -= 1`);
         lines.push(`${pad}end`);
       } else if (roll < 0.86) {
-        // a statement that spans lines: positions inside it are not a line each
         lines.push(`${pad}print("multi",`);
         lines.push(`${pad}\t${name} ~= nil,`);
         lines.push(`${pad}\ttype(${name}) == "table")`);
       } else if (roll < 0.9) {
-        // a closure over the register: what it reads must stay where it is
         lines.push(`${pad}local function peek${k}() return ${name} end`);
         lines.push(`${pad}print("peek", peek${k}() ~= nil)`);
       } else if (roll < 0.95) {
-        // a temporary read once, right below
         lines.push(`${pad}local tmp = ${pick(['t.X', 'n', 'a', 'u'])}`);
         lines.push(`${pad}print("tmp", tmp ~= nil)`);
       } else {
@@ -180,7 +162,6 @@ test('the text passes never change what a register-shaped program prints', () =>
       if (failures.length >= 3) break;
     }
   }
-  // the corpus has to actually exercise the passes, or a green run means nothing
   assert.ok(copies >= 20, `the corpus only folded ${copies} copies`);
   assert.ok(temps >= total * 0.75, `the corpus only folded ${temps} temporaries`);
 

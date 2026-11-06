@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """CLI for the Luarmor v4 static analyzer.
 
-    python3 core/lm_analyze.py sample.lua          # human text
-    python3 core/lm_analyze.py sample.lua --json   # machine
+    python3 core/obfuscators/luarmor/analyze.py sample.lua          # human text
+    python3 core/obfuscators/luarmor/analyze.py sample.lua --json   # machine
 
 Exit codes: 0 = analysed (whatever the verdict), 2 = usage/IO error.
 """
@@ -11,9 +11,9 @@ import json
 import os
 import sys
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-from lm import analyze, report_text  # noqa: E402
+from obfuscators.luarmor import analyze, report_text  # noqa: E402
 
 
 def main(argv=None):

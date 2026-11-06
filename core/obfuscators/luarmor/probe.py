@@ -7,7 +7,7 @@ whose payload is fetched at runtime behind a key.
 """
 import re
 
-import lm_stub as _stub
+from . import stub as _stub
 
 SIGS = [
     ("luarmor_host", re.compile(r"luarmor\.net|Luarmor", re.I)),

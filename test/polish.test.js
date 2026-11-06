@@ -1,10 +1,5 @@
 'use strict';
 
-// The AST cleanup runs last, after every rewrite that can empty a declaration
-// out. These cases are about what it leaves behind: names nothing reads, calls
-// whose first result is deliberately thrown away, and the indentation a merged
-// declaration keeps. Every case is also run under Luau, before and after, so a
-// slot can only go when the program still prints the same thing.
 
 const assert = require('node:assert/strict');
 const { spawnSync } = require('node:child_process');
@@ -14,7 +9,7 @@ const path = require('node:path');
 const test = require('node:test');
 
 const ROOT = path.resolve(__dirname, '..');
-const { getPythonBin, pythonEnv } = require('../core/pyenv');
+const { getPythonBin, pythonEnv } = require('../src/pyenv');
 
 const LUAU = path.join(ROOT, 'bin', 'luau');
 
@@ -69,8 +64,6 @@ test('a call in a dead slot is never dropped, only renamed', () => {
 });
 
 test('the first result of a multi-value call keeps a name nothing reads', () => {
-  // `local a, b = f()` hands b the *second* result; deleting `a` would give it
-  // the first, so the name stays and says that the value is discarded
   const out = same('local function f() return 1, 2 end\nlocal dropped, second = f()\nprint(second)\n');
   assert.match(out, /local _, second = f\(\)/, out);
 });
@@ -88,10 +81,6 @@ test('a merged declaration keeps the indentation of the block it sits in', () =>
   assert.ok(!/^\t\tlocal t/.test(out), out);
 });
 
-// --- context slots --------------------------------------------------------
-// The script keeps its own helper table and indexes it by number. These cases
-// pin the rule that gives a slot a name: what was stored in it, and only where
-// that name really means the same value at the read.
 
 const GAME = 'local game = {GetService = function(_, name) return {Name = name} end}\n';
 
@@ -111,8 +100,6 @@ test('a slot copied from a local uses that local and adds no alias', () => {
 });
 
 test('a read the name would not reach keeps its number', () => {
-  // `state` inside f is a different binding that is read there, so the slot has
-  // to stay indexed: naming it would silently hand the inner table to the read
   const src = 'local state = {note = 1}\nlocal data = {}\ndata[20] = state\n'
     + 'local function f()\n\tlocal state = {note = 2}\n\treturn state.note, data[20].note\nend\n'
     + 'print(f(), state.note)\n';
@@ -136,11 +123,6 @@ test('naming a slot settles: a second polish changes nothing', () => {
   assert.equal(polish(once), once);
 });
 
-// --- usage names ----------------------------------------------------------
-// A parameter the lifter called `argument5` is named from what is done with
-// it; a handler it called `callback7` from the event or the body it is given.
-// Each case prints values, so the Luau comparison in `same()` has something to
-// compare and a rename that changed behaviour shows up.
 
 test('a parameter is named from the method it is given to', () => {
   const src = 'local fakeRemote = {FireServer = function(self, payload) return payload end}\n'
@@ -204,10 +186,6 @@ test('a function is named from what its body builds when it is only called', () 
   assert.match(out, /local function newFrame\(/, out);
 });
 
-// --- method tables and value locals --------------------------------------
-// A hub script defines its modules by hand, so a method body is the contract
-// for `module:method(x)`. And `local value7 = <something>` says what the value
-// is, which is worth a name when the local is written only once.
 
 test('a parameter is named from the method it is handed to', () => {
   const src = 'local module = {}\nmodule.run = function(self, job)\n\treturn job + 1\nend\n'
@@ -255,13 +233,8 @@ test('a value local written more than once takes no name from its first write', 
   assert.ok(!/^local position = part\.Position$/m.test(out), out);
 });
 
-// --- a write into a frozen library ---------------------------------------
-// Luau freezes `string`, `table`, `math` and friends. A lift that ends with
-// `x = string` followed by `x[k] = v` lost the table the code builds, so the
-// table is materialized -- and the file says so instead of dying at run time.
 
 test('a field write into a library global materializes the table', () => {
-  // the original cannot be run: it writes into the frozen `string` table
   const src = 'local data\n\nif nil then\n\tdata = string\nelse\n\tdata = string\n'
     + '\tdata["8008"] = true\nend\nprint(data["8008"] and "ok" or "no")\n';
   const out = polish(src);
@@ -284,9 +257,6 @@ test('a binding that is also called is not materialized', () => {
   assert.ok(!/local s = \{\}/.test(out), out);
 });
 
-// --- a branch whose condition is a literal -------------------------------
-// The run decided it, so the code that ran is the code to keep; a branch that
-// never ran is dropped with a note rather than left for the reader to puzzle out.
 
 test('a branch on a literal nil keeps the block that ran', () => {
   const src = 'if nil then\n\tprint("lost")\nelse\n\tprint("ran")\nend\n';
@@ -303,12 +273,6 @@ test('an `if true` block is left to the local merge, not folded here', () => {
   assert.ok(!/-- devirt/.test(out), out);
 });
 
-// --- register names the lift left behind ---------------------------------
-// A state machine block that read a register inside a loop can end up outside it
-// once the CFG is structured again; the read survives and the store does not, so
-// the text says `r6` with nothing declaring it. That is a global read of a name
-// no script has, and the freevars gate flags it. Declaring it keeps the value
-// (nil either way) and tells the reader which register went missing.
 
 test('a register the lift never declares is declared, with its shape at each use', () => {
   const out = same('local text = "stage " .. tostring(r6) .. " left"\nprint(text)\n');
@@ -351,11 +315,6 @@ test('a register name inside a string is data, not a read', () => {
   assert.ok(!/unresolvedRegister/.test(out), out);
 });
 
-// --- a literal branch that holds the only assignment ----------------------
-// The condition prints as a literal, but when the body it guards is the only
-// place a value is set, the literal is a value the lift lost, not a decision the
-// run made. Dropping the block leaves the variable nil and the frame stops on
-// arithmetic the original performed (the f44daa11 callback, `argument % 256`).
 
 test('a literal-false branch that is the only initializer is kept', () => {
   const out = same('local a\nif nil then\n\ta = 5\nend\nprint(type(a))\n');

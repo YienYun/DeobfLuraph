@@ -12,7 +12,7 @@ import sys
 import time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = HERE
+ROOT = os.path.dirname(os.path.dirname(HERE))
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
@@ -31,14 +31,14 @@ from ir import (
     ForPrep, Close, Opaque, Vec, Missing, fmt_expr, fmt_any, fmt_tail, fmt_multi,
     fmt_const, fmt_stmt, fmt_node,
 )
-from v15_dump import FrameArg, OpaqueFn, RuntimeMaker, SharedFn, JitFrame, REG_ARRAY
-from v15_dataflow import (
+from obfuscators.luraph_v15.dump import FrameArg, OpaqueFn, RuntimeMaker, SharedFn, JitFrame, REG_ARRAY
+from obfuscators.luraph_v15.dataflow import (
     BoxPart, BoxProxy, FRAME, FrameProxy, MaybeBox, OPENUPS, OpenUps, REGFILE, UpList, expr_regs, walk_expr,
 )
-from v15_vm_model import (
+from obfuscators.luraph_v15.vm_model import (
     Overlay, PlainProto, VMCrash, _classify_vm_method, _differs, _pack_sig, iter_nodes,
 )
-from v15_stepper import (
+from obfuscators.luraph_v15.stepper import (
     GenIterMaker, JIT_BOTTOM, JIT_TMP, JitModel, JitProto, _declared_in, _jit_nested_model,
 )
 

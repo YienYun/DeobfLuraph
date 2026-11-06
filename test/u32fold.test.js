@@ -1,12 +1,5 @@
 'use strict';
 
-// The u32 folding pass replaces arithmetic the Luraph v15 VM emits with the
-// constants it computes. A wrong fold changes what a script does, so every case
-// here is checked the only way that counts: the folded program is run next to
-// the original one under Luau, and both must print the same numbers.
-//
-// The helper bodies below are the ones `core/v15_devirt.py`
-// emits, verbatim, so the arithmetic under test is the arithmetic in the wild.
 
 const assert = require('node:assert/strict');
 const { spawnSync } = require('node:child_process');
@@ -16,7 +9,7 @@ const path = require('node:path');
 const test = require('node:test');
 
 const ROOT = path.resolve(__dirname, '..');
-const { getPythonBin, pythonEnv } = require('../core/pyenv');
+const { getPythonBin, pythonEnv } = require('../src/pyenv');
 
 const PY = path.join(ROOT, 'core', 'u32fold.py');
 const LUAU = path.join(ROOT, 'bin', 'luau');
@@ -55,7 +48,6 @@ function runLuau(src) {
   return out;
 }
 
-// Deterministic pseudo-random numbers: a failing case must be reproducible.
 function rng(seed) {
   let s = seed >>> 0;
   return () => {
@@ -64,7 +56,6 @@ function rng(seed) {
   };
 }
 
-// The shape the v15 VM emits for one state update, with `x` as the state.
 const chain = (a, b, c, d, m, x) =>
   `u32Trunc((u32Mul(${a}, ${x}) + ${b}) + ` +
   `(u32Mul(${c}, bit32.bor(${x}, ${m})) + u32Mul(${d}, bit32.bxor(${x}, ${m}))))`;
@@ -80,7 +71,6 @@ test('a constant chain folds to the value Luau computes', () => {
   const src = `${HELPERS}${lines.join('\n')}\n`;
 
   const folded = fold(src);
-  // Every chain above is constant: no call may survive it.
   for (const line of folded.split('\n').filter((l) => l.startsWith('print('))) {
     assert.doesNotMatch(line, /u32Mul|u32Trunc|bit32\./, line);
     assert.match(line, /^print\(\d+\)$/);
@@ -92,13 +82,11 @@ test('parentheses do not hide a foldable expression', () => {
   const next = rng(0xc0ffee);
   const x = next();
   const inner = chain(next(), next(), next(), next(), next(), x);
-  // The AST keeps `( )` as a node, and the folder has to see through it.
   const wrapped = `(((((${inner})))))`;
   const lines = [`print(${wrapped})`, `print(u32Trunc((u32Trunc(((${x}))))) + 0)`];
   const src = `${HELPERS}local x = ${x}\n${lines.join('\n')}\n`;
 
   const folded = fold(src);
-  // Both prints are constants now; the helper definitions are untouched.
   const printed = folded.split('\n').filter((l) => l.startsWith('print('));
   assert.deepEqual(printed, [`print(${runLuau(src).split('\n')[0]})`,
                              `print(712164981)`].slice(0, printed.length));
@@ -113,14 +101,11 @@ test('a fold carries through a local that is written once', () => {
   const src = `${HELPERS}local seed = ${x}\nlocal s = u32Trunc(seed + ${a})\nprint(s)\nprint(u32Trunc(s * 3))\n`;
   const folded = fold(src);
   const [first, second] = runLuau(src).split('\n').map(Number);
-  // The initialiser becomes the constant; the read of `s` stays a read, since
-  // rewriting locals into literals everywhere belongs to the naming pass.
   assert.equal(folded,
     `${HELPERS}local seed = ${x}\nlocal s = ${first}\nprint(s)\nprint(${second})\n`);
 });
 
 test('a mask is only dropped when the operand is already an integer', () => {
-  // bit32 truncates towards zero, so band(2.5, 0xFFFFFFFF) is 2, not 2.5.
   const src = [
     HELPERS,
     'local f = 2.5',
@@ -132,17 +117,13 @@ test('a mask is only dropped when the operand is already an integer', () => {
   ].join('\n');
 
   const folded = fold(src);
-  // The float cases stay exactly as written: dropping them would be a guess.
   assert.match(folded, /print\(bit32\.band\(f, 4294967295\)\)/);
   assert.match(folded, /print\(bit32\.bxor\(f, 0\)\)/);
-  // The integer case folds, because 4294967259 % 2**32 is exact.
   assert.match(folded, /print\(4294967259\)/);
   assert.equal(runLuau(folded), runLuau(src));
 });
 
 test('a locally defined helper with another body is not evaluated', () => {
-  // A file may define its own `u32Mul`. Folding through it would be a guess,
-  // so a non-canonical body takes the name out of the model.
   const src = [
     'local function u32Mul(a, b)',
     '\treturn a + b',

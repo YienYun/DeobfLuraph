@@ -20,15 +20,15 @@ import re
 import sys
 import time
 
-import v15_devirt as D
+from obfuscators.luraph_v15 import devirt as D
 import luasym as S
 import ir
-from v15_devirt import (LTable, Builtin, LuaFunc, Unsupported, Scope,
+from obfuscators.luraph_v15.devirt import (LTable, Builtin, LuaFunc, Unsupported, Scope,
                                            Multi, OpaqueFn, ClosureExpr, RegFile, Missing,
                                            TempTail, walk_expr, fmt_expr, is_sym)
 from luasym import NewTable
 
-import v14_vmmap as vmmap
+from obfuscators.luraph_v14 import vmmap
 
 sys.setrecursionlimit(max(sys.getrecursionlimit(), 60000))
 
@@ -715,7 +715,7 @@ D.ProtoLifter.native_opaque_fn = _native_opaque_fn
 
 
 def _scaffold_score(text):
-    """Lower is better; mirrors core/driver.js v14ScaffoldScore."""
+    """Lower is better; mirrors src/driver.js v14ScaffoldScore."""
     if not text:
         return 10 ** 6
     score = 0

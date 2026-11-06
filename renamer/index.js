@@ -6,7 +6,7 @@ const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const garbage = require('./garbage');
-const { WATERMARK_COMMENT, WATERMARK_PRINT, injectWatermark } = require('../core/watermark');
+const { WATERMARK_COMMENT, WATERMARK_PRINT, injectWatermark } = require('../src/watermark');
 
 const DIRECTORY_EXTENSIONS = ['.lua', '.luau'];
 const FILE_EXTENSIONS = ['.lua', '.luau', '.txt'];
@@ -24,8 +24,8 @@ function sameExistingFile(a, b) {
   return sa.dev === sb.dev && sa.ino === sb.ino;
 }
 
-const format = require('../core/format');
-const { isValidLuaSyntax } = require('../core/luau_check');
+const format = require('../src/format');
+const { isValidLuaSyntax } = require('../src/luau_check');
 
 function writeAtomically(dest, content) {
   const abs = path.resolve(dest);

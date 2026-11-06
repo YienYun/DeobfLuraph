@@ -9,17 +9,17 @@ cannot lift — with the numbers, so nothing here has to be taken on trust.
 input.lua ──▶ offline Roblox sandbox (runtime/envlog.luau)
                  │  runs the VM, dumps every reachable proto as JSON
                  ▼
-             dump ──▶ symbolic walk (core/v15_lifter.py)
+             dump ──▶ symbolic walk (core/obfuscators/luraph_v15/lifter.py)
                  │     decodes instruction cells through the VM model,
                  │     builds a CFG, lifts statements
                  ▼
              IR ──▶ backend.lower ──▶ Luau text ──▶ polish ──▶ output
 ```
 
-`core/` holds both halves of the engine in one flat directory: the Node
-orchestration (`driver.js`, `harness.js`, `detect.js`, …) and the Python compiler
-backend (IR, CFG structuring, SSA/names, idioms, codegen). `runtime/envlog.luau`
-is the sandbox and the dump protocol.
+`src/` is the Node orchestration (`driver.js`, `harness.js`, `detect.js`, …).
+`core/*.py` is the shared compiler backend (IR, CFG structuring, SSA/names,
+idioms, codegen), and `core/obfuscators/<family>/` holds the per-family front
+ends that feed it. `runtime/envlog.luau` is the sandbox and the dump protocol.
 
 A lift runs in rounds: `devirt round N` walks and collects the constants it could
 not decode, the sandbox decodes them, and the next round lifts again. Rounds stop

@@ -39,6 +39,9 @@ function parseArgs(argv) {
     inputText: null,
     report: null,
     httpCache: null,
+    studio: false,
+    studioPort: 34880,
+    studioWait: 600,
     stats: false,
     rename: false,
     comments: 'light',
@@ -72,6 +75,9 @@ function parseArgs(argv) {
     else if (a === '-o' || a === '--output') { args.output = valueAt(++i, a); }
     else if (a === '--report') { args.report = valueAt(++i, a); }
     else if (a === '--http-cache') { args.httpCache = valueAt(++i, a); }
+    else if (a === '--studio') { args.studio = true; }
+    else if (a === '--studio-port') { args.studioPort = Number(valueAt(++i, a)); }
+    else if (a === '--studio-wait') { args.studioWait = Number(valueAt(++i, a)); }
     else if (a === '--stats') { args.stats = true; }
     else if (a === '--timeout') { args.timeout = Number(valueAt(++i, a)); }
     else if (a === '--prelude-file') { args.preludeFile = valueAt(++i, a); }
@@ -105,7 +111,8 @@ function parseArgs(argv) {
     else { throw new Error(`unknown option: ${a}`); }
   }
 
-  for (const [name, value] of [['--timeout', args.timeout], ['--budget', args.budget],
+  for (const [name, value] of [['--studio-port', args.studioPort], ['--studio-wait', args.studioWait],
+    ['--timeout', args.timeout], ['--budget', args.budget],
     ['--loop-fuel', args.loopFuel], ['--spin-fuel', args.spinFuel],
     ['--max-runs', args.maxRuns], ['--devirt-rounds', args.devirtRounds]]) {
     if (!Number.isSafeInteger(value) || value <= 0) throw new Error(`${name} must be a positive integer`);
@@ -509,12 +516,13 @@ async function processFile(absInput, args) {
 async function main() {
   const args = parseArgs(process.argv.slice(2));
 
-  const usage = 'Usage: node deob.js <input.lua | folder> [more_files_or_folders...] [-o <output.lua>] [--rename] [--comments none|light|detailed] [--plugin <name>] [--no-devirt] [--no-format] [--debug] [--detect] [--exec-rec] [--report <report.json>] [--http-cache <dir>] [--stats]';
+  const usage = 'Usage: node deob.js <input.lua | folder> [more_files_or_folders...] [-o <output.lua>] [--rename] [--comments none|light|detailed] [--plugin <name>] [--no-devirt] [--no-format] [--debug] [--detect] [--exec-rec] [--report <report.json>] [--http-cache <dir>] [--studio [--studio-port <n>] [--studio-wait <sec>]] [--stats]';
   if (args.help) {
     console.log(usage);
     console.log('Use --detect to classify without executing, or --no-devirt for a behaviour trace.');
     console.log('Use --exec-rec (or DEVIRT_EXECREC=1) to record which program counters the sample executed.');
     console.log('Use --http-cache <dir> to answer game:HttpGet from index.json instead of nil.');
+    console.log('Use --studio to trace inside a real Roblox place (paste the generated studio_loader into the Studio command bar).');
     console.log('Use --stats to print what the output still cannot promise (coverage, unexecuted pcs, naming).');
     return;
   }

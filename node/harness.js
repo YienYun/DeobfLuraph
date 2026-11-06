@@ -417,6 +417,134 @@ class HarnessServer {
   }
 }
 
+// --studio: the run happens in a real Roblox place, not in the offline sandbox.
+// The harness is served over http://127.0.0.1:<port> to a loader the user
+// pastes into the Studio command bar; that loader turns HttpService on only
+// while it is fetching/posting (never while the script runs) and hands the
+// trace back. Everything the sandbox only models -- UDim2 arithmetic, real
+// instances, game data, HttpGet -- is real in that run.
+const STUDIO_LOADER = (port) => `-- deobf Studio loader: run in the Studio command bar (Edit mode).
+-- Fetches each harness from the engine, runs it natively and posts the trace back.
+local HS = game:GetService("HttpService")
+local base = "http://127.0.0.1:${port}"
+local was = HS.HttpEnabled
+HS.HttpEnabled = true
+local ok0, err0 = pcall(function()
+\twhile true do
+\t\tlocal src = HS:GetAsync(base .. "/harness", true)
+\t\tif src == "" then break end
+\t\tHS.HttpEnabled = false
+\t\tlocal f, err = loadstring(src, "=harness")
+\t\tlocal ok, out = false, err
+\t\tif f then ok, out = pcall(f) end
+\t\tHS.HttpEnabled = true
+\t\tout = ok and tostring(out) or ("\0ENVLOG-FAIL\\n" .. tostring(out))
+\t\tlocal n = math.max(1, math.ceil(#out / 900000))
+\t\tfor i = 1, n do
+\t\t\tHS:PostAsync(base .. "/result?part=" .. i .. "&of=" .. n,
+\t\t\t\tstring.sub(out, (i - 1) * 900000 + 1, i * 900000), Enum.HttpContentType.TextPlain)
+\t\tend
+\tend
+end)
+HS.HttpEnabled = was
+return ok0 and "deobf: done" or ("deobf loader error: " .. tostring(err0))
+`;
+
+class StudioBridge {
+  constructor(port) {
+    this.port = port;
+    this.jobs = [];
+    this.waiters = [];
+    this.parts = [];
+    this.pending = null;
+    this.closed = false;
+    this.failing = false;
+    this.server = http.createServer((req, res) => this._handle(req, res));
+    this.server.on('error', (err) => {
+      this.failing = err;
+      if (this.pending) { const p = this.pending; this.pending = null; p.reject(err); }
+    });
+    this.server.listen(port, '127.0.0.1');
+  }
+
+  _handle(req, res) {
+    if (req.method === 'GET' && req.url === '/harness') {
+      if (this.closed) {
+        res.writeHead(200, { 'Content-Type': 'text/plain', 'Content-Length': '0' });
+        res.end();
+        return;
+      }
+      const body = this.jobs.shift();
+      if (body === undefined) { this.waiters.push(res); return; }
+      res.writeHead(200, { 'Content-Type': 'text/plain', 'Content-Length': String(Buffer.byteLength(body, 'latin1')) });
+      res.end(Buffer.from(body, 'latin1'));
+      return;
+    }
+    if (req.method === 'POST' && req.url.startsWith('/result')) {
+      const bufs = [];
+      req.on('data', (d) => bufs.push(d));
+      req.on('end', () => {
+        res.writeHead(200, { 'Content-Length': '0' });
+        res.end();
+        this.parts.push(Buffer.concat(bufs));
+        const m = /part=(\d+)&of=(\d+)/.exec(req.url);
+        const part = m ? Number(m[1]) : 1;
+        const of = m ? Number(m[2]) : 1;
+        if (part === of) {
+          const text = Buffer.concat(this.parts).toString('latin1');
+          this.parts = [];
+          if (this.pending) { const p = this.pending; this.pending = null; p.resolve(text); }
+        }
+      });
+      return;
+    }
+    res.writeHead(404);
+    res.end();
+  }
+
+  run(harnessText, timeoutSec) {
+    if (this.failing) return Promise.reject(this.failing);
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => {
+        this.pending = null;
+        reject(new Error(`no answer from Studio within ${timeoutSec}s (is the loader running?)`));
+      }, timeoutSec * 1000);
+      timer.unref();
+      this.pending = {
+        resolve: (v) => { clearTimeout(timer); resolve(v); },
+        reject: (e) => { clearTimeout(timer); reject(e); },
+      };
+      const waiter = this.waiters.shift();
+      if (waiter) {
+        waiter.writeHead(200, {
+          'Content-Type': 'text/plain',
+          'Content-Length': String(Buffer.byteLength(harnessText, 'latin1')),
+        });
+        waiter.end(Buffer.from(harnessText, 'latin1'));
+      } else {
+        this.jobs.push(harnessText);
+      }
+    });
+  }
+
+  finish() {
+    this.closed = true;
+    for (const waiter of this.waiters) {
+      waiter.writeHead(200, { 'Content-Type': 'text/plain', 'Content-Length': '0' });
+      waiter.end();
+    }
+    this.waiters = [];
+    if (this.pending) { const p = this.pending; this.pending = null; p.reject(new Error('the run finished')); }
+    try { this.server.close(); } catch {}
+  }
+}
+
+function studioHarnessPath(tracePath, port) {
+  const lpath = tracePath.replace(/\.luau$/, '') + '.studio_loader.luau';
+  fs.writeFileSync(lpath, STUDIO_LOADER(port), 'utf8');
+  return lpath;
+}
+
 function traceText(body) {
   body = body.replace(/\x00[0-9a-f]{8,32}CHUNK \S+\n[0-9a-f]*\n/g, '');
   body = body.replace(/\x00[0-9a-f]{8,32}(PROTOS|FORCE|P2D|TRIGGER)[^\n]*\n?/g, '');
@@ -438,23 +566,52 @@ function sameTrace(a, b) {
 class Runner {
   constructor(job, luau) {
     this.job = job;
-    this.luau = luau || findLuau();
+    this.bridge = null;
+    const args = job.args || {};
+    if (args.studio) {
+      this.bridge = new StudioBridge(args.studioPort || 34880);
+      const lpath = studioHarnessPath(job.tracePath, args.studioPort || 34880);
+      process.stderr.write(`[*] Studio mode: paste ${lpath} into the Studio command bar (Edit mode); `
+        + 'this process waits for the trace\n');
+    } else {
+      this.luau = luau || findLuau();
+    }
     this.hpath = job.tracePath + '.harness.luau';
   }
 
   async run(source, cfg, chunks = {}, timeoutSec) {
     const timeout = timeoutSec || this.job.args.timeout;
-    return runOnce(this.luau, source, cfg, this.hpath, timeout, this.job.args.keepHarness, chunks);
+    if (!this.bridge) {
+      return runOnce(this.luau, source, cfg, this.hpath, timeout, this.job.args.keepHarness, chunks);
+    }
+    const native = Object.assign({ heartbeat: HEARTBEAT }, cfg, { native: true });
+    const harnessText = buildHarness(source, native, chunks);
+    if (this.job.args.keepHarness) fs.writeFileSync(this.hpath, harnessText, 'latin1');
+    let text;
+    try {
+      text = await this.bridge.run(harnessText, this.job.args.studioWait || timeout);
+    } catch (err) {
+      return { body: null, err: err.message };
+    }
+    LAST_RAW = text;
+    if (text.startsWith('\x00ENVLOG-FAIL')) {
+      return { body: null, err: 'harness failed in Studio: ' + text.slice(14) };
+    }
+    const m = new RegExp(mark('ENVLOG-BEGIN') + '\\n([\\s\\S]*?)' + mark('ENVLOG-END')).exec(text);
+    if (!m) return { body: null, err: clipDiagnostic(text.slice(-4000)) };
+    return { body: m[1], err: null };
   }
 
-  finish() {}
+  finish() {
+    if (this.bridge) { this.bridge.finish(); this.bridge = null; }
+  }
 }
 
 module.exports = {
   findLuau, luauAst, chunkKey, longString, luaValue, clipDiagnostic,
   buildHarness, runOnce, takeChunks, takeP2d, p2dMiss,
   loadP2dCache, p2dCachePath, traceText, sameTrace,
-  HarnessServer, Runner,
+  HarnessServer, Runner, StudioBridge, studioHarnessPath,
   getLastRaw: () => LAST_RAW,
   getMark: () => MARK,
   mark,

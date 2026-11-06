@@ -69,10 +69,48 @@ node dev/scripts/smoke.js out.lua             # run the result in the offline sa
 | `--keep-harness` / `--keep-preamble` | keep build artifacts for debugging |
 | `--cfg-json <json\|@file>` / `--executor <name>` / `--loop-fuel` / `--spin-fuel` / `--prelude-file` / `--input-text` | sandbox controls used when a sample needs a specific host behaviour |
 | `--no-dce` / `--ai-provider` / `--ai-model` | Layer-2 controls (the AI path is optional and off by default) |
+| `--studio [--studio-port <n>] [--studio-wait <sec>]` | trace inside a real Roblox place instead of the offline sandbox (see [Online runs](#online-runs)) |
 | `--no-format` | do not run the result through StyLua (see [Formatting](#formatting)) |
 
 A Luraph run costs roughly one sandbox execution per lifting round: a 1 MB file
 takes about a minute on a laptop, a 1.6 MB sample 73 s on the reference machine.
+
+---
+
+## Online runs
+
+The offline sandbox is a Lua 5.3 VM plus `runtime/roblox_api.luau`, a hand-written
+approximation of the engine. That approximation is where the coverage stops: a
+sample that asks for a DataModel the sandbox does not model, or reads a property
+whose type the API dump only half-describes, branches into a path a real place
+would not take. `--studio` removes the approximation — the recorded run happens
+inside Roblox Studio, on the real engine, and only the *recording* comes back
+here.
+
+```bash
+node deob.js protected.lua -o out.lua --studio
+```
+
+1. The engine starts a small HTTP bridge on `127.0.0.1:34880`
+   (`--studio-port`) and prints the path of the loader it wrote next to the input:
+   `protected.deobf.studio_loader.luau`.
+2. Open the place the sample belongs in, in **Studio, Edit mode**, and paste that
+   file into the **command bar**. It needs no script to be added to the place.
+3. The loader pulls each harness from the bridge, runs it natively, and posts the
+   trace back. The engine lifts from that trace exactly as it does offline, so the
+   result is the same kind of file — everything after the trace is unchanged.
+4. It stops when the bridge closes (the command bar prints `deobf: done`). The
+   engine waits `--studio-wait` seconds per run (default: the `--timeout` value);
+   a run with no answer fails that run instead of hanging.
+
+What `--studio` actually buys is fidelity, not more code: real Instances, real
+datatypes, real `game:HttpGet` traffic, real `require` of the hub's own modules.
+A sample that only needs the VM (the common case) traces identically either way —
+see [`TECHNICAL.md` §6](TECHNICAL.md#6-online-runs) for the measured difference.
+
+Studio gives the loader `HttpService` for the duration of the bridge and turns it
+back off around each harness, so the harness sees the place's own setting. A
+truncated read (`HttpService` is capped) is part of the record, not an error.
 
 ---
 

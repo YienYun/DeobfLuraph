@@ -602,3 +602,72 @@ Two things had to be right for this to be safe:
 Nothing else in the pipeline is allowed to depend on the layout: the passes that
 run after the lift work on parsed structure, and the gates (`luac`, `freevars`,
 `smoke`) run on the formatted file exactly as a user would run it.
+
+## 6. Online runs
+
+Everything above is measured in an offline sandbox: `bin/luau` (a Lua 5.3 build
+with the Luau syntax the VM uses) plus `runtime/roblox_api.luau`, which models
+`game`, `Instance`, `Enum`, the datatypes and the property types out of the API
+dump. That model is the ceiling. Three gaps are worth separating, because only
+the first one is a modelling bug:
+
+1. **The API dump does not type abstract classes.** Fixed in `d0d7ebe`: the six
+   abstract classes (`GuiObject`, `LayerCollector`, `InstanceAdornment`,
+   `PVAdornment`, `PartAdornment`, `SelectionLasso`) now type their members, and
+   the metamethod only narrows a name that disagrees across the dump. Effect: the
+   served Chilli library gets from line 1 339 to line 6 048 of 12 456 before it
+   stops. Lift size does not move (11 034 lines / 52 functions / 1 999 pcs).
+2. **The model cannot answer everything.** `game:HttpGet` needs a real network or
+   a cache directory (`--http-cache`); a served body is lifted, but the run then
+   dies inside the library's own nested VM (`attempt to compare userdata <=
+   number`) — 4 functions / 4 829 lines instead of 52 / 11 034. More offline
+   fidelity, less output.
+3. **The sample itself is the ceiling.** 1 999 of 328 377 program counters execute
+   in the recorded run; replaying unexecuted cells, eight extra exec runs and
+   `--drive` all produce the identical union. That number is a property of the
+   sample's runtime behaviour, not of the sandbox.
+
+`--studio` attacks (1) and (2) by not modelling at all.
+
+### Shape
+
+`node/harness.js` gained `STUDIO_LOADER(port)`, `StudioBridge` and
+`studioHarnessPath`, and `Runner` now builds its harness with `native: true`
+(no sandbox shims) when `args.studio` is set. The bridge is a plain
+`http.createServer` on `127.0.0.1:<--studio-port>` (default 34880):
+
+| Route | Direction | Behaviour |
+|---|---|---|
+| `GET /harness` | engine → Studio | blocks until a harness is queued; empty body means done |
+| `POST /result?part=i&of=n` | Studio → engine | parts of 900 000 characters, reassembled at `i == n` (the `HttpService` body cap is 1 MB) |
+
+The loader is a `while true` loop: fetch, `loadstring`, `pcall`, post. It fails
+closed — a harness that throws is posted as `\0ENVLOG-FAIL\n<error>` and the run
+is reported as failed rather than silently empty.
+
+`engine/harness.py` has had the same bridge (`ThreadingHTTPServer`,
+`run_once_studio`) for longer; the JS path used to hardcode `studio: false`, which
+is why `--studio` never worked from the CLI. It is wired now: `--studio`,
+`--studio-port`, `--studio-wait` reach `job.args`, and the CLI prints the loader
+path before it starts waiting.
+
+### What is verified here, and what is not
+
+Verified without Roblox (`dev/test/studio.test.js`, 4 cases): a harness round-trips
+through the bridge and comes back parsed, a second run reuses the same loader,
+a silent peer times out instead of hanging, and the written loader names the port
+and restores `HttpService.HttpEnabled`. Verified by hand: the CLI prints the
+loader path, waits, and fails the run cleanly when nothing answers.
+
+Not verified: an actual Studio run. There is no Roblox in this build environment,
+so the end-to-end numbers above are still offline numbers. The claim this section
+makes is deliberately narrow — the bridge is the real transport, the harness is
+real, and the only unrun link is Studio itself.
+
+### Why not answer calls one at a time
+
+The tempting shortcut is to keep the offline run and ask Studio only for the calls
+the sandbox cannot model (the `P2D` answer cache, `--studio` in
+`engine/harness.py`). Measured: 275 lines of trace down to 14. The trace is a
+sequence of observed states; splicing foreign answers into it destroys the
+sequence the lifter walks. Only a whole native run is worth doing.

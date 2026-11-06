@@ -99,7 +99,11 @@ async function runLuraphV14(job) {
     if (args.inputText) cfg.input_text = args.inputText;
     if (args.noFold) cfg.fold = false;
     if (args.cfgJson) Object.assign(cfg, args.cfgJson);
-    if (args.httpCache) cfg.http_map = httpcache.loadHttpCache(args.httpCache);
+    if (args.httpCache) {
+      cfg.http_map = httpcache.loadHttpCache(args.httpCache);
+      const served = httpcache.servedKeys(cfg.http_map);
+      if (served.length) cfg.http_served = Object.fromEntries(served.map((k) => [k, true]));
+    }
 
     if (!args.noHooks) {
         patched = vmmap.patchSpin(patched);

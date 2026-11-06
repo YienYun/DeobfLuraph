@@ -83,4 +83,19 @@ function loadHttpCache(dir, log) {
   return map;
 }
 
-module.exports = { loadHttpCache };
+// The runtime tags every big loadstring'd chunk with `#src .. "_" .. h`
+// (runtime/envlog.luau srcKey) so the driver can pass instrumented copies back.
+// Computing the same key here lets the runtime say which chunks came out of the
+// cache without shipping the 400 KB body twice.
+function srcKey(body) {
+  const bytes = Buffer.from(body, 'utf8');
+  let h = 0;
+  for (const b of bytes) h = (h * 31 + b) % 2147483648;
+  return `${bytes.length}_${h}`;
+}
+
+function servedKeys(map) {
+  return Object.values(map).map((entry) => srcKey(entry.body));
+}
+
+module.exports = { loadHttpCache, servedKeys, srcKey };

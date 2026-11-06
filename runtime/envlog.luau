@@ -657,6 +657,39 @@ local function propType(cls, k)
         return nil
 end
 
+-- A property name keeps the type it has in the API dump even when the object's
+-- class is unknown: FindFirstChild returns a child nobody told us the class of,
+-- and `frame.Position` is still a UDim2 there. When the dump disagrees between
+-- classes (Position is a UDim2 on GUI objects and a Vector3 on parts) the read
+-- keeps the candidate list and narrows it on the next member access
+-- (`.X.Scale` only exists on a UDim2/UDim, `.Unit` only on a vector), so no
+-- type is guessed while the evidence is still ambiguous. The index lives on
+-- API, not in a new local: this chunk sits at Luau's 200-register limit.
+function API.propTypes(k)
+        local pnt = API.pnt
+        if pnt == nil then
+                pnt = {}
+                for _, c in R.pairs(API.classes) do
+                        for name, vt in R.pairs(c.p) do
+                                if vt ~= true then
+                                        local cur = pnt[name]
+                                        if cur == nil then
+                                                pnt[name] = { vt }
+                                        else
+                                                local seen = #cur >= 4
+                                                for _, t in R.pairs(cur) do
+                                                        if t == vt then seen = true end
+                                                end
+                                                if not seen then R.insert(cur, vt) end
+                                        end
+                                end
+                        end
+                end
+                API.pnt = pnt
+        end
+        return pnt[k]
+end
+
 -- Unknown values must still behave like their type: Luau refuses to compare
 -- a userdata with a number before looking at metamethods, so numeric
 -- properties and datatype components are plain numbers (plausible defaults).
@@ -2705,6 +2738,26 @@ PMT.__index = function(p, k)
                         return false
                 end
         end
+        if info.cands then
+                -- inherited from a property whose type the dump could not pin
+                -- down: keep the candidates whose member table knows this key
+                local out = {}
+                for _, t in R.pairs(info.cands) do
+                        local mt = DT_MEMBERS[t] and DT_MEMBERS[t][k]
+                        if mt and mt ~= "n" then R.insert(out, mt) end
+                end
+                if #out == 1 then
+                        local c = indexP(p, k)
+                        INFO[c].className = nil
+                        INFO[c].tname = out[1]
+                        return c
+                elseif #out > 1 then
+                        local c = indexP(p, k)
+                        INFO[c].className = nil
+                        INFO[c].cands = out
+                        return c
+                end
+        end
         local dm = DT_MEMBERS[info.tname]
         if dm and R.type(k) == "string" and dm[k] and REALV[p] == nil then
                 if dm[k] == "n" then return 0 end
@@ -2714,6 +2767,31 @@ PMT.__index = function(p, k)
                 return c
         end
         local cls = info.className
+        if not cls and R.type(k) == "string" and REALV[p] == nil then
+                -- unknown class: the property's own type still holds
+                local types = API.propTypes(k)
+                if types and #types == 1 then
+                        local only = types[1]
+                        if DT_MEMBERS[only] or only == "bool" or only == "string" then
+                                local c = indexP(p, k)
+                                INFO[c].className = nil
+                                INFO[c].tname = DT_MEMBERS[only] and only
+                                        or (only == "bool" and "boolean" or "string")
+                                return c
+                        end
+                elseif types then
+                        local dtc = {}
+                        for _, t in R.pairs(types) do
+                                if DT_MEMBERS[t] then R.insert(dtc, t) end
+                        end
+                        if #dtc > 0 then
+                                local c = indexP(p, k)
+                                INFO[c].className = nil
+                                INFO[c].cands = dtc
+                                return c
+                        end
+                end
+        end
         if cls and API.classes[cls] and R.type(k) == "string" then
                 local kind = memberKind(cls, k)
                 if kind == "method" then return methodFn(p, k) end
@@ -3427,6 +3505,13 @@ E.loadstring = function(src, chunkname)
                 if not patched and not NEWCHUNKS[key] then
                         NEWCHUNKS[key] = src
                         R.insert(NEWCHUNKS, key)
+                        -- a body --http-cache handed the script is the library it
+                        -- fetched, not something the file carried: the driver
+                        -- must not print it as the script's payload
+                        if CFG.http_served and CFG.http_served[key] then
+                                NEWCHUNKS.ext = NEWCHUNKS.ext or {}
+                                NEWCHUNKS.ext[key] = true
+                        end
                 end
                 -- spin watchdog (see E.__SPIN): a chunk the driver never saw (the run
                 -- that would report it hung) gets its dispatch heads patched here
@@ -6916,6 +7001,9 @@ end
 for _, key in R.ipairs(NEWCHUNKS) do
         R.print(MARK .. "CHUNK " .. key)
         R.print((R.gsub(NEWCHUNKS[key], ".", function(c) return R.fmt("%02x", R.byte(c)) end)))
+        if NEWCHUNKS.ext and NEWCHUNKS.ext[key] then
+                R.print(MARK .. "XTRCH " .. key)
+        end
 end
 R.print(R.concat(header, "\n"))
 R.print("")

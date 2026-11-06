@@ -399,27 +399,62 @@ full trace budget on it, the runner probes once with a bounded 15 s trace, then
 reports that no dispatch loop matched and that older builds are not lifted. The
 refusal is a fixture expectation in `dev/test/golden.json`, not an untested path.
 
-**Serving the fetched library offline was measured, and it costs more than it
-gives.** A hub script bootstraps itself through `game:HttpGet`, which the sandbox
-answers with `nil`, so the run dies on the script's own `assert(chunk)`. `--http-cache`
-feeds the runtime's existing `CFG.http_map` from an explicit `index.json`
-(url -> file), so that url answers with the body instead of `nil`. The Chilli
-library the hub fetches is 415 KB of plain Luau, and serving it moved the trace's
-death from the bootstrap assert to *inside the library*
-(`attempt to compare userdata <= number`, its own `hudRestorePosition.X.Scale
-<= -0.5`, a `UDim2` component the proxy model only folds when it can):
+**The API dump was missing the classes every GUI script inherits from.**
+`runtime/roblox_api.luau` had 918 classes but no `GuiObject` and no
+`LayerCollector` (plus four adornments), so `memberKind("Frame", "Position")`
+walked `Frame -> GuiObject -> missing` and answered "not a member". Every GUI
+property read therefore came back as an untyped `Instance`, and a hub script's
+own `frame.Position` could not be a `UDim2` no matter what it did with it. The
+six abstract classes were restored from the Roblox API dump (their own members
+only, 1.4 KB) and two rules went into `PMT.__index`:
 
-| `RideAPet` | without the cache | with the library served |
+* a property whose name has one type across the whole dump keeps that type even
+  when the object's class is unknown (`FindFirstChild` returns a child nobody
+  told us the class of), and
+* a name the dump disagrees about (`Position` is a `UDim2` on GUI objects and a
+  `Vector3` on parts) carries its candidate list into the next read, which
+  narrows it: `.X.Scale` only exists on a `UDim2`/`UDim`, so `Position.X.Scale`
+  resolves and `Position.Unit` does not pretend to.
+
+Neither rule invents a number where the evidence is thin. The first version
+did — it answered `0` for a member every candidate called numeric — and the
+live build showed the cost immediately: the VM read a property, got a number,
+and died with `attempt to index number with '_registered'` (a degraded lift, 4
+functions instead of 52). Numbers now come only out of the datatype chain, and
+`dev/test/sandbox_types.test.js` pins all three cases (known class, unknown
+class, dump-disagrees).
+
+| `RideAPet` | before the dump fix | after |
 |---|---|---|
-| wall clock | 154 s | 475 s |
-| output | 11,034 lines, 716 functions | 10,405 lines, 660 functions |
-| `CreateToggle` / `GetService` | 32 / 20 | 28 / 19 |
-| verdict | baseline | compiles 1/1, 0 unresolved reads, but strictly less of the hub |
+| the fetched library runs to | line 1,339 (`hudRestorePosition.X.Scale <= -0.5`) | line 6,048 (its own bootstrap assertion) |
+| lift with no cache | 11,034 lines, 52 functions, 1,999 pcs | identical: the fix adds fidelity, not coverage |
 
-So the flag stays opt-in and refuses to pretend: a run that ends in a `script
-error` while the cache is on is reported as such, because reaching *further* into
-a body the sandbox cannot execute is not the same as lifting more of the script.
-The real blocker is the `UDim2`-component comparison, not the missing body.
+**Serving the fetched library offline is still a net loss, now for a measurable
+reason.** `--http-cache` feeds the runtime's existing `CFG.http_map` from an
+explicit `index.json` (url -> file), so a `game:HttpGet` bootstrap answers a real
+body instead of `nil`. With the Chilli library (415 KB of plain Luau) and the
+`ChilliLibraryEngine` it loads (183 KB, Luraph v15.0) both served:
+
+| `RideAPet` | without the cache | with both bodies served |
+|---|---|---|
+| run status | finished | `script error: [string "Luraph"]:1: attempt to compare userdata <= number` |
+| output | 11,034 lines, 716 functions, 52 lifted | 4,829 lines, 254 functions, 4 lifted |
+| `CreateToggle` / `GetService` / `FireServer` | 32 / 20 / 4 | 8 / 1 / 0 |
+| coverage | 1,999 pcs of 328,377 | 1,741 pcs of 1,780 (a different, smaller window) |
+
+The run now lives *inside* the served library and then inside the engine's own
+VM, which is the next thing that meets the sandbox: it compares a value it read
+from a proxy with a number. Every stop like that moves the trace further from
+the hub's code, so the flag stays opt-in and says so (`--http-cache` runs that
+end in a script error carry a warning).
+
+Two rules keep the cache from corrupting what the result *is*: a body served
+from the cache is instrumented and lifted like any chunk (its nested VM has to
+run) but it is never printed as the script's payload, and neither is anything
+the runtime `loadstring`s after it — a served library loading its own engine is
+not the file's script. Without those, `RideAPet` came out as `payload-source`
+holding a few thousand lines of the *engine's* internal source instead of the
+hub lifted from its own VM.
 
 **Before / after: what running the live hub scripts changed.** The fixtures were
 the reference samples for a long time, and they flattered the engine: small,
@@ -433,7 +468,7 @@ touched.
 | `--rename` | crashed at startup: `renamer/garbage.js` still required `../engine/pyenv`, a path that moved to `node/` when the helpers were split. No test loaded the renamer, so the gate stayed green. | runs: `RideAPet` gets 59 raised names and 58 comments (11,034 → 13,282 lines, comments only). Guarded by `dev/test/requires.test.js`, which resolves every literal relative `require()` in the tree (40 files). |
 | "is it maxed?" | answered by reading the log | `--stats` prints one digest per output: result type, size, coverage, unexecuted pcs, numbered identifiers, residual reads, warnings |
 | coverage | 64 % of the decoded pc window on `Lph1` was read as headroom for more runs | 1,999 pcs of 328,377 (0.6 %) on `RideAPet`, unchanged at `DEVIRT_EXECRUNS=4` and `=8`; cell union 113,791 either way, code byte-identical |
-| HTTP | `game:HttpGet` answers `nil`, so the hub's bootstrap `assert(chunk)` ends the run at line 20 | `--http-cache` answers a captured body instead; measured on `RideAPet` it moves the stop *inside* the library and lifts slightly less, so it stays opt-in |
+| HTTP | `game:HttpGet` answers `nil`, so the hub's bootstrap `assert(chunk)` ends the run at line 20 | `--http-cache` answers a captured body instead; on `RideAPet` it moves the stop *inside* the served library and then inside its engine, and the lift drops from 11,034 to 4,829 lines, so it stays opt-in |
 | shape | one obfuscated chunk per file | `StealAnEggg` is a loader that carries the hub script as plain Luau: 26,073 printed lines / 2,204 functions, `result_type: payload-source`; the VM wrapper is 5,055 lines of UI library and is deliberately not the answer |
 
 The two numbers that matter for trust: `RideAPet` compiles 1/1 under Luau and

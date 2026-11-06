@@ -14,7 +14,7 @@
     "fixtures:verify": "node dev/scripts/fixtures.js verify",
     "golden": "node dev/scripts/update-golden.js",
     "check": "node dev/scripts/check.js && node dev/scripts/luac.js results",
-    "test": "node dev/scripts/check.js && node --test dev/test/coverage.test.js dev/test/watermark.test.js dev/test/detect.test.js dev/test/diagnostics.test.js dev/test/engines.test.js dev/test/fixtures.test.js dev/test/flatten.test.js dev/test/u32fold.test.js dev/test/seeds.test.js dev/test/copies.test.js dev/test/tidy.test.js dev/test/carrier.test.js dev/test/chain.test.js dev/test/passes_fuzz.test.js dev/test/polish.test.js dev/test/smoke.test.js dev/test/trace_status.test.js dev/test/format.test.js dev/test/requires.test.js dev/test/stats.test.js dev/test/httpcache.test.js",
+    "test": "node dev/scripts/check.js && node --test dev/test/coverage.test.js dev/test/watermark.test.js dev/test/detect.test.js dev/test/diagnostics.test.js dev/test/engines.test.js dev/test/fixtures.test.js dev/test/flatten.test.js dev/test/u32fold.test.js dev/test/seeds.test.js dev/test/copies.test.js dev/test/tidy.test.js dev/test/carrier.test.js dev/test/chain.test.js dev/test/passes_fuzz.test.js dev/test/polish.test.js dev/test/smoke.test.js dev/test/trace_status.test.js dev/test/format.test.js dev/test/requires.test.js dev/test/stats.test.js dev/test/httpcache.test.js dev/test/sandbox_types.test.js",
     "test:e2e": "node --test dev/test/e2e.test.js",
     "test:all": "node dev/scripts/check.js && node --test dev/test/",
     "metrics": "python3 dev/scripts/metrics.py",

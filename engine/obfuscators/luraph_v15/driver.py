@@ -126,6 +126,33 @@ def _req_sort_key(r):
     m = re.match(r"^!?(\d+)[,~]", r)
     return (0 if not r.startswith("!") else 1, int(m.group(1)) if m else 10**9, r)
 
+def _served_from_cache(cfg, src):
+    """True when this chunk is a body --http-cache handed the script.
+
+    The body travels Python str -> utf-8 bytes -> latin-1 view inside the
+    harness, which is exactly what the runtime hex-encodes back to us, so the
+    two are comparable once the encoding is undone. Length is checked too: a
+    415 KB library must never be mistaken for a 415 KB chunk of the file.
+    """
+    for entry in (cfg.get("http_map") or {}).values():
+        if not isinstance(entry, dict):
+            continue
+        body = entry.get("body")
+        if not isinstance(body, str):
+            continue
+        view = body.encode("utf-8", "surrogatepass").decode("latin-1")
+        if len(view) == len(src) and view == src:
+            return True
+        # The driver hands the runtime an instrumented copy of every chunk it
+        # saw (spin counters in the dispatch heads), so a served body comes back
+        # with the same first and last 200 bytes and a different middle.
+        head, tail = 200, 200
+        if len(view) > head + tail and len(src) > head + tail \
+                and view[:head] == src[:head] and view[-tail:] == src[-tail:]:
+            return True
+    return False
+
+
 def write_dump(ppath, text, exec_rec_on, seen=None):
     """Write the proto dump a round works from, and refresh its coverage
     sidecar from every run seen so far.
@@ -169,6 +196,16 @@ def emit_payload_source(job, dpath, chunk_paths, why=None, require_script=False)
     printing the payload is then the faithful output (names aside) and the only
     route that reaches the code the VM never carries.  -> stats, or None."""
     from obfuscators.luraph_v15 import devirt
+    if os.environ.get("DEVIRT_CHUNKDBG"):
+        for path in chunk_paths or ():
+            try:
+                with open(path, encoding="latin-1") as f:
+                    head = f.read(300)
+                size = os.path.getsize(path)
+            except OSError:
+                head, size = "", -1
+            print("[dbg] payload candidate %s size=%d head=%r" % (os.path.basename(str(path)), size,
+                                                                  head[:90]), file=sys.stderr)
     found = payload_source(chunk_paths, require_script=require_script)
     if not found:
         return None
@@ -190,7 +227,8 @@ def emit_payload_source(job, dpath, chunk_paths, why=None, require_script=False)
                 payload_source=text.count("\n") + 1)
 
 
-def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None, exec_seen=None):
+def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None, exec_seen=None,
+                 payload_paths=None):
     """Lift the captured protos; constants that only Luraph's lazy decoder can
     produce (code that never ran) are requested from further runs. With a
     live harness (`live()` -> fetch function, while the long-lived harness
@@ -201,7 +239,8 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None, exec_
     from obfuscators.luraph_v15 import devirt
     import deadline
     if not os.environ.get("DEVIRT_PREFER_VM"):
-        out_stats = emit_payload_source(job, dpath, chunk_paths,
+        out_stats = emit_payload_source(job, dpath,
+                                        chunk_paths if payload_paths is None else payload_paths,
                                         "the loader carries the script as source", require_script=True)
         if out_stats is not None:
             return out_stats
@@ -255,7 +294,8 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None, exec_
                 text, stats, reqs, bufs = devirt.run_big_stack(devirt.lift_program, job.source_path, ppath,
                                                                chunk_paths, live and live())
             except (devirt.WalkLost, deadline.LiftTimeout) as ex:
-                out_stats = emit_payload_source(job, dpath, chunk_paths,
+                out_stats = emit_payload_source(job, dpath,
+                                                chunk_paths if payload_paths is None else payload_paths,
                                                 "the walk lost the script (%s)" % ex)
                 if out_stats is not None:
                     return out_stats
@@ -369,7 +409,8 @@ def run(job):
     if spin:
         patched = patch_spin(patched)
     chunks = {}
-    raw_chunks = {}     
+    raw_chunks = {}
+    harness.EXTERNAL_CHUNKS.clear()     
     body = None
     trapped = None      
     cfg = None
@@ -475,9 +516,29 @@ def run(job):
             job.write(ppath, protos_json)
             if devirt_on:
 
+                from_cache = [k for k, src in raw_chunks.items()
+                              if k in harness.EXTERNAL_CHUNKS or _served_from_cache(cfg, src)]
+                if os.environ.get("DEVIRT_CHUNKDBG"):
+                    for k, src in raw_chunks.items():
+                        print("[dbg] chunk %s len=%d head=%r" % (k, len(src), src[:32]), file=sys.stderr)
+                    for url, entry in (cfg.get("http_map") or {}).items():
+                        b = entry.get("body") if isinstance(entry, dict) else None
+                        print("[dbg] cache %s len=%s head=%r" % (url[-30:], len(b) if isinstance(b, str) else None,
+                              (b[:32] if isinstance(b, str) else None)), file=sys.stderr)
+                if from_cache:
+                    # A body we handed the script from --http-cache is the
+                    # library it fetched, not something the file carried: it is
+                    # instrumented like any chunk (the nested VM has to run) but
+                    # it is never printed as *the* script the loader carries.
+                    print("[*] http cache: %d chunk(s) come from the cache; they run and are "
+                          "instrumented, but they are not the payload" % len(from_cache),
+                          file=sys.stderr)
                 chunk_paths = [job.write(job.path(".chunk_%s.luau" % key), src, encoding="latin-1")
                                for key, src in raw_chunks.items()]
-                lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths)
+                payload_paths = [job.write(job.path(".chunk_%s.luau" % key), src, encoding="latin-1")
+                                 for key, src in raw_chunks.items() if key not in from_cache]
+                lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths,
+                     payload_paths)
     runner.finish()
     trace.status_line(body)
     if devirt_on and os.path.exists(dpath):
@@ -694,7 +755,8 @@ def payload_source(chunk_paths, require_script=False):
     return best
 
 
-def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths):
+def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths,
+         payload_paths=None):
     """devirtualize() with its constant rounds answered by one long-lived
     harness (started now, so the script runs while round 1 walks); a fresh
     run per round if it fails or behaves differently."""
@@ -706,7 +768,9 @@ def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths)
     import deadline
 
     if os.environ.get("DEVIRT_PAYLOAD_SRC"):
-        out_stats = emit_payload_source(job, dpath, chunk_paths, "asked for by DEVIRT_PAYLOAD_SRC")
+        out_stats = emit_payload_source(job, dpath,
+                                        chunk_paths if payload_paths is None else payload_paths,
+                                        "asked for by DEVIRT_PAYLOAD_SRC")
         if out_stats is not None:
             return out_stats
         print("[!] payload: no chunk reads as Luau source; lifting the VMs instead", file=sys.stderr)
@@ -801,7 +865,8 @@ def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths)
             server[0] = None
         return runner.run(patched, c, chunks)
     try:
-        return devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths, live, exec_seen)
+        return devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths, live, exec_seen,
+                            payload_paths)
     except Exception as e:
 
         print("[!] devirtualization failed: %s: %s" % (type(e).__name__, e), file=sys.stderr)

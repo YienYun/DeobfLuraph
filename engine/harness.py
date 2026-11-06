@@ -226,12 +226,22 @@ def chunk_key(src):
         h = (h * PROTO["chunk_hash"]["multiplier"] + b) % PROTO["chunk_hash"]["modulus"]
     return "%d_%d" % (len(src), h)
 
+EXTERNAL_CHUNKS = set()
+
+
 def take_chunks(body):
     """[(key, source)] of the big loadstring'd chunks a run reported (\\0CHUNK),
     and the body without them. Chunks passed back in `chunks` run instead of
-    the original (a plugin instruments them like the main script)."""
+    the original (a plugin instruments them like the main script).
+
+    Keys listed after the chunk under \\0XTRCH came out of the offline HTTP
+    cache, not out of the file: they are executed and instrumented like any
+    other chunk, but they are never the script the loader carries."""
     found = re.findall(mark("CHUNK ") + r"(\S+)\n([0-9a-f]*)\n", body)
     body = re.sub(mark("CHUNK ") + r"\S+\n[0-9a-f]*\n", "", body)
+    external = re.findall(mark("XTRCH ") + r"(\S+)\n", body)
+    body = re.sub(mark("XTRCH ") + r"\S+\n", "", body)
+    EXTERNAL_CHUNKS.update(external)
     return [(k, bytes.fromhex(hx).decode("latin-1")) for k, hx in found], body
 
 LAST_RAW = [""]     

@@ -55,7 +55,7 @@ node dev/scripts/smoke.js out.lua             # run the result in the offline sa
 | `--plugin <name>` | force an engine (`luraph_v15`, `luraph_v14`, `luarmor`, `generic`) |
 | `--no-devirt` | behaviour trace only: no lifting, no `--report`-free guessing |
 | `--report <file.json>` | machine-readable run report (schema `1`, includes `output_sha256`) |
-| `--http-cache <dir>` | answer `game:HttpGet` from `index.json` (url -> file) instead of `nil` |
+| `--http-cache <dir>` | answer `game:HttpGet` from `index.json` (url -> file) instead of `nil`; served bodies are lifted like any chunk but never become the result |
 | `--stats` | print a digest of what the output still cannot promise: coverage, unexecuted pcs, numbered identifiers, residual reads |
 | `--rename` | extra Layer-2 pass: dead-code removal + scope-verified renaming |
 | `--comments <none\|light\|detailed>` | how much the Layer-2 pass annotates (default `light`) |

@@ -79,6 +79,28 @@ def _run_luraph_pipeline(config_file, v14=False):
 
     if profiler:
         profiler.enable()
+    chunk_paths = c.get("chunk_paths", [])
+    # A chunk the script got from --http-cache is the library it fetched, not
+    # something the file carried: instrument and lift it like any chunk (the
+    # nested VM has to run), but never print it as *the* script. Everything the
+    # runtime loadstrings after a served body came out of that body -- the
+    # Chilli library's own engine loads a VM of its own -- so only the chunks
+    # reported before the first served body can be the script the file carries.
+    served = []
+    for path in chunk_paths:
+        try:
+            with open(path, "rb") as f:
+                src = f.read().decode("latin-1")
+        except OSError:
+            served.append(False)
+            continue
+        served.append(driver._served_from_cache(c["cfg"], src))
+    first = served.index(True) if True in served else len(served)
+    payload_paths = [path for i, path in enumerate(chunk_paths) if i < first]
+    if first < len(chunk_paths):
+        sys.stderr.write("[*] http cache: %d chunk(s) came from the cache (directly or as its "
+                         "own nested VM); they run, but they are not the payload\n"
+                         % (len(chunk_paths) - first))
     stats = driver.lift(
         job,
         runner,
@@ -88,7 +110,8 @@ def _run_luraph_pipeline(config_file, v14=False):
         c["run_text"],
         c["ppath"],
         c["dpath"],
-        c.get("chunk_paths", []),
+        chunk_paths,
+        payload_paths,
     )
     if profiler:
         profiler.disable()

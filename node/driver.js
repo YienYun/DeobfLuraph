@@ -94,7 +94,11 @@ async function run(job) {
     if (args.execRec || process.env.DEVIRT_EXECREC) cfg.exec_rec = true;
     if (spin) cfg.spin = SPIN_CHECKS;
     if (args.cfgJson) Object.assign(cfg, args.cfgJson);
-    if (args.httpCache) cfg.http_map = httpcache.loadHttpCache(args.httpCache);
+    if (args.httpCache) {
+      cfg.http_map = httpcache.loadHttpCache(args.httpCache);
+      const served = httpcache.servedKeys(cfg.http_map);
+      if (served.length) cfg.http_served = Object.fromEntries(served.map((k) => [k, true]));
+    }
 
     process.stderr.write(`[*] tracing ${job.input} (run ${attempt})...\n`);
     const res = await runner.run(patched, cfg, chunks);
@@ -339,7 +343,11 @@ async function runGeneric(job) {
   if (args.inputText) cfg.input_text = args.inputText;
   if (args.noFold) cfg.fold = false;
   if (args.cfgJson) Object.assign(cfg, args.cfgJson);
-  if (args.httpCache) cfg.http_map = httpcache.loadHttpCache(args.httpCache);
+  if (args.httpCache) {
+      cfg.http_map = httpcache.loadHttpCache(args.httpCache);
+      const served = httpcache.servedKeys(cfg.http_map);
+      if (served.length) cfg.http_served = Object.fromEntries(served.map((k) => [k, true]));
+    }
 
   process.stderr.write(`[*] tracing ${job.input}...\n`);
   const res = await runner.run(job.source, cfg);

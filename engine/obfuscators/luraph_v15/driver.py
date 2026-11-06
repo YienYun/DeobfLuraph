@@ -144,17 +144,23 @@ def write_dump(ppath, text, exec_rec_on, seen=None):
     elif text not in seen:
         seen.append(text)
     from obfuscators.luraph_v15 import dump as dump_mod
-    union, info = dump_mod.union_exec_runs(seen, base_text=text)
-    if not union:
+    union, info, scan = dump_mod.union_exec_runs(seen, base_text=text)
+    if not union and not (scan["scanned"] or scan["restored"]):
         return
+    flags = {str(t): 1 for t in scan["scanned"]}
+    flags.update({str(t): 0 for t in scan["restored"]})
     with open(ppath + ".union.json", "w", encoding="utf-8", newline="\n") as f:
         json.dump({"exec": {str(t): dump_mod.exec_str(pcs) for t, pcs in union.items()},
+                   "scan": flags,
                    "meta": info}, f)
     print("[*]   [execrec] union over %d run(s): covered %d->%d, cells %s -> %d"
+          " (scanned %d, restored %d)"
           % (info.get("runs", 0), info.get("covered_first", 0),
              info.get("covered_union", 0),
              ",".join(str(n) for n in (info.get("per_run") or [])),
-             info.get("pcs_union", 0)), file=sys.stderr)
+             info.get("pcs_union", 0),
+             info.get("scan_scanned", 0), info.get("scan_restored", 0)),
+          file=sys.stderr)
 
 
 def emit_payload_source(job, dpath, chunk_paths, why=None, require_script=False):
@@ -284,6 +290,10 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None, exec_
                          stats.get("exec_pcs", 0),
                          int(round(100.0 * stats.get("exec_pcs", 0) / win)),
                          stats.get("walk_trim_unexecuted", 0)), file=sys.stderr)
+                print("[*]   [execrec] arrays: scanned=%d restored=%d settled_verdicts=%d"
+                      % (stats.get("exec_arrays_scanned", 0),
+                         stats.get("exec_arrays_restored", 0),
+                         stats.get("poison_settled", 0)), file=sys.stderr)
             seen = []
             for pc, mode, total, rec, hit, verdict in stats.get("poison_sites") or []:
                 if (pc, mode) in [(x[0], x[1]) for x in seen]:

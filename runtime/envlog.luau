@@ -5530,8 +5530,14 @@ if E.__PA then
         local exArr = CFG.exec_rec and R.setmetatable({}, { __mode = "k" }) or nil
         CHAIN.execArr = exArr
         CHAIN.execRestored = nil
+        -- Which arrays the scan actually walked ("seen") and which belong to a
+        -- proto the restore rewound.  An array in neither is one the runtime
+        -- cannot speak for, and that is not the same as "walked, nothing ran".
+        CHAIN.execSeen = CFG.exec_rec and R.setmetatable({}, { __mode = "k" }) or nil
+        CHAIN.execRestoredArr = CFG.exec_rec and R.setmetatable({}, { __mode = "k" }) or nil
         local function restore(copy)
                 for arr, c in R.next, copy do
+                        if CHAIN.execRestoredArr then CHAIN.execRestoredArr[arr] = true end
                         local keys = lazyKeys[arr]
                         if keys and not CHAIN.lazyLate[arr] then
                                 local late = {}
@@ -5663,6 +5669,7 @@ if E.__PA then
                         if not done[proto] then
                                 for arr, c in R.next, copy do
                                         if not lazyKeys[arr] then
+                                                if CHAIN.execSeen then CHAIN.execSeen[arr] = true end
                                                 local s = nil
                                                 for i, x in R.next, c do
                                                         if R.rawget(arr, i) ~= x then
@@ -6197,6 +6204,13 @@ do
                                 late = ',"late":[' .. R.concat(e, ",") .. "]"
                         end
                         local exs = ""
+                        if CHAIN.execSeen then
+                                if CHAIN.execRestoredArr and CHAIN.execRestoredArr[t] then
+                                        exs = ',"scan":0'
+                                elseif CHAIN.execSeen[t] then
+                                        exs = ',"scan":1'
+                                end
+                        end
                         local ex = CHAIN.execArr and CHAIN.execArr[t]
                         if ex then
                                 local keys = {}
@@ -6218,7 +6232,7 @@ do
                                 if lo ~= nil then
                                         R.insert(runs, lo == hi and R.tostring(lo) or (lo .. "-" .. hi))
                                 end
-                                exs = ',"exec":"' .. R.concat(runs, ",") .. '"'
+                                exs = exs .. ',"exec":"' .. R.concat(runs, ",") .. '"'
                         end
                         return '"' .. i .. '":{"arr":[' .. R.concat(parts, ",") .. '],"kv":[' .. R.concat(kv, ",") .. "]" .. late
                                 .. exs

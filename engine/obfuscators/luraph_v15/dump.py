@@ -115,13 +115,43 @@ def _covered(d, pcs):
     return n
 
 
-def union_exec_runs(texts, base_text=None):
-    """Merge the per-run `exec` coverage of several dumps.
+def _scan_flags(d):
+    """({scanned tids}, {restored tids}) from the per-table `scan` flag.
 
-    -> ({tid: {pcs}} in the *first* dump's id space, info).  The dumps are never
-    rewritten: a JSON round trip turns 0.94743997235392186 into
-    0.9474399723539219, and a changed constant changes the lift.
-    """
+    A run marks every array its scan walked (`scan":1`) and every array whose
+    proto the restore rewound (`scan":0`).  An array with neither is one the
+    runtime could not speak for -- which is not the same as an array it walked
+    and found no decoded cell in, and the two must never be merged."""
+    scanned, restored = set(), set()
+    for tid, t in (d.get("tables") or {}).items():
+        if not isinstance(t, dict):
+            continue
+        f = t.get("scan")
+        if f is None:
+            continue
+        try:
+            f = int(f)
+        except (TypeError, ValueError):
+            continue
+        try:
+            tid = int(tid)
+        except (TypeError, ValueError):
+            continue
+        (scanned if f else restored).add(tid)
+    return scanned, restored
+
+
+def union_exec_runs(texts, base_text=None):
+    """Merge the per-run `exec` coverage and `scan` flags of several dumps.
+
+    -> ({tid: {pcs}}, info, {"scanned": {tid}, "restored": {tid}}), all in the
+    *first* dump's id space.  The dumps are never rewritten: a JSON round trip
+    turns 0.94743997235392186 into 0.9474399723539219, and a changed constant
+    changes the lift.
+
+    A tid counts as scanned when any run walked it, and as restored only when a
+    run rewound it and no run ever walked it: one run that spoke for the array
+    is enough to make silence elsewhere mean "nothing decoded here"."""
     import json
     dumps = []
     for t in texts:
@@ -130,7 +160,7 @@ def union_exec_runs(texts, base_text=None):
         except (TypeError, ValueError):
             continue
     if not dumps:
-        return {}, {"runs": 0}
+        return {}, {"runs": 0}, {"scanned": set(), "restored": set()}
     base = dumps[0]
     if base_text is not None:
         try:
@@ -142,13 +172,26 @@ def union_exec_runs(texts, base_text=None):
     for kmap, pcs in maps:
         for tid, s in pcs.items():
             union.setdefault(kmap.get(tid, ("tid", tid)), set()).update(s)
+    seen, rewound = {}, {}
+    for d, (kmap, _) in zip(dumps, maps):
+        scanned, restored = _scan_flags(d)
+        for tid in scanned:
+            seen[kmap.get(tid, ("tid", tid))] = True
+        for tid in restored:
+            rewound[kmap.get(tid, ("tid", tid))] = True
     first_pcs = maps[0][1]
     kmap0 = array_identity(base)
     out = {}
+    scan = {"scanned": set(), "restored": set()}
     for tid in map(int, (base.get("tables") or {})):
-        pcs = union.get(kmap0.get(tid, ("tid", tid)))
+        key = kmap0.get(tid, ("tid", tid))
+        pcs = union.get(key)
         if pcs:
             out[tid] = pcs
+        if key in seen:
+            scan["scanned"].add(tid)
+        elif key in rewound:
+            scan["restored"].add(tid)
     info = {
         "runs": len(dumps),
         "pcs_first": sum(len(s) for s in first_pcs.values()),
@@ -157,8 +200,10 @@ def union_exec_runs(texts, base_text=None):
         "covered_union": _covered(base, out),
         "base_covered": _covered(base, out),
         "per_run": [sum(len(s) for s in pcs.values()) for _, pcs in maps],
+        "scan_scanned": len(scan["scanned"]),
+        "scan_restored": len(scan["restored"]),
     }
-    return out, info
+    return out, info, scan
 
 
 class Dump:
@@ -192,6 +237,7 @@ class Dump:
         self._paths = None
         self.late = self._lazy_late(d)
         self.exec_pcs = self._exec_pcs(d)
+        self.exec_scanned, self.exec_restored_tids = _scan_flags(d)
         meta = d.get("exec_meta") or {}
         self.exec_scrambled = int(meta.get("scrambled") or 0)
         self.exec_runs = 0
@@ -208,6 +254,17 @@ class Dump:
                 pcs = self._parse_runs(runs)
                 if pcs:
                     self.exec_pcs[int(tid)] = pcs
+            for tid, flag in (u.get("scan") or {}).items():
+                try:
+                    tid = int(tid)
+                    flag = int(flag)
+                except (TypeError, ValueError):
+                    continue
+                if flag:
+                    self.exec_scanned.add(tid)
+                    self.exec_restored_tids.discard(tid)
+                elif tid not in self.exec_scanned:
+                    self.exec_restored_tids.add(tid)
             meta = u.get("meta") or {}
             self.exec_runs = int(meta.get("runs") or 0)
             self.exec_pcs_first = int(meta.get("pcs_first") or 0)
@@ -266,6 +323,16 @@ class Dump:
             scr = min(self.exec_scrambled, max(0, total - covered))
             self._exec_sum = (covered, scr, max(0, total - covered - scr))
         return self._exec_sum
+
+    def exec_scan_state(self, tid):
+        """1 = the recorder walked this array, 0 = it rewound the proto, None =
+        the dump says nothing about it.  Only 1 licenses reading a missing pc as
+        "the run did not decode that cell"."""
+        if tid in self.exec_scanned:
+            return 1
+        if tid in self.exec_restored_tids:
+            return 0
+        return None
 
     def exec_coverage(self, proto):
         """The pcs of `proto` the recorded run executed, or None when the dump

@@ -765,14 +765,26 @@ class FunctionLifter:
         pc counts as covered only when *every* one of those arrays holds a cell
         the recorded run decoded in place: one array's word is not the
         instruction's, so no union and no "some array did it" shortcut."""
-        pcs = self.prog.dump.exec_pcs
+        d = self.prog.dump
+        pcs = d.exec_pcs
+        state_of = getattr(d, "exec_scan_state", None)
+        settled = 0
         for (pc, mode), tids in sites:
             if pc is None:
                 continue
             tids = sorted(tids or ())
             rec = [t for t in tids if t in pcs]
             hit = [t for t in tids if t in pcs and pc in pcs[t]]
-            if not tids or not rec:
+            unknown = []
+            no = []
+            for t in tids:
+                if t in pcs and pc in pcs[t]:
+                    continue
+                if t in pcs or (state_of is not None and state_of(t) == 1):
+                    no.append(t)
+                else:
+                    unknown.append(t)
+            if not tids or unknown:
                 v = "unrecorded"
             elif len(hit) == len(tids):
                 v = "yes"
@@ -780,8 +792,11 @@ class FunctionLifter:
                 v = "no"
             else:
                 v = "partial"
+            if v in ("yes", "no"):
+                settled += 1
             self.stats.setdefault("poison_sites", []).append(
                 (pc, mode, len(tids), len(rec), len(hit), v))
+        self.stats["poison_settled"] = self.stats.get("poison_settled", 0) + settled
 
     def frame_regs(self, vm, vmobj, c, depth=0):
         """{upvalue index: registers} a closure reads or writes through the
@@ -1251,6 +1266,8 @@ def lift_program(source, protos_path, chunk_paths=(), fetch=None):
     cov, scr, none = prog.dump.exec_summary()
     fl.stats["exec_covered"], fl.stats["exec_scrambled"], fl.stats["exec_no_arrays"] = cov, scr, none
     fl.stats["exec_runs"] = prog.dump.exec_runs
+    fl.stats["exec_arrays_scanned"] = len(prog.dump.exec_scanned)
+    fl.stats["exec_arrays_restored"] = len(prog.dump.exec_restored_tids)
     fl.stats["exec_pcs_first"] = prog.dump.exec_pcs_first
     fl.stats["exec_covered_first"] = prog.dump.exec_covered_first
     fl.stats["residual_unknown"] = variables.LIFT_STATS["residual_unknown"]

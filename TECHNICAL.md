@@ -404,6 +404,28 @@ unlifted blocks / unstructured jumps / new constant requests`,
 `--exec-rec` also `[execrec] runs= covered= ... pcs_visited=`, plus
 `poison_pc_covered=` when a call is dropped.
 
+### Which arrays the recorder can speak for
+
+With `--exec-rec` the runtime records, per number array, the pcs it decoded in
+place. Silence had two meanings and the dump could not tell them apart: an array
+the scan walked and found nothing in, and an array whose proto the restore
+rewound (a scramble rewrites every cell, so a diff proves nothing). Every table
+now carries `"scan":1` when the walk looked at it and `"scan":0` when its proto
+was rewound; an array with neither is one the runtime says nothing about.
+
+`dump.exec_scan_state(tid)` returns 1, 0 or None from that, and the
+`poison_pc_covered=` verdict only reads a missing pc as "this run did not decode
+that cell" when every array the instruction reads returns 1. A verdict of `no`
+is therefore a fact about the recorded runs, never a claim that the code is dead;
+`unrecorded` still means exactly what it says.
+
+The union sidecar merges the flags the same way it merges pcs: an array counts as
+scanned when any run walked it, and as rewound only when a run rewound it and no
+run ever walked it. Measured on `Lph6-V15.0` (737 protos, 6,142 arrays, 313,801
+cells, four runs): 1,660 arrays / 150,565 cells moved from unspoken to a stated
+"nothing decoded here", 0 were rewound, and 2,458 arrays (lazy constants and
+tables no proto owns) stayed unspoken -- named, not guessed.
+
 ### Naming why a run stopped
 
 A trace that stops early carries `-- run status: ...` in its header, and the

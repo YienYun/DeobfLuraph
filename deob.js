@@ -42,6 +42,8 @@ function parseArgs(argv) {
     studio: false,
     studioPort: 34880,
     studioWait: 600,
+    stepBudget: 0,
+    timePin: 0,
     stats: false,
     rename: false,
     comments: 'light',
@@ -75,6 +77,8 @@ function parseArgs(argv) {
     else if (a === '-o' || a === '--output') { args.output = valueAt(++i, a); }
     else if (a === '--report') { args.report = valueAt(++i, a); }
     else if (a === '--http-cache') { args.httpCache = valueAt(++i, a); }
+    else if (a === '--step-budget') { args.stepBudget = Number(valueAt(++i, a)); }
+    else if (a === '--time-pin') { args.timePin = Number(valueAt(++i, a)); }
     else if (a === '--studio') { args.studio = true; }
     else if (a === '--studio-port') { args.studioPort = Number(valueAt(++i, a)); }
     else if (a === '--studio-wait') { args.studioWait = Number(valueAt(++i, a)); }
@@ -116,6 +120,10 @@ function parseArgs(argv) {
     ['--loop-fuel', args.loopFuel], ['--spin-fuel', args.spinFuel],
     ['--max-runs', args.maxRuns], ['--devirt-rounds', args.devirtRounds]]) {
     if (!Number.isSafeInteger(value) || value <= 0) throw new Error(`${name} must be a positive integer`);
+  }
+  // 0 means "off" for the two pins, so they are validated apart from the rest
+  for (const [name, value] of [['--step-budget', args.stepBudget], ['--time-pin', args.timePin]]) {
+    if (!Number.isSafeInteger(value) || value < 0) throw new Error(`${name} must be zero (off) or a positive integer`);
   }
   return args;
 }
@@ -516,12 +524,14 @@ async function processFile(absInput, args) {
 async function main() {
   const args = parseArgs(process.argv.slice(2));
 
-  const usage = 'Usage: node deob.js <input.lua | folder> [more_files_or_folders...] [-o <output.lua>] [--rename] [--comments none|light|detailed] [--plugin <name>] [--no-devirt] [--no-format] [--debug] [--detect] [--exec-rec] [--report <report.json>] [--http-cache <dir>] [--studio [--studio-port <n>] [--studio-wait <sec>]] [--stats]';
+  const usage = 'Usage: node deob.js <input.lua | folder> [more_files_or_folders...] [-o <output.lua>] [--rename] [--comments none|light|detailed] [--plugin <name>] [--no-devirt] [--no-format] [--debug] [--detect] [--exec-rec] [--report <report.json>] [--http-cache <dir>] [--step-budget <n>] [--studio [--studio-port <n>] [--studio-wait <sec>]] [--stats]';
   if (args.help) {
     console.log(usage);
     console.log('Use --detect to classify without executing, or --no-devirt for a behaviour trace.');
     console.log('Use --exec-rec (or DEVIRT_EXECREC=1) to record which program counters the sample executed.');
     console.log('Use --http-cache <dir> to answer game:HttpGet from index.json instead of nil.');
+    console.log('Use --step-budget <n> to cut every traced run at the same statement count (a run that stops on wall-clock time traces different code on a slower machine).');
+    console.log('Use --time-pin <unix-seconds> to freeze os.time/tick/os.clock/math.random for the trace (a hub that branches on a cooldown or a nonce traces differently every second otherwise).');
     console.log('Use --studio to trace inside a real Roblox place (paste the generated studio_loader into the Studio command bar).');
     console.log('Use --stats to print what the output still cannot promise (coverage, unexecuted pcs, naming).');
     return;

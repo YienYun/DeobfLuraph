@@ -32,7 +32,8 @@ def patch_entries(source, path):
     return "\n".join(lines)
 
 
-def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths):
+def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths,
+         payload_paths=None):
     import obfuscators.luraph_v15 as pkg15
     from obfuscators.luraph_v15 import driver as v15_driver
     from obfuscators.luraph_v15 import devirt as v15_devirt
@@ -41,7 +42,8 @@ def lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths)
     pkg15.devirt = v14_devirt
     v14_devirt._set_v14_active(True)
     try:
-        return v15_driver.lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath, chunk_paths)
+        return v15_driver.lift(job, runner, patched, cfg, chunks, run_text, ppath, dpath,
+                               chunk_paths, payload_paths)
     finally:
         v14_devirt._set_v14_active(False)
         pkg15.devirt = v15_devirt

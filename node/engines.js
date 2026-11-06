@@ -59,6 +59,18 @@ function patchChunkV14(src, bridgePy) {
   }
 }
 
+// A lift of a sample whose top level decodes to nothing writes one line:
+// `return nil --[[ constant not decoded ]]` (plus the watermark print). That is
+// not a result -- handing back a 40-byte file reads as success.
+function hollowLift(file) {
+    let text;
+    try { text = fs.readFileSync(file, 'utf8'); } catch { return false; }
+    const mark = require('./watermark').WATERMARK_PRINT;
+    const code = text.split('\n').map((l) => l.trim())
+        .filter((l) => l && !l.startsWith('--') && l !== mark);
+    return code.length <= 1 && /^return nil\b/.test(code[0] || '');
+}
+
 async function runLuraphV14(job) {
     const { args } = job;
     const bridgePy = path.join(__dirname, 'devirt_bridge.py');
@@ -98,6 +110,8 @@ async function runLuraphV14(job) {
     };
     if (args.inputText) cfg.input_text = args.inputText;
     if (args.noFold) cfg.fold = false;
+    if (args.stepBudget) cfg.max_stmts = args.stepBudget;
+    if (args.timePin) cfg.time_pin = args.timePin;
     if (args.cfgJson) Object.assign(cfg, args.cfgJson);
     if (args.httpCache) {
       cfg.http_map = httpcache.loadHttpCache(args.httpCache);
@@ -247,8 +261,15 @@ async function runLuraphV14(job) {
     runner.finish();
     trace.statusLine(body);
     if (job.liftStats && job.liftStats.functions > 0 && fs.existsSync(dpath)) {
-        job.resultType = 'devirtualized';
-        return dpath;
+        if (hollowLift(dpath)) {
+            const warning = 'The lift produced only `return nil`: the sample\'s top level '
+                + 'decoded to nothing, so this run returns a behaviour trace instead.';
+            process.stderr.write(`[!] ${warning}\n`);
+            job.warnings.push(warning);
+        } else {
+            job.resultType = 'devirtualized';
+            return dpath;
+        }
     }
     writeTrace();
     job.resultType = 'trace';

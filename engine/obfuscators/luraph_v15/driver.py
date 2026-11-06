@@ -323,12 +323,14 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None, exec_
                       % (stats["walk_truncated"], int(devirt.WALK_SECONDS)), file=sys.stderr)
             if stats.get("exec_protos") or stats.get("exec_covered"):
                 win = stats.get("exec_window") or 1
+                # pcs_visited sums one distinct-pc set per lifted proto, so it is a
+                # count, not a fraction of one window: printed as a percentage it
+                # read 1276% on a hub whose protos share a pc space.
                 print("[*]   [execrec] runs=%d covered=%d scrambled_excluded=%d no_arrays=%d"
-                      " pcs_visited=%d (%d%% of the decoded window) annotated=%d"
+                      " pcs_visited=%d (per-proto windows sum to %d) annotated=%d"
                       % (stats.get("exec_runs", 0), stats.get("exec_covered", 0),
                          stats.get("exec_scrambled", 0), stats.get("exec_no_arrays", 0),
-                         stats.get("exec_pcs", 0),
-                         int(round(100.0 * stats.get("exec_pcs", 0) / win)),
+                         stats.get("exec_pcs", 0), win,
                          stats.get("walk_trim_unexecuted", 0)), file=sys.stderr)
                 print("[*]   [execrec] arrays: scanned=%d restored=%d settled_verdicts=%d"
                       % (stats.get("exec_arrays_scanned", 0),

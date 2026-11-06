@@ -710,3 +710,69 @@ the sandbox cannot model (the `P2D` answer cache, `--studio` in
 `engine/harness.py`). Measured: 275 lines of trace down to 14. The trace is a
 sequence of observed states; splicing foreign answers into it destroys the
 sequence the lifter walks. Only a whole native run is worth doing.
+
+## 7. The rest of the hub
+
+Sections 1–6 are written around two scripts. The hub ships more, and "the
+engine is done" only holds if the others are either lifted or explicitly
+refused. This is that ledger.
+
+| input | size | detection | result |
+|---|---|---|---|
+| `RideAPet` | 338,756 | Luraph v15.1 (1.00) | 11,034 lines, 716 functions, `finished` |
+| `StealAnEggg` | 529,242 | Luraph v15.1 (1.00) | `payload-source`, 2,204 functions |
+| `JumpForAnimals` | 503,353 | Luraph v15.1 (1.00) | 7,103 lines, **457 functions, 0 unlifted blocks**, 23,977 pcs annotated |
+| `ChilliLibraryEngine` | 183,544 | Luraph v15.1 (1.00) | `payload-source`, 474 functions, 2 wrapper levels, field '74' of 213 |
+| `PrivateServer` | 83,547 | Luraph v14.4.2 | 904 lines, 20 functions |
+| `JoinScript.lua` | 64,789 | Luraph v14.4.1 | **nothing**: top level decodes to nothing → behaviour trace, reported as a failed lift |
+| `Grow-a-Garden` | 1,469,699 | Prometheus (0.85) | refused (Luraph-only build, no new families) |
+| `Steal-a-Brainrot` | 1,067,422 | Luraph v15.1 (1.00) | lift runs past 30 min in the pipeline; not delivered |
+
+`JumpForAnimals` is the deepest lift in the set by a wide margin: 75% of the
+decoded window executed against RideAPet's 1%, 457 of 457 functions lifted, and
+no unlifted block. Two hub scripts that big and that different both coming out
+whole is the useful signal here — the ceiling measured in §3 was the sample's
+own runtime path, not the walk.
+
+### Three bugs this sweep found, and what they were
+
+1. **The v14 engine was dead.** `engine/obfuscators/luraph_v14/driver.py` still
+   called `v15_driver.lift()` with nine arguments after the payload-source
+   argument was added: every v14 sample died with `TypeError: lift() takes 9
+   positional arguments but 10 were given`, and the CLI reported it as a failed
+   file rather than a broken engine. Fixed; `PrivateServer` then lifted.
+2. **A hollow lift was reported as a success.** `JoinScript` produced a 40-byte
+   file — a watermark `print` and `return nil --[[ constant not decoded ]]` —
+   and the run said `1 succeeded`. Both the v15 path (`node/driver.js`) and the
+   v14 path (`node/engines.js`) now check the written file: when the only
+   statement left is that `return nil`, the run reports a failed lift and hands
+   back the behaviour trace instead. A file that says "nothing here" must not be
+   counted as a result.
+3. **The coverage line was arithmetic nonsense.** `pcs_visited` sums one
+   distinct-pc set per lifted proto, so dividing it by a single window printed
+   `1276% of the decoded window` on `Steal-a-Brainrot`. It now prints the count
+   and the summed windows next to it instead of a fraction.
+
+### Stability is not automatic, and the reason is measured
+
+`RideAPet`, `StealAnEggg`, `ChilliLibraryEngine` and `PrivateServer` are
+byte-identical run after run. `JumpForAnimals` is not: its lifted body is
+identical, but the closing `devirt:` line differs (244 / 316 / 260 functions
+across runs) because it counts pcs the recorded run never executed, and how much
+of the sample runs before the budget stops it varies.
+
+Two flags exist to attack that, both added with this sweep:
+
+* `--step-budget <n>` → `max_stmts`: cut every traced run at the same statement
+  count instead of a wall-clock deadline. Deterministic *if* the statement count
+  binds before the clock.
+* `--time-pin <unix-seconds>` → `time_pin`: freeze `os.time`, `os.date`,
+  `tick`, `os.clock`, `math.random` (Park-Miller) and `gcinfo` for the trace.
+
+Measured on `JumpForAnimals`, four runs: unpinned `pcs_visited` 20,778 / 23,977 /
+407,516; pinned with a 250,000-statement budget 18,375 / 20,145. The spread
+shrinks and the body never changes, but the trace still ends in a different
+place, because the hub branches on values the offline runtime has no way to pin
+(remote answers, `DateTime`, table identity). A sample that needs a *stable
+count* of what it did not run needs `--studio`: a real place answers those
+branches the same way twice.

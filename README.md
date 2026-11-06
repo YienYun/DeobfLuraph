@@ -70,6 +70,8 @@ node dev/scripts/smoke.js out.lua             # run the result in the offline sa
 | `--cfg-json <json\|@file>` / `--executor <name>` / `--loop-fuel` / `--spin-fuel` / `--prelude-file` / `--input-text` | sandbox controls used when a sample needs a specific host behaviour |
 | `--no-dce` / `--ai-provider` / `--ai-model` | Layer-2 controls (the AI path is optional and off by default) |
 | `--studio [--studio-port <n>] [--studio-wait <sec>]` | trace inside a real Roblox place instead of the offline sandbox (see [Online runs](#online-runs)) |
+| `--step-budget <n>` | cut every traced run at the same statement count instead of a wall-clock deadline (a run that stops on time traces different code on a slower machine) |
+| `--time-pin <unix-seconds>` | freeze `os.time` / `tick` / `os.clock` / `math.random` / `gcinfo` for the trace, so a hub that branches on a cooldown or a nonce traces the same way twice |
 | `--no-format` | do not run the result through StyLua (see [Formatting](#formatting)) |
 
 A Luraph run costs roughly one sandbox execution per lifting round: a 1 MB file

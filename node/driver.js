@@ -92,6 +92,8 @@ async function run(job) {
     if (args.preludeFile) cfg.prelude = require('fs').readFileSync(args.preludeFile, 'latin1');
     if (args.noFold) cfg.fold = false;
     if (args.execRec || process.env.DEVIRT_EXECREC) cfg.exec_rec = true;
+    if (args.stepBudget) cfg.max_stmts = args.stepBudget;
+    if (args.timePin) cfg.time_pin = args.timePin;
     if (spin) cfg.spin = SPIN_CHECKS;
     if (args.cfgJson) Object.assign(cfg, args.cfgJson);
     if (args.httpCache) {
@@ -280,7 +282,20 @@ async function run(job) {
     const nilCalls = (lifted.match(/\(nil\)\(/g) || []).length;
     const lines = lifted.split('\n').length;
     const stats = job.liftStats;
-    if (lifted.trim() && stats.functions > 0 && (nilCalls < 50 || nilCalls * 100 < lines)) {
+    // A lift of a sample whose top level decodes to nothing writes one line:
+    // `return nil --[[ constant not decoded ]]`. That is not a result -- a
+    // 40-byte file that says "nothing here" has to be reported as a failed
+    // lift, or it reads as a success.
+    const mark = require('./watermark').WATERMARK_PRINT;
+    const code = lifted.split('\n').map((l) => l.trim())
+      .filter((l) => l && !l.startsWith('--') && l !== mark);
+    const hollow = code.length <= 1 && /^return nil\b/.test(code[0] || '');
+    if (hollow) {
+      process.stderr.write('[!] the lift produced only `return nil`: nothing at the top level decoded\n');
+      job.warnings.push("The lift produced only `return nil`; nothing at the sample's top level decoded.");
+    }
+    if (lifted.trim() && stats.functions > 0 && !hollow
+        && (nilCalls < 50 || nilCalls * 100 < lines)) {
       job.resultType = stats.payload_source ? 'payload-source' : 'devirtualized';
       if (stats.errors || stats.fallbacks) {
         job.warnings.push(`Lift has ${stats.errors} unlifted blocks and ${stats.fallbacks} unstructured jumps.`);

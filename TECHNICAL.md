@@ -360,7 +360,7 @@ identity) and isolate each handler; that is a bigger change than the measured
 payoff justifies today.
 
 **One file can carry two scripts, and the wrapper is not the script.** The
-Chilli-hub build in the fixture set (`StealAnEggg`, pinned as `lph-v15-1-5`) is a
+Chilli-hub build in the fixture set (`StealAnEggg`, pinned as `lph-v15-1-stealaneggg`) is a
 `return setmetatable({...})` table: the hub's UI library is virtualized, and the
 Steal-An-Egg script itself sits in one field of that table as *plain Luau*.
 Lifting the VM recovers the machine (5,055 lines of ChilliLibrary), which is a
@@ -399,6 +399,28 @@ full trace budget on it, the runner probes once with a bounded 15 s trace, then
 reports that no dispatch loop matched and that older builds are not lifted. The
 refusal is a fixture expectation in `dev/test/golden.json`, not an untested path.
 
+**Serving the fetched library offline was measured, and it costs more than it
+gives.** A hub script bootstraps itself through `game:HttpGet`, which the sandbox
+answers with `nil`, so the run dies on the script's own `assert(chunk)`. `--http-cache`
+feeds the runtime's existing `CFG.http_map` from an explicit `index.json`
+(url -> file), so that url answers with the body instead of `nil`. The Chilli
+library the hub fetches is 415 KB of plain Luau, and serving it moved the trace's
+death from the bootstrap assert to *inside the library*
+(`attempt to compare userdata <= number`, its own `hudRestorePosition.X.Scale
+<= -0.5`, a `UDim2` component the proxy model only folds when it can):
+
+| `RideAPet` | without the cache | with the library served |
+|---|---|---|
+| wall clock | 154 s | 475 s |
+| output | 11,034 lines, 716 functions | 10,405 lines, 660 functions |
+| `CreateToggle` / `GetService` | 32 / 20 | 28 / 19 |
+| verdict | baseline | compiles 1/1, 0 unresolved reads, but strictly less of the hub |
+
+So the flag stays opt-in and refuses to pretend: a run that ends in a `script
+error` while the cache is on is reported as such, because reaching *further* into
+a body the sandbox cannot execute is not the same as lifting more of the script.
+The real blocker is the `UDim2`-component comparison, not the missing body.
+
 **Before / after: what running the live hub scripts changed.** The fixtures were
 the reference samples for a long time, and they flattered the engine: small,
 self-contained, one script per file. Two builds from the Chilli hub
@@ -411,6 +433,7 @@ touched.
 | `--rename` | crashed at startup: `renamer/garbage.js` still required `../engine/pyenv`, a path that moved to `node/` when the helpers were split. No test loaded the renamer, so the gate stayed green. | runs: `RideAPet` gets 59 raised names and 58 comments (11,034 → 13,282 lines, comments only). Guarded by `dev/test/requires.test.js`, which resolves every literal relative `require()` in the tree (40 files). |
 | "is it maxed?" | answered by reading the log | `--stats` prints one digest per output: result type, size, coverage, unexecuted pcs, numbered identifiers, residual reads, warnings |
 | coverage | 64 % of the decoded pc window on `Lph1` was read as headroom for more runs | 1,999 pcs of 328,377 (0.6 %) on `RideAPet`, unchanged at `DEVIRT_EXECRUNS=4` and `=8`; cell union 113,791 either way, code byte-identical |
+| HTTP | `game:HttpGet` answers `nil`, so the hub's bootstrap `assert(chunk)` ends the run at line 20 | `--http-cache` answers a captured body instead; measured on `RideAPet` it moves the stop *inside* the library and lifts slightly less, so it stays opt-in |
 | shape | one obfuscated chunk per file | `StealAnEggg` is a loader that carries the hub script as plain Luau: 26,073 printed lines / 2,204 functions, `result_type: payload-source`; the VM wrapper is 5,055 lines of UI library and is deliberately not the answer |
 
 The two numbers that matter for trust: `RideAPet` compiles 1/1 under Luau and

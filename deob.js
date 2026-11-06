@@ -38,6 +38,7 @@ function parseArgs(argv) {
     executor: 'Wave',
     inputText: null,
     report: null,
+    httpCache: null,
     stats: false,
     rename: false,
     comments: 'light',
@@ -70,6 +71,7 @@ function parseArgs(argv) {
     else if (a === '--keep-preamble') { args.keepPreamble = true; }
     else if (a === '-o' || a === '--output') { args.output = valueAt(++i, a); }
     else if (a === '--report') { args.report = valueAt(++i, a); }
+    else if (a === '--http-cache') { args.httpCache = valueAt(++i, a); }
     else if (a === '--stats') { args.stats = true; }
     else if (a === '--timeout') { args.timeout = Number(valueAt(++i, a)); }
     else if (a === '--prelude-file') { args.preludeFile = valueAt(++i, a); }
@@ -467,6 +469,10 @@ async function processFile(absInput, args) {
         job.warnings.push('Result is a behaviour trace, not reconstructed source (see the file header).');
         if (job.diagnosis) process.stderr.write(`[!] why: ${job.diagnosis}\n`);
       }
+      if (args.httpCache && /script error/i.test(String(job.traceStatus || ''))) {
+        job.warnings.push('The run stopped inside code it only reached through --http-cache: '
+          + 'the lift saw less of the script than the same file without the cache.');
+      }
       const report = {
         schema_version: 1,
         input: path.resolve(absInput),
@@ -503,11 +509,12 @@ async function processFile(absInput, args) {
 async function main() {
   const args = parseArgs(process.argv.slice(2));
 
-  const usage = 'Usage: node deob.js <input.lua | folder> [more_files_or_folders...] [-o <output.lua>] [--rename] [--comments none|light|detailed] [--plugin <name>] [--no-devirt] [--no-format] [--debug] [--detect] [--exec-rec] [--report <report.json>] [--stats]';
+  const usage = 'Usage: node deob.js <input.lua | folder> [more_files_or_folders...] [-o <output.lua>] [--rename] [--comments none|light|detailed] [--plugin <name>] [--no-devirt] [--no-format] [--debug] [--detect] [--exec-rec] [--report <report.json>] [--http-cache <dir>] [--stats]';
   if (args.help) {
     console.log(usage);
     console.log('Use --detect to classify without executing, or --no-devirt for a behaviour trace.');
     console.log('Use --exec-rec (or DEVIRT_EXECREC=1) to record which program counters the sample executed.');
+    console.log('Use --http-cache <dir> to answer game:HttpGet from index.json instead of nil.');
     console.log('Use --stats to print what the output still cannot promise (coverage, unexecuted pcs, naming).');
     return;
   }

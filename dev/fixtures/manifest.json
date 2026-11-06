@@ -311,6 +311,20 @@
       "sha256": "14cd35cc227c94f314b789c2c0cc2afa40b780754262f3017d9aaf65c2660a79"
     },
     {
+      "id": "lph-v15-1-stealaneggg",
+      "file": "StealAnEggg.lua",
+      "family": "luraph_v15",
+      "build": "15.1",
+      "tier": "full",
+      "source": {
+        "repo": "tienkhanh1/Chilli-Hub-Script",
+        "path": "StealAnEggg",
+        "blob": "51a26d429750cb5989a235fd394b4694df0a121a",
+        "bytes": 529242
+      },
+      "sha256": "41b5de74cc0fc687a884829357f2a7caf68d5b3519c9f30e1276e2698fdcd9ae"
+    },
+    {
       "id": "lph-v15-0-jumpforanimals",
       "file": "JumpForAnimals.lua",
       "family": "luraph_v15",

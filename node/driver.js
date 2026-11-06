@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const vmmap = require('./vmmap');
 const harness = require('./harness');
+const httpcache = require('./httpcache');
 const trace = require('./traceout');
 const tidy = require('./tidy');
 
@@ -93,6 +94,7 @@ async function run(job) {
     if (args.execRec || process.env.DEVIRT_EXECREC) cfg.exec_rec = true;
     if (spin) cfg.spin = SPIN_CHECKS;
     if (args.cfgJson) Object.assign(cfg, args.cfgJson);
+    if (args.httpCache) cfg.http_map = httpcache.loadHttpCache(args.httpCache);
 
     process.stderr.write(`[*] tracing ${job.input} (run ${attempt})...\n`);
     const res = await runner.run(patched, cfg, chunks);
@@ -337,6 +339,7 @@ async function runGeneric(job) {
   if (args.inputText) cfg.input_text = args.inputText;
   if (args.noFold) cfg.fold = false;
   if (args.cfgJson) Object.assign(cfg, args.cfgJson);
+  if (args.httpCache) cfg.http_map = httpcache.loadHttpCache(args.httpCache);
 
   process.stderr.write(`[*] tracing ${job.input}...\n`);
   const res = await runner.run(job.source, cfg);

@@ -7,6 +7,7 @@ const path = require('path');
 const { spawnSync, execFileSync } = require('child_process');
 const driver = require('./driver');
 const harness = require('./harness');
+const httpcache = require('./httpcache');
 const trace = require('./traceout');
 const tidy = require('./tidy');
 const { getPythonBin, pythonEnv } = require('./pyenv');
@@ -98,6 +99,7 @@ async function runLuraphV14(job) {
     if (args.inputText) cfg.input_text = args.inputText;
     if (args.noFold) cfg.fold = false;
     if (args.cfgJson) Object.assign(cfg, args.cfgJson);
+    if (args.httpCache) cfg.http_map = httpcache.loadHttpCache(args.httpCache);
 
     if (!args.noHooks) {
         patched = vmmap.patchSpin(patched);

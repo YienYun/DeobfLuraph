@@ -731,13 +731,19 @@ refused. This is that ledger.
 | `PrivateServer` | 83,547 | Luraph v14.4.2 | 904 lines, 20 functions |
 | `JoinScript.lua` | 64,789 | Luraph v14.4.1 | **nothing**: top level decodes to nothing → behaviour trace, reported as a failed lift |
 | `Grow-a-Garden` | 1,469,699 | Prometheus (0.85) | refused (Luraph-only build, no new families) |
-| `Steal-a-Brainrot` | 1,067,422 | Luraph v15.1 (1.00) | lift runs past 30 min in the pipeline; not delivered |
+| `Steal-a-Brainrot` | 1,067,422 | Luraph v15.1 (1.00) | **not delivered**: the lift passes 40 minutes at 1.8 GB resident and the process dies before it writes a file |
 
 `JumpForAnimals` is the deepest lift in the set by a wide margin: 75% of the
 decoded window executed against RideAPet's 1%, 457 of 457 functions lifted, and
 no unlifted block. Two hub scripts that big and that different both coming out
 whole is the useful signal here — the ceiling measured in §3 was the sample's
 own runtime path, not the walk.
+
+The one that does not come out is the largest: `Steal-a-Brainrot` (1.0 MB) spends
+its first minutes building a 6.5 MB proto dump and then never finishes the
+constant rounds — 40 minutes, 1.8 GB resident, no output. That is a size the
+walk has not been tuned for (`--devirt-rounds` and `--step-budget` are the
+knobs), and it is written down rather than hidden behind "in progress".
 
 ### Three bugs this sweep found, and what they were
 

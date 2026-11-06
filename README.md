@@ -60,9 +60,33 @@ node tools/oracle/compare.js original.lua out.lua   # compare what two files pri
 | `--keep-harness` / `--keep-preamble` | keep build artifacts for debugging |
 | `--cfg-json <json\|@file>` / `--executor <name>` / `--loop-fuel` / `--spin-fuel` / `--prelude-file` / `--input-text` | sandbox controls used when a sample needs a specific host behaviour |
 | `--no-dce` / `--ai-provider` / `--ai-model` | Layer-2 controls (the AI path is optional and off by default) |
+| `--no-format` | do not run the result through StyLua (see [Formatting](#formatting)) |
 
 A Luraph run costs roughly one sandbox execution per lifting round: a 1 MB file
 takes about a minute on a laptop, a 1.6 MB sample 73 s on the reference machine.
+
+---
+
+## Formatting
+
+Every result is printed through [StyLua](https://github.com/JohnnyMorganz/StyLua)
+before it is written — the same formatter GitHub's "Format with StyLua" action
+runs — so the file opens already laid out: tabs, one statement per line, table and
+call arguments wrapped at 100 columns, quotes normalised. The renamed copy from
+`--rename` and the renamer's own CLI go through the same pass, so both copies of a
+script match.
+
+* The settings live in `src/format.js` and are mirrored in `.stylua.toml`, so an
+  editor or a `stylua` on `PATH` formats the same way the engine does.
+* StyLua is run to a fixed point (at most 4 passes): formatting is stable, and
+  formatting a result a second time moves no bytes.
+* The formatted text is parsed before it replaces the result. If it does not
+  parse, or if StyLua is not installed, the run keeps its own layout and the
+  report says why (`format.skipped`) — a formatting miss never costs a result.
+* Turn it off with `--no-format` (or the renamer's `--no-format`); the report then
+  records `format: { tool: "stylua", changed: false, skipped: "disabled" }`.
+
+The report carries `format: { tool, changed, passes? }` next to `trace_status`.
 
 ---
 

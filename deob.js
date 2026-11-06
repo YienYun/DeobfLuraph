@@ -9,6 +9,8 @@ const driver = require('./src/driver');
 const engines = require('./src/engines');
 const harness = require('./src/harness');
 const { injectWatermark } = require('./src/watermark');
+const format = require('./src/format');
+const { isValidLuaSyntax } = require('./src/luau_check');
 
 const DIRECTORY_EXTENSIONS = ['.lua', '.luau'];
 const FILE_EXTENSIONS = ['.lua', '.luau', '.txt'];
@@ -41,6 +43,7 @@ function parseArgs(argv) {
     aiProvider: null,
     aiModel: null,
     noDce: false,
+    noFormat: false,
     help: false,
   };
 
@@ -76,6 +79,7 @@ function parseArgs(argv) {
     else if (a === '--executor') { args.executor = valueAt(++i, a); }
     else if (a === '--input-text') { args.inputText = valueAt(++i, a); }
     else if (a === '--rename') { args.rename = true; }
+    else if (a === '--no-format') { args.noFormat = true; }
     else if (a === '--comments') {
       args.comments = valueAt(++i, a);
       if (!['none', 'light', 'detailed'].includes(args.comments)) {
@@ -417,6 +421,26 @@ async function processFile(absInput, args) {
         }
         writeAtomically(stringsFinal, fs.readFileSync(stringsPath, 'utf8'));
       }
+      // Print the result through the formatter before it lands, so what the
+      // reader opens is laid out the way StyLua would lay it out. A formatting
+      // miss never costs a result: the unformatted text is kept and said so.
+      const before = Buffer.byteLength(content, 'utf8');
+      const fmt = format.formatLuau(content, { enabled: !args.noFormat });
+      if (fmt.ok && fmt.changed && !isValidLuaSyntax(fmt.text)) {
+        job.warnings.push('Formatted output did not parse; kept the unformatted result.');
+        job.format = { tool: 'stylua', changed: false, skipped: 'output did not parse after formatting' };
+      } else if (fmt.ok) {
+        content = fmt.text;
+        job.format = { tool: fmt.tool, changed: fmt.changed };
+        if (fmt.changed) {
+          process.stderr.write(
+            `[*] formatted with ${fmt.tool}: ${before} B -> ${Buffer.byteLength(content, 'utf8')} B\n`
+          );
+        }
+      } else {
+        job.format = { tool: 'stylua', changed: false, skipped: fmt.reason };
+        if (!args.noFormat) job.warnings.push(`Formatter skipped: ${fmt.reason}`);
+      }
       // Attribution goes on every result, whatever produced it (a behaviour
       // trace is just as much a deobfuscated script as a lifted one).
       content = injectWatermark(content);
@@ -436,6 +460,7 @@ async function processFile(absInput, args) {
         confidence,
         result_type: job.resultType,
         trace_status: job.traceStatus,
+        ...(job.format ? { format: job.format } : {}),
         ...(job.diagnosis ? { diagnosis: job.diagnosis } : {}),
         lift_stats: job.liftStats,
         ...(job.chain ? { chain: job.chain } : {}),
@@ -459,7 +484,7 @@ async function processFile(absInput, args) {
 async function main() {
   const args = parseArgs(process.argv.slice(2));
 
-  const usage = 'Usage: node deob.js <input.lua | folder> [more_files_or_folders...] [-o <output.lua>] [--rename] [--comments none|light|detailed] [--plugin <name>] [--no-devirt] [--debug] [--detect] [--exec-rec] [--report <report.json>]';
+  const usage = 'Usage: node deob.js <input.lua | folder> [more_files_or_folders...] [-o <output.lua>] [--rename] [--comments none|light|detailed] [--plugin <name>] [--no-devirt] [--no-format] [--debug] [--detect] [--exec-rec] [--report <report.json>]';
   if (args.help) {
     console.log(usage);
     console.log('Use --detect to classify without executing, or --no-devirt for a behaviour trace.');

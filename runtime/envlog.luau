@@ -2237,6 +2237,10 @@ local function onCall(p, ...)
 if name == "HttpGet" or name == "HttpGetAsync" or name == "HttpPost" or name == "HttpPostAsync"
                 or name == "GetAsync" or name == "PostAsync" or name == "RequestAsync" then
                 if R.type(a1) == "string" then remember(urls, a1) end
+                -- An offline executor has no network: the call answers nil, so a
+                -- script's own "fetch the library" bootstrap takes its failure
+                -- path instead of building a library out of a proxy.
+                if CFG.offline_http then return nil end
                 return callP(calleeText .. "(" .. fmtArgs(R.unpack(args, 1, args.n)) .. ")", "response", "string")
         end
 

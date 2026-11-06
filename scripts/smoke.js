@@ -20,6 +20,9 @@ function smoke(file, opts = {}) {
     time_budget: opts.budget || 6000,
     dump_strings: false,
     executor: opts.executor || 'auto',
+    // no network here: a script that fetches its library has to take its own
+    // failure path, exactly as it would on an executor with no internet
+    offline_http: true,
   };
   const text = harness.buildHarness(source, cfg, {});
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'smoke-'));

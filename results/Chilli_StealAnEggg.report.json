@@ -2,13 +2,17 @@
   "schema_version": 1,
   "input": "/tmp/new2/StealAnEggg.lua",
   "output": "/home/user/DeobfLuraph/results/Chilli_StealAnEggg.deobf.luau",
-  "output_sha256": "86161645826a0d8f2300e7c6f6b4e345e13f86aa71bf45ad2c5149d56f99750a",
-  "output_bytes": 960422,
+  "output_sha256": "b44d7a9d4c12313aae2c5f6243d2a79139933eeaba09d7e1a498b2cb909ee86f",
+  "output_bytes": 1027222,
   "obfuscator": "luraph_v15",
   "engine": "Luraph v15",
   "confidence": 1,
   "result_type": "payload-source",
   "trace_status": "finished",
+  "format": {
+    "tool": "stylua",
+    "changed": true
+  },
   "lift_stats": {
     "functions": 2204,
     "walked": 0,

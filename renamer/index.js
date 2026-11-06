@@ -24,6 +24,9 @@ function sameExistingFile(a, b) {
   return sa.dev === sb.dev && sa.ino === sb.ino;
 }
 
+const format = require('../src/format');
+const { isValidLuaSyntax } = require('../src/luau_check');
+
 function writeAtomically(dest, content) {
   const abs = path.resolve(dest);
   fs.mkdirSync(path.dirname(abs), { recursive: true });
@@ -221,6 +224,7 @@ function parseArgs(argv) {
     configPath: null,
     header: false,
     noDce: false,
+    format: true,
     noDarklua: false,
     noDeobfPolish: false,
     report: null,
@@ -250,6 +254,7 @@ function parseArgs(argv) {
     else if (a === '--config') args.configPath = valueAt(++i, a);
     else if (a === '--header') args.header = true;
     else if (a === '--no-dce') args.noDce = true;
+    else if (a === '--no-format') args.format = false;
     else if (a === '--no-darklua') args.noDarklua = true;
     else if (a === '--no-deobf-polish') args.noDeobfPolish = true;
     else if (a === '--report') args.report = valueAt(++i, a);
@@ -293,7 +298,19 @@ function processFile(inputFile, args) {
     noDeobfPolish: args.noDeobfPolish,
   });
 
-  writeAtomically(outPath, res.source);
+  // The engine formats every result; a file produced here has to match it, or the
+  // raw and the renamed copy of one script would be laid out differently.
+  let source = res.source;
+  if (args.format !== false) {
+    const fmt = format.formatLuau(source);
+    if (fmt.ok && (!fmt.changed || isValidLuaSyntax(fmt.text))) {
+      if (fmt.changed) process.stderr.write(`[*] formatted with ${fmt.tool}\n`);
+      source = fmt.text;
+    } else if (!fmt.ok) {
+      process.stderr.write(`[!] formatter skipped: ${fmt.reason}\n`);
+    }
+  }
+  writeAtomically(outPath, source);
   const reportObj = {
     input: absIn,
     output: outPath,
@@ -325,6 +342,7 @@ function main() {
     '  --no-dce                  Skip Darklua + AST dead-code/garbage cleanup',
     '  --header                  Prepend summary header comment at top of output',
     '  --report <report.json>    Write structured JSON summary report',
+    '  --no-format               Do not run the result through StyLua',
   ].join('\n');
 
   const args = parseArgs(process.argv.slice(2));

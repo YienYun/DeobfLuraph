@@ -450,3 +450,27 @@ are also assigned by the block that is kept (`_branch_targets`). A body that set
 nothing new is still folded exactly as before, which is why the pinned results are
 byte-identical; a body that is the only initializer stays, and the file keeps the
 value it would otherwise have lost.
+
+### Formatting the result
+
+The lift lays its own code out, but a payload printed from a loader field is
+printed as written, and a trace is one statement per line by construction. Both
+read better through a real formatter, so `src/format.js` calls StyLua (the WASM
+build, `@johnnymorganz/stylua`, no platform binary) on the finished text, in
+`deob.js` right before the watermark and the write, and in the renamer before its
+output.
+
+Two things had to be right for this to be safe:
+
+* **The formatted text is parsed before it replaces the result.** `luau-ast` is
+  asked; a formatter that mangles a script is worse than no formatter, so the
+  unformatted text wins and the report says `format.skipped`.
+* **The formatter is run to a fixed point.** With very long table/call lines the
+  hang decision can move on the next pass (`}, {}` joining), so one pass is not
+  stable. `formatLuau` repeats (at most 4 passes, each with a fresh `Config`, since
+  the wasm Config is consumed by the call) until the text stops changing.
+  `test/format.test.js` pins that formatting a formatted result moves no bytes.
+
+Nothing else in the pipeline is allowed to depend on the layout: the passes that
+run after the lift work on parsed structure, and the gates (`luac`, `freevars`,
+`smoke`) run on the formatted file exactly as a user would run it.

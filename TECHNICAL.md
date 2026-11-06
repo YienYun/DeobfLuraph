@@ -344,6 +344,21 @@ word but whether the instruction it decodes to is the one the program would
 have run there, and no post-hoc decode can answer that. Replay was reverted;
 what stayed is the flag that makes `unrecorded` mean what it says.
 
+**Driving the connected handlers was tried and rejected too.** The run stops at
+the first yield, so every `:Connect`ed handler -- a button click, a remote, a
+heartbeat -- never executes. `--drive` queued each handler where the connection
+is made and fired the queue after the main chunk, in the VM's own session
+(`coroutine.resume`, four rounds, 4,000 calls). Six handlers fired on
+`Lph1-v15.0`, sixteen on `Lph6-V15.0`; coverage did not move (147,295 -> 147,414
+cells, inside the run-to-run band) and the lift got *worse*: `Lph6` went from
+14,895 to 9,614 lines with the same ten `:Create` and twenty-four `GetService`
+calls. Firing a handler after the script has finished mutates the VM state the
+dump is a photograph of, so the dump stops describing the run that was traced
+without contributing code the walk can use. A sound version has to keep the
+driven run out of the authoritative dump (coverage-only, mapped by array
+identity) and isolate each handler; that is a bigger change than the measured
+payoff justifies today.
+
 **One file can carry two scripts, and the wrapper is not the script.** The
 Chilli-hub build in the fixture set (`StealAnEggg`, pinned as `lph-v15-1-5`) is a
 `return setmetatable({...})` table: the hub's UI library is virtualized, and the

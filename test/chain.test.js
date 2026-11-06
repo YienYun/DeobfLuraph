@@ -13,7 +13,7 @@ const path = require('node:path');
 const test = require('node:test');
 
 const ROOT = path.resolve(__dirname, '..');
-const luarmor = require(path.join(ROOT, 'src', 'luarmor'));
+const luarmor = require(path.join(ROOT, 'core', 'luarmor'));
 
 const STUB = `local _bsdata0 = { module_id = "abc", cache_key = "def" }
 local url = "https://api.luarmor.net/files/v4/loaders/0123456789abcdef0123456789abcdef.lua"

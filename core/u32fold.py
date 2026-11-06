@@ -51,9 +51,6 @@ _BIN_OPS = {
     "Mod": lambda a, b: a % b,
 }
 
-# Names this pass is willing to evaluate. A local definition with the same name
-# but a different body removes its name here: a file may legitimately define its
-# own `u32Mul`, and folding through it would be a guess.
 _MODELED = {"u32Mul", "u32Trunc"}
 
 _CALL_RE = re.compile(r"(?<![\w.])(?:bit32\.(?:band|bor|bxor|bnot|lshift|rshift|lrotate|rrotate)"
@@ -127,7 +124,6 @@ def _callee(node):
         name = fn.get("global") or fn.get("name")
         return name if name in _MODELED else None
     if fn.get("type") == "AstExprLocal":
-        # The v15 build declares its helpers with `local function`.
         name = (fn.get("local") or {}).get("name")
         return name if name in _MODELED else None
     if fn.get("type") == "AstExprIndexName":
@@ -148,14 +144,13 @@ def _args(node):
 
 def _ev(node, env, depth=0):
     """Exact integer value of `node`, or None when it is not provably constant."""
-    if depth > 24:                     # a pathological nest is not worth the stack
+    if depth > 24:
         return None
     v = _num(node)
     if v is not None:
         return v
     t = node.get("type")
     if t == "AstExprGroup":
-        # `(x)`: the AST keeps the parentheses as a node of their own.
         return _ev(node.get("expr") or {}, env, depth + 1)
     if t == "AstExprTypeAssertion":
         return _ev(node.get("expr") or {}, env, depth + 1)
@@ -192,7 +187,6 @@ def _ev(node, env, depth=0):
     if name == "u32Trunc" and len(vals) == 1:
         return vals[0] % U32
     if name == "u32Mul" and len(vals) == 2:
-        # The emitted helper is exactly (a * b) mod 2**32 for integers.
         return (vals[0] * vals[1]) % U32
     if name.startswith("bit32."):
         fn = BIT32_OPS.get(name.split(".", 1)[1])
@@ -307,7 +301,6 @@ def _fold_expr(node, env, starts, edits, stats):
         stats["folded"] += 1
         return
 
-    # Identities that do not need a value for the operand.
     name = _callee(node)
     if name in ("bit32.bxor", "bit32.bor", "bit32.band"):
         args = _args(node) or []
@@ -322,8 +315,6 @@ def _fold_expr(node, env, starts, edits, stats):
                 keep = b if zero_l else a
             elif name == "bit32.band" and (mask_l or mask_r):
                 keep = b if mask_l else a
-            # Dropping the call is only sound when the operand is already an
-            # integer: bit32 truncates, so `band(2.5, M)` is 2, not 2.5.
             if keep is not None and not _int_known(keep):
                 keep = None
             if keep is not None:
@@ -471,9 +462,9 @@ def _modeled(root):
         consts = set()
         _num_consts(fn, consts)
         if marker in consts:
-            modeled.add(name)            # canonical helper: safe to evaluate
+            modeled.add(name)
         else:
-            modeled.discard(name)        # a different function wears the name
+            modeled.discard(name)
     return modeled
 
 
@@ -510,7 +501,7 @@ def _fold_once(text):
     stats = {"folded": 0, "identity": 0}
     try:
         root = ast_polish._parse_ast(text)
-    except Exception as ex:                       # not our job to fix syntax
+    except Exception as ex:
         print("[!] u32 fold skipped: %s" % str(ex)[:160], file=sys.stderr)
         return text, stats
 
@@ -525,14 +516,12 @@ def _fold_once(text):
     if not edits:
         return text, stats
 
-    # An identity keeps the operand's source text; read it now, while every
-    # offset still refers to the file we parsed.
     resolved = []
     for s0, e0, repl in edits:
         identity = isinstance(repl, tuple) and repl and repl[0] == "src"
         if identity:
             repl = btext[repl[1]:repl[2]]
-        if repl == btext[s0:e0]:        # already written as that constant
+        if repl == btext[s0:e0]:
             stats["identity" if identity else "folded"] -= 1
             continue
         resolved.append((s0, e0, repl))

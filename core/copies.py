@@ -245,7 +245,7 @@ def find_copies(text):
                 continue
             var = vars_[0]
             if var.get("type") not in ("AstExprLocal", "AstLocal"):
-                continue                  # a field target, not a register
+                continue
             local = var.get("local") if var.get("type") == "AstExprLocal" else var
             if not isinstance(local, dict) or "location" not in local or local["location"] not in writes:
                 continue
@@ -262,42 +262,25 @@ def find_copies(text):
             here = _pos(stmt["location"])[0]
             src_writes = writes.get(src[1]) or [] if src[0] == "local" else []
             if len(src_writes) > 1:
-                continue                  # the source moves on
+                continue
             if len(src_writes) == 1:
-                # the source must be visible where the copy happens: declared in
-                # this function or in one that encloses it
                 src_chain = src_writes[0][3] or ()
                 own_chain = writes[key][0][3] or ()
                 if own_chain[:len(src_chain)] != src_chain:
                     continue
                 if _pos(src_writes[0][0]["location"])[0] > here:
-                    continue              # the source is assigned after the copy
+                    continue
             stop = None
             stop_end = None
             stop_simple = False
             for j in range(i + 1, len(body)):
                 if key in marks[j][2]:
                     stop, stop_end = marks[j][0], marks[j][1]
-                    # a straight-line store always runs once the copy has run; a
-                    # store inside an `if` may not, and the read after it would
-                    # still see the copied value
                     stop_simple = not _child_blocks(body[j])
                     break
             reads_here = [_pos(node["location"])[0] for node, _f in reads.get(key, [])]
             if not reads_here:
-                continue                  # nothing to inline: deadstore's job
-            # Every read has to be accounted for. It is either between the copy
-            # and the next write -- so it is substituted -- or after a plain
-            # straight-line write, which refills the register no matter what.
-            # A read before the copy is not dead weight: inside a loop it runs
-            # again after this very statement, and in an `if`/`else` the other
-            # branch reaches it without the refill having happened, so the read
-            # would see nil where the program expects the value from last time.
-            # ... and it has to be in this block: a copy inside an `if` branch
-            # only happens when that branch runs, so a read outside it may see
-            # whatever the register held before.
-            # A read inside a loop that also writes this register is looking at
-            # what the previous pass through the body left there, not at the copy.
+                continue
             loops = []
             for j in range(i + 1, len(body)):
                 stmt_j = body[j]
@@ -313,16 +296,13 @@ def find_copies(text):
                 elif not (blk_start <= r <= blk_end):
                     ok.append(None)
                 elif here < r and (stop is None or r < stop):
-                    ok.append(True)         # before the refill: it is the copy
+                    ok.append(True)
                 elif stop is not None and stop <= r <= stop_end:
-                    ok.append(True)         # the refill's own right-hand side
+                    ok.append(True)
                 elif stop is not None and stop_simple:
-                    ok.append(False)        # the refill always overwrote it
+                    ok.append(False)
                 else:
                     ok.append(None)
-            # The substituted name has to mean the same thing at the read: a
-            # `local a` declared in between would make the new name refer to a
-            # different variable.
             scopes = _scope_index(root)
             if src[0] == "local":
                 src_name = names.get(src[1])
@@ -338,9 +318,6 @@ def find_copies(text):
                 continue
             is_decl = stmt.get("type") == "AstStatLocal"
             writes_later = any(key in t for _p, _e, t in marks[i + 1:])
-            # a read that stays behind still names the register, so its
-            # declaration has to stay too -- dropping it would make that read
-            # resolve to an outer variable of the same name
             keep_decl = is_decl and (writes_later or any(x is False for x in ok))
             plan.append((stmt, key, src, keep_decl, [r for r, k in zip(reads_here, ok) if k]))
         for stmt in body:
@@ -348,9 +325,6 @@ def find_copies(text):
                 scan_block(child)
 
     scan_block(root)
-    # A copy whose source is itself folded in this round would leave the name it
-    # writes pointing at a declaration that is about to disappear; the next round
-    # picks these up once the source is gone.
     changed = True
     while changed:
         changed = False
@@ -432,7 +406,6 @@ def propagate(text, rounds=4):
                 edits.append((s, e, name))
             s, e = ast_polish._loc_bytes(stmt["location"], starts)
             if keep_decl:
-                # the register is refilled later, so its declaration has to stay
                 var = stmt["vars"][0]
                 _vs, ve = ast_polish._loc_bytes(var["location"], starts)
                 edits.append((s, e, btext[s:ve]))
@@ -448,9 +421,6 @@ def propagate(text, rounds=4):
     return text, stats
 
 
-# Only a value that reads the same wherever it is written is worth moving: a call,
-# a name, a literal. A bigger expression stays behind its temporary, because
-# paste-and-parenthesise makes the line it lands on harder to read, not easier.
 _ATOMIC = {"AstExprLocal", "AstExprGlobal", "AstExprConstantString", "AstExprConstantNumber",
            "AstExprConstantBool", "AstExprConstantNil", "AstExprIndexName", "AstExprCall"}
 
@@ -496,10 +466,7 @@ def inline_temps(text, rounds=3):
                 rnode = rs[0][0]
                 rs_, re_ = ast_polish._loc_bytes(rnode["location"], starts)
                 if not (ns <= rs_ and re_ <= ne):
-                    continue                  # used somewhere further down
-                # ... and in the statement itself, not in a block it owns: moving
-                # a call into the body of an `if` would stop it running whenever
-                # the branch is not taken.
+                    continue
                 if any(bs <= rs_ and re_ <= be for bs, be in _inner_blocks(nxt, starts)):
                     continue
                 value = vals[0]
@@ -543,9 +510,6 @@ def drop_unused_decls(text):
         if isinstance(node, dict):
             if node.get("type") == "AstStatLocal" and not (node.get("values") or []):
                 vars_ = node.get("vars") or []
-                # A declaration may only go when the name is not written again
-                # either: dropping `local b` would turn a later `b = ...` into a
-                # write to an outer `b`.
                 keep = [v for v in vars_
                         if reads.get(v["location"]) or len(writes.get(v["location"]) or []) > 1]
                 if not keep:

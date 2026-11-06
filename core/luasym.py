@@ -6,12 +6,6 @@ import unicodedata
 class Unsupported(Exception):
     pass
 
-# A diagnostic string can become part of the output (`-- devirt: ...`), so it
-# must be a pure function of the input. Python's default object repr is not:
-# it carries id(), which changes from run to run and made two runs over one
-# input produce different bytes. describe_value() is the only way a VM value
-# may be formatted into a message; scrub_addresses() is the last line of
-# defence for messages built elsewhere.
 _ADDRESS_RE = re.compile(r"<([A-Za-z_][\w.]*) object at 0x[0-9a-fA-F]+>")
 _CLIP = 120
 
@@ -73,9 +67,6 @@ def describe_value(v):
         return "multi(%d value(s)%s)" % (len(v.items), ", tail" if v.tail is not None else "")
     if isinstance(v, SymList):
         return "packed list(%d value(s)%s)" % (len(v.items), ", tail" if v.tail is not None else "")
-    # A class that defines its own __repr__ gives a stable, readable
-    # description (object.__repr__ would give the address, which is exactly
-    # what this function exists to keep out of the output).
     try:
         if type(v).__repr__ is not object.__repr__:
             return _clip_text(repr(v))
@@ -119,8 +110,6 @@ class LTable:
         return n
 
     def __repr__(self):
-        # tid is deterministic (assigned at creation); id() is not, and this
-        # repr reaches diagnostic text, so it must never fall back to it.
         return "LTable#%s" % (self.tid if self.tid is not None else "-")
 
 class Buf:
@@ -150,8 +139,6 @@ class LuaFunc:
 def norm_key(k):
     if type(k) is int or type(k) is bytes:
         return k
-    # isfinite must come first: int(float("inf")) raises OverflowError and
-    # int(float("nan")) raises ValueError, and inf/nan are legal Lua keys.
     if isinstance(k, float) and math.isfinite(k) and k == int(k):
         return int(k)
     if isinstance(k, Expr):
@@ -360,22 +347,18 @@ def _pow(a, b):
     inf, a negative base with a fractional exponent returns complex instead
     of nan, and overflow raises OverflowError instead of saturating to inf."""
     if a == 0 and b < 0:
-        # pow(+-0, -odd) = -+inf, pow(+-0, -even or -fractional) = +inf
         if math.copysign(1.0, a) < 0 and b % 2 == 1:
             return float("-inf")
         return float("inf")
     if a < 0 and math.isfinite(b) and b != math.floor(b):
-        # math.floor would raise OverflowError on +-inf (legal Lua exponents)
         return float("nan")
     try:
         r = float(a) ** float(b)
     except OverflowError:
-        # only reachable with an integral b (fractional negative base returned
-        # nan above): sign follows the parity of the exponent
         return float("-inf") if (a < 0 and b % 2 == 1) else float("inf")
-    except ZeroDivisionError:  # defensive; a == 0 handled above
+    except ZeroDivisionError:
         return float("inf")
-    if isinstance(r, complex):  # defensive; should be unreachable
+    if isinstance(r, complex):
         return float("nan")
     return r
 
@@ -1040,16 +1023,12 @@ class Interp:
         sp = self.L.special.get(key)
         if sp is not None:
             return self.L.special_get(sp, self)
-        # Scope.get inlined: one call frame less on every variable read
         s = scope
         while s is not None:
             v = s.vars.get(key, _SCOPE_MISSING)
             if v is not _SCOPE_MISSING:
                 return v
             s = s.parent
-        # captured VM state: a free name of a VM closure reached through a
-        # helper called with a fresh scope has no chain to the maker's env,
-        # but the capture recorded the value the real run saw (by name)
         fb = getattr(self.L, "cap_fallback", None)
         if fb:
             try:
@@ -1174,7 +1153,7 @@ class Interp:
                     self.L._need_jreg(a, b, c)
                 raise Unsupported("numeric for with symbolic bounds")
             if a is None or b is None or c is None:
-                pass  # bound unknown at capture: skip, like a while with an unknown (falsy) condition
+                pass
             elif not (isinstance(a, (int, float)) and not isinstance(a, bool)
                       and isinstance(b, (int, float)) and not isinstance(b, bool)
                       and isinstance(c, (int, float)) and not isinstance(c, bool)):
@@ -1515,8 +1494,6 @@ class Interp:
             return r.values
         return Multi([])
 
-# expression-type dispatch (eval used to be a 15-branch string if-chain; it
-# is one of the hottest functions of the whole pipeline)
 _EVAL_DISPATCH = {
     "AstExprConstantNumber": Interp._ev_num,
     "AstExprConstantString": Interp._ev_str,

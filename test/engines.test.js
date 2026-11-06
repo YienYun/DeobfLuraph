@@ -3,12 +3,12 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
 
-const detect = require('../src/detect');
-const engines = require('../src/engines');
+const detect = require('../core/detect');
+const engines = require('../core/engines');
 
 test('this build ships the Luraph engines and refuses the rest', () => {
   assert.equal(engines.NOT_SHIPPED.luraph_v14, undefined, 'v14 must stay dispatchable');
-  assert.equal(engines.NOT_SHIPPED.luraph_v15, 'handled by src/driver.js');
+  assert.equal(engines.NOT_SHIPPED.luraph_v15, 'handled by core/driver.js');
   assert.match(engines.NOT_SHIPPED.moonveil, /Luraph-only/);
 });
 

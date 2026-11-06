@@ -30,8 +30,6 @@ def lower(entry_key, order, D, link, prefix, upnames, closure):
     LP.recognize(entry, blocks, D)
 
     entry = ST.thread_empty(entry, blocks)
-    # Registers a frame binding names (`upnames[(up, register)]`) are real
-    # values of the enclosing function, not holes of this one.
     frame_bound = {k[1] for k in (upnames or {})
                    if isinstance(k, tuple) and len(k) == 2 and isinstance(k[1], int)}
     dropped = ST.poison_unknown_callees(entry, blocks, D, frame_bound,
@@ -43,13 +41,9 @@ def lower(entry_key, order, D, link, prefix, upnames, closure):
         VR.LIFT_STATS["unknown_callee"] = VR.LIFT_STATS.get("unknown_callee", 0) + dropped
     CG.simplify_blocks(blocks, D)
     names = {("up", i): nm for i, nm in (upnames or {}).items()}
-    # The parent's names are fixed text; this function's own registers must step
-    # around them, or a local hides a capture the closure body reads.
     up_taken = {nm for nm in names.values() if isinstance(nm, str) and nm != "nil"}
     own = set(VR.rename(entry, blocks, prefix, set(), avoid=up_taken).values())
 
-    # Convert any rare surviving loop Pseudo variables (irreducible state-machine loops)
-    # into real declared locals with flat-yielding GenIterE so zero globals ever leak.
     pseudo_map = {}
     pseudo_seq = [0]
 
@@ -58,9 +52,6 @@ def lower(entry_key, order, D, link, prefix, upnames, closure):
             key = (x.name, x.depth)
             nm = pseudo_map.get(key)
             if nm is None:
-                # These hold the coroutine-wrapped generator of a loop the
-                # structurer could not rebuild as a `for`. `iter_z_1` was a
-                # register name wearing a prefix; call the thing what it is.
                 pseudo_seq[0] += 1
                 nm = "iterator" if pseudo_seq[0] == 1 else "iterator%d" % pseudo_seq[0]
                 while nm in own:
@@ -120,8 +111,6 @@ def lower(entry_key, order, D, link, prefix, upnames, closure):
     params = VR.extract_params(body)
     rend = CG.Renderer(names)
     text = rend.block(body, "")
-    # report the stubs that actually reach the output: a block the structuring
-    # pass never emits (behind a return/break) is dead code, not a lost one
     if nerr:
         nerr = text.count('error("devirt:')
     fallbacks = sr.fallbacks + (1 if getattr(sr, "state_machine", False) else 0)
@@ -175,8 +164,6 @@ def polish(text):
     import ast_polish
     text = text.replace(codegen.LONG_NL, "\n")
     if os.environ.get("POLISH_DUMP"):
-        # debugging aid: keep the text exactly as the lifter produced it, so the
-        # polish passes can be replayed on it without a two-minute re-lift
         with open(os.environ["POLISH_DUMP"], "w", encoding="utf-8", newline="\n") as fh:
             fh.write(text)
     
@@ -184,10 +171,6 @@ def polish(text):
         text = localfuncs.rewrite(text)
     except Exception as ex:  
         print("[!] pre-localfuncs pass failed: %s" % ex, file=sys.stderr)
-    # The v15 build seeds every protected function with a number it only ever
-    # hashes against itself. Those chains are the obfuscator's integrity trail,
-    # never the script's logic: drop the ones nothing can read, then the seeds
-    # themselves, and repeat until neither has anything left to say.
     try:
         import deadstore
         import seeds
@@ -208,9 +191,6 @@ def polish(text):
                   file=sys.stderr)
     except Exception as ex:
         print("[!] seed cleanup failed: %s" % ex, file=sys.stderr)
-    # Register copies (`data2 = data3` straight before the next use) are the VM
-    # refilling a slot, not a decision of the script; naming the source at the
-    # use sites takes the hop out.
     try:
         import copies
         text, cp = copies.propagate(text)
@@ -221,8 +201,6 @@ def polish(text):
                   file=sys.stderr)
     except Exception as ex:
         print("[!] copy pass failed: %s" % ex, file=sys.stderr)
-    # Folding a copy takes the reads that kept the register alive with it, so
-    # the stores it leaves behind are dead and worth a second sweep.
     try:
         import deadstore as _deadstore
         text, after = _deadstore.strip(text)
@@ -231,9 +209,6 @@ def polish(text):
                   % after["removed"], file=sys.stderr)
     except Exception as ex:
         print("[!] post-copy dead store pass failed: %s" % ex, file=sys.stderr)
-    # The u32 arithmetic a v15 build leaves behind is exact: folding it turns a
-    # state machine's seed chain into the constants it computes, which is what
-    # the control-flow passes need in order to see what a branch tests.
     try:
         import u32fold
         folded, u32stats = u32fold.fold_text(text)
@@ -244,10 +219,6 @@ def polish(text):
             text = folded
     except Exception as ex:
         print("[!] u32 fold pass failed: %s" % ex, file=sys.stderr)
-    # Control flow the obfuscator flattened into a loop over constants is
-    # unrolled first, then the AST cleanup drops the loop's dead prelude and
-    # simplifies what the unrolling exposed -- twice, because the second round
-    # sees bounds the first one could not (the prelude is gone, not overwritten).
     try:
         import flatten
         for _ in range(2):
@@ -259,8 +230,6 @@ def polish(text):
             text = ast_polish.polish_ast(text, text_names=False)
         except Exception as ex2:
             print("[!] ast polish pass failed: %s" % ex2, file=sys.stderr)
-    # Parentheses the lifter recorded around whole expressions say nothing; the
-    # tidier drops the ones no operator can rebind.
     try:
         import tidy
         groups = 0
@@ -281,11 +250,6 @@ def polish(text):
         import names
         try:
             text = names.rename_text(text)
-            # A second pass sees the field names the first one invented, so a
-            # local that only copies one can take that name (`local state =
-            # context.state` instead of `local value5 = ...`). It settles here:
-            # a third pass is byte-identical, so stop as soon as one changes
-            # nothing.
             for _ in range(2):
                 again = names.rename_text(text)
                 if again == text:
@@ -293,10 +257,6 @@ def polish(text):
                 text = again
         except Exception as ex:  
             print("[!] naming pass failed: %s" % ex, file=sys.stderr)
-    # One printed name, one binding: a duplicate declaration and a closure's
-    # name reused for a later value are split here, after naming (so the names
-    # the reader sees are the ones being split) and before the final tidy.
-    # DEVIRT_NO_NAMESPLIT keeps the shared names, for bisecting a diff.
     if not os.environ.get("DEVIRT_NO_NAMESPLIT"):
         try:
             import namesplit
@@ -308,10 +268,6 @@ def polish(text):
         text = localfuncs.rewrite(text)
     except Exception as ex:  
         print("[!] local function pass failed: %s" % ex, file=sys.stderr)
-    # Last, because it names what the script stores in its own `data[k]` helper
-    # table from what is stored there: the passes above rename locals by use, and
-    # giving them an alias to reason about first would change their result.
-    # DEVIRT_NO_SLOTNAMES keeps the numbered slots, for bisecting a diff.
     if not os.environ.get("DEVIRT_NO_SLOTNAMES"):
         text = ast_polish.name_context_slots(text)
         text = ast_polish.name_from_usage(text)

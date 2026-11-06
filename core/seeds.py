@@ -110,7 +110,7 @@ def _seed_expr(node, key, known):
     if t == "AstExprBinary":
         return node.get("op") in ARITH and _seed_expr(node["left"], key, known) \
             and _seed_expr(node["right"], key, known)
-    if t == "AstExprIndexName":                  # `bit32.bxor`
+    if t == "AstExprIndexName":
         return _seed_expr(node.get("expr") or {}, key, known)
     if t == "AstExprCall":
         return _dotted(node.get("func")) in HELPERS \
@@ -160,7 +160,7 @@ def _collect(root):
                 for i, var in enumerate(vars_):
                     local = var.get("local") if var.get("type") == "AstExprLocal" else var
                     if not isinstance(local, dict) or "location" not in local:
-                        continue                     # a field or a global target
+                        continue
                     if var.get("type") not in ("AstExprLocal", "AstLocal"):
                         continue
                     value = vals[i] if i < len(vals) else None
@@ -221,17 +221,12 @@ def find_seeds(text):
         """Every write is arithmetic over literals and other seeds, nothing else."""
         ws = writes[key]
         if any(w.impure for w in ws):
-            return False                 # `x += ...` reads and writes at once
-        # A `local x` declaration (no value) is pure nil: it never makes a local
-        # a seed on its own, but it does not disqualify one either.
+            return False
         values = [w.value for w in ws if w.value is not None]
         if not values:
             return False
         return all(_is_number(v) or _seed_expr(v, key, known) for v in values)
 
-    # Seeds feed each other (`state = bxor(alias, k)` while `alias = state`), so
-    # the set is the greatest fixpoint: start from everything seed-shaped and
-    # drop the ones that lean on something that did not survive.
     tracked = set(order)
     seeds = {key for key in order if shape_ok(key, tracked)}
     changed = True
@@ -277,7 +272,7 @@ def strip(text):
             edits.append((s, e, _decl(st, indexes, btext, starts)))
         else:
             if len(vals) != entry.nvars:
-                continue                 # `a, seed = f()`: positions would shift
+                continue
             rebuilt = _rebuild(st, indexes, btext, starts)
             s, e = ast_polish._loc_bytes(st["location"], starts)
             edits.append((s, e, rebuilt))
@@ -296,8 +291,6 @@ def strip(text):
 
     leaked = _leaked_names(out, {names[k] for k in seeds})
     if leaked:
-        # A seed is still read somewhere we did not remove: undo rather than
-        # hand back code that no longer compiles.
         print("[!] seed pass undone: %s would be left undefined"
               % ", ".join(sorted(leaked)), file=sys.stderr)
         return text, {"seeds": 0, "statements": 0, "calls": 0}

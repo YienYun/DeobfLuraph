@@ -6,7 +6,7 @@ const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const garbage = require('./garbage');
-const { WATERMARK_COMMENT, WATERMARK_PRINT, injectWatermark } = require('../src/watermark');
+const { WATERMARK_COMMENT, WATERMARK_PRINT, injectWatermark } = require('../core/watermark');
 
 const DIRECTORY_EXTENSIONS = ['.lua', '.luau'];
 const FILE_EXTENSIONS = ['.lua', '.luau', '.txt'];
@@ -24,8 +24,8 @@ function sameExistingFile(a, b) {
   return sa.dev === sb.dev && sa.ino === sb.ino;
 }
 
-const format = require('../src/format');
-const { isValidLuaSyntax } = require('../src/luau_check');
+const format = require('../core/format');
+const { isValidLuaSyntax } = require('../core/luau_check');
 
 function writeAtomically(dest, content) {
   const abs = path.resolve(dest);
@@ -35,11 +35,7 @@ function writeAtomically(dest, content) {
   fs.renameSync(tmp, abs);
 }
 
-/**
- * Invoke `renamer/bin/betterdecompiler clean --json` (scope-verified Luau renamer + commenter).
- * Supports both instant offline mode and AI LLM providers (openai, gemini, anthropic, groq,
- * deepseek, openrouter, xai, ollama, lmstudio).
- */
+
 function runBetterDecompiler(source, opts = {}) {
   const bin = betterDecompilerBin();
   if (!fs.existsSync(bin)) {
@@ -90,17 +86,11 @@ function runBetterDecompiler(source, opts = {}) {
   };
 }
 
-/**
- * Full Layer-2 pipeline on an in-memory Luau source string:
- *   1. Deobfuscator-aware AST chaff cleanup + Darklua dead-code elimination
- *   2. BetterDecompiler scope-verified variable/function renaming + AI-style comments
- *   3. Official `./bin/luau-ast` syntax verification gate (with automatic safe fallback)
- */
+
 function cleanAndRename(source, opts = {}) {
   const t0 = Date.now();
   const warnings = [];
 
-  // Stage 1 & 2: Garbage & dead-code removal
   let working = source;
   let dceStats = {
     deobfPolished: false,
@@ -122,8 +112,6 @@ function cleanAndRename(source, opts = {}) {
     warnings.push(...g.warnings);
   }
 
-  // If StyLua is unavailable, run Darklua readable generator before BetterDecompiler
-  // so BetterDecompiler's contextual comments are preserved on formatted output.
   let formatterUsed = 'none';
   if (!opts.noFormat && !garbage.resolveStyluaBin()) {
     const preFmt = garbage.formatLuauCode(working, opts);
@@ -131,11 +119,9 @@ function cleanAndRename(source, opts = {}) {
     formatterUsed = preFmt.formatter;
   }
 
-  // Stage 3: Scope-verified Luau renaming + contextual doc-comments
   const bd = runBetterDecompiler(working, opts);
   warnings.push(...bd.warnings);
 
-  // Stage 4: Official StyLua formatting (preserves comments & normalizes style)
   let candidateSource = bd.source;
   if (!opts.noFormat && garbage.resolveStyluaBin()) {
     const postFmt = garbage.formatLuauCode(candidateSource, opts);
@@ -143,7 +129,6 @@ function cleanAndRename(source, opts = {}) {
     formatterUsed = postFmt.formatter;
   }
 
-  // Stage 5: Final official Luau AST syntax verification gate
   let finalSource = candidateSource;
   let astCheck = garbage.checkLuauAst(finalSource);
   if (!astCheck.ok) {
@@ -298,8 +283,6 @@ function processFile(inputFile, args) {
     noDeobfPolish: args.noDeobfPolish,
   });
 
-  // The engine formats every result; a file produced here has to match it, or the
-  // raw and the renamed copy of one script would be laid out differently.
   let source = res.source;
   if (args.format !== false) {
     const fmt = format.formatLuau(source);

@@ -5,7 +5,7 @@
 // here is checked the only way that counts: the folded program is run next to
 // the original one under Luau, and both must print the same numbers.
 //
-// The helper bodies below are the ones `core/obfuscators/luraph_v15/devirt.py`
+// The helper bodies below are the ones `core/v15_devirt.py`
 // emits, verbatim, so the arithmetic under test is the arithmetic in the wild.
 
 const assert = require('node:assert/strict');
@@ -16,7 +16,7 @@ const path = require('node:path');
 const test = require('node:test');
 
 const ROOT = path.resolve(__dirname, '..');
-const { getPythonBin, pythonEnv } = require('../src/pyenv');
+const { getPythonBin, pythonEnv } = require('../core/pyenv');
 
 const PY = path.join(ROOT, 'core', 'u32fold.py');
 const LUAU = path.join(ROOT, 'bin', 'luau');

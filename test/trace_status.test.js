@@ -3,7 +3,7 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
 
-const { diagnoseTrace } = require('../src/driver');
+const { diagnoseTrace } = require('../core/driver');
 
 // A trace can stop for two very different reasons: the sandbox met a call it has
 // no answer for, or the captured file is not self-contained. The report has to

@@ -8,7 +8,7 @@ const test = require('node:test');
 
 const ROOT = path.resolve(__dirname, '..');
 const CORE = path.join(ROOT, 'core');
-const { getPythonBin, pythonEnv } = require('../src/pyenv');
+const { getPythonBin, pythonEnv } = require('../core/pyenv');
 
 // Diagnostic text ends up inside the output (`-- devirt: ...`). If it carries
 // an object address, two runs over one input produce different bytes; that is

@@ -1,20 +1,5 @@
 'use strict';
 
-/**
- * Compile every given Luau file with the real Luau compiler and report the
- * result. This is the `luac` gate: a result that does not compile is not a
- * result, whatever it looks like.
- *
- *     node scripts/luac.js results          # every *.luau under a directory
- *     node scripts/luac.js results/foo.luau --verbose
- *
- * Each file is embedded in a long-bracket string and handed to `loadstring`,
- * so the compiler runs exactly as it would in Roblox (locals/upvalue limits and
- * all) without executing a single statement of the file.
- *
- * Exit code: 0 when everything compiles, 1 when anything does not, 2 when the
- * Luau binary is missing or unusable.
- */
 
 const { spawnSync } = require('node:child_process');
 const fs = require('node:fs');
@@ -29,7 +14,6 @@ function luauBin() {
 }
 
 function brackets(text) {
-  // Longest run of '=' already inside the text decides the delimiter level.
   let level = 0;
   for (const m of text.matchAll(/\](\=*)\]/g)) level = Math.max(level, m[1].length + 1);
   const eq = '='.repeat(level);
@@ -62,7 +46,6 @@ function checkOne(bin, file) {
 function expand(args) {
   const out = [];
   for (const a of args) {
-    // A shell glob that matched nothing arrives verbatim; that is not a file.
     if (!fs.existsSync(a)) continue;
     if (fs.statSync(a).isDirectory()) {
       for (const name of fs.readdirSync(a).sort()) {

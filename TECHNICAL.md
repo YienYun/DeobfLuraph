@@ -9,16 +9,17 @@ cannot lift — with the numbers, so nothing here has to be taken on trust.
 input.lua ──▶ offline Roblox sandbox (runtime/envlog.luau)
                  │  runs the VM, dumps every reachable proto as JSON
                  ▼
-             dump ──▶ symbolic walk (core/obfuscators/luraph_v15/)
+             dump ──▶ symbolic walk (core/v15_lifter.py)
                  │     decodes instruction cells through the VM model,
                  │     builds a CFG, lifts statements
                  ▼
              IR ──▶ backend.lower ──▶ Luau text ──▶ polish ──▶ output
 ```
 
-`core/` is the compiler backend (IR, CFG structuring, SSA/names, idioms, codegen);
-`src/` is the Node orchestration around it; `runtime/envlog.luau` is the sandbox
-and the dump protocol.
+`core/` holds both halves of the engine in one flat directory: the Node
+orchestration (`driver.js`, `harness.js`, `detect.js`, …) and the Python compiler
+backend (IR, CFG structuring, SSA/names, idioms, codegen). `runtime/envlog.luau`
+is the sandbox and the dump protocol.
 
 A lift runs in rounds: `devirt round N` walks and collects the constants it could
 not decode, the sandbox decodes them, and the next round lifts again. Rounds stop
@@ -218,7 +219,7 @@ Two things can then be true, and the header of the result says which:
 ### Chaining into the Luarmor track
 
 When the engine prints a carrier's payload, the payload is handed to the Luarmor
-analyzer in the same command -- no second run (src/luarmor.js `chainPlan`/`chain`).
+analyzer in the same command -- no second run (core/luarmor.js `chainPlan`/`chain`).
 The payload alone is what gets read: `emit_payload_source` writes it next to the
 intermediates without the header and bootstrap lines this tool adds, so the
 analysis is about the loader's script and not about our own comments.
@@ -412,7 +413,7 @@ same message: the sandbox meeting a call it cannot answer, and the input not bei
 self-contained. For `attempt to call missing method 'X'`, the driver looks for a
 definition of `X` in the input (`X =`, `["X"] =`); if there is none, the diagnosis
 says the capture looks incomplete rather than blaming the environment. The mapping
-lives in `diagnoseTrace` (`src/driver.js`) and is covered by
+lives in `diagnoseTrace` (`core/driver.js`) and is covered by
 `test/trace_status.test.js`.
 
 ### Register names the lift cannot declare
@@ -455,7 +456,7 @@ value it would otherwise have lost.
 
 The lift lays its own code out, but a payload printed from a loader field is
 printed as written, and a trace is one statement per line by construction. Both
-read better through a real formatter, so `src/format.js` calls StyLua (the WASM
+read better through a real formatter, so `core/format.js` calls StyLua (the WASM
 build, `@johnnymorganz/stylua`, no platform binary) on the finished text, in
 `deob.js` right before the watermark and the write, and in the renamer before its
 output.

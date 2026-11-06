@@ -170,8 +170,6 @@ def prune_after_trap(entry, blocks):
         live.add(bid)
         b = blocks[bid]
         if trapped(b):
-            # the trap call itself stays (it is what the obfuscated code does);
-            # only what it can never reach is cut away
             b.kind, b.cond, b.succ = "end", None, []
             continue
         stack.extend(b.succ)
@@ -376,13 +374,11 @@ def _poison_multi(m, dead, D, depth=0):
     if m is None or depth > 12:
         return m
     if isinstance(m, D.TempTail) and m.t in dead:
-        # a multret outside a Multi: one unknown value is the safe reading
         return D.Missing(None)
     if isinstance(m, D.TempVal) and m.t in dead:
         return D.Missing(None)
     if isinstance(m, D.Multi):
         if isinstance(m.tail, D.TempTail) and m.tail.t in dead:
-            # the whole multret came from a call that is not emitted
             m.items = [D.Missing(None)]
             m.tail = None
         else:
@@ -446,8 +442,6 @@ def poison_unknown_callees(entry, blocks, D, frame_bound=(), on_drop=None):
             if fn.n in defined or fn.n in frame_bound:
                 continue
             if s.t not in used:
-                # nothing reads the results: the printer drops a nil call as a
-                # statement on its own, so leave the block as it was
                 continue
             dead.add(s.t)
             drops.append((bid, s))
@@ -503,9 +497,6 @@ def thread_empty(entry, blocks):
             b.stmts += s.stmts
             b.kind, b.cond, b.succ, b.values, b.error = s.kind, s.cond, s.succ, s.values, s.error
             del blocks[s.id]
-            # s vanished: b now feeds s's successors directly. Update their
-            # preds in place instead of a full O(V+E) recompute per merge
-            # (this loop used to be O(merges x blocks)).
             for x in b.succ:
                 if x in blocks:
                     ps = blocks[x].preds
@@ -769,7 +760,7 @@ class Structurer:
             if b.kind == "end":
                 return out
             if b.kind == "goto":
-                if not b.succ:      # dead end cut by the trap/reachability passes
+                if not b.succ:
                     return out
                 cur = b.succ[0]
                 continue
@@ -1074,7 +1065,7 @@ def structure(entry, blocks, own=None, rounds=128):
     copied = 0
     nflag = 0
     for _ in range(rounds):
-        recompute_preds(blocks)     # the fixers below read b.preds
+        recompute_preds(blocks)
         sr = Structurer(entry, blocks)
         body = sr.run()
         if not sr.gotos:
@@ -1111,9 +1102,6 @@ def structure(entry, blocks, own=None, rounds=128):
         if not n:
             break
     if sr.fallbacks:
-        # irreducible control flow: one dispatch loop for the whole function.
-        # Count it as one fallback (not as one per goto) so the run summary
-        # says how many functions were not structured.
         if own is not None:
             own.add("state")
         body = state_machine(*first, "state", own)
@@ -1201,14 +1189,8 @@ def state_machine(entry, blocks, name, own=None):
         elif b.kind == "crash":
             out.append(SCrash())
         elif b.kind == "end":
-            # dead path (a decided-away branch or an outcome-less block): the
-            # linear structurer just stops emitting here, which in the state
-            # machine form is an implicit return -- falling through instead
-            # would leave the state variable unchanged and loop forever
             out.append(SReturn(None))
         else:
-            # a new Block kind must be handled here explicitly; silently
-            # emitting `return` hid the bug and corrupted the output
             out.append(SError("state machine: unhandled block kind %s" % b.kind))
         cases.append((num[bid], out))
 

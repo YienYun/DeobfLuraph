@@ -59,11 +59,8 @@ if HERE not in sys.path:
 
 import ast_polish as AP
 
-# A dispatch loop over constants is short. Anything longer is not the obfuscator's
-# flattener and unrolling it would mean pasting one body dozens of times.
 MAX_ITER = 256
 
-# Totals of the last `apply_text` call, for the run report.
 STATS = {}
 
 _OPEN = {"+": "Add", "-": "Sub", "*": "Mul", "//": "FloorDiv", "%": "Mod"}
@@ -80,9 +77,6 @@ def _span(loc, starts):
     return AP._loc_bytes(loc, starts)
 
 
-# --------------------------------------------------------------------------
-# constants
-# --------------------------------------------------------------------------
 def _num(e):
     """The integer a numeric literal node stands for, else None."""
     if not isinstance(e, dict) or e.get("type") != "AstExprConstantNumber":
@@ -195,9 +189,6 @@ def _written_locals(root, dispatch):
     def walk(n, block_id):
         if isinstance(n, dict):
             if id(n) in dispatch:
-                # Predule statements and the loop head are the loop's own
-                # bookkeeping; the rest of the body is ordinary code and its
-                # writes still count.
                 if isinstance(dispatch[id(n)], tuple):
                     inner = (n.get("body") or {}).get("body") or []
                     for st in inner[2:]:
@@ -253,9 +244,6 @@ def _assign_consts(stmt, env, written, block_id=None):
             env[loc] = v
 
 
-# --------------------------------------------------------------------------
-# the loop shape
-# --------------------------------------------------------------------------
 def _group(e):
     while isinstance(e, dict) and e.get("type") == "AstExprGroup":
         e = e.get("expr")
@@ -352,9 +340,6 @@ def _loop_range(step, limit, counter0):
     return None
 
 
-# --------------------------------------------------------------------------
-# emission
-# --------------------------------------------------------------------------
 def _reindent(text, old_indent, new_indent):
     """Move a copied block from one nesting level to another."""
     if old_indent == new_indent:
@@ -408,8 +393,6 @@ def _dispatch_shape(st):
     cond0 = then_body[0].get("condition")
     a, b = _cmp(_not(cond0), "CompareLe")
     if not _local_ref(a, counter_loc):
-        # The inverted form (`if counter <= limit then break end`) names the
-        # same three registers; only its break condition is the other way up.
         a, b = _cmp(_group(cond0), "CompareLe")
     if not _local_ref(a, counter_loc) or not isinstance(b, dict) \
             or b.get("type") != "AstExprLocal":
@@ -590,7 +573,6 @@ class Unroller:
         self.stats = {"found": 0, "unrolled": 0, "iterations": 0, "removed": 0, "dead": 0}
         self.skipped = {}
 
-    # -- helpers ----------------------------------------------------------
     def _slice(self, node):
         s, e = _span(node["location"], self.starts)
         return self.btext[s:e].decode("latin-1")
@@ -676,8 +658,6 @@ class Unroller:
             if t == "AstStatContinue":
                 return "continue"
             if t in ("AstStatReturn", "AstStatError"):
-                # A `return` ends the function, so nothing after it in this
-                # iteration is reachable and no later iteration runs at all.
                 out.append(self._render(st, env))
                 return "return"
             if t == "AstStatIf":
@@ -693,8 +673,6 @@ class Unroller:
                 out.append(self._render(st, env))
                 continue
             if t == "AstStatLocal":
-                # A fresh local holding a known value: fold its reads and drop
-                # the declaration. Only safe when nothing ever writes it.
                 vals = st.get("values") or []
                 vars_ = st.get("vars") or []
                 folded = False
@@ -709,8 +687,6 @@ class Unroller:
                 out.append(self._render(st, env))
                 continue
             if t in ("AstStatWhile", "AstStatRepeat", "AstStatFor", "AstStatForIn"):
-                # A nested loop may itself be a dispatch loop; the next round of
-                # this pass will see it once the outer body is copied out.
                 out.append(self._render(st, env))
                 continue
             if self._has_jump(st):
@@ -720,7 +696,6 @@ class Unroller:
             _block_locals(st, env, self.written)
         return "fall"
 
-    # -- the pass ---------------------------------------------------------
     def _try_loop(self, st, env, block_id=None, stmts=None, idx=0, block=None):
         """Unroll one loop the shape pass already accepted. Returns text or None."""
         cand = self.dispatch.get(id(st))
@@ -745,10 +720,6 @@ class Unroller:
         body = (st.get("body") or {}).get("body") or []
         self.stats["found"] += 1
         if kind == "dead":
-            # The break checks are inverted, so the loop only ever runs while
-            # the counter stays outside the range it started outside -- with a
-            # non-zero step that never ends. It is dead code exactly when its
-            # own first break fires, and then nothing in it can have run.
             first = counter0 + step
             stops = (first <= limit) if step > 0 else (first >= limit)
             if not stops:
@@ -756,7 +727,6 @@ class Unroller:
             self.stats["dead"] += 1
             self.stats["removed"] += 1
             return ""
-        # Nothing in the body may disturb the three loop registers.
         for other in body[2:]:
             if self._writes_any(other, (step_loc, counter_loc, limit_loc)):
                 raise _Bail("loop-register-write")
@@ -768,7 +738,6 @@ class Unroller:
             if not _eligible(self.written, v_loc, block_id):
                 raise _Bail("loop-register-write")
 
-        # Emit.
         body_indent = self._indent_of(body[2]) if len(body) > 2 else self._indent_of(body[0])
         target_indent = self._indent_of(st)
         out = []
@@ -788,10 +757,6 @@ class Unroller:
             last_c = (values[-1] + step) if values else (counter0 + step)
         text = "\n".join(x for x in out if x.strip() != "")
         text = _reindent(text, body_indent, target_indent)
-        # The loop leaves its counter at the value that failed the check. The
-        # unrolled code drops the loop head, so put that value back when
-        # anything can still read it -- otherwise a later read would see the
-        # pre-loop value and quietly disagree with the original.
         read_later = self._reads_after_in_block(counter_loc, stmts, idx, st) \
             or self._reads_in_closures(counter_loc, block)
         if not returned and read_later:
@@ -960,8 +925,6 @@ class Unroller:
             if rep is not None:
                 s, e = _span(st["location"], self.starts)
                 if not rep.strip():
-                    # Nothing survives the loop: remove the line it occupied,
-                    # indent and newline included, rather than leaving a blank.
                     ls = self.btext.rfind(b"\n", 0, s) + 1
                     le = self.btext.find(b"\n", e)
                     s, e = ls, (le + 1 if le != -1 else e)
@@ -1008,8 +971,6 @@ def apply_text(text, rounds=1):
 def main(argv):
     import json
     if "--stdin" in argv:
-        # Test/driver mode: source on stdin, JSON {text, stats} on stdout, so a
-        # caller can check the rewrite without touching a file.
         src = sys.stdin.buffer.read().decode("latin-1")
         out, stats = apply_text(src, rounds=1)
         sys.stdout.write(json.dumps({"text": out, "stats": stats}))

@@ -1090,8 +1090,6 @@ def fold_pack_idioms(body, own=None):
             for st in stmts:
                 for sub in _sub_blocks(st):
                     walk_block(sub)
-            # Unbundle multi-target `a, b = ipairs, table.pack(...)` when safe so
-            # both `fold_pack_idioms` and `fold_single_use` can inline each part cleanly.
             unbundled = ST.SBlock()
             did_unbundle = False
             for st in stmts:
@@ -1136,7 +1134,6 @@ def fold_pack_idioms(body, own=None):
             i = 0
             while i < len(stmts):
                 st = stmts[i]
-                # Pattern 4: t = { arr_items... }; SetListS(t, len+1, vals)
                 if isinstance(st, CG.AssignS) and len(st.targets) == 1 and isinstance(st.targets[0], CG.LocalName) \
                         and len(st.values.items) == 1 and st.values.tail is None \
                         and isinstance(st.values.items[0], CG.NewTableE) and st.values.items[0].tail is None \
@@ -1164,7 +1161,6 @@ def fold_pack_idioms(body, own=None):
                     i += 1
                     continue
 
-                # Pattern 1: Vararg / multi prepend pack
                 if i + 3 < len(stmts):
                     s1, s2 = stmts[i + 1], stmts[i + 2]
                     if isinstance(s1, CG.AssignS) and len(s1.targets) == 1 \
@@ -1223,7 +1219,6 @@ def fold_pack_idioms(body, own=None):
                                                 changed[0] = True
                                                 continue
 
-                # Pattern 2: Forwarding pack -> single table.unpack(p, 1, p.n)
                 if nreads.get(pname, 0) == 2:
                     mov_reads = _multi_reads_set(pack_m)
                     mov_impure = _multi_has_side_effects(pack_m)
@@ -1243,7 +1238,6 @@ def fold_pack_idioms(body, own=None):
 
         walk_block(body)
 
-        # Pattern 3: Single-value pack `p = table.pack(expr1)` where `p` is ONLY indexed as `p[1]` or `p.n`
         nreads, writes, text = _counts_no_forprep(body)
         alltext = "\n".join(text)
         text_tokens = set(re.findall(r"(?<![\w.])[A-Za-z_]\w*", alltext)) if alltext else set()
@@ -1289,7 +1283,6 @@ def fold_pack_idioms(body, own=None):
                     if isinstance(st, CG.AssignS):
                         for t in st.targets:
                             if not isinstance(t, CG.LocalName):
-                                # Assigning to p[1] or p.n disqualifies p!
                                 for x in CG.walk(t):
                                     if isinstance(x, CG.LocalName) and x.name in single_cands:
                                         bad.add(x.name)
@@ -1346,7 +1339,6 @@ def eliminate_dead_code(body, own):
     for _ in range(8):
         changed = False
 
-        # 1. Drop standalone discardable CallS & collapse identical-branch SIf
         def clean_stmts(stmts):
             nonlocal changed
             out = ST.SBlock()
@@ -1373,10 +1365,9 @@ def eliminate_dead_code(body, own):
 
         body = clean_stmts(body)
 
-        # 2. Transitive mark-sweep liveness over `own`
         if own:
             live = set()
-            deps = {}  # local_name -> set of local_names it depends on when live
+            deps = {}
 
             def expr_info(e):
                 names = set()
@@ -1427,14 +1418,12 @@ def eliminate_dead_code(body, own):
                             if multi_discardable(st.values):
                                 deps.setdefault(tnm, set()).update((n1 | f1) & own)
                             else:
-                                # Impure RHS (e.g. call): RHS executes even if target is dead
                                 live.update((n1 | f1) & own)
                         else:
                             for t in st.targets:
                                 if not isinstance(t, CG.LocalName):
                                     mark_root_expr(t)
                                 elif t.name not in own:
-                                    # Upvalue assignment — value is externally observable!
                                     pass
                             mark_root_multi(st.values)
                     elif isinstance(st, (CG.CallS, CG.TempDef)):
@@ -1494,7 +1483,6 @@ def eliminate_dead_code(body, own):
 
             body = sweep_dead(body)
 
-        # 3. Straight-line overwritten dead-store elimination for uncaptured `own` locals
         if own:
             _, _, ftexts = _counts_no_forprep(body)
             cap_toks = set(tok_re.findall("\n".join(ftexts))) if ftexts else set()
@@ -1542,13 +1530,10 @@ def _simplify_bool_ifexp(e):
     from luasym import IfExp
     if isinstance(e, IfExp) and not CG.has_side_effects(e.c):
         ck = key(e.c)
-        # if c then P else not c  ==>  not c or P
         if ck is not None and isinstance(e.b, Un) and e.b.op == "Not" and key(e.b.a) == ck:
             return Bin("Or", ST.negate(e.c), _simplify_bool_ifexp(e.a))
-        # if c then P else false/nil  ==>  c and P
         if isinstance(e.b, Const) and (e.b.v is False or e.b.v is None):
             return Bin("And", e.c, _simplify_bool_ifexp(e.a))
-        # if c then true else P  ==>  c or P  (in boolean condition context)
         if isinstance(e.a, Const) and e.a.v is True:
             return Bin("Or", e.c, _simplify_bool_ifexp(e.b))
     return e
@@ -1569,7 +1554,6 @@ def flatten_nested_ifs(body, own=None):
         i = 0
         while i < len(stmts):
             st = stmts[i]
-            # Fold `a = b; [ForPrepS]; for ... in ... a ...` when `a` is an uncaptured single-use alias
             if isinstance(st, CG.AssignS) and not getattr(st, "is_local", False) \
                     and len(st.targets) == 1 and isinstance(st.targets[0], CG.LocalName) \
                     and len(st.values.items) == 1 and st.values.tail is None \

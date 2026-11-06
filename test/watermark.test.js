@@ -8,7 +8,7 @@ const {
   WATERMARK_PRINT,
   analyzeLuaLines,
   injectWatermark,
-} = require('../src/watermark');
+} = require('../core/watermark');
 
 test('attribution is the first line of the file', () => {
   const out = injectWatermark('local a = 1\nprint(a)\n');

@@ -84,9 +84,6 @@ def children(e):
     f = _CHILDREN.get(t)
     if f is not None:
         return f(e)
-    # unknown type: same semantics as before -- treat it as a leaf and
-    # remember it (the isinstance chain below kept the original behaviour
-    # for any subclass of a known complex type)
     if isinstance(e, (Index,)):
         return [e.obj, e.key]
     if isinstance(e, Bin):
@@ -347,8 +344,6 @@ def convert_stmts(stmts, D):
             v = st.value
             if not hasattr(st.target, "__class__") or isinstance(st.target, (int, float, bool)) \
                     or (isinstance(st.target, D.Const) and not isinstance(st.target.v, bytes)):
-                # a numeric-for recognition side effect writes the raw counter
-                # value (no register behind it): not expressible as Luau
                 out.append(CommentS("dropped write to raw counter slot %s"
                                  % S.describe_value(getattr(st.target, "v", st.target))))
                 continue
@@ -384,8 +379,6 @@ class TempDef:
 
 def conv(e, D):
     if isinstance(e, D.GenIter):
-        # The lifter already removed the VM receiver where the build passes one,
-        # so every remaining argument is a real generator argument.
         return GenIterE([conv(x, D) for x in e.args.items] if e.args is not None else [])
     if isinstance(e, S.NewTable):
 
@@ -506,14 +499,9 @@ def simplify_block(b, live_out, temp_uses_total, open_in=frozenset()):
     def _memo_entry(x):
         m = memo.get(id(x))
         if m is None or m[0] is not x:
-            # holding x in m keeps its id alive, so an id can never come back
-            # as a different object while the memo entry exists
             m = memo[id(x)] = (x, stmt_uses(x), stmt_defs(x))
         return m
 
-    # shared by the temp-def forward scans and the inline pass below: both
-    # memoize stmt_uses/stmt_defs per statement object; replacements that
-    # mutate a statement in place (map_stmt on ForPrepS) must drop its entry
     def scan_uses(x):
         return _memo_entry(x)[1]
 
@@ -1565,8 +1553,6 @@ class Renderer:
             ind = getattr(self, "cur_ind", "")
             return "\n".join([e.lines[0]] + [ind + l for l in e.lines[1:]])
         if isinstance(e, GenIterE):
-            # Every yielded value needs its own slot, but only the first two are
-            # ever named in the script: spell the rest out instead of `a..k`.
             slots = ["key", "item", "third", "fourth", "fifth", "sixth", "seventh",
                      "eighth", "ninth", "tenth"]
             yld = ", ".join(slots) if getattr(e, "flat", False) else "{%s}" % ", ".join(slots)
@@ -1708,9 +1694,6 @@ class Renderer:
         if isinstance(st, CallS):
             if type(getattr(st.call, "fn", None)).__name__ == "Const" \
                     and getattr(st.call.fn, "v", "?") is None:
-                # The callee is a constant no decoder produced: `(nil)(...)` is
-                # a call that can only raise, left over from a branch of
-                # Luraph's anti-tamper check. Emitting it would be a lie.
                 return []
             return [ind + self.expr(st.call)]
         if isinstance(st, TempDef):
@@ -1759,8 +1742,6 @@ class Renderer:
             return self.expr(t)
         if isinstance(t, Const) and not isinstance(t.v, (bytes, str)) or isinstance(t, (int, float, bool)) \
                 and not isinstance(t, Const):
-            # a numeric-for recognition side effect writes a raw counter value:
-            # render as a (valid) global-ish name so the output stays parseable
             return "__SLOT_%s__" % (t.v if isinstance(t, Const) else t)
         return self.expr(t)
 
@@ -1797,13 +1778,6 @@ class Renderer:
             return [ind + "repeat"] + self.block(st.body, ind + "\t") + [ind + "until %s" % self.expr(st.cond)]
         body = self.block(st.body, ind + "\t")
         if not body:
-            # An endless loop with nothing in it cannot be emitted: `while true
-            # do end` spins forever, so the script would hang where the original
-            # did not. The walk reached this loop and closed it on a state that
-            # repeats -- every statement it decoded was a write to a value
-            # nothing reads -- so there is no body to put back. Say that,
-            # instead of the loop or a guess (see ast_polish for the same
-            # marker on text the renderer never saw).
             why = ("its only statement wrote a value nothing reads"
                    if st.body else "it decoded to no statements")
             return [ind + "-- devirt: spin loop left out (its body has no effect: %s)" % why]
@@ -1890,8 +1864,6 @@ def quote(b):
     out.append('"')
     return "".join(out)
 
-# populate the children dispatch now that every expression class exists
-# (function bodies resolve at call time, the dict keys cannot)
 _CHILDREN.update({Index: _ch_index, Bin: _ch_bin, Un: _ch_un, IfExp: _ch_ifexp,
                   CallE: _ch_calle, SymList: _ch_symlist, TailRef: _ch_tailref,
                   NewTableE: _ch_newtable, GenIterE: _ch_geniter,

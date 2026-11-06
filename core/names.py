@@ -7,22 +7,12 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 GENERATED = re.compile(
     r"^(?:[A-Za-z_]\d+(?:_\d+)*|arg\d*_*|[ijk]_+|fn\d*|tbl\d*|str\d*|flag\d*|v|[a-z_][A-Z]|[A-Z]{2}"
-    # names that are never the script author's: the fallbacks this tool uses when
-    # an upvalue was never resolved (`upv3`), and the two-letter noise names that
-    # come from the obfuscated wrapper's own locals (`Ag`, `Lg`) and leak into the
-    # lifted code through the capture table.
     r"|upv\d+(?:_\d+)?|[A-Z][a-z])$"
 )
 SINGLE_CHAR = re.compile(r"^[A-Za-z]$")
-# Two-letter names that are the script's own idiom and worth keeping; every other
-# 1-2 letter local is register noise from the obfuscated wrapper.
 KEEP_SHORT = {"ok", "id"}
 
 
-# The lifter's placeholders. They say nothing about the value and make nesting
-# hard to follow (`value`, `value2`, `value3` in three scopes). Unlike `argument`,
-# which is the conventional word for a callback's parameter, these are worth
-# re-deriving from how the value is used.
 GENERIC_STEM = re.compile(
     r"^(?:value|val|data|number|num|text|list|item|item2|obj|result|res|tmp|temp|var|"
     r"table|tab|thing|entry|state|self)(?:\d+)?$"
@@ -78,10 +68,6 @@ GLOBAL_CALLS = {"tick": "now", "time": "now", "os.clock": "now", "os.time": "now
 GLOBAL_REFS = {"game": "gameRef", "workspace": "workspaceRef", "_G": "genv",
                "request": "httpRequest", "http_request": "httpRequest"}
 
-# House style: a generated name is always a full word. The inference engine
-# still works with its short internal keys, but the identifier that reaches the
-# output is spelled out -- `n` becomes `number`, `tbl` becomes `data`, and so on.
-# Numbers are only appended when two names would collide.
 BRAND = {
     "v": "value",
     "val": "value",
@@ -182,8 +168,6 @@ def duck_type_members(members):
         return "session"
     if m & {"tpOk", "inDim"} or ("cleanup" in m and len(m) >= 3):
         return "state"
-    # Anything else that answers the Instance API is an instance: a touched part,
-    # an egg from `DescendantAdded`, a child handed to a callback.
     if len(m & INSTANCE_API) >= 2 or (m & INSTANCE_API and m <= INSTANCE_API | INSTANCE_PROPS):
         return "instance"
     return None
@@ -535,7 +519,6 @@ class Namer:
             for var, v in zip(st["vars"], vals):
                 if var.get("type") == "AstExprIndexName" \
                         and var["expr"].get("type") == "AstExprLocal":
-                    # `T.Field = ...` says what T is, just as reading T.Field does
                     t_info = self.locals.get(var["expr"]["local"]["location"])
                     if t_info is not None:
                         t_info["members"].add(var["index"])
@@ -846,7 +829,6 @@ class Namer:
                 src = self.locals.get(f["local"]["location"])
                 if src:
                     out["local_calls"].add(strip_num_suffix(src.get("new") or src.get("name") or ""))
-            # Descend into immediate `pcall(function() ... end)` / `xpcall` body for calls/props (not outer returns)
             is_pcall = d in ("pcall", "xpcall")
             if not is_pcall and f.get("type") == "AstExprLocal":
                 f_src = self.locals.get(f["local"]["location"])
@@ -939,7 +921,6 @@ class Namer:
         props = scan["props"]
         has_args = bool(fn.get("args"))
 
-        # 1. Pure datatype parser / converter functions (e.g. parseColor3, toUDim2, toVector2, toUDim)
         if rets:
             dts = {self._ctor_datatype(r) for r in rets}
             if len(dts) == 1 and None not in dts:
@@ -947,7 +928,6 @@ class Namer:
                 prefix = "parse" if n_stmts >= 6 and has_args else ("to" if has_args else "get")
                 return prefix + dt
 
-        # 2. Filesystem & JSON config helpers
         if "makefolder" in calls and "writefile" not in calls and n_stmts <= 12:
             return "ensureFolder"
         if "writefile" in calls and n_stmts <= 18:
@@ -963,7 +943,6 @@ class Namer:
         if "delfile" in calls and n_stmts <= 10:
             return "deleteFile"
 
-        # 3. RichText / compact number / rate / vararg formatters & math helpers
         if ("GenerateGUID" in methods or "NextInteger" in methods) and "table.concat" in calls and n_stmts <= 25:
             return "generateRandomId"
         if "table.concat" in calls and "select" in calls and "tostring" in calls and n_stmts <= 15:
@@ -1002,7 +981,6 @@ class Namer:
                 and any(s in ("%.2f", "%.1f", "%.0f") for s in strs) and "0+$" in strs and n_stmts <= 12:
             return "formatDecimal"
 
-        # 4. Roblox Instance / Tween / Remote / HTTP / State helpers
         if "Cancel" in methods and ("Create" in methods or "tw" in lcalls or "TweenService" in (calls | lcalls)) and n_stmts <= 16:
             return "playTween"
         if "Destroy" in methods and not rets and n_stmts <= 15:
@@ -1317,7 +1295,6 @@ class Namer:
 
         members = set(kv) | (set(info["members"]) if info else set())
 
-        # 1. Well-known structural shapes
         if members & {"tpOk", "inDim"} or ("cleanup" in members and len(members) >= 2):
             return "state"
         if members & {"Callback", "Title"} and len(members) >= 2:
@@ -1355,7 +1332,6 @@ class Namer:
         if "hdr" in members and len(members) <= 4:
             return "groupState"
 
-        # 2. Named item / egg / entity record (`{..., Name = "Halloween egg", Uid = "carry"}`)
         if "Name" in kv and "Parent" not in members and "Size" not in members and "Position" not in members:
             nm_s = const_str(kv["Name"])
             if nm_s and re.match(r"^[A-Za-z][A-Za-z0-9 _-]{1,28}$", nm_s):
@@ -1363,7 +1339,6 @@ class Namer:
                 if c and c not in KEYWORDS and c not in WEAK_1CHAR:
                     return c
 
-        # 3. Unit multiplier / suffix tables
         if kv and set(kv) <= {"k", "m", "b", "t", "qa", "qi", "sx", "K", "M", "B", "T"} and len(kv) >= 3:
             return "unitMultipliers"
         arr_strs = [const_str(x) for x in arr if const_str(x) is not None]
@@ -1371,7 +1346,6 @@ class Namer:
                 and set(arr_strs) <= {"", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "k", "m", "b", "t"}:
             return "unitSuffixes"
 
-        # 4. Key-value maps (Enum maps, boolean property filters, function dispatchers, score maps)
         if len(kv) >= 2 and not arr:
             vals = list(kv.values())
             if all(dotted(v) and dotted(v).startswith("Enum.") for v in vals):
@@ -1412,7 +1386,6 @@ class Namer:
             if {"Default", "Labels"} <= set(kv):
                 return "priorityConfig"
 
-        # 5. Homogeneous array literals (`{Color3..., }`, `{Enum..., }`, string lists, nested presets)
         if arr and not kv:
             dts = [self._ctor_datatype(x) for x in arr]
             if all(d == "Color3" for d in dts):
@@ -1420,7 +1393,6 @@ class Namer:
             if all(d == "ColorSequenceKeypoint" for d in dts):
                 return "keypoints"
             if all(x.get("type") == "AstExprTable" for x in arr):
-                # Nested array of Color3 pairs or string presets or weight tiers
                 sub_entries = [(x.get("items") if x.get("items") is not None else x.get("entries", [])) for x in arr]
                 if sub_entries and all(
                     se and all(e0.get("key") is None and self._ctor_datatype(e0.get("value")) == "Color3" for e0 in se)
@@ -1459,7 +1431,6 @@ class Namer:
                     return dom
                 return "nameList"
 
-        # 6. Downstream usage on initially-empty tables (`local tbl = {}`)
         if info is not None:
             if info.get("disconnect_map"):
                 return "connections"
@@ -1488,8 +1459,6 @@ class Namer:
     def base_name(self, info, _seen=()):
         if info.get("spill"):
             return "ctx"
-        # A table that is handed named functions and state is the script's module:
-        # `module.EggData`, `module.Saved`, `module.WeightSlider`.
         fields = info.get("func_fields") or ()
         if len(fields) >= 2 and info["members"] and len(fields) / len(info["members"]) >= 0.4:
             return "module"
@@ -1504,9 +1473,6 @@ class Namer:
                 return info.get("label") or info["prop"]
         if isinstance(h, tuple):
             key, base = h
-            # A register the VM refills with different kinds of value is not any
-            # one of them: inheriting the first write's name would call it
-            # `module2` while it is holding `ipairs`.
             if info.get("reassigned") and len(self._hint_kinds(info)) > 1:
                 return duck or key
             if base is not None:
@@ -1522,7 +1488,6 @@ class Namer:
             return duck or key
         if h:
             return h
-        # Check if multiple distinct Instance.new classes were assigned to a scratch UI variable
         inst_classes = {
             const_str(ex["args"][0])
             for ex, idx in info["hints"]
@@ -1565,10 +1530,6 @@ class Namer:
         if GENERIC_STEM.match(nm) and not info.get("is_param"):
             return True
         if SINGLE_CHAR.match(nm):
-            # A one-letter name is never the script's: it is what the wrapper's
-            # own locals turn into once the VM's registers are unrolled. Rename
-            # it from how it is used, and if the use says nothing, from a
-            # role-based fallback (see run()) -- never keep the letter.
             return True
         return False
 
@@ -1589,9 +1550,6 @@ class Namer:
                 duck = duck_type_members(info["slot_members"].get(k))
                 if duck:
                     base = duck
-            # House style applies to field names too: `fn4` is `callback4`, and a
-            # slot nothing can be inferred from is `data` (what it holds), not
-            # `slot33` -- "slot" is our word for a VM register, not the script's.
             base = BRAND.get(base, base) if base else None
             if not base or base in WEAK_1CHAR or base == "v":
                 base = "data"
@@ -1618,7 +1576,6 @@ class Namer:
         taken = {}
         reserved = self.globals | KEYWORDS
         ordered = sorted(self.order, key=lambda k: self.locals[k]["decl"])
-        # First lock in genuinely descriptive existing names so generated ones never collide with them
         for key in ordered:
             info = self.locals[key]
             info["refs"].sort()
@@ -1632,7 +1589,6 @@ class Namer:
                 info["new"] = "_"
                 taken.setdefault("_", []).append(info)
 
-        # Next assign names in declaration order so downstream copies (`local b = a`) inherit `a["new"]`
         for key in ordered:
             info = self.locals[key]
             if "new" in info:
@@ -1694,12 +1650,6 @@ class Namer:
             o0, o1 = other["scope"]
             if s0 < o1 and o0 < s1:
                 if origin is not None and not any(s0 <= r <= s1 for r in other["refs"]):
-                    # A local that only caches a field (`local state = ctx.state`)
-                    # may reuse the field's name in a nested scope: every copy of
-                    # that field means the same table, so the reader is never in
-                    # doubt. Naming the third copy `state7` is the noise. The
-                    # outer name must not be read from inside this scope, or the
-                    # shadow would capture those reads.
                     continue
                 return False
         return True

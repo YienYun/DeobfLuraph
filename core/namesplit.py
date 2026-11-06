@@ -84,18 +84,17 @@ class Scan:
         self.btext = text.encode("utf-8")
         self.starts = _line_starts(self.btext)
         self.root = AP._parse_ast(text)
-        self.locals = {}    # local.location -> decl info
-        self.reads = []     # one dict per AstExprLocal reference
-        self.writes = []    # one dict per assignment target that is a local
-        self.dups = []      # (line, [(loc, name, span_start, span_end), ...])
-        self.refcount = {}  # local.location -> number of references
-        self.fn_info = {}   # id(fn node) -> {"line", "path"} of the creation site
-        self.loop_blocks = set()  # ids of loop bodies
-        self.all_names = set()  # every identifier in the file (fresh names avoid these)
+        self.locals = {}
+        self.reads = []
+        self.writes = []
+        self.dups = []
+        self.refcount = {}
+        self.fn_info = {}
+        self.loop_blocks = set()
+        self.all_names = set()
         self.order = 0
-        self.skipped = {}   # reason -> count (fills during analysis)
+        self.skipped = {}
 
-    # ---- traversal -------------------------------------------------------
     def run(self):
         self.walk_block(self.root, (), False, (), None)
         return self
@@ -193,7 +192,6 @@ class Scan:
             self.walk_expr(st["func"], path, loops, fn)
             self.walk_expr(st["name"], path, loops, fn)
             return
-        # any other statement: visit the expressions it carries
         for v in st.values():
             if isinstance(v, dict) and str(v.get("type", "")).startswith("AstExpr"):
                 self.walk_expr(v, path, loops, fn)
@@ -240,7 +238,6 @@ class Scan:
                     if isinstance(x, dict) and str(x.get("type", "")).startswith("AstExpr"):
                         self.walk_expr(x, path, loops, fn)
 
-    # ---- X: duplicate names in one declaration ---------------------------
     def duplicate_edits(self):
         """[(s0, e0, b'_', reason)] for shadowed duplicates that are unreferenced."""
         out = []
@@ -258,7 +255,6 @@ class Scan:
                     out.append((s0, e0, b"_", (line, name)))
         return out
 
-    # ---- W: one name, a closure and later reuse values -------------------
     @staticmethod
     def _dominated(assign, read):
         pa, pr = assign["path"], read["path"]
@@ -338,16 +334,12 @@ class Scan:
             if fn_path is None:
                 return "capture-unknown"
             if not any(self._dominated(a, {"path": fn_path}) for a in asg):
-                # the closure can be created (and run) before a reuse value is
-                # certainly in the variable, so it may see either one
                 return "capture-before-split"
         for a in asg:
             if not a["compound"]:
                 continue
             same = [x for x in reads if x["s0"] == a["s0"]]
             if not any(self._dominated(w, x) for w in asg for x in same):
-                # `f += 1` reads and writes one token; the token can take only
-                # one name, and here the read would have to keep the closure's
                 return "compound-assign"
         for r in reads:
             if r["fn"] != info["fn"]:
@@ -366,9 +358,6 @@ class Scan:
         renamed = self._renamed_reads(info, asg, reads)
         lca = self._lca([a["path"] for a in asg] + [r["path"] for r in renamed])
         if lca[-1][0] in self.loop_blocks and any(r["fn"] != info["fn"] for r in renamed):
-            # the declaration would sit inside the loop body, so a closure made in
-            # one iteration would capture that iteration's variable instead of the
-            # single variable the obfuscated code shares
             return "loop-capture"
         return None
 
@@ -383,8 +372,6 @@ class Scan:
             if reason is not None:
                 self._skip(reason)
                 continue
-            # `name_2` for the first split of a binding, then `name_3`, ... --
-            # never `name_22`, which reads like a per-write counter.
             bump = 2
             cand = "%s_%d" % (info["name"], bump)
             while cand in taken:
@@ -392,11 +379,6 @@ class Scan:
                 cand = "%s_%d" % (info["name"], bump)
             taken.add(cand)
             name = cand.encode("utf-8")
-            # The reuse value needs a declaration of its own -- renaming alone
-            # would write an undeclared name, i.e. a global -- and it has to be
-            # visible to every read and write we rename, so it goes into the
-            # deepest block that contains all of them (their longest common
-            # prefix), in front of the statement that leads to the first one.
             a0, st = asg[0], asg[0]["stmt"] or {}
             lca = self._lca([a["path"] for a in asg] + [r["path"] for r in renamed])
             if len(lca) == len(a0["path"]) and st.get("n_targets") == 1 \

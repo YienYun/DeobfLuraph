@@ -11,7 +11,6 @@ Everything else is left exactly as written.
 """
 import sys
 
-# Luau's binding powers, tightest last.
 PREC = {
     "Or": 1, "And": 2,
     "CompareNe": 3, "CompareEq": 3, "CompareLt": 3, "CompareLe": 3, "CompareGt": 3, "CompareGe": 3,
@@ -25,8 +24,6 @@ ATOMIC = {"AstExprLocal", "AstExprGlobal", "AstExprConstantString", "AstExprCons
           "AstExprConstantBool", "AstExprConstantNil", "AstExprIndexName", "AstExprCall",
           "AstExprTable", "AstExprFunction", "AstExprIfElse"}
 
-# Only a prefix expression can start an index: `({a = 1})[k]` needs its brackets,
-# `{a = 1}[k]` does not parse, and `(a or b)[k]` is not `a or b[k]`.
 PREFIX_EXPR = {"AstExprLocal", "AstExprGlobal", "AstExprCall", "AstExprIndexExpr",
                "AstExprIndexName", "AstExprGroup"}
 
@@ -89,10 +86,8 @@ def strip_groups(text):
         if ip > pp:
             mark(group, False)
             return
-        # comparisons never chain in Lua (`a == b == c` will not parse), so they
-        # are only folded when the inner expression is atomic
         if ip == pp and side == "left" and parent.get("op") in ("And", "Or", "Add", "Mul"):
-            mark(group, False)          # (a and b) and c reads the same as a and b and c
+            mark(group, False)
 
     def walk(node, multi_value=False):
         if isinstance(node, dict):
@@ -119,12 +114,9 @@ def strip_groups(text):
                         fold_operand(node[side], node, side)
             elif t == "AstExprUnary":
                 inner = node.get("expr")
-                # `not (x)` is `not x`; `not (a == b)` is not `not a == b`
                 if _is_group(inner) and inner["expr"].get("type") in ATOMIC:
                     mark(inner, False)
             elif t == "AstExprIndexExpr":
-                # the base has to stay a prefix expression; the slot inside the
-                # brackets is a full expression, so its group can always go
                 base = node.get("expr")
                 if _is_group(base) and (base.get("expr") or {}).get("type") in PREFIX_EXPR:
                     mark(base, False)

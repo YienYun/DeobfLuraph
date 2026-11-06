@@ -1,22 +1,6 @@
 #!/usr/bin/env node
 'use strict';
 
-/**
- * Regenerate `test/golden.json`, the regression table the end-to-end test
- * compares against.
- *
- * A golden row is not "the output we like"; it is the exact result the current
- * engine produces for a pinned input with pinned flags. Because the engine is
- * deterministic (see TECHNICAL.md), a row is a fact: if a later change moves a
- * byte, the diff says where.
- *
- *   node scripts/update-golden.js              # the fast (core) tier
- *   node scripts/update-golden.js --tier all   # every fixture
- *   node scripts/update-golden.js --only t14-8-0942
- *
- * Re-run it only for an intended change, and read the diff of golden.json in
- * the same commit as the engine change that caused it.
- */
 
 const crypto = require('crypto');
 const fs = require('fs');
@@ -29,12 +13,6 @@ const GOLDEN = path.join(ROOT, 'test', 'golden.json');
 const MANIFEST = path.join(ROOT, 'fixtures', 'manifest.json');
 const INPUT = path.join(ROOT, 'fixtures', 'input');
 
-// Fixed so the table does not depend on the machine: the offline sandbox is
-// capped by these, not by wall-clock speed.
-// The wall-clock ceiling is a safety net, not a stopping condition: a row that
-// finishes inside it produces the same bytes as one that has all day. It is
-// set well above the slowest row (t15-1-2153 takes ~31 s here) so that a busy
-// machine cannot truncate a lift and make the table look like a code change.
 const DEFAULT_ARGS = ['--budget', '30', '--timeout', '90'];
 
 function parseArgs(argv) {
@@ -111,8 +89,6 @@ function main() {
         row.trace_status = res.report.trace_status;
       }
       if (res.status !== 0 && !row.result_type) {
-        // A fixture the engine is expected to refuse (an out-of-range build)
-        // still gets a row: the test asserts the refusal, not an output.
         row.expected_error = true;
         row.message = (res.stderr.split('\n').find((l) => l.includes('failed on')) || '').trim();
       }

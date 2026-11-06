@@ -14,8 +14,8 @@ const path = require('node:path');
 const test = require('node:test');
 
 const ROOT = path.resolve(__dirname, '..');
-const { formatLuau, available } = require('../src/format');
-const { isValidLuaSyntax } = require('../src/luau_check');
+const { formatLuau, available } = require('../core/format');
+const { isValidLuaSyntax } = require('../core/luau_check');
 
 const LUAU = path.join(ROOT, 'bin', 'luau');
 

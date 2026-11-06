@@ -4,13 +4,13 @@
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
-const detectModule = require('./src/detect');
-const driver = require('./src/driver');
-const engines = require('./src/engines');
-const harness = require('./src/harness');
-const { injectWatermark } = require('./src/watermark');
-const format = require('./src/format');
-const { isValidLuaSyntax } = require('./src/luau_check');
+const detectModule = require('./core/detect');
+const driver = require('./core/driver');
+const engines = require('./core/engines');
+const harness = require('./core/harness');
+const { injectWatermark } = require('./core/watermark');
+const format = require('./core/format');
+const { isValidLuaSyntax } = require('./core/luau_check');
 
 const DIRECTORY_EXTENSIONS = ['.lua', '.luau'];
 const FILE_EXTENSIONS = ['.lua', '.luau', '.txt'];
@@ -90,7 +90,6 @@ function parseArgs(argv) {
     else if (a === '--ai-model') { args.aiModel = valueAt(++i, a); }
     else if (a === '--no-dce') { args.noDce = true; }
     else if (a === '--cfg-json') {
-      // Extra harness CFG as inline JSON or '@file.json'.
       let spec = valueAt(++i, a);
       if (spec.startsWith('@')) spec = fs.readFileSync(spec.slice(1), 'utf8');
       args.cfgJson = JSON.parse(spec);
@@ -245,7 +244,7 @@ async function processFile(absInput, args) {
   const source = fs.readFileSync(absInput, 'latin1');
   let plugin, confidence;
   if (args.plugin) {
-    plugin = detectModule.byName(args.plugin); // force a plugin (e.g. v14.x headers score 0.3)
+    plugin = detectModule.byName(args.plugin);
     confidence = 1.0;
   } else {
     ({ plugin, confidence } = detectModule.detect(source));
@@ -307,11 +306,7 @@ async function processFile(absInput, args) {
 
     let result;
     if (plugin.name === 'luarmor_client') {
-      // Luarmor v4 chain: report what the file carries, then devirtualize the
-      // Luraph v15 chunk if there is one (the sephal init, or a loader Luarmor
-      // served). A bare client stub has no code to lift and stays as it is,
-      // annotated, next to a .luarmor.json report.
-      const luarmor = require('./src/luarmor');
+      const luarmor = require('./core/luarmor');
       const meta = luarmor.analyze(job.sourcePath);
       job.luarmor = meta;
       luarmor.announce(meta);
@@ -323,9 +318,6 @@ async function processFile(absInput, args) {
         const stats = job.liftStats || {};
         const states = luarmor.blockedStates(stats);
         if (states.length) {
-          // The chain ran but Luarmor refused the offline environment, so the
-          // session payload was never decrypted. Hand back what was lifted (the
-          // bootstrap), never the 800 KB input again, and say why in the header.
           job.warnings.push(`Luarmor blocked the offline run (${states.join(', ')}): `
             + 'the session payload was not decrypted.');
           job.resultType = 'luarmor-blocked';
@@ -334,9 +326,6 @@ async function processFile(absInput, args) {
           luarmor.prependHeader(result, meta, stats);
         }
         if (!stats.functions) {
-          // Not one function came out: this file is a bootstrapper whose chunk
-          // is decrypted only by the live session. A behaviour trace would be a
-          // half-finished artifact, so state the fact and stop.
           const note = [luarmor.headerLines(meta, stats), '',
             '-- Nothing was lifted, so this file carries the result of the analysis, not code:',
             '-- a behaviour trace of a bootstrapper that cannot finish offline is not a script.',
@@ -365,10 +354,7 @@ async function processFile(absInput, args) {
     } else if (plugin.name === 'luraph_v15') {
       result = await driver.run(job);
       if (job.resultType === 'payload-source' && !args.noDevirt) {
-        // The loader may carry a script that is itself a delivery stub. When it
-        // is, the Luarmor track takes over without a second command: it reports
-        // the chain, and lifts the chunk if the payload carries one.
-        const chained = await require('./src/luarmor').chain(job, result);
+        const chained = await require('./core/luarmor').chain(job, result);
         if (chained) result = chained;
       }
     } else if (plugin.name === 'generic') {
@@ -378,10 +364,8 @@ async function processFile(absInput, args) {
     }
 
     if (job.luarmor && final) {
-      // The analysis of a carried Luarmor stub travels with the result, the same
-      // way it does when Luarmor is the input: a sidecar next to the file.
       try {
-        const lp = require('./src/luarmor').writeReport(final, job.luarmor);
+        const lp = require('./core/luarmor').writeReport(final, job.luarmor);
         process.stderr.write(`[*] luarmor report: ${lp}\n`);
       } catch (e) {
         job.warnings.push(`Luarmor report could not be written: ${e.message}`);
@@ -392,9 +376,6 @@ async function processFile(absInput, args) {
       let content = fs.readFileSync(result, 'utf8');
       content = content.replace(/^(\s*--(?:[ \t]*(?:Deobfuscated by|Detected obfuscation|Local names are inferred|source:|NOTE: reconstructed|during the trace|Input SHA-256:Constants decoded;|Names\/comments lost|This is not a claim)[^\n]*\n?|\s*\n))+/, '');
       let renameStats = undefined;
-      // `payload-source` is the same job one layer out: the script the loader
-      // carries, printed rather than devirtualized. It is plain Luau with the
-      // same placeholder names, so the renamer has just as much to work with.
       if (args.rename && (job.resultType === 'devirtualized' || job.resultType === 'payload-source')) {
         process.stderr.write(`[*] running Layer-2 renamer & dead-code cleaner (comments=${args.comments})...\n`);
         const renamer = require('./renamer');
@@ -421,9 +402,6 @@ async function processFile(absInput, args) {
         }
         writeAtomically(stringsFinal, fs.readFileSync(stringsPath, 'utf8'));
       }
-      // Print the result through the formatter before it lands, so what the
-      // reader opens is laid out the way StyLua would lay it out. A formatting
-      // miss never costs a result: the unformatted text is kept and said so.
       const before = Buffer.byteLength(content, 'utf8');
       const fmt = format.formatLuau(content, { enabled: !args.noFormat });
       if (fmt.ok && fmt.changed && !isValidLuaSyntax(fmt.text)) {
@@ -441,8 +419,6 @@ async function processFile(absInput, args) {
         job.format = { tool: 'stylua', changed: false, skipped: fmt.reason };
         if (!args.noFormat) job.warnings.push(`Formatter skipped: ${fmt.reason}`);
       }
-      // Attribution goes on every result, whatever produced it (a behaviour
-      // trace is just as much a deobfuscated script as a lifted one).
       content = injectWatermark(content);
       writeAtomically(final, content);
       if (job.resultType === 'trace') {

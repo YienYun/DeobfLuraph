@@ -1,10 +1,5 @@
 'use strict';
 
-// Run a script the way the tracer does -- inside the stub environment the
-// runtime provides for Roblox globals -- and report what it printed or where it
-// stopped. The obfuscated input runs there, so the deobfuscated output has to run
-// there too: a register that lost its value shows up here as a Luau error, which
-// a compile gate can never see.
 
 const fs = require('node:fs');
 const os = require('node:os');
@@ -12,7 +7,7 @@ const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 
 const ROOT = path.resolve(__dirname, '..');
-const harness = require(path.join(ROOT, 'src', 'harness'));
+const harness = require(path.join(ROOT, 'core', 'harness'));
 
 function smoke(file, opts = {}) {
   const source = fs.readFileSync(file, 'latin1');
@@ -20,8 +15,6 @@ function smoke(file, opts = {}) {
     time_budget: opts.budget || 6000,
     dump_strings: false,
     executor: opts.executor || 'auto',
-    // no network here: a script that fetches its library has to take its own
-    // failure path, exactly as it would on an executor with no internet
     offline_http: true,
   };
   const text = harness.buildHarness(source, cfg, {});
@@ -38,7 +31,6 @@ function smoke(file, opts = {}) {
   const stderr = r.stderr || '';
   const marker = harness.getMark();
   const lines = stdout.split('\n').filter((l) => l && !l.includes(marker));
-  // the runtime reports how the script itself ended: "finished", or the error
   const statusLine = (lines.find((l) => /^-- run status:/.test(l)) || '').trim();
   const failed = /error|aborted|timed out/i.test(statusLine) && !/finished/i.test(statusLine);
   return {

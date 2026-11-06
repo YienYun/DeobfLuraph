@@ -3,7 +3,6 @@ import sys
 import os
 import re
 
-# `upv<slot>`: the name the lifter invents for a capture it could not follow.
 UNRESOLVED_CAPTURE = re.compile(r"\bupv(\d+)(?:_(\d+))?\b")
 import tempfile
 
@@ -70,9 +69,6 @@ _PURE_CALLEES = frozenset({
 })
 
 
-# Initial values that cost nothing to skip: a literal, or another local the
-# declaration was copying. A field read or a call is not in this set -- those
-# can raise, so the slot has to stay.
 _FREE_SLOT_VALUES = ("AstExprConstantNil", "AstExprConstantBool",
                      "AstExprConstantNumber", "AstExprConstantString",
                      "AstExprLocal")
@@ -135,7 +131,6 @@ def _is_pure_arg_leaf(node):
 def _apply_edits(btext, edits):
     if not edits:
         return btext
-    # Sort descending by start offset; skip any edit that overlaps an already-accepted later edit
     ordered = sorted(edits, key=lambda x: (x[0], x[1]), reverse=True)
     accepted = []
     min_start = len(btext) + 1
@@ -147,11 +142,6 @@ def _apply_edits(btext, edits):
     cur = len(btext)
     for s0, e0, repl in accepted:
         if not repl and btext[e0:e0 + 1] == b"(" and _separator_needed(btext, s0, e0):
-            # Luau reads a `;` right before a `(` as the previous statement's
-            # terminator, so a statement that had to be separated (`;(nil).x=1`
-            # after a call) loses its separator when that previous statement is
-            # deleted: the two lines would parse as one ambiguous call. Keep the
-            # `;` when the deleted text ends on one.
             repl = b";"
         chunks.append(btext[e0:cur])
         chunks.append(repl)
@@ -178,18 +168,14 @@ def _separator_needed(btext, s0, e0):
     semi = s0 + len(stripped) - 1
     line_start = btext.rfind(b"\n", 0, semi) + 1
     if btext[line_start:semi].strip(b" \t"):
-        return True                     # mid-line: a `;` there is always legal
-    # only text outside the deleted range counts: when the previous statement
-    # is what is being deleted, the `(` becomes the block's first statement
+        return True
     prev = btext[:min(s0, line_start)].rstrip(b" \t\r\n")
     if not prev:
-        return False                    # first statement of the file/block
+        return False
     head = prev[prev.rfind(b"\n") + 1:].strip(b" \t")
     if head.startswith(b"--"):
-        return False                    # a comment in the way: do not guess
+        return False
     last = head.split()[-1]
-    # `then do else repeat` and `end` cannot be called, so `(` after them is
-    # already unambiguous; anything else may end a call.
     return last not in (b"then", b"do", b"else", b"repeat", b"end")
 
 
@@ -316,12 +302,12 @@ def _strip_unused_params_and_dead_locals(text):
         starts = _line_starts(btext)
         root = _parse_ast(text)
 
-        local_refs = {}       # var_loc -> list of AstExprLocal nodes
-        callee_refs = {}      # id(AstExprLocal) -> enclosing non-self AstExprCall
-        assign_lhs_refs = {}  # id(AstExprLocal) -> enclosing AstStatAssign
-        local_decls = {}      # var_loc -> (AstStatLocal, idx)
-        local_funcs = {}      # var_loc -> (stat, fn_node, "localfn" | "split")
-        dead_stat_cands = []  # AstStatLocal with 1 var and <=1 pure value
+        local_refs = {}
+        callee_refs = {}
+        assign_lhs_refs = {}
+        local_decls = {}
+        local_funcs = {}
+        dead_stat_cands = []
 
         def walk(n):
             if isinstance(n, dict):
@@ -356,7 +342,6 @@ def _strip_unused_params_and_dead_locals(text):
 
         walk(root)
 
-        # Also recognize forward-declared local functions: `local f` ... `f = function(...) ... end`
         for vloc, (decl_st, idx) in local_decls.items():
             if vloc in local_funcs:
                 continue
@@ -377,9 +362,6 @@ def _strip_unused_params_and_dead_locals(text):
 
         edits = []
 
-        # 1a. State keys left behind by the devirtualizer: `local n` followed by
-        # one `n = <number>` and never read anywhere. They are pure junk -- the
-        # value only ever fed the VM's own dispatch -- so both statements go.
         writes_by_vloc = {}
         for vloc, refs in local_refs.items():
             sts = [assign_lhs_refs[id(r)] for r in refs if id(r) in assign_lhs_refs]
@@ -411,7 +393,6 @@ def _strip_unused_params_and_dead_locals(text):
             s0, e0 = _expand_full_line_delete(btext, s0, e0)
             edits.append((s0, e0, b""))
 
-        # 1. Dead unread single-var pure `local x = ...` statements
         for st in dead_stat_cands:
             vloc = st["vars"][0]["location"]
             if local_refs.get(vloc):
@@ -423,10 +404,6 @@ def _strip_unused_params_and_dead_locals(text):
             s0, e0 = _expand_full_line_delete(btext, s0, e0)
             edits.append((s0, e0, b""))
 
-        # 1b. Dead slots inside a shared declaration. The seed cleanup empties one
-        # value of `local a, b = nil, os.clock()` and leaves the name behind; the
-        # slot is not a register the script uses, so the name goes with the value.
-        # Only slots carrying nothing or a literal move, so no call is lost.
         dead_slots = {}
         for vloc, (decl_st, idx) in local_decls.items():
             vs = decl_st.get("vars", ())
@@ -455,7 +432,6 @@ def _strip_unused_params_and_dead_locals(text):
             else:
                 edits.append((s0, e0, b"local " + names))
 
-        # 2. Unused dummy parameters on private direct-call-only local functions
         for vloc, (def_st, fn_node, kind) in local_funcs.items():
             if fn_node.get("vararg"):
                 continue
@@ -472,7 +448,6 @@ def _strip_unused_params_and_dead_locals(text):
                 if cnode is None:
                     ok = False
                     break
-                # Ensure parenthesized call syntax `f(...)`
                 fn_s, fn_e = _loc_bytes(r["location"], starts)
                 c_s, c_e = _loc_bytes(cnode["location"], starts)
                 tail_slice = btext[fn_e:c_e].lstrip(b" \t")
@@ -488,8 +463,6 @@ def _strip_unused_params_and_dead_locals(text):
                 ploc = p["location"]
                 prefs = local_refs.get(ploc)
                 if prefs:
-                    # Check if `p` is an unmutated Luraph state-key parameter (e.g. 147674248)
-                    # passed identically at 100% of call sites and used ONLY in constant-foldable `if` conditions
                     if all(id(pr) not in assign_lhs_refs for pr in prefs):
                         const_vals = set()
                         all_const = True
@@ -541,7 +514,6 @@ def _strip_unused_params_and_dead_locals(text):
                                             elif btext[eb_s:eb_s + 2] == b"if":
                                                 edits.append((if_s, eb_s, b""))
                     continue
-                # Check all call sites for parameter pidx
                 p_ok = True
                 for cnode in calls:
                     cargs = cnode.get("args", ())
@@ -557,7 +529,6 @@ def _strip_unused_params_and_dead_locals(text):
                 continue
 
             drop_set = set(cand_drop)
-            # Multi-return tail guard: dropping trailing args must not expose an earlier Call/Varargs as the new last arg
             while drop_set:
                 tail_hazard = False
                 for cnode in calls:
@@ -567,7 +538,6 @@ def _strip_unused_params_and_dead_locals(text):
                     kept_c = [i for i in range(len(cargs)) if i not in drop_set]
                     if kept_c and kept_c[-1] != len(cargs) - 1:
                         if cargs[kept_c[-1]].get("type") in ("AstExprCall", "AstExprVarargs"):
-                            # Keep the last argument of this call so `kept_c[-1]` stays truncated
                             drop_set.discard(len(cargs) - 1)
                             tail_hazard = True
                             break
@@ -576,9 +546,7 @@ def _strip_unused_params_and_dead_locals(text):
             if not drop_set:
                 continue
 
-            # Emit disjoint span deletions on `fn_node` params
             _emit_list_deletions(params, drop_set, starts, edits)
-            # Emit disjoint span deletions on every call site's args
             for cnode in calls:
                 cargs = cnode.get("args", ())
                 c_drop = {i for i in drop_set if i < len(cargs)}
@@ -661,7 +629,6 @@ def _unwrap_top_level_iife(text):
                 and len(fn.get("args", ())) == 0 and not fn.get("vararg")):
             continue
         st_s, st_e = _loc_bytes(st["location"], starts)
-        # Include any leading `;` on the same line right before `(`
         ls = btext.rfind(b"\n", 0, st_s)
         line_start = 0 if ls < 0 else ls + 1
         prefix_same_line = btext[line_start:st_s]
@@ -675,7 +642,6 @@ def _unwrap_top_level_iife(text):
             continue
 
         b_s, b_e = _loc_bytes(body_node["location"], starts)
-        # Match header `...(function()` up to first statement line and footer `end)()`
         head_chunk = btext[st_s:b_s]
         tail_chunk = btext[b_e:st_e]
         if not (re.match(rb"^;?\s*\(\s*function\s*\(\s*\)", head_chunk)
@@ -743,7 +709,6 @@ def _sugar_local_functions(text):
                         st_s, _ = _loc_bytes(st["location"], starts)
                         fn_s, _ = _loc_bytes(fn["location"], starts)
                         prefix = btext[st_s:fn_s]
-                        # Match exact `local <name> = function(` prefix
                         target_re = rb"^local\s+" + re.escape(nm.encode("utf-8")) + rb"\s*=\s*$"
                         if re.match(target_re, prefix) and btext[fn_s:fn_s + 8] == b"function":
                             edits.append((st_s, fn_s + 8, b"local function " + nm.encode("utf-8")))
@@ -858,8 +823,6 @@ def _collapse_single_packs(text):
         if t in ("AstStatAssign", "AstStatCompoundAssign"):
             tgts = n.get("vars") or ([n.get("var")] if n.get("var") else [])
             for v in tgts:
-                # anything the statement assigns into may be mutated, so every
-                # local on the left-hand side is off limits
                 stack = [v]
                 while stack:
                     cur = stack.pop()
@@ -885,9 +848,6 @@ def _collapse_single_packs(text):
             continue
         s0, e0 = rng(arg)
         cs, ce = rng(call)
-        # Strip only the `table.pack(` prefix and the closing paren: the
-        # argument may itself contain rewrites, and an edit that spans it
-        # would swallow them.
         edits.append((cs, s0, b""))
         edits.append((e0, ce, b""))
         for kind, node, self_node in uses[loc]:
@@ -941,10 +901,6 @@ def _merge_local_decls(text):
             value = avals[0]
             if value.get("type") == "AstExprFunction":
                 continue
-            # Not every pair folds. `local t` / `t = { ... t ... }` is the one
-            # shape that cannot: inside its own initialiser the name is not in
-            # scope yet, so those reads are globals. Folding rewrote a working
-            # self-referential table into reads of a nil global.
             if _has_ident_reference(value, vars_[0]["name"]):
                 continue
             vs, ve = rng(value)
@@ -952,8 +908,6 @@ def _merge_local_decls(text):
             ds, de = rng(st)
             as0, ae0 = rng(nxt)
             as0, ae0 = _expand_full_line_delete(btext, as0, ae0)
-            # the declaration's own indentation is already in front of `ds`; emit
-            # only the statement, or the merge would double it
             new_decl = b"local " + btext[name_s:name_e] + b" = " + btext[vs:ve]
             edits.append((ds, de, new_decl))
             edits.append((as0, ae0, b""))
@@ -1014,10 +968,6 @@ def _is_inert_expr(node):
     if t == "AstExprBinary":
         return _is_inert_expr(node.get("left")) and _is_inert_expr(node.get("right"))
     if t in ("AstExprIndexExpr", "AstExprIndexName"):
-        # Reading a slot of a value we already hold cannot observe anything but
-        # the slot, and this only ever runs on code that ends at a marker anyway
-        # (see _trim_dead_stub_bodies): the difference is which error is raised,
-        # not whether one is.
         base = node.get("expr")
         if not _is_inert_expr(base):
             return False
@@ -1043,7 +993,7 @@ def _is_devirt_marker(node):
     """`error("devirt: ...")` -- this tool's own "could not lift this" marker."""
     if not isinstance(node, dict):
         return False
-    if node.get("type") == "AstStatExpr":            # how luau-ast spells a call statement
+    if node.get("type") == "AstStatExpr":
         node = node.get("expr") or {}
     if node.get("type") != "AstExprCall":
         return False
@@ -1083,9 +1033,6 @@ def _marker_shaped(node):
     return False
 
 
-# What `_trim_dead_stub_bodies` removes, as (where, lines) pairs, so it can be
-# written next to the result instead of disappearing. Set TRIM_PATH to a file
-# path and the pass appends to it; the output itself stays clean.
 TRIMMED = []
 TRIM_PATH = None
 
@@ -1133,9 +1080,6 @@ def _trim_dead_stub_bodies(text):
                 and all(_is_inert_expr(v) for v in st.get("values") or [])
         return False
 
-    # A region is only dead if nothing unresolved reads out of it: a capture the
-    # walk could not follow may hold a value this "inert" run produced, in which
-    # case the run is the only way that value ever reaches the script.
     unresolved = [m.group(0).encode() for m in UNRESOLVED_CAPTURE.finditer(text)]
 
     def mentions_unresolved(node):
@@ -1144,7 +1088,7 @@ def _trim_dead_stub_bodies(text):
         try:
             a, b = rng(node)
         except Exception:
-            return True                     # cannot prove it dead: keep it
+            return True
         chunk = btext[a:b]
         return any(re.search(rb"\b" + re.escape(nm) + rb"\b", chunk) for nm in unresolved)
 
@@ -1155,14 +1099,10 @@ def _trim_dead_stub_bodies(text):
             body = node.get("body") or []
             first_marker = next((i for i, st in enumerate(body) if _marker_shaped(st)), None)
             if first_marker is not None:
-                # The dead part is the *trailing* run of inert statements just
-                # before the marker (the cipher arithmetic the walk got through
-                # before it stopped). Real work earlier in the body stays.
                 start = first_marker
                 while start > 0 and inert_stmt(body[start - 1]):
                     start -= 1
                 if start < first_marker and any(mentions_unresolved(st) for st in body[start:first_marker]):
-                    # the run feeds a value the trace lost: keep it, it is not dead
                     start = first_marker
                 if start < first_marker:
                     s0, _ = rng(body[start])
@@ -1205,8 +1145,6 @@ def _replace_error_markers(text):
     could not be lifted are still missing, and still say so.
     """
     def repl(m):
-        # group 2 is the message; group 1 is the indent, and reading it here
-        # turned every marker into `-- <tabs>` -- a hole with no explanation.
         msg = m.group(2)
         indent = m.group("indent")
         return "%s-- %s" % (indent, msg)
@@ -1318,8 +1256,6 @@ def _declare_unresolved_captures(text):
             "-- They are nil here, so a function that needs one stops where the",
             "-- original had a value; each use below says what shape it expected."]
     for i in range(0, len(free), 6):
-        # one `local` per line: a bare newline inside a name list is not a
-        # continuation in Lua, and repeating `local` with disjoint names is valid
         decl.append("local " + ", ".join(free[i:i + 6]))
     header = "\n".join(decl) + "\n\n"
     lines = body.split("\n")
@@ -1329,8 +1265,6 @@ def _declare_unresolved_captures(text):
     return "\n".join(lines[:at] + header.rstrip("\n").split("\n") + [""] + lines[at:])
 
 
-# `variables.rename` splits a register into one variable per web, so a
-# leftover can be plain (`r6`) or suffixed (`r6_2`).
 REG_LEFTOVER = re.compile(r"r\d+(?:_\d+)?")
 LOC_RE = re.compile(r"(\d+),(\d+) - (\d+),(\d+)$")
 
@@ -1382,7 +1316,7 @@ def _declare_unresolved_registers(text):
     holes = []
     for nm, loc in reads:
         if nm in writes:
-            continue                       # the script assigns it: a real global
+            continue
         m = LOC_RE.search(loc)
         if not m:
             continue
@@ -1472,7 +1406,6 @@ def _hint_unresolved_captures(text):
         if _line_can_take_comment(code):
             out.append(line.rstrip() + note)
         else:
-            # the statement runs on: put the hint above it, at the same indent
             indent = line[:len(line) - len(line.lstrip())]
             out.append(indent + "-- unresolved: " + hints)
             out.append(line)
@@ -1611,7 +1544,7 @@ def _drop_empty_branches(text):
             if not isinstance(st, dict):
                 continue
             if _empty_block(st):
-                drop_stmt(st)                                   # bare `do end`
+                drop_stmt(st)
                 continue
             if st.get("type") != "AstStatIf":
                 continue
@@ -1622,12 +1555,10 @@ def _drop_empty_branches(text):
                 if _is_inert_expr(st.get("condition")):
                     drop_stmt(st)
             elif els is not None and els_empty and not then_empty:
-                # keep the then-branch, drop "else" and the empty block after it
                 _, ts = rng(st["thenbody"])
                 _, te = rng(st["elsebody"])
                 edits.append((ts, te, b""))
             elif then_empty and not els_empty and els.get("type") == "AstStatBlock":
-                # `if C then else B end` -> `if not (C) then B end`
                 cs, ce = rng(st["condition"])
                 edits.append((cs, cs, b"not ("))
                 edits.append((ce, ce, b")"))
@@ -1656,38 +1587,23 @@ def _drop_empty_branches(text):
     return _apply_edits(btext, edits).decode("utf-8", "surrogateescape")
 
 
-# --- context slots -------------------------------------------------------
-# The lifter keeps the script's own helper table (`local data = {}` filled with
-# `data[15] = <function>`), because the script really does index it by number.
-# A number says nothing to a reader, so a slot that is written exactly once gets
-# a name: either the local it was copied from (`data[20] = state` -> `state`) or,
-# for a stored function, what that function looks up or waits on
-# (`FindFirstChild("HumanoidRootPart")` -> `humanoidRootPart`). Reads are only
-# rewritten where that name really resolves to the same binding -- a slot whose
-# name is shadowed somewhere keeps its `data[k]` form there.
-
 _SLOT_METHODS = ("GetService", "WaitForChild", "FindFirstChild", "FindFirstChildOfClass")
-# methods that say how a value is used, not what it is
 _SLOT_STRUCTURAL = {
     "IsA", "Clone", "Destroy", "Connect", "Disconnect", "GetChildren", "GetDescendants",
     "FindFirstChild", "FindFirstChildOfClass", "FindFirstChildWhichIsA", "WaitForChild",
     "GetService", "GetAttribute", "SetAttribute", "pairs", "Get", "Set",
-    # string/table utilities: a slot that formats a line is a logger, not a `format`
     "format", "sub", "gsub", "find", "match", "split", "rep", "upper", "lower",
     "insert", "remove", "concat", "pack", "unpack", "sort", "freeze", "tostring",
     "tonumber", "type", "print", "warn", "spawn", "defer", "delay",
     "gmatch", "byte", "char", "len", "clone", "keys", "values",
 }
-# a name made only of these words describes the type, not the value
 _SLOT_BORING = {"new", "value", "name", "wait", "call", "self", "data", "get", "set"}
-# a call on one of these says what the language does, not what the slot is for
 _SLOT_NAMESPACES = {
     "os", "math", "table", "string", "task", "coroutine", "utf8", "bit32", "debug",
     "game", "workspace", "script", "Instance", "Enum", "Color3", "UDim2", "UDim",
     "Vector2", "Vector3", "CFrame", "Rect", "NumberRange", "NumberSequence",
     "ColorSequence", "Ray", "Region3", "TweenInfo", "BrickColor", "Random",
 }
-# a local the lifter invented says no more than the number it replaced
 _SLOT_GENERATED = re.compile(
     r"^(?:data|value|valueMap|labelMap|uidMap|condition|response|number|callback|argument"
     r"|toNumberOrDefault|now|value\d*|slot)\d*$"
@@ -1887,7 +1803,6 @@ def _slot_shadow_ranges(bindings, target_location, alias_at):
         if target_location is not None and location == target_location:
             continue
         if decl_start < alias_at:
-            # declared above the name: it stops applying where the slot is named
             ranges.append((decl_end, alias_at))
         else:
             ranges.append((decl_end, block_end))
@@ -1921,7 +1836,6 @@ def _name_context_slots(text):
             return None, None
         return table, index.get("value")
 
-    # the statement that stores each slot, and the value it stores
     staged = {}
     for assign in _iter_nodes(root, "AstStatAssign"):
         vars_ = assign.get("vars") or []
@@ -1942,8 +1856,6 @@ def _name_context_slots(text):
             reads.setdefault((table, key), []).append(node)
 
     taken = set(re.findall(r"[A-Za-z_][A-Za-z0-9_]*", btext.decode("utf-8", "replace")))
-    # `local runService = data[58]` is the alias this pass writes; reading it as
-    # a use of the slot would write the alias twice
     alias_echo = set()
     for stmt in _iter_nodes(root, "AstStatLocal"):
         vars_, values = stmt.get("vars") or [], stmt.get("values") or []
@@ -1965,8 +1877,6 @@ def _name_context_slots(text):
         value = values[0]
         origin = None
         if value.get("type") == "AstExprLocal":
-            # `data[20] = state`: the name is already there, so the reads can use
-            # it directly and no alias line is written
             source = value.get("local") or {}
             name = source.get("name")
             if not name or _SLOT_GENERATED.match(name) or name in _LUA_KEYWORDS:
@@ -1986,7 +1896,6 @@ def _name_context_slots(text):
     edits = []
     for plan in plans:
         shadows = _slot_shadow_ranges(bindings.get(plan["name"]) or [], plan["origin"], plan["at"])
-        # a read above the write sees nil in the slot, so it keeps its `data[k]`
         usable = [r for r in plan["reads"] if span(r)[0] >= plan["at"]]
         usable = [r for r in usable
                   if (plan["name"], id(r)) not in alias_echo
@@ -2048,7 +1957,7 @@ def _discard_unread_slots(text):
                 walk(x)
 
     walk(root)
-    if (underscore & refs) or global_underscore:   # this file already has a `_`
+    if (underscore & refs) or global_underscore:
         return text
     edits = []
     for v in slots:
@@ -2061,15 +1970,6 @@ def _discard_unread_slots(text):
         return text
     return _apply_edits(btext, edits).decode("utf-8", "surrogateescape")
 
-
-# --- usage names ---------------------------------------------------------
-# The lifter calls a parameter it could not follow `argument5`, and a function
-# it could not name `callback7`. Both say nothing, but both are *used*: the
-# parameter is the receiver of `:GetAttribute("RacePowerUp")`, the argument of
-# `pcall`, the thing indexed by `map[uid]`; the function is the handler handed
-# to `:Connect`. This pass names a binding from that evidence, and only renames
-# a binding whose references it reaches: a name another live binding already
-# holds inside the same range is not used.
 
 _PLACEHOLDER = re.compile(r"^(?:argument\d+|callback\d*)$")
 _GENERIC_FIELDS = {
@@ -2099,7 +1999,6 @@ _METHOD_NAMES = {
     "Kick": "player",
     "Disconnect": "connection",
 }
-# `("callee", argument index) -> name`, for calls whose meaning is the language's
 _USAGE_CALLS = {
     ("pcall", 0): "callback", ("xpcall", 0): "callback",
     ("task.spawn", 0): "callback", ("task.defer", 0): "callback",
@@ -2223,7 +2122,7 @@ def _usage_method_handles(root):
     out, by_field = {}, {}
     for (receiver, field), fns in defs.items():
         signatures = {tuple(p.get("name") for p in (fn.get("args") or [])) for fn in fns}
-        if len(signatures) != 1:        # definitions that disagree say nothing
+        if len(signatures) != 1:
             continue
         if receiver:
             out[(receiver, field)] = fns[0]
@@ -2241,7 +2140,6 @@ def _usage_init_name(init):
     if t == "AstExprFunction":
         return _slot_function_name(init) or _usage_body_name(init)
     if t == "AstExprIndexName":
-        # a value read out of a field *is* that field: `part.Position` -> position
         return _slot_camel(init.get("index"))
     if t == "AstExprCall":
         if _slot_method_of(init) == "pack" or _usage_callee(init) == "pack":
@@ -2416,9 +2314,7 @@ def _usage_zone(bindings, name, location):
 
 
 _NUMBERED = re.compile(r"^(?:argument\d+|callback\d+)$")
-# a local the lifter filled from a register: `local value7 = ...`
 _VALUE_LOCAL = re.compile(r"^value\d+$")
-# the namer's own fallbacks: passing one of these on is not a name
 _GENERATEDISH = re.compile(
     r"^(?:argument\d+|callback\d+|value\d*|valueMap\d*|labelMap\d*|uidMap\d*"
     r"|condition\d*|response\d*|number\d+|data\d+|k\d+|i\d+|now\d+|parts\d*"
@@ -2433,13 +2329,13 @@ def _usage_free(name, zone, bindings, globals_in_zone, assigned=None):
         return False
     for start, end in ((assigned or {}).get(name) or ()):
         if start < zone[1] and zone[0] < end:
-            return False        # this pass already used that name here
+            return False
     if name in globals_in_zone:
         return False
     for entry in bindings.get(name) or []:
         start, end = entry[1], entry[2]
         if start < zone[1] and zone[0] < end:
-            return False        # that name is already live inside this range
+            return False
     return True
 
 
@@ -2469,7 +2365,7 @@ def _usage_names(text):
             owner_of_param[param.get("location")] = id(fn)
 
     methods = _usage_method_handles(root)
-    targets = {}                        # binding location -> (node, kind)
+    targets = {}
     for node in _iter_nodes(root, "AstLocal"):
         name = node.get("name") or ""
         if _VALUE_LOCAL.match(name):
@@ -2479,21 +2375,16 @@ def _usage_names(text):
             continue
         is_param = node.get("location") in owner_of_param
         if name.startswith("callback"):
-            # `callback` on a parameter is a name this pass chose; only the
-            # lifter's numbered fallbacks are worth renaming
             if is_param:
                 continue
             targets.setdefault(node.get("location"), (node, "closure"))
         elif is_param:
             targets.setdefault(node.get("location"), (node, "param"))
         else:
-            # an `argumentN` that is a plain local, not a parameter: it takes
-            # the same usage evidence, just without the parameter guards
             targets.setdefault(node.get("location"), (node, "local"))
     if not targets:
         return text
 
-    # where a `value` local is initialised, and how many times it is written
     init_of, writes = {}, {}
     for stmt in _iter_nodes(root, "AstStatLocal"):
         vars_, values = stmt.get("vars") or [], stmt.get("values") or []
@@ -2516,7 +2407,6 @@ def _usage_names(text):
     assigned = {}
     for _round in range(3):
         changed = False
-        # a parameter can be named from what the function it is handed to calls it
         for call in _iter_nodes(root, "AstExprCall"):
             fn = call.get("func") or {}
             params = None
@@ -2533,8 +2423,6 @@ def _usage_names(text):
                 if target is not None:
                     params = target.get("args") or []
                 if params and is_method_call:
-                    # `module:run(x)` hands the receiver in as `self`; align past
-                    # it, and say nothing when the method does not declare one
                     if (params[0].get("name") or "") in ("self", "_self"):
                         params = params[1:]
                     else:
@@ -2552,9 +2440,6 @@ def _usage_names(text):
                     if loc not in targets or loc in chosen:
                         continue
                     if targets[loc][1] == "closure":
-                        # a handler says more about what it is than the name its
-                        # caller happens to use for it, so keep this only as a
-                        # fallback for a handler with no evidence of its own
                         prop_fallback.setdefault(loc, source)
                         continue
                     if _PLACEHOLDER.match(source or ""):
@@ -2589,7 +2474,7 @@ def _usage_names(text):
                 candidate = _usage_evidence(loc, parent, refs)
                 holder = owner_of_param.get(loc) if kind == "param" else None
                 if holder is not None and candidate == owners.get(holder):
-                    continue            # the function's own name is not the parameter's
+                    continue
             if not candidate or candidate == name:
                 continue
             if _usage_free(candidate, zone, bindings, globals_within(zone), assigned):
@@ -2598,8 +2483,6 @@ def _usage_names(text):
                     assigned.setdefault(candidate, []).append(zone)
                     changed = True
                 continue
-            # a live neighbour already owns the plain name: a numbered sibling
-            # keeps the meaning and stays distinct (`object` -> `object2`)
             for n in range(2, 6):
                 alt = "%s%d" % (candidate, n)
                 if _usage_free(alt, zone, bindings, globals_within(zone), assigned):
@@ -2636,7 +2519,7 @@ def name_from_usage(text):
                 break
             text = out
         return text
-    except Exception as ex:                        # never lose a working output
+    except Exception as ex:
         print("[!] usage naming pass failed: %s" % ex, file=sys.stderr)
         return text
 
@@ -2645,7 +2528,7 @@ def name_context_slots(text):
     """Give the script's own `data[k]` helper slots a name. Never raises."""
     try:
         return _name_context_slots(text)
-    except Exception as ex:                        # never lose a working output
+    except Exception as ex:
         print("[!] context slot naming pass failed: %s" % ex, file=sys.stderr)
         return text
 
@@ -2725,21 +2608,15 @@ def _fold_constant_ifs_once(text):
         elif kind == "AstExprConstantBool" and not cond.get("value"):
             taken = stmt.get("elsebody")
         else:
-            # `if true then ... end` is harmless and the local merge already
-            # looks through it; only a branch the run skipped is worth rewriting
             continue
         start, end = _loc_bytes(stmt["location"], starts)
         body = (taken or {}).get("body") or []
         other = (stmt.get("thenbody") if taken is stmt.get("elsebody")
                  else stmt.get("elsebody")) or {}
         if _branch_targets(other.get("body")) - _branch_targets(body):
-            # the block that would go is the only place these values are set: a
-            # condition the lift lost prints as `nil`, and deleting the block it
-            # guards would leave the frame nil where the original had a value
             continue
         note = b""
         if other.get("body"):
-            # say it out loud: a branch that never ran is being dropped
             line = btext.rfind(b"\n", 0, start) + 1
             indent = btext[line:start]
             indent = indent[:len(indent) - len(indent.lstrip())]
@@ -2769,7 +2646,7 @@ def _fold_constant_ifs_once(text):
     kept = []
     for e in edits:
         if any(e[0] >= k[0] and e[1] <= k[1] for k in kept):
-            continue                          # nested in a fold we already took
+            continue
         kept.append(e)
     out = btext
     for start, end, repl in sorted(kept, key=lambda e: -e[0]):
@@ -2821,7 +2698,6 @@ def _readonly_lib_rewrites(text):
         if par.get("expr") is not ref:
             return False
         gp = par_of(par)
-        # `x:find(...)` / `x.find(...)` needs the library itself, not a table
         if (gp or {}).get("type") == "AstExprCall" and gp.get("func") is par:
             return False
         return True
@@ -2853,8 +2729,6 @@ def _readonly_lib_rewrites(text):
         uses = refs.get(loc) or []
         if not any(is_store_base(ref) for ref in uses):
             continue
-        # a field read is fine (the table is what holds those fields); being
-        # called, passed on or returned means the value really is the library
         if any(not (is_index_base(ref) or is_write_target(ref)) for ref in uses):
             continue
         for value in values:
@@ -2863,7 +2737,7 @@ def _readonly_lib_rewrites(text):
                 continue
             tail = btext[end:].split(b"\n", 1)[0]
             if tail.strip():
-                continue                 # something else shares the line
+                continue
             lib = value.get("global")
             line = btext.rfind(b"\n", 0, start) + 1
             indent = btext[line:start]
@@ -2883,94 +2757,83 @@ def polish_ast(text, text_names=True):
     text = _strip_unused_params_and_dead_locals(text)
     try:
         text = _align_comment_indent(text)
-    except Exception as ex:                        # never lose a working output
+    except Exception as ex:
         print("[!] comment indent pass failed: %s" % ex, file=sys.stderr)
     try:
         text = _fold_constant_ifs(text)
-    except Exception as ex:                        # never lose a working output
+    except Exception as ex:
         print("[!] constant-if fold failed: %s" % ex, file=sys.stderr)
     try:
         text = _readonly_lib_rewrites(text)
-    except Exception as ex:                        # never lose a working output
+    except Exception as ex:
         print("[!] read-only library rewrite failed: %s" % ex, file=sys.stderr)
     text = _unwrap_top_level_iife(text)
     text = _sugar_local_functions(text)
     if text_names:
-        # the script's own helper table is indexed by number; give each slot the
-        # name of the thing stored in it before anything else looks at the code
         text = name_context_slots(text)
-        # parameters and handlers are named from how they are used, after the
-        # slots, so a slot's new name counts as evidence
         text = name_from_usage(text)
     try:
         text = _merge_local_decls(text)
-    except Exception as ex:                        # never lose a working output
+    except Exception as ex:
         print("[!] local merge pass failed: %s" % ex, file=sys.stderr)
     try:
         text = _trim_dead_stub_bodies(text)
-    except Exception as ex:                        # never lose a working output
+    except Exception as ex:
         print("[!] dead stub trim pass failed: %s" % ex, file=sys.stderr)
     try:
         text = _split_single_value_locals(text)
-    except Exception as ex:                        # never lose a working output
+    except Exception as ex:
         print("[!] single-value local pass failed: %s" % ex, file=sys.stderr)
     try:
         text = _drop_empty_branches(text)
-    except Exception as ex:                        # never lose a working output
+    except Exception as ex:
         print("[!] empty branch pass failed: %s" % ex, file=sys.stderr)
     try:
         text = _tidy_blank_lines(text)
-    except Exception as ex:                        # never lose a working output
+    except Exception as ex:
         print("[!] blank line pass failed: %s" % ex, file=sys.stderr)
     try:
         text = _declare_unresolved_captures(text)
-    except Exception as ex:                        # never lose a working output
+    except Exception as ex:
         print("[!] unresolved capture pass failed: %s" % ex, file=sys.stderr)
     try:
         text = _declare_unresolved_registers(text)
-    except Exception as ex:                        # never lose a working output
+    except Exception as ex:
         print("[!] unresolved register pass failed: %s" % ex, file=sys.stderr)
     try:
         text = _hint_unresolved_captures(text)
-    except Exception as ex:                        # never lose a working output
+    except Exception as ex:
         print("[!] unresolved hint pass failed: %s" % ex, file=sys.stderr)
     try:
         text = _replace_error_markers(text)
-    except Exception as ex:                        # never lose a working output
+    except Exception as ex:
         print("[!] marker comment pass failed: %s" % ex, file=sys.stderr)
     try:
         text = _drop_degenerate_writes(text)
-    except Exception as ex:                        # never lose a working output
+    except Exception as ex:
         print("[!] degenerate write pass failed: %s" % ex, file=sys.stderr)
     try:
         text = _mark_truncated_loops(text)
-    except Exception as ex:                        # never lose a working output
+    except Exception as ex:
         print("[!] truncated loop pass failed: %s" % ex, file=sys.stderr)
     try:
         text = _collapse_single_packs(text)
-    except Exception as ex:                        # never lose a working output
+    except Exception as ex:
         print("[!] single-slot pack pass failed: %s" % ex, file=sys.stderr)
     if not os.environ.get("DEVIRT_NO_BITFOLD"):
         try:
-            # an unrolled checksum is one operation written out N times; fold it
-            # back into a loop so the reader sees the operation, not the unrolling
             import bitfold
             text = bitfold.fold_chains(text)
-        except Exception as ex:                    # never lose a working output
+        except Exception as ex:
             print("[!] bit32 chain fold pass failed: %s" % ex, file=sys.stderr)
     try:
-        # the passes above rewrite declarations, so the slots they emptied need one
-        # more sweep before the file is written out
         text = _strip_unused_params_and_dead_locals(text)
-        # what is left is a name that has to stay, because it is holding a call's
-        # result apart from the ones the next slots take
         text = _discard_unread_slots(text)
-    except Exception as ex:                        # never lose a working output
+    except Exception as ex:
         print("[!] final dead-slot pass failed: %s" % ex, file=sys.stderr)
     try:
-        # notes added while folding and materializing land at the right column
         text = _align_comment_indent(text)
-    except Exception as ex:                        # never lose a working output
+    except Exception as ex:
         print("[!] comment indent pass failed: %s" % ex, file=sys.stderr)
     return text
 

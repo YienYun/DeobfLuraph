@@ -23,12 +23,11 @@ unusual expression, a value escaping the chain, a block that repeats twice.
 import re
 import sys
 
-# Ops whose result is a bit pattern: pure, no side effects, no tables.
 BIT_OPS = frozenset("band bor bxor bnot lshift rshift lrotate rrotate extract replace "
                     "countlz countrz byteswap".split())
 
-MAX_PERIOD = 8          # a repetition longer than this is not a repeated shape
-MIN_REPEATS = 3         # two matching blocks are a coincidence
+MAX_PERIOD = 8
+MIN_REPEATS = 3
 _HELPER = "mixBits"
 
 
@@ -71,13 +70,13 @@ def _pure(node):
                 return False
             calls += 1
         elif t in ("AstExprConstantNumber", "AstExprLocal", "AstLocal"):
-            continue                 # `AstLocal` is the name inside an AstExprLocal
+            continue
         elif t == "AstExprGlobal":
             if n.get("global") != "bit32":
                 return False
         elif t == "AstExprIndexName":
             if id(n) not in callees:
-                return False                 # field access: not a bit pattern
+                return False
         elif t == "AstExprBinary":
             if n.get("op") not in ("+", "-", "*", "%", "//", "^"):
                 return False
@@ -153,7 +152,7 @@ def _as_stmt(node):
     try:
         a, b = loc.split(" - ")
         if a.split(",")[0] != b.split(",")[0]:
-            return None                      # spans lines: not a chain step
+            return None
     except ValueError:
         return None
     if not _pure(vals[0]):
@@ -250,8 +249,6 @@ def plan(text):
                     if ncanon != canon or len(next_ext) != 1:
                         break
                     if next_ext != {run[s + count * period - 1].var_loc}:
-                        # the next repetition must consume exactly what this one
-                        # produced last; otherwise the chain is not a chain
                         break
                     count += 1
                 if count < MIN_REPEATS:
@@ -264,11 +261,7 @@ def plan(text):
         first = run[s:s + period]
         last = run[s + (count - 1) * period:s + count * period]
         out_name, out_loc = last[-1].var_name, last[-1].var_loc
-        # what follows the folded span (the rest of the chain included: a prefix
-        # or a tail is allowed, as long as it only reads the result)
         tail = body[run_start + s + count * period:]
-        # every name a repetition binds, except its result, must stay inside the
-        # repetitions: a value that escapes would need renaming to survive
         inner_locs = {st.var_loc for st in first[:-1]}
         for st_after in tail:
             for node in _walk(st_after, []):
@@ -276,7 +269,6 @@ def plan(text):
                     loc = (node.get("local") or {}).get("location")
                     if loc in inner_locs:
                         return None
-        # ...and the result has to be read afterwards, or there is nothing to fold
         used = any(node.get("type") == "AstExprLocal" and
                    (node.get("local") or {}).get("location") == out_loc
                    for st_after in tail for node in _walk(st_after, []))
@@ -339,7 +331,7 @@ def plan(text):
         for node in _walk(root, []):
             if node.get("type") == "AstStatBlock":
                 visit(node)
-    except Exception as ex:                  # never lose a working output
+    except Exception as ex:
         print("[!] bit32 chain scan failed: %s" % ex, file=sys.stderr)
         return []
     return plans
@@ -358,7 +350,6 @@ def fold_chains(text):
         ind = p["indent"]
         block = list(p["block_lines"])
         last = block[-1]
-        # the block's own result becomes the loop's carried value
         m = re.match(r"^(\s*)local\s+\w+\s*=", last)
         if not m:
             continue

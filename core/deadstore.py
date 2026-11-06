@@ -53,7 +53,7 @@ def _dotted(node):
     t = (node or {}).get("type")
     if t == "AstExprGlobal":
         return node.get("global") or node.get("name")
-    if t == "AstExprLocal":                  # `local function u32Trunc`
+    if t == "AstExprLocal":
         return (node.get("local") or {}).get("name")
     if t == "AstExprIndexName":
         base = _dotted(node.get("expr"))
@@ -93,7 +93,7 @@ def _targets(stmt):
     for i, var in enumerate(vars_):
         local = var.get("local") if var.get("type") == "AstExprLocal" else var
         if var.get("type") not in ("AstExprLocal", "AstLocal"):
-            return None                       # a field or a global: not a plain store
+            return None
         if not isinstance(local, dict) or "location" not in local:
             return None
         out.append((local["location"], vals[i] if i < len(vals) else None))
@@ -202,17 +202,12 @@ def find_dead(text):
         the end of the body are known.
         """
         body = block.get("body") or []
-        live = set(live)                 # the caller keeps its own set
+        live = set(live)
         for stmt in reversed(body):
             head = set()
-            _reads_head(stmt, head)      # a loop's condition runs after its body
+            _reads_head(stmt, head)
             kids = nested_blocks(stmt)
             if stmt.get("type") == "AstStatIf" and len(kids) > 1:
-                # The branches are alternatives, not a sequence: one branch
-                # storing to a local says nothing about whether the code after
-                # the statement needs the value the *other* branch left there.
-                # Scan each from the same live-out and take the union, including
-                # the fall-through path when there is no `else`.
                 base = set(live) | head
                 out = set(base)
                 for child in kids:
@@ -222,7 +217,7 @@ def find_dead(text):
             for child in reversed(kids):
                 if stmt.get("type") in LOOP_STAT:
                     cur = live | head
-                    while True:          # the body's live-in is its own live-out
+                    while True:
                         attempt = []
                         nxt = scan(child, set(cur), attempt) | cur
                         if nxt == cur:
@@ -230,7 +225,7 @@ def find_dead(text):
                             break
                         cur = nxt
                         if len(cur) > len(live) + len(head) + 64:
-                            sink.extend(attempt)   # give up widening: keep all
+                            sink.extend(attempt)
                             break
                     live = cur
                 else:
@@ -242,10 +237,6 @@ def find_dead(text):
                 live |= use
                 continue
             targets, aligned = info
-            # `x = nil` is a real store worth deleting when nothing reads x again;
-            # inside a declaration it is a no-op (`local a, b = nil, v` would be
-            # reprinted unchanged), so nil values are only dropped from a plain
-            # assignment.
             is_decl = stmt.get("type") == "AstStatLocal"
             drop = [i for i, (key, val) in enumerate(targets)
                     if key not in live and not captured(key)
@@ -295,10 +286,6 @@ def strip(text, rounds=3):
             keep = [i for i in range(len(vars_)) if i not in drop]
             lhs = b", ".join(_slice(vars_[i], btext, starts) for i in keep)
             if stmt["type"] == "AstStatLocal":
-                # A declaration is never deleted: the local may still be stored
-                # to further down, and without `local` that store would write a
-                # global. Dropped values become `nil` (they were unobservable),
-                # and a dropped tail is simply cut off.
                 names = b", ".join(_slice(v, btext, starts) for v in vars_)
                 last = max([i for i in keep if i < len(vals)], default=-1)
                 parts = [_slice(vals[i], btext, starts) if i in keep else b"nil"

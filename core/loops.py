@@ -117,7 +117,6 @@ def _strip_kstack_pops_and_thread(entry, blocks, D):
             changed = True
     while True:
         step = False
-        # 1. Thread empty non-entry goto blocks (`B -> succ` when `B.stmts == []`)
         for bid in list(blocks):
             if bid == entry or bid not in blocks:
                 continue
@@ -130,12 +129,10 @@ def _strip_kstack_pops_and_thread(entry, blocks, D):
                 blocks.pop(bid, None)
                 step = True
                 changed = True
-        # 2. Merge non-loop-latch blocks with identical semantics & successors
         by_sig = {}
         remap = {}
         for bid in sorted(blocks):
             b = blocks[bid]
-            # Do not merge self-looping blocks directly
             if bid in b.succ:
                 continue
             sig = (
@@ -151,7 +148,6 @@ def _strip_kstack_pops_and_thread(entry, blocks, D):
             elif bid != entry:
                 remap[bid] = canon
             else:
-                # Keep `entry` alive if `entry` matched an earlier block id
                 remap[canon] = bid
                 by_sig[sig] = bid
         if remap:

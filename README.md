@@ -10,15 +10,15 @@ other obfuscator — MoonVeil included — has been removed from the tree.
 
 | Family | Module | What it does |
 |---|---|---|
-| **Luraph v15.0 / v15.1+** | `core/obfuscators/luraph_v15/` | Sandbox run ➔ symbolic CFG / SSA lift ➔ Luau source |
-| **Luraph v14.7 – v14.9** | `core/obfuscators/luraph_v14/` | v14 VM mapper + symbolic lift on the same backend |
-| **Luarmor v4** | `core/obfuscators/luarmor/`, `src/luarmor.js` | Client-chain analysis; when the file carries a Luraph chunk, that chunk is lifted by the v15 engine |
+| **Luraph v15.0 / v15.1+** | `core/v15.py`, `core/v15_*.py` | Sandbox run ➔ symbolic CFG / SSA lift ➔ Luau source |
+| **Luraph v14.7 – v14.9** | `core/v14.py`, `core/v14_*.py` | v14 VM mapper + symbolic lift on the same backend |
+| **Luarmor v4** | `core/lm.py`, `core/lm_*.py`, `core/luarmor.js` | Client-chain analysis; when the file carries a Luraph chunk, that chunk is lifted by the v15 engine |
 
 About Luarmor: the licence check is **not** bypassed. The session payload lives
 on Luarmor's server behind a key, so a bare `_bsdata0` client stub is reported —
 module id, hashes, build stamp, endpoints — instead of being faked into code.
 
-`src/detect.js` still recognises the signatures of the removed obfuscators, so a
+`core/detect.js` still recognises the signatures of the removed obfuscators, so a
 file can be named correctly (`--detect`). It cannot be deobfuscated here: the
 run stops with `<engine> is not part of this build` and writes no output. That
 includes MoonVeil: a MoonVeil file is named as such and refused, never
@@ -36,7 +36,7 @@ npm install
 node deob.js protected.lua -o out.lua     # one file
 node deob.js folder/                      # a whole folder, recursively
 node deob.js protected.lua --detect       # identify the obfuscator, run nothing
-node tools/oracle/compare.js original.lua out.lua   # compare what two files print
+node scripts/smoke.js out.lua             # run the result in the offline sandbox
 ```
 
 ### Flags
@@ -76,7 +76,7 @@ call arguments wrapped at 100 columns, quotes normalised. The renamed copy from
 `--rename` and the renamer's own CLI go through the same pass, so both copies of a
 script match.
 
-* The settings live in `src/format.js` and are mirrored in `.stylua.toml`, so an
+* The settings live in `core/format.js` and are mirrored in `.stylua.toml`, so an
   editor or a `stylua` on `PATH` formats the same way the engine does.
 * StyLua is run to a fixed point (at most 4 passes): formatting is stable, and
   formatting a result a second time moves no bytes.
@@ -137,18 +137,21 @@ DeobfLuraph/
 │   ├── check.js            # syntax gate (no dependencies)
 │   └── metrics.py          # the metrics table a report quotes
 ├── .github/workflows/ci.yml
-├── src/                    # Node orchestration around the Python core
+├── core/                   # the whole engine, one flat directory
 │   ├── detect.js           # Signature / structural detector
 │   ├── driver.js           # Luraph v15: sandbox run + devirt bridge
-│   ├── engines.js          # engine dispatch (Luraph v14) and refusals
-│   ├── luarmor.js          # Luarmor chain analysis + report
 │   ├── harness.js          # Offline Roblox sandbox builder
-│   ├── devirt_bridge.py    # JSON bridge between Node and the Python lifters
+│   ├── engines.js          # Engine dispatch (Luraph v14) and refusals
+│   ├── luarmor.js          # Luarmor chain analysis + report
+│   ├── format.js           # StyLua pass, applied to every result
 │   ├── watermark.js        # Attribution comment + `print("Deobf By Zed")`
 │   ├── luau_check.js       # Syntax gate on `bin/luau-ast`
-│   ├── vmmap.js / traceout.js
-│   └── pyenv.js / tidy.js
-├── core/                   # Python compiler backend
+│   ├── vmmap.js / traceout.js / pyenv.js / tidy.js
+│   ├── v15.py, v15_*.py    # v15 driver, sandbox stepper, VM model, lifter
+│   ├── v14.py, v14_*.py    # v14 VM mapper + devirt driver
+│   ├── lm.py, lm_*.py      # Luarmor probe, stub, analyzer
+│   ├── obf.py / obf_base.py # Engine registry + shared base
+│   ├── devirt_bridge.py    # JSON bridge between Node and the Python lifters
 │   ├── ir.py / luasym.py   # IR values and symbolic expressions
 │   ├── structure.py        # CFG structuring, guard/trap pruning, poisoning
 │   ├── loops.py            # Loop recognition
@@ -158,12 +161,10 @@ DeobfLuraph/
 │   ├── ast_polish.py       # Source cleanup after printing
 │   ├── flatten.py          # Unrolls constant-state dispatch loops
 │   ├── codegen.py          # Luau emitter
-│   ├── backend.py          # The lowering pipeline, in order
-│   └── obfuscators/        # luraph_v15/ luraph_v14/ luarmor/
+│   └── backend.py          # The lowering pipeline, in order
 ├── renamer/                # Optional `--rename` pass (scope-verified renamer)
 ├── runtime/envlog.luau     # Offline Roblox VM + environment
 ├── bin/                    # luau, luau-ast (native; .exe for Windows)
-├── tools/                  # Luraph dumper cross-check, Luarmor capture, oracle
 ├── TECHNICAL.md            # How the lift works, what is checked, what is missing
 └── package.json
 ```

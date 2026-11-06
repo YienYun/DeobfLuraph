@@ -1,20 +1,5 @@
 'use strict';
 
-/**
- * Report free identifiers: names a result *reads* that nothing ever declares or
- * assigns, and that are not globals Roblox/Luau provide. In a lifted script
- * those are the places where a register could not be resolved, and at run time
- * they are nil -- so `r4._unpack(...)` is a crash waiting for its code path.
- *
- *     node scripts/freevars.js results          # every *.luau under a directory
- *     node scripts/freevars.js file.luau --verbose
- *     node scripts/freevars.js results          # every *.luau under a directory --report-only   # never fails
- *
- * Exit code 0 when every read resolves, 1 when something does not, 2 on usage.
- *
- * The AST comes from bin/luau-ast, the same parser the lift checks its own
- * output with, so a name is judged exactly as the Luau compiler would see it.
- */
 
 const { spawnSync } = require('node:child_process');
 const fs = require('node:fs');
@@ -22,7 +7,6 @@ const path = require('node:path');
 
 const ROOT = path.resolve(__dirname, '..');
 
-// Globals that exist when a Roblox script runs. A read of one of these is fine.
 const KNOWN = new Set(`
 _G _VERSION assert bit32 buffer coroutine debug error gcinfo getfenv getmetatable
 ipairs loadstring math newproxy next os pairs pcall print rawequal rawget rawlen
@@ -66,7 +50,7 @@ function collect(file) {
   const r = spawnSync(astBin(), [file], { encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 });
   if (r.status !== 0) throw new Error('luau-ast failed: ' + (r.stderr || '').split('\n')[0]);
   const root = JSON.parse(r.stdout).root;
-  const read = new Map();   // name -> first line number
+  const read = new Map();
   const declared = new Set();
 
   const lineOf = (loc) => Number(String(loc).split(',')[0]) + 1;
@@ -108,11 +92,6 @@ function collect(file) {
     }
   })(root);
 
-  // Two different things, and only one of them is a defect:
-  //   * a name the lifter made up for a register (`r4`, `r34`) -- that is a
-  //     register it could not resolve, and it is a hole in the result;
-  //   * an unknown global (`syn`, `fluxus`) -- those belong to the executor the
-  //     script targets and are reported, not failed.
   const free = [...read]
     .filter(([name]) => !declared.has(name) && !KNOWN.has(name))
     .map(([name, line]) => ({ name, line, register: /^r\d+$/.test(name) }));
@@ -130,7 +109,7 @@ function main(argv) {
   }
   const files = [];
   for (const t of targets) {
-    if (!fs.existsSync(t)) continue;         // a glob that matched nothing
+    if (!fs.existsSync(t)) continue;
     if (fs.statSync(t).isDirectory()) {
       for (const name of fs.readdirSync(t).sort()) {
         if (name.endsWith('.luau') || name.endsWith('.lua')) files.push(path.join(t, name));

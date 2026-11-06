@@ -11,7 +11,7 @@ const path = require('node:path');
 const test = require('node:test');
 
 const ROOT = path.resolve(__dirname, '..');
-const { getPythonBin, pythonEnv } = require('../src/pyenv');
+const { getPythonBin, pythonEnv } = require('../core/pyenv');
 
 const PY = path.join(ROOT, 'core', 'flatten.py');
 

@@ -1,25 +1,6 @@
 #!/usr/bin/env node
 'use strict';
 
-/**
- * Fixture manager.
- *
- * The protected samples are third-party files of 0.1–3 MB. They are not
- * committed; `fixtures/manifest.json` pins each one by repository, path, blob
- * id and sha256, so a test run either gets exactly the bytes the tests were
- * written against or says so and stops.
- *
- *   node scripts/fixtures.js fetch                 # every tier
- *   node scripts/fixtures.js fetch --tier core     # the fast set only
- *   node scripts/fixtures.js fetch --only t14-8-0942,lph-v15-0-lph1
- *   node scripts/fixtures.js fetch --force         # re-download
- *   node scripts/fixtures.js fetch --from ~/samples  # import verified local copies
- *   node scripts/fixtures.js verify                # hash what is on disk
- *
- * GitHub's API allows 60 anonymous requests an hour; set GITHUB_TOKEN to raise
- * it. Files are written atomically, so an interrupted run never leaves a
- * truncated sample behind.
- */
 
 const crypto = require('crypto');
 const fs = require('fs');
@@ -93,8 +74,6 @@ async function download(sample) {
   try {
     res = await fetch(url, { headers, redirect: 'follow' });
   } catch (err) {
-    // Node reports every transport failure as "fetch failed"; the cause is what
-    // the operator needs (a proxy's certificate, DNS, no network).
     const cause = err.cause ? `${err.cause.code || ''} ${err.cause.message || ''}`.trim() : '';
     throw new Error(`could not reach api.github.com (${cause || err.message}). `
       + 'Behind a TLS-inspecting proxy, either point Node at its CA via NODE_EXTRA_CA_CERTS '

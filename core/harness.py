@@ -16,8 +16,6 @@ BIN = os.path.join(HERE, "..", "bin") if os.path.exists(os.path.join(HERE, "..",
 RUNTIME_DIR = os.path.join(HERE, "..", "runtime") if os.path.exists(os.path.join(HERE, "..", "runtime")) else HERE
 LUAU_URL = "https://github.com/luau-lang/luau/releases/latest/download/luau-windows.zip"
 
-# Protocol constants shared with the Node driver and the Luau runtime (see
-# protocol.json at the repo root and runtime/envlog.luau's PROTO table).
 with open(os.path.join(HERE, "..", "protocol.json"), encoding="utf-8") as _pf:
     PROTO = json.load(_pf)
 
@@ -78,7 +76,7 @@ def luau_ast():
         return _ensure_exec(override)
     return _ensure_exec(os.path.join(BIN, "luau-ast.exe" if os.name == "nt" else "luau-ast"))
 
-AST_TIMEOUT = 120  # seconds; 1.7 MB scripts parse in seconds, this only guards a hung binary
+AST_TIMEOUT = 120
 
 def run_luau_ast(path):
     """Run luau-ast on `path`; CompletedProcess with .returncode/.stdout/.stderr.
@@ -115,9 +113,6 @@ def lua_value(v):
     if isinstance(v, (list, tuple)):
         return "{" + ", ".join(lua_value(x) for x in v) + "}"
     if isinstance(v, dict):
-        # plain-object CFG values (e.g. CFG.readfile_map): quoted keys, same
-        # shape as luaValue() in src/harness.js -- str(dict) would emit Python
-        # repr ('k': v) which is not valid Lua
         return "{" + ", ".join("[%s] = %s" % (lua_value(k), lua_value(x)) for k, x in v.items()) + "}"
     if isinstance(v, str):
         return '"' + v.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n").replace("\r", "\\r") + '"'
@@ -180,14 +175,6 @@ def p2d_miss(body, cache_path):
           file=sys.stderr)
     return body.replace(mark("P2DMISS") + "\n", "")
 
-# The analyzed script can climb the Lua stack with getfenv(2+) from inside any
-# callback the harness calls into (and from the runner coroutine body), so
-# every harness closure it can reach must not carry the real globals: a shield
-# environment (stdlib only, no loadstring/getfenv/setfenv/_G) is set on the
-# function wrapping the runtime below. Sensitive values (__MARK, __SOURCE, ...)
-# are parameters of that wrapper, i.e. upvalues -- getfenv only hands out
-# environment tables, so they stay invisible. The outer chunk's own frames are
-# unreachable: getfenv levels cannot cross the coroutine resume boundary.
 SHIELD_STDLIB = """{
         string = string, math = math, table = table, os = os, debug = debug,
         coroutine = coroutine, bit32 = bit32, buffer = buffer, utf8 = utf8, vector = vector,
@@ -204,9 +191,6 @@ def build_harness(source, cfg, chunks=None):
     cfg_lua = "{" + ", ".join("%s = %s" % (k, lua_value(v)) for k, v in cfg.items()) + "}"
 
     runtime = runtime.replace("--!nocheck", "", 1)
-    # PROTO constants: always inject the current protocol.json values so the
-    # runtime can never drift from the drivers (the baked-in defaults are a
-    # fallback for standalone Studio runs; protocol_test.py keeps them equal).
     if not PROTO_LINE_RE.search(runtime):
         raise RuntimeError("runtime/envlog.luau lost its `local PROTO = {...}` line; "
                            "restore it (see protocol.json)")
@@ -252,7 +236,7 @@ def take_chunks(body):
 
 LAST_RAW = [""]     
 
-LAST_MARK = [""]    # per-run protocol nonce (see envlog.luau MARK); set by build_harness
+LAST_MARK = [""]
 
 def mark(s):
     """The \0-protocol line prefix of the current run. The runtime prefixes
@@ -344,16 +328,12 @@ class HarnessServer:
         self.dir = tempfile.mkdtemp(prefix="deobf_serve_")
         with open(os.path.join(self.dir, "harness.luau"), "w", encoding="latin-1", newline="\n") as f:
             f.write(build_harness(source, dict(cfg, serve=True), chunks))
-        self.END = mark("ENVLOG-END").encode()   # after build_harness: same nonce
+        self.END = mark("ENVLOG-END").encode()
         self.proc = subprocess.Popen([luau], cwd=self.dir, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                      stderr=subprocess.STDOUT)
         self.buf = b""
         self.eof = False
         self.nreq = 0
-        # A harness that exited (or was closed) has already removed its temp
-        # directory, so writing another request file into it would raise
-        # FileNotFoundError from deep inside a fetch. `alive()` is the single
-        # answer every caller asks before touching that directory.
         self.closed = False
 
         self.deadline = None
@@ -391,13 +371,8 @@ class HarnessServer:
                     self.eof = True
                     out = self.buf.decode("utf-8", "replace")
                     self.close()
-                    # the harness pads stdout with runs of spaces to flush the
-                    # pipe, so the raw tail is unreadable: collapse them before
-                    # the message is truncated by whoever prints it
                     out = re.sub(r"[ \t]{8,}", " ", out[-3000:]).strip()
                     if not out and not self.timed_out:
-                        # no stack trace, no error line: the process was killed
-                        # from outside (the kernel, on a big script's dump)
                         out = "(no output: killed from outside, most likely out of memory)"
                     return None, ("no reply within %ds" % timeout if self.timed_out else
                                   "harness process exited") + ": " + out
@@ -580,9 +555,6 @@ def run_once_studio(bridge, source, cfg, timeout, chunks=None):
         return None, "no result from Studio within %ds (is the loader running?)" % timeout
     out = out.replace("\r\n", "\n")
     LAST_RAW[0] = out
-    # ENVLOG-FAIL here is emitted by the Studio loader itself (it cannot know
-    # the per-run nonce); it only fires when the harness chunk failed to load
-    # or run at all, so the analyzed script can never produce it.
     if out.startswith("\x00ENVLOG-FAIL"):
         return None, "harness failed in Studio: " + out[len("\x00ENVLOG-FAIL\n"):]
     m = re.search(mark("ENVLOG-BEGIN") + r"\n(.*?)" + mark("ENVLOG-END"), out, re.S)

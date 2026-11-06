@@ -84,8 +84,8 @@ def payload_note(text):
     false claim about what the reader is holding, so the analyzer decides.
     """
     try:
-        from obfuscators.luarmor import probe
-    except Exception:                                    # no Luarmor track loaded
+        import lm_probe as probe
+    except Exception:
         return []
     try:
         meta = probe.analyze_bytes(text.encode("latin-1", "replace"), "<carried script>")

@@ -106,7 +106,7 @@ for (const row of (golden ? golden.samples : [])) {
       assert.ok(!INTERNAL_LEAK_RE.test(first.output), 'output leaks an internal object identity');
 
       if (row.result_type === 'devirtualized') {
-        const { isValidLuaSyntax } = require('../src/luau_check');
+        const { isValidLuaSyntax } = require('../core/luau_check');
         assert.ok(isValidLuaSyntax(first.output), 'output is not valid Luau');
       } else {
         assert.match(first.output, /BEHAVIOUR TRACE, NOT RECONSTRUCTED SOURCE/);

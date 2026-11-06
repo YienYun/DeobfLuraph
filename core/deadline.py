@@ -8,7 +8,7 @@ budget from its hot loops so it can stop and let the driver take another route.
 """
 import time
 
-DEADLINE = [0.0, 0.0]   # [absolute deadline, start time]
+DEADLINE = [0.0, 0.0]
 
 
 class LiftTimeout(Exception):

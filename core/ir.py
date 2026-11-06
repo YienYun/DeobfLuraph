@@ -77,9 +77,6 @@ class Missing(Expr):
         self.slot = slot
 
 def fmt_expr(e):
-    # sys.intern: state keys carry these strings by the million and nearly all
-    # repeat ("r3", "K5", "(BitAnd r7 255)" ...); interning dedupes them and
-    # keeps deep-proto walks from OOM-ing the container
     out = _fmt_expr(e)
     if type(out) is str:
         return sys.intern(out)

@@ -1,13 +1,6 @@
 #!/usr/bin/env node
 'use strict';
 
-/**
- * Dependency-free syntax gate for everything that is ours.
- *
- * `npm test` proves behaviour; this proves the tree loads at all, which is what
- * a fresh clone or a bad merge breaks first. Vendored code and node_modules are
- * skipped on purpose: their syntax is not our problem to fix.
- */
 
 const fs = require('fs');
 const path = require('path');

@@ -299,6 +299,21 @@ def expr_key(e):
         return "I(%s,%s)" % (expr_key(e.obj), expr_key(e.key))
     return "X%d" % id(e)
 
+def is_undecoded_prefix(text):
+    """Does a rendered expression stand for a value the walk never decoded?
+
+    True for the placeholder itself (bare, or already parenthesised) and for a
+    plain `nil`. A real identifier that merely starts with the letters is not
+    matched: `nilCheck.x` is a name, not a placeholder.
+    """
+    if text in ("nil", "(nil)"):
+        return True
+    for pre in ("nil", "(nil"):
+        if text.startswith(pre) and text[len(pre):].lstrip().startswith("--[["):
+            return True
+    return False
+
+
 class AssignS:
     """targets = values (targets: list of lvalue exprs; values: Multi)."""
 
@@ -1518,7 +1533,7 @@ class Renderer:
                 if IDENT.match(name) and name not in LUA_KEYWORDS:
                     return name         
             obj = self.prefix(e.obj)
-            if obj.startswith("(nil"):
+            if is_undecoded_prefix(obj):
                 # Reading a member off a value the walk could not decode. Printing
                 # `(nil).AbsolutePosition` parses and then throws; printing the bare
                 # placeholder keeps the fact ("this value is unknown") and stays
@@ -1688,7 +1703,15 @@ class Renderer:
         if isinstance(st, AssignS):
 
             vals = self.multi(st.values, trunc=len(st.targets) > len(st.values.items))
-            tg = ", ".join(self.lvalue(t) for t in st.targets)
+            pieces = [self.lvalue(t) for t in st.targets]
+            if any(is_undecoded_prefix(p) for p in pieces):
+                # A store into a value the walk never decoded. Printed, it is
+                # `nil.X = v`, which the parser rejects -- for the whole file, not
+                # just this line -- and the store has no object to reach anyway.
+                # structure.poison_unknown_writes() drops these earlier when the
+                # target is a bare index; this catches whatever renders late.
+                return [ind + "-- devirt: a store into a value the walk never decoded is dropped here"]
+            tg = ", ".join(pieces)
             if getattr(st, "is_local", False):
                 return [ind + "local %s = %s" % (tg, vals)]
 

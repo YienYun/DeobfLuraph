@@ -461,6 +461,56 @@ def poison_unknown_callees(entry, blocks, D, frame_bound=(), on_drop=None):
         b.stmts = [_poison_multi(s, dead, D) for s in b.stmts]
     return len(drops)
 
+def poison_unknown_writes(entry, blocks, D, frame_bound=(), on_drop=None):
+    """Drop stores into a value this function never has.
+
+    `nil.Enabled = true` does not parse -- it is a parse error, not a run-time
+    one, so one such line rejects the whole file. It is what a field write into
+    a register the CFG never defines prints as: object field assignment goes
+    through codegen's `prefix()`, which renders an unbound register as `nil`.
+    The register is a caller's frame slot the walk never bound, or a slot from a
+    branch the trace never took; either way there is no object to write to, and
+    a field write into something that does not exist is never valid Lua. So the
+    statement goes, exactly as `poison_unknown_callees` drops calls to a callee
+    that does not exist.
+
+    Only a direct index target is treated. `a.b.c = 1` whose `a.b` is unknown
+    still has a known `a`, so it is left to its own devices.
+
+    Returns how many assignment statements were dropped.
+    """
+    defined = set()
+    for bid in blocks:
+        b = blocks[bid]
+        for s in b.stmts:
+            if isinstance(s, D.Assign) and isinstance(s.target, D.Reg):
+                defined.add(s.target.n)
+            elif isinstance(s, D.CallStmt):
+                defined.add(s.t)
+    drops = []
+    for bid in sorted(blocks):
+        for s in blocks[bid].stmts:
+            if not isinstance(s, D.Assign):
+                continue
+            target = s.target
+            if type(target).__name__ != "Index":
+                continue
+            obj = target.obj
+            unknown = type(obj).__name__ in ("Missing", "NilIndex")
+            if type(obj).__name__ == "Reg" and obj.n not in frame_bound and obj.n not in defined:
+                unknown = True
+            if unknown:
+                drops.append((bid, s))
+    if not drops:
+        return 0
+    if on_drop is not None:
+        for _bid, s0 in drops:
+            on_drop(s0)
+    for bid, s in drops:
+        b = blocks[bid]
+        b.stmts = [x for x in b.stmts if x is not s]
+    return len(drops)
+
 def thread_empty(entry, blocks):
     """Skip empty goto blocks (dispatcher hops, NOPs); merge straight-line chains."""
     def target(bid, seen=None):

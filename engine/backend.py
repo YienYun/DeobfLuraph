@@ -39,6 +39,13 @@ def lower(entry_key, order, D, link, prefix, upnames, closure):
                                                 getattr(s0, "pc_arrays", None))))
     if dropped:
         VR.LIFT_STATS["unknown_callee"] = VR.LIFT_STATS.get("unknown_callee", 0) + dropped
+    dropped_writes = ST.poison_unknown_writes(entry, blocks, D, frame_bound,
+                                             lambda s0: VR.LIFT_STATS.setdefault(
+                                                 "poison_write_sites", []).append(
+                                                     (getattr(s0, "pc_mode", None),
+                                                      getattr(s0, "pc_arrays", None))))
+    if dropped_writes:
+        VR.LIFT_STATS["unknown_write"] = VR.LIFT_STATS.get("unknown_write", 0) + dropped_writes
     CG.simplify_blocks(blocks, D)
     names = {("up", i): nm for i, nm in (upnames or {}).items()}
     up_taken = {nm for nm in names.values() if isinstance(nm, str) and nm != "nil"}

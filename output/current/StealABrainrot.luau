@@ -315,12 +315,14 @@ do
 				end
 
 				local function callback23()
-					local instance = Workspace:FindFirstChild(localPlayer.Name)
-					if not instance or not instance:IsA("Model") then
+					local instance = Workspace:FindFirstChild(nil)
+					if not instance or not (nil)(instance, "Model") then
 						return nil
 					end
-					return instance:FindFirstChild("HumanoidRootPart")
-						or instance:FindFirstChild("__HITBOX")
+					if not nil then
+						instance:FindFirstChild("__HITBOX")
+					end
+					return nil
 				end
 
 				local chilliAutoKickOnStealRuntime =
@@ -7543,10 +7545,9 @@ do
 		local function callback25()
 			condition5 = false
 			number7 += 1
-			local object = callback24()
-			if object then
+			if callback24() then
 				pcall(function()
-					object:Deactivate()
+					(nil):Deactivate()
 				end)
 			end
 			if not condition3 and not condition4 then
@@ -7931,9 +7932,9 @@ do
 			if localPlayer.Character then
 				callback19(localPlayer.Character)
 			end
-			connection2 = localPlayer.CharacterAdded:Connect(function()
+			connection2 = localPlayer.CharacterAdded:Connect(function(character_)
 				if condition3 then
-					callback19(nil)
+					callback19(character_)
 				end
 			end)
 			callback15()
@@ -8518,7 +8519,7 @@ do
 			connection = argument.DescendantAdded:Connect(function(descendant)
 				if
 					not (not (condition11 or condition12) or os.clock() > number24)
-					and (descendant:IsA("BodyMover") or descendant:IsA("Constraint"))
+					and (descendant:IsA(nil) or descendant:IsA(nil))
 				then
 					task.defer(function()
 						if descendant.Parent then
@@ -9520,7 +9521,7 @@ do
 						number9,
 						humanoidRootPart.Position.Z
 					)
-					local number10 = number9 + number4 * 0.5
+					local number10 = number9 + 0.5
 
 					if number10 > number8 then
 						local number11 = number10 + number7
@@ -9740,17 +9741,18 @@ do
 		end
 
 		local function callback32()
-			local humanoid = nil and (nil):FindFirstChildOfClass("Humanoid")
+			local character_ = localPlayer.Character
+			local humanoid = character_ and character_:FindFirstChildOfClass("Humanoid")
 			local value2 = value
 			local tool2 = tool
 			value = nil
 			tool = nil
-			if not condition4 or not nil or not humanoid or humanoid.Health <= 0 then
+			if not condition4 or not character_ or not humanoid or humanoid.Health <= 0 then
 				condition4 = false
 				return
 			end
 			condition4 = false
-			local tool3 = (nil):FindFirstChildWhichIsA("Tool")
+			local tool3 = character_:FindFirstChildWhichIsA("Tool")
 			if tool3 and tool3 ~= value2 then
 				return
 			end
@@ -15339,7 +15341,7 @@ do
 				task.defer(callback39)
 			end)
 			connections3[#connections3 + 1] = argument.ChildRemoved:Connect(function()
-				task.defer(callback39)
+				task.defer(nil)
 			end)
 			local number7 = #connections3 + 1
 			local function onDescendantAdded(descendant)
@@ -16150,36 +16152,87 @@ do
 		if isTable6 <= 0 then
 			number6 = callback35(text) or 0
 		else
-			local response = text2 and isTable3 and isTable3[text2]
-			local number7 = 1
-			if response then
-				number7 = 1 + (tonumber(isTable3[text2].Modifier) or 0)
-			end
-			local response2 = activeTraitNames and isTable5
-			local condition6 = false
+			local condition6, value3, value4, object, round, number7
 
-			if response2 then
-				local _, value3, value4 = ipairs(activeTraitNames)
+			if text2 and isTable3 and isTable3[text2] then
+				if not tonumber(isTable3[text2].Modifier) then
+				end
+				local response = activeTraitNames and isTable5
+				condition6 = false
 
-				for _, value5 in value3, value4 do
-					local object = isTable5[value5] or isTable5[value5:gsub("_", " ")]
+				if response then
+					local value6
+					value6, value3, value4 = ipairs(activeTraitNames)
 
-					if object then
-						if value5 == "Sleepy" or object.Name == "Sleepy" then
-							condition6 = true
-						else
-							number7 += tonumber(object.MultiplierModifier) or 0
+					for _, value7 in value3, value4 do
+						local value8 = isTable5[value7]
+						object = value8 or isTable5[value7:gsub("_", " ")]
+
+						if object then
+							local isNameSleepy = value7 == "Sleepy" or object.Name == "Sleepy"
+							if isNameSleepy then
+								condition6 = true
+							elseif not tonumber(object.MultiplierModifier) then
+							end
 						end
 					end
+
+					round = math.round
+					number7 = isTable6 * nil
+				else
+					round = math.round
+					number7 = isTable6 * nil
+				end
+			else
+				local response = activeTraitNames and isTable5
+				condition6 = false
+
+				if response then
+					local _, value6, value7 = ipairs(activeTraitNames)
+					local exitTo = nil
+
+					for _, value8 in value6, value7 do
+						object = isTable5[value8] or isTable5[value8:gsub("_", " ")]
+
+						if object then
+							if value8 == "Sleepy" or object.Name == "Sleepy" then
+								condition6 = true
+							else
+								exitTo = 1
+								break
+							end
+						end
+					end
+
+					if exitTo == 1 then
+						for _, value8 in value3, value4 do
+							object = isTable5[value8] or isTable5[value8:gsub("_", " ")]
+							if object then
+								if value8 == "Sleepy" or object.Name == "Sleepy" then
+									condition6 = true
+								elseif not tonumber(object.MultiplierModifier) then
+								end
+							end
+						end
+
+						round = math.round
+						number7 = isTable6 * nil
+					else
+						round = math.round
+						number7 = isTable6 * 1
+					end
+				else
+					round = math.round
+					number7 = isTable6 * 1
 				end
 			end
 
-			number6 = math.round(isTable6 * number7 * (condition6 and 0.5 or 1))
-			local value3 = callback35(text)
-			if value3 and value3 > number6 then
-				return value3
+			number6 = round(number7 * (condition6 and 0.5 or 1))
+			local value6 = callback35(text)
+			if value6 and value6 > number6 then
+				return value6
 			end
-			number6 = number6 > 0 and number6 or value3 or isTable6
+			number6 = number6 > 0 and number6 or value6 or isTable6
 		end
 
 		return number6
@@ -16426,11 +16479,10 @@ do
 		local number6 = 95 * number4
 		argument.Billboard.Size = UDim2.fromOffset(math.floor(220 * number4), math.floor(number6))
 		argument.RarityRow.Holder.Size = UDim2.new(1, 0, 0, math.floor(16 * number4))
-		local number7 = math.floor(18 * number4)
+		local number7 = math.floor(18)
 		argument.TraitRow.Holder.Size = UDim2.new(1, 0, 0, number7)
-		local _, value2, value3 = ipairs(argument.TraitRow.Icons)
-		for _, value4 in value2, value3 do
-			value4.Size = UDim2.fromOffset(number7, number7)
+		for _, value2 in nil, table.pack(ipairs(nil))[3] do
+			value2.Size = UDim2.fromOffset(number7, number7)
 		end
 		argument.MutationRow.Holder.Size = UDim2.new(1, 0, 0, math.floor(15 * number4))
 		argument.NameRow.Holder.Size = UDim2.new(1, 0, 0, math.floor(19 * number4))
@@ -16927,10 +16979,8 @@ do
 
 	local function callback48()
 		local plots = Workspace:FindFirstChild("Plots")
-		if not plots then
-			callback43()
-			return
-		end
+		-- devirt: dropped a branch the run never took (its condition was a literal)
+
 		local instanceMap = {}
 		local _, value2, value3 = ipairs(plots:GetChildren())
 
@@ -16971,8 +17021,9 @@ do
 	end
 
 	local function onEvent()
-		-- devirt: dropped a branch the run never took (its condition was a literal)
-
+		if not condition3 then
+			return
+		end
 		condition3 = false
 		disconnectAll(connections2)
 		cleanup2()

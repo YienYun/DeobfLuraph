@@ -731,7 +731,7 @@ refused. This is that ledger.
 | `PrivateServer` | 83,547 | Luraph v14.4.2 | 904 lines, 20 functions |
 | `JoinScript.lua` | 64,789 | Luraph v14.4.1 | **nothing**: top level decodes to nothing → behaviour trace, reported as a failed lift |
 | `Grow-a-Garden` | 1,469,699 | Prometheus (0.85) | refused (Luraph-only build, no new families) |
-| `Steal-a-Brainrot` | 1,067,422 | Luraph v15.1 (1.00) | 18,699 lines, **1,029 functions, 0 unlifted blocks** — but only with `--devirt-rounds 25 --time-pin 1700000000`; the offline run stops on `attempt to compare number < userdata` |
+| `Steal-a-Brainrot` | 1,067,422 | Luraph v15.1 (1.00) | 18,750 lines, **1,029 functions, 0 unlifted blocks** — but only with `--devirt-rounds 25 --time-pin 1700000000`, and see the stability section: this sample is not reproducible; the offline run stops on `attempt to compare number < userdata` |
 
 `JumpForAnimals` is the deepest lift in the set by a wide margin: 75% of the
 decoded window executed against RideAPet's 1%, 457 of 457 functions lifted, and
@@ -750,24 +750,32 @@ protos carry unexecuted pcs and their bodies come from the walk, not from a
 recorded execution. That is a fidelity hole a real place would close — the
 comparison is legal in Roblox and only wrong in the offline model.
 
-### Known open gap: a thin run can still emit an unsafe prefix
+### A store into a decoded value does not parse either
 
-The `nil.X` guard above covers expression positions. It does not cover *statement*
-positions: a run whose coverage is thin enough can still emit
+The `nil.X` guard above covers *reads*. A store is worse: `nil.X = v` is a parse
+error too, and it is what a field write into a register the CFG never defines
+prints as. Two rules now cover it, in the two places it can be seen:
 
-    nil.Enabled = true
+* `structure.poison_unknown_writes()` drops the assignment at IR level, next to
+  `structure.poison_unknown_callees()` which already drops calls to a callee the
+  function never defines. Same argument: writing a field of something that does
+  not exist is never valid Lua, so the statement goes.
+* `codegen.stmt()` is the backstop. It sees the rendered left-hand side, so when
+  any target prints as the placeholder it drops the statement and leaves a
+  comment saying why — that catches the renderers that only resolve late, which
+  is where the first version of this fix was defeated.
 
-as an assignment target, which the parser rejects for the same reason. This is
-not academic — a repeat of the delivered `StealABrainrot` command produced a
-15,384-line file that failed to parse on exactly that line, while the delivered
-run produced 18,699 lines that compile. Two runs of the same command are not
-interchangeable here, because the script stops on `attempt to compare number <
-userdata` and where it stops moves the walk.
+This was found the hard way. Repeat runs of the delivered `StealABrainrot`
+command failed to parse three times in a row, each time one shape further in:
+`nil.Enabled = true` (store), then `nil --[[ constant not decoded ]] = r14`
+(store whose target renders late), then `nil --[[ constant not decoded ]].Visible`
+(member read inside an `and` chain). Every repeat run since the third guard
+parses. That the same command produces 15,281 / 15,384 / 18,699 / 18,750-line
+files is a property of the sample, not of the parser — it stops on `attempt to
+compare number < userdata` and where it stops moves the walk.
 
-The fix is a statement-level rule in the same place as
-`structure.drop_unbound_callee_calls()`, which already drops calls whose callee
-resolved to nothing: an assignment whose target is an index off an undecoded
-value has nothing to write to, so the statement goes, not the whole file.
+`codegen.is_undecoded_prefix()` is the one predicate all three guards use, so a
+real name that merely starts with those letters (`nilCheck.x`) is left alone.
 
 ### A member read off a decoded value does not parse
 

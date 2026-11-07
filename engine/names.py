@@ -1261,12 +1261,19 @@ class Namer:
                     return right
                 return self.infer(e["left"], 0, _seen) or right
             if e["op"].startswith("Compare"):
-                return "flag"
+                return self.compare_name(e, _seen) or "flag"
             if e["op"] == "Concat":
                 return "str"
             return "n"
         if t == "AstExprUnary":
-            return "flag" if e["op"] == "Not" else "n"
+            if e["op"] == "Not":
+                return "flag"
+            if e["op"] == "Len":
+                # `#players` is not a "number": it is how many players there are.
+                inner = self.infer(e["expr"], 0, _seen)
+                if inner and inner not in WEAK_1CHAR:
+                    return camel(inner + " count")
+            return "n"
         if t == "AstExprConstantBool":
             return "flag"
         if t == "AstExprConstantString":
@@ -1277,6 +1284,47 @@ class Namer:
             return self.infer(e["expr"], idx, _seen)
         if t == "AstExprIfElse":
             return self.infer(e["trueExpr"], 0, _seen) or self.infer(e["falseExpr"], 0, _seen)
+        return None
+
+    def compare_name(self, e, _seen=()):
+        """A comparison hides what it compares, and `condition` says nothing.
+
+        `type(uiLibrary.Notify) == "function"` is not a condition: it is whether
+        the library can notify at all. `obj ~= nil` is not a condition either.
+        Both have a subject, and printing the subject keeps the reader out of the
+        expression. Anything this cannot name stays `flag`.
+        """
+        op = e.get("op")
+        left, right = e.get("left"), e.get("right")
+        if not isinstance(left, dict) or not isinstance(right, dict):
+            return None
+
+        def const_str_of(node):
+            if node.get("type") == "AstExprConstantString":
+                return node.get("value")
+            return None
+
+        for a, b in ((left, right), (right, left)):
+            txt = const_str_of(b)
+            if not txt or not re.match(r"^[A-Za-z_]\w*$", txt):
+                continue
+            if a.get("type") == "AstExprCall" and dotted(a.get("func")) in ("type", "typeof"):
+                args = a.get("args") or []
+                inner = args[0] if args else None
+                stem = None
+                if isinstance(inner, dict) and inner.get("type") == "AstExprIndexName":
+                    stem = camel(inner.get("index") or "")
+                if txt == "function":
+                    return camel("has " + stem) if stem else "hasMethod"
+                return camel("is " + txt)
+            inner = self.infer(a, 0, _seen)
+            if inner and inner not in WEAK_1CHAR and txt not in WEAK_1CHAR and txt != "nil":
+                return camel("is " + inner + " " + txt)
+        for a, b in ((left, right), (right, left)):
+            if b.get("type") == "AstExprConstantNil":
+                inner = self.infer(a, 0, _seen)
+                if inner and inner not in WEAK_1CHAR:
+                    return camel(("has " if op == "CompareNe" else "no ") + inner)
         return None
 
     def table_name(self, e, info=None, _seen=()):
@@ -1618,6 +1666,8 @@ class Namer:
                 if cand not in reserved and self.fits(cand, info, taken):
                     break
                 n += 1
+            if n > 1 and os.environ.get("DEVIRT_NAME_DEBUG"):
+                sys.stderr.write("[name] %s -> %s\n" % (base, cand))
             info["new"] = cand
             taken.setdefault(cand, []).append(info)
 

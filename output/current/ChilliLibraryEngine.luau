@@ -524,13 +524,13 @@ local function payload(_, _, argument)
 					list3 or {}
 
 				local function callback27(i, argument7, key)
-					local condition2 = type(i) == "table" and i[key] or nil
-					if type(condition2) == "table" and condition2.Value ~= nil then
-						return condition2
+					local isTable = type(i) == "table" and i[key] or nil
+					if type(isTable) == "table" and isTable.Value ~= nil then
+						return isTable
 					end
-					condition2 = type(argument7) == "table" and argument7[key] or nil
-					if type(condition2) == "table" and condition2.Value ~= nil then
-						return condition2
+					isTable = type(argument7) == "table" and argument7[key] or nil
+					if type(isTable) == "table" and isTable.Value ~= nil then
+						return isTable
 					end
 					return nil
 				end
@@ -786,9 +786,9 @@ local function payload(_, _, argument)
 						response.Name or response.Profile or response.Config.Profile,
 						response.Config
 				else
-					local condition2 = type(response.Values) == "table"
+					local isTable = type(response.Values) == "table"
 						or type(response.States) == "table"
-					if condition2 then
+					if isTable then
 						ok = response.Profile
 					else
 						return nil, nil, "JSON is not a Chilli config export."
@@ -1829,7 +1829,7 @@ local function payload(_, _, argument)
 			local function createTextButton(
 				parent,
 				argument4,
-				argument5,
+				isTypeButton,
 				argument6,
 				visible,
 				zIndex
@@ -1844,7 +1844,7 @@ local function payload(_, _, argument)
 				keyChip.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 				keyChip.BackgroundTransparency = 0.35
 				keyChip.BorderSizePixel = 0
-				keyChip.Position = UDim2.fromScale(argument5, 0.5)
+				keyChip.Position = UDim2.fromScale(isTypeButton, 0.5)
 				keyChip.Size = UDim2.fromScale(argument6, visible)
 				keyChip.Text = ""
 				keyChip.TextWrapped = false
@@ -1915,8 +1915,8 @@ local function payload(_, _, argument)
 						return
 					end
 
-					local number9, number10 = object.Type == "button" and 0.772 or 0.822, 0.082
-					local number11 = number9 - number10
+					local isTypeButton, number9 = object.Type == "button" and 0.772 or 0.822, 0.082
+					local number10 = isTypeButton - number9
 					local visible = (
 						note
 						and note:IsA("TextLabel")
@@ -1925,7 +1925,7 @@ local function payload(_, _, argument)
 					) or 0.42
 
 					if not optionKeyChip then
-						optionKeyChip = createTextButton(main, 1, number9, number10, visible, 7)
+						optionKeyChip = createTextButton(main, 1, isTypeButton, number9, visible, 7)
 						optionKeyChip.Name = "OptionKeyChip"
 						optionKeyChip.Active = true
 						argument[13](optionKeyChip, 1.06, 0.94)
@@ -1936,10 +1936,10 @@ local function payload(_, _, argument)
 						end)
 					end
 
-					optionKeyChip.Position = UDim2.fromScale(number9, 0.5)
-					optionKeyChip.Size = UDim2.fromScale(number10, visible)
+					optionKeyChip.Position = UDim2.fromScale(isTypeButton, 0.5)
+					optionKeyChip.Size = UDim2.fromScale(number9, visible)
 					optionKeyChip.Text = keyboardEnabled2
-					mirrorOf = number11 - 0.015
+					mirrorOf = number10 - 0.015
 
 					if label then
 						if not object._quickLabelSize then
@@ -1960,13 +1960,13 @@ local function payload(_, _, argument)
 						if not object._quickNoteSize then
 							object._quickNoteSize = note.Size
 						end
-						number11, number9 =
+						number10, isTypeButton =
 							object._quickNoteSize, math.max(0.12, mirrorOf - note.Position.X.Scale)
 						note.Size = UDim2.new(
-							math.min(number11.X.Scale, number9),
-							number11.X.Offset,
-							number11.Y.Scale,
-							number11.Y.Offset
+							math.min(number10.X.Scale, isTypeButton),
+							number10.X.Offset,
+							number10.Y.Scale,
+							number10.Y.Offset
 						)
 					end
 				end)
@@ -2727,51 +2727,51 @@ local function payload(_, _, argument)
 					iEntry = iMap[i]
 					destroyAll(iEntry)
 					keyboardEnabled = iMap2[i]
-					local number14 = #keyboardEnabled
+					local iEntryCount = #keyboardEnabled
 
-					if not data3[i] or number14 == 0 then
+					if not data3[i] or iEntryCount == 0 then
 						iEntry.Panel.Visible = false
 					else
-						local number15, number16, number17, iMap3 =
+						local number14, number15, number16, iMap3 =
 							number3 * number8, number4 * number8, number5 * number8, {}
-						local number18 = math.max(number14 - 1, 0) * number17
+						local number17 = math.max(iEntryCount - 1, 0) * number16
 						for i2, value8 in ipairs(keyboardEnabled) do
-							local number19 = number15 * callback39(value8.Option)
-							iMap3[i2] = number19
-							number18 += number19
+							local number18 = number14 * callback39(value8.Option)
+							iMap3[i2] = number18
+							number17 += number18
 						end
-						number15 = number16 + number17 + number18
-						local bodyFraction = number18 / number15
+						number14 = number15 + number16 + number17
+						local bodyFraction = number17 / number14
 						if iEntry.SizeTween then
 							iEntry.SizeTween:Cancel()
 							iEntry.SizeTween = nil
 						end
 						iEntry.BodyFraction = bodyFraction
-						iEntry.Panel.Size = UDim2.fromScale(number2 * number8, number15)
-						iEntry.Handle.Size = UDim2.fromScale(0.94, number16 / number15)
+						iEntry.Panel.Size = UDim2.fromScale(number2 * number8, number14)
+						iEntry.Handle.Size = UDim2.fromScale(0.94, number15 / number14)
 						iEntry.Body.Position =
-							UDim2.fromScale(0.5, (number16 + number17) / number15)
+							UDim2.fromScale(0.5, (number15 + number16) / number14)
 						iEntry.Body.Size =
 							UDim2.fromScale(1.32, iEntry.Collapsed and 0 or bodyFraction)
-						iEntry.BodyLayout.Padding = UDim.new(number17 / number18, 0)
+						iEntry.BodyLayout.Padding = UDim.new(number16 / number17, 0)
 						iEntry.Caret.Rotation = iEntry.Collapsed and 180 or 0
 
 						for i2, value8 in ipairs(keyboardEnabled) do
-							number17, bodyFraction = iMap3[i2] / number18, value8.Option.Type
+							number16, bodyFraction = iMap3[i2] / number17, value8.Option.Type
 
 							if bodyFraction == "button" then
-								callback35(iEntry, value8.Option, value8.KeyName, i2, number17)
+								callback35(iEntry, value8.Option, value8.KeyName, i2, number16)
 							elseif bodyFraction == "toggle" or bodyFraction == "switch" then
-								newTextButton(iEntry, value8.Option, value8.KeyName, i2, number17)
+								newTextButton(iEntry, value8.Option, value8.KeyName, i2, number16)
 							elseif bodyFraction == "slider" or bodyFraction == "slidebar" then
-								callback37(iEntry, value8.Option, i2, number17)
+								callback37(iEntry, value8.Option, i2, number16)
 							elseif bodyFraction == "input" or bodyFraction == "textbox" then
-								callback38(iEntry, value8.Option, i2, number17)
+								callback38(iEntry, value8.Option, i2, number16)
 							end
 						end
 
-						number15, number17 = callback29(i)
-						iEntry.Panel.Position = UDim2.fromScale(number15, number17)
+						number14, number16 = callback29(i)
+						iEntry.Panel.Position = UDim2.fromScale(number14, number16)
 						iEntry.Panel.Visible = true
 					end
 				end
@@ -3425,10 +3425,10 @@ local function payload(_, _, argument)
 					i = frameMap2[frame]
 
 					if i then
-						local visible = argument4 == "" or i.Search:find(argument4, 1, true) ~= nil
-						frame.Visible = visible
+						local hasPos = argument4 == "" or i.Search:find(argument4, 1, true) ~= nil
+						frame.Visible = hasPos
 						callback47(frame)
-						if visible then
+						if hasPos then
 							if i.Header then
 								headerMap[i.Header] = true
 							end

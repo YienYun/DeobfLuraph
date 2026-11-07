@@ -39,10 +39,10 @@ end
 uiLibrary = compileChunk()
 do
 	local value = assert
-	local condition = type(uiLibrary) == "table"
+	local hasFinalize = type(uiLibrary) == "table"
 		and type(uiLibrary.CreateWindow) == "function"
 		and type(uiLibrary.Finalize) == "function"
-	value(condition, "Chilli Library returned an invalid API.")
+	value(hasFinalize, "Chilli Library returned an invalid API.")
 end
 
 uiLibrary.ManualQuickDefaults = {
@@ -265,11 +265,11 @@ do
 		"Eternal",
 	}
 
-	local rarities = data.Rarities
+	local isTable = data.Rarities
 		and type(data.Rarities.List) == "table"
 		and #data.Rarities.List > 0
 
-	if rarities then
+	if isTable then
 		nameList = {}
 		local _, value2, value3 = ipairs(data.Rarities.List)
 		for _, value4 in value2, value3 do
@@ -446,8 +446,8 @@ end
 module.AnimalData = function(argument)
 	local animals = data.Animals
 	local list = animals and animals.List
-	local condition = type(list) == "table" and list[tostring(argument)] or nil
-	return type(condition) == "table" and condition or nil
+	local isTable = type(list) == "table" and list[tostring(argument)] or nil
+	return type(isTable) == "table" and isTable or nil
 end
 
 module.EggRarity = function(instance)
@@ -474,9 +474,9 @@ module.EggNeed = function(instance)
 	local climbs = type(areas) == "table" and areas.Climbs or nil
 	local text2 = tostring(instance:GetAttribute("AreaName") or "")
 		.. tostring(instance:GetAttribute("SpawnerName") or "")
-	local number = type(climbs) == "table" and tonumber(climbs[text2]) or 0
-	local number2 = type(areas) == "table" and tonumber(areas.JumpPowerSquaredPerStud) or 293
-	return math.sqrt(math.max(0, number) * number2)
+	local isTable = type(climbs) == "table" and tonumber(climbs[text2]) or 0
+	local isTable2 = type(areas) == "table" and tonumber(areas.JumpPowerSquaredPerStud) or 293
+	return math.sqrt(math.max(0, isTable) * isTable2)
 end
 
 module.StealGrace = function()
@@ -1131,13 +1131,13 @@ do
 	local number2 = 6
 	local number3 = 0
 	local instanceMap = {}
-	local function callback9()
+	local function isString()
 		return module.Tools(function(instance)
 			return instance:GetAttribute("IsEggTool") == true
 				and type(instance:GetAttribute("EggId")) == "string"
 		end)
 	end
-	local function callback10()
+	local function callback9()
 		local placedEggs = module.Plot()
 		placedEggs = placedEggs and placedEggs:FindFirstChild("PlacedEggs")
 		return placedEggs and placedEggs:GetChildren() or {}
@@ -1151,8 +1151,8 @@ do
 		return type(placement) == "table" and tonumber(placement.MaximumIncubatingEggs) or 8
 	end
 
-	local function callback11()
-		local _, value5, value6 = ipairs(callback10())
+	local function callback10()
+		local _, value5, value6 = ipairs(callback9())
 		local number4 = 0
 		for _, instance in value5, value6 do
 			if instance:GetAttribute("HatchReady") ~= true then
@@ -1164,23 +1164,23 @@ do
 
 	local number4 = nil
 
-	local function callback12()
-		local number5 = #callback10()
+	local function callback11()
+		local number5 = #callback9()
 		if number4 and number5 >= number4 then
 			return false
 		end
 		number4 = nil
 		return number5 < math.min(toNumberOrDefault(), toNumberOrDefault2())
-			and callback11() < toNumberOrDefault2()
+			and callback10() < toNumberOrDefault2()
 	end
 
-	local function callback13()
+	local function callback12()
 		local part = module.Detector()
 		if not part then
 			return nil
 		end
 		local attributes = {}
-		local _, value6, value7 = ipairs(callback10())
+		local _, value6, value7 = ipairs(callback9())
 		for _, instance in value6, value7 do
 			local attribute = instance:GetAttribute("GroundPosition")
 			if typeof(attribute) == "Vector3" then
@@ -1223,17 +1223,17 @@ do
 	module2.PlaceWanted = function()
 		return data2.Toggle(module2.Place, false)
 			and os.clock() >= number3
-			and #callback9() > 0
-			and callback12()
+			and #isString() > 0
+			and callback11()
 	end
 
 	module2.PlaceStep = function()
-		local _, value5, value6 = ipairs(callback9())
+		local _, value5, value6 = ipairs(isString())
 		local condition = false
 
 		for _, instance in value5, value6 do
-			if not (not callback12() or not data2.Toggle(module2.Place, false)) then
-				local object = callback13()
+			if not (not callback11() or not data2.Toggle(module2.Place, false)) then
+				local object = callback12()
 
 				if object then
 					module.Status = string.format("Placing %s", instance.Name)
@@ -1254,7 +1254,7 @@ do
 							task.wait(0.45)
 							continue
 						else
-							number4 = #callback10()
+							number4 = #callback9()
 							break
 						end
 					else
@@ -1277,7 +1277,7 @@ do
 	module2.OpenWanted = function()
 		if data2.Toggle(module2.Open, false) then
 			local now = os.clock()
-			local _, value5, value6 = ipairs(callback10())
+			local _, value5, value6 = ipairs(callback9())
 
 			for _, instance in value5, value6 do
 				local condition = instance:GetAttribute("HatchReady") == true
@@ -1295,18 +1295,18 @@ do
 
 	module2.OpenStep = function()
 		local now = os.clock()
-		local _, value5, value6 = ipairs(callback10())
+		local _, value5, value6 = ipairs(callback9())
 		local condition = false
 
 		for _, instance in value5, value6 do
 			local attribute = instance:GetAttribute("EggId")
-			local condition2 = instance:GetAttribute("HatchReady") == true
+			local isString2 = instance:GetAttribute("HatchReady") == true
 				and type(attribute) == "string"
-			if condition2 then
-				condition2 = (instanceMap[instance] or 0) < now
+			if isString2 then
+				isString2 = (instanceMap[instance] or 0) < now
 			end
 
-			if condition2 then
+			if isString2 then
 				instanceMap[instance] = now + 8
 				module.Status = string.format("Opening %s", instance.Name)
 				module.Fire("PetInventory", "EggAction", attribute)
@@ -3078,11 +3078,11 @@ do
 
 	local function callback9(argument, argument2)
 		local attribute = localPlayer:GetAttribute("MutationCraftAnimalName")
-		local condition = type(attribute) == "string" and attribute ~= ""
-		if condition then
-			condition = (tonumber(localPlayer:GetAttribute("MutationStoredCount")) or 0) > 0
+		local isString = type(attribute) == "string" and attribute ~= ""
+		if isString then
+			isString = (tonumber(localPlayer:GetAttribute("MutationStoredCount")) or 0) > 0
 		end
-		if condition then
+		if isString then
 			return attribute
 		end
 		local _, value2, value3 = pairs(argument)
@@ -4004,8 +4004,8 @@ do
 
 	local function callback8(argument)
 		local list2 = data.Eggs and data.Eggs.List
-		local condition4 = type(list2) == "table" and list2[argument] or nil
-		local animals = type(condition4) == "table" and condition4.Animals or nil
+		local isTable = type(list2) == "table" and list2[argument] or nil
+		local animals = type(isTable) == "table" and isTable.Animals or nil
 		if type(animals) ~= "table" then
 			return tostring(argument), tostring(argument)
 		end
@@ -4481,18 +4481,18 @@ do
 	end
 
 	local function callback22(argument)
-		local spotlight2 = data4.Spotlight and argument ~= nil
-		if spotlight ~= spotlight2 then
-			spotlight = spotlight2
-			object3:SetDock(spotlight2 and 5 or 0, { Gap = number17 })
+		local hasArgument = data4.Spotlight and argument ~= nil
+		if spotlight ~= hasArgument then
+			spotlight = hasArgument
+			object3:SetDock(hasArgument and 5 or 0, { Gap = number17 })
 		end
-		data5.Icon.Set({ Visible = spotlight2 })
-		data5.Name.Set({ Visible = spotlight2 })
-		data5.Rarity.Set({ Visible = spotlight2 })
-		data5.Info.Set({ Visible = spotlight2 })
-		data5.Action.Set({ Visible = spotlight2 })
-		data5.Focus = spotlight2 and argument or nil
-		if not spotlight2 then
+		data5.Icon.Set({ Visible = hasArgument })
+		data5.Name.Set({ Visible = hasArgument })
+		data5.Rarity.Set({ Visible = hasArgument })
+		data5.Info.Set({ Visible = hasArgument })
+		data5.Action.Set({ Visible = hasArgument })
+		data5.Focus = hasArgument and argument or nil
+		if not hasArgument then
 			return
 		end
 		local info = argument.Info
@@ -4697,18 +4697,18 @@ do
 
 		local connection = RunService.Heartbeat:Connect(function(deltaTime)
 			local object = module3.PageVisible()
-			local object2 = object and (object3 == nil or module3.IsShown(object3:Root()))
-			if object2 and not condition3 then
+			local noArgument = object and (object3 == nil or module3.IsShown(object3:Root()))
+			if noArgument and not condition3 then
 				condition2 = true
 			end
-			condition3 = object2
+			condition3 = noArgument
 
 			if object then
 				number8 += deltaTime
 
-				if object2 and condition2 or number8 >= number then
+				if noArgument and condition2 or number8 >= number then
 					number8 = 0
-					if object2 then
+					if noArgument then
 						condition2 = false
 						pcall(callback25)
 					end
@@ -4717,7 +4717,7 @@ do
 					end
 				end
 
-				if object2 and condition then
+				if noArgument and condition then
 					pcall(callback24)
 				end
 				if module3.PlaceFuse then
@@ -5423,12 +5423,12 @@ end
 	local function callback11(argument)
 		local text4 = tostring(game.JobId or "")
 		local list = {}
-		local condition3 = argument == "Random"
+		local isArgumentRandom = argument == "Random"
 		local text5 = argument == "Least Players" and "Asc" or "Desc"
-		local condition4 = condition3 and 3 or 6
+		local isArgumentRandom2 = isArgumentRandom and 3 or 6
 		local nextPageCursor = nil
 
-		for i = 1, condition4 do
+		for i = 1, isArgumentRandom2 do
 			local text6 = string.format(
 				"https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=%s&excludeFullGames=true&limit=100",
 				game.PlaceId,
@@ -5454,7 +5454,7 @@ end
 				end
 			end
 
-			if #list > 0 and not condition3 then
+			if #list > 0 and not isArgumentRandom then
 				break
 			end
 			nextPageCursor = response.nextPageCursor
@@ -7099,5 +7099,5 @@ task.spawn(function()
 	end)
 end)
 
--- devirt: 316 function(s) contain 11720 pc(s) the recorded run never executed; what they decode is the walk's value, not the program's
+-- devirt: 254 function(s) contain 4694 pc(s) the recorded run never executed; what they decode is the walk's value, not the program's
 print("Deobf By Zed")

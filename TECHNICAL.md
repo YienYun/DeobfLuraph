@@ -731,7 +731,7 @@ refused. This is that ledger.
 | `PrivateServer` | 83,547 | Luraph v14.4.2 | 904 lines, 20 functions |
 | `JoinScript.lua` | 64,789 | Luraph v14.4.1 | **nothing**: top level decodes to nothing → behaviour trace, reported as a failed lift |
 | `Grow-a-Garden` | 1,469,699 | Prometheus (0.85) | refused (Luraph-only build, no new families) |
-| `Steal-a-Brainrot` | 1,067,422 | Luraph v15.1 (1.00) | **not delivered**: the lift passes 40 minutes at 1.8 GB resident and the process dies before it writes a file |
+| `Steal-a-Brainrot` | 1,067,422 | Luraph v15.1 (1.00) | 18,653 lines, **1,027 functions, 0 unlifted blocks** — but only with `--devirt-rounds 25`; the offline run stops on `attempt to compare number < userdata` |
 
 `JumpForAnimals` is the deepest lift in the set by a wide margin: 75% of the
 decoded window executed against RideAPet's 1%, 457 of 457 functions lifted, and
@@ -739,11 +739,43 @@ no unlifted block. Two hub scripts that big and that different both coming out
 whole is the useful signal here — the ceiling measured in §3 was the sample's
 own runtime path, not the walk.
 
-The one that does not come out is the largest: `Steal-a-Brainrot` (1.0 MB) spends
-its first minutes building a 6.5 MB proto dump and then never finishes the
-constant rounds — 40 minutes, 1.8 GB resident, no output. That is a size the
-walk has not been tuned for (`--devirt-rounds` and `--step-budget` are the
-knobs), and it is written down rather than hidden behind "in progress".
+The largest sample is also the one that taught the most. `Steal-a-Brainrot`
+(1.0 MB) on the default 200 rounds spends its first minutes building a 6.5 MB
+proto dump and then never finishes — 40 minutes, 1.8 GB resident, no file. At
+`--devirt-rounds 25` the same walk converges: **1,027 functions, 0 unlifted
+blocks, 0 unstructured jumps**, 33,040 pcs annotated against per-proto windows
+summing to 37,074 (89%). The remaining defect is not the walk but the run: the
+hub stops on `attempt to compare number < userdata` inside its own VM, so 404
+protos carry unexecuted pcs and their bodies come from the walk, not from a
+recorded execution. That is a fidelity hole a real place would close — the
+comparison is legal in Roblox and only wrong in the offline model.
+
+### Naming: what a comparison is about
+
+The lifter falls back to role names — `value`, `number`, `data`, `condition` —
+and `names.fits()` never lets one binding shadow another, so a repeated base
+becomes `condition2`, `condition3`, `data4`. The numbering is a consequence: the
+base said nothing about the value, so the file had to reuse it.
+
+Two rules now read the expression instead of its kind:
+
+| expression | was | now |
+|---|---|---|
+| `type(uiLibrary.CreateWindow) == "function"` | `condition` | `hasCreateWindow` |
+| `type(x) == "table"` | `condition` | `isTable` |
+| `player:GetAttribute("Owned") ~= nil` | `condition` | `hasAttribute` |
+| `#basket` | `number` | `BasketCount` |
+
+Measured on `RideAPet`: generic-numbered **uses** 4,353 → 4,050, and 243 use
+sites now read as `has…`/`is…`/`no…` plus 26 `…Count`. That is a 7% cut, not a
+transformation — `value` and `number` still dominate (548 and 490 numbering
+events), because an arithmetic result and an uninferable register genuinely have
+no name to recover. `--rename` (the vendored BetterDecompiler) still only moves
+59 identifiers; the honest ceiling for the rest is "the VM register had no
+stored provenance".
+
+`DEVIRT_NAME_DEBUG=1` prints every `base -> baseN` decision, which is how the
+table above was measured.
 
 ### Three bugs this sweep found, and what they were
 

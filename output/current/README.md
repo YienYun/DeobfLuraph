@@ -15,11 +15,12 @@ accounted for below.
 
 | file | lines | obfuscator | result | stability |
 |---|---|---|---|---|
-| `RideAPet.luau` | 11,034 | Luraph v15.1 | devirtualized, 716 functions | byte-identical across runs |
-| `StealAnEggg.luau` | 37,563 | Luraph v15.1 carrier | `payload-source`: the loader carries the hub script as plain Luau (2,204 functions) | byte-identical |
+| `RideAPet.luau` | 11,038 | Luraph v15.1 | devirtualized, 716 functions | byte-identical across runs |
+| `StealAnEggg.luau` | 37,558 | Luraph v15.1 carrier | `payload-source`: the loader carries the hub script as plain Luau (2,204 functions) | byte-identical |
 | `JumpForAnimals.luau` | 7,103 | Luraph v15.1 | devirtualized, 457 functions, 0 unlifted blocks — the deepest lift in the set | body byte-identical; the closing `devirt:` disclosure line counts trace coverage and moves between runs (244–316 functions), see below |
 | `ChilliLibraryEngine.luau` | 3,667 | Luraph v15.1 carrier | `payload-source` (474 functions) — the UI engine the whole hub runs on | byte-identical |
 | `PrivateServer.luau` | 904 | Luraph v14.4.2 | devirtualized, 20 functions | byte-identical |
+| `StealABrainrot.luau` | 18,653 | Luraph v15.1 | devirtualized, **1,027 functions, 0 unlifted blocks** at 25 rounds; the offline run stops on `attempt to compare number < userdata`, so 404 protos carry unexecuted pcs | byte-identical once the round count is fixed |
 | `RideAPet.studio_loader.luau` | 25 | — | paste-ready loader for `--studio` (port 34880) | written by the engine |
 | `StealAnEggg.luarmor.json` | — | — | the Luarmor report the run wrote next to the output | — |
 
@@ -29,7 +30,7 @@ Not delivered, with the reason:
 |---|---|
 | `JoinScript.lua` (Luraph v14.4.1) | its top level decodes to nothing offline: the lift writes one line, the guard reports a failed lift and the run leaves a behaviour trace instead. Nothing is handed over as a "result" for it. |
 | `Grow-a-Garden` | Prometheus (detected 0.85). This build is Luraph-only and a new obfuscator family is not in scope, so it is identified and refused, not half-lifted. |
-| `Steal-a-Brainrot` | Luraph v15.1, 1.0 MB. The lift passes 40 minutes at 1.8 GB resident and is killed before it writes a file; §7 of `TECHNICAL.md` records that and the knobs (`--devirt-rounds`, `--step-budget`). |
+| `JoinScript` detail | the file that *does* work at v14.4.x (`PrivateServer`) recovers 20 functions; this one's top level decodes to nothing, so it stays a behaviour trace. |
 
 ## How they were produced
 
@@ -39,6 +40,7 @@ node deob.js dev/fixtures/input/StealAnEggg.lua  -o output/current/StealAnEggg.l
 node deob.js dev/fixtures/input/JumpForAnimals.lua -o output/current/JumpForAnimals.luau --exec-rec
 node deob.js dev/fixtures/input/http/chilli-library-engine.lua -o output/current/ChilliLibraryEngine.luau --exec-rec
 node deob.js dev/fixtures/input/PrivateServer.lua -o output/current/PrivateServer.luau --exec-rec
+node deob.js dev/fixtures/input/StealABrainrot.lua -o output/current/StealABrainrot.luau --exec-rec --devirt-rounds 25   # the default 200 rounds is what runs out of memory
 ```
 
 Inputs are not committed (`.gitignore`: `/dev/fixtures/input/`); their sha256s:

@@ -750,6 +750,23 @@ protos carry unexecuted pcs and their bodies come from the walk, not from a
 recorded execution. That is a fidelity hole a real place would close — the
 comparison is legal in Roblox and only wrong in the offline model.
 
+### A member read off a decoded value does not parse
+
+Pinning `Steal-a-Brainrot` changed which branch the hub took and surfaced a bug
+older than this work. Two lines came out as
+
+    local r1_1 = nil.AbsolutePosition
+
+`nil.X` is not Lua and not Luau — it is a parse error, not a runtime one, so the
+whole file is rejected by the parser before a single line runs. The old text was
+`(nil).AbsolutePosition`, which parses and then throws at run time; the filler
+value was being used as the object of a member read. `codegen.expr()` now prints
+the placeholder instead (`nil --[[ constant not decoded ]]`) when the object of
+an index resolved to nothing: the value is unknown either way, and the file stays
+parseable. None of the five delivered files contained an indexed placeholder, so
+the fix changed no delivered byte — it only stopped the next sample from failing
+at the parser.
+
 ### Naming: what a comparison is about
 
 The lifter falls back to role names — `value`, `number`, `data`, `condition` —

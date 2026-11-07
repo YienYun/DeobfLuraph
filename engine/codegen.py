@@ -1518,6 +1518,14 @@ class Renderer:
                 if IDENT.match(name) and name not in LUA_KEYWORDS:
                     return name         
             obj = self.prefix(e.obj)
+            if obj.startswith("(nil"):
+                # Reading a member off a value the walk could not decode. Printing
+                # `(nil).AbsolutePosition` parses and then throws; printing the bare
+                # placeholder keeps the fact ("this value is unknown") and stays
+                # valid Luau. `nil.X` without the parentheses does not even parse,
+                # which is how this was found on a pinned run of Steal-a-Brainrot.
+                return "nil --[[ constant not decoded ]]"
+
             if isinstance(k, Const) and isinstance(k.v, bytes):
                 name = k.v.decode("latin-1")
                 if IDENT.match(name) and name not in LUA_KEYWORDS:

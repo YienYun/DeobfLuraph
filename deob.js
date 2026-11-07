@@ -231,7 +231,10 @@ function statsDigest(content, job, outputPath) {
   const names = Object.create(null);
   let uses = 0;
   for (const m of content.matchAll(MECHANICAL_NAME)) { names[m[0]] = true; uses++; }
-  const unexec = content.match(UNEXECUTED_FOOTER);
+  const legacy = content.match(UNEXECUTED_FOOTER);
+  const unexec = legacy || (stats.trim_functions
+    ? [null, String(stats.trim_functions), String(stats.trim_pcs || 0)]
+    : null);
   const rows = [];
   const row = (label, value) => rows.push(`    ${label.padEnd(12)} ${value}`);
 

@@ -17,7 +17,7 @@ accounted for below.
 |---|---|---|---|---|
 | `RideAPet.luau` | 11,038 | Luraph v15.1 | devirtualized, 716 functions | byte-identical across runs |
 | `StealAnEggg.luau` | 37,558 | Luraph v15.1 carrier | `payload-source`: the loader carries the hub script as plain Luau (2,204 functions) | byte-identical |
-| `JumpForAnimals.luau` | 7,103 | Luraph v15.1 | devirtualized, 457 functions, 0 unlifted blocks — the deepest lift in the set | body byte-identical; the closing `devirt:` disclosure line counts trace coverage and moves between runs (244–316 functions), see below |
+| `JumpForAnimals.luau` | 7,103 | Luraph v15.1 | devirtualized, 457 functions, 0 unlifted blocks — the deepest lift in the set | byte-identical, with `--time-pin 1700000000` (the hub names its UI objects from `math.random`; unpinned, every run traces a different script) |
 | `ChilliLibraryEngine.luau` | 3,667 | Luraph v15.1 carrier | `payload-source` (474 functions) — the UI engine the whole hub runs on | byte-identical |
 | `PrivateServer.luau` | 904 | Luraph v14.4.2 | devirtualized, 20 functions | byte-identical |
 | `StealABrainrot.luau` | 18,653 | Luraph v15.1 | devirtualized, **1,027 functions, 0 unlifted blocks** at 25 rounds; the offline run stops on `attempt to compare number < userdata`, so 404 protos carry unexecuted pcs | byte-identical once the round count is fixed |
@@ -37,7 +37,7 @@ Not delivered, with the reason:
 ```bash
 node deob.js dev/fixtures/input/RideAPet.lua     -o output/current/RideAPet.luau     --exec-rec
 node deob.js dev/fixtures/input/StealAnEggg.lua  -o output/current/StealAnEggg.luau  --exec-rec
-node deob.js dev/fixtures/input/JumpForAnimals.lua -o output/current/JumpForAnimals.luau --exec-rec
+node deob.js dev/fixtures/input/JumpForAnimals.lua -o output/current/JumpForAnimals.luau --exec-rec --time-pin 1700000000
 node deob.js dev/fixtures/input/http/chilli-library-engine.lua -o output/current/ChilliLibraryEngine.luau --exec-rec
 node deob.js dev/fixtures/input/PrivateServer.lua -o output/current/PrivateServer.luau --exec-rec
 node deob.js dev/fixtures/input/StealABrainrot.lua -o output/current/StealABrainrot.luau --exec-rec --devirt-rounds 25   # the default 200 rounds is what runs out of memory
@@ -63,12 +63,12 @@ node deob.js dev/fixtures/input/RideAPet.lua -o /tmp/again.luau --exec-rec
 diff output/current/RideAPet.luau /tmp/again.luau   # identical
 ```
 
-`JumpForAnimals` is the one exception to the last check, and only in its closing
-disclosure line: the trace coverage it reports depends on how much of the
-sample's own loop runs before the budget stops it. The lifted body — everything
-above that line — is identical between runs. `--step-budget` and `--time-pin`
-(constant statement count, frozen clock) shrink the spread but do not close it,
-because the hub branches on values the offline runtime cannot pin.
+All of them are byte-identical on re-run, `JumpForAnimals` included. Two things
+had to be fixed before that was true: the hub names its UI objects from
+`math.random` (so the trace needs `--time-pin`), and the closing `devirt:` line
+used to carry a count of what the run never executed — a number that moved
+between runs that printed identical code. The count now lives in `--stats` and
+the report; the file carries the sentence without it.
 
 `RideAPet-cache.luau` (the `--http-cache` experiment that produced a *smaller*
 result, kept for `TECHNICAL.md` §3) lives in `results/`, next to the earlier

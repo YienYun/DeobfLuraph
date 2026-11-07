@@ -366,22 +366,32 @@ def devirtualize(job, ppath, dpath, cfg, rerun, chunk_paths=(), live=None, exec_
         if not m or m.group(1).startswith("error:"):
             print("[!] constant request run gave no protos", file=sys.stderr)
             break
-        write_dump(ppath, m.group(1), exec_rec_on, exec_seen)
+        # The dump a round works from is replaced here, but its coverage does not
+        # join the union: a round's dump carries whatever the run happened to
+        # decode with the constants known so far, so folding it in made the union
+        # -- and every trim decision and disclosure count that reads it -- depend
+        # on how many rounds the pipeline got through. The union is the recorded
+        # runs, and only them.
+        write_dump(ppath, m.group(1), exec_rec_on, None)
     header = job.credit_header()
     prefix = (header + "\n") if header else ""
     marks = last_full_stats.get("trim_marks") or []
+    n_marks, n_mark_pcs = len(marks), sum(len(pcs) for _, pcs in marks)
     suffix = ""
     if marks:
-        n_pcs = sum(len(pcs) for _, pcs in marks)
-        suffix = ("\n-- devirt: %d function(s) contain %d pc(s) the recorded run never executed;"
-                  " what they decode is the walk's value, not the program's\n"
-                  % (len(marks), n_pcs))
+        # The counts live in the stats, not in the file. A lift round's walk ends
+        # where its own coverage runs ended, and two runs that print byte-identical
+        # code can report 232 or 259 trimmed functions -- putting that number in the
+        # output made the file itself unstable for a fact about the run.
+        suffix = ("\n-- devirt: the recorded run did not execute every pc in some of these functions;"
+                  " where it did not, what they decode is the walk's value, not the program's\n")
     if text is None:
         sys.exit("[!] no devirtualized output was produced: the constant-request run failed "
                  "before the first full lift (see the error above); re-run with "
                  "DEVIRT_FULL_ROUNDS=1 to lift the first round without extra constant runs")
     job.write(dpath, prefix + devirt.finish_text(text) + "\n" + suffix)
-    out_stats = dict(last_full_stats, converged=converged, pending_constant_requests=pending_constants)
+    out_stats = dict(last_full_stats, converged=converged, pending_constant_requests=pending_constants,
+                     trim_functions=n_marks, trim_pcs=n_mark_pcs)
     states = getattr(job, "luarmor_states", None)
     if states:
         out_stats["luarmor_states"] = states

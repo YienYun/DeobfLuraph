@@ -11034,5 +11034,5 @@ end
 
 task.spawn(callback35)
 
--- devirt: 21 function(s) contain 590 pc(s) the recorded run never executed; what they decode is the walk's value, not the program's
+-- devirt: the recorded run did not execute every pc in some of these functions; where it did not, what they decode is the walk's value, not the program's
 print("Deobf By Zed")

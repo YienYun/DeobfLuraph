@@ -796,26 +796,41 @@ table above was measured.
    `1276% of the decoded window` on `Steal-a-Brainrot`. It now prints the count
    and the summed windows next to it instead of a fraction.
 
-### Stability is not automatic, and the reason is measured
+### Stability: what actually moved, and what fixed it
 
-`RideAPet`, `StealAnEggg`, `ChilliLibraryEngine` and `PrivateServer` are
-byte-identical run after run. `JumpForAnimals` is not: its lifted body is
-identical, but the closing `devirt:` line differs (244 / 316 / 260 functions
-across runs) because it counts pcs the recorded run never executed, and how much
-of the sample runs before the budget stops it varies.
+`RideAPet`, `StealAnEggg`, `ChilliLibraryEngine` and `PrivateServer` were stable
+from the start. `JumpForAnimals` was not, and chasing it down found two separate
+causes — neither of them the lifter.
 
-Two flags exist to attack that, both added with this sweep:
+**The hub is random.** Diffing two traces of the same input shows the first
+divergence at line 401:
 
-* `--step-budget <n>` → `max_stmts`: cut every traced run at the same statement
-  count instead of a wall-clock deadline. Deterministic *if* the statement count
-  binds before the clock.
-* `--time-pin <unix-seconds>` → `time_pin`: freeze `os.time`, `os.date`,
-  `tick`, `os.clock`, `math.random` (Park-Miller) and `gcinfo` for the trace.
+    <   ScreenGui2.Name = "CioiAvadg1l2c2t"
+    >   ScreenGui2.Name = "lL4a1E0Kx9SFjrm"
 
-Measured on `JumpForAnimals`, four runs: unpinned `pcs_visited` 20,778 / 23,977 /
-407,516; pinned with a 250,000-statement budget 18,375 / 20,145. The spread
-shrinks and the body never changes, but the trace still ends in a different
-place, because the hub branches on values the offline runtime has no way to pin
-(remote answers, `DateTime`, table identity). A sample that needs a *stable
-count* of what it did not run needs `--studio`: a real place answers those
-branches the same way twice.
+The hub names its UI objects from `math.random`, and every later branch that
+looks one of those objects up by name inherits the difference. `--time-pin`
+freezes `os.time`, `tick`, `os.clock`, `math.random` (Park-Miller) and `gcinfo`;
+with it, two traces of `JumpForAnimals` are **byte-identical** (19,754 lines,
+0 differing lines). Unpinned they are not, at any budget.
+
+**The disclosure counted the run, not the code.** With the trace pinned, two
+lifts still printed identical bodies and different footers (232 / 259 trimmed
+functions). The footers were right: each run's walk stops where its own coverage
+runs ended, and two accurate measurements of two different runs disagree. Folding
+a round's dump into the coverage union (`write_dump` in the round loop) made the
+union — and every trim decision reading it — depend on how many rounds the
+pipeline got through. That union is now the recorded runs and only them, and the
+*count* no longer goes into the file:
+
+    -- devirt: the recorded run did not execute every pc in some of these functions; ...
+
+`--stats` and the report still print `246 function(s) / 5328 pc(s)` — the number
+is a measurement of a run, so it belongs next to the run's other numbers, not in
+a file whose whole point is that it comes out the same every time.
+
+Two flags exist for this, both added with this work: `--time-pin <unix-seconds>`
+and `--step-budget <n>` (cut every traced run at the same statement count instead
+of a wall-clock deadline).
+
+

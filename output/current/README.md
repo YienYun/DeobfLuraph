@@ -20,7 +20,7 @@ accounted for below.
 | `JumpForAnimals.luau` | 7,103 | Luraph v15.1 | devirtualized, 457 functions, 0 unlifted blocks — the deepest lift in the set | byte-identical, with `--time-pin 1700000000` (the hub names its UI objects from `math.random`; unpinned, every run traces a different script) |
 | `ChilliLibraryEngine.luau` | 3,667 | Luraph v15.1 carrier | `payload-source` (474 functions) — the UI engine the whole hub runs on | byte-identical |
 | `PrivateServer.luau` | 904 | Luraph v14.4.2 | devirtualized, 20 functions | byte-identical |
-| `StealABrainrot.luau` | 18,653 | Luraph v15.1 | devirtualized, **1,027 functions, 0 unlifted blocks** at 25 rounds; the offline run stops on `attempt to compare number < userdata`, so 404 protos carry unexecuted pcs | byte-identical once the round count is fixed |
+| `StealABrainrot.luau` | 18,699 | Luraph v15.1 | devirtualized, **1,029 functions, 0 unlifted blocks** at 25 rounds; the offline run stops on `attempt to compare number < userdata`; the rest is recovered from the trace, and what it never executed is flagged in the file's closing comment | **not** reproducible: the run walks a different path each time (a second run of the same command lifted 15,384 lines and did not parse), so this file is a specific run — sha256 `a5cb9ded…7e5a` |
 | `RideAPet.studio_loader.luau` | 25 | — | paste-ready loader for `--studio` (port 34880) | written by the engine |
 | `StealAnEggg.luarmor.json` | — | — | the Luarmor report the run wrote next to the output | — |
 
@@ -40,7 +40,7 @@ node deob.js dev/fixtures/input/StealAnEggg.lua  -o output/current/StealAnEggg.l
 node deob.js dev/fixtures/input/JumpForAnimals.lua -o output/current/JumpForAnimals.luau --exec-rec --time-pin 1700000000
 node deob.js dev/fixtures/input/http/chilli-library-engine.lua -o output/current/ChilliLibraryEngine.luau --exec-rec
 node deob.js dev/fixtures/input/PrivateServer.lua -o output/current/PrivateServer.luau --exec-rec
-node deob.js dev/fixtures/input/StealABrainrot.lua -o output/current/StealABrainrot.luau --exec-rec --devirt-rounds 25   # the default 200 rounds is what runs out of memory
+node deob.js dev/fixtures/input/StealABrainrot.lua -o output/current/StealABrainrot.luau --exec-rec --devirt-rounds 25 --time-pin 1700000000   # the default 200 rounds is what runs out of memory
 ```
 
 Inputs are not committed (`.gitignore`: `/dev/fixtures/input/`); their sha256s:
@@ -63,7 +63,7 @@ node deob.js dev/fixtures/input/RideAPet.lua -o /tmp/again.luau --exec-rec
 diff output/current/RideAPet.luau /tmp/again.luau   # identical
 ```
 
-All of them are byte-identical on re-run, `JumpForAnimals` included. Two things
+All but `StealABrainrot` are byte-identical on re-run, `JumpForAnimals` included. Two things
 had to be fixed before that was true: the hub names its UI objects from
 `math.random` (so the trace needs `--time-pin`), and the closing `devirt:` line
 used to carry a count of what the run never executed — a number that moved

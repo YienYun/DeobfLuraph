@@ -731,7 +731,7 @@ refused. This is that ledger.
 | `PrivateServer` | 83,547 | Luraph v14.4.2 | 904 lines, 20 functions |
 | `JoinScript.lua` | 64,789 | Luraph v14.4.1 | **nothing**: top level decodes to nothing → behaviour trace, reported as a failed lift |
 | `Grow-a-Garden` | 1,469,699 | Prometheus (0.85) | refused (Luraph-only build, no new families) |
-| `Steal-a-Brainrot` | 1,067,422 | Luraph v15.1 (1.00) | 18,653 lines, **1,027 functions, 0 unlifted blocks** — but only with `--devirt-rounds 25`; the offline run stops on `attempt to compare number < userdata` |
+| `Steal-a-Brainrot` | 1,067,422 | Luraph v15.1 (1.00) | 18,699 lines, **1,029 functions, 0 unlifted blocks** — but only with `--devirt-rounds 25 --time-pin 1700000000`; the offline run stops on `attempt to compare number < userdata` |
 
 `JumpForAnimals` is the deepest lift in the set by a wide margin: 75% of the
 decoded window executed against RideAPet's 1%, 457 of 457 functions lifted, and
@@ -742,13 +742,32 @@ own runtime path, not the walk.
 The largest sample is also the one that taught the most. `Steal-a-Brainrot`
 (1.0 MB) on the default 200 rounds spends its first minutes building a 6.5 MB
 proto dump and then never finishes — 40 minutes, 1.8 GB resident, no file. At
-`--devirt-rounds 25` the same walk converges: **1,027 functions, 0 unlifted
+`--devirt-rounds 25` the same walk converges: **1,029 functions, 0 unlifted
 blocks, 0 unstructured jumps**, 33,040 pcs annotated against per-proto windows
 summing to 37,074 (89%). The remaining defect is not the walk but the run: the
 hub stops on `attempt to compare number < userdata` inside its own VM, so 404
 protos carry unexecuted pcs and their bodies come from the walk, not from a
 recorded execution. That is a fidelity hole a real place would close — the
 comparison is legal in Roblox and only wrong in the offline model.
+
+### Known open gap: a thin run can still emit an unsafe prefix
+
+The `nil.X` guard above covers expression positions. It does not cover *statement*
+positions: a run whose coverage is thin enough can still emit
+
+    nil.Enabled = true
+
+as an assignment target, which the parser rejects for the same reason. This is
+not academic — a repeat of the delivered `StealABrainrot` command produced a
+15,384-line file that failed to parse on exactly that line, while the delivered
+run produced 18,699 lines that compile. Two runs of the same command are not
+interchangeable here, because the script stops on `attempt to compare number <
+userdata` and where it stops moves the walk.
+
+The fix is a statement-level rule in the same place as
+`structure.drop_unbound_callee_calls()`, which already drops calls whose callee
+resolved to nothing: an assignment whose target is an index off an undecoded
+value has nothing to write to, so the statement goes, not the whole file.
 
 ### A member read off a decoded value does not parse
 

@@ -1422,6 +1422,7 @@ do
 				local condition9 = false
 				local input = nil
 				local vector2 = Vector2.new(0, 0)
+				local position2 = nil
 
 				callback5(targetCard.InputBegan:Connect(function(input2)
 					local condition = condition9
@@ -1442,17 +1443,37 @@ do
 							)
 						then
 							local vector22 = Vector2.new(input2.Position.X, input2.Position.Y)
+
 							if callback21(targetCard, vector22) then
 								condition9 = true
 								input = condition10 and input2 or nil
 								vector2 = vector22
+								position2 = targetCard.Position
 								return
 							end
 						end
 					end
 				end))
 
-				callback5(UserInputService2.InputChanged:Connect(function(input2) end))
+				callback5(UserInputService2.InputChanged:Connect(function(input2)
+					if
+						not (not condition9 or not position2)
+						and (
+							input and input2 == input
+							or not input
+								and input2.UserInputType == Enum.UserInputType.MouseMovement
+						)
+					then
+						local number13 = Vector2.new(input2.Position.X, input2.Position.Y) - vector2
+						targetCard.Position = UDim2.new(
+							position2.X.Scale,
+							position2.X.Offset + number13.X,
+							position2.Y.Scale,
+							position2.Y.Offset + number13.Y
+						)
+					end
+				end))
+
 				callback5(UserInputService2.InputEnded:Connect(function(input2)
 					if
 						condition9
@@ -1464,6 +1485,7 @@ do
 					then
 						condition9 = false
 						input = nil
+						position2 = nil
 					end
 				end))
 
@@ -6611,8 +6633,19 @@ do
 			callback15()
 			condition3 = true
 			callback14()
-			connection2 = Workspace.ChildAdded:Connect(nil)
-			connection = (nil):Connect(function()
+
+			connection2 = Workspace.ChildAdded:Connect(function(child)
+				if not condition3 or not hasMatch(child) then
+					return
+				end
+				task.defer(function()
+					if condition3 and child.Parent then
+						newSelectionBox(child)
+					end
+				end)
+			end)
+
+			connection = localPlayer.CharacterAdded:Connect(function()
 				if condition3 then
 					task.defer(callback14)
 				end
@@ -7898,9 +7931,9 @@ do
 			if localPlayer.Character then
 				callback19(localPlayer.Character)
 			end
-			connection2 = localPlayer.CharacterAdded:Connect(function(character_)
+			connection2 = localPlayer.CharacterAdded:Connect(function()
 				if condition3 then
-					callback19(character_)
+					callback19(nil)
 				end
 			end)
 			callback15()
@@ -7980,15 +8013,17 @@ do
 	local number13
 	number13 = 0.2
 	local number14
-	number14 = 0.52
+	number14 = 0
 	local number15
-	number15 = 52
+	number15 = 0.52
 	local number16
-	number16 = 28
+	number16 = 52
 	local number17
-	number17 = 240
+	number17 = 28
 	local number18
-	number18 = 185
+	number18 = 240
+	local number19
+	number19 = 185
 	local condition3
 	condition3 = false
 	local condition4
@@ -7997,10 +8032,10 @@ do
 	condition5 = true
 	local condition6
 	condition6 = false
-	local number19
-	number19 = number16 - number8
 	local number20
-	number20 = 1
+	number20 = number17 - number8
+	local number21
+	number21 = 1
 	local text
 	text = "Bottom"
 	local now
@@ -8013,18 +8048,18 @@ do
 	y = nil
 	local now2
 	now2 = os.clock()
-	local number21
-	number21 = 0
+	local number22
+	number22 = 0
 	local text2
 	text2 = "Grapple Hook"
-	local tool, number22, toolSpeedBoostToggle, toggle, condition7, condition8, speedToolDropdown, adjustToolSpeedSlider, condition9, condition10
-	local connection, connection2, connection3, connection4, connection5, connection6, condition11, condition12, number23, condition13
+	local tool, number23, toolSpeedBoostToggle, toggle, condition7, condition8, speedToolDropdown, adjustToolSpeedSlider, condition9, condition10
+	local connection, connection2, connection3, connection4, connection5, connection6, condition11, condition12, number24, condition13
 	local value2, isTool, text4
 
 	do
-		local number24 = 0.8
+		local number25 = 0.8
 		tool = nil
-		number22 = 0
+		number23 = 0
 		local condition14 = false
 		toolSpeedBoostToggle = nil
 		toggle = nil
@@ -8045,7 +8080,7 @@ do
 		local condition15 = false
 		condition11 = false
 		condition12 = false
-		number23 = 0
+		number24 = 0
 		condition13 = false
 		value2 = nil
 		local beamMap = {}
@@ -8105,16 +8140,16 @@ do
 
 		local value4
 		value4, text4 = callback10()
-		local number25 = text4 == text2 and number17
-		local number26 = number25 or number18
+		local number26 = text4 == text2 and number18
+		local number27 = number26 or number19
 
 		local function callback11()
 			local condition16 = text4 == text2
 			local condition17 = condition16 and 270 or 210
-			number26 = math.clamp(condition16 and number17 or number18, 50, condition17)
+			number27 = math.clamp(condition16 and number18 or number19, 50, condition17)
 			if adjustToolSpeedSlider then
 				adjustToolSpeedSlider:SetRange(50, condition17, false)
-				adjustToolSpeedSlider:Set(number26, false)
+				adjustToolSpeedSlider:Set(number27, false)
 			end
 		end
 
@@ -8256,7 +8291,7 @@ do
 			then
 				return
 			end
-			number23 = os.clock() + number24
+			number24 = os.clock() + number25
 			callback15(instance2)
 		end
 
@@ -8310,7 +8345,7 @@ do
 			condition11 = false
 			tool = nil
 			if not condition12 then
-				number23 = 0
+				number24 = 0
 				callback16()
 				callback12()
 			end
@@ -8348,7 +8383,7 @@ do
 			if not character_ or not humanoid or humanoid.Health <= 0 or not isTool(argument) then
 				return nil
 			end
-			number22 = os.clock() + 1.5
+			number23 = os.clock() + 1.5
 			if argument.Parent == character_ then
 				return argument
 			end
@@ -8482,7 +8517,7 @@ do
 
 			connection = argument.DescendantAdded:Connect(function(descendant)
 				if
-					not (not (condition11 or condition12) or os.clock() > number23)
+					not (not (condition11 or condition12) or os.clock() > number24)
 					and (descendant:IsA("BodyMover") or descendant:IsA("Constraint"))
 				then
 					task.defer(function()
@@ -8510,7 +8545,7 @@ do
 					and child:IsA("Tool")
 					and child.Name ~= text4
 					and not callback8()
-					and os.clock() >= number22
+					and os.clock() >= number23
 				then
 					callback21()
 				end
@@ -8525,7 +8560,7 @@ do
 					humanoid = condition
 				end
 
-				if humanoid and child == tool and not callback8() and os.clock() >= number22 then
+				if humanoid and child == tool and not callback8() and os.clock() >= number23 then
 					task.defer(function()
 						local character_ = localPlayer.Character
 						local humanoid2 = character_
@@ -8607,16 +8642,16 @@ do
 				parent = parent2
 				raycastParams.FilterDescendantsInstances = { parent2 }
 			end
-			local number27
+			local number28
 			if humanoid.RigType == Enum.HumanoidRigType.R6 then
-				number27 = 3
+				number28 = 3
 			else
-				number27 =
+				number28 =
 					math.max(argument.Size.Y * 0.5, humanoid.HipHeight + argument.Size.Y * 0.5)
 			end
 			local hit = Workspace:Raycast(
 				argument.Position,
-				Vector3.new(0, -(number27 + number7), 0),
+				Vector3.new(0, -(number28 + number7), 0),
 				raycastParams
 			)
 			return hit ~= nil and hit.Normal.Y > 0.15
@@ -8628,7 +8663,7 @@ do
 			if not argument or not humanoid or humanoid.Health <= 0 then
 				value = nil
 				y = nil
-				number21 = 0
+				number22 = 0
 				return
 			end
 
@@ -8636,68 +8671,68 @@ do
 				value = argument
 				y = argument.Position.Y
 				now2 = now3
-				number21 = 0
+				number22 = 0
 				callback29("Bottom", now3)
 			else
-				local number27 = now3 - now2
-				if number27 > 0 then
-					number21 = (argument.Position.Y - y) / number27
+				local number28 = now3 - now2
+				if number28 > 0 then
+					number22 = (argument.Position.Y - y) / number28
 				end
 				y = argument.Position.Y
 				now2 = now3
 			end
 
 			if condition3 then
-				local number27 = math.max(0.02, number3 / number14)
-				local number28 = math.max(0.01, number5 / number14)
-				local number29 = number4 * number14
-				local number30 = now3 - now
+				local number28 = math.max(0.02, number3 / number15)
+				local number29 = math.max(0.01, number5 / number15)
+				local number30 = number4 * number15
+				local number31 = now3 - now
 
 				if text == "Rise" then
-					local number31 = math.clamp(number30 / number27, 0, 1)
-					local number32 = number12
+					local number32 = math.clamp(number31 / number28, 0, 1)
+					local number33 = number12
 						* 3.1415926535897931
 						/ 2
-						* number27
-						* math.cos(number31 * 3.1415926535897931 * 0.5)
+						* number28
+						* math.cos(number32 * 3.1415926535897931 * 0.5)
 
 					if
 						callback30(
-							number30 >= 0.06
-								and number32 >= number10
-								and math.abs(number21) <= number11,
+							number31 >= 0.06
+								and number33 >= number10
+								and math.abs(number22) <= number11,
 							now3
 						)
 					then
 						callback29("Fall", now3)
-					elseif number31 >= 1 then
+					elseif number32 >= 1 then
 						callback29("Hold", now3)
 						callback31(argument, 0)
 					else
-						callback31(argument, number32)
+						callback31(argument, number33)
 					end
 				elseif text == "Hold" then
-					if number13 <= number30 then
+					if number13 <= number31 then
 						callback29("Fall", now3)
 					else
 						callback31(argument, 0)
 					end
 				elseif text == "Fall" then
-					local number31 = math.clamp(number30 / number28, 0, 1)
-					local number32 = -number29 * math.sin(number31 * 3.1415926535897931 * 0.5)
+					local number32 = math.clamp(number31 / number29, 0, 1)
+					local number33 = -number30 * math.sin(number32 * 3.1415926535897931 * 0.5)
 					if
 						callback30(
-							number30 >= 0.01 and number32 <= -number10 and number21 >= -number11,
+							number31 >= 0.01 and number33 <= -number10 and number22 >= -number11,
 							now3
-						) or number31 >= 1
+						) or number32 >= 1
 					then
 						callback29("Bottom", now3)
 					else
-						callback31(argument, number32)
+						callback31(argument, number33)
 					end
 				else
 					object = nil
-					if number30 >= 0 and raycastGround(argument, humanoid) then
+					if number31 >= number14 and raycastGround(argument, humanoid) then
 						callback29("Rise", now3)
 					end
 				end
@@ -8714,13 +8749,13 @@ do
 
 				if not (humanoid2 and humanoid2.Health > 0) then
 					condition9 = false
-					number22 = math.max(number22, now3 + 1.5)
+					number23 = math.max(number23, now3 + 1.5)
 				else
 					local tool2 = character_:FindFirstChildWhichIsA("Tool")
 					condition9 = tool2 ~= nil and tool2.Name == text4
 
 					if not tool2 or tool2.Name ~= text4 then
-						if not callback8() and now3 >= number22 then
+						if not callback8() and now3 >= number23 then
 							callback21()
 						end
 					elseif text4 == text2 then
@@ -8763,8 +8798,8 @@ do
 							toggle:Set(true, true)
 						else
 							condition5 = true
-							number19 = math.max(20, number16 - number8)
-							number20 = 1
+							number20 = math.max(20, number17 - number8)
+							number21 = 1
 						end
 					end
 				end)
@@ -8778,7 +8813,7 @@ do
 				local moveDirection = humanoid.MoveDirection
 				local vector3Zero = Vector3.zero
 				if moveDirection.Magnitude > 0.001 then
-					vector3Zero = moveDirection.Unit * number26
+					vector3Zero = moveDirection.Unit * number27
 				end
 				argument.AssemblyLinearVelocity =
 					Vector3.new(vector3Zero.X, assemblyLinearVelocity.Y, vector3Zero.Z)
@@ -8787,50 +8822,34 @@ do
 				callback18()
 			end
 
-			local number, moveDirection, number27, condition20, condition21
+			local number
 
 			if condition18 then
-				local number28 = math.max(20, number16 - number8)
-				number19 += number20 * number9 * deltaTime
+				local number28 = math.max(20, number17 - number8)
+				number20 += number21 * number9 * deltaTime
 
-				if number16 <= number19 then
-					number19 = number16
-					number20 = -1
-				elseif number19 <= number28 then
-					number19 = number28
-					number20 = 1
+				if number17 <= number20 then
+					number20 = number17
+					number21 = -1
+				elseif number20 <= number28 then
+					number20 = number28
+					number21 = 1
 				end
 
-				number = number19
-
-				if number then
-					moveDirection = humanoid.MoveDirection
-					number27 = number - humanoid.WalkSpeed
-					condition20 = moveDirection.Magnitude > 0.001
-					condition21 = condition20 and math.abs(number27) > 0.001
-					if condition21 then
-						argument.CFrame = argument.CFrame + moveDirection * number27 * deltaTime
-					end
-				end
+				number = number20
 			else
-				local condition22 = not condition16 and condition4 and not condition19
+				local condition20 = not condition16 and condition4 and not condition19
 				number = nil
+				if condition20 then
+					number = number16
+				end
+			end
 
-				if condition22 then
-					number = number15
-					moveDirection = humanoid.MoveDirection
-					number27 = number - humanoid.WalkSpeed
-					condition20 = moveDirection.Magnitude > 0.001
-					condition21 = condition20 and math.abs(number27) > 0.001
-					if condition21 then
-						argument.CFrame = argument.CFrame + moveDirection * number27 * deltaTime
-					end
-				elseif number then
-					moveDirection = humanoid.MoveDirection
-					number27 = number - humanoid.WalkSpeed
-					if moveDirection.Magnitude > 0.001 and math.abs(number27) > 0.001 then
-						argument.CFrame = argument.CFrame + moveDirection * number27 * deltaTime
-					end
+			if number then
+				local moveDirection = humanoid.MoveDirection
+				local number28 = number - humanoid.WalkSpeed
+				if moveDirection.Magnitude > 0.001 and math.abs(number28) > 0.001 then
+					argument.CFrame = argument.CFrame + moveDirection * number28 * deltaTime
 				end
 			end
 		end)
@@ -8842,7 +8861,7 @@ do
 			callback12()
 			tool = nil
 			condition9 = false
-			number22 = os.clock() + 3
+			number23 = os.clock() + 3
 			cleanup2(character_)
 			local backpack2 = localPlayer:FindFirstChildOfClass("Backpack")
 			if backpack2 then
@@ -8968,7 +8987,7 @@ do
 			AllowDecimals = true,
 			Increment = 0.1,
 			Callback = function(argument)
-				number15 = math.clamp(tonumber(argument) or 52, 20, 64)
+				number16 = math.clamp(tonumber(argument) or 52, 20, 64)
 			end,
 		})
 
@@ -8978,8 +8997,8 @@ do
 			Note = "Smoothly varies speed while stealing.",
 			Callback = function(argument)
 				condition5 = argument == true
-				number19 = math.max(20, number16 - number8)
-				number20 = 1
+				number20 = math.max(20, number17 - number8)
+				number21 = 1
 			end,
 		})
 
@@ -8993,9 +9012,9 @@ do
 			AllowDecimals = true,
 			Increment = 0.1,
 			Callback = function(argument)
-				number16 = math.clamp(tonumber(argument) or 28, 20, 29)
-				number19 = math.max(20, number16 - number8)
-				number20 = 1
+				number17 = math.clamp(tonumber(argument) or 28, 20, 29)
+				number20 = math.max(20, number17 - number8)
+				number21 = 1
 			end,
 		})
 
@@ -9047,11 +9066,11 @@ do
 			Increment = 0.1,
 			Callback = function(argument)
 				if text4 == text2 then
-					number17 = math.clamp(tonumber(argument) or 240, 50, 270)
-					number26 = number17
+					number18 = math.clamp(tonumber(argument) or 240, 50, 270)
+					number27 = number18
 				else
-					number18 = math.clamp(tonumber(argument) or 185, 50, 210)
-					number26 = number18
+					number19 = math.clamp(tonumber(argument) or 185, 50, 210)
+					number27 = number19
 				end
 			end,
 		})
@@ -9091,7 +9110,7 @@ do
 			Increment = 0.1,
 			Note = "Controls jump speed (20 to 110, default 52 = 0.52x).",
 			Callback = function(argument)
-				number14 = math.clamp(tonumber(argument) or 52, 20, 110) / 100
+				number15 = math.clamp(tonumber(argument) or 52, 20, 110) / 100
 			end,
 		})
 
@@ -9118,7 +9137,9 @@ do
 			AllowDecimals = true,
 			Increment = 0.01,
 			Note = "Controls how long to wait on the ground before jumping again.",
-			Callback = function(argument) end,
+			Callback = function(argument)
+				number14 = math.clamp(tonumber(argument) or 0, 0, 1)
+			end,
 		})
 
 		floatSpeedToolBridge.GetSelectedName = function()
@@ -9136,7 +9157,7 @@ do
 					return nil
 				end
 			elseif not isTool(grappleHook) then
-				uiLibrary.Notify("Tool unavailable", text4 .. " is not currently owned.", nil)
+				uiLibrary.Notify("Tool unavailable", text4 .. " is not currently owned.", 5)
 				return nil
 			end
 
@@ -9177,7 +9198,7 @@ do
 		floatSpeedToolBridge.StopGrappleSpam = function()
 			condition12 = false
 			if not condition11 then
-				number23 = 0
+				number24 = 0
 				callback16()
 				callback12()
 			end
@@ -9719,18 +9740,17 @@ do
 		end
 
 		local function callback32()
-			local character_ = localPlayer.Character
-			local humanoid = character_ and character_:FindFirstChildOfClass("Humanoid")
+			local humanoid = nil and (nil):FindFirstChildOfClass("Humanoid")
 			local value2 = value
 			local tool2 = tool
 			value = nil
 			tool = nil
-			if not condition4 or not character_ or not humanoid or humanoid.Health <= 0 then
+			if not condition4 or not nil or not humanoid or humanoid.Health <= 0 then
 				condition4 = false
 				return
 			end
 			condition4 = false
-			local tool3 = character_:FindFirstChildWhichIsA("Tool")
+			local tool3 = (nil):FindFirstChildWhichIsA("Tool")
 			if tool3 and tool3 ~= value2 then
 				return
 			end
@@ -15438,9 +15458,23 @@ do
 	number5 = math.clamp(tonumber(argumentMap.ClearBaseTransparency), 0, 1)
 	local number6
 	number6 = 0.0015
-	local chilliFadePlotsRuntime
+	local chilliFadePlotsRuntime, cleanup2, condition8, number7, plots
 
 	do
+		local enabledFlags3 = {
+			AnimalPodiums = true,
+			Unlock = true,
+			PlotSign = true,
+			Purchases = true,
+			Conveyor = true,
+			Walls = true,
+			Wall = true,
+			Floors = true,
+			Floor = true,
+			Roof = true,
+			Decorations = true,
+		}
+
 		local value4 = callback2()
 		local instanceMap = {}
 		local _, value5, value6 = ipairs({ value4, CoreGui })
@@ -15451,10 +15485,10 @@ do
 				local chilliFadePlotsRuntime2 = instance2:FindFirstChild("__ChilliFadePlotsRuntime")
 
 				if chilliFadePlotsRuntime2 then
-					local cleanup2 = chilliFadePlotsRuntime2:FindFirstChild("Cleanup")
-					if cleanup2 and cleanup2:IsA("BindableEvent") then
+					local cleanup3 = chilliFadePlotsRuntime2:FindFirstChild("Cleanup")
+					if cleanup3 and cleanup3:IsA("BindableEvent") then
 						pcall(function()
-							cleanup2:Fire()
+							cleanup3:Fire()
 						end)
 					end
 					pcall(function()
@@ -15468,20 +15502,12 @@ do
 		chilliFadePlotsRuntime.Name = "__ChilliFadePlotsRuntime"
 		chilliFadePlotsRuntime.Archivable = false
 		chilliFadePlotsRuntime.Parent = value4
-	end
-
-	local cleanup2
-	cleanup2 = Instance.new("BindableEvent")
-	cleanup2.Name = "Cleanup"
-	cleanup2.Parent = chilliFadePlotsRuntime
-	local condition8
-	condition8 = false
-	local number7
-	number7 = 0
-	local plots
-	plots = nil
-
-	do
+		cleanup2 = Instance.new("BindableEvent")
+		cleanup2.Name = "Cleanup"
+		cleanup2.Parent = chilliFadePlotsRuntime
+		condition8 = false
+		number7 = 0
+		plots = nil
 		local connection = nil
 		local connection2 = nil
 		local rng2 = Random.new()
@@ -15508,9 +15534,33 @@ do
 			return nil
 		end
 
-		local function callback24(argument, argument2)
-			while nil do
-				if (nil)(argument, "Model") and (nil)(argument, argument2) then
+		local function callback24(instance2, argument)
+			local value7 = weakCache2[instance2]
+			if value7 ~= nil then
+				return value7
+			end
+			local condition10 = false
+
+			if not enabledFlags3[instance2.Name] then
+				if instance2.Parent == argument then
+					condition10 = true
+				elseif
+					instance2:FindFirstChildOfClass("Humanoid")
+					or instance2:FindFirstChildOfClass("AnimationController")
+				then
+					condition10 = true
+				end
+			end
+
+			if condition10 or #instance2:GetChildren() > 0 then
+				weakCache2[instance2] = condition10
+			end
+			return condition10
+		end
+
+		local function callback25(argument, argument2)
+			while argument and argument ~= argument2 do
+				if argument:IsA("Model") and callback24(argument, argument2) then
 					return true
 				end
 				argument = argument.Parent
@@ -15518,15 +15568,15 @@ do
 			return false
 		end
 
-		local function callback25(argument)
+		local function callback26(argument)
 			if
 				kMap[argument] == nil
 				and argument:IsA("BasePart")
 				and not (argument.Transparency >= 1)
 			then
-				local value4 = callback23(argument)
+				local value7 = callback23(argument)
 
-				if not (not value4 or value4 == argument3 or callback24(argument, value4)) then
+				if not (not value7 or value7 == argument3 or callback25(argument, value7)) then
 					local localTransparencyModifier = argument.LocalTransparencyModifier
 					if math.abs(localTransparencyModifier - number5) <= 0.001 then
 						localTransparencyModifier = 0
@@ -15541,11 +15591,11 @@ do
 			end
 		end
 
-		local function callback26()
-			local _, value4, value5 = pairs(kMap)
-			for k, value6 in value4, value5 do
+		local function callback27()
+			local _, value7, value8 = pairs(kMap)
+			for k, value9 in value7, value8 do
 				pcall(function()
-					k.LocalTransparencyModifier = value6
+					k.LocalTransparencyModifier = value9
 				end)
 			end
 			table.clear(kMap)
@@ -15555,39 +15605,39 @@ do
 			condition9 = false
 		end
 
-		local function callback27(argument)
-			local _, value4, value5 = pairs(kMap)
+		local function callback28(argument)
+			local _, value7, value8 = pairs(kMap)
 
-			for k, value6 in value4, value5 do
+			for k, value9 in value7, value8 do
 				if callback23(k) == argument then
 					pcall(function()
-						k.LocalTransparencyModifier = value6
+						k.LocalTransparencyModifier = value9
 					end)
 					kMap[k] = nil
 				end
 			end
 		end
 
-		local function callback28(instance2)
+		local function callback29(instance2)
 			if not (not instance2 or not instance2.Parent) then
-				local _, value4, value5 = ipairs(instance2:GetDescendants())
-				for _, value6 in value4, value5 do
-					callback25(value6)
+				local _, value7, value8 = ipairs(instance2:GetDescendants())
+				for _, value9 in value7, value8 do
+					callback26(value9)
 				end
 			end
 		end
 
-		local function callback29(argument)
+		local function callback30(argument)
 			if argument3 ~= argument then
 				local instance2 = argument3
 				argument3 = argument
 
 				if condition8 then
 					if argument then
-						callback27(argument)
+						callback28(argument)
 					end
 					if instance2 then
-						callback28(instance2)
+						callback29(instance2)
 					end
 				end
 			end
@@ -15597,12 +15647,12 @@ do
 			number5 = math.clamp(tonumber(argument) or 0.8, 0, 1)
 
 			if condition8 then
-				local _, value4, value5 = pairs(kMap)
+				local _, value7, value8 = pairs(kMap)
 
-				for k, value6 in value4, value5 do
+				for k, value9 in value7, value8 do
 					if k.Parent then
 						pcall(function()
-							k.LocalTransparencyModifier = math.max(value6, number5)
+							k.LocalTransparencyModifier = math.max(value9, number5)
 						end)
 					else
 						kMap[k] = nil
@@ -15614,13 +15664,13 @@ do
 		callback9(function(argument, argument2)
 			if argument == "UnfadedPlot" then
 				argument2 = typeof(argument2) == "Instance" and argument2
-				callback29(argument2 or nil)
+				callback30(argument2 or nil)
 			elseif argument == "ClearBaseTransparency" then
 				clampValue(argument2)
 			end
 		end)
 
-		local function callback30(argument)
+		local function callback31(argument)
 			number8 += 1
 			data7[number8] = argument
 			if condition9 then
@@ -15640,14 +15690,14 @@ do
 					for idx = 1, number do
 						local child = data[idx]
 						if child and child.Parent then
-							callback25(child)
+							callback26(child)
 						end
 					end
 				end
 			end)
 		end
 
-		local function callback31()
+		local function callback32()
 			number7 += 1
 			local number = number7
 
@@ -15663,10 +15713,10 @@ do
 						number9 += 1
 
 						if child then
-							callback25(child)
-							local _, value4, value5 = ipairs(child:GetChildren())
-							for _, value6 in value4, value5 do
-								children[#children + 1] = value6
+							callback26(child)
+							local _, value7, value8 = ipairs(child:GetChildren())
+							for _, value9 in value7, value8 do
+								children[#children + 1] = value9
 							end
 						end
 
@@ -15684,7 +15734,7 @@ do
 			end)
 		end
 
-		local function callback32()
+		local function callback33()
 			if connection then
 				connection:Disconnect()
 				connection = nil
@@ -15694,10 +15744,10 @@ do
 			end
 			connection = plots.DescendantAdded:Connect(function(descendant)
 				if condition8 then
-					callback30(descendant)
+					callback31(descendant)
 				end
 			end)
-			callback31()
+			callback32()
 		end
 
 		local function onEvent()
@@ -15711,15 +15761,15 @@ do
 				connection2:Disconnect()
 				connection2 = nil
 			end
-			callback26()
+			callback27()
 		end
 
-		local function callback34()
+		local function callback35()
 			onEvent()
 			condition8 = true
 			plots = Workspace:FindFirstChild("Plots")
 			if plots then
-				callback32()
+				callback33()
 				return
 			end
 
@@ -15730,15 +15780,15 @@ do
 						connection2:Disconnect()
 						connection2 = nil
 					end
-					callback32()
+					callback33()
 				end
 			end)
 		end
 
-		local function callback35()
+		local function callback36()
 			local condition10 = argumentMap.YourBaseClear == true
 			if condition10 and not condition8 then
-				callback34()
+				callback35()
 			elseif not condition10 and condition8 then
 				onEvent()
 			end
@@ -15746,10 +15796,10 @@ do
 
 		callback9(function(argument)
 			if argument == "YourBaseClear" then
-				callback35()
+				callback36()
 			end
 		end)
-		callback35()
+		callback36()
 		cleanup2.Event:Connect(onEvent)
 		chilliFadePlotsRuntime.Destroying:Connect(onEvent)
 	end
@@ -15961,9 +16011,10 @@ end
 local formatCompact, getRootPart, newBillboardGui, callback25, callback26, callback27, newImageLabel, callback29, callback30
 
 do
-	local function callback31()
-		if type(nil) == "table" and (nil).Rarity then
-			return tostring(nil)
+	local function callback31(argument)
+		local value2 = isTable[argument]
+		if type(value2) == "table" and value2.Rarity then
+			return tostring(value2.Rarity)
 		end
 		return nil
 	end
@@ -16463,7 +16514,7 @@ do
 			return
 		end
 		argument.RarityCheckedAt = amount + 0.5
-		local text = callback31()
+		local text = callback31(argument.Model.Name)
 		local instance = callback33(argument)
 		local rarity = instance and instance:FindFirstChild("Rarity")
 		if rarity and rarity:IsA("TextLabel") and rarity.Visible and rarity.Text ~= "" then
@@ -16920,9 +16971,8 @@ do
 	end
 
 	local function onEvent()
-		if not condition3 then
-			return
-		end
+		-- devirt: dropped a branch the run never took (its condition was a literal)
+
 		condition3 = false
 		disconnectAll(connections2)
 		cleanup2()
@@ -17217,13 +17267,13 @@ local condition7 = true
 local number9 = 0
 local connection = nil
 local weakCache2 = setmetatable({}, { __mode = "k" })
-local chilliSpecialNotificationSlots, instance, notificationStack, TweenService, font2, data6, data7, data8, data9, callback31
+local chilliSpecialNotificationSlots, screenGui, notificationStack, TweenService, font2, data6, data7, data8, data9, callback31
 local newSound
 
 do
 	local response3 = nil
 	chilliSpecialNotificationSlots = {}
-	instance = nil
+	screenGui = nil
 	notificationStack = nil
 	TweenService = game:GetService("TweenService")
 	font2 = Font.new(
@@ -17300,26 +17350,26 @@ do
 		return nil
 	end
 
-	local function callback35(instance2)
-		if not instance2 then
+	local function callback35(instance)
+		if not instance then
 			return nil
 		end
 
-		if instance2:IsA("Sound") then
-			return callback34(instance2.SoundId)
+		if instance:IsA("Sound") then
+			return callback34(instance.SoundId)
 		end
 		local object
-		if instance2:IsA("StringValue") then
-			object = callback34(instance2.Value)
+		if instance:IsA("StringValue") then
+			object = callback34(instance.Value)
 			if object then
 				return object
 			end
 		end
-		object = callback34(instance2:GetAttribute("SoundId"))
+		object = callback34(instance:GetAttribute("SoundId"))
 		if object then
 			return object
 		end
-		local sound = instance2:FindFirstChildWhichIsA("Sound", true)
+		local sound = instance:FindFirstChildWhichIsA("Sound", true)
 		return sound and callback34(sound.SoundId) or nil
 	end
 
@@ -17332,8 +17382,8 @@ do
 			table.move(values, 1, values.n, 2, data12)
 		end
 		local _, value3, value4 = ipairs(data12)
-		for _, instance2 in value3, value4 do
-			local object = callback35(instance2:FindFirstChild("CrystalSpawn", true))
+		for _, instance in value3, value4 do
+			local object = callback35(instance:FindFirstChild("CrystalSpawn", true))
 			if object then
 				return object
 			end
@@ -17426,8 +17476,8 @@ do
 		end
 	end
 
-	local function callback38(instance2, parent, name, text4, position, size, textSize)
-		local clone = instance2:Clone()
+	local function callback38(instance, parent, name, text4, position, size, textSize)
+		local clone = instance:Clone()
 		clone.Name = name
 		clone.Visible = true
 		clone.RichText = true
@@ -17448,34 +17498,34 @@ do
 
 	local function newWorldModel(parent, argument, child)
 		if child and child.Parent then
-			local ok, instance2 = pcall(function()
+			local ok, instance = pcall(function()
 				return child:Clone()
 			end)
 
-			if not (not ok or not instance2) then
-				local _, value3, value4 = ipairs(instance2:GetDescendants())
-				for _, instance3 in value3, value4 do
+			if not (not ok or not instance) then
+				local _, value3, value4 = ipairs(instance:GetDescendants())
+				for _, instance2 in value3, value4 do
 					if
-						instance3:IsA("ParticleEmitter")
-						or instance3:IsA("Beam")
-						or instance3:IsA("Trail")
-						or instance3:IsA("Light")
-						or instance3:IsA("Sound")
-						or instance3:IsA("Script")
-						or instance3:IsA("LocalScript")
+						instance2:IsA("ParticleEmitter")
+						or instance2:IsA("Beam")
+						or instance2:IsA("Trail")
+						or instance2:IsA("Light")
+						or instance2:IsA("Sound")
+						or instance2:IsA("Script")
+						or instance2:IsA("LocalScript")
 					then
-						instance3:Destroy()
+						instance2:Destroy()
 					end
 				end
 				local worldModel = Instance.new("WorldModel")
 				worldModel.Parent = parent
-				instance2.Parent = worldModel
+				instance.Parent = worldModel
 				pcall(function()
-					instance2:PivotTo(CFrame.new())
+					instance:PivotTo(CFrame.new())
 				end)
 				local cframe = CFrame.new()
 				local ok2, response, vector = pcall(function()
-					return instance2:GetBoundingBox()
+					return instance:GetBoundingBox()
 				end)
 				ok2 = ok2 and response and vector
 				local vector2 = Vector3.new(4, 4, 4)
@@ -17494,8 +17544,8 @@ do
 				local humanoid = child:FindFirstChildWhichIsA("Humanoid")
 					or child:FindFirstChildWhichIsA("AnimationController")
 				humanoid = humanoid and humanoid:FindFirstChildOfClass("Animator")
-				local humanoid2 = instance2:FindFirstChildWhichIsA("Humanoid")
-					or instance2:FindFirstChildWhichIsA("AnimationController")
+				local humanoid2 = instance:FindFirstChildWhichIsA("Humanoid")
+					or instance:FindFirstChildWhichIsA("AnimationController")
 				local animator = humanoid2 and humanoid2:FindFirstChildOfClass("Animator")
 
 				if humanoid and animator then
@@ -17550,20 +17600,20 @@ do
 			end
 		end
 
-		local text4 = text .. "Gui"
-		local instance2 = CoreGui2:FindFirstChild(text4)
-		if instance2 then
+		local name = text .. "Gui"
+		local instance = CoreGui2:FindFirstChild(name)
+		if instance then
 			pcall(function()
-				instance2:Destroy()
+				instance:Destroy()
 			end)
 		end
-		Instance.new("ScreenGui")
-		-- devirt: dropped a write through an undecoded register
-		-- devirt: dropped a write through an undecoded register
-		-- devirt: dropped a write through an undecoded register
-		-- devirt: dropped a write through an undecoded register
-		-- devirt: dropped a write through an undecoded register
-		-- devirt: dropped a write through an undecoded register
+		local screenGui2 = Instance.new("ScreenGui")
+		screenGui2.Name = name
+		screenGui2.DisplayOrder = 190
+		screenGui2.IgnoreGuiInset = true
+		screenGui2.ResetOnSpawn = false
+		screenGui2.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+		screenGui2.Parent = CoreGui2
 		local notificationStack2 = Instance.new("Frame")
 		notificationStack2.Name = "NotificationStack"
 		notificationStack2.AnchorPoint = Vector2.new(0.5, 0)
@@ -17571,7 +17621,7 @@ do
 		notificationStack2.BorderSizePixel = 0
 		notificationStack2.Position = UDim2.fromScale(0.5, 0.025)
 		notificationStack2.Size = UDim2.new(1, -16, 0.55, 0)
-		notificationStack2.Parent = nil
+		notificationStack2.Parent = screenGui2
 		local uiListLayout = Instance.new("UIListLayout")
 		uiListLayout.FillDirection = Enum.FillDirection.Vertical
 		uiListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
@@ -17579,7 +17629,7 @@ do
 		uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 		uiListLayout.VerticalAlignment = Enum.VerticalAlignment.Top
 		uiListLayout.Parent = notificationStack2
-		instance = nil
+		screenGui = screenGui2
 		notificationStack = notificationStack2
 		return notificationStack2
 	end
@@ -18064,36 +18114,32 @@ do
 							local _, value5, value6 =
 								ipairs(chilliSpecialNotification:GetDescendants())
 
-							for _, instance2 in value5, value6 do
-								if instance2:IsA("TextLabel") then
+							for _, instance in value5, value6 do
+								if instance:IsA("TextLabel") then
 									TweenService:Create(
-										instance2,
+										instance,
 										TweenInfo.new(0.28),
 										{ TextTransparency = 1, BackgroundTransparency = 1 }
 									):Play()
-								elseif instance2:IsA("UIStroke") then
+								elseif instance:IsA("UIStroke") then
 									TweenService
-										:Create(
-											instance2,
-											TweenInfo.new(0.28),
-											{ Transparency = 1 }
-										)
+										:Create(instance, TweenInfo.new(0.28), { Transparency = 1 })
 										:Play()
-								elseif instance2:IsA("ImageLabel") then
+								elseif instance:IsA("ImageLabel") then
 									TweenService:Create(
-										instance2,
+										instance,
 										TweenInfo.new(0.28),
 										{ ImageTransparency = 1 }
 									):Play()
-								elseif instance2:IsA("ViewportFrame") then
+								elseif instance:IsA("ViewportFrame") then
 									TweenService:Create(
-										instance2,
+										instance,
 										TweenInfo.new(0.28),
 										{ BackgroundTransparency = 1, ImageTransparency = 1 }
 									):Play()
-								elseif instance2:IsA("Frame") then
+								elseif instance:IsA("Frame") then
 									TweenService:Create(
-										instance2,
+										instance,
 										TweenInfo.new(0.28),
 										{ BackgroundTransparency = 1 }
 									):Play()
@@ -18164,9 +18210,9 @@ do
 		if debris then
 			local _, value3, value4 = ipairs(debris:GetChildren())
 
-			for _, instance2 in value3, value4 do
-				if instance2:IsA("BasePart") and instance2.Name == "FastOverheadTemplate" then
-					local animalOverhead = instance2:FindFirstChild("AnimalOverhead")
+			for _, instance in value3, value4 do
+				if instance:IsA("BasePart") and instance.Name == "FastOverheadTemplate" then
+					local animalOverhead = instance:FindFirstChild("AnimalOverhead")
 					local displayName = animalOverhead
 						and animalOverhead:FindFirstChild("DisplayName")
 					local generation = animalOverhead
@@ -18180,7 +18226,7 @@ do
 						local text4 = tostring(displayName.Text or "")
 						data12[text4] = data12[text4] or {}
 						data12[text4][#data12[text4] + 1] = {
-							Position = instance2.Position,
+							Position = instance.Position,
 							Value = formatCompact2(generation.Text),
 							Overhead = animalOverhead,
 						}
@@ -18208,8 +18254,8 @@ do
 		return value5
 	end
 
-	local function callback44(instance2, argument)
-		local Animal = data6[instance2.Name]
+	local function callback44(instance, argument)
+		local Animal = data6[instance.Name]
 		local isTable6 = type(Animal) == "table" and tonumber(Animal.Generation) or 0
 		local argument2
 
@@ -18217,8 +18263,8 @@ do
 			argument = argument and argument.Value
 			argument2 = argument or 0
 		else
-			local attribute = instance2:GetAttribute("Mutation")
-				or instance2:GetAttribute("__mutation")
+			local attribute = instance:GetAttribute("Mutation")
+				or instance:GetAttribute("__mutation")
 			local mutation = argument and argument.Overhead:FindFirstChild("Mutation")
 			if
 				mutation
@@ -18233,7 +18279,7 @@ do
 			if type(attribute) == "table" then
 				number10 = 1 + (tonumber(attribute.Modifier) or 0)
 			end
-			local _, value3, value4 = ipairs(instance2:GetChildren())
+			local _, value3, value4 = ipairs(instance:GetChildren())
 			local condition8 = false
 
 			for _, value5 in value3, value4 do
@@ -18269,19 +18315,19 @@ do
 		local _, value4, value5 = ipairs(plots:GetChildren())
 		local number10 = 0
 
-		for _, instance2 in value4, value5 do
-			local _, value6, value7 = ipairs(instance2:GetChildren())
+		for _, instance in value4, value5 do
+			local _, value6, value7 = ipairs(instance:GetChildren())
 
-			for _, instance3 in value6, value7 do
-				if instance3:IsA("Model") and data6[instance3.Name] then
-					local rootPart = getRootPart2(instance3)
+			for _, instance2 in value6, value7 do
+				if instance2:IsA("Model") and data6[instance2.Name] then
+					local rootPart = getRootPart2(instance2)
 
 					if rootPart then
-						local overhead = callback43(instance3.Name, rootPart.Position, value3)
-						local argument = callback44(instance3, overhead)
+						local overhead = callback43(instance2.Name, rootPart.Position, value3)
+						local argument = callback44(instance2, overhead)
 
 						if argument > 0 then
-							local Animal = data6[instance3.Name]
+							local Animal = data6[instance2.Name]
 							overhead = overhead and overhead.Overhead
 							local mutation = overhead and overhead:FindFirstChild("Mutation")
 							local visible = mutation
@@ -18345,8 +18391,8 @@ do
 								or nil
 
 							list[#list + 1] = {
-								Model = instance3,
-								Name = instance3.Name,
+								Model = instance2,
+								Name = instance2.Name,
 								Value = argument,
 								ValueText = formatCompact3(argument),
 								Rarity = rarity and tostring(rarity) or "",
@@ -18472,10 +18518,10 @@ do
 			chilliSpecialNotificationSlots[idx] = nil
 		end
 
-		if instance and instance.Parent then
-			instance:Destroy()
+		if screenGui and screenGui.Parent then
+			screenGui:Destroy()
 		end
-		instance = nil
+		screenGui = nil
 		notificationStack = nil
 	end
 
@@ -18649,5 +18695,5 @@ do
 	cleanup2.Parent = chilliOptimizerRuntime2
 end
 
--- devirt: 404 function(s) contain 6156 pc(s) the recorded run never executed; what they decode is the walk's value, not the program's
+-- devirt: the recorded run did not execute every pc in some of these functions; where it did not, what they decode is the walk's value, not the program's
 print("Deobf By Zed")
